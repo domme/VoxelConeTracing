@@ -1,1 +1,8 @@
 *~
+lib
+cmake_install.cmake
+Makefile
+KoRE.cbp
+CMakeLists.txt.user
+CMakeFiles
+CMakeCache.txt
