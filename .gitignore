@@ -6,3 +6,8 @@ KoRE.cbp
 CMakeLists.txt.user
 CMakeFiles
 CMakeCache.txt
+*.suo
+*.sdf
+core/Debug
+MainGLFW/Debug
+*.user
