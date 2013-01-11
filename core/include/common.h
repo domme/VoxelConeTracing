@@ -31,3 +31,5 @@
 #include <map>
 #include <string>
 #include <ctime>
+
+#include "log.h"

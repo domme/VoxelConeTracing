@@ -26,7 +26,7 @@ namespace kore {
   class Log {
   public:
     static Log *getInstance(void);
-    void write(std::string message);
+    void write(const char* format, ...);
   private:
     Log(void);
     virtual ~Log(void);

@@ -29,7 +29,7 @@ namespace kore {
 	  KORE_SHADER_FRAGMENT,
 	  KORE_SHADER_TESSELATION_CONTROL,
 	  KORE_SHADER_TESSELATION_EVALUATION
-  }
+  };
 
   enum inputtype {
 	// TODO: Add ALL possible types
@@ -78,7 +78,7 @@ namespace kore {
   public:
     Shader(void);
 	virtual ~Shader(void);
-  bool loadShader(std::string file, shadertype type);
+  bool loadShader(const std::string& file, shadertype type);
 
   private:
 	std::vector<ShaderInput> _input;

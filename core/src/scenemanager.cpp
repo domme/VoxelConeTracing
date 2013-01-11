@@ -25,7 +25,9 @@ kore::SceneManager* kore::SceneManager::getInstance(void) {
 }
 
 kore::SceneManager::SceneManager(void) {
+  _root = new kore::SceneNode();
 }
 
 kore::SceneManager::~SceneManager(void) {
+
 }

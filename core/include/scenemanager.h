@@ -20,6 +20,8 @@
 #ifndef KORE_CORE_SCENEMANAGER_H_
 #define KORE_CORE_SCENEMANAGER_H_
 
+#include "scenenode.h"
+
 namespace kore {
 	class SceneManager {
 	public:
@@ -27,6 +29,7 @@ namespace kore {
 	private:
 		SceneManager(void);
 		virtual ~SceneManager(void);
+		SceneNode* _root;
 	};
 };
 #endif  // KORE_CORE_SCENEMANAGER_H_
