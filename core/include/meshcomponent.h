@@ -17,17 +17,21 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef KORE_CORE_RESSOURCEMANAGER_H_
-#define KORE_CORE_RESSOURCEMANAGER_H_
+#ifndef KORE_CORE_MESHCOMPONENT_H_
+#define KORE_CORE_MESHCOMPONENT_H_
 
 namespace kore {
-	class RessourceManager {
-	public:
-		static RessourceManager *getInstance(void);
-		bool addPath(const std::string& path);
-	private:
-		RessourceManager(void);
-		virtual ~RessourceManager(void);
-	};
+  class MeshComponent {
+  public:
+    MeshComponent(void);
+    virtual ~MeshComponent(void);
+    SceneNode* getNode(void);
+    void attachTo(SceneNode* node);
+    long getID(void);
+    bool loadMesh(const std::string& file);
+  private:
+    long _id;
+    SceneNode* _node;
+  };
 };
-#endif  // KORE_CORE_RESSOURCEMANAGER_H_
+#endif // KORE_CORE_MESHCOMPONENT_H_

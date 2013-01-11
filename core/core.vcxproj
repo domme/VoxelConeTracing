@@ -14,6 +14,7 @@
     <ClInclude Include="include\common.h" />
     <ClInclude Include="include\kore.h" />
     <ClInclude Include="include\log.h" />
+    <ClInclude Include="include\meshcomponent.h" />
     <ClInclude Include="include\rendermanager.h" />
     <ClInclude Include="include\ressourcemanager.h" />
     <ClInclude Include="include\scenemanager.h" />
@@ -81,6 +82,10 @@
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
+    <PreBuildEvent />
+    <PreBuildEvent>
+      <Command>python $(SolutionDir)scripts\cpplint.py $(ProjectDir)include\common.h --output=vs7</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>

@@ -16,6 +16,8 @@
   You should have received a copy of the GNU General Public License
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
+#ifndef CORE_INCLUDE_COMMON_H_
+#define CORE_INCLUDE_COMMON_H_
 
 #define GLFW_INCLUDE_GL3
 #include <GL/glew.h>
@@ -32,4 +34,6 @@
 #include <string>
 #include <ctime>
 
-#include "log.h"
+#include "./log.h"
+
+#endif  // CORE_INCLUDE_COMMON_H_
