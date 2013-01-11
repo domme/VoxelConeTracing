@@ -1,5 +1,5 @@
 /*
-  Copyright © 2012 The KoRE Project
+  Copyright ï¿½ 2012 The KoRE Project
 
   This file is part of KoRE.
 
@@ -55,12 +55,11 @@ bool kore::Shader::loadShader(const std::string& file, shadertype type) {
     break;
   }
 
-  FILE *code_file;
-  fopen_s(&code_file, file.c_str(), "r");
+  FILE *code_file = fopen(file.c_str(), "r");
 
   if (code_file == NULL) {
-	  kore::Log::getInstance()->write("[ERROR] Could not open shader program %s\n", file);
-    return false;
+	  kore::Log::getInstance()->write("[ERROR] Could not open shader program %s\n", file.c_str());
+	  return false;
   }
 
   char f_char;

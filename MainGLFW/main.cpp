@@ -162,11 +162,10 @@ void initScene(void) {
 }
 
 void loadShaderFile(std::string shaderFile, std::string* program) {
-  FILE *code_file;
-	fopen_s(&code_file, shaderFile.c_str(), "r");
+  FILE *code_file = fopen(shaderFile.c_str(), "r");
 
 	if(code_file == NULL) {
-		printf("[ERROR] Could not open shader program %s\n", shaderFile);
+		//printf("[ERROR] Could not open shader program %s\n", shaderFile);
     return;
 	}
 

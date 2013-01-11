@@ -1,5 +1,5 @@
 /*
-  Copyright © 2012 The KoRE Project
+  Copyright ï¿½ 2012 The KoRE Project
 
   This file is part of KoRE.
 
@@ -21,7 +21,7 @@
 #include <stdarg.h>
 #include <time.h>
 #include <string>
-#include "Log.h"
+#include "./log.h"
 
 kore::Log* kore::Log::getInstance(void) {
   static kore::Log theInstance;
@@ -30,8 +30,7 @@ kore::Log* kore::Log::getInstance(void) {
 
 kore::Log::Log(void) {
   kLogName_ = "KoRE_Log.txt";
-  FILE* pfile = 0;
-  fopen_s(&pfile, kLogName_.c_str(), "w");
+  FILE* pfile = fopen(kLogName_.c_str(), "w");
   if (pfile!= 0) {
     time_t rawtime;
     time(&rawtime);
@@ -41,8 +40,7 @@ kore::Log::Log(void) {
 }
 
 kore::Log::~Log(void) {
-  FILE* pfile = 0;
-  fopen_s(&pfile, kLogName_.c_str(), "a");
+  FILE* pfile = fopen(kLogName_.c_str(), "a");
   if (pfile!= 0) {
     fprintf(pfile, "%s\n", "\nEnd of Log");
     fclose(pfile);
@@ -50,9 +48,8 @@ kore::Log::~Log(void) {
 }
 
 void kore::Log::write(const char* format, ...) {
-  FILE* pfile;
   va_list args;
-  fopen_s(&pfile, kLogName_.c_str(), "a");
+  FILE* pfile = fopen(kLogName_.c_str(), "a");
   if (pfile!= 0) {
 	  va_start(args, format);
 	  vfprintf(pfile, format, args);
