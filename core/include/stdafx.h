@@ -17,7 +17,7 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef KORE_CORE_STDAFX_H_
-#define KORE_CORE_STDAFX_H_
-#include "common.h"
-#endif // KORE_CORE_STDAFX_H_
+#ifndef CORE_INCLUDE_STDAFX_H_
+#define CORE_INCLUDE_STDAFX_H_
+#include "./common.h"
+#endif  // CORE_INCLUDE_STDAFX_H_

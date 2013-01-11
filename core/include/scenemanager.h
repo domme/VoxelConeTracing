@@ -17,19 +17,19 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef KORE_CORE_SCENEMANAGER_H_
-#define KORE_CORE_SCENEMANAGER_H_
+#ifndef CORE_INCLUDE_SCENEMANAGER_H_
+#define CORE_INCLUDE_SCENEMANAGER_H_
 
-#include "scenenode.h"
+#include "./scenenode.h"
 
 namespace kore {
-	class SceneManager {
-	public:
-		static SceneManager *getInstance(void);
-	private:
-		SceneManager(void);
-		virtual ~SceneManager(void);
-		SceneNode* _root;
-	};
+  class SceneManager {
+  public:
+    static SceneManager *getInstance(void);
+  private:
+    SceneManager(void);
+    virtual ~SceneManager(void);
+    SceneNode* _root;
+  };
 };
-#endif  // KORE_CORE_SCENEMANAGER_H_
+#endif  // CORE_INCLUDE_SCENEMANAGER_H_

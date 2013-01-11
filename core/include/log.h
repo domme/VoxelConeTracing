@@ -17,8 +17,8 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef KORE_CORE_LOG_H_
-#define KORE_CORE_LOG_H_
+#ifndef CORE_INCLUDE_LOG_H_
+#define CORE_INCLUDE_LOG_H_
 
 #include <string>
 
@@ -33,4 +33,4 @@ namespace kore {
     std::string kLogName_;
   };
 };
-#endif  // KORE_CORE_LOG_H_
+#endif  // CORE_INCLUDE_LOG_H_

@@ -17,16 +17,16 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef KORE_CORE_RENDERMANAGER_H_
-#define KORE_CORE_RENDERMANAGER_H_
+#ifndef CORE_INCLUDE_RENDERMANAGER_H_
+#define CORE_INCLUDE_RENDERMANAGER_H_
 
 namespace kore {
-	class RenderManager {
-	public:
-		static RenderManager *getInstance(void);
-	private:
-		RenderManager(void);
-		virtual ~RenderManager(void);
-	};
+  class RenderManager {
+  public:
+    static RenderManager *getInstance(void);
+  private:
+    RenderManager(void);
+    virtual ~RenderManager(void);
+  };
 };
-#endif  // KORE_CORE_RENDERMANAGER_H_
+#endif  // CORE_INCLUDE_RENDERMANAGER_H_

@@ -17,21 +17,21 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef KORE_CORE_SCENENODECOMPONENT_H_
-#define KORE_CORE_SCENENODECOMPONENT_H_
+#ifndef CORE_INCLUDE_SCENENODECOMPONENT_H_
+#define CORE_INCLUDE_SCENENODECOMPONENT_H_
 
 namespace kore {
   class SceneNode;
   class SceneNodeComponent {
   public:
     SceneNodeComponent(void);
-	virtual ~SceneNodeComponent(void);
-	SceneNode* getNode(void);
-	void attachTo(SceneNode* node);
-	long getID(void);
+  virtual ~SceneNodeComponent(void);
+  SceneNode* getNode(void);
+  void attachTo(SceneNode* node);
+  int64_t getID(void);
   private:
-	  long _id;
-	  SceneNode* _node;
+    int64_t _id;
+    SceneNode* _node;
   };
 };
-#endif // KORE_CORE_SCENENODECOMPONENT_H_
+#endif  // CORE_INCLUDE_SCENENODECOMPONENT_H_

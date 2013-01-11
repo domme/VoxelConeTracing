@@ -36,6 +36,6 @@ void kore::SceneNode::setParent(SceneNode* parent) {
   _parent = parent;
 }
 
-long kore::SceneNode::getID(void) {
+int64_t kore::SceneNode::getID(void) {
   return _id;
 }

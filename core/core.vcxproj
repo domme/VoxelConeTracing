@@ -84,7 +84,9 @@
     </ProjectReference>
     <PreBuildEvent />
     <PreBuildEvent>
-      <Command>python $(SolutionDir)scripts\cpplint.py $(ProjectDir)include\common.h --output=vs7</Command>
+      <Command>for %%f in ($(ProjectDir)include\*.*) do (
+  python $(SolutionDir)scripts\cpplint.py %%f
+)</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

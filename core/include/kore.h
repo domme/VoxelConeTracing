@@ -17,11 +17,16 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "common.h"
-#include "log.h"
-#include "rendermanager.h"
-#include "ressourcemanager.h"
-#include "scenemanager.h"
-#include "scenenode.h"
-#include "scenenodecomponent.h"
-#include "shader.h"
+#ifndef CORE_INCLUDE_KORE_H_
+#define CORE_INCLUDE_KORE_H_
+
+#include "./common.h"
+#include "./log.h"
+#include "./rendermanager.h"
+#include "./ressourcemanager.h"
+#include "./scenemanager.h"
+#include "./scenenode.h"
+#include "./scenenodecomponent.h"
+#include "./shader.h"
+
+#endif  // CORE_INCLUDE_KORE_H_

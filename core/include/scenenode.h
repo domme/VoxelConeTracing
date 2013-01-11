@@ -17,24 +17,25 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef KORE_CORE_SCENENODE_H_
-#define KORE_CORE_SCENENODE_H_
+#ifndef CORE_INCLUDE_SCENENODE_H_
+#define CORE_INCLUDE_SCENENODE_H_
 
-#include "common.h"
-#include "scenenodecomponent.h"
+#include <vector>
+#include "./common.h"
+#include "./scenenodecomponent.h"
 
 namespace kore {
   class SceneNode {
   public:
     SceneNode(void);
-	virtual ~SceneNode(void);
-	SceneNode* getParent(void);
-	void setParent(SceneNode* parent);
-	long getID(void);
+  virtual ~SceneNode(void);
+  SceneNode* getParent(void);
+  void setParent(SceneNode* parent);
+  int64_t getID(void);
   private:
-	  long _id;
-	  SceneNode* _parent;
-	  std::vector<SceneNode*> _children;
+    int64_t _id;
+    SceneNode* _parent;
+    std::vector<SceneNode*> _children;
   };
 };
-#endif // KORE_CORE_SCENENODE_H_
+#endif  // CORE_INCLUDE_SCENENODE_H_

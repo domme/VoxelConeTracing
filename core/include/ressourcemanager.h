@@ -17,19 +17,20 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef KORE_CORE_RESSOURCEMANAGER_H_
-#define KORE_CORE_RESSOURCEMANAGER_H_
+#ifndef CORE_INCLUDE_RESSOURCEMANAGER_H_
+#define CORE_INCLUDE_RESSOURCEMANAGER_H_
 
-#include "common.h"
+#include <string>
+#include "./common.h"
 
 namespace kore {
-	class RessourceManager {
-	public:
-		static RessourceManager *getInstance(void);
-		bool addPath(const std::string& path);
-	private:
-		RessourceManager(void);
-		virtual ~RessourceManager(void);
-	};
+  class RessourceManager {
+   public:
+    static RessourceManager *getInstance(void);
+    bool addPath(const std::string& path);
+   private:
+    RessourceManager(void);
+    virtual ~RessourceManager(void);
+  };
 };
-#endif  // KORE_CORE_RESSOURCEMANAGER_H_
+#endif  // CORE_INCLUDE_RESSOURCEMANAGER_H_
