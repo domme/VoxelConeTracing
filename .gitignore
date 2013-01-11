@@ -10,6 +10,7 @@ CMakeFiles
 CMakeCache.txt
 *.suo
 *.sdf
+*.opensdf
 core/Debug
 MainGLFW/Debug
 *.user
