@@ -1,6 +1,7 @@
 *~
 Debug
 Release
+ipch
 cmake_install.cmake
 Makefile
 KoRE.cbp
