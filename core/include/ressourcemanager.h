@@ -1,5 +1,5 @@
 /*
-  Copyright © 2012 The KoRE Project
+  Copyright ï¿½ 2012 The KoRE Project
 
   This file is part of KoRE.
 
@@ -19,6 +19,8 @@
 
 #ifndef KORE_CORE_RESSOURCEMANAGER_H_
 #define KORE_CORE_RESSOURCEMANAGER_H_
+
+#include "common.h"
 
 namespace kore {
 	class RessourceManager {
