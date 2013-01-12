@@ -17,20 +17,24 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CORE_INCLUDE_LOG_H_
-#define CORE_INCLUDE_LOG_H_
+#include "core/common.h"
+#include "core/scenenode.h"
 
-#include <string>
+kore::SceneNode::SceneNode(void) {
+  _parent = NULL;
+}
 
-namespace kore {
-  class Log {
-  public:
-    static Log *getInstance(void);
-    void write(const char* format, ...);
-  private:
-    Log(void);
-    virtual ~Log(void);
-    std::string kLogName_;
-  };
-};
-#endif  // CORE_INCLUDE_LOG_H_
+kore::SceneNode::~SceneNode(void) {
+}
+
+kore::SceneNode* kore::SceneNode::getParent(void) {
+  return _parent;
+}
+
+void kore::SceneNode::setParent(SceneNode* parent) {
+  _parent = parent;
+}
+
+int64_t kore::SceneNode::getID(void) {
+  return _id;
+}

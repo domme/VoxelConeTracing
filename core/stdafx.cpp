@@ -17,16 +17,4 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CORE_INCLUDE_RENDERMANAGER_H_
-#define CORE_INCLUDE_RENDERMANAGER_H_
-
-namespace kore {
-  class RenderManager {
-  public:
-    static RenderManager *getInstance(void);
-  private:
-    RenderManager(void);
-    virtual ~RenderManager(void);
-  };
-};
-#endif  // CORE_INCLUDE_RENDERMANAGER_H_
+#include "core/stdafx.h"

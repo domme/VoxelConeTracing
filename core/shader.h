@@ -17,8 +17,8 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CORE_INCLUDE_SHADER_H_
-#define CORE_INCLUDE_SHADER_H_
+#ifndef CORE_SHADER_H_
+#define CORE_SHADER_H_
 
 #include <string>
 #include <vector>
@@ -92,4 +92,4 @@ namespace kore {
     std::string _tess_eval;
   };
 };
-#endif  // CORE_INCLUDE_SHADER_H_
+#endif  // CORE_SHADER_H_

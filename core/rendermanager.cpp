@@ -1,5 +1,5 @@
 /*
-  Copyright ï¿½ 2012 The KoRE Project
+  Copyright © 2012 The KoRE Project
 
   This file is part of KoRE.
 
@@ -17,15 +17,15 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "./ressourcemanager.h"
+#include "core/rendermanager.h"
 
-kore::RessourceManager* kore::RessourceManager::getInstance(void) {
-  static kore::RessourceManager theInstance;
+kore::RenderManager* kore::RenderManager::getInstance(void) {
+  static kore::RenderManager theInstance;
   return &theInstance;
 }
 
-kore::RessourceManager::RessourceManager(void) {
+kore::RenderManager::RenderManager(void) {
 }
 
-kore::RessourceManager::~RessourceManager(void) {
+kore::RenderManager::~RenderManager(void) {
 }

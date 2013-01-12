@@ -1,5 +1,5 @@
 /*
-  Copyright ï¿½ 2012 The KoRE Project
+  Copyright © 2012 The KoRE Project
 
   This file is part of KoRE.
 
@@ -17,17 +17,23 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "scenemanager.h"
+#ifndef CORE_MESHCOMPONENT_H_
+#define CORE_MESHCOMPONENT_H_
 
-kore::SceneManager* kore::SceneManager::getInstance(void) {
-  static kore::SceneManager theInstance;
-  return &theInstance;
-}
+#include <string>
 
-kore::SceneManager::SceneManager(void) {
-  _root = new kore::SceneNode();
-}
-
-kore::SceneManager::~SceneManager(void) {
-
-}
+namespace kore {
+  class MeshComponent {
+  public:
+    MeshComponent(void);
+    virtual ~MeshComponent(void);
+    SceneNode* getNode(void);
+    void attachTo(SceneNode* node);
+    int64_t getID(void);
+    bool loadMesh(const std::string& file);
+  private:
+    int64_t _id;
+    SceneNode* _node;
+  };
+};
+#endif  // CORE_MESHCOMPONENT_H_

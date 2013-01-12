@@ -17,7 +17,8 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "./shader.h"
+#include <string>
+#include "core/shader.h"
 
 
 kore::Shader::Shader(void) {
@@ -58,8 +59,9 @@ bool kore::Shader::loadShader(const std::string& file, shadertype type) {
   FILE *code_file = fopen(file.c_str(), "r");
 
   if (code_file == NULL) {
-	  kore::Log::getInstance()->write("[ERROR] Could not open shader program %s\n", file.c_str());
-	  return false;
+    kore::Log::getInstance()->write(
+      "[ERROR] Could not open shader program %s\n", file.c_str());
+    return false;
   }
 
   char f_char;

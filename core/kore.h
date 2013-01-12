@@ -17,8 +17,8 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CORE_INCLUDE_KORE_H_
-#define CORE_INCLUDE_KORE_H_
+#ifndef CORE_KORE_H_
+#define CORE_KORE_H_
 
 #include "./common.h"
 #include "./log.h"
@@ -29,4 +29,4 @@
 #include "./scenenodecomponent.h"
 #include "./shader.h"
 
-#endif  // CORE_INCLUDE_KORE_H_
+#endif  // CORE_KORE_H_

@@ -17,20 +17,16 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CORE_INCLUDE_RESSOURCEMANAGER_H_
-#define CORE_INCLUDE_RESSOURCEMANAGER_H_
+#include "core/scenemanager.h"
 
-#include <string>
-#include "./common.h"
+kore::SceneManager* kore::SceneManager::getInstance(void) {
+  static kore::SceneManager theInstance;
+  return &theInstance;
+}
 
-namespace kore {
-  class RessourceManager {
-   public:
-    static RessourceManager *getInstance(void);
-    bool addPath(const std::string& path);
-   private:
-    RessourceManager(void);
-    virtual ~RessourceManager(void);
-  };
-};
-#endif  // CORE_INCLUDE_RESSOURCEMANAGER_H_
+kore::SceneManager::SceneManager(void) {
+  _root = new kore::SceneNode();
+}
+
+kore::SceneManager::~SceneManager(void) {
+}

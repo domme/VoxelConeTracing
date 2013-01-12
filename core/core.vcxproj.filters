@@ -15,60 +15,60 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\log.h">
+    <ClInclude Include="common.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="include\rendermanager.h">
+    <ClInclude Include="kore.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="include\ressourcemanager.h">
+    <ClInclude Include="log.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="include\scenemanager.h">
+    <ClInclude Include="meshcomponent.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="include\common.h">
+    <ClInclude Include="rendermanager.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="include\scenenode.h">
+    <ClInclude Include="ressourcemanager.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="include\scenenodecomponent.h">
+    <ClInclude Include="scenemanager.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="include\shader.h">
+    <ClInclude Include="scenenode.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="include\kore.h">
+    <ClInclude Include="scenenodecomponent.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="include\stdafx.h">
+    <ClInclude Include="shader.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="include\meshcomponent.h">
+    <ClInclude Include="stdafx.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\log.cpp">
+    <ClCompile Include="log.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="src\rendermanager.cpp">
+    <ClCompile Include="rendermanager.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="src\ressourcemanager.cpp">
+    <ClCompile Include="ressourcemanager.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="src\scenemanager.cpp">
+    <ClCompile Include="scenemanager.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="src\scenenode.cpp">
+    <ClCompile Include="scenenode.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="src\shader.cpp">
+    <ClCompile Include="shader.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="src\stdafx.cpp">
+    <ClCompile Include="stdafx.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>

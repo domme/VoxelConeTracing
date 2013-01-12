@@ -17,23 +17,21 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CORE_INCLUDE_MESHCOMPONENT_H_
-#define CORE_INCLUDE_MESHCOMPONENT_H_
-
-#include <string>
+#ifndef CORE_SCENENODECOMPONENT_H_
+#define CORE_SCENENODECOMPONENT_H_
 
 namespace kore {
-  class MeshComponent {
+  class SceneNode;
+  class SceneNodeComponent {
   public:
-    MeshComponent(void);
-    virtual ~MeshComponent(void);
-    SceneNode* getNode(void);
-    void attachTo(SceneNode* node);
-    int64_t getID(void);
-    bool loadMesh(const std::string& file);
+    SceneNodeComponent(void);
+  virtual ~SceneNodeComponent(void);
+  SceneNode* getNode(void);
+  void attachTo(SceneNode* node);
+  int64_t getID(void);
   private:
     int64_t _id;
     SceneNode* _node;
   };
 };
-#endif  // CORE_INCLUDE_MESHCOMPONENT_H_
+#endif  // CORE_SCENENODECOMPONENT_H_

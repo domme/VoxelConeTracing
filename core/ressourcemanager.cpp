@@ -1,5 +1,5 @@
 /*
-  Copyright © 2012 The KoRE Project
+  Copyright ï¿½ 2012 The KoRE Project
 
   This file is part of KoRE.
 
@@ -16,24 +16,16 @@
   You should have received a copy of the GNU General Public License
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef CORE_INCLUDE_COMMON_H_
-#define CORE_INCLUDE_COMMON_H_
 
-#define GLFW_INCLUDE_GL3
-#include <GL/glew.h>
-#include <GL/glfw.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/matrix_inverse.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include "core/ressourcemanager.h"
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <vector>
-#include <map>
-#include <string>
-#include <ctime>
+kore::RessourceManager* kore::RessourceManager::getInstance(void) {
+  static kore::RessourceManager theInstance;
+  return &theInstance;
+}
 
-#include "./log.h"
+kore::RessourceManager::RessourceManager(void) {
+}
 
-#endif  // CORE_INCLUDE_COMMON_H_
+kore::RessourceManager::~RessourceManager(void) {
+}

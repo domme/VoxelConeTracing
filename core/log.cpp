@@ -21,7 +21,7 @@
 #include <stdarg.h>
 #include <time.h>
 #include <string>
-#include "./log.h"
+#include "core/log.h"
 
 kore::Log* kore::Log::getInstance(void) {
   static kore::Log theInstance;
@@ -51,9 +51,9 @@ void kore::Log::write(const char* format, ...) {
   va_list args;
   FILE* pfile = fopen(kLogName_.c_str(), "a");
   if (pfile!= 0) {
-	  va_start(args, format);
-	  vfprintf(pfile, format, args);
-	  va_end(args);
+    va_start(args, format);
+    vfprintf(pfile, format, args);
+    va_end(args);
     fclose(pfile);
   }
 }
