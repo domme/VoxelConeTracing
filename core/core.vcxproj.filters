@@ -24,9 +24,6 @@
     <ClInclude Include="log.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="meshcomponent.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="rendermanager.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -46,6 +43,15 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="stdafx.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="datatypes.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="meshrendercomponent.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

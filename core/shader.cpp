@@ -1,5 +1,5 @@
 /*
-  Copyright � 2012 The KoRE Project
+  Copyright © 2012 The KoRE Project
 
   This file is part of KoRE.
 
@@ -33,7 +33,7 @@ kore::Shader::Shader(void) {
 kore::Shader::~Shader(void) {
 }
 
-bool kore::Shader::loadShader(const std::string& file, shadertype type) {
+bool kore::Shader::loadShader(const std::string& file, ShaderType type) {
   std::string* prog;
   switch (type) {
   case KORE_SHADER_VERTEX:

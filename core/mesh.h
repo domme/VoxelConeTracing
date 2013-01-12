@@ -17,48 +17,23 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CORE_SHADER_H_
-#define CORE_SHADER_H_
+#ifndef CORE_MESH_H_
+#define CORE_MESH_H_
 
 #include <string>
-#include <vector>
 #include "core/datatypes.h"
-#include "core/common.h"
 
 namespace kore {
-  enum ShaderType {
-    KORE_SHADER_VERTEX,
-    KORE_SHADER_GEOMETRY,
-    KORE_SHADER_FRAGMENT,
-    KORE_SHADER_TESSELATION_CONTROL,
-    KORE_SHADER_TESSELATION_EVALUATION
-  };
-
-  struct ShaderInput {
-    InputType type;
-    std::string name;
-    GLuint location;
-  };
-
-  struct ShaderOutput {
-    OutputType output;
-    std::string name;
-  };
-
-  class Shader {
+  class Mesh {
   public:
-    Shader(void);
-    virtual ~Shader(void);
-    bool loadShader(const std::string& file, ShaderType type);
-
+    Mesh(void);
+    virtual ~Mesh(void);
+    bool loadFromFile(const std::string& file);
+    int getNumAttributes(void);
+    InputType getAttributeType(int attribute_index);
+    int getAttributeSize(int attribute_index);
+    void* getAttributeData(int attribute_index);
   private:
-    std::vector<ShaderInput> _input;
-
-    std::string _vertex_prog;
-    std::string _geometry_prog;
-    std::string _fragment_prog;
-    std::string _tess_ctrl;
-    std::string _tess_eval;
   };
 };
-#endif  // CORE_SHADER_H_
+#endif  // CORE_MESH_H_
