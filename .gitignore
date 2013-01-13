@@ -11,6 +11,5 @@ CMakeCache.txt
 *.suo
 *.sdf
 *.opensdf
-core/Debug
-MainGLFW/Debug
+project/Debug
 *.user

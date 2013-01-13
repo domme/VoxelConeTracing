@@ -10,6 +10,13 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\mainglfw\main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\assets\simple.fp" />
+    <None Include="..\assets\simple.vp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{3A04ED36-76B5-44BA-B9F4-CF7D8E07D672}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -76,13 +83,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="simple.fp" />
-    <None Include="simple.vp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

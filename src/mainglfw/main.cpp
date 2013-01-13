@@ -178,8 +178,8 @@ void loadShaderFile(std::string shaderFile, std::string* program) {
 
 void initShader(void) {
   // read from file
-  loadShaderFile("simple.vp", &vp_code);
-  loadShaderFile("simple.fp", &fp_code);
+  loadShaderFile("assets/simple.vp", &vp_code);
+  loadShaderFile("assets/simple.fp", &fp_code);
 
   // compile vertex shader
   const GLchar *vp = vp_code.c_str();

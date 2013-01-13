@@ -16,20 +16,24 @@
   You should have received a copy of the GNU General Public License
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
+#ifndef INCLUDE_CORE_COMMON_H_
+#define INCLUDE_CORE_COMMON_H_
 
-#ifndef CORE_SCENEMANAGER_H_
-#define CORE_SCENEMANAGER_H_
+#define GLFW_INCLUDE_GL3
+#include <GL/glew.h>
+#include <GL/glfw.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/matrix_inverse.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
-#include "./scenenode.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <vector>
+#include <map>
+#include <string>
+#include <ctime>
 
-namespace kore {
-  class SceneManager {
-  public:
-    static SceneManager *getInstance(void);
-  private:
-    SceneManager(void);
-    virtual ~SceneManager(void);
-    SceneNode* _root;
-  };
-};
-#endif  // CORE_SCENEMANAGER_H_
+#include "core/log.h"
+
+#endif  // INCLUDE_CORE_COMMON_H_

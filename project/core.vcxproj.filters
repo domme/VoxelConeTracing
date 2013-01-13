@@ -15,66 +15,66 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="common.h">
+    <ClInclude Include="..\include\core\common.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="kore.h">
+    <ClInclude Include="..\include\core\datatypes.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="log.h">
+    <ClInclude Include="..\include\core\kore.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="rendermanager.h">
+    <ClInclude Include="..\include\core\log.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="ressourcemanager.h">
+    <ClInclude Include="..\include\core\mesh.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="scenemanager.h">
+    <ClInclude Include="..\include\core\meshrendercomponent.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="scenenode.h">
+    <ClInclude Include="..\include\core\rendermanager.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="scenenodecomponent.h">
+    <ClInclude Include="..\include\core\ressourcemanager.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="shader.h">
+    <ClInclude Include="..\include\core\scenemanager.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="stdafx.h">
+    <ClInclude Include="..\include\core\scenenode.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="mesh.h">
+    <ClInclude Include="..\include\core\scenenodecomponent.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="datatypes.h">
+    <ClInclude Include="..\include\core\shader.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="meshrendercomponent.h">
+    <ClInclude Include="..\include\core\stdafx.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="log.cpp">
+    <ClCompile Include="..\src\core\log.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="rendermanager.cpp">
+    <ClCompile Include="..\src\core\rendermanager.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="ressourcemanager.cpp">
+    <ClCompile Include="..\src\core\ressourcemanager.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="scenemanager.cpp">
+    <ClCompile Include="..\src\core\scenemanager.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="scenenode.cpp">
+    <ClCompile Include="..\src\core\scenenode.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="shader.cpp">
+    <ClCompile Include="..\src\core\shader.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="stdafx.cpp">
+    <ClCompile Include="..\src\core\stdafx.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>

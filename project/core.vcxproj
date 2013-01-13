@@ -11,28 +11,28 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="common.h" />
-    <ClInclude Include="datatypes.h" />
-    <ClInclude Include="kore.h" />
-    <ClInclude Include="log.h" />
-    <ClInclude Include="mesh.h" />
-    <ClInclude Include="meshrendercomponent.h" />
-    <ClInclude Include="rendermanager.h" />
-    <ClInclude Include="ressourcemanager.h" />
-    <ClInclude Include="scenemanager.h" />
-    <ClInclude Include="scenenode.h" />
-    <ClInclude Include="scenenodecomponent.h" />
-    <ClInclude Include="shader.h" />
-    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="..\include\core\common.h" />
+    <ClInclude Include="..\include\core\datatypes.h" />
+    <ClInclude Include="..\include\core\kore.h" />
+    <ClInclude Include="..\include\core\log.h" />
+    <ClInclude Include="..\include\core\mesh.h" />
+    <ClInclude Include="..\include\core\meshrendercomponent.h" />
+    <ClInclude Include="..\include\core\rendermanager.h" />
+    <ClInclude Include="..\include\core\ressourcemanager.h" />
+    <ClInclude Include="..\include\core\scenemanager.h" />
+    <ClInclude Include="..\include\core\scenenode.h" />
+    <ClInclude Include="..\include\core\scenenodecomponent.h" />
+    <ClInclude Include="..\include\core\shader.h" />
+    <ClInclude Include="..\include\core\stdafx.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="log.cpp" />
-    <ClCompile Include="rendermanager.cpp" />
-    <ClCompile Include="ressourcemanager.cpp" />
-    <ClCompile Include="scenemanager.cpp" />
-    <ClCompile Include="scenenode.cpp" />
-    <ClCompile Include="shader.cpp" />
-    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="..\src\core\log.cpp" />
+    <ClCompile Include="..\src\core\rendermanager.cpp" />
+    <ClCompile Include="..\src\core\ressourcemanager.cpp" />
+    <ClCompile Include="..\src\core\scenemanager.cpp" />
+    <ClCompile Include="..\src\core\scenenode.cpp" />
+    <ClCompile Include="..\src\core\shader.cpp" />
+    <ClCompile Include="..\src\core\stdafx.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B851B68F-DA2D-4F44-8FE5-A400094F2C87}</ProjectGuid>
@@ -64,11 +64,11 @@
   <PropertyGroup />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../ext/include;../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../include/core;../ext/include;../include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
     </ClCompile>
@@ -84,7 +84,10 @@
     </ProjectReference>
     <PreBuildEvent />
     <PreBuildEvent>
-      <Command>for %%f in ($(ProjectDir)*.*) do (
+      <Command>for %%f in ($(SolutionDir)include\core\*.*) do (
+  python $(SolutionDir)scripts\cpplint.py %%f
+);
+for %%f in ($(SolutionDir)src\core\*.*) do (
   python $(SolutionDir)scripts\cpplint.py %%f
 )</Command>
       <Message>cpplint google style</Message>

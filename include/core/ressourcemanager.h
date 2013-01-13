@@ -17,8 +17,8 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CORE_RESSOURCEMANAGER_H_
-#define CORE_RESSOURCEMANAGER_H_
+#ifndef INCLUDE_CORE_RESSOURCEMANAGER_H_
+#define INCLUDE_CORE_RESSOURCEMANAGER_H_
 
 #include <string>
 #include "./common.h"
@@ -33,4 +33,4 @@ namespace kore {
     virtual ~RessourceManager(void);
   };
 };
-#endif  // CORE_RESSOURCEMANAGER_H_
+#endif  // INCLUDE_CORE_RESSOURCEMANAGER_H_

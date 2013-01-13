@@ -17,20 +17,16 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CORE_LOG_H_
-#define CORE_LOG_H_
+#ifndef INCLUDE_CORE_KORE_H_
+#define INCLUDE_CORE_KORE_H_
 
-#include <string>
+#include "./common.h"
+#include "./log.h"
+#include "./rendermanager.h"
+#include "./ressourcemanager.h"
+#include "./scenemanager.h"
+#include "./scenenode.h"
+#include "./scenenodecomponent.h"
+#include "./shader.h"
 
-namespace kore {
-  class Log {
-  public:
-    static Log *getInstance(void);
-    void write(const char* format, ...);
-  private:
-    Log(void);
-    virtual ~Log(void);
-    std::string kLogName_;
-  };
-};
-#endif  // CORE_LOG_H_
+#endif  // INCLUDE_CORE_KORE_H_

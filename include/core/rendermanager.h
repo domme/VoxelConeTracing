@@ -17,23 +17,16 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CORE_MESH_H_
-#define CORE_MESH_H_
-
-#include <string>
-#include "core/datatypes.h"
+#ifndef INCLUDE_CORE_RENDERMANAGER_H_
+#define INCLUDE_CORE_RENDERMANAGER_H_
 
 namespace kore {
-  class Mesh {
+  class RenderManager {
   public:
-    Mesh(void);
-    virtual ~Mesh(void);
-    bool loadFromFile(const std::string& file);
-    int getNumAttributes(void);
-    InputType getAttributeType(int attribute_index);
-    int getAttributeSize(int attribute_index);
-    void* getAttributeData(int attribute_index);
+    static RenderManager *getInstance(void);
   private:
+    RenderManager(void);
+    virtual ~RenderManager(void);
   };
 };
-#endif  // CORE_MESH_H_
+#endif  // INCLUDE_CORE_RENDERMANAGER_H_

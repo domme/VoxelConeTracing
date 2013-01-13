@@ -17,8 +17,8 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CORE_DATATYPES_H_
-#define CORE_DATATYPES_H_
+#ifndef INCLUDE_CORE_DATATYPES_H_
+#define INCLUDE_CORE_DATATYPES_H_
 
 namespace kore {
   enum InputType {
@@ -53,4 +53,4 @@ namespace kore {
     KORE_SHADER_OUTPUT_VEC4
   };
 };
-#endif  // CORE_DATATYPES_H_
+#endif  // INCLUDE_CORE_DATATYPES_H_
