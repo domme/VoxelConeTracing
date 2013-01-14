@@ -1,0 +1,12 @@
+KoRE Log - Mon Jan 14 13:29:41 2013
+
+Render Device: GeForce GTX 560 Ti/PCIe/SSE2
+Vendor: NVIDIA Corporation
+OpenGL version: 4.3.0
+GLSL version: 4.30 NVIDIA via Cg compiler
+GLFW version 2.7.6
+GLEW version: 1.9.0
+[DEBUG] added ressource path: './assets/shader'
+[WARNING] ressource path not found: './assets/meshes'
+
+End of Log
