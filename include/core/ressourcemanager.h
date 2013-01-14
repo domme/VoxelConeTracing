@@ -1,5 +1,5 @@
 /*
-  Copyright � 2012 The KoRE Project
+  Copyright @ 2012 The KoRE Project
 
   This file is part of KoRE.
 
@@ -20,17 +20,19 @@
 #ifndef INCLUDE_CORE_RESSOURCEMANAGER_H_
 #define INCLUDE_CORE_RESSOURCEMANAGER_H_
 
+#include <vector>
 #include <string>
-#include "./common.h"
 
 namespace kore {
   class RessourceManager {
-   public:
+  public:
     static RessourceManager *getInstance(void);
     bool addPath(const std::string& path);
-   private:
+  private:
     RessourceManager(void);
     virtual ~RessourceManager(void);
+
+    std::vector<std::string> _ressource_paths;
   };
 };
 #endif  // INCLUDE_CORE_RESSOURCEMANAGER_H_

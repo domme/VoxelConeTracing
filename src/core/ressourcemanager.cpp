@@ -1,5 +1,5 @@
 /*
-  Copyright � 2012 The KoRE Project
+  Copyright @ 2012 The KoRE Project
 
   This file is part of KoRE.
 
@@ -17,7 +17,12 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <string>
+#include <io.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include "core/ressourcemanager.h"
+#include "core/log.h"
 
 kore::RessourceManager* kore::RessourceManager::getInstance(void) {
   static kore::RessourceManager theInstance;
@@ -28,4 +33,28 @@ kore::RessourceManager::RessourceManager(void) {
 }
 
 kore::RessourceManager::~RessourceManager(void) {
+}
+
+bool kore::RessourceManager::addPath(const std::string& path) {
+  if (_access(path.c_str(), 0) == 0) {
+    struct stat status;
+    stat(path.c_str(), &status);
+
+    if (status.st_mode & S_IFDIR) {
+      kore::Log::getInstance()->write(
+        "[DEBUG] added ressource path: '%s'\n",
+        path.c_str());
+      return true;
+    } else {
+      kore::Log::getInstance()->write(
+        "[WARNING] ressource path not found: '%s'\n",
+        path.c_str());
+      return false;
+    }
+  } else {
+    kore::Log::getInstance()->write(
+      "[WARNING] ressource path not found: '%s'\n",
+      path.c_str());
+    return false;
+  }
 }

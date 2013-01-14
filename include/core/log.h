@@ -30,7 +30,7 @@ namespace kore {
   private:
     Log(void);
     virtual ~Log(void);
-    std::string kLogName_;
+    std::string _logname;
   };
 };
 #endif  // INCLUDE_CORE_LOG_H_

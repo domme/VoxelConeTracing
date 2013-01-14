@@ -20,13 +20,16 @@
 #ifndef INCLUDE_CORE_KORE_H_
 #define INCLUDE_CORE_KORE_H_
 
-#include "./common.h"
-#include "./log.h"
-#include "./rendermanager.h"
-#include "./ressourcemanager.h"
-#include "./scenemanager.h"
-#include "./scenenode.h"
-#include "./scenenodecomponent.h"
-#include "./shader.h"
+#include "core/common.h"
+#include "core/datatypes.h"
+#include "core/log.h"
+#include "core/mesh.h"
+#include "core/meshrendercomponent.h"
+#include "core/rendermanager.h"
+#include "core/ressourcemanager.h"
+#include "core/scenemanager.h"
+#include "core/scenenode.h"
+#include "core/scenenodecomponent.h"
+#include "core/shader.h"
 
 #endif  // INCLUDE_CORE_KORE_H_

@@ -17,32 +17,37 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INCLUDE_CORE_MESH_H_
-#define INCLUDE_CORE_MESH_H_
-
 #include <string>
-#include <vector>
+#include "core/mesh.h"
+#include "core/ressourcemanager.h"
 #include "core/datatypes.h"
 
-namespace kore {
-  struct Attribute {
-    std::string name;
-    InputType type;
-    int size;
-    void* data;
-  };
-  class Mesh {
-  public:
-    Mesh(void);
-    virtual ~Mesh(void);
-    bool loadFromFile(const std::string& file);
-    int getNumAttributes(void);
-    std::string getAttributeName(int attribute_index);
-    InputType getAttributeType(int attribute_index);
-    int getAttributeSize(int attribute_index);
-    void* getAttributeData(int attribute_index);
-  private:
-    std::vector<Attribute> _attributes;
-  };
-};
-#endif  // INCLUDE_CORE_MESH_H_
+kore::Mesh::Mesh(void) {
+}
+
+kore::Mesh::~Mesh(void) {
+}
+
+bool kore::Mesh::loadFromFile(const std::string& file) {
+  return false;
+}
+
+int kore::Mesh::getNumAttributes(void) {
+  return _attributes.size();
+}
+
+std::string kore::Mesh::getAttributeName(int attribute_index) {
+  return _attributes[attribute_index].name;
+}
+
+kore::InputType kore::Mesh::getAttributeType(int attribute_index) {
+  return _attributes[attribute_index].type;
+}
+
+int kore::Mesh::getAttributeSize(int attribute_index) {
+  return _attributes[attribute_index].size;
+}
+
+void* kore::Mesh::getAttributeData(int attribute_index) {
+  return _attributes[attribute_index].data;
+}

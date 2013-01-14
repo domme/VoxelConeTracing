@@ -24,7 +24,7 @@
 #include "core/scenenodecomponent.h"
 
 namespace kore {
-  class MeshRenderComponent:public SceneNodeComponent; {
+  class MeshRenderComponent:public SceneNodeComponent {
   public:
     MeshRenderComponent(void);
     virtual ~MeshRenderComponent(void);
