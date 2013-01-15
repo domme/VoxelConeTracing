@@ -22,10 +22,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <string>
-#include "assimp/Importer.hpp"
-#include "assimp/scene.h"
-#include "assimp/postprocess.h"
+#include "core/Meshloader.h"
 #include "core/log.h"
+#include "core/mesh.h"
 
 kore::RessourceManager* kore::RessourceManager::getInstance(void) {
   static kore::RessourceManager theInstance;
@@ -63,10 +62,19 @@ bool kore::RessourceManager::addPath(const std::string& path) {
   }
 }
 
-kore::Mesh* kore::RessourceManager::loadMesh(const std::string& filename) {
+std::shared_ptr<kore::Mesh>
+kore::RessourceManager::loadMesh(const std::string& filename) {
   std::string currentpath;
   for (unsigned int i = 0; i < _ressource_paths.size(); i++) {
     currentpath = _ressource_paths[i] + filename;
   }
-  return NULL;
+
+  std::shared_ptr<kore::Mesh> pNewMesh =
+      MeshLoader::getInstance()->loadMesh(filename);
+
+  if (pNewMesh) {
+     _meshes.push_back(pNewMesh);
+  }
+
+  return pNewMesh;
 }

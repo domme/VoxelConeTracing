@@ -36,26 +36,16 @@
 
 #include "core/log.h"
 
-//Typedefs:
-typedef			 char			int8;
-typedef			 short			int16;
-typedef			 long			int32;
-typedef			 long long		int64;
+// Typedefs:
+typedef unsigned char uint8;
+typedef glm::half float16;
+typedef double float64;
 
-typedef unsigned char			uint8;
-typedef unsigned short			uint16;
-typedef unsigned long			uint32;
-typedef unsigned long long		uint64;
-typedef unsigned int			uint;
-
-typedef glm::half				float16;
-typedef double	                float64;
-
-//Use this to indicate an invalid GL-handle of type GLuint
+// Use this to indicate an invalid GL-handle of type GLuint
 #define GLUINT_HANDLE_INVALID 0xFFFFFFFF
 
-#define SAFE_DELETE(p) if(p){ delete p; p = NULL; }
-#define SAFE_DELETE_ARR(p) if( p[ 0 ] ) delete[] p;
+#define SAFE_DELETE(p) if (p) { delete p; p = NULL; }
+#define SAFE_DELETE_ARR(p) if (p[ 0 ]) delete[] p;
 #define BUFFER_OFFSET(i) ( (char*) NULL + (i) )
 
 

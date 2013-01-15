@@ -83,7 +83,7 @@ int main(void) {
   kore::RessourceManager::getInstance()->addPath("./assets/meshes/");
 
   // load ressources
-  kore::RessourceManager::getInstance()->loadMesh("testmesh.dae");
+  kore::RessourceManager::getInstance()->loadMesh("./assets/meshes/Test_LightCamera.dae");
 
   // test git
 

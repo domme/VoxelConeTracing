@@ -25,19 +25,20 @@
 #include "core/Mesh.h"
 #include "core/Shader.h"
 
+
 namespace kore {
   class RessourceManager {
   public:
     static RessourceManager *getInstance(void);
     bool addPath(const std::string& path);
-    Mesh* loadMesh(const std::string& filename);
+    std::shared_ptr<kore::Mesh> loadMesh(const std::string& filename);
   private:
     RessourceManager(void);
     virtual ~RessourceManager(void);
 
     std::vector<std::string> _ressource_paths;
-    std::vector<Mesh*> _meshes;
-    std::vector<Shader*> _shader;
+    std::vector<std::shared_ptr<Mesh>> _meshes;
+    std::vector<std::shared_ptr<Shader>> _shader;
   };
 };
 #endif  // INCLUDE_CORE_RESSOURCEMANAGER_H_

@@ -17,34 +17,25 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INCLUDE_CORE_MESH_H_
-#define INCLUDE_CORE_MESH_H_
+#ifndef INCLUDE_CORE_MESHLOADER_H_
+#define INCLUDE_CORE_MESHLOADER_H_
 
 #include <string>
-#include <vector>
-#include "core/datatypes.h"
+
+#include "core/scenenode.h"
+#include "core/mesh.h"
+#include "assimp/Importer.hpp"
 
 namespace kore {
-  struct Attribute {
-    std::string name;
-    InputType type;
-    int size;
-    void* data;
-  };
-  class Mesh {
-    friend class MeshLoader;
+    class MeshLoader {
+        public:
+            static MeshLoader* getInstance();
+            ~MeshLoader();
+            std::shared_ptr<Mesh> loadMesh(const std::string& szMeshPath);
+        private:
+           MeshLoader();
 
-  public:
-    Mesh(void);
-    virtual ~Mesh(void);
-    bool loadFromFile(const std::string& file);
-    int getNumAttributes(void);
-    std::string getAttributeName(int attribute_index);
-    InputType getAttributeType(int attribute_index);
-    int getAttributeSize(int attribute_index);
-    void* getAttributeData(int attribute_index);
-  private:
-    std::vector<Attribute> _attributes;
-  };
-};
-#endif  // INCLUDE_CORE_MESH_H_
+           Assimp::Importer _aiImporter;
+    };
+}
+#endif  // INCLUDE_CORE_MESHLOADER_H_

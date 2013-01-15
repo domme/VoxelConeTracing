@@ -16,6 +16,7 @@
     <ClInclude Include="..\include\core\kore.h" />
     <ClInclude Include="..\include\core\log.h" />
     <ClInclude Include="..\include\core\mesh.h" />
+    <ClInclude Include="..\include\core\meshloader.h" />
     <ClInclude Include="..\include\core\meshrendercomponent.h" />
     <ClInclude Include="..\include\core\rendermanager.h" />
     <ClInclude Include="..\include\core\ressourcemanager.h" />
@@ -28,6 +29,7 @@
   <ItemGroup>
     <ClCompile Include="..\src\core\log.cpp" />
     <ClCompile Include="..\src\core\mesh.cpp" />
+    <ClCompile Include="..\src\core\meshloader.cpp" />
     <ClCompile Include="..\src\core\rendermanager.cpp" />
     <ClCompile Include="..\src\core\ressourcemanager.cpp" />
     <ClCompile Include="..\src\core\scenemanager.cpp" />
@@ -86,10 +88,10 @@
     <PreBuildEvent />
     <PreBuildEvent>
       <Command>for %%f in ("$(SolutionDir)include\core\*.*") do (
-  python "$(SolutionDir)scripts\cpplint.py" %%f
+  python "$(SolutionDir)scripts\cpplint.py" "%%f"
 );
 for %%f in ("$(SolutionDir)src\core\*.*") do (
-  python "$(SolutionDir)scripts\cpplint.py" %%f
+  python "$(SolutionDir)scripts\cpplint.py" "%%f"
 )</Command>
       <Message>cpplint google style</Message>
     </PreBuildEvent>

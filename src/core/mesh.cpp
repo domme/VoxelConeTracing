@@ -17,8 +17,9 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "core/mesh.h"
 #include <string>
+
+#include "core/mesh.h"
 #include "core/ressourcemanager.h"
 #include "core/datatypes.h"
 
@@ -27,6 +28,13 @@ kore::Mesh::Mesh(void) {
 }
 
 kore::Mesh::~Mesh(void) {
+    // Free all attribute-data.
+    // This has to be done more sophisticated in a future version
+    for (unsigned int i = 0; i < _attributes.size(); ++i) {
+        if (_attributes[ i ].data) {
+            free(_attributes[ i ].data);
+        }
+    }
 }
 
 bool kore::Mesh::loadFromFile(const std::string& file) {

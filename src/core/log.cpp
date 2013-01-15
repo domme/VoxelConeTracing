@@ -17,10 +17,15 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#if defined WIN32 || defined WIN64
+#include <Windows.h>
+#endif
+
 #include <stdio.h>
 #include <stdarg.h>
 #include <time.h>
 #include <string>
+
 #include "core/log.h"
 
 kore::Log* kore::Log::getInstance(void) {
@@ -56,4 +61,14 @@ void kore::Log::write(const char* format, ...) {
     va_end(args);
     fclose(pfile);
   }
+
+#if defined WIN32 || defined WIN64
+  // Also print to VisualStudio-console
+  char szBuf[ 1000 ];
+  va_start(args, format);
+  vsprintf(szBuf, format, args);
+  va_end(args);
+
+  OutputDebugStringA(szBuf);
+#endif
 }
