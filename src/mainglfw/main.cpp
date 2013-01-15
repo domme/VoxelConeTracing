@@ -58,16 +58,32 @@ int main(void) {
   // log versions
   int GLFWmajor, GLFWminor, GLFWrev;
   glfwGetVersion(&GLFWmajor, &GLFWminor, &GLFWrev);
-  kore::Log::getInstance()->write("Render Device: %s\n", reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
-  kore::Log::getInstance()->write("Vendor: %s\n", reinterpret_cast<const char*>(glGetString(GL_VENDOR)));
-  kore::Log::getInstance()->write("OpenGL version: %s\n", reinterpret_cast<const char*>(glGetString(GL_VERSION)));
-  kore::Log::getInstance()->write("GLSL version: %s\n", reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
-  kore::Log::getInstance()->write("GLFW version %i.%i.%i\n", GLFWmajor, GLFWminor, GLFWrev);
-  kore::Log::getInstance()->write("GLEW version: %s\n", reinterpret_cast<const char*>(glewGetString(GLEW_VERSION)));
+  kore::Log::getInstance()->write(
+    "Render Device: %s\n",
+    reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
+  kore::Log::getInstance()->write(
+    "Vendor: %s\n",
+    reinterpret_cast<const char*>(glGetString(GL_VENDOR)));
+  kore::Log::getInstance()->write(
+    "OpenGL version: %s\n",
+    reinterpret_cast<const char*>(glGetString(GL_VERSION)));
+  kore::Log::getInstance()->write(
+    "GLSL version: %s\n",
+    reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
+  kore::Log::getInstance()->write(
+    "GLFW version %i.%i.%i\n",
+    GLFWmajor, GLFWminor, GLFWrev);
+  kore::Log::getInstance()->write(
+    "GLEW version: %s\n",
+    reinterpret_cast<const char*>(glewGetString(GLEW_VERSION)));
 
-  //initialize
-  kore::RessourceManager::getInstance()->addPath("./assets/shader");
-  kore::RessourceManager::getInstance()->addPath("./assets/meshes");
+  // initialize
+  // add ressource paths
+  kore::RessourceManager::getInstance()->addPath("./assets/shader/");
+  kore::RessourceManager::getInstance()->addPath("./assets/meshes/");
+
+  // load ressources
+  kore::RessourceManager::getInstance()->loadMesh("testmesh.dae");
 
   glClearColor(1.0f,1.0f,1.0f,1.0f);
 

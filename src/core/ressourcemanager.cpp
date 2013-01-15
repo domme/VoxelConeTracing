@@ -17,11 +17,14 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <string>
+#include "core/ressourcemanager.h"
 #include <io.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include "core/ressourcemanager.h"
+#include <string>
+#include "assimp/Importer.hpp"
+#include "assimp/scene.h"
+#include "assimp/postprocess.h"
 #include "core/log.h"
 
 kore::RessourceManager* kore::RessourceManager::getInstance(void) {
@@ -41,6 +44,7 @@ bool kore::RessourceManager::addPath(const std::string& path) {
     stat(path.c_str(), &status);
 
     if (status.st_mode & S_IFDIR) {
+      _ressource_paths.push_back(path);
       kore::Log::getInstance()->write(
         "[DEBUG] added ressource path: '%s'\n",
         path.c_str());
@@ -57,4 +61,12 @@ bool kore::RessourceManager::addPath(const std::string& path) {
       path.c_str());
     return false;
   }
+}
+
+kore::Mesh* kore::RessourceManager::loadMesh(const std::string& filename) {
+  std::string currentpath;
+  for (unsigned int i = 0; i < _ressource_paths.size(); i++) {
+    currentpath = _ressource_paths[i] + filename;
+  }
+  return NULL;
 }

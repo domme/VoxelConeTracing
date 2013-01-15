@@ -17,10 +17,11 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <string>
 #include "core/mesh.h"
+#include <string>
 #include "core/ressourcemanager.h"
 #include "core/datatypes.h"
+
 
 kore::Mesh::Mesh(void) {
 }
