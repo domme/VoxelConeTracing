@@ -14,10 +14,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\assets\simple.fp">
+    <None Include="..\assets\shader\simple.fp">
       <Filter>Ressourcendateien</Filter>
     </None>
-    <None Include="..\assets\simple.vp">
+    <None Include="..\assets\shader\simple.vp">
       <Filter>Ressourcendateien</Filter>
     </None>
   </ItemGroup>

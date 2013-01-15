@@ -16,8 +16,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\assets\simple.fp" />
-    <None Include="..\assets\simple.vp" />
+    <None Include="..\assets\shader\simple.fp" />
+    <None Include="..\assets\shader\simple.vp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{3A04ED36-76B5-44BA-B9F4-CF7D8E07D672}</ProjectGuid>
