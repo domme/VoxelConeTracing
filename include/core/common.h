@@ -36,4 +36,14 @@
 
 #include "core/log.h"
 
+//Typedefs:
+typedef glm::uint16				uint16;
+typedef glm::uint32				uint32;
+typedef glm::uint64				uint64;
+typedef glm::uint8				uint8;
+typedef glm::uint				uint;
+typedef glm::half				float16;
+typedef double                  float64;
+
+
 #endif  // INCLUDE_CORE_COMMON_H_
