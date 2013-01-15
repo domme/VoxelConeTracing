@@ -85,6 +85,8 @@ int main(void) {
   // load ressources
   kore::RessourceManager::getInstance()->loadMesh("testmesh.dae");
 
+  // test git
+
   glClearColor(1.0f,1.0f,1.0f,1.0f);
 
   // Main loop
