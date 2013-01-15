@@ -85,11 +85,11 @@
     </ProjectReference>
     <PreBuildEvent />
     <PreBuildEvent>
-      <Command>for %%f in ($(SolutionDir)include\core\*.*) do (
-  python $(SolutionDir)scripts\cpplint.py %%f
+      <Command>for %%f in ("$(SolutionDir)include\core\*.*") do (
+  python "$(SolutionDir)scripts\cpplint.py" %%f
 );
-for %%f in ($(SolutionDir)src\core\*.*) do (
-  python $(SolutionDir)scripts\cpplint.py %%f
+for %%f in ("$(SolutionDir)src\core\*.*") do (
+  python "$(SolutionDir)scripts\cpplint.py" %%f
 )</Command>
       <Message>cpplint google style</Message>
     </PreBuildEvent>
