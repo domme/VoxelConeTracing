@@ -21,7 +21,7 @@
 #include <vector>
 
 #include "core/mesh.h"
-#include "core/ressourcemanager.h"
+#include "core/resourcemanager.h"
 #include "core/datatypes.h"
 
 

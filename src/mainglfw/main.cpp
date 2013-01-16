@@ -78,12 +78,12 @@ int main(void) {
     reinterpret_cast<const char*>(glewGetString(GLEW_VERSION)));
 
   // initialize
-  // add ressource paths
-  kore::RessourceManager::getInstance()->addPath("./assets/shader/");
-  kore::RessourceManager::getInstance()->addPath("./assets/meshes/");
+  // add resource paths
+  kore::ResourceManager::getInstance()->addPath("./assets/shader/");
+  kore::ResourceManager::getInstance()->addPath("./assets/meshes/");
 
-  // load ressources
-  kore::RessourceManager::getInstance()->loadMesh("./assets/meshes/Test_LightCamera.dae");
+  // load resources
+  kore::ResourceManager::getInstance()->loadMesh("./assets/meshes/Test_LightCamera.dae");
 
   // test git
 

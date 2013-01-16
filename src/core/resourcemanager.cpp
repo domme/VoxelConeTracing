@@ -17,7 +17,7 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "core/ressourcemanager.h"
+#include "core/resourcemanager.h"
 #include <io.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -26,47 +26,47 @@
 #include "core/log.h"
 #include "core/mesh.h"
 
-kore::RessourceManager* kore::RessourceManager::getInstance(void) {
-  static kore::RessourceManager theInstance;
+kore::ResourceManager* kore::ResourceManager::getInstance(void) {
+  static kore::ResourceManager theInstance;
   return &theInstance;
 }
 
-kore::RessourceManager::RessourceManager(void) {
+kore::ResourceManager::ResourceManager(void) {
 }
 
-kore::RessourceManager::~RessourceManager(void) {
+kore::ResourceManager::~ResourceManager(void) {
 }
 
-bool kore::RessourceManager::addPath(const std::string& path) {
+bool kore::ResourceManager::addPath(const std::string& path) {
   if (_access(path.c_str(), 0) == 0) {
     struct stat status;
     stat(path.c_str(), &status);
 
     if (status.st_mode & S_IFDIR) {
-      _ressource_paths.push_back(path);
+      _resource_paths.push_back(path);
       kore::Log::getInstance()->write(
-        "[DEBUG] added ressource path: '%s'\n",
+        "[DEBUG] added resource path: '%s'\n",
         path.c_str());
       return true;
     } else {
       kore::Log::getInstance()->write(
-        "[WARNING] ressource path not found: '%s'\n",
+        "[WARNING] resource path not found: '%s'\n",
         path.c_str());
       return false;
     }
   } else {
     kore::Log::getInstance()->write(
-      "[WARNING] ressource path not found: '%s'\n",
+      "[WARNING] resource path not found: '%s'\n",
       path.c_str());
     return false;
   }
 }
 
 std::shared_ptr<kore::Mesh>
-kore::RessourceManager::loadMesh(const std::string& filename) {
+kore::ResourceManager::loadMesh(const std::string& filename) {
   std::string currentpath;
-  for (unsigned int i = 0; i < _ressource_paths.size(); i++) {
-    currentpath = _ressource_paths[i] + filename;
+  for (unsigned int i = 0; i < _resource_paths.size(); i++) {
+    currentpath = _resource_paths[i] + filename;
   }
 
   std::shared_ptr<kore::Mesh> pNewMesh =

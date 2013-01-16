@@ -20,7 +20,7 @@
     <ClInclude Include="..\include\core\meshloader.h" />
     <ClInclude Include="..\include\core\meshrendercomponent.h" />
     <ClInclude Include="..\include\core\rendermanager.h" />
-    <ClInclude Include="..\include\core\ressourcemanager.h" />
+    <ClInclude Include="..\include\core\resourcemanager.h" />
     <ClInclude Include="..\include\core\scenemanager.h" />
     <ClInclude Include="..\include\core\scenenode.h" />
     <ClInclude Include="..\include\core\scenenodecomponent.h" />
@@ -35,7 +35,7 @@
     <ClCompile Include="..\src\core\mesh.cpp" />
     <ClCompile Include="..\src\core\meshloader.cpp" />
     <ClCompile Include="..\src\core\rendermanager.cpp" />
-    <ClCompile Include="..\src\core\ressourcemanager.cpp" />
+    <ClCompile Include="..\src\core\resourcemanager.cpp" />
     <ClCompile Include="..\src\core\scenemanager.cpp" />
     <ClCompile Include="..\src\core\scenenode.cpp" />
     <ClCompile Include="..\src\core\shader.cpp" />

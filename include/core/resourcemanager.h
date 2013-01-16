@@ -17,8 +17,8 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INCLUDE_CORE_RESSOURCEMANAGER_H_
-#define INCLUDE_CORE_RESSOURCEMANAGER_H_
+#ifndef INCLUDE_CORE_RESOURCEMANAGER_H_
+#define INCLUDE_CORE_RESOURCEMANAGER_H_
 
 #include <vector>
 #include <string>
@@ -28,18 +28,18 @@
 
 
 namespace kore {
-  class RessourceManager {
+  class ResourceManager {
   public:
-    static RessourceManager *getInstance(void);
+    static ResourceManager *getInstance(void);
     bool addPath(const std::string& path);
     std::shared_ptr<kore::Mesh> loadMesh(const std::string& filename);
   private:
-    RessourceManager(void);
-    virtual ~RessourceManager(void);
+    ResourceManager(void);
+    virtual ~ResourceManager(void);
 
-    std::vector<std::string> _ressource_paths;
+    std::vector<std::string> _resource_paths;
     std::vector<std::shared_ptr<Mesh>> _meshes;
     std::vector<std::shared_ptr<Shader>> _shader;
   };
 };
-#endif  // INCLUDE_CORE_RESSOURCEMANAGER_H_
+#endif  // INCLUDE_CORE_RESOURCEMANAGER_H_

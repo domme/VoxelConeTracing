@@ -26,7 +26,7 @@
 #include "core/mesh.h"
 #include "core/meshrendercomponent.h"
 #include "core/rendermanager.h"
-#include "core/ressourcemanager.h"
+#include "core/resourcemanager.h"
 #include "core/scenemanager.h"
 #include "core/scenenode.h"
 #include "core/scenenodecomponent.h"
