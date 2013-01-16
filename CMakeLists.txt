@@ -6,6 +6,7 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 
 file(GLOB_RECURSE SOURCES src/*.cpp)
 add_library(kore ${SOURCES})
+include_directories(include ext/include)
 
 set(IGNORE "-build/include")
 
