@@ -76,7 +76,7 @@ kore::MeshLoader::loadMesh(const std::string& szMeshPath) {
     att_Pos.data = pVertexPosData;
     pMesh->_attributes.push_back(att_Pos);
 
-    pMesh->_numVertices = pAimesh->mNumVertices;
+    pMesh->_numVertices = pAimesh->mNumVertices / 3;
 
     return pMesh;
 }

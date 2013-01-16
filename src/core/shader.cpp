@@ -157,3 +157,7 @@ GLuint kore::Shader::getUniformLocation(const std::string &name) {
 void kore::Shader::applyShader() {
     glUseProgram(_shaderID);
 }
+
+GLuint kore::Shader::getProgramLocation() {
+    return _shaderID;
+}

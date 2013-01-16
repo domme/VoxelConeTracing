@@ -46,6 +46,7 @@ namespace kore {
     bool initShader(void);
     GLuint getAttributeLocation(const std::string &name);
     GLuint getUniformLocation(const std::string &name);
+    GLuint getProgramLocation();
     void   applyShader();
 
   private:
