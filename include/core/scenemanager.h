@@ -20,16 +20,19 @@
 #ifndef INCLUDE_CORE_SCENEMANAGER_H_
 #define INCLUDE_CORE_SCENEMANAGER_H_
 
-#include "./scenenode.h"
+#include "core/scenenode.h"
+#include "core/common.h"
 
 namespace kore {
   class SceneManager {
   public:
     static SceneManager *getInstance(void);
+    uint64 createID(void);
   private:
     SceneManager(void);
     virtual ~SceneManager(void);
     SceneNode* _root;
+    uint64 _idcount;
   };
 };
 #endif  // INCLUDE_CORE_SCENEMANAGER_H_

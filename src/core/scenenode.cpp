@@ -17,11 +17,20 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "core/common.h"
 #include "core/scenenode.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/matrix_inverse.hpp>
+#include "core/common.h"
+#include "core/scenemanager.h"
 
 kore::SceneNode::SceneNode(void) {
+  _id = kore::SceneManager::getInstance()->createID();
   _parent = NULL;
+  _dirty = true;
+  _transform.global = glm::mat4(1.0f);
+  _transform.local = glm::mat4(1.0f);
+  _children.clear();
 }
 
 kore::SceneNode::~SceneNode(void) {
@@ -35,6 +44,16 @@ void kore::SceneNode::setParent(SceneNode* parent) {
   _parent = parent;
 }
 
-int64_t kore::SceneNode::getID(void) {
+uint64 kore::SceneNode::getID(void) {
   return _id;
+}
+
+void kore::SceneNode::translate(const glm::vec3& dir) {
+  _transform.local = glm::translate(_transform.local, dir);
+}
+
+void kore::SceneNode::rotate(const GLfloat& angle, const glm::vec3& axis){
+}
+
+void kore::SceneNode::scale(const glm::vec3& dim){
 }

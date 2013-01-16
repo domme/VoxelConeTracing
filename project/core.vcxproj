@@ -26,6 +26,7 @@
     <ClInclude Include="..\include\core\scenenodecomponent.h" />
     <ClInclude Include="..\include\core\shader.h" />
     <ClInclude Include="..\include\core\stdafx.h" />
+    <ClInclude Include="..\include\core\transform.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\core\camera.cpp" />

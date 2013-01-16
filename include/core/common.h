@@ -37,7 +37,7 @@
 #include "core/log.h"
 
 // Typedefs:
-typedef unsigned char uint8;
+typedef uint64_t uint64;
 typedef glm::half float16;
 typedef double float64;
 

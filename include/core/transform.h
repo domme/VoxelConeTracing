@@ -1,5 +1,5 @@
 /*
-  Copyright ï¿½ 2012 The KoRE Project
+  Copyright © 2012 The KoRE Project
 
   This file is part of KoRE.
 
@@ -17,21 +17,17 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "core/scenemanager.h"
+#ifndef INCLUDE_CORE_TRANSFORM_H_
+#define INCLUDE_CORE_TRANSFORM_H_
 
-kore::SceneManager* kore::SceneManager::getInstance(void) {
-  static kore::SceneManager theInstance;
-  return &theInstance;
-}
-
-kore::SceneManager::SceneManager(void) {
-  _root = new kore::SceneNode();
-  _idcount = 0;
-}
-
-kore::SceneManager::~SceneManager(void) {
-}
-
-uint64 kore::SceneManager::createID(void) {
-  return _idcount++;
-}
+#include <glm/glm.hpp>
+namespace kore {
+  class Transform {
+  public:
+    Transform(void) {}
+    virtual ~Transform(void) {}
+    glm::mat4 global;
+    glm::mat4 local;
+  };
+};
+#endif  // INCLUDE_CORE_TRANSFORM_H_

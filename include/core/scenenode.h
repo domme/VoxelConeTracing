@@ -21,21 +21,28 @@
 #define INCLUDE_CORE_SCENENODE_H_
 
 #include <vector>
-#include "./common.h"
-#include "./scenenodecomponent.h"
+#include "core/common.h"
+#include "core/scenenodecomponent.h"
+#include "core/transform.h"
 
 namespace kore {
   class SceneNode {
   public:
     SceneNode(void);
-  virtual ~SceneNode(void);
-  SceneNode* getParent(void);
-  void setParent(SceneNode* parent);
-  int64_t getID(void);
+    virtual ~SceneNode(void);
+    SceneNode* getParent(void);
+    void setParent(SceneNode* parent);
+    uint64 getID(void);
+
+    void translate(const glm::vec3& dir);
+    void rotate(const GLfloat& angle, const glm::vec3& axis);
+    void scale(const glm::vec3& dim);
   private:
-    int64_t _id;
+    uint64 _id;
     SceneNode* _parent;
     std::vector<SceneNode*> _children;
+    Transform _transform;
+    bool _dirty;  // if node has to be updated;
   };
 };
 #endif  // INCLUDE_CORE_SCENENODE_H_
