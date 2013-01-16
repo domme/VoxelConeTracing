@@ -57,6 +57,9 @@
     <ClInclude Include="..\include\core\meshloader.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\core\camera.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\core\log.cpp">
@@ -87,6 +90,9 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="..\src\core\datatypes.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\core\camera.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>

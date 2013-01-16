@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\include\core\camera.h" />
     <ClInclude Include="..\include\core\common.h" />
     <ClInclude Include="..\include\core\datatypes.h" />
     <ClInclude Include="..\include\core\kore.h" />
@@ -27,6 +28,7 @@
     <ClInclude Include="..\include\core\stdafx.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\core\camera.cpp" />
     <ClCompile Include="..\src\core\datatypes.cpp" />
     <ClCompile Include="..\src\core\log.cpp" />
     <ClCompile Include="..\src\core\mesh.cpp" />

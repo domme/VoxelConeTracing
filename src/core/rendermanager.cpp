@@ -52,3 +52,18 @@ void kore::RenderManager::renderMesh
     // shader->useShader();
     glDrawArrays(GL_TRIANGLES, 0, mesh->getNumVertices());
 }
+
+const glm::ivec2& kore::RenderManager::getRenderResolution() const {
+    return _renderResolution;
+}
+
+void kore::RenderManager::
+    setRenderResolution(const glm::ivec2& newResolution) {
+    _renderResolution = newResolution;
+    resolutionChanged();
+}
+
+void kore::RenderManager::resolutionChanged() {
+    // Update all resolution-dependant resources here
+    // (e.g. GBuffer-Textures...)
+}
