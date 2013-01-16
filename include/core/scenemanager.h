@@ -28,6 +28,7 @@ namespace kore {
   public:
     static SceneManager *getInstance(void);
     uint64 createID(void);
+    void update(void);
   private:
     SceneManager(void);
     virtual ~SceneManager(void);

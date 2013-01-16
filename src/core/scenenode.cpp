@@ -36,24 +36,53 @@ kore::SceneNode::SceneNode(void) {
 kore::SceneNode::~SceneNode(void) {
 }
 
-kore::SceneNode* kore::SceneNode::getParent(void) {
+const kore::SceneNode* kore::SceneNode::getParent(void) {
   return _parent;
+}
+
+const std::vector<kore::SceneNode*> kore::SceneNode::getChildren() {
+  return _children;
+}
+
+const uint64 kore::SceneNode::getID(void) {
+  return _id;
+}
+
+const kore::Transform* kore::SceneNode::getTransform(void) {
+  return &_transform;
 }
 
 void kore::SceneNode::setParent(SceneNode* parent) {
   _parent = parent;
 }
 
-uint64 kore::SceneNode::getID(void) {
-  return _id;
+const bool kore::SceneNode::needsUpdate(void) {
+  return _dirty;
+}
+
+void kore::SceneNode::update(void) {
+  if (needsUpdate()) {
+    if (_parent) {
+      _transform.global = _parent->getTransform()->global * _transform.local;
+    } else {
+      _transform.global = _transform.local;
+    }
+  }
+  for (unsigned int i; i<_children.size(); i++) {
+    _children[i]->update();
+  }
+  _dirty = false;
 }
 
 void kore::SceneNode::translate(const glm::vec3& dir) {
   _transform.local = glm::translate(_transform.local, dir);
+  _dirty = true;
 }
 
 void kore::SceneNode::rotate(const GLfloat& angle, const glm::vec3& axis) {
+  _dirty = true;
 }
 
 void kore::SceneNode::scale(const glm::vec3& dim) {
+  _dirty = true;
 }

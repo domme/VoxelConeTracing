@@ -30,9 +30,14 @@ namespace kore {
   public:
     SceneNode(void);
     virtual ~SceneNode(void);
-    SceneNode* getParent(void);
+    const SceneNode* getParent(void);
+    const std::vector<SceneNode*> getChildren();
+    const uint64 getID(void);
+    const Transform* getTransform(void);
     void setParent(SceneNode* parent);
-    uint64 getID(void);
+
+    const bool needsUpdate(void);
+    void update(void);
 
     void translate(const glm::vec3& dir);
     void rotate(const GLfloat& angle, const glm::vec3& axis);

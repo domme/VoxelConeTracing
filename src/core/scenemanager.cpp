@@ -25,8 +25,8 @@ kore::SceneManager* kore::SceneManager::getInstance(void) {
 }
 
 kore::SceneManager::SceneManager(void) {
-  _root = new kore::SceneNode();
   _idcount = 0;
+  _root = new kore::SceneNode();
 }
 
 kore::SceneManager::~SceneManager(void) {
@@ -34,4 +34,8 @@ kore::SceneManager::~SceneManager(void) {
 
 uint64 kore::SceneManager::createID(void) {
   return _idcount++;
+}
+
+void kore::SceneManager::update(void) {
+  _root->update();
 }
