@@ -68,7 +68,7 @@ void kore::SceneNode::update(void) {
       _transform.global = _transform.local;
     }
   }
-  for (unsigned int i; i<_children.size(); i++) {
+  for (unsigned int i = 0; i<_children.size(); i++) {
     _children[i]->update();
   }
   _dirty = false;
