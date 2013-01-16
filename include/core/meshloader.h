@@ -21,6 +21,7 @@
 #define INCLUDE_CORE_MESHLOADER_H_
 
 #include <string>
+#include <memory>
 
 #include "core/scenenode.h"
 #include "core/mesh.h"

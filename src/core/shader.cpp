@@ -148,6 +148,6 @@ GLuint kore::Shader::getAttributeLocation(const std::string &name) {
   return 0;
 }
 
-GLuint  kore::Shader::getUniformLocation(const std::string &name) {
+GLuint kore::Shader::getUniformLocation(const std::string &name) {
   return glGetUniformLocation(_shaderID, name.c_str());
 }

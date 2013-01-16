@@ -20,6 +20,8 @@
 #ifndef INCLUDE_CORE_RENDERMANAGER_H_
 #define INCLUDE_CORE_RENDERMANAGER_H_
 
+#include <memory>
+
 #include "core/Mesh.h"
 #include "core/Shader.h"
 

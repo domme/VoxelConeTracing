@@ -30,7 +30,7 @@
 #include <string>
 #include <ctime>
 
-#include "kore.h"
+#include "core/kore.h"
 
 int main(void) {
   int running = GL_TRUE;

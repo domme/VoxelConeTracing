@@ -22,6 +22,7 @@
 
 #include <vector>
 #include <string>
+#include <memory>
 #include "core/Mesh.h"
 #include "core/Shader.h"
 

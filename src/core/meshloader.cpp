@@ -17,6 +17,7 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include <string>
+#include <memory>
 
 #include "core/meshloader.h"
 #include "core/log.h"
@@ -44,13 +45,13 @@ kore::MeshLoader::loadMesh(const std::string& szMeshPath) {
         Log::getInstance()->write("[ERROR] Mesh-file could not be loaded: %s",
                                   szMeshPath.c_str());
 
-        return std::shared_ptr<Mesh>(NULL);
+        return std::shared_ptr<Mesh>();
     }
 
     if (!pAiScene->HasMeshes()) {
         Log::getInstance()->write("[ERROR] Mesh-file does not"
                                   "contain any meshes: %s", szMeshPath.c_str());
-        return std::shared_ptr<Mesh>(NULL);
+        return std::shared_ptr<Mesh>();
     }
 
     if (pAiScene->mNumMeshes > 1) {
