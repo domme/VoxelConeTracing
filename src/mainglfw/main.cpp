@@ -81,12 +81,12 @@ int main(void) {
 
   // initialize
   // add ressource paths
-  kore::RessourceManager::getInstance()->addPath("./assets/shader/");
-  kore::RessourceManager::getInstance()->addPath("./assets/meshes/");
+  kore::ResourceManager::getInstance()->addPath("./assets/shader/");
+  kore::ResourceManager::getInstance()->addPath("./assets/meshes/");
 
   // load ressources
 
-  std::shared_ptr<kore::Mesh> pTestMesh = kore::RessourceManager::getInstance()->loadMesh("./assets/meshes/cube.dae");
+  std::shared_ptr<kore::Mesh> pTestMesh = kore::ResourceManager::getInstance()->loadMesh("./assets/meshes/cube.dae");
   std::shared_ptr<kore::Shader> pSimpleShader(new kore::Shader);
   pSimpleShader->loadShader( "./assets/shader/simple.vp", GL_VERTEX_SHADER);
   pSimpleShader->loadShader( "./assets/shader/simple.fp", GL_FRAGMENT_SHADER);
