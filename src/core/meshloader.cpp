@@ -50,7 +50,8 @@ kore::MeshLoader::loadMesh(const std::string& szMeshPath) {
 
     if (!pAiScene->HasMeshes()) {
         Log::getInstance()->write("[ERROR] Mesh-file does not"
-                                  "contain any meshes: %s", szMeshPath.c_str());
+                                  "contain any meshes: %s",
+                                  szMeshPath.c_str());
         return std::shared_ptr<Mesh>();
     }
 
@@ -60,23 +61,172 @@ kore::MeshLoader::loadMesh(const std::string& szMeshPath) {
                                   szMeshPath.c_str());
     }
 
-
     std::shared_ptr<kore::Mesh> pMesh(new kore::Mesh);
+    aiMesh* pAiMesh = pAiScene->mMeshes[ 0 ];
+    pMesh->_numVertices = pAiMesh->mNumVertices / 3;
 
-    aiMesh* pAimesh = pAiScene->mMeshes[ 0 ];
-    void* pVertexPosData = malloc(pAimesh->mNumVertices * sizeof(glm::vec3));
-    memcpy(pVertexPosData, pAimesh->mVertices,
-            pAimesh->mNumVertices * sizeof(glm::vec3));
+    pMesh->_name = pAiMesh->mName.C_Str();
 
-    kore::Attribute att_Pos;
-    att_Pos.name = "position";
-    att_Pos.numValues = pAimesh->mNumVertices;
-    att_Pos.type = GL_FLOAT_VEC3;
-    att_Pos.size = kore::DatatypeUtil::getSizeFromGLdatatype(att_Pos.type);
-    att_Pos.data = pVertexPosData;
-    pMesh->_attributes.push_back(att_Pos);
+    if (pAiMesh->HasPositions()) {
+        loadVertexPositions(pAiMesh, pMesh);
+    }
 
-    pMesh->_numVertices = pAimesh->mNumVertices / 3;
+    if (pAiMesh->HasNormals()) {
+        loadVertexNormals(pAiMesh, pMesh);
+    }
+
+    if (pAiMesh->HasTangentsAndBitangents()) {
+        loadVertexTangents(pAiMesh, pMesh);
+    }
+
+    // Load all vertex color sets
+    unsigned int iColorSet = 0;
+    while (pAiMesh->HasVertexColors(iColorSet++)) {
+        loadVertexColors(pAiMesh, pMesh, iColorSet);
+    }
+
+    // Load all texture coord-sets
+    unsigned int iUVset = 0;
+    while (pAiMesh->HasTextureCoords(iUVset++)) {
+        loadVertexTextureCoords(pAiMesh, pMesh, iUVset);
+    }
+
+    if (pAiMesh->HasFaces()) {
+        loadFaceIndices(pAiMesh, pMesh);
+    }
 
     return pMesh;
+}
+
+void kore::MeshLoader::
+    loadVertexPositions(const aiMesh* pAiMesh,
+                         std::shared_ptr<kore::Mesh>& pMesh ) {
+    unsigned int allocSize = pAiMesh->mNumVertices * 3 * 4;
+    void* pVertexData = malloc(allocSize);
+    memcpy(pVertexData, pAiMesh->mVertices,
+           allocSize);
+
+    kore::Attribute att;
+    att.name = "position";
+    att.numValues = pAiMesh->mNumVertices;
+    att.type = GL_FLOAT_VEC3;
+    att.componentType = GL_FLOAT;
+    att.byteSize = kore::DatatypeUtil::getSizeFromGLdatatype(att.type);
+    att.data = pVertexData;
+    pMesh->_attributes.push_back(att);
+}
+
+void kore::MeshLoader::
+    loadVertexNormals(const aiMesh* pAiMesh,
+                       std::shared_ptr<kore::Mesh>& pMesh ) {
+    unsigned int allocSize = pAiMesh->mNumVertices * 3 * 4;
+    void* pVertexData = malloc(allocSize);
+    memcpy(pVertexData, pAiMesh->mNormals,
+           allocSize);
+
+    kore::Attribute att;
+    att.name = "normal";
+    att.numValues = pAiMesh->mNumVertices;
+    att.type = GL_FLOAT_VEC3;
+    att.componentType = GL_FLOAT;
+    att.byteSize = kore::DatatypeUtil::getSizeFromGLdatatype(att.type);
+    att.data = pVertexData;
+    pMesh->_attributes.push_back(att);
+}
+
+void kore::MeshLoader::
+    loadVertexTangents(const aiMesh* pAiMesh,
+                        std::shared_ptr<kore::Mesh>& pMesh ) {
+    unsigned int allocSize = pAiMesh->mNumVertices * 3 * 4;
+    void* pVertexData = malloc(allocSize);
+    memcpy(pVertexData, pAiMesh->mTangents,
+           allocSize);
+
+    kore::Attribute att;
+    att.name = "tangent";
+    att.numValues = pAiMesh->mNumVertices;
+    att.type = GL_FLOAT_VEC3;
+    att.componentType = GL_FLOAT;
+    att.byteSize = kore::DatatypeUtil::getSizeFromGLdatatype(att.type);
+    att.data = pVertexData;
+    pMesh->_attributes.push_back(att);
+}
+
+void kore::MeshLoader::
+    loadFaceIndices(const aiMesh* pAiMesh,
+                     std::shared_ptr<kore::Mesh>& pMesh ) {
+    for (unsigned int iFace = 0; iFace < pAiMesh->mNumFaces; ++iFace) {
+        aiFace& rAiFace = pAiMesh->mFaces[iFace];
+        for (unsigned int iIndex = 0; iIndex < rAiFace.mNumIndices; ++iIndex) {
+            pMesh->_indices.push_back(rAiFace.mIndices[iIndex]);
+        }
+    }
+}
+
+void kore::MeshLoader::
+    loadVertexColors(const aiMesh* pAiMesh,
+                      std::shared_ptr<kore::Mesh>& pMesh,
+                      unsigned int iColorSet) {
+    unsigned int allocSize =
+        pAiMesh->mNumVertices * 4 * pAiMesh->GetNumColorChannels();
+    void* pVertexData = malloc(allocSize);
+    memcpy(pVertexData, pAiMesh->mColors[iColorSet], allocSize);
+
+    kore::Attribute att;
+    char szNameBuf[20];
+    sprintf(szNameBuf, "Color%i", iColorSet);
+    att.name = std::string(&szNameBuf[0]);
+    att.numValues = pAiMesh->mNumVertices;
+
+    if (pAiMesh->GetNumColorChannels() == 2) {
+        att.type = GL_FLOAT_VEC2;
+    } else if (pAiMesh->GetNumColorChannels() == 3) {
+        att.type = GL_FLOAT_VEC3;
+    } else if (pAiMesh->GetNumColorChannels() == 4) {
+        att.type = GL_FLOAT_VEC4;
+    } else {
+        Log::getInstance()->write("[WARNING] Mesh %s has an"
+                                  "unsupported number of color channels: %i",
+                                  pMesh->getName().c_str());
+        free(pVertexData);
+        return;
+    }
+
+    att.componentType = GL_FLOAT;
+    att.byteSize = kore::DatatypeUtil::getSizeFromGLdatatype(att.type);
+    att.data = pVertexData;
+    pMesh->_attributes.push_back(att);
+}
+
+void kore::MeshLoader::
+    loadVertexTextureCoords(const aiMesh* pAiMesh,
+                             std::shared_ptr<kore::Mesh>& pMesh,
+                             unsigned int iUVset) {
+    unsigned int allocSize =
+        pAiMesh->mNumVertices * 4 * pAiMesh->GetNumUVChannels();
+    void* pVertexData = malloc(allocSize);
+    memcpy(pVertexData, pAiMesh->mTextureCoords[iUVset], allocSize);
+
+    kore::Attribute att;
+    char szNameBuf[20];
+    sprintf(szNameBuf, "UV%i", iUVset);
+    att.name = std::string(&szNameBuf[0]);
+    att.numValues = pAiMesh->mNumVertices;
+
+    if (pAiMesh->GetNumUVChannels() == 2) {
+        att.type = GL_FLOAT_VEC2;
+    } else if (pAiMesh->GetNumUVChannels() == 3) {
+        att.type = GL_FLOAT_VEC3;
+    } else {
+        Log::getInstance()->write("[WARNING] Mesh %s has an unsupported"
+                                  "number of UV channels: %i",
+                                  pMesh->getName().c_str());
+        free(pVertexData);
+        return;
+    }
+
+    att.componentType = GL_FLOAT;
+    att.byteSize = kore::DatatypeUtil::getSizeFromGLdatatype(att.type);
+    att.data = pVertexData;
+    pMesh->_attributes.push_back(att);
 }

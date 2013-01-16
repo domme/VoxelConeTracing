@@ -27,9 +27,10 @@
 namespace kore {
   struct Attribute {
       std::string name;
-      GLenum type;
+      GLenum type;              // e.g. GL_VEC3
+      GLenum componentType;     // e.g. GL_FLOAT
       int numValues;
-      int size;  // size in bytes of one attribute
+      int byteSize;  // size in bytes of one attribute
       void* data;
   };
   class Mesh {
@@ -41,10 +42,18 @@ namespace kore {
     bool loadFromFile(const std::string& file);
     int getNumAttributes(void);
     const std::vector<Attribute>& getAttributes() const;
+    const std::vector<unsigned int>& getIndices() const;
     const unsigned int getNumVertices() const;
+    const bool hasIndices() const;
+    const GLenum getPrimitiveType() const;
+    const std::string& getName() const;
+
   private:
-    std::vector<Attribute> _attributes;
-    unsigned int _numVertices;
+    std::string                     _name;
+    std::vector<Attribute>          _attributes;
+    std::vector<unsigned int>       _indices;
+    unsigned int                    _numVertices;
+    GLenum                          _primitiveType;
   };
 };
 #endif  // INCLUDE_CORE_MESH_H_

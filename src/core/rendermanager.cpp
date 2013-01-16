@@ -35,8 +35,8 @@ kore::RenderManager::~RenderManager(void) {
 
 void kore::RenderManager::renderMesh
 (const std::shared_ptr<Mesh>& mesh,
- const std::shared_ptr<Shader>& shader,
- const std::shared_ptr<Camera>& camera ) {
+const std::shared_ptr<Shader>& shader,
+const std::shared_ptr<Camera>& camera) {
     const std::vector<Attribute>& vAttributes = mesh->getAttributes();
 
     for (unsigned int i = 0; i < vAttributes.size(); ++i) {
@@ -53,12 +53,21 @@ void kore::RenderManager::renderMesh
 
     shader->applyShader();
     // Update uniforms
-    GLint iView = glGetUniformLocation(shader->getProgramLocation(), "view");
-    GLint iProj = glGetUniformLocation(shader->getProgramLocation(), "projection");
-    GLint iModel = glGetUniformLocation(shader->getProgramLocation(), "model");
+    GLint iView =
+        glGetUniformLocation(shader->getProgramLocation(), "view");
+
+    GLint iProj =
+        glGetUniformLocation(shader->getProgramLocation(), "projection");
+
+    GLint iModel =
+        glGetUniformLocation(shader->getProgramLocation(), "model");
+
     glUniformMatrix4fv(iView, 1, GL_FALSE, glm::value_ptr(camera->getView()));
-    glUniformMatrix4fv( iProj, 1, GL_FALSE, glm::value_ptr(camera->getProjection()));
-    glUniformMatrix4fv( iModel, 1, GL_FALSE, glm::value_ptr(glm::mat4(1.0f)));
+
+    glUniformMatrix4fv(iProj, 1, GL_FALSE,
+                        glm::value_ptr(camera->getProjection()));
+
+    glUniformMatrix4fv(iModel, 1, GL_FALSE, glm::value_ptr(glm::mat4(1.0f)));
 
     glDrawArrays(GL_QUADS, 0, mesh->getNumVertices());
 }

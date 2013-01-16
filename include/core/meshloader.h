@@ -20,12 +20,16 @@
 #ifndef INCLUDE_CORE_MESHLOADER_H_
 #define INCLUDE_CORE_MESHLOADER_H_
 
-#include <string>
+#include <assimp/mesh.h>
+#include <assimp/Importer.hpp>
+
 #include <memory>
+#include <string>
+
 
 #include "core/scenenode.h"
 #include "core/mesh.h"
-#include "assimp/Importer.hpp"
+
 
 namespace kore {
     class MeshLoader {
@@ -35,6 +39,25 @@ namespace kore {
             std::shared_ptr<Mesh> loadMesh(const std::string& szMeshPath);
         private:
            MeshLoader();
+            void loadVertexPositions(const aiMesh* pAiMesh,
+                                    std::shared_ptr<kore::Mesh>& pMesh);
+
+            void loadVertexNormals(const aiMesh* pAiMesh,
+                                    std::shared_ptr<kore::Mesh>& pMesh);
+
+            void loadVertexTangents(const aiMesh* pAiMesh,
+                                    std::shared_ptr<kore::Mesh>& pMesh);
+
+            void loadFaceIndices(const aiMesh* pAiMesh,
+                                std::shared_ptr<kore::Mesh>& pMesh);
+
+            void loadVertexTextureCoords(const aiMesh* pAiMesh,
+                                        std::shared_ptr<kore::Mesh>& pMesh,
+                                        const unsigned int iUVset);
+
+            void loadVertexColors(const aiMesh* pAiMesh,
+                                  std::shared_ptr<kore::Mesh>& pMesh,
+                                  const unsigned int iColorSet);
 
            Assimp::Importer _aiImporter;
     };
