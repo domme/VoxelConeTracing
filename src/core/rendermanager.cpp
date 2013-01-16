@@ -42,7 +42,7 @@ const std::shared_ptr<Camera>& camera) {
     for (unsigned int i = 0; i < vAttributes.size(); ++i) {
         const Attribute& att = vAttributes[i];
 
-        // Ger shader's attribute index
+        // Get shader's attribute index
         GLuint uAttLoc = 0;
 
         glEnableVertexAttribArray(uAttLoc);
@@ -69,7 +69,10 @@ const std::shared_ptr<Camera>& camera) {
 
     glUniformMatrix4fv(iModel, 1, GL_FALSE, glm::value_ptr(glm::mat4(1.0f)));
 
-    glDrawArrays(GL_QUADS, 0, mesh->getNumVertices());
+if (mesh->hasIndices()) {
+    glDrawElements(mesh->getPrimitiveType(), mesh->getIndices().size(), GL_UNSIGNED_INT, &mesh->getIndices()[0] );
+} else
+    glDrawArrays(mesh->getPrimitiveType(), 0, mesh->getNumVertices());
 }
 
 const glm::ivec2& kore::RenderManager::getRenderResolution() const {

@@ -65,6 +65,9 @@ kore::MeshLoader::loadMesh(const std::string& szMeshPath) {
     aiMesh* pAiMesh = pAiScene->mMeshes[ 0 ];
     pMesh->_numVertices = pAiMesh->mNumVertices / 3;
 
+    // TODO(dlazarek): Make more flexible here:
+    pMesh->_primitiveType = GL_TRIANGLES;
+
     pMesh->_name = pAiMesh->mName.C_Str();
 
     if (pAiMesh->HasPositions()) {
