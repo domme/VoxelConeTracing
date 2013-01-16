@@ -26,10 +26,11 @@
 
 namespace kore {
   struct Attribute {
-    std::string name;
-    InputType type;
-    int size;
-    void* data;
+      std::string name;
+      GLenum type;
+      int numValues;
+      int size;  // size in bytes of one attribute
+      void* data;
   };
   class Mesh {
     friend class MeshLoader;
@@ -39,12 +40,11 @@ namespace kore {
     virtual ~Mesh(void);
     bool loadFromFile(const std::string& file);
     int getNumAttributes(void);
-    std::string getAttributeName(int attribute_index);
-    InputType getAttributeType(int attribute_index);
-    int getAttributeSize(int attribute_index);
-    void* getAttributeData(int attribute_index);
+    const std::vector<Attribute>& getAttributes() const;
+    const unsigned int getNumVertices() const;
   private:
     std::vector<Attribute> _attributes;
+    unsigned int _numVertices;
   };
 };
 #endif  // INCLUDE_CORE_MESH_H_

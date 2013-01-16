@@ -13,8 +13,4 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="..\assets\shader\simple.fp" />
-    <None Include="..\assets\shader\simple.vp" />
-  </ItemGroup>
 </Project>

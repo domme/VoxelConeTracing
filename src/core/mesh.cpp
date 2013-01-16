@@ -18,13 +18,15 @@
 */
 
 #include <string>
+#include <vector>
 
 #include "core/mesh.h"
 #include "core/ressourcemanager.h"
 #include "core/datatypes.h"
 
 
-kore::Mesh::Mesh(void) {
+kore::Mesh::Mesh(void)
+    : _numVertices(0) {
 }
 
 kore::Mesh::~Mesh(void) {
@@ -45,18 +47,10 @@ int kore::Mesh::getNumAttributes(void) {
   return _attributes.size();
 }
 
-std::string kore::Mesh::getAttributeName(int attribute_index) {
-  return _attributes[attribute_index].name;
+const std::vector<kore::Attribute>& kore::Mesh::getAttributes() const {
+    return _attributes;
 }
 
-kore::InputType kore::Mesh::getAttributeType(int attribute_index) {
-  return _attributes[attribute_index].type;
-}
-
-int kore::Mesh::getAttributeSize(int attribute_index) {
-  return _attributes[attribute_index].size;
-}
-
-void* kore::Mesh::getAttributeData(int attribute_index) {
-  return _attributes[attribute_index].data;
+const unsigned int kore::Mesh::getNumVertices() const {
+    return _numVertices;
 }

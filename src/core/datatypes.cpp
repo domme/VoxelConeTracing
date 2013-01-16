@@ -16,22 +16,23 @@
   You should have received a copy of the GNU General Public License
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include "core/datatypes.h"
 
-#ifndef INCLUDE_CORE_RENDERMANAGER_H_
-#define INCLUDE_CORE_RENDERMANAGER_H_
-
-#include "core/Mesh.h"
-#include "core/Shader.h"
-
-namespace kore {
-  class RenderManager {
-  public:
-    static RenderManager *getInstance(void);
-    void renderMesh(const std::shared_ptr<Mesh>& mesh,
-                    const std::shared_ptr<Shader>& shader);
-  private:
-    RenderManager(void);
-    virtual ~RenderManager(void);
-  };
-};
-#endif  // INCLUDE_CORE_RENDERMANAGER_H_
+unsigned int kore::DatatypeUtil::getSizeFromGLdatatype(GLenum datatype) {
+    switch (datatype) {
+        case GL_FLOAT_VEC2:
+            return sizeof(glm::vec2);
+            break;
+        case GL_FLOAT_VEC3:
+            return sizeof(glm::vec3);
+            break;
+        case GL_FLOAT_VEC4:
+            return sizeof(glm::vec4);
+            break;
+        default:
+            Log::getInstance()->
+                write("[ERROR] No size for GL-datatype implemented!");
+                return 0;
+            break;
+        }
+}

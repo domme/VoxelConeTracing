@@ -35,14 +35,14 @@ namespace kore {
   };
 
   struct ShaderInput {
-    InputType type;
-    std::string name;
-    GLuint location;
+      GLuint type;
+      std::string name;
+      GLuint location;
   };
 
   struct ShaderOutput {
-    OutputType output;
-    std::string name;
+      OutputType output;
+      std::string name;
   };
 
   class Shader {

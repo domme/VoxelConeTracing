@@ -56,10 +56,10 @@ void kore::Log::write(const char* format, ...) {
   va_list args;
   FILE* pfile = fopen(_logname.c_str(), "a");
   if (pfile!= 0) {
-    va_start(args, format);
-    vfprintf(pfile, format, args);
-    va_end(args);
-    fclose(pfile);
+      va_start(args, format);
+      vfprintf(pfile, format, args);
+      va_end(args);
+      fclose(pfile);
   }
 
 #if defined WIN32 || defined WIN64

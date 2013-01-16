@@ -41,18 +41,22 @@ kore::MeshLoader::loadMesh(const std::string& szMeshPath) {
         aiProcess_JoinIdenticalVertices | aiProcess_Triangulate);
 
     if (!pAiScene) {
-        Log::getInstance()->write("[ERROR] Mesh-file could not be loaded: %s", szMeshPath.c_str());
+        Log::getInstance()->write("[ERROR] Mesh-file could not be loaded: %s",
+                                  szMeshPath.c_str());
 
         return std::shared_ptr<Mesh>(NULL);
     }
 
     if (!pAiScene->HasMeshes()) {
-        Log::getInstance()->write("[ERROR] Mesh-file does not contain any meshes: %s", szMeshPath.c_str());
+        Log::getInstance()->write("[ERROR] Mesh-file does not"
+                                  "contain any meshes: %s", szMeshPath.c_str());
         return std::shared_ptr<Mesh>(NULL);
     }
 
     if (pAiScene->mNumMeshes > 1) {
-        Log::getInstance()->write("[WARNING] Mesh-file contains more than one mesh but it is loaded as a single mesh. %s", szMeshPath.c_str());
+        Log::getInstance()->write("[WARNING] Mesh-file contains more than one"
+                                  "mesh but it is loaded as a single mesh. %s",
+                                  szMeshPath.c_str());
     }
 
 
@@ -60,15 +64,18 @@ kore::MeshLoader::loadMesh(const std::string& szMeshPath) {
 
     aiMesh* pAimesh = pAiScene->mMeshes[ 0 ];
     void* pVertexPosData = malloc(pAimesh->mNumVertices * sizeof(glm::vec3));
-    memcpy(pVertexPosData, pAimesh->mVertices, pAimesh->mNumVertices * sizeof(glm::vec3));
+    memcpy(pVertexPosData, pAimesh->mVertices,
+            pAimesh->mNumVertices * sizeof(glm::vec3));
 
     kore::Attribute att_Pos;
     att_Pos.name = "position";
-    att_Pos.size = pAimesh->mNumVertices;
-    att_Pos.type = KORE_SHADER_INPUT_VEC3;
+    att_Pos.numValues = pAimesh->mNumVertices;
+    att_Pos.type = GL_FLOAT_VEC3;
+    att_Pos.size = kore::DatatypeUtil::getSizeFromGLdatatype(att_Pos.type);
     att_Pos.data = pVertexPosData;
-
     pMesh->_attributes.push_back(att_Pos);
+
+    pMesh->_numVertices = pAimesh->mNumVertices;
 
     return pMesh;
 }
