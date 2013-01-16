@@ -49,7 +49,7 @@ void kore::RenderManager::renderMesh
                               att.type, att.data);
     }
 
-    // shader->useShader();
+    shader->applyShader();
     glDrawArrays(GL_TRIANGLES, 0, mesh->getNumVertices());
 }
 

@@ -21,7 +21,9 @@
 #include "core/shader.h"
 
 
-kore::Shader::Shader(void) {
+kore::Shader::Shader(void)
+: _name(""),
+_shaderID(GLUINT_HANDLE_INVALID) {
   _attributes.clear();
   _uniforms.clear();
   _name.clear();
@@ -150,4 +152,8 @@ GLuint kore::Shader::getAttributeLocation(const std::string &name) {
 
 GLuint kore::Shader::getUniformLocation(const std::string &name) {
   return glGetUniformLocation(_shaderID, name.c_str());
+}
+
+void kore::Shader::applyShader() {
+    glUseProgram(_shaderID);
 }
