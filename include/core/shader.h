@@ -26,39 +26,39 @@
 #include "core/common.h"
 
 namespace kore {
-  enum ShaderType {
-    KORE_SHADER_VERTEX,
-    KORE_SHADER_GEOMETRY,
-    KORE_SHADER_FRAGMENT,
-    KORE_SHADER_TESSELATION_CONTROL,
-    KORE_SHADER_TESSELATION_EVALUATION
-  };
 
   struct ShaderInput {
-      GLuint type;
-      std::string name;
-      GLuint location;
+    GLuint type;
+    std::string name;
+    GLuint location;
   };
 
   struct ShaderOutput {
-      OutputType output;
-      std::string name;
+    GLuint type;
+    std::string name;
   };
 
   class Shader {
   public:
     Shader(void);
     virtual ~Shader(void);
-    bool loadShader(const std::string& file, ShaderType type);
+    bool loadShader(const std::string& file, GLenum shadertype);
+    bool initShader(void);
+    GLuint getAttributeLocation(const std::string &name);
+    GLuint getUniformLocation(const std::string &name);
 
   private:
-    std::vector<ShaderInput> _input;
+    std::string _name;
+    std::vector<ShaderInput> _attributes;
+    std::vector<ShaderInput> _uniforms;
 
     std::string _vertex_prog;
     std::string _geometry_prog;
     std::string _fragment_prog;
     std::string _tess_ctrl;
     std::string _tess_eval;
+
+    GLuint _shaderID;
   };
 };
 #endif  // INCLUDE_CORE_SHADER_H_

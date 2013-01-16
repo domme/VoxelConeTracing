@@ -22,33 +22,35 @@
 
 
 kore::Shader::Shader(void) {
-  _input.clear();
-  _vertex_prog = "undefined";
-  _geometry_prog = "undefined";
-  _fragment_prog = "undefined";
-  _tess_ctrl = "undefined";
-  _tess_eval = "undefined";
+  _attributes.clear();
+  _uniforms.clear();
+  _name.clear();
+  _vertex_prog.clear();
+  _geometry_prog.clear();
+  _fragment_prog.clear();
+  _tess_ctrl.clear();
+  _tess_eval.clear();
 }
 
 kore::Shader::~Shader(void) {
 }
 
-bool kore::Shader::loadShader(const std::string& file, ShaderType type) {
+bool kore::Shader::loadShader(const std::string& file, GLenum shadertype) {
   std::string* prog;
-  switch (type) {
-  case KORE_SHADER_VERTEX:
+  switch (shadertype) {
+  case GL_VERTEX_SHADER:
     prog = &_vertex_prog;
     break;
-  case KORE_SHADER_GEOMETRY:
+  case GL_GEOMETRY_SHADER:
     prog = &_geometry_prog;
     break;
-  case KORE_SHADER_FRAGMENT:
+  case GL_FRAGMENT_SHADER:
     prog = &_fragment_prog;
     break;
-  case KORE_SHADER_TESSELATION_CONTROL:
+  case GL_TESS_CONTROL_SHADER:
     prog = &_tess_ctrl;
     break;
-  case KORE_SHADER_TESSELATION_EVALUATION:
+  case GL_TESS_EVALUATION_SHADER:
     prog = &_tess_eval;
     break;
   default:
@@ -70,4 +72,82 @@ bool kore::Shader::loadShader(const std::string& file, ShaderType type) {
   }
   fclose(code_file);
   return true;
+}
+
+bool kore::Shader::initShader(void) {
+  GLuint vert_sh, geom_sh, frag_sh, tess_ctrl, tess_eval;
+  _shaderID = glCreateProgram();
+  const char* tmp_prog;
+  if (!_vertex_prog.empty()) {
+    tmp_prog = _vertex_prog.c_str();
+    vert_sh = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vert_sh, 1, &tmp_prog, 0);
+    glCompileShader(vert_sh);
+    glAttachShader(_shaderID, vert_sh);
+    _vertex_prog.clear();
+  }
+  if (!_geometry_prog.empty()) {
+    tmp_prog = _geometry_prog.c_str();
+    geom_sh = glCreateShader(GL_GEOMETRY_SHADER);
+    glShaderSource(geom_sh, 1, &tmp_prog, 0);
+    glCompileShader(geom_sh);
+    glAttachShader(_shaderID, geom_sh);
+    _geometry_prog.clear()
+  }
+  if (!_fragment_prog.empty()) {
+    tmp_prog = _fragment_prog.c_str();
+    frag_sh = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(frag_sh, 1, &tmp_prog, 0);
+    glCompileShader(frag_sh);
+    glAttachShader(_shaderID, frag_sh);
+    _fragment_prog.clear();
+  }
+  if (!_tess_ctrl.empty()) {
+    tmp_prog = _tess_ctrl.c_str();
+    tess_ctrl = glCreateShader(GL_TESS_CONTROL_SHADER);
+    glShaderSource(tess_ctrl, 1, &tmp_prog, 0);
+    glCompileShader(tess_ctrl);
+    glAttachShader(_shaderID, tess_ctrl);
+    _tess_ctrl.clear();
+  }
+  if (!_tess_eval.empty()) {
+    tmp_prog = _tess_eval.c_str();
+    tess_eval = glCreateShader(GL_TESS_EVALUATION_SHADER);
+    glShaderSource(tess_eval, 1, &tmp_prog, 0);
+    glCompileShader(tess_eval);
+    glAttachShader(_shaderID, tess_eval);
+    _tess_eval.clear();
+  }
+
+  glLinkProgram(_shaderID);
+  GLint success;
+  glGetProgramiv(_shaderID, GL_LINK_STATUS, &success);
+
+  int infologLen = 0;
+  glGetProgramiv(_shaderID, GL_INFO_LOG_LENGTH, &infologLen);
+  if (infologLen > 1) {
+    GLchar * infoLog = new GLchar[infologLen];
+    if (infoLog == NULL) {
+      kore::Log::getInstance()->write(
+        "[ERROR] Could not allocate ShaderInfoLog buffer");
+    }
+    int charsWritten = 0;
+    glGetProgramInfoLog(_shaderID, infologLen, &charsWritten, infoLog);
+    std::string shaderlog = infoLog;
+    kore::Log::getInstance()->write(
+      "[DEBUG] Program Log %s\n", shaderlog.c_str());
+    free(infoLog);
+  } else {
+    kore::Log::getInstance()->write(
+      "[DEBUG] Program compiled\n");
+  }
+  return (success == GL_TRUE)?true:false;
+}
+
+GLuint kore::Shader::getAttributeLocation(const std::string &name) {
+  return 0;
+}
+
+GLuint getUniformLocation(const std::string &name) {
+  return glGetUniformLocation(_shaderID, name.c_str());
 }
