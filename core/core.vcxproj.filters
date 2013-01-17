@@ -60,6 +60,9 @@
     <ClInclude Include="include\core\transform.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\core\bindattributeop.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\camera.cpp">

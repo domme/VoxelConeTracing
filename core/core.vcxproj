@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\core\bindattributeop.h" />
     <ClInclude Include="include\core\camera.h" />
     <ClInclude Include="include\core\common.h" />
     <ClInclude Include="include\core\datatypes.h" />
