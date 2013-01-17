@@ -1,6 +1,4 @@
 *~
-Debug
-Release
 ipch
 cmake_install.cmake
 Makefile
@@ -12,5 +10,6 @@ KoRE_Log.txt
 *.suo
 *.sdf
 *.opensdf
-project/Debug
-project/Release
+core/obj
+core/lib
+mainglfw/obj
