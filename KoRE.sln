@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "core", "core\core.vcxproj", "{B851B68F-DA2D-4F44-8FE5-A400094F2C87}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mainglfw", "mainglfw\mainglfw.vcxproj", "{3A04ED36-76B5-44BA-B9F4-CF7D8E07D672}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B851B68F-DA2D-4F44-8FE5-A400094F2C87} = {B851B68F-DA2D-4F44-8FE5-A400094F2C87}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assets", "assets", "{478EF097-9C8E-442C-A614-3351D87CEDC6}"
 EndProject
