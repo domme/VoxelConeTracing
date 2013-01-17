@@ -19,6 +19,7 @@
     <ClInclude Include="..\include\core\mesh.h" />
     <ClInclude Include="..\include\core\meshloader.h" />
     <ClInclude Include="..\include\core\meshrendercomponent.h" />
+    <ClInclude Include="..\include\core\operation.h" />
     <ClInclude Include="..\include\core\rendermanager.h" />
     <ClInclude Include="..\include\core\resourcemanager.h" />
     <ClInclude Include="..\include\core\scenemanager.h" />

@@ -84,6 +84,9 @@
     <ClInclude Include="..\include\core\resourcemanager.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\core\operation.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Headerdateien">
