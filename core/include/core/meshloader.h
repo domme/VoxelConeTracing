@@ -36,7 +36,8 @@ namespace kore {
         public:
             static MeshLoader* getInstance();
             ~MeshLoader();
-            std::shared_ptr<Mesh> loadMesh(const std::string& szMeshPath);
+            std::shared_ptr<Mesh> loadMesh(const std::string& szMeshPath,
+                                           const bool bUseBuffers);
         private:
            MeshLoader();
             void loadVertexPositions(const aiMesh* pAiMesh,
