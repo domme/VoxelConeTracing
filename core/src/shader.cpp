@@ -161,3 +161,11 @@ void kore::Shader::applyShader() {
 GLuint kore::Shader::getProgramLocation() {
     return _shaderID;
 }
+
+const std::vector<kore::ShaderInput>& kore::Shader::getAttributes() const {
+    return _attributes;
+}
+
+const std::vector<kore::ShaderInput>& kore::Shader::getUniforms() const {
+    return _uniforms;
+}

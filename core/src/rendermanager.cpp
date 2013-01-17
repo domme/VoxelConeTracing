@@ -37,18 +37,24 @@ void kore::RenderManager::renderMesh
 (const std::shared_ptr<Mesh>& mesh,
 const std::shared_ptr<Shader>& shader,
 const std::shared_ptr<Camera>& camera) {
-    const std::vector<Attribute>& vAttributes = mesh->getAttributes();
-
+    const std::vector<kore::ShaderInput>& vAttributes = shader->getAttributes();
     for (unsigned int i = 0; i < vAttributes.size(); ++i) {
-        const Attribute& att = vAttributes[i];
+        const kore::ShaderInput& shaderAtt = vAttributes[i];
+        const kore::Attribute* meshAtt =
+            mesh->getAttributeByName(shaderAtt.name);
 
-        // Get shader's attribute index
-        GLuint uAttLoc = 0;
+        if(!meshAtt) {
+            Log::getInstance()->write("[ERROR] Mesh %s does not have an"
+                                      "Attribute %s",
+                                      mesh->getName().c_str(),
+                                      shaderAtt.name.c_str());
+            return;
+        }
 
-        glEnableVertexAttribArray(uAttLoc);
-        glVertexAttribPointer(uAttLoc, 3,
-                              GL_FLOAT, GL_FALSE,
-                              0, att.data);
+        glEnableVertexAttribArray(shaderAtt.location);
+        glVertexAttribPointer(shaderAtt.location, meshAtt->numValues,
+                              meshAtt->componentType, GL_FALSE,
+                              0, meshAtt->data);
     }
 
     shader->applyShader();

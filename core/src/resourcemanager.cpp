@@ -70,7 +70,7 @@ kore::ResourceManager::loadMesh(const std::string& filename) {
   }
 
   std::shared_ptr<kore::Mesh> pNewMesh =
-      MeshLoader::getInstance()->loadMesh(filename);
+      MeshLoader::getInstance()->loadMesh(filename, true);
 
   if (pNewMesh) {
      _meshes.push_back(pNewMesh);

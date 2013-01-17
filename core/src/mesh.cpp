@@ -68,5 +68,15 @@ const bool kore::Mesh::hasIndices() const {
 }
 
 const std::vector<unsigned int>& kore::Mesh::getIndices() const {
-	return _indices;
+    return _indices;
+}
+
+const kore::Attribute* kore::Mesh::
+    getAttributeByName(const std::string& szName) const {
+        for (unsigned int i = 0; i < _attributes.size(); ++i) {
+            if (_attributes[i].name == szName) {
+                return &_attributes[i];
+            }
+        }
+        return NULL;
 }
