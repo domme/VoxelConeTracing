@@ -17,7 +17,8 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include <string>
-#include <memory>
+
+#include "core/common.h"
 
 #include "core/meshloader.h"
 #include "core/log.h"

@@ -33,6 +33,7 @@
 #include <map>
 #include <string>
 #include <ctime>
+#include <memory>
 
 #include "core/log.h"
 

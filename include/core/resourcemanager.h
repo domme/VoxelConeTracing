@@ -22,7 +22,9 @@
 
 #include <vector>
 #include <string>
-#include <memory>
+
+#include "core/common.h"
+
 #include "core/Mesh.h"
 #include "core/Shader.h"
 
