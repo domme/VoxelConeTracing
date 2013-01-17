@@ -70,7 +70,7 @@ const std::shared_ptr<Camera>& camera) {
     glUniformMatrix4fv(iModel, 1, GL_FALSE, glm::value_ptr(glm::mat4(1.0f)));
 
 if (mesh->hasIndices()) {
-    glDrawElements(mesh->getPrimitiveType(), mesh->getIndices().size(), GL_UNSIGNED_INT, &mesh->getIndices()[0] );
+    glDrawElements(mesh->getPrimitiveType(), mesh->getIndices().size(), GL_UNSIGNED_INT, &mesh->getIndices()[0]);
 } else
     glDrawArrays(mesh->getPrimitiveType(), 0, mesh->getNumVertices());
 }

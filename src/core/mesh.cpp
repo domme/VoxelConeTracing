@@ -66,3 +66,7 @@ const GLenum kore::Mesh::getPrimitiveType() const {
 const bool kore::Mesh::hasIndices() const {
     return _indices.size() > 0;
 }
+
+const std::vector<unsigned int>& kore::Mesh::getIndices() const {
+	return _indices;
+}
