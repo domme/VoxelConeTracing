@@ -20,11 +20,9 @@
 #ifndef CORE_INCLUDE_CORE_RESOURCEMANAGER_H_
 #define CORE_INCLUDE_CORE_RESOURCEMANAGER_H_
 
-#include <vector>
 #include <string>
-
+#include <vector>
 #include "core/common.h"
-
 #include "core/Mesh.h"
 #include "core/Shader.h"
 

@@ -20,6 +20,7 @@
 #ifndef CORE_INCLUDE_CORE_MESHLOADER_H_
 #define CORE_INCLUDE_CORE_MESHLOADER_H_
 
+#include <string>
 #include <assimp/mesh.h>
 #include <assimp/Importer.hpp>
 
@@ -39,6 +40,7 @@ namespace kore {
             std::shared_ptr<Mesh> loadMesh(const std::string& szMeshPath,
                                            const bool bUseBuffers);
         private:
+
            MeshLoader();
             void loadVertexPositions(const aiMesh* pAiMesh,
                                     std::shared_ptr<kore::Mesh>& pMesh);

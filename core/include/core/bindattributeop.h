@@ -17,8 +17,8 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CORE_INCLUDE_CORE_BINDATTRIBUTEOP
-#define CORE_INCLUDE_CORE_BINDATTRIBUTEOP
+#ifndef CORE_INCLUDE_CORE_BINDATTRIBUTEOP_H_
+#define CORE_INCLUDE_CORE_BINDATTRIBUTEOP_H_
 
 #include "core/operation.h"
 #include "core/mesh.h"
@@ -31,7 +31,6 @@ namespace kore {
     virtual void execute(void);
     bool connect(void*a, void*b);
   private:
-
   }
 };
-#endif  // CORE_INCLUDE_CORE_BINDATTRIBUTEOP
+#endif  // CORE_INCLUDE_CORE_BINDATTRIBUTEOP_H_

@@ -17,6 +17,7 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <vector>
 #include <string>
 #include "core/shader.h"
 

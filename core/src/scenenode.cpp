@@ -18,6 +18,7 @@
 */
 
 #include "core/scenenode.h"
+#include <vector>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
@@ -68,7 +69,7 @@ void kore::SceneNode::update(void) {
       _transform.global = _transform.local;
     }
   }
-  for (unsigned int i = 0; i<_children.size(); i++) {
+  for (unsigned int i = 0; i < _children.size(); i++) {
     _children[i]->update();
   }
   _dirty = false;

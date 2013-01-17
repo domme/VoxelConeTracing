@@ -24,8 +24,8 @@ namespace kore {
   class Operation {
   public:
     Operation(void);
-    virtual Operation(void);
+    virtual ~Operation(void);
     virtual bool execute(void) = 0;
-  }
+  };
 };
 #endif  // CORE_INCLUDE_CORE_OPERATION_H_

@@ -42,7 +42,8 @@ namespace kore {
     bool loadFromFile(const std::string& file);
     int getNumAttributes(void);
     const std::vector<kore::MeshAttributeArray>& getAttributes() const;
-    const kore::MeshAttributeArray* getAttributeByName(const std::string& szName) const;
+    const kore::MeshAttributeArray* getAttributeByName(
+        const std::string& szName) const;
     const std::vector<unsigned int>& getIndices() const;
     const unsigned int getNumVertices() const;
     const bool hasIndices() const;

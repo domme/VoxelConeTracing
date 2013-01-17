@@ -28,7 +28,6 @@
 kore::Mesh::Mesh(void)
     : _numVertices(0),
     _primitiveType(GL_TRIANGLES) {
-
 }
 
 kore::Mesh::~Mesh(void) {

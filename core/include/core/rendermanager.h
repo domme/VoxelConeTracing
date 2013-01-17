@@ -20,10 +20,11 @@
 #ifndef CORE_INCLUDE_CORE_RENDERMANAGER_H_
 #define CORE_INCLUDE_CORE_RENDERMANAGER_H_
 
+#include <vector>
 #include "core/common.h"
-
-#include "core/Mesh.h"
-#include "core/Shader.h"
+#include "core/operation.h"
+#include "core/mesh.h"
+#include "core/shader.h"
 #include "core/camera.h"
 
 namespace kore {
@@ -33,16 +34,18 @@ namespace kore {
 
     void renderMesh(const std::shared_ptr<Mesh>& mesh,
                     const std::shared_ptr<Shader>& shader,
-                    const std::shared_ptr<Camera>& camera );
+                    const std::shared_ptr<Camera>& camera);
 
     const glm::ivec2& getRenderResolution() const;
     void setRenderResolution(const glm::ivec2& newResolution);
+    void renderFrame(void);
   private:
     RenderManager(void);
     virtual ~RenderManager(void);
     void resolutionChanged();
 
     glm::ivec2 _renderResolution;
+    std::vector<Operation*> _operations;
   };
 };
 #endif  // CORE_INCLUDE_CORE_RENDERMANAGER_H_

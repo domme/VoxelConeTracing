@@ -29,7 +29,7 @@
 
 namespace kore {
 class Camera {
-public:
+ public:
      Camera();
      virtual ~Camera();
 
