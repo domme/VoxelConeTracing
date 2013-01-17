@@ -6,7 +6,10 @@ KoRE.cbp
 CMakeLists.txt.user
 CMakeFiles
 CMakeCache.txt
-KoRE_Log.txt
+bin/KoRE_Log.txt
+bin/*.exe
+bin/*.pdb
+bin/*.ilk
 *.suo
 *.sdf
 *.opensdf
