@@ -11,36 +11,36 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\core\camera.h" />
-    <ClInclude Include="..\include\core\common.h" />
-    <ClInclude Include="..\include\core\datatypes.h" />
-    <ClInclude Include="..\include\core\kore.h" />
-    <ClInclude Include="..\include\core\log.h" />
-    <ClInclude Include="..\include\core\mesh.h" />
-    <ClInclude Include="..\include\core\meshloader.h" />
-    <ClInclude Include="..\include\core\meshrendercomponent.h" />
-    <ClInclude Include="..\include\core\operation.h" />
-    <ClInclude Include="..\include\core\rendermanager.h" />
-    <ClInclude Include="..\include\core\resourcemanager.h" />
-    <ClInclude Include="..\include\core\scenemanager.h" />
-    <ClInclude Include="..\include\core\scenenode.h" />
-    <ClInclude Include="..\include\core\scenenodecomponent.h" />
-    <ClInclude Include="..\include\core\shader.h" />
-    <ClInclude Include="..\include\core\stdafx.h" />
-    <ClInclude Include="..\include\core\transform.h" />
+    <ClInclude Include="include\core\camera.h" />
+    <ClInclude Include="include\core\common.h" />
+    <ClInclude Include="include\core\datatypes.h" />
+    <ClInclude Include="include\core\kore.h" />
+    <ClInclude Include="include\core\log.h" />
+    <ClInclude Include="include\core\mesh.h" />
+    <ClInclude Include="include\core\meshloader.h" />
+    <ClInclude Include="include\core\meshrendercomponent.h" />
+    <ClInclude Include="include\core\operation.h" />
+    <ClInclude Include="include\core\rendermanager.h" />
+    <ClInclude Include="include\core\resourcemanager.h" />
+    <ClInclude Include="include\core\scenemanager.h" />
+    <ClInclude Include="include\core\scenenode.h" />
+    <ClInclude Include="include\core\scenenodecomponent.h" />
+    <ClInclude Include="include\core\shader.h" />
+    <ClInclude Include="include\core\stdafx.h" />
+    <ClInclude Include="include\core\transform.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\core\camera.cpp" />
-    <ClCompile Include="..\src\core\datatypes.cpp" />
-    <ClCompile Include="..\src\core\log.cpp" />
-    <ClCompile Include="..\src\core\mesh.cpp" />
-    <ClCompile Include="..\src\core\meshloader.cpp" />
-    <ClCompile Include="..\src\core\rendermanager.cpp" />
-    <ClCompile Include="..\src\core\resourcemanager.cpp" />
-    <ClCompile Include="..\src\core\scenemanager.cpp" />
-    <ClCompile Include="..\src\core\scenenode.cpp" />
-    <ClCompile Include="..\src\core\shader.cpp" />
-    <ClCompile Include="..\src\core\stdafx.cpp" />
+    <ClCompile Include="src\camera.cpp" />
+    <ClCompile Include="src\datatypes.cpp" />
+    <ClCompile Include="src\log.cpp" />
+    <ClCompile Include="src\mesh.cpp" />
+    <ClCompile Include="src\meshloader.cpp" />
+    <ClCompile Include="src\rendermanager.cpp" />
+    <ClCompile Include="src\resourcemanager.cpp" />
+    <ClCompile Include="src\scenemanager.cpp" />
+    <ClCompile Include="src\scenenode.cpp" />
+    <ClCompile Include="src\shader.cpp" />
+    <ClCompile Include="src\stdafx.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B851B68F-DA2D-4F44-8FE5-A400094F2C87}</ProjectGuid>
@@ -69,7 +69,19 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(ProjectDir)lib\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IntDir>$(ProjectDir)obj\</IntDir>
+    <TargetName>$(ProjectName)_d</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(ProjectDir)lib\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IntDir>$(ProjectDir)obj\</IntDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -92,10 +104,10 @@
     </ProjectReference>
     <PreBuildEvent />
     <PreBuildEvent>
-      <Command>for %%f in ("$(SolutionDir)include\core\*.*") do (
+      <Command>for %%f in ("$(ProjectDir)include\core\*.*") do (
   python "$(SolutionDir)scripts\cpplint.py" "%%f"
 );
-for %%f in ("$(SolutionDir)src\core\*.*") do (
+for %%f in ("$(ProjectDir)src\*.*") do (
   python "$(SolutionDir)scripts\cpplint.py" "%%f"
 )</Command>
       <Message>cpplint google style</Message>
@@ -118,6 +130,14 @@ for %%f in ("$(SolutionDir)src\core\*.*") do (
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
+    <PreBuildEvent>
+      <Command>for %%f in ("$(ProjectDir)include\core\*.*") do (
+  python "$(SolutionDir)scripts\cpplint.py" "%%f"
+);
+for %%f in ("$(ProjectDir)src\*.*") do (
+  python "$(SolutionDir)scripts\cpplint.py" "%%f"
+)</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

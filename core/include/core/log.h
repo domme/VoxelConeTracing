@@ -17,17 +17,20 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INCLUDE_CORE_MESHRENDERCOMPONENT_H_
-#define INCLUDE_CORE_MESHRENDERCOMPONENT_H_
+#ifndef CORE_INCLUDE_CORE_LOG_H_
+#define CORE_INCLUDE_CORE_LOG_H_
 
 #include <string>
-#include "core/scenenodecomponent.h"
 
 namespace kore {
-  class MeshRenderComponent:public SceneNodeComponent {
+  class Log {
   public:
-    MeshRenderComponent(void);
-    virtual ~MeshRenderComponent(void);
+    static Log *getInstance(void);
+    void write(const char* format, ...);
+  private:
+    Log(void);
+    virtual ~Log(void);
+    std::string _logname;
   };
 };
-#endif  // INCLUDE_CORE_MESHRENDERCOMPONENT_H_
+#endif  // CORE_INCLUDE_CORE_LOG_H_

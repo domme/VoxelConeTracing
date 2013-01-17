@@ -17,8 +17,8 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INCLUDE_CORE_SCENENODE_H_
-#define INCLUDE_CORE_SCENENODE_H_
+#ifndef CORE_INCLUDE_CORE_SCENENODE_H_
+#define CORE_INCLUDE_CORE_SCENENODE_H_
 
 #include <vector>
 #include "core/common.h"
@@ -50,4 +50,4 @@ namespace kore {
     bool _dirty;  // if node has to be updated;
   };
 };
-#endif  // INCLUDE_CORE_SCENENODE_H_
+#endif  // CORE_INCLUDE_CORE_SCENENODE_H_

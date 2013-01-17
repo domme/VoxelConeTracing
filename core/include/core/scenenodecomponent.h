@@ -17,8 +17,8 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INCLUDE_CORE_SCENENODECOMPONENT_H_
-#define INCLUDE_CORE_SCENENODECOMPONENT_H_
+#ifndef CORE_INCLUDE_CORE_SCENENODECOMPONENT_H_
+#define CORE_INCLUDE_CORE_SCENENODECOMPONENT_H_
 
 namespace kore {
   class SceneNode;
@@ -34,4 +34,4 @@ namespace kore {
     SceneNode* _node;
   };
 };
-#endif  // INCLUDE_CORE_SCENENODECOMPONENT_H_
+#endif  // CORE_INCLUDE_CORE_SCENENODECOMPONENT_H_

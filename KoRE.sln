@@ -1,17 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "core", "project\core.vcxproj", "{B851B68F-DA2D-4F44-8FE5-A400094F2C87}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mainglfw", "project\mainglfw.vcxproj", "{3A04ED36-76B5-44BA-B9F4-CF7D8E07D672}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assets", "assets", "{C08E3BCC-B6CA-4F25-A24B-B5BF7DB3C4A7}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "shader", "shader", "{5A0ECA38-8363-4903-AC9D-1D3EB6BC28E6}"
-	ProjectSection(SolutionItems) = preProject
-		assets\shader\simple.fp = assets\shader\simple.fp
-		assets\shader\simple.vp = assets\shader\simple.vp
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "core", "core\core.vcxproj", "{B851B68F-DA2D-4F44-8FE5-A400094F2C87}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,15 +13,8 @@ Global
 		{B851B68F-DA2D-4F44-8FE5-A400094F2C87}.Debug|Win32.Build.0 = Debug|Win32
 		{B851B68F-DA2D-4F44-8FE5-A400094F2C87}.Release|Win32.ActiveCfg = Release|Win32
 		{B851B68F-DA2D-4F44-8FE5-A400094F2C87}.Release|Win32.Build.0 = Release|Win32
-		{3A04ED36-76B5-44BA-B9F4-CF7D8E07D672}.Debug|Win32.ActiveCfg = Debug|Win32
-		{3A04ED36-76B5-44BA-B9F4-CF7D8E07D672}.Debug|Win32.Build.0 = Debug|Win32
-		{3A04ED36-76B5-44BA-B9F4-CF7D8E07D672}.Release|Win32.ActiveCfg = Release|Win32
-		{3A04ED36-76B5-44BA-B9F4-CF7D8E07D672}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{5A0ECA38-8363-4903-AC9D-1D3EB6BC28E6} = {C08E3BCC-B6CA-4F25-A24B-B5BF7DB3C4A7}
 	EndGlobalSection
 EndGlobal

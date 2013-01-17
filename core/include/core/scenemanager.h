@@ -17,7 +17,23 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INCLUDE_CORE_STDAFX_H_
-#define INCLUDE_CORE_STDAFX_H_
+#ifndef CORE_INCLUDE_CORE_SCENEMANAGER_H_
+#define CORE_INCLUDE_CORE_SCENEMANAGER_H_
+
+#include "core/scenenode.h"
 #include "core/common.h"
-#endif  // INCLUDE_CORE_STDAFX_H_
+
+namespace kore {
+  class SceneManager {
+  public:
+    static SceneManager *getInstance(void);
+    uint64 createID(void);
+    void update(void);
+  private:
+    SceneManager(void);
+    virtual ~SceneManager(void);
+    SceneNode* _root;
+    uint64 _idcount;
+  };
+};
+#endif  // CORE_INCLUDE_CORE_SCENEMANAGER_H_

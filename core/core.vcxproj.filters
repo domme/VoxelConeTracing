@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{9f8c19eb-9291-48da-8874-e436ea98688f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{a9bc7084-37ad-4dcd-a083-2e2d3c7786a2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\core\camera.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\common.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\datatypes.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\kore.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\log.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\mesh.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\meshloader.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\meshrendercomponent.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\operation.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\rendermanager.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\resourcemanager.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\scenemanager.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\scenenode.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\scenenodecomponent.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\shader.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\stdafx.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\transform.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\camera.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\datatypes.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\log.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mesh.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\meshloader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rendermanager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\resourcemanager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scenemanager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scenenode.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\shader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\stdafx.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

@@ -17,8 +17,8 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INCLUDE_CORE_SHADER_H_
-#define INCLUDE_CORE_SHADER_H_
+#ifndef CORE_INCLUDE_CORE_SHADER_H_
+#define CORE_INCLUDE_CORE_SHADER_H_
 
 #include <string>
 #include <vector>
@@ -63,4 +63,4 @@ namespace kore {
     GLuint _shaderID;
   };
 };
-#endif  // INCLUDE_CORE_SHADER_H_
+#endif  // CORE_INCLUDE_CORE_SHADER_H_

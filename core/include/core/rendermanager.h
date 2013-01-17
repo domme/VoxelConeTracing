@@ -17,27 +17,32 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INCLUDE_CORE_DATATYPES_H_
-#define INCLUDE_CORE_DATATYPES_H_
+#ifndef CORE_INCLUDE_CORE_RENDERMANAGER_H_
+#define CORE_INCLUDE_CORE_RENDERMANAGER_H_
 
 #include "core/common.h"
-#include "core/log.h"
+
+#include "core/Mesh.h"
+#include "core/Shader.h"
+#include "core/camera.h"
 
 namespace kore {
-        class DatatypeUtil {
-        public:
-            static unsigned int getSizeFromGLdatatype(GLenum datatype);
-        };
+  class RenderManager {
+  public:
+    static RenderManager *getInstance(void);
 
-        enum OutputType {
-            // TODO(mr.crow): Add ALL possible Types
-            KORE_SHADER_OUTPUT_INT,
-            KORE_SHADER_OUTPUT_UINT,
-            KORE_SHADER_OUTPUT_FLOAT,
-            KORE_SHADER_OUTPUT_DOUBLE,
-            KORE_SHADER_OUTPUT_VEC2,
-            KORE_SHADER_OUTPUT_VEC3,
-            KORE_SHADER_OUTPUT_VEC4
-        };
+    void renderMesh(const std::shared_ptr<Mesh>& mesh,
+                    const std::shared_ptr<Shader>& shader,
+                    const std::shared_ptr<Camera>& camera );
+
+    const glm::ivec2& getRenderResolution() const;
+    void setRenderResolution(const glm::ivec2& newResolution);
+  private:
+    RenderManager(void);
+    virtual ~RenderManager(void);
+    void resolutionChanged();
+
+    glm::ivec2 _renderResolution;
+  };
 };
-#endif  // INCLUDE_CORE_DATATYPES_H_
+#endif  // CORE_INCLUDE_CORE_RENDERMANAGER_H_

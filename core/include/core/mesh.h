@@ -17,8 +17,8 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INCLUDE_CORE_MESH_H_
-#define INCLUDE_CORE_MESH_H_
+#ifndef CORE_INCLUDE_CORE_MESH_H_
+#define CORE_INCLUDE_CORE_MESH_H_
 
 #include <string>
 #include <vector>
@@ -56,4 +56,4 @@ namespace kore {
     GLenum                          _primitiveType;
   };
 };
-#endif  // INCLUDE_CORE_MESH_H_
+#endif  // CORE_INCLUDE_CORE_MESH_H_

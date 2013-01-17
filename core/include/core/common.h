@@ -16,8 +16,8 @@
   You should have received a copy of the GNU General Public License
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef INCLUDE_CORE_COMMON_H_
-#define INCLUDE_CORE_COMMON_H_
+#ifndef CORE_INCLUDE_CORE_COMMON_H_
+#define CORE_INCLUDE_CORE_COMMON_H_
 
 #define GLFW_INCLUDE_GL3
 #include <GL/glew.h>
@@ -49,4 +49,4 @@ typedef double float64;
 #define SAFE_DELETE_ARR(p) if (p[ 0 ]) delete[] p;
 #define BUFFER_OFFSET(i) (reinterpret_cast<char*>(NULL + (i)))
 
-#endif  // INCLUDE_CORE_COMMON_H_
+#endif  // CORE_INCLUDE_CORE_COMMON_H_

@@ -17,23 +17,17 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INCLUDE_CORE_SCENEMANAGER_H_
-#define INCLUDE_CORE_SCENEMANAGER_H_
+#ifndef CORE_INCLUDE_CORE_MESHRENDERCOMPONENT_H_
+#define CORE_INCLUDE_CORE_MESHRENDERCOMPONENT_H_
 
-#include "core/scenenode.h"
-#include "core/common.h"
+#include <string>
+#include "core/scenenodecomponent.h"
 
 namespace kore {
-  class SceneManager {
+  class MeshRenderComponent:public SceneNodeComponent {
   public:
-    static SceneManager *getInstance(void);
-    uint64 createID(void);
-    void update(void);
-  private:
-    SceneManager(void);
-    virtual ~SceneManager(void);
-    SceneNode* _root;
-    uint64 _idcount;
+    MeshRenderComponent(void);
+    virtual ~MeshRenderComponent(void);
   };
 };
-#endif  // INCLUDE_CORE_SCENEMANAGER_H_
+#endif  // CORE_INCLUDE_CORE_MESHRENDERCOMPONENT_H_

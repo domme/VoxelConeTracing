@@ -17,20 +17,15 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INCLUDE_CORE_LOG_H_
-#define INCLUDE_CORE_LOG_H_
-
-#include <string>
+#ifndef CORE_INCLUDE_CORE_OPERATION_H_
+#define CORE_INCLUDE_CORE_OPERATION_H_
 
 namespace kore {
-  class Log {
+  class Operation {
   public:
-    static Log *getInstance(void);
-    void write(const char* format, ...);
-  private:
-    Log(void);
-    virtual ~Log(void);
-    std::string _logname;
-  };
+    Operation(void);
+    virtual Operation(void);
+    virtual bool execute(void) = 0;
+  }
 };
-#endif  // INCLUDE_CORE_LOG_H_
+#endif  // CORE_INCLUDE_CORE_OPERATION_H_

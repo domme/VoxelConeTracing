@@ -21,8 +21,8 @@
 /* \author Dominik Lazarek                                              */
 /************************************************************************/
 
-#ifndef INCLUDE_CORE_CAMERA_H_
-#define INCLUDE_CORE_CAMERA_H_
+#ifndef CORE_INCLUDE_CORE_CAMERA_H_
+#define CORE_INCLUDE_CORE_CAMERA_H_
 
 #include <vector>
 #include "core/common.h"
@@ -118,4 +118,4 @@ public:
 };
 }
 
-#endif  // INCLUDE_CORE_CAMERA_H_
+#endif  // CORE_INCLUDE_CORE_CAMERA_H_

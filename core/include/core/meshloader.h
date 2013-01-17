@@ -17,8 +17,8 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INCLUDE_CORE_MESHLOADER_H_
-#define INCLUDE_CORE_MESHLOADER_H_
+#ifndef CORE_INCLUDE_CORE_MESHLOADER_H_
+#define CORE_INCLUDE_CORE_MESHLOADER_H_
 
 #include <assimp/mesh.h>
 #include <assimp/Importer.hpp>
@@ -62,4 +62,4 @@ namespace kore {
            Assimp::Importer _aiImporter;
     };
 }
-#endif  // INCLUDE_CORE_MESHLOADER_H_
+#endif  // CORE_INCLUDE_CORE_MESHLOADER_H_

@@ -56,7 +56,7 @@ int main(void) {
     glfwTerminate();
     exit(EXIT_FAILURE);
   }
-  
+
   // log versions
   int GLFWmajor, GLFWminor, GLFWrev;
   glfwGetVersion(&GLFWmajor, &GLFWminor, &GLFWrev);
@@ -98,7 +98,7 @@ int main(void) {
 
   // test git
 
-  glClearColor(1.0f,1.0f,1.0f,1.0f);  
+  glClearColor(1.0f,1.0f,1.0f,1.0f);
 
   // Main loop
   while (running) {

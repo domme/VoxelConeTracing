@@ -17,32 +17,17 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INCLUDE_CORE_RENDERMANAGER_H_
-#define INCLUDE_CORE_RENDERMANAGER_H_
+#ifndef CORE_INCLUDE_CORE_TRANSFORM_H_
+#define CORE_INCLUDE_CORE_TRANSFORM_H_
 
-#include "core/common.h"
-
-#include "core/Mesh.h"
-#include "core/Shader.h"
-#include "core/camera.h"
-
+#include <glm/glm.hpp>
 namespace kore {
-  class RenderManager {
+  class Transform {
   public:
-    static RenderManager *getInstance(void);
-
-    void renderMesh(const std::shared_ptr<Mesh>& mesh,
-                    const std::shared_ptr<Shader>& shader,
-                    const std::shared_ptr<Camera>& camera );
-
-    const glm::ivec2& getRenderResolution() const;
-    void setRenderResolution(const glm::ivec2& newResolution);
-  private:
-    RenderManager(void);
-    virtual ~RenderManager(void);
-    void resolutionChanged();
-
-    glm::ivec2 _renderResolution;
+    Transform(void) {}
+    virtual ~Transform(void) {}
+    glm::mat4 global;
+    glm::mat4 local;
   };
 };
-#endif  // INCLUDE_CORE_RENDERMANAGER_H_
+#endif  // CORE_INCLUDE_CORE_TRANSFORM_H_

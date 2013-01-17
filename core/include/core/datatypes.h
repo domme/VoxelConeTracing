@@ -17,17 +17,27 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INCLUDE_CORE_TRANSFORM_H_
-#define INCLUDE_CORE_TRANSFORM_H_
+#ifndef CORE_INCLUDE_CORE_DATATYPES_H_
+#define CORE_INCLUDE_CORE_DATATYPES_H_
 
-#include <glm/glm.hpp>
+#include "core/common.h"
+#include "core/log.h"
+
 namespace kore {
-  class Transform {
-  public:
-    Transform(void) {}
-    virtual ~Transform(void) {}
-    glm::mat4 global;
-    glm::mat4 local;
-  };
+        class DatatypeUtil {
+        public:
+            static unsigned int getSizeFromGLdatatype(GLenum datatype);
+        };
+
+        enum OutputType {
+            // TODO(mr.crow): Add ALL possible Types
+            KORE_SHADER_OUTPUT_INT,
+            KORE_SHADER_OUTPUT_UINT,
+            KORE_SHADER_OUTPUT_FLOAT,
+            KORE_SHADER_OUTPUT_DOUBLE,
+            KORE_SHADER_OUTPUT_VEC2,
+            KORE_SHADER_OUTPUT_VEC3,
+            KORE_SHADER_OUTPUT_VEC4
+        };
 };
-#endif  // INCLUDE_CORE_TRANSFORM_H_
+#endif  // CORE_INCLUDE_CORE_DATATYPES_H_
