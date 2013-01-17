@@ -143,7 +143,7 @@ bool kore::Shader::initShader(void) {
     kore::Log::getInstance()->write(
       "[DEBUG] Program compiled\n");
   }
-  return (success == GL_TRUE)?true:false;
+    return success == GL_TRUE;
 }
 
 GLuint kore::Shader::getAttributeLocation(const std::string &name) {
@@ -168,4 +168,53 @@ const std::vector<kore::ShaderInput>& kore::Shader::getAttributes() const {
 
 const std::vector<kore::ShaderInput>& kore::Shader::getUniforms() const {
     return _uniforms;
+}
+
+void kore::Shader::getAttributeInfo() {
+   /* GLint iNumActiveAttributes = 0;
+    glGetProgramiv( _shaderID, GL_ACTIVE_ATTRIBUTES, &iNumActiveAttributes );
+    for (int i = 0; i < iNumActiveAttributes; ++i) {
+        unsigned int bufSize;
+        GLchar szNameBuf[bufSize];
+        GLsizei iActualNameLength = 0;
+        GLint iAttributeSize = 0;
+        GLenum eAttributeType;
+        GLint iAttributeLoc = -1;
+
+        glGetActiveAttrib(_shaderID, i, bufSize, &iActualNameLength,
+                          &iAttributeSize, &eAttributeType, szNameBuf);
+        iAttributeLoc = glGetAttribLocation( _shaderID, szNameBuf);
+        std::string szName = std::string(szNameBuf);
+
+        ShaderInput att;
+        att.name = szName;
+        att.
+
+        m_vAttributes.push_back( pAttribute );
+    } */
+}
+
+void kore::Shader::getUniformInfo() {
+   /* GLint iNumActiveUniforms = 0;
+    glGetProgramiv( m_uShaderProgram, GL_ACTIVE_UNIFORMS, &iNumActiveUniforms );
+    GLchar szNameBuf[ BUFSIZE ];
+    GLsizei iActualNameLength = 0;
+    GLint iUniformSize = 0;
+    GLenum eUniformType;
+    GLint iUniformLoc = -1;
+    IUniform* pUniform = NULL;
+
+    glGetActiveUniform( m_uShaderProgram, i, BUFSIZE, &iActualNameLength, &iUniformSize, &eUniformType, szNameBuf );
+    iUniformLoc = glGetUniformLocation( m_uShaderProgram, szNameBuf );
+
+    String szName = String( szNameBuf );
+
+    pUniform = createUniformFromDescription( eUniformType, szName, iUniformLoc );
+    pUniform->SetObserver( this );
+
+    if( m_mapActiveUniforms.find( szName ) != m_mapActiveUniforms.end() )
+        LOG( "WARNING!! Uniform " + szName + " already in Map!" );
+
+    m_mapActiveUniforms[ szName ] = pUniform;
+    m_vCachedUniforms.push_back( pUniform ); */
 }

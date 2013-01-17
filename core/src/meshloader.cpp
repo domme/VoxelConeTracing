@@ -111,7 +111,7 @@ void kore::MeshLoader::
     memcpy(pVertexData, pAiMesh->mVertices,
            allocSize);
 
-    kore::Attribute att;
+    kore::MeshAttributeArray att;
     att.name = "v_position";
     att.numValues = pAiMesh->mNumVertices;
     att.type = GL_FLOAT_VEC3;
@@ -129,7 +129,7 @@ void kore::MeshLoader::
     memcpy(pVertexData, pAiMesh->mNormals,
            allocSize);
 
-    kore::Attribute att;
+    kore::MeshAttributeArray att;
     att.name = "v_normal";
     att.numValues = pAiMesh->mNumVertices;
     att.type = GL_FLOAT_VEC3;
@@ -147,7 +147,7 @@ void kore::MeshLoader::
     memcpy(pVertexData, pAiMesh->mTangents,
            allocSize);
 
-    kore::Attribute att;
+    kore::MeshAttributeArray att;
     att.name = "v_tangent";
     att.numValues = pAiMesh->mNumVertices;
     att.type = GL_FLOAT_VEC3;
@@ -177,7 +177,7 @@ void kore::MeshLoader::
     void* pVertexData = malloc(allocSize);
     memcpy(pVertexData, pAiMesh->mColors[iColorSet], allocSize);
 
-    kore::Attribute att;
+    kore::MeshAttributeArray att;
     char szNameBuf[20];
     sprintf(szNameBuf, "v_color%i", iColorSet);
     att.name = std::string(&szNameBuf[0]);
@@ -212,7 +212,7 @@ void kore::MeshLoader::
     void* pVertexData = malloc(allocSize);
     memcpy(pVertexData, pAiMesh->mTextureCoords[iUVset], allocSize);
 
-    kore::Attribute att;
+    kore::MeshAttributeArray att;
     char szNameBuf[20];
     sprintf(szNameBuf, "v_uv%i", iUVset);
     att.name = std::string(&szNameBuf[0]);

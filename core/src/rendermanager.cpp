@@ -40,7 +40,7 @@ const std::shared_ptr<Camera>& camera) {
     const std::vector<kore::ShaderInput>& vAttributes = shader->getAttributes();
     for (unsigned int i = 0; i < vAttributes.size(); ++i) {
         const kore::ShaderInput& shaderAtt = vAttributes[i];
-        const kore::Attribute* meshAtt =
+        const kore::MeshAttributeArray* meshAtt =
             mesh->getAttributeByName(shaderAtt.name);
 
         if(!meshAtt) {

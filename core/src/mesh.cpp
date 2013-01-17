@@ -26,7 +26,9 @@
 
 
 kore::Mesh::Mesh(void)
-    : _numVertices(0) {
+    : _numVertices(0),
+    _primitiveType(GL_TRIANGLES) {
+
 }
 
 kore::Mesh::~Mesh(void) {
@@ -47,7 +49,7 @@ int kore::Mesh::getNumAttributes(void) {
   return _attributes.size();
 }
 
-const std::vector<kore::Attribute>& kore::Mesh::getAttributes() const {
+const std::vector<kore::MeshAttributeArray>& kore::Mesh::getAttributes() const {
     return _attributes;
 }
 
@@ -71,7 +73,7 @@ const std::vector<unsigned int>& kore::Mesh::getIndices() const {
     return _indices;
 }
 
-const kore::Attribute* kore::Mesh::
+const kore::MeshAttributeArray* kore::Mesh::
     getAttributeByName(const std::string& szName) const {
         for (unsigned int i = 0; i < _attributes.size(); ++i) {
             if (_attributes[i].name == szName) {

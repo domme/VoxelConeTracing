@@ -28,7 +28,9 @@
 namespace kore {
 
   struct ShaderInput {
-    GLuint type;
+    GLuint componentType;        // e.g. GL_FLOAT
+    unsigned int numComponents;  // e.g. 3 for VEC3
+    GLenum type;                 // e.g. GL_VEC3
     std::string name;
     GLuint location;
   };
@@ -52,6 +54,9 @@ namespace kore {
     const std::vector<ShaderInput>& getUniforms() const;
 
   private:
+    void getAttributeInfo();
+    void getUniformInfo();
+
     std::string _name;
     std::vector<ShaderInput> _attributes;
     std::vector<ShaderInput> _uniforms;

@@ -5,6 +5,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "core", "core\core.vcxproj",
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mainglfw", "mainglfw\mainglfw.vcxproj", "{3A04ED36-76B5-44BA-B9F4-CF7D8E07D672}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assets", "assets", "{478EF097-9C8E-442C-A614-3351D87CEDC6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "shader", "shader", "{E2BFA9E3-C84D-433E-A5E8-17CDD6D7311D}"
+	ProjectSection(SolutionItems) = preProject
+		bin\assets\shader\simple.fp = bin\assets\shader\simple.fp
+		bin\assets\shader\simple.vp = bin\assets\shader\simple.vp
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -22,5 +30,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E2BFA9E3-C84D-433E-A5E8-17CDD6D7311D} = {478EF097-9C8E-442C-A614-3351D87CEDC6}
 	EndGlobalSection
 EndGlobal

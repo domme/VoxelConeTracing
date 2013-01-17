@@ -25,7 +25,7 @@
 #include "core/datatypes.h"
 
 namespace kore {
-  struct Attribute {
+  struct MeshAttributeArray {
       std::string name;
       GLenum type;              // e.g. GL_VEC3
       GLenum componentType;     // e.g. GL_FLOAT
@@ -41,8 +41,8 @@ namespace kore {
     virtual ~Mesh(void);
     bool loadFromFile(const std::string& file);
     int getNumAttributes(void);
-    const std::vector<kore::Attribute>& getAttributes() const;
-    const kore::Attribute* getAttributeByName(const std::string& szName) const;
+    const std::vector<kore::MeshAttributeArray>& getAttributes() const;
+    const kore::MeshAttributeArray* getAttributeByName(const std::string& szName) const;
     const std::vector<unsigned int>& getIndices() const;
     const unsigned int getNumVertices() const;
     const bool hasIndices() const;
@@ -51,7 +51,7 @@ namespace kore {
 
   private:
     std::string                     _name;
-    std::vector<Attribute>          _attributes;
+    std::vector<MeshAttributeArray>          _attributes;
     std::vector<unsigned int>       _indices;
     unsigned int                    _numVertices;
     GLenum                          _primitiveType;
