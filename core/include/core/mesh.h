@@ -29,7 +29,8 @@ namespace kore {
       std::string name;
       GLenum type;              // e.g. GL_VEC3
       GLenum componentType;     // e.g. GL_FLOAT
-      int numValues;
+      int numValues;            // number of componentTypes (e.g. floats)
+      int numComponents;        // number of components per vertex (3 for vec3)
       int byteSize;  // size in bytes of one attribute
       void* data;
   };
