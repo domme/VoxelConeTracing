@@ -178,14 +178,14 @@ const std::vector<kore::ShaderInput>& kore::Shader::getUniforms() const {
     return _uniforms;
 }
 
-void kore::Shader::constructShaderInfo( const kore::EShaderInputType eType,
-                                std::vector<kore::ShaderInput>& rInputVector ) {
+void kore::Shader::constructShaderInfo(const kore::EShaderInputType eType,
+                                std::vector<kore::ShaderInput>& rInputVector) {
     GLint iNumActiveElements = 0;
 
-    glGetProgramiv( _shaderID,
+    glGetProgramiv(_shaderID,
                     eType == SHADERINPUT_ATTRIBUTE ?
                              GL_ACTIVE_ATTRIBUTES : GL_ACTIVE_UNIFORMS,
-                    &iNumActiveElements );
+                    &iNumActiveElements);
 
     for (int i = 0; i < iNumActiveElements; ++i) {
         GLchar szNameBuf[BUFSIZE];

@@ -24,7 +24,6 @@
 #include "core/datatypes.h"
 #include "core/log.h"
 #include "core/mesh.h"
-#include "core/meshrendercomponent.h"
 #include "core/rendermanager.h"
 #include "core/resourcemanager.h"
 #include "core/scenemanager.h"

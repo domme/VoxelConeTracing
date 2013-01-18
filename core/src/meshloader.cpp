@@ -16,15 +16,12 @@
   You should have received a copy of the GNU General Public License
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include <string>
-
-#include "core/common.h"
-
 #include "core/meshloader.h"
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+#include <string>
 #include "core/log.h"
 
-#include "assimp/scene.h"
-#include "assimp/postprocess.h"
 
 kore::MeshLoader* kore::MeshLoader::getInstance() {
     static MeshLoader clInstance;
@@ -37,7 +34,7 @@ kore::MeshLoader::MeshLoader() {
 kore::MeshLoader::~MeshLoader() {
 }
 
-std::shared_ptr<kore::Mesh>
+kore::MeshPtr
 kore::MeshLoader::loadMesh(const std::string& szMeshPath,
                            const bool bUseBuffers) {
     const aiScene* pAiScene = _aiImporter.ReadFile(szMeshPath,
@@ -48,14 +45,14 @@ aiProcess_JoinIdenticalVertices);
         Log::getInstance()->write("[ERROR] Mesh-file could not be loaded: %s",
                                   szMeshPath.c_str());
 
-        return std::shared_ptr<Mesh>();
+        return kore::MeshPtr();
     }
 
     if (!pAiScene->HasMeshes()) {
         Log::getInstance()->write("[ERROR] Mesh-file does not"
                                   "contain any meshes: %s",
                                   szMeshPath.c_str());
-        return std::shared_ptr<Mesh>();
+        return kore::MeshPtr();
     }
 
     if (pAiScene->mNumMeshes > 1) {
@@ -64,7 +61,7 @@ aiProcess_JoinIdenticalVertices);
                                   szMeshPath.c_str());
     }
 
-    std::shared_ptr<kore::Mesh> pMesh(new kore::Mesh);
+    kore::MeshPtr pMesh(new kore::Mesh);
     aiMesh* pAiMesh = pAiScene->mMeshes[ 0 ];
     pMesh->_numVertices = pAiMesh->mNumVertices;
 
@@ -106,7 +103,7 @@ aiProcess_JoinIdenticalVertices);
 
 void kore::MeshLoader::
     loadVertexPositions(const aiMesh* pAiMesh,
-                         std::shared_ptr<kore::Mesh>& pMesh ) {
+                         kore::MeshPtr& pMesh ) {
     unsigned int allocSize = pAiMesh->mNumVertices * 3 * 4;
     void* pVertexData = malloc(allocSize);
     memcpy(pVertexData, pAiMesh->mVertices,
@@ -125,7 +122,7 @@ void kore::MeshLoader::
 
 void kore::MeshLoader::
     loadVertexNormals(const aiMesh* pAiMesh,
-                       std::shared_ptr<kore::Mesh>& pMesh ) {
+                       kore::MeshPtr& pMesh ) {
     unsigned int allocSize = pAiMesh->mNumVertices * 3 * 4;
     void* pVertexData = malloc(allocSize);
     memcpy(pVertexData, pAiMesh->mNormals,
@@ -144,7 +141,7 @@ void kore::MeshLoader::
 
 void kore::MeshLoader::
     loadVertexTangents(const aiMesh* pAiMesh,
-                        std::shared_ptr<kore::Mesh>& pMesh ) {
+                        kore::MeshPtr& pMesh ) {
     unsigned int allocSize = pAiMesh->mNumVertices * 3 * 4;
     void* pVertexData = malloc(allocSize);
     memcpy(pVertexData, pAiMesh->mTangents,
@@ -163,7 +160,7 @@ void kore::MeshLoader::
 
 void kore::MeshLoader::
     loadFaceIndices(const aiMesh* pAiMesh,
-                     std::shared_ptr<kore::Mesh>& pMesh ) {
+                     kore::MeshPtr& pMesh ) {
     for (unsigned int iFace = 0; iFace < pAiMesh->mNumFaces; ++iFace) {
         aiFace& rAiFace = pAiMesh->mFaces[iFace];
         for (unsigned int iIndex = 0; iIndex < rAiFace.mNumIndices; ++iIndex) {
@@ -174,7 +171,7 @@ void kore::MeshLoader::
 
 void kore::MeshLoader::
     loadVertexColors(const aiMesh* pAiMesh,
-                      std::shared_ptr<kore::Mesh>& pMesh,
+                      kore::MeshPtr& pMesh,
                       unsigned int iColorSet) {
     unsigned int allocSize =
         pAiMesh->mNumVertices * 4 * pAiMesh->GetNumColorChannels();
@@ -210,7 +207,7 @@ void kore::MeshLoader::
 
 void kore::MeshLoader::
     loadVertexTextureCoords(const aiMesh* pAiMesh,
-                             std::shared_ptr<kore::Mesh>& pMesh,
+                             kore::MeshPtr& pMesh,
                              unsigned int iUVset) {
     unsigned int allocSize =
         pAiMesh->mNumVertices * 4 * pAiMesh->GetNumUVChannels();
@@ -241,3 +238,4 @@ void kore::MeshLoader::
     att.data = pVertexData;
     pMesh->_attributes.push_back(att);
 }
+

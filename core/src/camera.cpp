@@ -40,7 +40,8 @@ kore::Camera::Camera()
         m_fFocalLength(0.0f),
         m_bIsOrtho(false),
         m_fWidth(1.0f),
-        m_fHeight(1.0) {
+        m_fHeight(1.0),
+        kore::SceneNodeComponent() {
 }
 
 kore::Camera::~Camera() {

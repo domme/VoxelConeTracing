@@ -21,9 +21,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\core\camera.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="include\core\common.h">
       <Filter>include</Filter>
     </ClInclude>
@@ -36,13 +33,7 @@
     <ClInclude Include="include\core\log.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\core\mesh.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="include\core\meshloader.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\core\operation.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\core\rendermanager.h">
@@ -72,24 +63,24 @@
     <ClInclude Include="include\core\rendermeshop.h">
       <Filter>include\operations</Filter>
     </ClInclude>
-    <ClInclude Include="include\core\meshrendercomponent.h">
-      <Filter>include\components</Filter>
-    </ClInclude>
     <ClInclude Include="include\core\scenenodecomponent.h">
       <Filter>include\components</Filter>
     </ClInclude>
+    <ClInclude Include="include\core\mesh.h">
+      <Filter>include\components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\camera.h">
+      <Filter>include\components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\operation.h">
+      <Filter>include\operations</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\camera.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\datatypes.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\log.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\mesh.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\meshloader.cpp">
@@ -119,10 +110,13 @@
     <ClCompile Include="src\operation.cpp">
       <Filter>src\operations</Filter>
     </ClCompile>
-    <ClCompile Include="src\meshrendercomponent.cpp">
+    <ClCompile Include="src\scenenodecomponent.cpp">
       <Filter>src\components</Filter>
     </ClCompile>
-    <ClCompile Include="src\scenenodecomponent.cpp">
+    <ClCompile Include="src\mesh.cpp">
+      <Filter>src\components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\camera.cpp">
       <Filter>src\components</Filter>
     </ClCompile>
   </ItemGroup>

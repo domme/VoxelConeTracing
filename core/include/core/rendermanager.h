@@ -31,11 +31,6 @@ namespace kore {
   class RenderManager {
   public:
     static RenderManager *getInstance(void);
-
-    void renderMesh(const std::shared_ptr<Mesh>& mesh,
-                    const std::shared_ptr<Shader>& shader,
-                    const std::shared_ptr<Camera>& camera);
-
     const glm::ivec2& getRenderResolution() const;
     void setRenderResolution(const glm::ivec2& newResolution);
     void renderFrame(void);

@@ -22,18 +22,37 @@
 
 #include "core/operation.h"
 #include "core/mesh.h"
-#include "core/meshrendercomponent.h"
+#include "core/camera.h"
+#include "core/shader.h"
 
 namespace kore {
   class RenderMeshOp: public Operation {
   public:
-    RenderMeshOp(void);
+    explicit RenderMeshOp(void);
+    explicit RenderMeshOp(const kore::MeshPtr& mesh,
+                          const kore::CameraPtr& camera,
+                          const kore::ShaderPtr& shader);
+
     virtual ~RenderMeshOp(void);
     virtual void execute(void);
     virtual void update(void);
     virtual void reset(void);
+
+    const kore::MeshPtr& getMesh() const;
+    void setMesh(const kore::MeshPtr& mesh);
+
+    const kore::CameraPtr& getCamera() const;
+    void setCamera(const kore::CameraPtr& camera);
+
+    const kore::ShaderPtr& getShader() const;
+    void setShader(const kore::ShaderPtr& shader);
+
+
   private:
-    std::shared_ptr<MeshRenderComponent> _meshRenderComponent;
+    kore::MeshPtr _mesh;
+
+    kore::CameraPtr _camera;
+    kore::ShaderPtr _shader;
   };
 };
 #endif  // CORE_INCLUDE_CORE_RENDERMESHOP_H_

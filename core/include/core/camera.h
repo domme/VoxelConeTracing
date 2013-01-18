@@ -26,9 +26,10 @@
 
 #include <vector>
 #include "core/common.h"
+#include "core/scenenodecomponent.h"
 
 namespace kore {
-class Camera {
+class Camera : public SceneNodeComponent {
  public:
      Camera();
      virtual ~Camera();
@@ -116,6 +117,7 @@ class Camera {
      void        paramsChanged();
      void        rotateViewQuat(const float angle, const glm::vec3 v3Axis);
 };
+typedef std::shared_ptr<kore::Camera> CameraPtr;
 }
 
 #endif  // CORE_INCLUDE_CORE_CAMERA_H_

@@ -32,14 +32,14 @@ namespace kore {
   public:
     static ResourceManager *getInstance(void);
     bool addPath(const std::string& path);
-    std::shared_ptr<kore::Mesh> loadMesh(const std::string& filename);
+    kore::MeshPtr loadMesh(const std::string& filename);
   private:
     ResourceManager(void);
     virtual ~ResourceManager(void);
 
     std::vector<std::string> _resource_paths;
-    std::vector<std::shared_ptr<Mesh>> _meshes;
-    std::vector<std::shared_ptr<Shader>> _shader;
+    std::vector<kore::MeshPtr> _meshes;
+    std::vector<kore::ShaderPtr> _shader;
   };
 };
 #endif  // CORE_INCLUDE_CORE_RESOURCEMANAGER_H_

@@ -23,6 +23,7 @@
 #include <string>
 #include <vector>
 #include "core/datatypes.h"
+#include "core/scenenodecomponent.h"
 
 namespace kore {
   struct MeshAttributeArray {
@@ -34,7 +35,7 @@ namespace kore {
       int byteSize;  // size in bytes of one attribute
       void* data;
   };
-  class Mesh {
+  class Mesh : public SceneNodeComponent {
     friend class MeshLoader;
     friend class MeshRenderComponent;
 
@@ -59,5 +60,6 @@ namespace kore {
     unsigned int                    _numVertices;
     GLenum                          _primitiveType;
   };
+  typedef std::shared_ptr<kore::Mesh> MeshPtr;
 };
 #endif  // CORE_INCLUDE_CORE_MESH_H_

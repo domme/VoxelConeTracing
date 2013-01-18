@@ -62,14 +62,14 @@ bool kore::ResourceManager::addPath(const std::string& path) {
   }
 }
 
-std::shared_ptr<kore::Mesh>
+kore::MeshPtr
 kore::ResourceManager::loadMesh(const std::string& filename) {
   std::string currentpath;
   for (unsigned int i = 0; i < _resource_paths.size(); i++) {
     currentpath = _resource_paths[i] + filename;
   }
 
-  std::shared_ptr<kore::Mesh> pNewMesh =
+  kore::MeshPtr pNewMesh =
       MeshLoader::getInstance()->loadMesh(filename, true);
 
   if (pNewMesh) {

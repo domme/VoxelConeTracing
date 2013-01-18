@@ -77,5 +77,6 @@ namespace kore {
 
     GLuint _shaderID;
   };
+  typedef std::shared_ptr<kore::Shader> ShaderPtr;
 };
 #endif  // CORE_INCLUDE_CORE_SHADER_H_
