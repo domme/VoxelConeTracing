@@ -20,17 +20,20 @@
 #ifndef CORE_INCLUDE_CORE_SCENENODECOMPONENT_H_
 #define CORE_INCLUDE_CORE_SCENENODECOMPONENT_H_
 
+#include "core/common.h"
+
 namespace kore {
   class SceneNode;
   class SceneNodeComponent {
   public:
-    SceneNodeComponent(void);
-  virtual ~SceneNodeComponent(void);
-  SceneNode* getNode(void);
-  void attachTo(SceneNode* node);
-  int64_t getID(void);
+    explicit SceneNodeComponent(void);
+    virtual ~SceneNodeComponent(void);
+    virtual void attachTo(SceneNode* node);
+    const SceneNode* getNode(void) const;
+    uint getID(void) const;
+
   private:
-    int64_t _id;
+    uint _id;
     SceneNode* _node;
   };
 };

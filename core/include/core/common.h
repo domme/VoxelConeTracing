@@ -38,12 +38,15 @@
 #include "core/log.h"
 
 // Typedefs:
+typedef unsigned int uint;
 typedef uint64_t uint64;
 typedef glm::half float16;
 typedef double float64;
 
 // Use this to indicate an invalid GL-handle of type GLuint
 #define GLUINT_HANDLE_INVALID 0xFFFFFFFF
+#define UINT_INVALID 0xFFFFFFFF
+#define UINT64_INVALID 0xFFFFFFFFFFFFFFFF
 
 #define SAFE_DELETE(p) if (p) { delete p; p = NULL; }
 #define SAFE_DELETE_ARR(p) if (p[ 0 ]) delete[] p;

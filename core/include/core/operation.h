@@ -25,7 +25,15 @@ namespace kore {
   public:
     Operation(void);
     virtual ~Operation(void);
-    virtual bool execute(void) = 0;
+    virtual void execute(void) = 0;
+    virtual void update(void) = 0;
+    virtual void reset(void) = 0;
+    void setExecuted(bool flag);
+    bool getExecuted(void);
+
+  private:
+    bool _executeOnce;
+    bool _executed;
   };
 };
 #endif  // CORE_INCLUDE_CORE_OPERATION_H_

@@ -187,7 +187,7 @@ void kore::Shader::constructShaderInfo( const kore::EShaderInputType eType,
                              GL_ACTIVE_ATTRIBUTES : GL_ACTIVE_UNIFORMS,
                     &iNumActiveElements );
 
-    for (unsigned int i = 0; i < iNumActiveElements; ++i) {
+    for (int i = 0; i < iNumActiveElements; ++i) {
         GLchar szNameBuf[BUFSIZE];
         GLsizei iActualNameLength = 0;
         GLint iElementSize = 0;

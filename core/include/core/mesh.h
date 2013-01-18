@@ -36,6 +36,7 @@ namespace kore {
   };
   class Mesh {
     friend class MeshLoader;
+    friend class MeshRenderComponent;
 
   public:
     Mesh(void);

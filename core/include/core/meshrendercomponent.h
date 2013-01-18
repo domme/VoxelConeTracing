@@ -21,13 +21,17 @@
 #define CORE_INCLUDE_CORE_MESHRENDERCOMPONENT_H_
 
 #include <string>
+#include <memory>
 #include "core/scenenodecomponent.h"
+#include "core/mesh.h"
 
 namespace kore {
   class MeshRenderComponent:public SceneNodeComponent {
   public:
     MeshRenderComponent(void);
     virtual ~MeshRenderComponent(void);
+  private:
+    std::shared_ptr<Mesh> _mesh;
   };
 };
 #endif  // CORE_INCLUDE_CORE_MESHRENDERCOMPONENT_H_

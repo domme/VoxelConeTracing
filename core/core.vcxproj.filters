@@ -7,6 +7,18 @@
     <Filter Include="src">
       <UniqueIdentifier>{a9bc7084-37ad-4dcd-a083-2e2d3c7786a2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\operations">
+      <UniqueIdentifier>{c4731b86-0f24-4344-b635-7c3bca178d6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\operations">
+      <UniqueIdentifier>{4b38bdeb-8967-432d-8e6e-2a784eee6bb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\components">
+      <UniqueIdentifier>{f9ab88e6-672f-4bc5-9097-91544e597afd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\components">
+      <UniqueIdentifier>{6d43df84-04b0-48dd-bf72-077ea097faa4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\core\camera.h">
@@ -30,9 +42,6 @@
     <ClInclude Include="include\core\meshloader.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\core\meshrendercomponent.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="include\core\operation.h">
       <Filter>include</Filter>
     </ClInclude>
@@ -48,9 +57,6 @@
     <ClInclude Include="include\core\scenenode.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\core\scenenodecomponent.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="include\core\shader.h">
       <Filter>include</Filter>
     </ClInclude>
@@ -61,7 +67,16 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\core\bindattributeop.h">
-      <Filter>include</Filter>
+      <Filter>include\operations</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\rendermeshop.h">
+      <Filter>include\operations</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\meshrendercomponent.h">
+      <Filter>include\components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\scenenodecomponent.h">
+      <Filter>include\components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -97,6 +112,18 @@
     </ClCompile>
     <ClCompile Include="src\stdafx.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rendermeshop.cpp">
+      <Filter>src\operations</Filter>
+    </ClCompile>
+    <ClCompile Include="src\operation.cpp">
+      <Filter>src\operations</Filter>
+    </ClCompile>
+    <ClCompile Include="src\meshrendercomponent.cpp">
+      <Filter>src\components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scenenodecomponent.cpp">
+      <Filter>src\components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -17,22 +17,28 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CORE_INCLUDE_CORE_BINDATTRIBUTEOP_H_
-#define CORE_INCLUDE_CORE_BINDATTRIBUTEOP_H_
+#include "core/rendermeshop.h"
 
-#include "core/operation.h"
-#include "core/mesh.h"
+kore::RenderMeshOp::RenderMeshOp(void)
+  : _meshRenderComponent(NULL),
+    kore::Operation() {
+}
 
-namespace kore {
-  class BindAttributeOp: public Operation {
-  public:
-    BindAttributeOp(void);
-    virtual BindAttributeOp(void);
-    virtual void execute(void);
-    virtual void update(void);
-    virtual void reset(void);
-    bool connect(void*a, void*b);
-  private:
-  }
-};
-#endif  // CORE_INCLUDE_CORE_BINDATTRIBUTEOP_H_
+kore::RenderMeshOp::~RenderMeshOp(void) {
+}
+
+void kore::RenderMeshOp::execute(void) {
+
+
+
+
+
+  setExecuted(true);
+}
+
+void kore::RenderMeshOp::update(void) {
+}
+
+void kore::RenderMeshOp::reset(void) {
+  setExecuted(false);
+}
