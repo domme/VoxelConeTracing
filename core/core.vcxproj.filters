@@ -119,5 +119,8 @@
     <ClCompile Include="src\camera.cpp">
       <Filter>src\components</Filter>
     </ClCompile>
+    <ClCompile Include="src\bindattributeop.cpp">
+      <Filter>src\operations</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

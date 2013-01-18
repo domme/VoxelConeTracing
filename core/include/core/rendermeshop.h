@@ -47,12 +47,12 @@ namespace kore {
     const kore::ShaderPtr& getShader() const;
     void setShader(const kore::ShaderPtr& shader);
 
-
   private:
     kore::MeshPtr _mesh;
 
     kore::CameraPtr _camera;
     kore::ShaderPtr _shader;
   };
+  typedef std::shared_ptr<RenderMeshOp> RenderMeshOpPtr;
 };
 #endif  // CORE_INCLUDE_CORE_RENDERMESHOP_H_

@@ -33,6 +33,7 @@
 #include "core/kore.h"
 #include "core/shader.h"
 #include "core/mesh.h"
+#include "core/rendermeshop.h"
 
 int main(void) {
   int running = GL_TRUE;
@@ -101,7 +102,12 @@ int main(void) {
                    glm::vec3(0.0f, 1.0f, 0.0f)));
   pCamera->setProjectionPersp(60.0f, 800.0f, 600.0f, 1.0f, 100.0f);
 
-  // test git
+  kore::RenderMeshOpPtr pOp(new kore::RenderMeshOp);
+  pOp->setCamera(pCamera);
+  pOp->setMesh(pTestMesh);
+  pOp->setShader(pSimpleShader);
+
+  kore::RenderManager::getInstance()->addOperation(pOp);
 
   glClearColor(1.0f,1.0f,1.0f,1.0f);  
 

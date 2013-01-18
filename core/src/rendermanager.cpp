@@ -18,6 +18,7 @@
 */
 
 #include <vector>
+#include <algorithm>
 
 #include "core/rendermanager.h"
 #include "core/log.h"
@@ -94,12 +95,44 @@ void kore::RenderManager::
 }
 
 void kore::RenderManager::renderFrame(void) {
-  for (unsigned int i = 0; i < _operations.size(); i++) {
-    _operations[i]->execute();
-  }
+    OperationList::const_iterator it;
+    for (it = _operations.begin(); it != _operations.end(); ++it) {
+        (*it)->execute();
+    }
 }
 
 void kore::RenderManager::resolutionChanged() {
     // Update all resolution-dependant resources here
     // (e.g. GBuffer-Textures...)
+}
+
+void kore::RenderManager::addOperation(const OperationPtr& op) {
+    if(!hasOperation(op)) {
+       _operations.push_back(op);
+    }
+}
+
+void kore::RenderManager::addOperation(const OperationPtr& op,
+                                       const OperationPtr& targetOp,
+                                       const EOpInsertPos insertPos) {
+     if(!hasOperation(targetOp) || hasOperation(op)) {
+            return;
+     }
+
+     OperationList::const_iterator it =
+         std::find(_operations.begin(), _operations.end(), targetOp);
+
+     switch (insertPos) {
+     case INSERT_AFTER:
+         _operations.insert(it, op);
+         break;
+     case INSERT_BEFORE:
+         _operations.insert(--it,op);
+         break;
+     }
+}
+
+bool kore::RenderManager::hasOperation(const OperationPtr& op) {
+    return std::find(_operations.begin(), _operations.end(), op) !=
+                                                             _operations.end();
 }

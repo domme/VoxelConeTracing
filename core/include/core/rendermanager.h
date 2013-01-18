@@ -20,7 +20,7 @@
 #ifndef CORE_INCLUDE_CORE_RENDERMANAGER_H_
 #define CORE_INCLUDE_CORE_RENDERMANAGER_H_
 
-#include <vector>
+#include <list>
 #include "core/common.h"
 #include "core/operation.h"
 #include "core/mesh.h"
@@ -28,19 +28,31 @@
 #include "core/camera.h"
 
 namespace kore {
+   enum EOpInsertPos {
+       INSERT_BEFORE,
+       INSERT_AFTER
+   };
+
   class RenderManager {
   public:
     static RenderManager *getInstance(void);
     const glm::ivec2& getRenderResolution() const;
     void setRenderResolution(const glm::ivec2& newResolution);
     void renderFrame(void);
+    void addOperation(const OperationPtr& op);
+    void addOperation(const OperationPtr& op, const OperationPtr& targetOp,
+                                                 const EOpInsertPos insertPos);
+    bool hasOperation(const OperationPtr& op);
+
   private:
     RenderManager(void);
     virtual ~RenderManager(void);
     void resolutionChanged();
 
     glm::ivec2 _renderResolution;
-    std::vector<Operation*> _operations;
+
+    typedef std::list<const OperationPtr> OperationList;
+    OperationList _operations;
   };
 };
 #endif  // CORE_INCLUDE_CORE_RENDERMANAGER_H_

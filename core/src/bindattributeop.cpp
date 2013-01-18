@@ -16,27 +16,34 @@
   You should have received a copy of the GNU General Public License
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include "core/bindattributeop.h"
 
-#ifndef CORE_INCLUDE_CORE_BINDATTRIBUTEOP_H_
-#define CORE_INCLUDE_CORE_BINDATTRIBUTEOP_H_
+kore::BindAttributeOp::BindAttributeOp(void) {
+}
 
-#include "core/operation.h"
-#include "core/mesh.h"
-#include "core/shader.h"
 
-namespace kore {
-  class BindAttributeOp: public Operation {
-  public:
-    BindAttributeOp(void);
-    virtual ~BindAttributeOp(void);
-    virtual void execute(void);
-    virtual void update(void);
-    virtual void reset(void);
-    bool connect(const MeshAttributeArray& meshAtt,
-                 const ShaderInput& shaderAtt);
-  private:
-    const MeshAttributeArray* _meshAttPtr;
-    const ShaderInput* _shaderInput;
-  };
-};
-#endif  // CORE_INCLUDE_CORE_BINDATTRIBUTEOP_H_
+kore::BindAttributeOp::~BindAttributeOp( void )
+{
+
+}
+
+void kore::BindAttributeOp::execute( void )
+{
+
+}
+
+void kore::BindAttributeOp::update( void )
+{
+
+}
+
+void kore::BindAttributeOp::reset( void )
+{
+
+}
+
+bool kore::BindAttributeOp::connect(const kore::MeshAttributeArray& meshAtt,
+                                    const kore::ShaderInput& shaderAtt ) {
+ _meshAttPtr = &meshAtt;
+ _shaderInput = &shaderAtt;
+}
