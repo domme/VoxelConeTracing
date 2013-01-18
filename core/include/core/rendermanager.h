@@ -28,10 +28,10 @@
 #include "core/camera.h"
 
 namespace kore {
-   enum EOpInsertPos {
-       INSERT_BEFORE,
-       INSERT_AFTER
-   };
+  enum EOpInsertPos {
+    INSERT_BEFORE,
+    INSERT_AFTER
+  };
 
   class RenderManager {
   public:

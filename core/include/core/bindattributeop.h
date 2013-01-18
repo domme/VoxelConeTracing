@@ -32,7 +32,7 @@ namespace kore {
     virtual void execute(void);
     virtual void update(void);
     virtual void reset(void);
-    bool connect(const MeshAttributeArray& meshAtt,
+    void connect(const MeshAttributeArray& meshAtt,
                  const ShaderInput& shaderAtt);
   private:
     const MeshAttributeArray* _meshAttPtr;

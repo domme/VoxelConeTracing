@@ -55,7 +55,7 @@ namespace kore {
 
   private:
     std::string                     _name;
-    std::vector<MeshAttributeArray>          _attributes;
+    std::vector<MeshAttributeArray> _attributes;
     std::vector<unsigned int>       _indices;
     unsigned int                    _numVertices;
     GLenum                          _primitiveType;
