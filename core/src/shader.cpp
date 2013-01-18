@@ -21,6 +21,7 @@
 #include <string>
 #include "core/shader.h"
 
+const unsigned int BUFSIZE = 100;  // Buffer length for shader-element names
 
 kore::Shader::Shader(void)
 : _name(""),
@@ -144,7 +145,13 @@ bool kore::Shader::initShader(void) {
     kore::Log::getInstance()->write(
       "[DEBUG] Program compiled\n");
   }
-    return success == GL_TRUE;
+
+  _attributes.clear();
+  _uniforms.clear();
+  constructShaderInfo(SHADERINPUT_ATTRIBUTE, _attributes);
+  constructShaderInfo(SHADERINPUT_UNIFORM, _uniforms);
+
+  return success == GL_TRUE;
 }
 
 GLuint kore::Shader::getAttributeLocation(const std::string &name) {
@@ -171,51 +178,44 @@ const std::vector<kore::ShaderInput>& kore::Shader::getUniforms() const {
     return _uniforms;
 }
 
-void kore::Shader::getAttributeInfo() {
-   /* GLint iNumActiveAttributes = 0;
-    glGetProgramiv( _shaderID, GL_ACTIVE_ATTRIBUTES, &iNumActiveAttributes );
-    for (int i = 0; i < iNumActiveAttributes; ++i) {
-        unsigned int bufSize;
-        GLchar szNameBuf[bufSize];
-        GLsizei iActualNameLength = 0;
-        GLint iAttributeSize = 0;
-        GLenum eAttributeType;
-        GLint iAttributeLoc = -1;
+void kore::Shader::constructShaderInfo( const kore::EShaderInputType eType,
+                                std::vector<kore::ShaderInput>& rInputVector ) {
+    GLint iNumActiveElements = 0;
 
-        glGetActiveAttrib(_shaderID, i, bufSize, &iActualNameLength,
-                          &iAttributeSize, &eAttributeType, szNameBuf);
-        iAttributeLoc = glGetAttribLocation( _shaderID, szNameBuf);
+    glGetProgramiv( _shaderID,
+                    eType == SHADERINPUT_ATTRIBUTE ?
+                             GL_ACTIVE_ATTRIBUTES : GL_ACTIVE_UNIFORMS,
+                    &iNumActiveElements );
+
+    for (unsigned int i = 0; i < iNumActiveElements; ++i) {
+        GLchar szNameBuf[BUFSIZE];
+        GLsizei iActualNameLength = 0;
+        GLint iElementSize = 0;
+        GLenum eElementType;
+        GLint iElementLoc = -1;
+
+        if (eType == SHADERINPUT_ATTRIBUTE) {
+            glGetActiveAttrib(_shaderID, i, BUFSIZE, &iActualNameLength,
+                              &iElementSize, &eElementType, szNameBuf);
+            iElementLoc = glGetAttribLocation(_shaderID, szNameBuf);
+        } else {
+            glGetActiveUniform(_shaderID, i, BUFSIZE, &iActualNameLength,
+                &iElementSize, &eElementType, szNameBuf);
+            iElementLoc = glGetUniformLocation(_shaderID, szNameBuf);
+        }
+
         std::string szName = std::string(szNameBuf);
 
-        ShaderInput att;
-        att.name = szName;
-        att.
+        ShaderInput element;
+        element.name = szName;
+        element.componentType = GL_FLOAT;  // TODO(dlazarek):
+                                           // We don't get this info
+                                           // from the shader currently.
+                                           // so we'll just assume GL_FLOAT here
+        element.type = eElementType;
+        element.size = iElementSize;
+        element.location = iElementLoc;
 
-        m_vAttributes.push_back( pAttribute );
-    } */
-}
-
-void kore::Shader::getUniformInfo() {
-   /* GLint iNumActiveUniforms = 0;
-    glGetProgramiv( m_uShaderProgram, GL_ACTIVE_UNIFORMS, &iNumActiveUniforms );
-    GLchar szNameBuf[ BUFSIZE ];
-    GLsizei iActualNameLength = 0;
-    GLint iUniformSize = 0;
-    GLenum eUniformType;
-    GLint iUniformLoc = -1;
-    IUniform* pUniform = NULL;
-
-    glGetActiveUniform( m_uShaderProgram, i, BUFSIZE, &iActualNameLength, &iUniformSize, &eUniformType, szNameBuf );
-    iUniformLoc = glGetUniformLocation( m_uShaderProgram, szNameBuf );
-
-    String szName = String( szNameBuf );
-
-    pUniform = createUniformFromDescription( eUniformType, szName, iUniformLoc );
-    pUniform->SetObserver( this );
-
-    if( m_mapActiveUniforms.find( szName ) != m_mapActiveUniforms.end() )
-        LOG( "WARNING!! Uniform " + szName + " already in Map!" );
-
-    m_mapActiveUniforms[ szName ] = pUniform;
-    m_vCachedUniforms.push_back( pUniform ); */
+        rInputVector.push_back(element);
+    }
 }
