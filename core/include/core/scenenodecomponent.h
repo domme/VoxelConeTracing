@@ -36,5 +36,6 @@ namespace kore {
     uint _id;
     SceneNode* _node;
   };
+  typedef std::shared_ptr<SceneNodeComponent> SceneNodeComponentPtr;
 };
 #endif  // CORE_INCLUDE_CORE_SCENENODECOMPONENT_H_

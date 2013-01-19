@@ -27,11 +27,13 @@
 
 namespace kore {
   class SceneNode {
+      friend class MeshLoader;
   public:
     SceneNode(void);
     virtual ~SceneNode(void);
     const SceneNode* getParent(void);
     const std::vector<SceneNode*> getChildren();
+    const std::vector<SceneNodeComponentPtr> getComponents();
     const uint64 getID(void);
     const Transform* getTransform(void);
     void setParent(SceneNode* parent);
@@ -46,8 +48,10 @@ namespace kore {
     uint64 _id;
     SceneNode* _parent;
     std::vector<SceneNode*> _children;
+    std::vector<SceneNodeComponentPtr> _components;
     Transform _transform;
     bool _dirty;  // if node has to be updated;
   };
+  typedef std::shared_ptr<SceneNode> SceneNodePtr;
 };
 #endif  // CORE_INCLUDE_CORE_SCENENODE_H_

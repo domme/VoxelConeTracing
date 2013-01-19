@@ -70,7 +70,7 @@ kore::ResourceManager::loadMesh(const std::string& filename) {
   }
 
   kore::MeshPtr pNewMesh =
-      MeshLoader::getInstance()->loadMesh(filename, true);
+      MeshLoader::getInstance()->loadSingleMesh(filename, true);
 
   if (pNewMesh) {
      _meshes.push_back(pNewMesh);

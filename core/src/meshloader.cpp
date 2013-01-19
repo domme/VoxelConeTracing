@@ -21,6 +21,7 @@
 #include <assimp/postprocess.h>
 #include <string>
 #include "core/log.h"
+#include "core/transform.h"
 
 
 kore::MeshLoader* kore::MeshLoader::getInstance() {
@@ -34,33 +35,93 @@ kore::MeshLoader::MeshLoader() {
 kore::MeshLoader::~MeshLoader() {
 }
 
-kore::MeshPtr
-kore::MeshLoader::loadMesh(const std::string& szMeshPath,
-                           const bool bUseBuffers) {
-    const aiScene* pAiScene = _aiImporter.ReadFile(szMeshPath,
+
+const aiScene* kore::MeshLoader::readScene(const std::string& szScenePath) {
+    const aiScene* pAiScene = _aiImporter.ReadFile(szScenePath,
         aiProcess_JoinIdenticalVertices | aiProcess_Triangulate |
-aiProcess_JoinIdenticalVertices);
+        aiProcess_JoinIdenticalVertices);
 
     if (!pAiScene) {
-        Log::getInstance()->write("[ERROR] Mesh-file could not be loaded: %s",
-                                  szMeshPath.c_str());
+        Log::getInstance()->write("[ERROR] Scene-file could not be loaded: %s",
+                                   szScenePath.c_str());
 
-        return kore::MeshPtr();
+        return NULL;
     }
 
     if (!pAiScene->HasMeshes()) {
-        Log::getInstance()->write("[ERROR] Mesh-file does not"
+        Log::getInstance()->write("[ERROR] Scene-file does not"
                                   "contain any meshes: %s",
-                                  szMeshPath.c_str());
-        return kore::MeshPtr();
+                                   szScenePath.c_str());
+        return NULL;
+    }
+    return pAiScene;
+}
+
+
+kore::MeshPtr
+kore::MeshLoader::loadSingleMesh(const std::string& szMeshPath,
+                                 const bool bUseBuffers) {
+    const aiScene* pAiScene = readScene(szMeshPath);
+
+    if (!pAiScene) {
+        return MeshPtr(NULL);
     }
 
     if (pAiScene->mNumMeshes > 1) {
-        Log::getInstance()->write("[WARNING] Mesh-file contains more than one"
-                                  "mesh but it is loaded as a single mesh. %s",
+        Log::getInstance()->write("[WARNING] Mesh file contains more than"
+                                  "one mesh but it is"
+                                  "loaded as a single mesh: %s",
                                   szMeshPath.c_str());
     }
 
+    return loadMesh(pAiScene, 0, bUseBuffers);
+}
+
+kore::SceneNodePtr
+kore::MeshLoader::loadScene(const std::string& szScenePath,
+                            const bool bUseBuffers)
+{
+    const aiScene* pAiScene = readScene(szScenePath);
+
+    if (!pAiScene) {
+        return SceneNodePtr(NULL);
+    }
+
+    SceneNodePtr koreSceneNode(new SceneNode);
+
+    // Load scene nodes recursively and return:
+    loadNode(pAiScene, pAiScene->mRootNode, koreSceneNode, bUseBuffers);
+    return koreSceneNode;
+}
+
+
+void kore::MeshLoader::loadNode(const aiScene* paiScene,
+                                const aiNode* paiNode,
+                                SceneNodePtr& koreNode,
+                                const bool bUseBuffers) {
+    koreNode->_transform.local = glmMatFromAiMat(paiNode->mTransformation);
+    koreNode->_dirty = true;
+
+    for (uint iMesh = 0; iMesh < paiNode->mNumMeshes; ++iMesh) {
+        MeshPtr mesh = loadMesh(paiScene,
+                                paiNode->mMeshes[iMesh],
+                                bUseBuffers);
+        koreNode->_components.push_back(mesh);
+        break;  // Note: currently only one mesh-component is allowed per node
+    }
+
+    for (uint iChild = 0; iChild < paiNode->mNumChildren; ++iChild) {
+        SceneNodePtr childNode(new SceneNode);
+        childNode->_parent = koreNode._Get();
+        loadNode(paiScene, paiNode->mChildren[iChild], childNode, bUseBuffers);
+    }
+}
+
+
+kore::MeshPtr
+    kore::MeshLoader::loadMesh(const aiScene* pAiScene,
+                               const uint uMeshIdx,
+                               const bool bUseBuffers) {
     kore::MeshPtr pMesh(new kore::Mesh);
     aiMesh* pAiMesh = pAiScene->mMeshes[ 0 ];
     pMesh->_numVertices = pAiMesh->mNumVertices;
@@ -239,3 +300,10 @@ void kore::MeshLoader::
     pMesh->_attributes.push_back(att);
 }
 
+glm::mat4 kore::MeshLoader::glmMatFromAiMat( const aiMatrix4x4& aiMat ) {
+    // Note: ai-matrix is row-major, but glm::mat4 is column-major
+    return glm::mat4(aiMat.a1, aiMat.b1, aiMat.c1, aiMat.d1,
+                     aiMat.a2, aiMat.b2, aiMat.c2, aiMat.d2,
+                     aiMat.a3, aiMat.b3, aiMat.c3, aiMat.d3,
+                     aiMat.a4, aiMat.b4, aiMat.c4, aiMat.d4);
+}

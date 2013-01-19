@@ -45,6 +45,10 @@ const std::vector<kore::SceneNode*> kore::SceneNode::getChildren() {
   return _children;
 }
 
+const std::vector<kore::SceneNodeComponentPtr> kore::SceneNode::getComponents() {
+    return _components;
+}
+
 const uint64 kore::SceneNode::getID(void) {
   return _id;
 }

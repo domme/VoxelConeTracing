@@ -21,6 +21,7 @@
 #define CORE_INCLUDE_CORE_MESHLOADER_H_
 
 #include <assimp/mesh.h>
+#include <assimp/scene.h>
 #include <assimp/Importer.hpp>
 #include <string>
 
@@ -37,11 +38,24 @@ namespace kore {
         public:
             static MeshLoader* getInstance();
             ~MeshLoader();
-            kore::MeshPtr loadMesh(const std::string& szMeshPath,
-                                           const bool bUseBuffers);
+
+            SceneNodePtr loadScene(const std::string& szScenePath,
+                                   const bool bUseBuffers);
+            MeshPtr loadSingleMesh(const std::string& szMeshPath,
+                                   const bool bUseBuffers);
 
         private:
            MeshLoader();
+           const aiScene* readScene(const std::string& szScenePath);
+           void loadNode(const aiScene* paiScene,
+                         const aiNode* paiNode,
+                         SceneNodePtr& koreNode,
+                         const bool bUseBuffers);
+
+           kore::MeshPtr loadMesh(const aiScene* paiScene,
+                                   const uint uMeshIdx,
+                                   const bool bUseBuffers);
+
             void loadVertexPositions(const aiMesh* pAiMesh,
                                     kore::MeshPtr& pMesh);
 
@@ -61,6 +75,8 @@ namespace kore {
             void loadVertexColors(const aiMesh* pAiMesh,
                                   kore::MeshPtr& pMesh,
                                   const unsigned int iColorSet);
+
+            glm::mat4 glmMatFromAiMat(const aiMatrix4x4& aiMat);
 
            Assimp::Importer _aiImporter;
     };

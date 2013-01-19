@@ -24,8 +24,11 @@
 namespace kore {
   class Transform {
   public:
-    Transform(void) {}
-    virtual ~Transform(void) {}
+    Transform(void)
+        : global(glm::mat4(1.0f)),
+          local(glm::mat4(1.0f)) {}
+
+    ~Transform(void) {}
     glm::mat4 global;
     glm::mat4 local;
   };
