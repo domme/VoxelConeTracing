@@ -17,28 +17,28 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CORE_INCLUDE_CORE_BINDATTRIBUTEOP_H_
-#define CORE_INCLUDE_CORE_BINDATTRIBUTEOP_H_
+#ifndef CORE_INCLUDE_CORE_BINDUNIFORMOP_H_
+#define CORE_INCLUDE_CORE_BINDUNIFORMOP_H_
 
 #include "core/operation.h"
-#include "core/mesh.h"
+#include "core/datatypes.h"
 #include "core/shader.h"
 
 namespace kore {
-  class BindAttributeOp: public Operation {
+  class BindUniformOp: public Operation {
   public:
-    BindAttributeOp(void);
-    BindAttributeOp(const kore::MeshAttributeArray& meshAtt,
-                    const kore::ShaderInput& shaderAtt);
-    virtual ~BindAttributeOp(void);
+    BindUniformOp(void);
+    virtual ~BindUniformOp(void);
     virtual void execute(void);
     virtual void update(void);
     virtual void reset(void);
-    void connect(const MeshAttributeArray& meshAtt,
-                 const ShaderInput& shaderAtt);
+    void connect(const ShaderInput& componentUni,
+                 GLuint shaderID,
+                 const ShaderInput& shaderUni);
   private:
-    const MeshAttributeArray* _meshAttPtr;
-    const ShaderInput* _shaderInput;
+    const ShaderInput* _componentUniform;
+    const ShaderInput* _shaderUniform;
+    GLuint _shaderID;
   };
 };
-#endif  // CORE_INCLUDE_CORE_BINDATTRIBUTEOP_H_
+#endif  // CORE_INCLUDE_CORE_BINDUNIFORMOP_H_

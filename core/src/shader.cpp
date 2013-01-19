@@ -25,7 +25,7 @@ const unsigned int BUFSIZE = 100;  // Buffer length for shader-element names
 
 kore::Shader::Shader(void)
 : _name(""),
-_shaderID(GLUINT_HANDLE_INVALID) {
+  _shaderID(GLUINT_HANDLE_INVALID) {
   _attributes.clear();
   _uniforms.clear();
   _name.clear();
@@ -148,8 +148,8 @@ bool kore::Shader::initShader(void) {
 
   _attributes.clear();
   _uniforms.clear();
-  constructShaderInfo(SHADERINPUT_ATTRIBUTE, _attributes);
-  constructShaderInfo(SHADERINPUT_UNIFORM, _uniforms);
+  constructShaderInfo(GL_ACTIVE_ATTRIBUTES, _attributes);
+  constructShaderInfo(GL_ACTIVE_UNIFORMS, _uniforms);
 
   return success == GL_TRUE;
 }
@@ -178,13 +178,12 @@ const std::vector<kore::ShaderInput>& kore::Shader::getUniforms() const {
     return _uniforms;
 }
 
-void kore::Shader::constructShaderInfo(const kore::EShaderInputType eType,
+void kore::Shader::constructShaderInfo(const GLenum activeType,
                                 std::vector<kore::ShaderInput>& rInputVector) {
     GLint iNumActiveElements = 0;
 
     glGetProgramiv(_shaderID,
-                    eType == SHADERINPUT_ATTRIBUTE ?
-                             GL_ACTIVE_ATTRIBUTES : GL_ACTIVE_UNIFORMS,
+                    activeType,
                     &iNumActiveElements);
 
     for (int i = 0; i < iNumActiveElements; ++i) {
@@ -194,7 +193,7 @@ void kore::Shader::constructShaderInfo(const kore::EShaderInputType eType,
         GLenum eElementType;
         GLint iElementLoc = -1;
 
-        if (eType == SHADERINPUT_ATTRIBUTE) {
+        if (activeType == GL_ACTIVE_ATTRIBUTES) {
             glGetActiveAttrib(_shaderID, i, BUFSIZE, &iActualNameLength,
                               &iElementSize, &eElementType, szNameBuf);
             iElementLoc = glGetAttribLocation(_shaderID, szNameBuf);

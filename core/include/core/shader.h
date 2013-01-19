@@ -26,26 +26,6 @@
 #include "core/common.h"
 
 namespace kore {
-
-  struct ShaderInput {
-    GLuint componentType;        // e.g. GL_FLOAT
-    GLenum type;                 // e.g. GL_VEC3
-    GLuint size;                 // number of components in units of type
-                                 // (currently this is always 1)
-    GLint location;
-    std::string name;
-  };
-
-  struct ShaderOutput {
-    GLuint type;
-    std::string name;
-  };
-
-  enum EShaderInputType {
-      SHADERINPUT_ATTRIBUTE,
-      SHADERINPUT_UNIFORM
-  };
-
   class Shader {
   public:
     Shader(void);
@@ -62,7 +42,7 @@ namespace kore {
   private:
     void getAttributeInfo();
     void getUniformInfo();
-    void constructShaderInfo(const EShaderInputType eType,
+    void constructShaderInfo(const GLenum activeType,
                              std::vector<ShaderInput>& rInputVector);
 
     std::string _name;

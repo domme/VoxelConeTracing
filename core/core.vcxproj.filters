@@ -75,6 +75,9 @@
     <ClInclude Include="include\core\operation.h">
       <Filter>include\operations</Filter>
     </ClInclude>
+    <ClInclude Include="include\core\binduniformop.h">
+      <Filter>include\operations</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\datatypes.cpp">
@@ -120,6 +123,9 @@
       <Filter>src\components</Filter>
     </ClCompile>
     <ClCompile Include="src\bindattributeop.cpp">
+      <Filter>src\operations</Filter>
+    </ClCompile>
+    <ClCompile Include="src\binduniformop.cpp">
       <Filter>src\operations</Filter>
     </ClCompile>
   </ItemGroup>

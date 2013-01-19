@@ -82,21 +82,21 @@ int main(void) {
 
   // initialize
   // add ressource paths
-  kore::ResourceManager::getInstance()->addPath("./assets/shader/");
-  kore::ResourceManager::getInstance()->addPath("./assets/meshes/");
+  // kore::ResourceManager::getInstance()->addPath("./assets/shader/");
+  // kore::ResourceManager::getInstance()->addPath("./assets/meshes/");
 
   // load ressources
-  
   kore::MeshPtr pTestMesh =
       kore::ResourceManager::getInstance()->
       loadMesh("./assets/meshes/cube.dae");
 
- kore::ShaderPtr pSimpleShader(new kore::Shader);
+  kore::ShaderPtr pSimpleShader(new kore::Shader);
   pSimpleShader->loadShader( "./assets/shader/simple.vp", GL_VERTEX_SHADER);
   pSimpleShader->loadShader( "./assets/shader/simple.fp", GL_FRAGMENT_SHADER);
   pSimpleShader->initShader();
 
- kore::CameraPtr pCamera(new kore::Camera);
+
+  kore::CameraPtr pCamera(new kore::Camera);
   pCamera->setView(glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f),
                    glm::vec3(0.0f, 0.0f, 0.0f),
                    glm::vec3(0.0f, 1.0f, 0.0f)));
@@ -109,7 +109,7 @@ int main(void) {
 
   kore::RenderManager::getInstance()->addOperation(pOp);
 
-  glClearColor(1.0f,1.0f,1.0f,1.0f);  
+  glClearColor(1.0f,1.0f,1.0f,1.0f);
 
   // Main loop
   while (running) {

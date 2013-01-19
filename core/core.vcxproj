@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\core\bindattributeop.h" />
+    <ClInclude Include="include\core\binduniformop.h" />
     <ClInclude Include="include\core\camera.h" />
     <ClInclude Include="include\core\common.h" />
     <ClInclude Include="include\core\datatypes.h" />
@@ -32,6 +33,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\bindattributeop.cpp" />
+    <ClCompile Include="src\binduniformop.cpp" />
     <ClCompile Include="src\camera.cpp" />
     <ClCompile Include="src\datatypes.cpp" />
     <ClCompile Include="src\log.cpp" />

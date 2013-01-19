@@ -48,11 +48,11 @@ namespace kore {
     RenderManager(void);
     virtual ~RenderManager(void);
     void resolutionChanged();
-
     glm::ivec2 _renderResolution;
 
     typedef std::list<const OperationPtr> OperationList;
     OperationList _operations;
+    const Shader* _activeShader;
   };
 };
 #endif  // CORE_INCLUDE_CORE_RENDERMANAGER_H_

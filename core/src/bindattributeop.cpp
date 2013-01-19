@@ -23,32 +23,21 @@ kore::BindAttributeOp::BindAttributeOp(void) : _meshAttPtr(NULL),
                                                kore::Operation() {
 }
 
+kore::BindAttributeOp::BindAttributeOp(const kore::MeshAttributeArray& meshAtt,
+                                       const kore::ShaderInput& shaderAtt) :
+                                      _meshAttPtr(&meshAtt),
+                                      _shaderInput(&shaderAtt),
+                                      kore::Operation() {
+}
+
+
 kore::BindAttributeOp::~BindAttributeOp(void) {
 }
 
 void kore::BindAttributeOp::execute(void) {
-  /*glEnableVertexAttribArray(_shaderInput->location);
+  glEnableVertexAttribArray(_shaderInput->location);
   glVertexAttribPointer(_shaderInput->location, _meshAttPtr->numComponents,
       _meshAttPtr->componentType, GL_FALSE, 0, _meshAttPtr->data);
-
-
-    _shader->applyShader();
-    // Update uniforms
-    GLint iView =
-        glGetUniformLocation(_shader->getProgramLocation(), "view");
-
-    GLint iProj =
-        glGetUniformLocation(_shader->getProgramLocation(), "projection");
-
-    GLint iModel =
-        glGetUniformLocation(_shader->getProgramLocation(), "model");
-
-    glUniformMatrix4fv(iView, 1, GL_FALSE, glm::value_ptr(_camera->getView()));
-
-    glUniformMatrix4fv(iProj, 1, GL_FALSE,
-        glm::value_ptr(_camera->getProjection()));
-
-    glUniformMatrix4fv(iModel, 1, GL_FALSE, glm::value_ptr(glm::mat4(1.0f)));*/
 }
 
 void kore::BindAttributeOp::update(void) {

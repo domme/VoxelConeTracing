@@ -20,24 +20,23 @@
 #ifndef CORE_INCLUDE_CORE_DATATYPES_H_
 #define CORE_INCLUDE_CORE_DATATYPES_H_
 
+#include <string>
 #include "core/common.h"
 #include "core/log.h"
 
 namespace kore {
-        class DatatypeUtil {
-        public:
-            static unsigned int getSizeFromGLdatatype(GLenum datatype);
-        };
+  class DatatypeUtil {
+  public:
+    static unsigned int getSizeFromGLdatatype(GLenum datatype);
+  };
 
-        enum OutputType {
-            // TODO(mr.crow): Add ALL possible Types
-            KORE_SHADER_OUTPUT_INT,
-            KORE_SHADER_OUTPUT_UINT,
-            KORE_SHADER_OUTPUT_FLOAT,
-            KORE_SHADER_OUTPUT_DOUBLE,
-            KORE_SHADER_OUTPUT_VEC2,
-            KORE_SHADER_OUTPUT_VEC3,
-            KORE_SHADER_OUTPUT_VEC4
-        };
+  struct ShaderInput {
+    GLuint componentType;        // e.g. GL_FLOAT
+    GLenum type;                 // e.g. GL_VEC3
+    GLuint size;                 // number of components in units of type
+                                 // (currently this is always 1)
+    GLint location;
+    std::string name;
+  };
 };
 #endif  // CORE_INCLUDE_CORE_DATATYPES_H_
