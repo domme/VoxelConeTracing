@@ -30,6 +30,7 @@
     <ClInclude Include="include\core\shader.h" />
     <ClInclude Include="include\core\stdafx.h" />
     <ClInclude Include="include\core\transform.h" />
+    <ClInclude Include="include\core\values.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\bindattributeop.cpp" />

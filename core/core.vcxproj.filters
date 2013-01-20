@@ -78,6 +78,9 @@
     <ClInclude Include="include\core\binduniformop.h">
       <Filter>include\operations</Filter>
     </ClInclude>
+    <ClInclude Include="include\core\values.h">
+      <Filter>include\components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\datatypes.cpp">

@@ -1,5 +1,5 @@
 /*
-  Copyright @ 2012 The KoRE Project
+  Copyright © 2012 The KoRE Project
 
   This file is part of KoRE.
 
@@ -17,29 +17,25 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef CORE_INCLUDE_CORE_VALUES_H_
+#define CORE_INCLUDE_CORE_VALUES_H_
+
+#include <string>
+#include <vector>
+#include "core/datatypes.h"
 #include "core/scenenodecomponent.h"
-#include "core/SceneNode.h"
 
-kore::SceneNodeComponent::SceneNodeComponent()
-  : _id(UINT_INVALID),
-  _node(NULL) {
-}
+namespace kore {
+  class Values : public SceneNodeComponent {
 
-kore::SceneNodeComponent::~SceneNodeComponent() {
-}
+  public:
+    Values(void);
+    virtual ~Values(void);
+    const std::string& getName() const;
 
-void kore::SceneNodeComponent::attachTo(kore::SceneNode* node) {
-}
-
-const kore::SceneNode*
-  kore::SceneNodeComponent::getNode(void) const {
-    return _node;
-}
-
-const kore::ComponentType kore::SceneNodeComponent::getType(void) const {
-  return _type;
-}
-
-uint kore::SceneNodeComponent::getID(void) const {
-  return _id;
-}
+  private:
+    std::string _name;
+    std::vector<ShaderInput> _values;
+  };
+};
+#endif  // CORE_INCLUDE_CORE_VALUES_H_

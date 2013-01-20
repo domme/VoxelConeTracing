@@ -23,6 +23,13 @@
 #include "core/common.h"
 
 namespace kore {
+  enum ComponentType {
+    COMPONENT_UNKNOWN,
+    COMPONENT_MESH,
+    COMPONENT_CAMERA,
+    COMPONENT_VALUES
+  };
+
   class SceneNode;
   class SceneNodeComponent {
   public:
@@ -30,11 +37,13 @@ namespace kore {
     virtual ~SceneNodeComponent(void);
     virtual void attachTo(SceneNode* node);
     const SceneNode* getNode(void) const;
+    const ComponentType getType(void) const;
     uint getID(void) const;
 
   private:
     uint _id;
     SceneNode* _node;
+    ComponentType _type;
   };
   typedef std::shared_ptr<SceneNodeComponent> SceneNodeComponentPtr;
 };
