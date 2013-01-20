@@ -87,36 +87,51 @@ kore::MeshLoader::loadScene(const std::string& szScenePath,
         return SceneNodePtr(NULL);
     }
 
-    SceneNodePtr koreSceneNode(new SceneNode);
-
+    SceneNodePtr koreSceneRootNode(new SceneNode);
     // Load scene nodes recursively and return:
-    loadNode(pAiScene, pAiScene->mRootNode, koreSceneNode, bUseBuffers);
-    return koreSceneNode;
+    loadChildNode(pAiScene, pAiScene->mRootNode, koreSceneRootNode,
+                                                                 bUseBuffers);
+    return koreSceneRootNode;
 }
 
 
-void kore::MeshLoader::loadNode(const aiScene* paiScene,
+void kore::MeshLoader::loadChildNode(const aiScene* paiScene,
                                 const aiNode* paiNode,
-                                SceneNodePtr& koreNode,
+                                SceneNodePtr& parentNode,
                                 const bool bUseBuffers) {
+    SceneNodePtr koreNode(new SceneNode);
     koreNode->_transform.local = glmMatFromAiMat(paiNode->mTransformation);
+    koreNode->_parent = parentNode.get();
     koreNode->_dirty = true;
+    parentNode->_children.push_back(koreNode.get());
 
-    for (uint iMesh = 0; iMesh < paiNode->mNumMeshes; ++iMesh) {
+    // Load the first mesh as a component of this node.
+    // Further meshes have to be loaded into duplicate nodes
+    if (paiNode->mNumMeshes > 0) {
+        MeshPtr mesh = loadMesh(paiScene,
+                                paiNode->mMeshes[0],
+                                bUseBuffers);
+        koreNode->_components.push_back(mesh);
+    }
+
+    // Make additional copies for any more meshes
+    for (uint iMesh = 1; iMesh < paiNode->mNumMeshes; ++iMesh) {
+        SceneNodePtr copyNode(new SceneNode);
+        copyNode->_transform.local = glmMatFromAiMat(paiNode->mTransformation);
+        copyNode->_parent = parentNode.get();
+        copyNode->_dirty = true;
+        parentNode->_children.push_back(copyNode.get());
         MeshPtr mesh = loadMesh(paiScene,
                                 paiNode->mMeshes[iMesh],
                                 bUseBuffers);
-        koreNode->_components.push_back(mesh);
-        break;  // Note: currently only one mesh-component is allowed per node
+        copyNode->_components.push_back(mesh);
     }
 
     for (uint iChild = 0; iChild < paiNode->mNumChildren; ++iChild) {
-        SceneNodePtr childNode(new SceneNode);
-        childNode->_parent = koreNode._Get();
-        loadNode(paiScene, paiNode->mChildren[iChild], childNode, bUseBuffers);
+        loadChildNode(paiScene, paiNode->mChildren[iChild], koreNode,
+                      bUseBuffers);
     }
 }
-
 
 kore::MeshPtr
     kore::MeshLoader::loadMesh(const aiScene* pAiScene,

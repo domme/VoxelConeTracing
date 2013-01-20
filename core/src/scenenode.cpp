@@ -37,23 +37,24 @@ kore::SceneNode::SceneNode(void) {
 kore::SceneNode::~SceneNode(void) {
 }
 
-const kore::SceneNode* kore::SceneNode::getParent(void) {
+const kore::SceneNode* kore::SceneNode::getParent(void) const {
   return _parent;
 }
 
-const std::vector<kore::SceneNode*> kore::SceneNode::getChildren() {
+const std::vector<kore::SceneNode*> kore::SceneNode::getChildren() const {
   return _children;
 }
 
-const std::vector<kore::SceneNodeComponentPtr> kore::SceneNode::getComponents() {
+const std::vector<kore::SceneNodeComponentPtr>
+    kore::SceneNode::getComponents() const {
     return _components;
 }
 
-const uint64 kore::SceneNode::getID(void) {
+const uint64 kore::SceneNode::getID(void) const {
   return _id;
 }
 
-const kore::Transform* kore::SceneNode::getTransform(void) {
+const kore::Transform* kore::SceneNode::getTransform(void) const {
   return &_transform;
 }
 
@@ -61,7 +62,7 @@ void kore::SceneNode::setParent(SceneNode* parent) {
   _parent = parent;
 }
 
-const bool kore::SceneNode::needsUpdate(void) {
+const bool kore::SceneNode::needsUpdate(void) const {
   return _dirty;
 }
 

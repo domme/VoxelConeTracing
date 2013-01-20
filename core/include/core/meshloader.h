@@ -47,9 +47,10 @@ namespace kore {
         private:
            MeshLoader();
            const aiScene* readScene(const std::string& szScenePath);
-           void loadNode(const aiScene* paiScene,
+
+           void loadChildNode(const aiScene* paiScene,
                          const aiNode* paiNode,
-                         SceneNodePtr& koreNode,
+                         SceneNodePtr& parentNode,
                          const bool bUseBuffers);
 
            kore::MeshPtr loadMesh(const aiScene* paiScene,

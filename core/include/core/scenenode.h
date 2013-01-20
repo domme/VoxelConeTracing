@@ -31,14 +31,14 @@ namespace kore {
   public:
     SceneNode(void);
     virtual ~SceneNode(void);
-    const SceneNode* getParent(void);
-    const std::vector<SceneNode*> getChildren();
-    const std::vector<SceneNodeComponentPtr> getComponents();
-    const uint64 getID(void);
-    const Transform* getTransform(void);
+    const SceneNode* getParent(void) const;
+    const std::vector<SceneNode*> getChildren() const;
+    const std::vector<SceneNodeComponentPtr> getComponents() const;
+    const uint64 getID(void) const;
+    const Transform* getTransform(void) const;
     void setParent(SceneNode* parent);
 
-    const bool needsUpdate(void);
+    const bool needsUpdate(void) const;
     void update(void);
 
     void translate(const glm::vec3& dir);
@@ -46,7 +46,7 @@ namespace kore {
     void scale(const glm::vec3& dim);
   private:
     uint64 _id;
-    SceneNode* _parent;
+    const SceneNode* _parent;
     std::vector<SceneNode*> _children;
     std::vector<SceneNodeComponentPtr> _components;
     Transform _transform;
