@@ -79,8 +79,7 @@ kore::MeshLoader::loadSingleMesh(const std::string& szMeshPath,
 
 kore::SceneNodePtr
 kore::MeshLoader::loadScene(const std::string& szScenePath,
-                            const bool bUseBuffers)
-{
+                            const bool bUseBuffers) {
     const aiScene* pAiScene = readScene(szScenePath);
 
     if (!pAiScene) {
@@ -315,7 +314,7 @@ void kore::MeshLoader::
     pMesh->_attributes.push_back(att);
 }
 
-glm::mat4 kore::MeshLoader::glmMatFromAiMat( const aiMatrix4x4& aiMat ) {
+glm::mat4 kore::MeshLoader::glmMatFromAiMat(const aiMatrix4x4& aiMat) {
     // Note: ai-matrix is row-major, but glm::mat4 is column-major
     return glm::mat4(aiMat.a1, aiMat.b1, aiMat.c1, aiMat.d1,
                      aiMat.a2, aiMat.b2, aiMat.c2, aiMat.d2,
