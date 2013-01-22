@@ -29,6 +29,7 @@ kore::Mesh::Mesh(void)
     : _numVertices(0),
     _primitiveType(GL_TRIANGLES),
     SceneNodeComponent() {
+        _type = COMPONENT_MESH;
 }
 
 kore::Mesh::~Mesh(void) {

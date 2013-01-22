@@ -100,9 +100,9 @@ void kore::MeshLoader::loadChildNode(const aiScene* paiScene,
                                 const bool bUseBuffers) {
     SceneNodePtr koreNode(new SceneNode);
     koreNode->_transform.local = glmMatFromAiMat(paiNode->mTransformation);
-    koreNode->_parent = parentNode.get();
+    koreNode->_parent = parentNode;
     koreNode->_dirty = true;
-    parentNode->_children.push_back(koreNode.get());
+    parentNode->_children.push_back(koreNode);
 
     // Load the first mesh as a component of this node.
     // Further meshes have to be loaded into duplicate nodes
@@ -111,15 +111,16 @@ void kore::MeshLoader::loadChildNode(const aiScene* paiScene,
                                 paiNode->mMeshes[0],
                                 bUseBuffers);
         koreNode->_components.push_back(mesh);
+        mesh->setNode(koreNode);
     }
 
     // Make additional copies for any more meshes
     for (uint iMesh = 1; iMesh < paiNode->mNumMeshes; ++iMesh) {
         SceneNodePtr copyNode(new SceneNode);
         copyNode->_transform.local = glmMatFromAiMat(paiNode->mTransformation);
-        copyNode->_parent = parentNode.get();
+        copyNode->_parent = parentNode;
         copyNode->_dirty = true;
-        parentNode->_children.push_back(copyNode.get());
+        parentNode->_children.push_back(copyNode);
         MeshPtr mesh = loadMesh(paiScene,
                                 paiNode->mMeshes[iMesh],
                                 bUseBuffers);

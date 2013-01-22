@@ -28,12 +28,15 @@ kore::SceneNodeComponent::SceneNodeComponent()
 kore::SceneNodeComponent::~SceneNodeComponent() {
 }
 
-void kore::SceneNodeComponent::attachTo(kore::SceneNode* node) {
+void kore::SceneNodeComponent::attachTo(kore::SceneNodePtr& node) {
 }
 
-const kore::SceneNode*
-  kore::SceneNodeComponent::getNode(void) const {
+const kore::SceneNodePtr&
+kore::SceneNodeComponent::getNode(void) const {
     return _node;
+}
+
+void kore::SceneNodeComponent::setNode( const kore::SceneNodePtr& node ) {
 }
 
 const kore::ComponentType kore::SceneNodeComponent::getType(void) const {

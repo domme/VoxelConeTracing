@@ -42,6 +42,7 @@ kore::Camera::Camera()
         m_fWidth(1.0f),
         m_fHeight(1.0),
         kore::SceneNodeComponent() {
+    _type = COMPONENT_CAMERA;
 }
 
 kore::Camera::~Camera() {

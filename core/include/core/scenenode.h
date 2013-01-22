@@ -26,18 +26,19 @@
 #include "core/transform.h"
 
 namespace kore {
-  class SceneNode {
-      friend class MeshLoader;
+    typedef std::shared_ptr<SceneNode> SceneNodePtr;
+    class SceneNode {
+    friend class MeshLoader;
   public:
     SceneNode(void);
     virtual ~SceneNode(void);
-    const SceneNode* getParent(void) const;
-    const std::vector<SceneNode*> getChildren() const;
+    const SceneNodePtr& getParent(void) const;
+    const std::vector<SceneNodePtr>& getChildren() const;
     const std::vector<SceneNodeComponentPtr> getComponents() const;
     const uint64 getID(void) const;
     const uint getTag(void) const;
     const Transform* getTransform(void) const;
-    void setParent(SceneNode* parent);
+    void setParent(const SceneNodePtr& parent);
     void setTag(uint tag);
 
     const bool needsUpdate(void) const;
@@ -51,12 +52,11 @@ namespace kore {
     uint64 _id;
     uint _tag;
 
-    const SceneNode* _parent;
-    std::vector<SceneNode*> _children;
+    SceneNodePtr _parent;
+    std::vector<SceneNodePtr> _children;
     std::vector<SceneNodeComponentPtr> _components;
     Transform _transform;
     bool _dirty;  // if node has to be updated;
   };
-  typedef std::shared_ptr<SceneNode> SceneNodePtr;
 };
 #endif  // CORE_INCLUDE_CORE_SCENENODE_H_
