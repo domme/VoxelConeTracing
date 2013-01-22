@@ -23,21 +23,20 @@
 #include <string>
 #include <vector>
 #include "core/common.h"
-#include "core/Mesh.h"
-#include "core/Shader.h"
+#include "core/mesh.h"
+#include "core/shader.h"
+#include "core/scenenode.h"
 
 
 namespace kore {
   class ResourceManager {
   public:
     static ResourceManager *getInstance(void);
-    bool addPath(const std::string& path);
-    kore::MeshPtr loadMesh(const std::string& filename);
+    kore::SceneNodePtr loadScene(const std::string& filename);
   private:
     ResourceManager(void);
     virtual ~ResourceManager(void);
 
-    std::vector<std::string> _resource_paths;
     std::vector<kore::MeshPtr> _meshes;
     std::vector<kore::ShaderPtr> _shader;
   };

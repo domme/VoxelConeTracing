@@ -37,44 +37,9 @@ kore::ResourceManager::ResourceManager(void) {
 kore::ResourceManager::~ResourceManager(void) {
 }
 
-bool kore::ResourceManager::addPath(const std::string& path) {
-  if (_access(path.c_str(), 0) == 0) {
-    struct stat status;
-    stat(path.c_str(), &status);
-
-    if (status.st_mode & S_IFDIR) {
-      _resource_paths.push_back(path);
-      kore::Log::getInstance()->write(
-        "[DEBUG] added resource path: '%s'\n",
-        path.c_str());
-      return true;
-    } else {
-      kore::Log::getInstance()->write(
-        "[WARNING] resource path not found: '%s'\n",
-        path.c_str());
-      return false;
-    }
-  } else {
-    kore::Log::getInstance()->write(
-      "[WARNING] resource path not found: '%s'\n",
-      path.c_str());
-    return false;
-  }
-}
-
-kore::MeshPtr
-kore::ResourceManager::loadMesh(const std::string& filename) {
-  std::string currentpath;
-  for (unsigned int i = 0; i < _resource_paths.size(); i++) {
-    currentpath = _resource_paths[i] + filename;
-  }
-
-  kore::MeshPtr pNewMesh =
-      MeshLoader::getInstance()->loadSingleMesh(filename, true);
-
-  if (pNewMesh) {
-     _meshes.push_back(pNewMesh);
-  }
-
-  return pNewMesh;
+kore::SceneNodePtr
+kore::ResourceManager::loadScene(const std::string& filename) {
+  kore::SceneNodePtr pNewScene =
+      MeshLoader::getInstance()->loadScene(filename, true);
+  return pNewScene;
 }
