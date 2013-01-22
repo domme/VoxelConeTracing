@@ -100,3 +100,14 @@ void kore::SceneNode::rotate(const GLfloat& angle, const glm::vec3& axis) {
 void kore::SceneNode::scale(const glm::vec3& dim) {
   _dirty = true;
 }
+
+void kore::SceneNode::getSceneNodesWithTag( const uint tag,
+                                          std::vector<SceneNodePtr>& vNodes ) {
+    for (uint iChild = 0; iChild < _children.size(); ++iChild) {
+        // If there is at least one bit set in both tags, the child is added
+        if ((_children[iChild]->getTag() & tag) != 0) {
+            vNodes.push_back(_children[iChild]);
+            _children[iChild]->getSceneNodesWithTag(tag, vNodes);
+        }
+    }
+}

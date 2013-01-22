@@ -47,6 +47,7 @@ typedef double float64;
 #define GLUINT_HANDLE_INVALID 0xFFFFFFFF
 #define UINT_INVALID 0xFFFFFFFF
 #define UINT64_INVALID 0xFFFFFFFFFFFFFFFF
+#define TAG_INVALID 0x00000000
 
 #define SAFE_DELETE(p) if (p) { delete p; p = NULL; }
 #define SAFE_DELETE_ARR(p) if (p[ 0 ]) delete[] p;

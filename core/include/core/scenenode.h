@@ -38,6 +38,8 @@ namespace kore {
     const uint64 getID(void) const;
     const uint getTag(void) const;
     const Transform* getTransform(void) const;
+    void getSceneNodesWithTag(const uint tag,
+                              std::vector<SceneNodePtr>& vNodes);
     void setParent(const SceneNodePtr& parent);
     void setTag(uint tag);
 

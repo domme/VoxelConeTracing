@@ -33,6 +33,10 @@ namespace kore {
     void update(void);
     void addTag(const std::string& name);
     const uint getTag(const std::string& name);
+    void getSceneNodesWithTag(const uint tag,
+                              std::vector<SceneNodePtr>& vSceneNodes);
+    void getSceneNodesWithTag(const std::string& name,
+                              std::vector<SceneNodePtr>& vSceneNodes);
   private:
     SceneManager(void);
     virtual ~SceneManager(void);
