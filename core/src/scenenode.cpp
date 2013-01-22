@@ -25,13 +25,13 @@
 #include "core/common.h"
 #include "core/scenemanager.h"
 
-kore::SceneNode::SceneNode(void) {
+kore::SceneNode::SceneNode(void)
+                       :_tag(0),
+                        _parent(NULL),
+                        _dirty(true) {
   _id = kore::SceneManager::getInstance()->createID();
-  _parent = NULL;
-  _dirty = true;
   _transform.global = glm::mat4(1.0f);
   _transform.local = glm::mat4(1.0f);
-  _children.clear();
 }
 
 kore::SceneNode::~SceneNode(void) {
@@ -54,12 +54,20 @@ const uint64 kore::SceneNode::getID(void) const {
   return _id;
 }
 
+const uint kore::SceneNode::getTag(void) const {
+  return _tag;
+}
+
 const kore::Transform* kore::SceneNode::getTransform(void) const {
   return &_transform;
 }
 
 void kore::SceneNode::setParent(SceneNode* parent) {
   _parent = parent;
+}
+
+void kore::SceneNode::setTag(uint tag) {
+  _tag = tag;
 }
 
 const bool kore::SceneNode::needsUpdate(void) const {

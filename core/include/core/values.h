@@ -27,7 +27,6 @@
 
 namespace kore {
   class Values : public SceneNodeComponent {
-
   public:
     Values(void);
     virtual ~Values(void);

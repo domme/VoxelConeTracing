@@ -35,8 +35,10 @@ namespace kore {
     const std::vector<SceneNode*> getChildren() const;
     const std::vector<SceneNodeComponentPtr> getComponents() const;
     const uint64 getID(void) const;
+    const uint getTag(void) const;
     const Transform* getTransform(void) const;
     void setParent(SceneNode* parent);
+    void setTag(uint tag);
 
     const bool needsUpdate(void) const;
     void update(void);
@@ -44,8 +46,11 @@ namespace kore {
     void translate(const glm::vec3& dir);
     void rotate(const GLfloat& angle, const glm::vec3& axis);
     void scale(const glm::vec3& dim);
+
   private:
     uint64 _id;
+    uint _tag;
+
     const SceneNode* _parent;
     std::vector<SceneNode*> _children;
     std::vector<SceneNodeComponentPtr> _components;

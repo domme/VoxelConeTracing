@@ -21,6 +21,8 @@
 #define CORE_INCLUDE_CORE_SCENEMANAGER_H_
 
 #include "core/scenenode.h"
+#include <map>
+#include <string>
 #include "core/common.h"
 
 namespace kore {
@@ -29,11 +31,15 @@ namespace kore {
     static SceneManager *getInstance(void);
     uint64 createID(void);
     void update(void);
+    void addTag(const std::string& name);
+    const uint getTag(const std::string& name);
   private:
     SceneManager(void);
     virtual ~SceneManager(void);
     SceneNode* _root;
     uint64 _idcount;
+    uint _tagcount;
+    std::map<std::string, uint> _tagmap;
   };
 };
 #endif  // CORE_INCLUDE_CORE_SCENEMANAGER_H_

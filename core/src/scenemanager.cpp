@@ -18,13 +18,18 @@
 */
 
 #include "core/scenemanager.h"
+#include <string>
+#include <utility>
 
 kore::SceneManager* kore::SceneManager::getInstance(void) {
   static kore::SceneManager theInstance;
   return &theInstance;
 }
 
-kore::SceneManager::SceneManager(void) : _idcount(0) {
+kore::SceneManager::SceneManager(void) :
+                            _idcount(0),
+                            _tagcount(0) {
+  addTag("DEFAULT");
   _root = new kore::SceneNode();
 }
 
@@ -37,4 +42,14 @@ uint64 kore::SceneManager::createID(void) {
 
 void kore::SceneManager::update(void) {
   _root->update();
+}
+
+void kore::SceneManager::addTag(const std::string& name) {
+  if (_tagmap.find(name) != _tagmap.end()) {
+    _tagmap.insert(std::pair<std::string, uint>(name, _tagcount++));
+  }
+}
+
+const uint kore::SceneManager::getTag(const std::string& name) {
+  return (_tagmap.find(name) != _tagmap.end())?_tagmap.find(name)->second:0;
 }
