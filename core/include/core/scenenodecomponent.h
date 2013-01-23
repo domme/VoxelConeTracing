@@ -33,14 +33,16 @@ namespace kore {
   class SceneNode;
   typedef std::shared_ptr<SceneNode> SceneNodePtr;
   class SceneNodeComponent {
-  public:
-    explicit SceneNodeComponent(void);
-    virtual ~SceneNodeComponent(void);
-    virtual void attachTo(SceneNodePtr& node);
-    void setNode(const SceneNodePtr& node);
-    const SceneNodePtr& getNode(void) const;
-    const ComponentType getType(void) const;
-    uint getID(void) const;
+public:
+  explicit SceneNodeComponent(void);
+  virtual ~SceneNodeComponent(void);
+  /// Checks if this component is of the same type as the other component
+  virtual bool isCompatibleWith(const SceneNodeComponent& otherComponent) = 0;
+  virtual void attachTo(SceneNodePtr& node);
+  void setNode(const SceneNodePtr& node);
+  const SceneNodePtr& getNode(void) const;
+  const ComponentType getType(void) const;
+  uint getID(void) const;
 
   protected:
     uint _id;

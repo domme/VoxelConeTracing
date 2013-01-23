@@ -28,6 +28,10 @@
 namespace kore {
   class Values : public SceneNodeComponent {
   public:
+    virtual bool
+    isCompatibleWith(const SceneNodeComponent& otherComponent) const
+    {return true;}
+
     Values(void);
     virtual ~Values(void);
     const std::string& getName() const;

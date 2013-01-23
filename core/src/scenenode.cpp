@@ -37,6 +37,32 @@ kore::SceneNode::SceneNode(void)
 kore::SceneNode::~SceneNode(void) {
 }
 
+
+bool kore::SceneNode::isCompatibleWith( const SceneNode& otherNode ) const {
+
+  if (_components.size() != otherNode._components.size()) {
+    return false;
+  }
+
+  bool bCompatible = false;
+  for (uint iComponent = 0; iComponent < _components.size(); ++iComponent) {
+
+    for (uint iOtherCompoent = 0;
+         iOtherCompoent < otherNode._components.size();
+         ++iOtherCompoent) {
+
+     bCompatible = _components[iComponent]->
+       isCompatibleWith(*(otherNode._components[iOtherCompoent]));
+
+     if(bCompatible) {
+       break;
+     }
+    }
+  }
+
+}
+
+
 const kore::SceneNodePtr& kore::SceneNode::getParent(void) const {
   return _parent;
 }

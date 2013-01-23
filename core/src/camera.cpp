@@ -70,6 +70,13 @@ void kore::Camera::setOrientation(const glm::vec3& v3Side,
     setPosition(getPosition());
 }
 
+
+bool kore::Camera::
+isCompatibleWith(const SceneNodeComponent& otherComponent) const {
+  return true;
+}
+
+
 glm::vec3 kore::Camera::getSide() const {
     // Note: assume the camera's view matrix is not scaled
     // (otherwise the return-vec would have to be normalized)

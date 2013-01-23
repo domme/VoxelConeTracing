@@ -32,7 +32,7 @@ namespace kore {
       GLenum componentType;     // e.g. GL_FLOAT
       int numValues;            // number of componentTypes (e.g. floats)
       int numComponents;        // number of components per vertex (3 for vec3)
-      int byteSize;  // size in bytes of one attribute
+      int byteSize;             // size in bytes of one attribute
       void* data;
   };
   class Mesh : public SceneNodeComponent {
@@ -42,6 +42,7 @@ namespace kore {
   public:
     Mesh(void);
     virtual ~Mesh(void);
+    virtual bool isCompatibleWith(const SceneNodeComponent& otherComponent);
     bool loadFromFile(const std::string& file);
     int getNumAttributes(void);
     const std::vector<kore::MeshAttributeArray>& getAttributes() const;

@@ -42,6 +42,38 @@ kore::Mesh::~Mesh(void) {
     }
 }
 
+bool kore::Mesh::isCompatibleWith(const kore::SceneNodeComponent&
+                                  otherComponent) {
+  if (otherComponent.getType() != getType()) {
+    return false;
+  }
+
+  const kore::Mesh& otherMesh = static_cast<const kore::Mesh&>(otherComponent);
+
+  if (_attributes.size() != otherMesh._attributes.size()) {
+    return false;
+  }
+
+  bool bSameAttributes = false;
+  for( int iAtt = 0; iAtt < _attributes.size(); ++iAtt) {
+    const MeshAttributeArray& att = _attributes[iAtt];
+
+    for (int iAttOther = 0; iAttOther < _attributes.size(); ++iAttOther) {
+      const MeshAttributeArray& attOther = otherMesh._attributes[iAttOther];
+
+      bSameAttributes = attOther.type == att.type &&
+                        attOther.componentType == att.componentType &&
+                        attOther.name == att.name &&
+                        attOther.byteSize == att.byteSize &&
+                        attOther.numComponents == att.numComponents;
+      if (bSameAttributes)
+        break;
+    }
+  }
+
+  return bSameAttributes;
+}
+
 bool kore::Mesh::loadFromFile(const std::string& file) {
   return false;
 }
