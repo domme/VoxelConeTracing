@@ -25,8 +25,8 @@
 
 
 kore::MeshLoader* kore::MeshLoader::getInstance() {
-    static MeshLoader clInstance;
-    return &clInstance;
+  static MeshLoader clInstance;
+  return &clInstance;
 }
 
 kore::MeshLoader::MeshLoader() {
@@ -37,24 +37,24 @@ kore::MeshLoader::~MeshLoader() {
 
 
 const aiScene* kore::MeshLoader::readScene(const std::string& szScenePath) {
-    const aiScene* pAiScene = _aiImporter.ReadFile(szScenePath,
-        aiProcess_JoinIdenticalVertices | aiProcess_Triangulate |
-        aiProcess_JoinIdenticalVertices);
+  const aiScene* pAiScene = _aiImporter.ReadFile(szScenePath,
+      aiProcess_JoinIdenticalVertices | aiProcess_Triangulate |
+      aiProcess_JoinIdenticalVertices);
 
-    if (!pAiScene) {
-        Log::getInstance()->write("[ERROR] Scene-file could not be loaded: %s",
-                                   szScenePath.c_str());
+  if (!pAiScene) {
+    Log::getInstance()->write("[ERROR] Scene-file could not be loaded: %s",
+                              szScenePath.c_str());
 
-        return NULL;
-    }
+    return NULL;
+  }
 
-    if (!pAiScene->HasMeshes()) {
-        Log::getInstance()->write("[ERROR] Scene-file does not"
-                                  "contain any meshes: %s",
-                                   szScenePath.c_str());
-        return NULL;
-    }
-    return pAiScene;
+  if (!pAiScene->HasMeshes()) {
+    Log::getInstance()->write("[ERROR] Scene-file does not"
+                              "contain any meshes: %s",
+                              szScenePath.c_str());
+    return NULL;
+  }
+  return pAiScene;
 }
 
 
@@ -80,25 +80,27 @@ kore::MeshLoader::loadSingleMesh(const std::string& szMeshPath,
 kore::SceneNodePtr
 kore::MeshLoader::loadScene(const std::string& szScenePath,
                             const bool bUseBuffers) {
-    const aiScene* pAiScene = readScene(szScenePath);
+  const aiScene* pAiScene = readScene(szScenePath);
 
-    if (!pAiScene) {
-        return SceneNodePtr(NULL);
-    }
+  if (!pAiScene) {
+    return SceneNodePtr(NULL);
+  }
 
-    SceneNodePtr koreSceneRootNode(new SceneNode);
-    koreSceneRootNode->_name = szScenePath.substr(szScenePath.find_last_of("/")+1);
-    // Load scene nodes recursively and return:
-    loadChildNode(pAiScene, pAiScene->mRootNode, koreSceneRootNode,
-                                                                 bUseBuffers);
-    return koreSceneRootNode;
+  SceneNodePtr koreSceneRootNode(new SceneNode);
+  koreSceneRootNode->_name = szScenePath.substr(szScenePath.find_last_of("/")+1);
+  // Load scene nodes recursively and return:
+  loadChildNode(pAiScene,
+                pAiScene->mRootNode,
+                koreSceneRootNode,
+                bUseBuffers);
+  return koreSceneRootNode;
 }
 
 
 void kore::MeshLoader::loadChildNode(const aiScene* paiScene,
-                                const aiNode* paiNode,
-                                SceneNodePtr& parentNode,
-                                const bool bUseBuffers) {
+                                     const aiNode* paiNode,
+                                     SceneNodePtr& parentNode,
+                                     const bool bUseBuffers) {
     SceneNodePtr koreNode(new SceneNode);
     koreNode->_transform.local = glmMatFromAiMat(paiNode->mTransformation);
     koreNode->_parent = parentNode;
@@ -219,7 +221,7 @@ void kore::MeshLoader::
 
 void kore::MeshLoader::
     loadVertexTangents(const aiMesh* pAiMesh,
-                        kore::MeshPtr& pMesh ) {
+                       kore::MeshPtr& pMesh) {
     unsigned int allocSize = pAiMesh->mNumVertices * 3 * 4;
     void* pVertexData = malloc(allocSize);
     memcpy(pVertexData, pAiMesh->mTangents,
@@ -284,43 +286,43 @@ void kore::MeshLoader::
 }
 
 void kore::MeshLoader::
-    loadVertexTextureCoords(const aiMesh* pAiMesh,
-                             kore::MeshPtr& pMesh,
-                             unsigned int iUVset) {
-    unsigned int allocSize =
-        pAiMesh->mNumVertices * 4 * pAiMesh->GetNumUVChannels();
-    void* pVertexData = malloc(allocSize);
-    memcpy(pVertexData, pAiMesh->mTextureCoords[iUVset], allocSize);
+  loadVertexTextureCoords(const aiMesh* pAiMesh,
+                           kore::MeshPtr& pMesh,
+                           unsigned int iUVset) {
+  unsigned int allocSize =
+    pAiMesh->mNumVertices * 4 * pAiMesh->GetNumUVChannels();
+  void* pVertexData = malloc(allocSize);
+  memcpy(pVertexData, pAiMesh->mTextureCoords[iUVset], allocSize);
 
-    kore::MeshAttributeArray att;
-    char szNameBuf[20];
-    sprintf(szNameBuf, "v_uv%i", iUVset);
-    att.name = std::string(&szNameBuf[0]);
-    att.numValues = pAiMesh->mNumVertices * pAiMesh->GetNumUVChannels();
-    att.numComponents = pAiMesh->GetNumUVChannels();
+  kore::MeshAttributeArray att;
+  char szNameBuf[20];
+  sprintf(szNameBuf, "v_uv%i", iUVset);
+  att.name = std::string(&szNameBuf[0]);
+  att.numValues = pAiMesh->mNumVertices * pAiMesh->GetNumUVChannels();
+  att.numComponents = pAiMesh->GetNumUVChannels();
 
-    if (pAiMesh->GetNumUVChannels() == 2) {
-        att.type = GL_FLOAT_VEC2;
-    } else if (pAiMesh->GetNumUVChannels() == 3) {
-        att.type = GL_FLOAT_VEC3;
-    } else {
-        Log::getInstance()->write("[WARNING] Mesh %s has an unsupported"
-                                  "number of UV channels: %i",
-                                  pMesh->getName().c_str());
-        free(pVertexData);
-        return;
-    }
+  if (pAiMesh->GetNumUVChannels() == 2) {
+    att.type = GL_FLOAT_VEC2;
+  } else if (pAiMesh->GetNumUVChannels() == 3) {
+      att.type = GL_FLOAT_VEC3;
+  } else {
+    Log::getInstance()->write("[WARNING] Mesh %s has an unsupported"
+                              "number of UV channels: %i",
+                              pMesh->getName().c_str());
+    free(pVertexData);
+    return;
+  }
 
-    att.componentType = GL_FLOAT;
-    att.byteSize = kore::DatatypeUtil::getSizeFromGLdatatype(att.type);
-    att.data = pVertexData;
-    pMesh->_attributes.push_back(att);
+  att.componentType = GL_FLOAT;
+  att.byteSize = kore::DatatypeUtil::getSizeFromGLdatatype(att.type);
+  att.data = pVertexData;
+  pMesh->_attributes.push_back(att);
 }
 
 glm::mat4 kore::MeshLoader::glmMatFromAiMat(const aiMatrix4x4& aiMat) {
-    // Note: ai-matrix is row-major, but glm::mat4 is column-major
-    return glm::mat4(aiMat.a1, aiMat.b1, aiMat.c1, aiMat.d1,
-                     aiMat.a2, aiMat.b2, aiMat.c2, aiMat.d2,
-                     aiMat.a3, aiMat.b3, aiMat.c3, aiMat.d3,
-                     aiMat.a4, aiMat.b4, aiMat.c4, aiMat.d4);
+  // Note: ai-matrix is row-major, but glm::mat4 is column-major
+  return glm::mat4(aiMat.a1, aiMat.b1, aiMat.c1, aiMat.d1,
+                   aiMat.a2, aiMat.b2, aiMat.c2, aiMat.d2,
+                   aiMat.a3, aiMat.b3, aiMat.c3, aiMat.d3,
+                   aiMat.a4, aiMat.b4, aiMat.c4, aiMat.d4);
 }
