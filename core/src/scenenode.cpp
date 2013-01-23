@@ -71,8 +71,8 @@ void kore::SceneNode::setParent(const SceneNodePtr& parent) {
   _parent = parent;
 }
 
-void kore::SceneNode::setTag(uint tag) {
-  _tag = tag;
+void kore::SceneNode::setTag( const std::string& tagname ) {
+  _tag = kore::SceneManager::getInstance()->getTag(tagname);
 }
 
 void kore::SceneNode::setName(const std::string& name) {
@@ -110,13 +110,24 @@ void kore::SceneNode::scale(const glm::vec3& dim) {
   _dirty = true;
 }
 
-void kore::SceneNode::getSceneNodesWithTag( const uint tag,
+void kore::SceneNode::getSceneNodesByTag( const uint tag,
                                           std::vector<SceneNodePtr>& vNodes ) {
-    for (uint iChild = 0; iChild < _children.size(); ++iChild) {
-        // If there is at least one bit set in both tags, the child is added
-        if ((_children[iChild]->getTag() & tag) != 0) {
-            vNodes.push_back(_children[iChild]);
-            _children[iChild]->getSceneNodesWithTag(tag, vNodes);
-        }
+  for (uint iChild = 0; iChild < _children.size(); ++iChild) {
+      // If there is at least one bit set in both tags, the child is added
+      if ((_children[iChild]->getTag() & tag) != 0) {
+          vNodes.push_back(_children[iChild]);
+          _children[iChild]->getSceneNodesByTag(tag, vNodes);
+      }
+  }
+}
+
+void kore::SceneNode::getSceneNodesByName(const std::string name,
+                                          std::vector<SceneNodePtr>& vNodes) {
+  for (uint iChild = 0; iChild < _children.size(); ++iChild) {
+    // If there is at least one bit set in both tags, the child is added
+    if (_children[iChild]->getName() == name) {
+      vNodes.push_back(_children[iChild]);
+      _children[iChild]->getSceneNodesByName(name, vNodes);
     }
+  }
 }
