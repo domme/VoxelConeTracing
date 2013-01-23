@@ -11,30 +11,30 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\core\bindattributeop.h" />
-    <ClInclude Include="include\core\binduniformop.h" />
-    <ClInclude Include="include\core\camera.h" />
     <ClInclude Include="include\core\common.h" />
+    <ClInclude Include="include\core\components\camera.h" />
+    <ClInclude Include="include\core\components\mesh.h" />
+    <ClInclude Include="include\core\components\scenenodecomponent.h" />
+    <ClInclude Include="include\core\components\values.h" />
     <ClInclude Include="include\core\datatypes.h" />
     <ClInclude Include="include\core\kore.h" />
     <ClInclude Include="include\core\log.h" />
-    <ClInclude Include="include\core\mesh.h" />
     <ClInclude Include="include\core\meshloader.h" />
-    <ClInclude Include="include\core\operation.h" />
+    <ClInclude Include="include\core\operations\bindattribute.h" />
+    <ClInclude Include="include\core\operations\binduniform.h" />
+    <ClInclude Include="include\core\operations\operation.h" />
+    <ClInclude Include="include\core\operations\rendermesh.h" />
     <ClInclude Include="include\core\rendermanager.h" />
-    <ClInclude Include="include\core\rendermeshop.h" />
     <ClInclude Include="include\core\resourcemanager.h" />
     <ClInclude Include="include\core\scenemanager.h" />
     <ClInclude Include="include\core\scenenode.h" />
-    <ClInclude Include="include\core\scenenodecomponent.h" />
     <ClInclude Include="include\core\shader.h" />
     <ClInclude Include="include\core\stdafx.h" />
     <ClInclude Include="include\core\transform.h" />
-    <ClInclude Include="include\core\values.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\bindattributeop.cpp" />
-    <ClCompile Include="src\binduniformop.cpp" />
+    <ClCompile Include="src\bindattribute.cpp" />
+    <ClCompile Include="src\binduniform.cpp" />
     <ClCompile Include="src\camera.cpp" />
     <ClCompile Include="src\datatypes.cpp" />
     <ClCompile Include="src\log.cpp" />
@@ -42,7 +42,7 @@
     <ClCompile Include="src\meshloader.cpp" />
     <ClCompile Include="src\operation.cpp" />
     <ClCompile Include="src\rendermanager.cpp" />
-    <ClCompile Include="src\rendermeshop.cpp" />
+    <ClCompile Include="src\rendermesh.cpp" />
     <ClCompile Include="src\resourcemanager.cpp" />
     <ClCompile Include="src\scenemanager.cpp" />
     <ClCompile Include="src\scenenode.cpp" />

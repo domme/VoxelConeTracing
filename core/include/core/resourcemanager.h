@@ -23,7 +23,7 @@
 #include <string>
 #include <vector>
 #include "core/common.h"
-#include "core/mesh.h"
+#include "core/components/mesh.h"
 #include "core/shader.h"
 #include "core/scenenode.h"
 

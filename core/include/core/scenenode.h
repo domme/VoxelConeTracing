@@ -21,8 +21,9 @@
 #define CORE_INCLUDE_CORE_SCENENODE_H_
 
 #include <vector>
+#include <string>
 #include "core/common.h"
-#include "core/scenenodecomponent.h"
+#include "core/components/scenenodecomponent.h"
 #include "core/transform.h"
 
 namespace kore {

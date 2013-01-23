@@ -17,7 +17,7 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "core/operation.h"
+#include "core/operations/operation.h"
 
 kore::Operation::Operation(void)
   : _executed(false),

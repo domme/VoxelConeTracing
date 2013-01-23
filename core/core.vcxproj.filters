@@ -57,29 +57,29 @@
     <ClInclude Include="include\core\transform.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\core\bindattributeop.h">
-      <Filter>include\operations</Filter>
-    </ClInclude>
-    <ClInclude Include="include\core\rendermeshop.h">
-      <Filter>include\operations</Filter>
-    </ClInclude>
-    <ClInclude Include="include\core\scenenodecomponent.h">
+    <ClInclude Include="include\core\components\camera.h">
       <Filter>include\components</Filter>
     </ClInclude>
-    <ClInclude Include="include\core\mesh.h">
+    <ClInclude Include="include\core\components\mesh.h">
       <Filter>include\components</Filter>
     </ClInclude>
-    <ClInclude Include="include\core\camera.h">
+    <ClInclude Include="include\core\components\scenenodecomponent.h">
       <Filter>include\components</Filter>
     </ClInclude>
-    <ClInclude Include="include\core\operation.h">
+    <ClInclude Include="include\core\components\values.h">
+      <Filter>include\components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\operations\bindattribute.h">
       <Filter>include\operations</Filter>
     </ClInclude>
-    <ClInclude Include="include\core\binduniformop.h">
+    <ClInclude Include="include\core\operations\binduniform.h">
       <Filter>include\operations</Filter>
     </ClInclude>
-    <ClInclude Include="include\core\values.h">
-      <Filter>include\components</Filter>
+    <ClInclude Include="include\core\operations\operation.h">
+      <Filter>include\operations</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\operations\rendermesh.h">
+      <Filter>include\operations</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -110,9 +110,6 @@
     <ClCompile Include="src\stdafx.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\rendermeshop.cpp">
-      <Filter>src\operations</Filter>
-    </ClCompile>
     <ClCompile Include="src\operation.cpp">
       <Filter>src\operations</Filter>
     </ClCompile>
@@ -125,10 +122,13 @@
     <ClCompile Include="src\camera.cpp">
       <Filter>src\components</Filter>
     </ClCompile>
-    <ClCompile Include="src\bindattributeop.cpp">
+    <ClCompile Include="src\bindattribute.cpp">
       <Filter>src\operations</Filter>
     </ClCompile>
-    <ClCompile Include="src\binduniformop.cpp">
+    <ClCompile Include="src\binduniform.cpp">
+      <Filter>src\operations</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rendermesh.cpp">
       <Filter>src\operations</Filter>
     </ClCompile>
   </ItemGroup>

@@ -20,7 +20,7 @@
 #include <string>
 #include <vector>
 
-#include "core/mesh.h"
+#include "core/components/mesh.h"
 #include "core/resourcemanager.h"
 #include "core/datatypes.h"
 
@@ -55,7 +55,7 @@ bool kore::Mesh::isCompatibleWith(const kore::SceneNodeComponent&
   }
 
   bool bSameAttributes = false;
-  for( int iAtt = 0; iAtt < _attributes.size(); ++iAtt) {
+  for (int iAtt = 0; iAtt < _attributes.size(); ++iAtt) {
     const MeshAttributeArray& att = _attributes[iAtt];
 
     for (int iAttOther = 0; iAttOther < _attributes.size(); ++iAttOther) {

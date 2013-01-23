@@ -24,7 +24,7 @@
 #include <string>
 #include "core/Meshloader.h"
 #include "core/log.h"
-#include "core/mesh.h"
+#include "core/components/mesh.h"
 
 kore::ResourceManager* kore::ResourceManager::getInstance(void) {
   static kore::ResourceManager theInstance;

@@ -20,9 +20,10 @@
 #ifndef CORE_INCLUDE_CORE_SCENEMANAGER_H_
 #define CORE_INCLUDE_CORE_SCENEMANAGER_H_
 
-#include "core/scenenode.h"
 #include <map>
 #include <string>
+#include <vector>
+#include "core/scenenode.h"
 #include "core/common.h"
 
 namespace kore {

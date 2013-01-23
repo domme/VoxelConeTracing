@@ -87,7 +87,8 @@ kore::MeshLoader::loadScene(const std::string& szScenePath,
   }
 
   SceneNodePtr koreSceneRootNode(new SceneNode);
-  koreSceneRootNode->_name = szScenePath.substr(szScenePath.find_last_of("/")+1);
+  koreSceneRootNode->_name =
+      szScenePath.substr(szScenePath.find_last_of("/")+1);
   // Load scene nodes recursively and return:
   loadChildNode(pAiScene,
                 pAiScene->mRootNode,

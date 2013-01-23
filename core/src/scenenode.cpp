@@ -22,6 +22,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
 #include <vector>
+#include <string>
 #include "core/common.h"
 #include "core/scenemanager.h"
 
@@ -38,28 +39,25 @@ kore::SceneNode::~SceneNode(void) {
 }
 
 
-bool kore::SceneNode::isCompatibleWith( const SceneNode& otherNode ) const {
-
+bool kore::SceneNode::isCompatibleWith(const SceneNode& otherNode) const {
   if (_components.size() != otherNode._components.size()) {
     return false;
   }
 
   bool bCompatible = false;
   for (uint iComponent = 0; iComponent < _components.size(); ++iComponent) {
-
     for (uint iOtherCompoent = 0;
          iOtherCompoent < otherNode._components.size();
          ++iOtherCompoent) {
+      bCompatible = _components[iComponent]->
+        isCompatibleWith(*(otherNode._components[iOtherCompoent]));
 
-     bCompatible = _components[iComponent]->
-       isCompatibleWith(*(otherNode._components[iOtherCompoent]));
-
-     if(bCompatible) {
-       break;
-     }
+      if (bCompatible) {
+        break;
+      }
     }
   }
-
+  return bCompatible;
 }
 
 
@@ -84,7 +82,7 @@ const uint kore::SceneNode::getTag(void) const {
   return _tag;
 }
 
-const std::string kore::SceneNode::getName( void ) const {
+const std::string kore::SceneNode::getName(void) const {
   return _name;
 }
 
@@ -97,7 +95,7 @@ void kore::SceneNode::setParent(const SceneNodePtr& parent) {
   _parent = parent;
 }
 
-void kore::SceneNode::setTag( const std::string& tagname ) {
+void kore::SceneNode::setTag(const std::string& tagname) {
   _tag = kore::SceneManager::getInstance()->getTag(tagname);
 }
 
@@ -136,8 +134,8 @@ void kore::SceneNode::scale(const glm::vec3& dim) {
   _dirty = true;
 }
 
-void kore::SceneNode::getSceneNodesByTag( const uint tag,
-                                          std::vector<SceneNodePtr>& vNodes ) {
+void kore::SceneNode::getSceneNodesByTag(const uint tag,
+                                         std::vector<SceneNodePtr>& vNodes ) {
   for (uint iChild = 0; iChild < _children.size(); ++iChild) {
       // If there is at least one bit set in both tags, the child is added
       if ((_children[iChild]->getTag() & tag) != 0) {

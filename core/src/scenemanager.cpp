@@ -18,6 +18,7 @@
 */
 
 #include "core/scenemanager.h"
+#include <vector>
 #include <string>
 #include <utility>
 
@@ -26,8 +27,8 @@ kore::SceneManager* kore::SceneManager::getInstance(void) {
   return &theInstance;
 }
 
-kore::SceneManager::SceneManager(void) :
-                            _idcount(0),
+kore::SceneManager::SceneManager(void)
+                           :_idcount(0),
                             _tagcount(0) {
   addTag("DEFAULT");
   _root = new kore::SceneNode();
@@ -55,8 +56,9 @@ const uint kore::SceneManager::getTag(const std::string& name) {
     _tagmap.end())?_tagmap.find(name)->second:TAG_INVALID;
 }
 
-void kore::SceneManager::getSceneNodesByTag(const uint tag,
-                                            std::vector<SceneNodePtr>& vSceneNodes) {
+void kore::SceneManager::
+  getSceneNodesByTag(const uint tag,
+                     std::vector<SceneNodePtr>& vSceneNodes) {
   _root->getSceneNodesByTag(tag, vSceneNodes);
 }
 
@@ -68,7 +70,8 @@ void kore::SceneManager::getSceneNodesByTag(const std::string& name,
   }
 }
 
-void kore::SceneManager::getSceneNodesByName(const std::string& name,
-                                             std::vector<SceneNodePtr>& vSceneNodes) {
-
+void kore::SceneManager::
+  getSceneNodesByName(const std::string& name,
+                      std::vector<SceneNodePtr>& vSceneNodes) {
+  _root->getSceneNodesByName(name, vSceneNodes);
 }

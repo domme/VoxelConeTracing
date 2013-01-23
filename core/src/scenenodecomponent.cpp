@@ -17,7 +17,7 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "core/scenenodecomponent.h"
+#include "core/components/scenenodecomponent.h"
 #include "core/SceneNode.h"
 
 kore::SceneNodeComponent::SceneNodeComponent()
@@ -36,7 +36,7 @@ kore::SceneNodeComponent::getNode(void) const {
     return _node;
 }
 
-void kore::SceneNodeComponent::setNode( const kore::SceneNodePtr& node ) {
+void kore::SceneNodeComponent::setNode(const kore::SceneNodePtr& node) {
 }
 
 const kore::ComponentType kore::SceneNodeComponent::getType(void) const {

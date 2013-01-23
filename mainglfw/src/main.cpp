@@ -57,7 +57,7 @@ int main(void) {
     glfwTerminate();
     exit(EXIT_FAILURE);
   }
-  
+
   // log versions
   int GLFWmajor, GLFWminor, GLFWrev;
   glfwGetVersion(&GLFWmajor, &GLFWminor, &GLFWrev);
@@ -79,11 +79,6 @@ int main(void) {
   kore::Log::getInstance()->write(
     "GLEW version: %s\n",
     reinterpret_cast<const char*>(glewGetString(GLEW_VERSION)));
-
-  // initialize
-  // add ressource paths
-  // kore::ResourceManager::getInstance()->addPath("./assets/shader/");
-  // kore::ResourceManager::getInstance()->addPath("./assets/meshes/");
 
   // load resources
   kore::SceneNodePtr pTestScene =

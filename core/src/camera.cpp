@@ -25,7 +25,7 @@
 #include <stdio.h>
 #include <vector>
 
-#include "core/Camera.h"
+#include "core/components/camera.h"
 #include "core/rendermanager.h"
 
 kore::Camera::Camera()

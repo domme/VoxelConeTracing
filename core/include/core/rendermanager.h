@@ -22,10 +22,10 @@
 
 #include <list>
 #include "core/common.h"
-#include "core/operation.h"
-#include "core/mesh.h"
+#include "core/operations/operation.h"
+#include "core/components/mesh.h"
+#include "core/components/camera.h"
 #include "core/shader.h"
-#include "core/camera.h"
 
 namespace kore {
   enum EOpInsertPos {
