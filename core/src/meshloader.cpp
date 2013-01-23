@@ -87,6 +87,7 @@ kore::MeshLoader::loadScene(const std::string& szScenePath,
     }
 
     SceneNodePtr koreSceneRootNode(new SceneNode);
+    koreSceneRootNode->_name = szScenePath.substr(szScenePath.find_last_of("/")+1);
     // Load scene nodes recursively and return:
     loadChildNode(pAiScene, pAiScene->mRootNode, koreSceneRootNode,
                                                                  bUseBuffers);
@@ -102,6 +103,7 @@ void kore::MeshLoader::loadChildNode(const aiScene* paiScene,
     koreNode->_transform.local = glmMatFromAiMat(paiNode->mTransformation);
     koreNode->_parent = parentNode;
     koreNode->_dirty = true;
+    koreNode->_name = paiNode->mName.C_Str();
     parentNode->_children.push_back(koreNode);
 
     // Load the first mesh as a component of this node.

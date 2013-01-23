@@ -58,6 +58,11 @@ const uint kore::SceneNode::getTag(void) const {
   return _tag;
 }
 
+const std::string kore::SceneNode::getName( void ) const {
+  return _name;
+}
+
+
 const kore::Transform* kore::SceneNode::getTransform(void) const {
   return &_transform;
 }
@@ -68,6 +73,10 @@ void kore::SceneNode::setParent(const SceneNodePtr& parent) {
 
 void kore::SceneNode::setTag(uint tag) {
   _tag = tag;
+}
+
+void kore::SceneNode::setName(const std::string& name) {
+  _name = name;
 }
 
 const bool kore::SceneNode::needsUpdate(void) const {

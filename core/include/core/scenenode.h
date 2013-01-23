@@ -37,11 +37,13 @@ namespace kore {
     const std::vector<SceneNodeComponentPtr> getComponents() const;
     const uint64 getID(void) const;
     const uint getTag(void) const;
+    const std::string getName(void) const;
     const Transform* getTransform(void) const;
     void getSceneNodesWithTag(const uint tag,
                               std::vector<SceneNodePtr>& vNodes);
     void setParent(const SceneNodePtr& parent);
-    void setTag(uint tag);
+    void setTag(const uint tag);
+    void setName(const std::string& name);
 
     const bool needsUpdate(void) const;
     void update(void);
@@ -53,7 +55,7 @@ namespace kore {
   private:
     uint64 _id;
     uint _tag;
-
+    std::string _name;
     SceneNodePtr _parent;
     std::vector<SceneNodePtr> _children;
     std::vector<SceneNodeComponentPtr> _components;

@@ -85,11 +85,12 @@ int main(void) {
   // kore::ResourceManager::getInstance()->addPath("./assets/shader/");
   // kore::ResourceManager::getInstance()->addPath("./assets/meshes/");
 
-  // load ressources
+  // load resources
   kore::SceneNodePtr pTestScene =
       kore::ResourceManager::getInstance()->
       loadScene("./assets/meshes/Test_LightCamera.dae");
 
+  // load shader
   kore::ShaderPtr pSimpleShader(new kore::Shader);
   pSimpleShader->loadShader( "./assets/shader/simple.vp", GL_VERTEX_SHADER);
   pSimpleShader->loadShader( "./assets/shader/simple.fp", GL_FRAGMENT_SHADER);
