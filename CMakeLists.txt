@@ -10,7 +10,7 @@ endif()
 
 file(GLOB_RECURSE SOURCES src/*.cpp)
 add_library(kore ${SOURCES})
-include_directories(include ext/include)
+include_directories(src ext/include)
 
 set(IGNORE "-build/include")
 

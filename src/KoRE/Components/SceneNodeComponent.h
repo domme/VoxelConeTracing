@@ -20,7 +20,7 @@
 #ifndef CORE_INCLUDE_CORE_SCENENODECOMPONENT_H_
 #define CORE_INCLUDE_CORE_SCENENODECOMPONENT_H_
 
-#include "core/common.h"
+#include "KoRE/Common.h"
 
 namespace kore {
   enum ComponentType {

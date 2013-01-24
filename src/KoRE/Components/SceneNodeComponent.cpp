@@ -17,8 +17,8 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "core/components/scenenodecomponent.h"
-#include "core/SceneNode.h"
+#include "KoRE/components/ScenenodeComponent.h"
+#include "KoRE/SceneNode.h"
 
 kore::SceneNodeComponent::SceneNodeComponent()
   : _id(UINT_INVALID),

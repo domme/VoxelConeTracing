@@ -23,8 +23,8 @@
 #include <map>
 #include <string>
 #include <vector>
-#include "core/scenenode.h"
-#include "core/common.h"
+#include "KoRE/SceneNode.h"
+#include "KoRE/Common.h"
 
 namespace kore {
   class SceneManager {

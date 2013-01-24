@@ -17,14 +17,14 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "core/scenenode.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
 #include <vector>
 #include <string>
-#include "core/common.h"
-#include "core/scenemanager.h"
+#include "KoRE/SceneNode.h"
+#include "KoRE/Common.h"
+#include "KoRE/SceneManager.h"
 
 kore::SceneNode::SceneNode(void)
                        :_tag(0),

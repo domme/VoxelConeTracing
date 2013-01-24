@@ -22,10 +22,10 @@
 
 #include <string>
 #include <vector>
-#include "core/common.h"
-#include "core/components/mesh.h"
-#include "core/shader.h"
-#include "core/scenenode.h"
+#include "KoRE/Common.h"
+#include "KoRE/components/mesh.h"
+#include "KoRE/shader.h"
+#include "KoRE/scenenode.h"
 
 
 namespace kore {

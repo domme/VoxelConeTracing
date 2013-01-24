@@ -26,7 +26,7 @@
 #include <time.h>
 #include <string>
 
-#include "core/log.h"
+#include "KoRE/Log.h"
 
 kore::Log* kore::Log::getInstance(void) {
   static kore::Log theInstance;

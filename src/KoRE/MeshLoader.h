@@ -25,12 +25,10 @@
 #include <assimp/Importer.hpp>
 #include <string>
 
-#include <memory>
-#include <string>
+#include "KoRE/Common.h"
 
-
-#include "core/scenenode.h"
-#include "core/components/mesh.h"
+#include "KoRE/scenenode.h"
+#include "KoRE/components/mesh.h"
 
 
 namespace kore {

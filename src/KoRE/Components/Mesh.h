@@ -22,8 +22,8 @@
 
 #include <string>
 #include <vector>
-#include "core/datatypes.h"
-#include "core/components/scenenodecomponent.h"
+#include "KoRE/DataTypes.h"
+#include "KoRE/Components/SceneNodeComponent.h"
 
 namespace kore {
   struct MeshAttributeArray {

@@ -17,14 +17,14 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "core/resourcemanager.h"
+#include "KoRE/resourcemanager.h"
 #include <io.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <string>
-#include "core/Meshloader.h"
-#include "core/log.h"
-#include "core/components/mesh.h"
+#include "KoRE/Meshloader.h"
+#include "KoRE/log.h"
+#include "KoRE/components/mesh.h"
 
 kore::ResourceManager* kore::ResourceManager::getInstance(void) {
   static kore::ResourceManager theInstance;

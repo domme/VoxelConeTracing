@@ -17,7 +17,7 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "core/scenemanager.h"
+#include "KoRE/scenemanager.h"
 #include <vector>
 #include <string>
 #include <utility>

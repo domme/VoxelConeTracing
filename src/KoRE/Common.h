@@ -35,7 +35,7 @@
 #include <ctime>
 #include <memory>
 
-#include "core/log.h"
+#include "KoRE//Log.h"
 
 // Typedefs:
 typedef unsigned int uint;

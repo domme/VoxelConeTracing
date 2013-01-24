@@ -20,9 +20,9 @@
 #include <string>
 #include <vector>
 
-#include "core/components/mesh.h"
-#include "core/resourcemanager.h"
-#include "core/datatypes.h"
+#include "KoRE/components/mesh.h"
+#include "KoRE/resourcemanager.h"
+#include "KoRE/DataTypes.h"
 
 
 kore::Mesh::Mesh(void)

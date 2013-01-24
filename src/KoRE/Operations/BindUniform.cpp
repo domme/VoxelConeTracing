@@ -17,9 +17,9 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "core/operations/binduniform.h"
-#include "core/shader.h"
-#include "core/datatypes.h"
+#include "KoRE/operations/binduniform.h"
+#include "KoRE/shader.h"
+#include "KoRE/DataTypes.h"
 
 
 

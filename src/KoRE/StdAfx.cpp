@@ -17,4 +17,4 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "core/stdafx.h"
+#include "KoRE/stdafx.h"

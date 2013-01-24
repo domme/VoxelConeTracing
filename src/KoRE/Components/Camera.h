@@ -25,8 +25,8 @@
 #define CORE_INCLUDE_CORE_CAMERA_H_
 
 #include <vector>
-#include "core/common.h"
-#include "core/components/scenenodecomponent.h"
+#include "KoRE/Common.h"
+#include "KoRE/Components/SceneNodeComponent.h"
 
 namespace kore {
 class Camera : public SceneNodeComponent {

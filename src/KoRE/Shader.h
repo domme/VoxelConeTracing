@@ -22,8 +22,8 @@
 
 #include <string>
 #include <vector>
-#include "core/datatypes.h"
-#include "core/common.h"
+#include "KoRE/DataTypes.h"
+#include "KoRE/Common.h"
 
 namespace kore {
   class Shader {
