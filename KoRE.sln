@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "core", "core\core.vcxproj", "{B851B68F-DA2D-4F44-8FE5-A400094F2C87}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assets", "assets", "{478EF097-9C8E-442C-A614-3351D87CEDC6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "shader", "shader", "{E2BFA9E3-C84D-433E-A5E8-17CDD6D7311D}"
@@ -10,6 +8,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "shader", "shader", "{E2BFA9
 		bin\assets\shader\simple.fp = bin\assets\shader\simple.fp
 		bin\assets\shader\simple.vp = bin\assets\shader\simple.vp
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KoRE", "src\KoRE\core.vcxproj", "{B851B68F-DA2D-4F44-8FE5-A400094F2C87}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
