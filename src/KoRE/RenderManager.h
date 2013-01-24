@@ -50,7 +50,7 @@ namespace kore {
     void resolutionChanged();
     glm::ivec2 _renderResolution;
 
-    typedef std::list<const OperationPtr> OperationList;
+    typedef std::list<OperationPtr> OperationList;
     OperationList _operations;
     const Shader* _activeShader;
   };
