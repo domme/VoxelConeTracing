@@ -20,8 +20,8 @@
 #include <string>
 #include <vector>
 
-#include "KoRE/components/mesh.h"
-#include "KoRE/resourcemanager.h"
+#include "KoRE/Components/Mesh.h"
+#include "KoRE/ResourceManager.h"
 #include "KoRE/DataTypes.h"
 
 

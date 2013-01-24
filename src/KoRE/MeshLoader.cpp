@@ -16,12 +16,12 @@
   You should have received a copy of the GNU General Public License
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "KoRE/meshloader.h"
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <string>
-#include "KoRE/log.h"
-#include "KoRE/transform.h"
+#include "KoRE/Log.h"
+#include "KoRE/MeshLoader.h"
+#include "KoRE/Transform.h"
 
 
 kore::MeshLoader* kore::MeshLoader::getInstance() {

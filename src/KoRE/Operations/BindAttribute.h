@@ -20,9 +20,9 @@
 #ifndef CORE_INCLUDE_CORE_BINDATTRIBUTEOP_H_
 #define CORE_INCLUDE_CORE_BINDATTRIBUTEOP_H_
 
-#include "KoRE/operations/operation.h"
-#include "KoRE/components/mesh.h"
-#include "KoRE/shader.h"
+#include "KoRE/Operations/Operation.h"
+#include "KoRE/Components/Mesh.h"
+#include "KoRE/Shader.h"
 
 namespace kore {
   class BindAttribute: public Operation {

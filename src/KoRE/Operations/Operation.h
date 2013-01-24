@@ -20,6 +20,8 @@
 #ifndef CORE_INCLUDE_CORE_OPERATION_H_
 #define CORE_INCLUDE_CORE_OPERATION_H_
 
+#include <memory>
+
 namespace kore {
   class Operation {
   public:
@@ -36,5 +38,5 @@ namespace kore {
     bool _executed;
   };
   typedef std::shared_ptr<Operation> OperationPtr;
-};
+}
 #endif  // CORE_INCLUDE_CORE_OPERATION_H_

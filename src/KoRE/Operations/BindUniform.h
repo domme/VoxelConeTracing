@@ -20,9 +20,9 @@
 #ifndef CORE_INCLUDE_CORE_BINDUNIFORMOP_H_
 #define CORE_INCLUDE_CORE_BINDUNIFORMOP_H_
 
-#include "KoRE/operations/operation.h"
+#include "KoRE/Operations/Operation.h"
 #include "KoRE/DataTypes.h"
-#include "KoRE/shader.h"
+#include "KoRE/Shader.h"
 
 namespace kore {
   class BindUniform: public Operation {

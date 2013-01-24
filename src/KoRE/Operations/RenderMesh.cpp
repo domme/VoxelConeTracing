@@ -17,7 +17,7 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "KoRE/operations/rendermesh.h"
+#include "KoRE/Operations/RenderMesh.h"
 #include <vector>
 
 kore::RenderMesh::RenderMesh(void)

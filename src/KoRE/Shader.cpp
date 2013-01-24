@@ -19,7 +19,7 @@
 
 #include <vector>
 #include <string>
-#include "KoRE/shader.h"
+#include "KoRE/Shader.h"
 
 const unsigned int BUFSIZE = 100;  // Buffer length for shader-element names
 

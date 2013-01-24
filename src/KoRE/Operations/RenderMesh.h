@@ -20,10 +20,10 @@
 #ifndef CORE_INCLUDE_CORE_RENDERMESHOP_H_
 #define CORE_INCLUDE_CORE_RENDERMESHOP_H_
 
-#include "KoRE/operations/operation.h"
-#include "KoRE/components/mesh.h"
-#include "KoRE/components/camera.h"
-#include "KoRE/shader.h"
+#include "KoRE/Operations/Operation.h"
+#include "KoRE/Components/Mesh.h"
+#include "KoRE/Components/Camera.h"
+#include "KoRE/Shader.h"
 
 namespace kore {
   class RenderMesh: public Operation {

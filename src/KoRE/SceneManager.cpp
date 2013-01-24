@@ -17,10 +17,10 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "KoRE/scenemanager.h"
 #include <vector>
 #include <string>
 #include <utility>
+#include "KoRE/SceneManager.h"
 
 kore::SceneManager* kore::SceneManager::getInstance(void) {
   static kore::SceneManager theInstance;

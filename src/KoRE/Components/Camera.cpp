@@ -25,8 +25,8 @@
 #include <stdio.h>
 #include <vector>
 
-#include "KoRE/components/camera.h"
-#include "KoRE/rendermanager.h"
+#include "KoRE/Components/Camera.h"
+#include "KoRE/RenderManager.h"
 
 kore::Camera::Camera()
     :   m_fMovementSpeed(50.0f),

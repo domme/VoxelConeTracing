@@ -23,9 +23,9 @@
 #include <string>
 #include <vector>
 #include "KoRE/Common.h"
-#include "KoRE/components/mesh.h"
-#include "KoRE/shader.h"
-#include "KoRE/scenenode.h"
+#include "KoRE/Components/Mesh.h"
+#include "KoRE/Shader.h"
+#include "KoRE/SceneNode.h"
 
 
 namespace kore {
