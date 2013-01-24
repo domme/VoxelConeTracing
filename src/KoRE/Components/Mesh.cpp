@@ -55,10 +55,10 @@ bool kore::Mesh::isCompatibleWith(const kore::SceneNodeComponent&
   }
 
   bool bSameAttributes = false;
-  for (int iAtt = 0; iAtt < _attributes.size(); ++iAtt) {
+  for (unsigned int iAtt = 0; iAtt < _attributes.size(); ++iAtt) {
     const MeshAttributeArray& att = _attributes[iAtt];
 
-    for (int iAttOther = 0; iAttOther < _attributes.size(); ++iAttOther) {
+    for (unsigned int iAttOther = 0; iAttOther < _attributes.size(); ++iAttOther) {
       const MeshAttributeArray& attOther = otherMesh._attributes[iAttOther];
 
       bSameAttributes = attOther.type == att.type &&
