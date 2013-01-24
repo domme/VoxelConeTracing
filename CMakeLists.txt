@@ -22,6 +22,12 @@ else()
     set(PYTHON_VER "python")
 endif()
 
+
+if(MSVC)
+  include_directories(${CMAKE_SOURCE_DIR}/ext/include)
+  message("Hello MSVC")
+endif()
+
 add_custom_target(style
   COMMAND ${PYTHON_VER} scripts/cpplint.py --filter=${IGNORE} ${SOURCES}
 )
