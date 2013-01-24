@@ -30,10 +30,11 @@
 #include <string>
 #include <ctime>
 
-#include "core/kore.h"
-#include "core/shader.h"
-#include "core/mesh.h"
-#include "core/rendermeshop.h"
+#include "KoRE/Shader.h"
+#include "KoRE/Components/Mesh.h"
+#include "KoRE/Operations/RenderMesh.h"
+#include "KoRE/ResourceManager.h"
+#include "KoRE/RenderManager.h"
 
 int main(void) {
   int running = GL_TRUE;
