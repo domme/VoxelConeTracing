@@ -51,13 +51,18 @@ bool kore::SceneNode::isCompatibleWith(const SceneNode& otherNode) const {
          ++iOtherCompoent) {
       bCompatible = _components[iComponent]->
         isCompatibleWith(*(otherNode._components[iOtherCompoent]));
-
       if (bCompatible) {
         break;
       }
     }
   }
   return bCompatible;
+}
+
+bool kore::SceneNode::isCompatibleWith(const SceneNode& otherNode,
+                                       const ComponentType types) const {
+  // TODO(dominik) Implement multiple type comparison
+  return false;
 }
 
 
@@ -72,6 +77,13 @@ const std::vector<kore::SceneNodePtr>& kore::SceneNode::getChildren() const {
 const std::vector<kore::SceneNodeComponentPtr>
     kore::SceneNode::getComponents() const {
     return _components;
+}
+
+const kore::SceneNodeComponentPtr kore::SceneNode::getComponent(ComponentType type) const {
+  for (unsigned int i = 0; i < _components.size(); ++i) {
+    if (_components[i]->getType() == type) return _components[i];
+  }
+  return NULL;
 }
 
 const uint64 kore::SceneNode::getID(void) const {

@@ -34,9 +34,11 @@ namespace kore {
     SceneNode(void);
     virtual ~SceneNode(void);
     bool isCompatibleWith(const SceneNode& otherNode) const;
+    bool isCompatibleWith(const SceneNode& otherNode, ComponentType types) const;
     const SceneNodePtr& getParent(void) const;
     const std::vector<SceneNodePtr>& getChildren() const;
     const std::vector<SceneNodeComponentPtr> getComponents() const;
+    const SceneNodeComponentPtr getComponent(ComponentType type) const;
     const uint64 getID(void) const;
     const uint getTag(void) const;
     const std::string getName(void) const;
