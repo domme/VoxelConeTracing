@@ -32,13 +32,20 @@ namespace kore {
   };
   class SelectNodes : public Operation {
   public:
-    SelectNodes(const uint tag, const SceneNodePtr& root, SortingType type = SORT_NODES_SIMPLE);
-    SelectNodes(const std::string& name, const SceneNodePtr& root, SortingType type = SORT_NODES_SIMPLE);
+    SelectNodes(const uint tag,
+                const SceneNodePtr& root,
+                SortingType type = SORT_NODES_SIMPLE);
+    SelectNodes(const std::string& name,
+                const SceneNodePtr& root,
+                SortingType type = SORT_NODES_SIMPLE,
+                bool partial_match = true);
     virtual ~SelectNodes(void);
     virtual void execute(void);
     virtual void update(void);
     virtual void reset(void);
   private:
+    void append(const SceneNodePtr& root, const uint tag);
+    void append(const SceneNodePtr& root, std::string& name);
     std::vector<SceneNodePtr> _nodes;
   };
 };
