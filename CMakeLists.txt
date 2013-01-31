@@ -6,6 +6,11 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 include(GetOpenGLHeaders)
 
+if(WIN32 AND NOT EXISTS ${CMAKE_SOURCE_DIR}/ext)
+  message("No ext dir. Will make one.")
+  execute_process(COMMAND ${PYTHON_VER} scripts/updateExt.py)
+endif()
+
 check_gl_headers()
 
 set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib)
@@ -28,7 +33,6 @@ if(EXISTS "/usr/bin/python2")
 else()
     set(PYTHON_VER "python")
 endif()
-
 
 if(MSVC)
   INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/ext/include)
