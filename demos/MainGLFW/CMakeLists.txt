@@ -7,24 +7,25 @@ if(WIN32)
   if(MSVC)
     link_directories(${EXT_LIBS})
 	  set(KoRE_LIBS
-	    OpenGL32.lib 
-	    ${EXT_LIBS}/GLFW.lib 
-	    ${CMAKE_SOURCE_DIR}/lib/$(Configuration)/KoRE.lib 
-	    ${EXT_LIBS}/glew32.lib 
-	    ${EXT_LIBS}/assimp32.lib 
-	    )
+	    KoRE
+	    OpenGL32.lib
+	    ${EXT_LIBS}/msvc100/GLFW.lib
+	    #${CMAKE_SOURCE_DIR}/lib/$(Configuration)/KoRE.lib
+	    ${EXT_LIBS}/glew32.lib
+	    ${EXT_LIBS}/assimp_debug-dll_win32/assimp.lib
+	  )
 	else()
 	#MinGW
 		  set(KoRE_LIBS
 	    #${EXT_LIBS}/mingw/libglfw.a
-	    #${EXT_LIBS}/glew32.lib 
-	    #${EXT_LIBS}/assimp_debug-dll_win32/assimp.lib 
+	    #${EXT_LIBS}/glew32.lib
+	    #${EXT_LIBS}/assimp_debug-dll_win32/assimp.lib
 	    #OpenGL32
 	    #glaux
 	    #glu32
+	    opengl32
 	    glfw
 	    glew32
-	    opengl32
 	    KoRE 
 	    )
 	

@@ -19,11 +19,9 @@
 #ifndef CORE_INCLUDE_CORE_COMMON_H_
 #define CORE_INCLUDE_CORE_COMMON_H_
 
-//#include <GL/glew.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/matrix_inverse.hpp>
-#include <glm/gtc/type_ptr.hpp>
+//# define GLCOREARB_PROTOTYPES 1
+//# define GL_GLEXT_PROTOTYPES 1
+//#include <GL/glcorearb.h>
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -33,11 +31,20 @@
 #include <ctime>
 #include <memory>
 
+
+#include <GL/glew.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/matrix_inverse.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+
 #include "KoRE/Log.h"
 
 // Typedefs:
 typedef unsigned int uint;
-typedef uint64_t uint64;
+//typedef uint64_t uint64;
+typedef long uint64;
 typedef glm::half float16;
 typedef double float64;
 

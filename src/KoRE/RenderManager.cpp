@@ -20,9 +20,6 @@
 #include <vector>
 #include <algorithm>
 
-# define GLCOREARB_PROTOTYPES 1
-#include <GL/glcorearb.h>
-
 #include "KoRE/RenderManager.h"
 #include "KoRE/Log.h"
 

@@ -37,6 +37,7 @@ endif()
 
 if(WIN32)
   include_directories(${CMAKE_SOURCE_DIR}/ext/include)
+  add_definitions(-DGLFW_INCLUDE_GL3)
 endif()
 
 #if(MSVC)

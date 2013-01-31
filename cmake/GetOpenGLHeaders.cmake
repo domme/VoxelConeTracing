@@ -6,8 +6,7 @@ set(GL_HEADER_DIR ${EXT_HEADER_DIR}/GL)
 function(download_gl_header GL_HEADER)
     if(NOT EXISTS ${GL_HEADER_DIR}/${GL_HEADER})
         execute_process(
-            WORKING_DIRECTORY ${GL_HEADER_DIR}
-            COMMAND wget http://www.opengl.org/registry/api/${GL_HEADER}
+            COMMAND curl -L http://www.opengl.org/registry/api/${GL_HEADER} -o ${GL_HEADER_DIR}/${GL_HEADER}
     )
     endif()
 endfunction(download_gl_header)
@@ -24,6 +23,17 @@ function(check_gl_headers)
 	  foreach(GL_HEADER ${GL_HEADERS})
 		      download_gl_header(${GL_HEADER})
     endforeach(GL_HEADER)
+
+    #temporaly make GL3 folder for GLFW
+    if(WIN32)
+      set(GL3_HEADER_DIR ${EXT_HEADER_DIR}/GL3)
+      if(NOT EXISTS ${GL3_HEADER_DIR})
+		    execute_process(COMMAND mkdir -p ${GL3_HEADER_DIR})
+	    endif()
+      execute_process(
+        COMMAND curl -L http://www.opengl.org/registry/api/glcorearb.h -o ${GL3_HEADER_DIR}/gl3.h
+      )
+    endif()
 
 	  include_directories(${EXT_HEADER_DIR})
   endif()

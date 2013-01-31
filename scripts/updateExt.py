@@ -99,6 +99,7 @@ def installFiles():
   
   copy("download/glfw-2.7.7.bin.WIN32/lib-mingw", "lib/mingw")
   copy("download/glfw-2.7.7.bin.WIN32/lib-msvc110", "lib/msvc110")
+  copy("download/glfw-2.7.7.bin.WIN32/lib-msvc100", "lib/msvc100")
   copy("download/glm", "include/glm")
   
 makeDir(downloadDir)

@@ -22,7 +22,6 @@
 
 #include <vector>
 #include <string>
-#include <GL/glcorearb.h>
 #include "KoRE/Common.h"
 #include "KoRE/Components/SceneNodeComponent.h"
 #include "KoRE/Transform.h"

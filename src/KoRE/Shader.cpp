@@ -19,10 +19,6 @@
 
 #include <vector>
 #include <string>
-# define GLCOREARB_PROTOTYPES 1
-#include <GL/glcorearb.h>
-
-
 #include "KoRE/Shader.h"
 
 const unsigned int BUFSIZE = 100;  // Buffer length for shader-element names
