@@ -2,6 +2,7 @@
 #coding: UTF-8
 
 import subprocess, os, shutil
+from urllib import request
 
 arch = "win32"
 ext = "ext"
@@ -41,7 +42,10 @@ def downloadZips():
     url = dependency[arch]
     name = url.split("/")[-1]
     if not os.path.exists(name):
-      subprocess.call(["wget", url])
+      #subprocess.call(["wget", url])
+      print ("Downloading", url)
+      request.urlretrieve (url, name)
+      print ("Done")
 
 
 def removeUnpack():
