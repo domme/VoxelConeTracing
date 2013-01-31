@@ -45,7 +45,7 @@ namespace kore {
     virtual void reset(void);
   private:
     void append(const SceneNodePtr& root, const uint tag);
-    void append(const SceneNodePtr& root, std::string& name);
+    void append(const SceneNodePtr& root, const std::string &name);
     std::vector<SceneNodePtr> _nodes;
   };
 };

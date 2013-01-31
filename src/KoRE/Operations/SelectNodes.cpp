@@ -51,7 +51,7 @@ void kore::SelectNodes::append(const SceneNodePtr& root, const uint tag) {
     append(root->getChildren()[i], tag);
   }
 }
-void kore::SelectNodes::append(const SceneNodePtr& root, std::string& name) {
+void kore::SelectNodes::append(const SceneNodePtr& root, const std::string& name) {
   // TODO(someone) name matching
   // if (namematch) {
   //   _nodes.push_back(root);
