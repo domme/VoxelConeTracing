@@ -1,8 +1,9 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 #coding: UTF-8
 
 import subprocess, os, shutil
-from urllib import request
+import urllib
+import zipfile
 
 arch = "win32"
 ext = "ext"
@@ -44,7 +45,7 @@ def downloadZips():
     if not os.path.exists(name):
       #subprocess.call(["wget", url])
       print ("Downloading", url)
-      request.urlretrieve (url, name)
+      urllib.urlretrieve (url, name)
       print ("Done")
 
 
@@ -59,6 +60,8 @@ def removeUnpack():
 def unPack():
   filelist = [ f for f in os.listdir(".") if f.endswith(".zip") ]
   for f in filelist:
+    
+    #zfile = zipfile.ZipFile(f)
     subprocess.call(["unzip", f])
 
 def copy(src, dst):
@@ -71,13 +74,15 @@ def copyFiles(source, destination):
   for f in os.listdir(source):
     sourcePath = source + "/" + f
     try:
-        copy(sourcePath, destination)
-    except FileExistsError:
+      copy(sourcePath, destination)
+    #except FileExistsError:
+    except OSError:
         try:
           copy(sourcePath, destination + f)
-        except FileExistsError:
+    #    except FileExistsError:
+        except OSError:
           copyFiles(sourcePath, destination + f)
-        
+
 def install(src, dest):
   copyFiles("download/%s/%s" % (src, dest), "%s/" % dest)
 
