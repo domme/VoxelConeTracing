@@ -19,9 +19,12 @@
 #ifndef CORE_INCLUDE_CORE_COMMON_H_
 #define CORE_INCLUDE_CORE_COMMON_H_
 
-#define GLFW_INCLUDE_GL3
+//# define GLCOREARB_PROTOTYPES 1
+//# define GL_GLEXT_PROTOTYPES 1
+//#include <GL/glcorearb.h>
+
+
 #include <GL/glew.h>
-#include <GL/glfw.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
@@ -35,7 +38,7 @@
 #include <ctime>
 #include <memory>
 
-#include "KoRE//Log.h"
+#include "KoRE/Log.h"
 
 // Typedefs:
 typedef unsigned int uint;
