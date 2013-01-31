@@ -17,7 +17,6 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#define GLFW_INCLUDE_GL3
 #include <GL/glew.h>
 #include <GL/glfw.h>
 #include <glm/glm.hpp>
