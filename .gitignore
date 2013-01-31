@@ -25,3 +25,6 @@ Win32/*
 demos/MainGLFW/MainGLFW.dir/*
 core_d.lib
 KoRE.lib
+lib
+bin
+ext
