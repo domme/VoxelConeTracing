@@ -53,6 +53,12 @@ namespace kore {
     typedef std::list<OperationPtr> OperationList;
     OperationList _operations;
     const Shader* _activeShader;
+    
+    void renderMesh
+(const std::shared_ptr<Mesh>& mesh,
+const std::shared_ptr<Shader>& shader,
+const std::shared_ptr<Camera>& camera);
+    
   };
 };
 #endif  // CORE_INCLUDE_CORE_RENDERMANAGER_H_
