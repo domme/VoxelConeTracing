@@ -19,12 +19,7 @@
 #ifndef CORE_INCLUDE_CORE_COMMON_H_
 #define CORE_INCLUDE_CORE_COMMON_H_
 
-//# define GLCOREARB_PROTOTYPES 1
-//# define GL_GLEXT_PROTOTYPES 1
-//#include <GL/glcorearb.h>
-
-
-#include <GL/glew.h>
+//#include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/matrix_inverse.hpp>

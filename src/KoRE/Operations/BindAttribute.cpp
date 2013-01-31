@@ -16,6 +16,10 @@
   You should have received a copy of the GNU General Public License
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+# define GLCOREARB_PROTOTYPES 1
+#include <GL/glcorearb.h>
+
 #include "KoRE/Operations/BindAttribute.h"
 
 kore::BindAttribute::BindAttribute(void) : _meshAttPtr(NULL),

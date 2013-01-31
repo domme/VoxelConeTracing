@@ -17,8 +17,13 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "KoRE/Operations/RenderMesh.h"
 #include <vector>
+
+# define GLCOREARB_PROTOTYPES 1
+#include <GL/glcorearb.h>
+
+
+#include "KoRE/Operations/RenderMesh.h"
 
 kore::RenderMesh::RenderMesh(void)
   : _mesh(NULL),

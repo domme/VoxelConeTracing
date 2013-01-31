@@ -21,8 +21,10 @@
 #define CORE_INCLUDE_CORE_DATATYPES_H_
 
 #include <string>
+#include <GL/glcorearb.h>
 #include "KoRE/Common.h"
 #include "KoRE/Log.h"
+
 
 namespace kore {
   class DatatypeUtil {
