@@ -19,7 +19,7 @@ if(WIN32)
 		  set(KoRE_LIBS
 	    #${EXT_LIBS}/mingw/libglfw.a
 	    #${EXT_LIBS}/glew32.lib
-	    #${EXT_LIBS}/assimp_debug-dll_win32/assimp.lib
+	    #${EXT_LIBS}/assimp_release-dll_win32/assimp.lib
 	    #OpenGL32
 	    #glaux
 	    #glu32
