@@ -2,19 +2,40 @@ file(GLOB_RECURSE SOURCES *.cpp)
 
 add_executable(MainGLFW ${SOURCES})
 
-#if(MSVC)
 if(WIN32)
-  link_directories(${CMAKE_SOURCE_DIR}/ext/lib/)
-	target_link_libraries(
-      MainGLFW 
-	  OpenGL32.lib 
-	  ${CMAKE_SOURCE_DIR}/ext/lib/GLFW.lib 
-	  ${CMAKE_SOURCE_DIR}/lib/$(Configuration)/KoRE.lib 
-	  ${CMAKE_SOURCE_DIR}/ext/lib/glew32.lib 
-	  ${CMAKE_SOURCE_DIR}/ext/lib/assimp32.lib 
-	  )
+  set(EXT_LIBS ${CMAKE_SOURCE_DIR}/ext/lib)
+  if(MSVC)
+    link_directories(${EXT_LIBS})
+	  set(KoRE_LIBS
+	    OpenGL32.lib 
+	    ${EXT_LIBS}/GLFW.lib 
+	    ${CMAKE_SOURCE_DIR}/lib/$(Configuration)/KoRE.lib 
+	    ${EXT_LIBS}/glew32.lib 
+	    ${EXT_LIBS}/assimp32.lib 
+	    )
+	else()
+	#MinGW
+		  set(KoRE_LIBS
+	    #${EXT_LIBS}/mingw/libglfw.a
+	    #${EXT_LIBS}/glew32.lib 
+	    #${EXT_LIBS}/assimp_debug-dll_win32/assimp.lib 
+	    #OpenGL32
+	    #glaux
+	    #glu32
+	    glfw
+	    glew32
+	    opengl32
+	    KoRE 
+	    )
+	
+	
+  endif(MSVC)
 else()
-  target_link_libraries(MainGLFW glfw GL GLEW KoRE assimp)
-endif()
+  #Linux
+  set(KoRE_LIBS glfw GL GLEW KoRE assimp)
+endif(WIN32)
 
+
+
+target_link_libraries(MainGLFW ${KoRE_LIBS})
 

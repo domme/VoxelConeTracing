@@ -23,7 +23,7 @@ endif()
 file(GLOB_RECURSE SOURCES src/KoRE/*.cpp)
 file(GLOB_RECURSE HEADER src/KoRE/*.h)
 add_library(KoRE ${SOURCES} ${HEADER})
-include_directories(src ext/include)
+include_directories(src)
 
 set(IGNORE "-build/include")
 
@@ -34,10 +34,15 @@ else()
     set(PYTHON_VER "python")
 endif()
 
-if(MSVC)
-  INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/ext/include)
-  message("Hello MSVC")
+
+if(WIN32)
+  include_directories(${CMAKE_SOURCE_DIR}/ext/include)
 endif()
+
+#if(MSVC)
+#  INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/ext/include)
+#  message("Hello MSVC")
+#endif()
 
 add_custom_target(style
   COMMAND ${PYTHON_VER} scripts/cpplint.py --filter=${IGNORE} ${SOURCES}
