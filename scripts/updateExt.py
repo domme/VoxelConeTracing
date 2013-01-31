@@ -43,11 +43,9 @@ def downloadZips():
     url = dependency[arch]
     name = url.split("/")[-1]
     if not os.path.exists(name):
-      #subprocess.call(["wget", url])
       print ("Downloading", url)
-      urllib.urlretrieve (url, name)
-      print ("Done")
-
+      subprocess.call(["curl", "-L", url, "-o", name])
+      #urllib.urlretrieve (url, name)
 
 def removeUnpack():
   filelist = [ f for f in os.listdir(".") if not f.endswith(".zip") ]
@@ -60,8 +58,6 @@ def removeUnpack():
 def unPack():
   filelist = [ f for f in os.listdir(".") if f.endswith(".zip") ]
   for f in filelist:
-    
-    #zfile = zipfile.ZipFile(f)
     subprocess.call(["unzip", f])
 
 def copy(src, dst):
