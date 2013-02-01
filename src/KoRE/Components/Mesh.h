@@ -46,13 +46,20 @@ namespace kore {
     bool loadFromFile(const std::string& file);
     int getNumAttributes(void);
     const std::vector<kore::MeshAttributeArray>& getAttributes() const;
-    const kore::MeshAttributeArray* getAttributeByName(
-        const std::string& szName) const;
+
+    const kore::MeshAttributeArray*
+      getAttributeByName(const std::string& szName) const;
+
     const std::vector<unsigned int>& getIndices() const;
     const unsigned int getNumVertices() const;
     const bool hasIndices() const;
     const GLenum getPrimitiveType() const;
     const std::string& getName() const;
+    const GLuint getVBO() const;
+    const GLuint getVAO() const;
+    const GLuint getIBO() const;
+    const bool usesVBO() const;
+    const bool usesIBO() const;
 
   private:
     std::string                     _name;
@@ -60,6 +67,10 @@ namespace kore {
     std::vector<unsigned int>       _indices;
     unsigned int                    _numVertices;
     GLenum                          _primitiveType;
+    GLuint                          _VBOloc;
+    GLuint                          _VAOloc;
+    GLuint                          _IBOloc;
+
   };
   typedef std::shared_ptr<kore::Mesh> MeshPtr;
 };

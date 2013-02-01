@@ -182,6 +182,28 @@ kore::MeshPtr
     return pMesh;
 }
 
+// TODO(dlazarek) Maybe the mesh is a better place for this method...
+void kore::MeshLoader::createBufferObjectsFromAttributes(kore::MeshPtr& pMesh,
+                                              const EMeshBufferType bufferType)
+{
+  GLuint uVBO;
+  glGenBuffers(1, &uVBO);
+
+  const std::vector<MeshAttributeArray>& 
+    rvMeshAttributes = pMesh->getAttributes();
+
+  // Determine byte-size needed for the VBO
+  uint uBufferSizeByte = 0;
+  for(int iAtt = 0; iAtt < pMesh->getNumAttributes(); ++iAtt) {
+    const MeshAttributeArray& rAttArray = rvMeshAttributes[iAtt];
+      uBufferSizeByte += rAttArray.byteSize *
+                         (rAttArray.numValues / rAttArray.numComponents);
+  }
+
+  //glBufferData(GL_ARRAY_BUFFER, 
+}
+
+
 void kore::MeshLoader::
     loadVertexPositions(const aiMesh* pAiMesh,
                          kore::MeshPtr& pMesh ) {

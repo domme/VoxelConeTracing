@@ -32,6 +32,12 @@
 
 
 namespace kore {
+    enum EMeshBufferType
+    {
+        BUFFERTYPE_INTERLEAVED,
+        BUFFERTYPE_SEQUENTIAL
+    };
+
     class MeshLoader {
         public:
             static MeshLoader* getInstance();
@@ -74,6 +80,9 @@ namespace kore {
             void loadVertexColors(const aiMesh* pAiMesh,
                                   kore::MeshPtr& pMesh,
                                   const unsigned int iColorSet);
+
+            void createBufferObjectsFromAttributes(kore::MeshPtr& pMesh,
+                                             const EMeshBufferType bufferType);
 
             glm::mat4 glmMatFromAiMat(const aiMatrix4x4& aiMat);
 
