@@ -200,6 +200,8 @@ void kore::MeshLoader::createBufferObjectsFromAttributes(kore::MeshPtr& pMesh,
                          (rAttArray.numValues / rAttArray.numComponents);
   }
 
+  
+  
   //glBufferData(GL_ARRAY_BUFFER, 
 }
 
