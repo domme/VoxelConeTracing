@@ -43,6 +43,18 @@ kore::Mesh::~Mesh(void) {
             free(_attributes[ i ].data);
         }
     }
+
+    if (_IBOloc != GLUINT_HANDLE_INVALID) {
+      glDeleteBuffers(1, &_IBOloc);
+    }
+
+    if (_VBOloc != GLUINT_HANDLE_INVALID) {
+      glDeleteBuffers(1, &_VBOloc);
+    }
+
+    if(_VAOloc != GLUINT_HANDLE_INVALID) {
+      glDeleteBuffers(1, &_VAOloc);
+    }
 }
 
 bool kore::Mesh::isCompatibleWith(const kore::SceneNodeComponent&

@@ -186,23 +186,88 @@ kore::MeshPtr
 void kore::MeshLoader::createBufferObjectsFromAttributes(kore::MeshPtr& pMesh,
                                               const EMeshBufferType bufferType)
 {
-  GLuint uVBO;
-  glGenBuffers(1, &uVBO);
-
   const std::vector<MeshAttributeArray>& 
     rvMeshAttributes = pMesh->getAttributes();
 
+  if (rvMeshAttributes.size() == 0) {
+    Log::getInstance()->write("[ERROR] Can't create GL buffer objects for Mesh"
+                              "%s because it has no loaded attributes!",
+                              pMesh->_name.c_str());
+    return;
+  }
+  
+  GLuint uVBO;
+  glGenBuffers(1, &uVBO);
+
   // Determine byte-size needed for the VBO
   uint uBufferSizeByte = 0;
-  for(int iAtt = 0; iAtt < pMesh->getNumAttributes(); ++iAtt) {
+  for (uint iAtt = 0; iAtt < pMesh->getNumAttributes(); ++iAtt) {
     const MeshAttributeArray& rAttArray = rvMeshAttributes[iAtt];
       uBufferSizeByte += rAttArray.byteSize *
                          (rAttArray.numValues / rAttArray.numComponents);
   }
 
+  glBindBuffer(GL_ARRAY_BUFFER, uVBO);
+  glBufferData(GL_ARRAY_BUFFER,
+               static_cast<GLsizeiptr>(uBufferSizeByte),
+               NULL,
+               GL_STATIC_DRAW );
+
+  // In case of sequential layout: add all attribute arrays sequentially 
+  // into the buffer
+  uint byteOffset = 0;
+  if (bufferType == BUFFERTYPE_SEQUENTIAL) {
+    for (int iAtt = 0; iAtt < pMesh->getNumAttributes(); ++iAtt) {
+      const MeshAttributeArray& rAttArray = rvMeshAttributes[iAtt];
+      uint attribArrayByteSize = rAttArray.byteSize *
+                               (rAttArray.numValues / rAttArray.numComponents);
+
+      glBufferSubData(GL_ARRAY_BUFFER,
+                      byteOffset,
+                      attribArrayByteSize,
+                      rAttArray.data);
+    }
+  } else if (bufferType == BUFFERTYPE_INTERLEAVED) {
+    const uint numVertices = pMesh->getNumVertices();
+    for (uint iVert = 0; iVert < numVertices; ++iVert) {
+      for(uint iAtt = 0; iAtt < rvMeshAttributes.size(); ++iAtt) {
+        const MeshAttributeArray& rAttArray = rvMeshAttributes[iAtt];
   
+        // Calculate the address of the current element.
+        // Note: We are assuming that every attribute consists of floats here
+        float* pDataPointer = static_cast<float*>(rAttArray.data);
+        pDataPointer += iVert * rAttArray.numComponents;
+
+        glBufferSubData(GL_ARRAY_BUFFER,
+                        byteOffset,
+                        rAttArray.byteSize,
+                        pDataPointer);
+      }
+    }
+  }
+
+  pMesh->_VBOloc = uVBO;
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+  // Load indices into IBO
+  if (pMesh->hasIndices()) {
+    GLuint uIBO;
+    glGenBuffers(1, &uIBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, uIBO);
+
+    // TODO(dlazarek) implement other index-sizes (currently assumung a 
+    // byte-size of 4 for each element
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                 pMesh->_indices.size() * 4,
+                 &pMesh->_indices[0],
+                 GL_STATIC_DRAW);
+    pMesh->_IBOloc = uVBO;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+  }
+
   
-  //glBufferData(GL_ARRAY_BUFFER, 
+
+
 }
 
 
