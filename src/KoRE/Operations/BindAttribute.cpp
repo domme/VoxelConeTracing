@@ -19,15 +19,14 @@
 #include "KoRE/Operations/BindAttribute.h"
 
 kore::BindAttribute::BindAttribute(void) : _meshAttPtr(NULL),
-                                               _shaderInput(NULL),
-                                               kore::Operation() {
+                                           _shaderInput(NULL),
+                                           kore::Operation() {
 }
 
-kore::BindAttribute::BindAttribute(const kore::MeshAttributeArray& meshAtt,
-                                       const kore::ShaderInput& shaderAtt) :
-                                      _meshAttPtr(&meshAtt),
-                                      _shaderInput(&shaderAtt),
-                                      kore::Operation() {
+kore::BindAttribute::BindAttribute(const kore::MeshAttributeArrayPtr meshAtt,
+                                   const kore::ShaderInputPtr shaderAtt) :
+                                   kore::Operation() {
+  connect(meshAtt, shaderAtt);
 }
 
 
@@ -46,8 +45,8 @@ void kore::BindAttribute::update(void) {
 void kore::BindAttribute::reset(void) {
 }
 
-void kore::BindAttribute::connect(const kore::MeshAttributeArray& meshAtt,
-                                    const kore::ShaderInput& shaderAtt) {
-  _meshAttPtr = &meshAtt;
-  _shaderInput = &shaderAtt;
+void kore::BindAttribute::connect(const kore::MeshAttributeArrayPtr meshAtt,
+                                    const kore::ShaderInputPtr shaderAtt) {
+  _meshAttPtr = meshAtt;
+  _shaderInput = shaderAtt;
 }

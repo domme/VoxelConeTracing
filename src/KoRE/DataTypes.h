@@ -30,13 +30,21 @@ namespace kore {
     static unsigned int getSizeFromGLdatatype(GLenum datatype);
   };
 
-  struct ShaderInput {
-    GLuint componentType;        // e.g. GL_FLOAT
-    GLenum type;                 // e.g. GL_VEC3
+  class ShaderInput {
+  public:
+    ShaderInput(void);
+    virtual ~ShaderInput(void) {};
+
+    GLenum type;                 // e.g. GL_FLOAT_VEC3
     GLuint size;                 // number of components in units of type
                                  // (currently this is always 1)
+    GLuint texUnit;
     GLint location;
     std::string name;
+    void* data;                  // Pointer to the data-source in the
+                                 // application (only valid for component-
+                                 // uniforms.
   };
+  typedef std::shared_ptr<ShaderInput> ShaderInputPtr;
 };
 #endif  // CORE_INCLUDE_CORE_DATATYPES_H_

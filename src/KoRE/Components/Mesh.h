@@ -35,6 +35,8 @@ namespace kore {
       int byteSize;             // size in bytes of one attribute
       void* data;
   };
+  typedef std::shared_ptr<MeshAttributeArray> MeshAttributeArrayPtr;
+
   class Mesh : public SceneNodeComponent {
     friend class MeshLoader;
     friend class MeshRenderComponent;

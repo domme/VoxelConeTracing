@@ -207,10 +207,6 @@ void kore::Shader::constructShaderInfo(const GLenum activeType,
 
         ShaderInput element;
         element.name = szName;
-        element.componentType = GL_FLOAT;  // TODO(dlazarek):
-                                           // We don't get this info
-                                           // from the shader currently.
-                                           // so we'll just assume GL_FLOAT here
         element.type = eElementType;
         element.size = iElementSize;
         element.location = iElementLoc;
