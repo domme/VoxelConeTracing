@@ -21,14 +21,14 @@
 
 kore::SelectNodes::SelectNodes(const uint tag,
                                const SceneNodePtr& root,
-                               SortingType type) {
+                               ESortingType type) {
   append(root, tag);
   // TODO(someone): sorting
 }
 
 kore::SelectNodes::SelectNodes(const std::string& name,
                                const SceneNodePtr& root,
-                               SortingType type,
+                               ESortingType type,
                                bool partial_match) {
   append(root, name);
   // TODO(someone): sorting

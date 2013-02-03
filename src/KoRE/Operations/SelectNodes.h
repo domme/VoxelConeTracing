@@ -25,7 +25,7 @@
 #include "KoRE/SceneNode.h"
 
 namespace kore {
-  enum SortingType {
+  enum ESortingType {
     SORT_NODES_SIMPLE,
     SORT_NODES_COMPONENT,
     SORT_NODES_Z
@@ -34,10 +34,10 @@ namespace kore {
   public:
     SelectNodes(const uint tag,
                 const SceneNodePtr& root,
-                SortingType type = SORT_NODES_SIMPLE);
+                ESortingType type = SORT_NODES_SIMPLE);
     SelectNodes(const std::string& name,
                 const SceneNodePtr& root,
-                SortingType type = SORT_NODES_SIMPLE,
+                ESortingType type = SORT_NODES_SIMPLE,
                 bool partial_match = true);
     virtual ~SelectNodes(void);
     virtual void execute(void);

@@ -39,7 +39,7 @@ kore::SceneNodeComponent::getNode(void) const {
 void kore::SceneNodeComponent::setNode(const kore::SceneNodePtr& node) {
 }
 
-const kore::ComponentType kore::SceneNodeComponent::getType(void) const {
+const kore::EComponentType kore::SceneNodeComponent::getType(void) const {
   return _type;
 }
 

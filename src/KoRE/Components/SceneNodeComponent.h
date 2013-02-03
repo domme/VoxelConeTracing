@@ -23,7 +23,7 @@
 #include "KoRE/Common.h"
 
 namespace kore {
-  enum ComponentType {
+  enum EComponentType {
     COMPONENT_UNKNOWN,
     COMPONENT_MESH,
     COMPONENT_CAMERA,
@@ -41,13 +41,13 @@ namespace kore {
     virtual void attachTo(SceneNodePtr& node);
     void setNode(const SceneNodePtr& node);
     const SceneNodePtr& getNode(void) const;
-    const ComponentType getType(void) const;
+    const EComponentType getType(void) const;
     uint getID(void) const;
 
   protected:
     uint _id;
     SceneNodePtr _node;
-    ComponentType _type;
+    EComponentType _type;
   };
   typedef std::shared_ptr<SceneNodeComponent> SceneNodeComponentPtr;
 };
