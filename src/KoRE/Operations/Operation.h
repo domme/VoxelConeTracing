@@ -23,6 +23,7 @@
 #include <memory>
 
 namespace kore {
+  class RenderManager;
   class Operation {
   public:
     Operation(void);
@@ -36,6 +37,8 @@ namespace kore {
   private:
     bool _executeOnce;
     bool _executed;
+  protected:
+    RenderManager* _renderManager;
   };
   typedef std::shared_ptr<Operation> OperationPtr;
 }

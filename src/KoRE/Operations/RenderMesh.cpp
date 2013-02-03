@@ -18,6 +18,7 @@
 */
 
 #include "KoRE/Operations/RenderMesh.h"
+#include "KoRE/RenderManager.h";
 #include <vector>
 
 kore::RenderMesh::RenderMesh(void)
@@ -62,7 +63,7 @@ void kore::RenderMesh::execute(void) {
             0, meshAtt->data);
     }
 
-    _shader->applyShader();
+    _renderManager->useShaderProgram(_shader->getProgramLocation());
     // Update uniforms
     GLint iView =
         glGetUniformLocation(_shader->getProgramLocation(), "view");

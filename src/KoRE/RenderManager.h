@@ -44,6 +44,12 @@ namespace kore {
                                                  const EOpInsertPos insertPos);
     bool hasOperation(const OperationPtr& op);
 
+    // The OpenGL-State wrapper functions go here:
+    void bindVBO(const GLuint vbo);
+    void bindIBO(const GLuint ibo);
+    void useShaderProgram(const GLuint shaderProgram);
+    //////////////////////////////////////////////////////////////////////////
+
   private:
     RenderManager(void);
     virtual ~RenderManager(void);
@@ -53,12 +59,12 @@ namespace kore {
     typedef std::list<OperationPtr> OperationList;
     OperationList _operations;
     const Shader* _activeShader;
-    
-    void renderMesh
-(const std::shared_ptr<Mesh>& mesh,
-const std::shared_ptr<Shader>& shader,
-const std::shared_ptr<Camera>& camera);
-    
+
+    // OpenGL-States:
+    GLuint _vbo;
+    GLuint _ibo;
+    GLuint _shaderProgram;
+    //////////////////////////////////////////////////////////////////////////
   };
 };
 #endif  // CORE_INCLUDE_CORE_RENDERMANAGER_H_

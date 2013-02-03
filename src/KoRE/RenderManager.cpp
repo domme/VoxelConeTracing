@@ -34,56 +34,6 @@ kore::RenderManager::RenderManager(void) {
 kore::RenderManager::~RenderManager(void) {
 }
 
-void kore::RenderManager::renderMesh
-(const std::shared_ptr<Mesh>& mesh,
-const std::shared_ptr<Shader>& shader,
-const std::shared_ptr<Camera>& camera) {
-    const std::vector<kore::ShaderInput>& vAttributes = shader->getAttributes();
-    for (unsigned int i = 0; i < vAttributes.size(); ++i) {
-        const kore::ShaderInput& shaderAtt = vAttributes[i];
-        const kore::MeshAttributeArray* meshAtt =
-            mesh->getAttributeByName(shaderAtt.name);
-
-        if (!meshAtt) {
-            Log::getInstance()->write("[ERROR] Mesh %s does not have an"
-                                      "Attribute %s",
-                                      mesh->getName().c_str(),
-                                      shaderAtt.name.c_str());
-            return;
-        }
-
-        glEnableVertexAttribArray(shaderAtt.location);
-        glVertexAttribPointer(shaderAtt.location, meshAtt->numValues,
-                              meshAtt->componentType, GL_FALSE,
-                              0, meshAtt->data);
-    }
-
-    shader->applyShader();
-    // Update uniforms
-    GLint iView =
-        glGetUniformLocation(shader->getProgramLocation(), "view");
-
-    GLint iProj =
-        glGetUniformLocation(shader->getProgramLocation(), "projection");
-
-    GLint iModel =
-        glGetUniformLocation(shader->getProgramLocation(), "model");
-
-    glUniformMatrix4fv(iView, 1, GL_FALSE, glm::value_ptr(camera->getView()));
-
-    glUniformMatrix4fv(iProj, 1, GL_FALSE,
-                        glm::value_ptr(camera->getProjection()));
-
-    glUniformMatrix4fv(iModel, 1, GL_FALSE, glm::value_ptr(glm::mat4(1.0f)));
-
-if (mesh->hasIndices()) {
-   glDrawElements(mesh->getPrimitiveType(), mesh->getIndices().size(),
-       GL_UNSIGNED_INT, &mesh->getIndices()[0]);
-} else {
-     glDrawArrays(mesh->getPrimitiveType(), 0, mesh->getNumVertices());
- }
-}
-
 const glm::ivec2& kore::RenderManager::getRenderResolution() const {
     return _renderResolution;
 }
@@ -136,3 +86,29 @@ bool kore::RenderManager::hasOperation(const OperationPtr& op) {
     return std::find(_operations.begin(), _operations.end(), op) !=
                                                              _operations.end();
 }
+
+// OpenGL-Wrappers:
+void kore::RenderManager::bindVBO(const GLuint vbo) {
+  if (_vbo != vbo) {
+    _vbo = vbo;
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+  }
+}
+
+void kore::RenderManager::bindIBO( const GLuint ibo ) {
+  if (_ibo != ibo) {
+    _ibo = ibo;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+  }
+}
+
+void kore::RenderManager::useShaderProgram(const GLuint shaderProgram) {
+  if (_shaderProgram != shaderProgram) {
+    _shaderProgram = shaderProgram;
+    glUseProgram(shaderProgram);
+  }
+}
+
+
+
+//////////////////////////////////////////////////////////////////////////

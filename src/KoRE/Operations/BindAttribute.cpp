@@ -17,16 +17,19 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "KoRE/Operations/BindAttribute.h"
+#include "KoRE/RenderManager.h"
 
 kore::BindAttribute::BindAttribute(void) : _meshAttPtr(NULL),
                                            _shaderInput(NULL),
+                                           _mesh(NULL),
                                            kore::Operation() {
 }
 
-kore::BindAttribute::BindAttribute(const kore::MeshAttributeArrayPtr meshAtt,
+kore::BindAttribute::BindAttribute(const kore::MeshPtr mesh,
+                                   const kore::MeshAttributeArrayPtr meshAtt,
                                    const kore::ShaderInputPtr shaderAtt) :
                                    kore::Operation() {
-  connect(meshAtt, shaderAtt);
+  connect(mesh, meshAtt, shaderAtt);
 }
 
 
@@ -34,8 +37,13 @@ kore::BindAttribute::~BindAttribute(void) {
 }
 
 void kore::BindAttribute::execute(void) {
+ 
+  if (_mesh->usesVBO()) {
+    _renderManager->bindVBO(_mesh->getVBO());
+  }
+
   glEnableVertexAttribArray(_shaderInput->location);
-  glVertexAttribPointer(_shaderInput->location, _meshAttPtr->numComponents,
+ glVertexAttribPointer(_shaderInput->location, _meshAttPtr->numComponents,
  _meshAttPtr->componentType, GL_FALSE, _meshAttPtr->stride, _meshAttPtr->data);
 }
 
@@ -45,8 +53,10 @@ void kore::BindAttribute::update(void) {
 void kore::BindAttribute::reset(void) {
 }
 
-void kore::BindAttribute::connect(const kore::MeshAttributeArrayPtr meshAtt,
+void kore::BindAttribute::connect(const kore::MeshPtr mesh,
+                                  const kore::MeshAttributeArrayPtr meshAtt,
                                   const kore::ShaderInputPtr shaderAtt) {
+  _mesh = mesh;
   _meshAttPtr = meshAtt;
   _shaderInput = shaderAtt;
 }

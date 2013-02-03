@@ -35,7 +35,6 @@ namespace kore {
     GLuint getAttributeLocation(const std::string &name);
     GLuint getUniformLocation(const std::string &name);
     GLuint getProgramLocation();
-    void   applyShader();
     const std::vector<ShaderInput>& getAttributes() const;
     const std::vector<ShaderInput>& getUniforms() const;
 

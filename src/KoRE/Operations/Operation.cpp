@@ -18,13 +18,16 @@
 */
 
 #include "KoRE/Operations/Operation.h"
+#include "Kore/RenderManager.h"
 
 kore::Operation::Operation(void)
   : _executed(false),
     _executeOnce(false) {
+      _renderManager = RenderManager::getInstance();
 }
 
 kore::Operation::~Operation(void) {
+  _renderManager = RenderManager::getInstance();
 }
 
 bool kore::Operation::getExecuted(void) {
