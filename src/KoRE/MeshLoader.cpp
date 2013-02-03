@@ -179,6 +179,10 @@ kore::MeshPtr
         loadFaceIndices(pAiMesh, pMesh);
     }
 
+    if (bUseBuffers) {
+      createBufferObjectsFromAttributes(pMesh, BUFFERTYPE_INTERLEAVED);
+    }
+
     return pMesh;
 }
 
@@ -186,8 +190,7 @@ kore::MeshPtr
 void kore::MeshLoader::createBufferObjectsFromAttributes(kore::MeshPtr& pMesh,
                                               const EMeshBufferType bufferType)
 {
-  const std::vector<MeshAttributeArray>& 
-    rvMeshAttributes = pMesh->getAttributes();
+  std::vector<MeshAttributeArray>& rvMeshAttributes = pMesh->_attributes;
 
   if (rvMeshAttributes.size() == 0) {
     Log::getInstance()->write("[ERROR] Can't create GL buffer objects for Mesh"
@@ -202,9 +205,9 @@ void kore::MeshLoader::createBufferObjectsFromAttributes(kore::MeshPtr& pMesh,
   // Determine byte-size needed for the VBO
   uint uBufferSizeByte = 0;
   for (uint iAtt = 0; iAtt < pMesh->getNumAttributes(); ++iAtt) {
-    const MeshAttributeArray& rAttArray = rvMeshAttributes[iAtt];
-      uBufferSizeByte += rAttArray.byteSize *
-                         (rAttArray.numValues / rAttArray.numComponents);
+    MeshAttributeArray& rAttArray = rvMeshAttributes[iAtt];
+    uBufferSizeByte += rAttArray.byteSize *
+                      (rAttArray.numValues / rAttArray.numComponents);
   }
 
   glBindBuffer(GL_ARRAY_BUFFER, uVBO);
@@ -218,7 +221,7 @@ void kore::MeshLoader::createBufferObjectsFromAttributes(kore::MeshPtr& pMesh,
   uint byteOffset = 0;
   if (bufferType == BUFFERTYPE_SEQUENTIAL) {
     for (int iAtt = 0; iAtt < pMesh->getNumAttributes(); ++iAtt) {
-      const MeshAttributeArray& rAttArray = rvMeshAttributes[iAtt];
+      MeshAttributeArray& rAttArray = rvMeshAttributes[iAtt];
       uint attribArrayByteSize = rAttArray.byteSize *
                                (rAttArray.numValues / rAttArray.numComponents);
 
@@ -226,13 +229,21 @@ void kore::MeshLoader::createBufferObjectsFromAttributes(kore::MeshPtr& pMesh,
                       byteOffset,
                       attribArrayByteSize,
                       rAttArray.data);
+
+      free(rAttArray.data);  // Delete the attribute-list
+      rAttArray.data = 0;  // Data now has the value of the offset in the 
+                           // VBO to this attribute list.
+                           // (always 0 for sequential layout)
+      rAttArray.stride = 0;
     }
   } else if (bufferType == BUFFERTYPE_INTERLEAVED) {
+    uint stride = 0;
     const uint numVertices = pMesh->getNumVertices();
     for (uint iVert = 0; iVert < numVertices; ++iVert) {
+      stride = 0;
       for(uint iAtt = 0; iAtt < rvMeshAttributes.size(); ++iAtt) {
-        const MeshAttributeArray& rAttArray = rvMeshAttributes[iAtt];
-  
+        MeshAttributeArray& rAttArray = rvMeshAttributes[iAtt];
+        stride += rAttArray.byteSize;
         // Calculate the address of the current element.
         // Note: We are assuming that every attribute consists of floats here
         float* pDataPointer = static_cast<float*>(rAttArray.data);
@@ -242,9 +253,20 @@ void kore::MeshLoader::createBufferObjectsFromAttributes(kore::MeshPtr& pMesh,
                         byteOffset,
                         rAttArray.byteSize,
                         pDataPointer);
-      }
+      }  // End Attributes
+    }  // End Vertices
+
+    // Now loop through attributes again to delete the attribute list and set 
+    // the correct offset value.
+    uint offset = 0;
+    for(uint iAtt = 0; iAtt < rvMeshAttributes.size(); ++iAtt) {
+      MeshAttributeArray& rAttArray = rvMeshAttributes[iAtt];
+      free(rAttArray.data);
+      rAttArray.data = reinterpret_cast<void*>(offset);
+      rAttArray.stride = stride;
+      offset += rAttArray.byteSize;
     }
-  }
+  }  // End Interleaved
 
   pMesh->_VBOloc = uVBO;
   glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -264,10 +286,6 @@ void kore::MeshLoader::createBufferObjectsFromAttributes(kore::MeshPtr& pMesh,
     pMesh->_IBOloc = uVBO;
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
   }
-
-  
-
-
 }
 
 

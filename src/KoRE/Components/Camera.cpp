@@ -167,6 +167,7 @@ const kore::ShaderInputPtr kore::Camera::getShaderInput(const std::string& name)
     for (uint i = 0; i < _uniforms.size(); ++i) {
       if(_uniforms[i]->name == name ) return _uniforms[i];
     }
+    return ShaderInputPtr(NULL);
 }
 
 void kore::Camera::setPosition(const glm::vec3& v3Pos) {

@@ -36,7 +36,7 @@ kore::BindAttribute::~BindAttribute(void) {
 void kore::BindAttribute::execute(void) {
   glEnableVertexAttribArray(_shaderInput->location);
   glVertexAttribPointer(_shaderInput->location, _meshAttPtr->numComponents,
-      _meshAttPtr->componentType, GL_FALSE, 0, _meshAttPtr->data);
+ _meshAttPtr->componentType, GL_FALSE, _meshAttPtr->stride, _meshAttPtr->data);
 }
 
 void kore::BindAttribute::update(void) {
@@ -46,7 +46,7 @@ void kore::BindAttribute::reset(void) {
 }
 
 void kore::BindAttribute::connect(const kore::MeshAttributeArrayPtr meshAtt,
-                                    const kore::ShaderInputPtr shaderAtt) {
+                                  const kore::ShaderInputPtr shaderAtt) {
   _meshAttPtr = meshAtt;
   _shaderInput = shaderAtt;
 }

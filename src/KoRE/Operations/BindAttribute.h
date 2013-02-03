@@ -29,7 +29,7 @@ namespace kore {
   public:
     BindAttribute(void);
     BindAttribute(const MeshAttributeArrayPtr meshAtt,
-                    const ShaderInputPtr shaderAtt);
+                  const ShaderInputPtr shaderAtt);
     virtual ~BindAttribute(void);
     virtual void execute(void);
     virtual void update(void);

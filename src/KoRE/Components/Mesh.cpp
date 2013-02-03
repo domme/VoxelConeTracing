@@ -38,10 +38,12 @@ kore::Mesh::Mesh(void)
 kore::Mesh::~Mesh(void) {
     // Free all attribute-data.
     // This has to be done more sophisticated in a future version
-    for (unsigned int i = 0; i < _attributes.size(); ++i) {
+    if (!usesVBO()) {  // In case of VBO, the data-pointers are already freed
+      for (unsigned int i = 0; i < _attributes.size(); ++i) {
         if (_attributes[ i ].data) {
-            free(_attributes[ i ].data);
+          free(_attributes[ i ].data);
         }
+      }
     }
 
     if (_IBOloc != GLUINT_HANDLE_INVALID) {

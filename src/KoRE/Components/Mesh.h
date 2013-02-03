@@ -27,13 +27,25 @@
 
 namespace kore {
   struct MeshAttributeArray {
+      MeshAttributeArray()
+        : name("undefined"),
+          type(0),
+          componentType(0),
+          numValues(0),
+          numComponents(0),
+          byteSize(0),
+          stride(0),
+          data(NULL) {}
       std::string name;
       GLenum type;              // e.g. GL_VEC3
       GLenum componentType;     // e.g. GL_FLOAT
-      int numValues;            // number of componentTypes (e.g. floats)
-      int numComponents;        // number of components per vertex (3 for vec3)
-      int byteSize;             // size in bytes of one attribute
+      uint numValues;            // number of componentTypes (e.g. floats)
+      uint numComponents;        // number of components per vertex
+                                 // (3 for vec3)
+      uint byteSize;             // size in bytes of one attribute
+      uint stride;               // byte-offset between two successive elements
       void* data;
+
   };
   typedef std::shared_ptr<MeshAttributeArray> MeshAttributeArrayPtr;
 
@@ -72,7 +84,6 @@ namespace kore {
     GLuint                          _VBOloc;
     GLuint                          _VAOloc;
     GLuint                          _IBOloc;
-
   };
   typedef std::shared_ptr<kore::Mesh> MeshPtr;
 };
