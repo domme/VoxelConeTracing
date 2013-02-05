@@ -46,11 +46,33 @@ void kore::RenderMesh::execute(void) {
 
     _renderManager->useShaderProgram(_shader->getProgramLocation());
 
-    if (_mesh->hasIndices()) {
-        glDrawElements(_mesh->getPrimitiveType(), _mesh->getIndices().size(),
-            GL_UNSIGNED_INT, &_mesh->getIndices()[0]);
+    if (_mesh->usesVBO()) {
+      _renderManager->bindVBO(_mesh->getVBO());
     } else {
-        glDrawArrays(_mesh->getPrimitiveType(), 0, _mesh->getNumVertices());
+      _renderManager->bindVBO(0);
+    }
+
+    if (_mesh->usesIBO()) {
+      _renderManager->bindIBO(_mesh->getIBO());
+    } else {
+      _renderManager->bindIBO(0);
+    }
+
+    // Indices but no IBO
+    if (_mesh->hasIndices() && !_mesh->usesIBO()) {
+      glDrawElements(_mesh->getPrimitiveType(), _mesh->getIndices().size(),
+                     GL_UNSIGNED_INT, &_mesh->getIndices()[0]);
+    }
+
+    // Indices with IBO
+    else if (_mesh->hasIndices() && _mesh->usesIBO()) {
+      glDrawElements(_mesh->getPrimitiveType(), _mesh->getIndices().size(),
+                      GL_UNSIGNED_INT, BUFFER_OFFSET(0));
+    }
+
+    // No Indices
+    else if (!_mesh->hasIndices()) {
+      glDrawArrays(_mesh->getPrimitiveType(), 0, _mesh->getNumVertices());
     }
 
   setExecuted(true);

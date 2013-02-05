@@ -38,15 +38,20 @@ kore::ResourceManager::~ResourceManager(void) {
 }
 
 kore::SceneNodePtr
-kore::ResourceManager::loadScene(const std::string& filename) {
+kore::ResourceManager::loadScene(const std::string& filename,
+                                 uint importFlags) {
+  bool bUseBuffers = (importFlags & USE_BUFFERS) != 0;
   kore::SceneNodePtr pNewScene =
-      MeshLoader::getInstance()->loadScene(filename, true);
+      MeshLoader::getInstance()->loadScene(filename, bUseBuffers);
   return pNewScene;
 }
 
 kore::MeshPtr
-kore::ResourceManager::loadSingleMesh(const std::string& filename) {
+kore::ResourceManager::loadSingleMesh(const std::string& filename,
+                                      uint importFlags) {
+  bool bUseBuffers = (importFlags & USE_BUFFERS) != 0;
+
   kore::MeshPtr pNewScene =
-    MeshLoader::getInstance()->loadSingleMesh(filename, false);
+    MeshLoader::getInstance()->loadSingleMesh(filename, bUseBuffers);
     return pNewScene;
 }

@@ -60,6 +60,9 @@ int main(void) {
     exit(EXIT_FAILURE);
   }
 
+  // Init gl-states
+  // glEnable(GL_VERTEX_ARRAY);
+
   // log versions
   int GLFWmajor, GLFWminor, GLFWrev;
   glfwGetVersion(&GLFWmajor, &GLFWminor, &GLFWrev);
@@ -85,7 +88,7 @@ int main(void) {
   // load resources
   kore::MeshPtr pTestMesh =
       kore::ResourceManager::getInstance()->
-      loadSingleMesh("./assets/meshes/cube.dae");
+      loadSingleMesh("./assets/meshes/cube.dae", kore::USE_BUFFERS);
 
   // load shader
   kore::ShaderPtr pSimpleShader(new kore::Shader);

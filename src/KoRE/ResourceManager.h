@@ -29,11 +29,15 @@
 
 
 namespace kore {
+  enum EImportOptions {
+    USE_BUFFERS = 0x00000001
+  };
+
   class ResourceManager {
   public:
     static ResourceManager *getInstance(void);
-    kore::SceneNodePtr loadScene(const std::string& filename);
-    kore::MeshPtr loadSingleMesh(const std::string& filename);
+    kore::SceneNodePtr loadScene(const std::string& filename, uint importFlags);
+    kore::MeshPtr loadSingleMesh(const std::string& filename, uint importFlags);
   private:
     ResourceManager(void);
     virtual ~ResourceManager(void);
