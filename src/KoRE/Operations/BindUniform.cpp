@@ -134,14 +134,36 @@ kore::BindUniform::BindUniform(void)
                             kore::Operation() {
 }
 
-kore::BindUniform::BindUniform(const ShaderInputPtr componentUni,
+kore::BindUniform::BindUniform(const ShaderInput* componentUni,
                                GLuint shaderID,
-                               const ShaderInputPtr shaderUni)
+                               const ShaderInput* shaderUni)
                               : kore::Operation() {
   connect(componentUni, shaderID, shaderUni);
 }
 
 kore::BindUniform::~BindUniform(void) {
+}
+
+void kore::BindUniform::connect(const kore::ShaderInput* componentUni,
+  GLuint shaderID,
+  const kore::ShaderInput* shaderUni) {
+    if (componentUni->type != shaderUni->type
+      || shaderID == GLUINT_HANDLE_INVALID
+      || componentUni->size != shaderUni->size) {
+        _componentUniform = NULL;
+        _shaderUniform = NULL;
+        _shaderID = GLUINT_HANDLE_INVALID;
+    } else {
+      _componentUniform = componentUni;
+      _shaderUniform = shaderUni;
+      _shaderID = shaderID;
+    }
+}
+
+void kore::BindUniform::update(void) {
+}
+
+void kore::BindUniform::reset(void) {
 }
 
 void kore::BindUniform::execute(void) {
@@ -538,21 +560,5 @@ break; */
     default:
      kore::Log::getInstance()->write("[ERROR] Unknown uniform binding");
     break;
-  }
-}
-
-void kore::BindUniform::connect(const kore::ShaderInputPtr componentUni,
-                                  GLuint shaderID,
-                                  const kore::ShaderInputPtr shaderUni) {
-  if (componentUni->type != shaderUni->type
-      || shaderID != GLUINT_HANDLE_INVALID
-      || componentUni->size != shaderUni->size) {
-    _componentUniform = NULL;
-    _shaderUniform = NULL;
-    _shaderID = GLUINT_HANDLE_INVALID;
-  } else {
-    _componentUniform = componentUni;
-    _shaderUniform = shaderUni;
-    _shaderID = shaderID;
   }
 }

@@ -56,7 +56,7 @@ namespace kore {
   public:
     Mesh(void);
     virtual ~Mesh(void);
-    virtual bool isCompatibleWith(const SceneNodeComponent& otherComponent);
+    virtual bool isCompatibleWith(const SceneNodeComponent& otherComponent) const;
     bool loadFromFile(const std::string& file);
     int getNumAttributes(void);
     const std::vector<kore::MeshAttributeArray>& getAttributes() const;

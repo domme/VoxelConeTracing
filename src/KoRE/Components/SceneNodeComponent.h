@@ -37,7 +37,7 @@ namespace kore {
     explicit SceneNodeComponent(void);
     virtual ~SceneNodeComponent(void);
      /// Checks if this component is of the same type as the other component
-    virtual bool isCompatibleWith(const SceneNodeComponent& otherComponent) = 0;
+    virtual bool isCompatibleWith(const SceneNodeComponent& otherComponent) const = 0;
     virtual void attachTo(SceneNodePtr& node);
     void setNode(const SceneNodePtr& node);
     const SceneNodePtr& getNode(void) const;

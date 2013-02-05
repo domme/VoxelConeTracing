@@ -33,6 +33,7 @@ namespace kore {
   public:
     static ResourceManager *getInstance(void);
     kore::SceneNodePtr loadScene(const std::string& filename);
+    kore::MeshPtr loadSingleMesh(const std::string& filename);
   private:
     ResourceManager(void);
     virtual ~ResourceManager(void);

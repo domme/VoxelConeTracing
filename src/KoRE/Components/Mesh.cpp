@@ -60,7 +60,7 @@ kore::Mesh::~Mesh(void) {
 }
 
 bool kore::Mesh::isCompatibleWith(const kore::SceneNodeComponent&
-                                  otherComponent) {
+                                  otherComponent) const {
   if (otherComponent.getType() != getType()) {
     return false;
   }

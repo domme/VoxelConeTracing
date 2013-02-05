@@ -44,42 +44,7 @@ void kore::RenderMesh::execute(void) {
     const std::vector<kore::ShaderInput>& vAttributes =
                                                     _shader->getAttributes();
 
-    for (unsigned int i = 0; i < vAttributes.size(); ++i) {
-        const kore::ShaderInput& shaderAtt = vAttributes[i];
-        const kore::MeshAttributeArray* meshAtt =
-            _mesh->getAttributeByName(shaderAtt.name);
-
-        if (!meshAtt) {
-            Log::getInstance()->write("[ERROR] Mesh %s does not have an"
-                "Attribute %s",
-                _mesh->getName().c_str(),
-                shaderAtt.name.c_str());
-            return;
-        }
-
-        glEnableVertexAttribArray(shaderAtt.location);
-        glVertexAttribPointer(shaderAtt.location, meshAtt->numComponents,
-            meshAtt->componentType, GL_FALSE,
-            0, meshAtt->data);
-    }
-
     _renderManager->useShaderProgram(_shader->getProgramLocation());
-    // Update uniforms
-    GLint iView =
-        glGetUniformLocation(_shader->getProgramLocation(), "view");
-
-    GLint iProj =
-        glGetUniformLocation(_shader->getProgramLocation(), "projection");
-
-    GLint iModel =
-        glGetUniformLocation(_shader->getProgramLocation(), "model");
-
-    glUniformMatrix4fv(iView, 1, GL_FALSE, glm::value_ptr(_camera->getView()));
-
-    glUniformMatrix4fv(iProj, 1, GL_FALSE,
-        glm::value_ptr(_camera->getProjection()));
-
-    glUniformMatrix4fv(iModel, 1, GL_FALSE, glm::value_ptr(glm::mat4(1.0f)));
 
     if (_mesh->hasIndices()) {
         glDrawElements(_mesh->getPrimitiveType(), _mesh->getIndices().size(),

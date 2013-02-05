@@ -32,6 +32,8 @@
 #include "KoRE/Shader.h"
 #include "KoRE/Components/Mesh.h"
 #include "KoRE/Operations/RenderMesh.h"
+#include "KoRE/Operations/BindAttribute.h"
+#include "KoRE/Operations/BindUniform.h"
 #include "KoRE/ResourceManager.h"
 #include "KoRE/RenderManager.h"
 
@@ -81,9 +83,9 @@ int main(void) {
     reinterpret_cast<const char*>(glewGetString(GLEW_VERSION)));
 
   // load resources
-  kore::SceneNodePtr pTestScene =
+  kore::MeshPtr pTestMesh =
       kore::ResourceManager::getInstance()->
-      loadScene("./assets/meshes/Test_LightCamera.dae");
+      loadSingleMesh("./assets/meshes/cube.dae");
 
   // load shader
   kore::ShaderPtr pSimpleShader(new kore::Shader);
@@ -91,19 +93,38 @@ int main(void) {
   pSimpleShader->loadShader( "./assets/shader/simple.fp", GL_FRAGMENT_SHADER);
   pSimpleShader->initShader();
 
-
-  /*kore::CameraPtr pCamera(new kore::Camera);
+  kore::CameraPtr pCamera(new kore::Camera);
   pCamera->setView(glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f),
                    glm::vec3(0.0f, 0.0f, 0.0f),
                    glm::vec3(0.0f, 1.0f, 0.0f)));
   pCamera->setProjectionPersp(60.0f, 800.0f, 600.0f, 1.0f, 100.0f);
 
-  kore::RenderMeshOpPtr pOp(new kore::RenderMeshOp);
+  // Bind Uniform-Ops
+  // Bind Attribute-Ops
+  kore::BindAttributePtr pPosAttBind (new kore::BindAttribute);
+  pPosAttBind->connect(pTestMesh,
+                       pTestMesh->getAttributeByName("v_position"),
+                       pSimpleShader->getAttributeByName("v_position"));
+
+  kore::BindUniformPtr pViewBind(new kore::BindUniform);
+  pViewBind->connect(pCamera->getShaderInput("view Matrix").get(),
+                     pSimpleShader->getProgramLocation(),
+                     pSimpleShader->getUniformByName("view"));
+
+  kore::BindUniformPtr pProjBind(new kore::BindUniform);
+  pProjBind->connect(pCamera->getShaderInput("projection Matrix").get(),
+                    pSimpleShader->getProgramLocation(),
+                    pSimpleShader->getUniformByName("projection"));
+
+  kore::RenderMeshOpPtr pOp(new kore::RenderMesh);
   pOp->setCamera(pCamera);
   pOp->setMesh(pTestMesh);
   pOp->setShader(pSimpleShader);
 
-  kore::RenderManager::getInstance()->addOperation(pOp);*/
+  kore::RenderManager::getInstance()->addOperation(pViewBind);
+  kore::RenderManager::getInstance()->addOperation(pProjBind);
+  kore::RenderManager::getInstance()->addOperation(pPosAttBind);
+  kore::RenderManager::getInstance()->addOperation(pOp);
 
   glClearColor(1.0f,1.0f,1.0f,1.0f);
 

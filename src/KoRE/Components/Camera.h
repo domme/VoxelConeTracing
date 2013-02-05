@@ -34,8 +34,7 @@ class Camera : public SceneNodeComponent {
  public:
      Camera();
      virtual ~Camera();
-     virtual bool
-       isCompatibleWith(const SceneNodeComponent& otherComponent) const;
+     virtual bool isCompatibleWith(const SceneNodeComponent& otherComponent) const;
 
      const glm::mat4&  getView() const           {return _matView;}
      const glm::mat4&  getProjection() const     {return _matProjection;}

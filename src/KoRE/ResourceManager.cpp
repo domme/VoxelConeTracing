@@ -43,3 +43,10 @@ kore::ResourceManager::loadScene(const std::string& filename) {
       MeshLoader::getInstance()->loadScene(filename, true);
   return pNewScene;
 }
+
+kore::MeshPtr
+kore::ResourceManager::loadSingleMesh(const std::string& filename) {
+  kore::MeshPtr pNewScene =
+    MeshLoader::getInstance()->loadSingleMesh(filename, false);
+    return pNewScene;
+}

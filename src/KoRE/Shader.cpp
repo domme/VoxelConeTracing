@@ -20,6 +20,7 @@
 #include <vector>
 #include <string>
 #include "KoRE/Shader.h"
+#include "KoRE/Log.h"
 
 const unsigned int BUFSIZE = 100;  // Buffer length for shader-element names
 
@@ -209,4 +210,30 @@ void kore::Shader::constructShaderInfo(const GLenum activeType,
 
         rInputVector.push_back(element);
     }
+}
+
+const kore::ShaderInput*
+kore::Shader::getAttributeByName( const std::string& name ) const {
+  for (uint i = 0; i < _attributes.size(); ++i) {
+    if (_attributes[i].name == name) {
+      return &_attributes[i];
+    }
+  }
+
+  Log::getInstance()->write("[ERROR] Attribute %s not found in shader %s",
+                            name.c_str(), _name.c_str());
+  return NULL;
+}
+
+const kore::ShaderInput*
+kore::Shader::getUniformByName( const std::string& name ) const {
+  for (uint i = 0; i < _uniforms.size(); ++i) {
+    if (_uniforms[i].name == name) {
+      return &_uniforms[i];
+    }
+  }
+
+  Log::getInstance()->write("[ERROR] Uniform %s not found in shader %s",
+    name.c_str(), _name.c_str());
+  return NULL;
 }
