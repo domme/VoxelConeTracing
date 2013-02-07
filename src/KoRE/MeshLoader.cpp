@@ -212,7 +212,7 @@ void kore::MeshLoader::createBufferObjectsFromAttributes(kore::MeshPtr& pMesh,
 
   glBindBuffer(GL_ARRAY_BUFFER, uVBO);
   glBufferData(GL_ARRAY_BUFFER,
-               static_cast<GLsizeiptr>(uBufferSizeByte),
+              (uBufferSizeByte),
                NULL,
                GL_STATIC_DRAW );
 
@@ -231,10 +231,11 @@ void kore::MeshLoader::createBufferObjectsFromAttributes(kore::MeshPtr& pMesh,
                       rAttArray.data);
 
       free(rAttArray.data);  // Delete the attribute-list
-      rAttArray.data = 0;  // Data now has the value of the offset in the 
+      rAttArray.data = reinterpret_cast<void*>(byteOffset);  // Data now has the value of the offset in the 
                            // VBO to this attribute list.
                            // (always 0 for sequential layout)
       rAttArray.stride = 0;
+      byteOffset += attribArrayByteSize;
     }
   } else if (bufferType == BUFFERTYPE_INTERLEAVED) {
     uint stride = 0;
@@ -247,12 +248,13 @@ void kore::MeshLoader::createBufferObjectsFromAttributes(kore::MeshPtr& pMesh,
         // Calculate the address of the current element.
         // Note: We are assuming that every attribute consists of floats here
         float* pDataPointer = static_cast<float*>(rAttArray.data);
-        pDataPointer += iVert * rAttArray.numComponents;
+        pDataPointer = &pDataPointer[iVert * rAttArray.numComponents];
 
         glBufferSubData(GL_ARRAY_BUFFER,
                         byteOffset,
                         rAttArray.byteSize,
                         pDataPointer);
+        byteOffset += rAttArray.byteSize;
       }  // End Attributes
     }  // End Vertices
 
@@ -283,7 +285,7 @@ void kore::MeshLoader::createBufferObjectsFromAttributes(kore::MeshPtr& pMesh,
                  pMesh->_indices.size() * 4,
                  &pMesh->_indices[0],
                  GL_STATIC_DRAW);
-    pMesh->_IBOloc = uVBO;
+    pMesh->_IBOloc = uIBO;
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
   }
 }
