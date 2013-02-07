@@ -23,6 +23,7 @@
 #include "KoRE/Components/Mesh.h"
 #include "KoRE/ResourceManager.h"
 #include "KoRE/DataTypes.h"
+#include "KoRE/Log.h"
 
 
 kore::Mesh::Mesh(void)
@@ -153,4 +154,104 @@ const kore::MeshAttributeArray* kore::Mesh::
             }
         }
         return NULL;
+}
+
+void kore::Mesh::createAttributeBuffers(const kore::EMeshBufferType bufferType) {
+
+  if (_attributes.size() == 0) {
+    Log::getInstance()->write("[ERROR] Can't create GL buffer objects for Mesh"
+                              "%s because it has no loaded attributes!",
+                              _name.c_str());
+    return;
+  }
+  
+  GLuint uVBO;
+  glGenBuffers(1, &uVBO);
+
+  // Determine byte-size needed for the VBO
+  uint uBufferSizeByte = 0;
+  for (uint iAtt = 0; iAtt < _attributes.size(); ++iAtt) {
+    MeshAttributeArray& rAttArray = _attributes[iAtt];
+    uBufferSizeByte += rAttArray.byteSize *
+                      (rAttArray.numValues / rAttArray.numComponents);
+  }
+
+  glBindBuffer(GL_ARRAY_BUFFER, uVBO);
+  glBufferData(GL_ARRAY_BUFFER,
+              (uBufferSizeByte),
+               NULL,
+               GL_STATIC_DRAW );
+
+  // In case of sequential layout: add all attribute arrays sequentially 
+  // into the buffer
+  uint byteOffset = 0;
+  if (bufferType == BUFFERTYPE_SEQUENTIAL) {
+    for (int iAtt = 0; iAtt < _attributes.size(); ++iAtt) {
+      MeshAttributeArray& rAttArray = _attributes[iAtt];
+      uint attribArrayByteSize = rAttArray.byteSize *
+                               (rAttArray.numValues / rAttArray.numComponents);
+
+      glBufferSubData(GL_ARRAY_BUFFER,
+                      byteOffset,
+                      attribArrayByteSize,
+                      rAttArray.data);
+
+      free(rAttArray.data);  // Delete the attribute-list
+      rAttArray.data = reinterpret_cast<void*>(byteOffset);  // Data now has the value of the offset in the 
+                           // VBO to this attribute list.
+                           // (always 0 for sequential layout)
+      rAttArray.stride = 0;
+      byteOffset += attribArrayByteSize;
+    }
+  } else if (bufferType == BUFFERTYPE_INTERLEAVED) {
+    uint stride = 0;
+    const uint numVertices = _numVertices;
+    for (uint iVert = 0; iVert < numVertices; ++iVert) {
+      stride = 0;
+      for(uint iAtt = 0; iAtt < _attributes.size(); ++iAtt) {
+        MeshAttributeArray& rAttArray = _attributes[iAtt];
+        stride += rAttArray.byteSize;
+        // Calculate the address of the current element.
+        // Note: We are assuming that every attribute consists of floats here
+        float* pDataPointer = static_cast<float*>(rAttArray.data);
+        pDataPointer = &pDataPointer[iVert * rAttArray.numComponents];
+
+        glBufferSubData(GL_ARRAY_BUFFER,
+                        byteOffset,
+                        rAttArray.byteSize,
+                        pDataPointer);
+        byteOffset += rAttArray.byteSize;
+      }  // End Attributes
+    }  // End Vertices
+
+    // Now loop through attributes again to delete the attribute list and set 
+    // the correct offset value.
+    uint offset = 0;
+    for(uint iAtt = 0; iAtt < _attributes.size(); ++iAtt) {
+      MeshAttributeArray& rAttArray = _attributes[iAtt];
+      free(rAttArray.data);
+      rAttArray.data = reinterpret_cast<void*>(offset);
+      rAttArray.stride = stride;
+      offset += rAttArray.byteSize;
+    }
+  }  // End Interleaved
+
+  _VBOloc = uVBO;
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+  // Load indices into IBO
+  if (_indices.size() > 0) {
+    GLuint uIBO;
+    glGenBuffers(1, &uIBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, uIBO);
+
+    // TODO(dlazarek) implement other index-sizes (currently assumung a 
+    // byte-size of 4 for each element
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                 _indices.size() * 4,
+                 &_indices[0],
+                 GL_STATIC_DRAW);
+    _IBOloc = uIBO;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+  }
 }

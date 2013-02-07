@@ -26,6 +26,12 @@
 #include "KoRE/Components/SceneNodeComponent.h"
 
 namespace kore {
+
+  enum EMeshBufferType {
+    BUFFERTYPE_INTERLEAVED,
+    BUFFERTYPE_SEQUENTIAL
+  };
+
   struct MeshAttributeArray {
       MeshAttributeArray()
         : name("undefined"),
@@ -63,6 +69,8 @@ namespace kore {
 
     const kore::MeshAttributeArray*
       getAttributeByName(const std::string& szName) const;
+
+    void createAttributeBuffers(const EMeshBufferType bufferType);
 
     const std::vector<unsigned int>& getIndices() const;
     const unsigned int getNumVertices() const;
