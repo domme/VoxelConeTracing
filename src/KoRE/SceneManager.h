@@ -34,6 +34,7 @@ namespace kore {
     void update(void);
     void addTag(const std::string& name);
     const uint getTag(const std::string& name);
+    SceneNodePtr getRootNode(void);
     void getSceneNodesByTag(const uint tag,
                             std::vector<SceneNodePtr>& vSceneNodes);
     void getSceneNodesByTag(const std::string& name,
@@ -44,7 +45,7 @@ namespace kore {
   private:
     SceneManager(void);
     virtual ~SceneManager(void);
-    SceneNode* _root;
+    SceneNodePtr _root;
     uint64 _idcount;
     uint _tagcount;
     std::map<std::string, uint> _tagmap;

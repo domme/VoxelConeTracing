@@ -23,6 +23,7 @@
 #include <string>
 #include "KoRE/ResourceManager.h"
 #include "KoRE/MeshLoader.h"
+#include "KoRE/SceneLoader.h"
 #include "KoRE/Log.h"
 #include "KoRE/Components/Mesh.h"
 
@@ -37,13 +38,8 @@ kore::ResourceManager::ResourceManager(void) {
 kore::ResourceManager::~ResourceManager(void) {
 }
 
-kore::SceneNodePtr
-kore::ResourceManager::loadScene(const std::string& filename,
-                                 uint importFlags) {
-  bool bUseBuffers = (importFlags & USE_BUFFERS) != 0;
-  kore::SceneNodePtr pNewScene =
-      MeshLoader::getInstance()->loadScene(filename, bUseBuffers);
-  return pNewScene;
+void kore::ResourceManager::loadScene(const std::string& filename, SceneNodePtr parent) {
+  kore::SceneLoader::getInstance()->loadScene(filename, parent);
 }
 
 kore::MeshPtr

@@ -22,10 +22,12 @@
 
 #include <string>
 #include <vector>
+#include <map>
 #include "KoRE/Common.h"
 #include "KoRE/Components/Mesh.h"
 #include "KoRE/Shader.h"
 #include "KoRE/SceneNode.h"
+#include "KoRE/SceneManager.h"
 
 
 namespace kore {
@@ -36,13 +38,17 @@ namespace kore {
   class ResourceManager {
   public:
     static ResourceManager *getInstance(void);
-    kore::SceneNodePtr loadScene(const std::string& filename, uint importFlags);
+    // reads a scene file and creates all nodes and components within a scenegraph
+    void loadScene(const std::string& filename,
+                                 SceneNodePtr parent =
+                                 kore::SceneManager::getInstance()
+                                 ->getRootNode());
     kore::MeshPtr loadSingleMesh(const std::string& filename, uint importFlags);
   private:
     ResourceManager(void);
     virtual ~ResourceManager(void);
 
-    std::vector<kore::MeshPtr> _meshes;
+    std::map<std::string, kore::MeshPtr> _meshes;
     std::vector<kore::ShaderPtr> _shader;
   };
 };

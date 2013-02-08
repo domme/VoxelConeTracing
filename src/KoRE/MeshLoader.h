@@ -75,9 +75,6 @@ namespace kore {
                                   kore::MeshPtr& pMesh,
                                   const unsigned int iColorSet);
 
-            /*void createBufferObjectsFromAttributes(kore::MeshPtr& pMesh,
-                                             const EMeshBufferType bufferType);*/
-
             glm::mat4 glmMatFromAiMat(const aiMatrix4x4& aiMat);
 
            Assimp::Importer _aiImporter;

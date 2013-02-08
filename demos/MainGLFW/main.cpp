@@ -86,6 +86,11 @@ int main(void) {
     reinterpret_cast<const char*>(glewGetString(GLEW_VERSION)));
 
   // load resources
+  // the new way...
+  // TODO(dospelt) whole scene loading with all components
+  kore::ResourceManager::getInstance()->loadScene("./assets/meshes/cube.dae");
+  
+  // the old way...
   kore::MeshPtr pTestMesh =
       kore::ResourceManager::getInstance()->
       loadSingleMesh("./assets/meshes/cube.dae", kore::USE_BUFFERS);

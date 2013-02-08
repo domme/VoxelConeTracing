@@ -56,6 +56,7 @@ namespace kore {
   typedef std::shared_ptr<MeshAttributeArray> MeshAttributeArrayPtr;
 
   class Mesh : public SceneNodeComponent {
+    friend class SceneLoader;
     friend class MeshLoader;
     friend class MeshRenderComponent;
 

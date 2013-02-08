@@ -31,7 +31,7 @@ kore::SceneManager::SceneManager(void)
                            :_idcount(0),
                             _tagcount(0) {
   addTag("DEFAULT");
-  _root = new kore::SceneNode();
+  _root = SceneNodePtr(new SceneNode());
 }
 
 kore::SceneManager::~SceneManager(void) {
@@ -74,4 +74,8 @@ void kore::SceneManager::
   getSceneNodesByName(const std::string& name,
                       std::vector<SceneNodePtr>& vSceneNodes) {
   _root->getSceneNodesByName(name, vSceneNodes);
+}
+
+kore::SceneNodePtr kore::SceneManager::getRootNode() {
+  return _root;
 }
