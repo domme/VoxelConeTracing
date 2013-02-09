@@ -42,6 +42,11 @@ void kore::ResourceManager::loadScene(const std::string& filename, SceneNodePtr 
   kore::SceneLoader::getInstance()->loadScene(filename, parent);
 }
 
+void kore::ResourceManager::loadResources(const std::string& filename) {
+  kore::SceneLoader::getInstance()->loadRessources(filename);
+}
+
+// deprecated
 kore::MeshPtr
 kore::ResourceManager::loadSingleMesh(const std::string& filename,
                                       uint importFlags) {
@@ -50,4 +55,12 @@ kore::ResourceManager::loadSingleMesh(const std::string& filename,
   kore::MeshPtr pNewScene =
     MeshLoader::getInstance()->loadSingleMesh(filename, bUseBuffers);
     return pNewScene;
+}
+
+void kore::ResourceManager::addMesh(const std::string& path, MeshPtr mesh) {
+  _meshes[path][mesh->getName()] = mesh;
+}
+
+kore::MeshPtr kore::ResourceManager::getMesh(const std::string& path, const std::string& id) {
+  return _meshes[path][id];
 }

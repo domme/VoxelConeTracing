@@ -32,52 +32,51 @@
 
 
 namespace kore {
-    class MeshLoader {
-        public:
-            static MeshLoader* getInstance();
-            ~MeshLoader();
+  class MeshLoader {
+  public:
+    static MeshLoader* getInstance();
+    virtual ~MeshLoader();
 
-            SceneNodePtr loadScene(const std::string& szScenePath,
-                                   const bool bUseBuffers);
-            MeshPtr loadSingleMesh(const std::string& szMeshPath,
-                                   const bool bUseBuffers);
+    SceneNodePtr loadScene(const std::string& szScenePath,
+                           const bool bUseBuffers);
+    MeshPtr loadSingleMesh(const std::string& szMeshPath,
+                           const bool bUseBuffers);
 
-        private:
-           MeshLoader();
-           const aiScene* readScene(const std::string& szScenePath);
+    kore::MeshPtr loadMesh(const aiScene* paiScene,
+                           const uint uMeshIdx,
+                           const bool bUseBuffers = true);
 
-           void loadChildNode(const aiScene* paiScene,
-                         const aiNode* paiNode,
-                         SceneNodePtr& parentNode,
-                         const bool bUseBuffers);
+  private:
+    MeshLoader();
+    const aiScene* readScene(const std::string& szScenePath);
 
-           kore::MeshPtr loadMesh(const aiScene* paiScene,
-                                   const uint uMeshIdx,
-                                   const bool bUseBuffers);
+    void loadChildNode(const aiScene* paiScene,
+                       const aiNode* paiNode,
+                       SceneNodePtr& parentNode,
+                       const bool bUseBuffers);
+    void loadVertexPositions(const aiMesh* pAiMesh,
+                             kore::MeshPtr& pMesh);
 
-            void loadVertexPositions(const aiMesh* pAiMesh,
-                                    kore::MeshPtr& pMesh);
+    void loadVertexNormals(const aiMesh* pAiMesh,
+                           kore::MeshPtr& pMesh);
 
-            void loadVertexNormals(const aiMesh* pAiMesh,
-                                    kore::MeshPtr& pMesh);
+    void loadVertexTangents(const aiMesh* pAiMesh,
+                            kore::MeshPtr& pMesh);
 
-            void loadVertexTangents(const aiMesh* pAiMesh,
-                                    kore::MeshPtr& pMesh);
+    void loadFaceIndices(const aiMesh* pAiMesh,
+                         kore::MeshPtr& pMesh);
 
-            void loadFaceIndices(const aiMesh* pAiMesh,
-                                kore::MeshPtr& pMesh);
+    void loadVertexTextureCoords(const aiMesh* pAiMesh,
+                                 kore::MeshPtr& pMesh,
+                                 const unsigned int iUVset);
 
-            void loadVertexTextureCoords(const aiMesh* pAiMesh,
-                                        kore::MeshPtr& pMesh,
-                                        const unsigned int iUVset);
+    void loadVertexColors(const aiMesh* pAiMesh,
+                          kore::MeshPtr& pMesh,
+                          const unsigned int iColorSet);
 
-            void loadVertexColors(const aiMesh* pAiMesh,
-                                  kore::MeshPtr& pMesh,
-                                  const unsigned int iColorSet);
+    glm::mat4 glmMatFromAiMat(const aiMatrix4x4& aiMat);
 
-            glm::mat4 glmMatFromAiMat(const aiMatrix4x4& aiMat);
-
-           Assimp::Importer _aiImporter;
-    };
-}
+    Assimp::Importer _aiImporter;
+  };
+};
 #endif  // CORE_INCLUDE_CORE_MESHLOADER_H_

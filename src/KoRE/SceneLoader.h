@@ -20,9 +20,9 @@
 #ifndef CORE_INCLUDE_CORE_SCENELOADER_H_
 #define CORE_INCLUDE_CORE_SCENELOADER_H_
 
-#include <assimp/mesh.h>
 #include <assimp/scene.h>
 #include <assimp/Importer.hpp>
+#include <assimp/scene.h>
 #include <string>
 
 #include "KoRE/Common.h"
@@ -44,36 +44,9 @@ namespace kore {
     SceneLoader();
     const aiScene* readScene(const std::string& szScenePath);
 
-    void loadChildNode(const aiScene* paiScene,
-      const aiNode* paiNode,
-      SceneNodePtr& parentNode,
-      const bool bUseBuffers);
-
-    kore::MeshPtr loadMesh(const aiScene* paiScene,
-      const uint uMeshIdx,
-      const bool bUseBuffers);
-
-    void loadVertexPositions(const aiMesh* pAiMesh,
-      kore::MeshPtr& pMesh);
-
-    void loadVertexNormals(const aiMesh* pAiMesh,
-      kore::MeshPtr& pMesh);
-
-    void loadVertexTangents(const aiMesh* pAiMesh,
-      kore::MeshPtr& pMesh);
-
-    void loadFaceIndices(const aiMesh* pAiMesh,
-      kore::MeshPtr& pMesh);
-
-    void loadVertexTextureCoords(const aiMesh* pAiMesh,
-      kore::MeshPtr& pMesh,
-      const unsigned int iUVset);
-
-    void loadVertexColors(const aiMesh* pAiMesh,
-      kore::MeshPtr& pMesh,
-      const unsigned int iColorSet);
-
-    glm::mat4 glmMatFromAiMat(const aiMatrix4x4& aiMat);
+    void loadSceneGraph(const aiNode* ainode,
+                        SceneNodePtr& node,
+                        const std::string& szScenePath);
     Assimp::Importer _aiImporter;
   };
 };

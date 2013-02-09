@@ -107,6 +107,10 @@ void kore::SceneNode::setParent(const SceneNodePtr& parent) {
   _parent = parent;
 }
 
+void kore::SceneNode::addChild(const SceneNodePtr& child) {
+  _children.push_back(child);
+}
+
 void kore::SceneNode::setTag(const std::string& tagname) {
   _tag = kore::SceneManager::getInstance()->getTag(tagname);
 }

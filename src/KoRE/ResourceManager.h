@@ -38,17 +38,26 @@ namespace kore {
   class ResourceManager {
   public:
     static ResourceManager *getInstance(void);
-    // reads a scene file and creates all nodes and components within a scenegraph
+    // reads a scene file and creates all nodes and components within a scene graph
     void loadScene(const std::string& filename,
                                  SceneNodePtr parent =
                                  kore::SceneManager::getInstance()
                                  ->getRootNode());
+    // adds all resources from a specific file
+    void loadResources(const std::string& filename);
+
+    // deprecated
     kore::MeshPtr loadSingleMesh(const std::string& filename, uint importFlags);
+
+    void addMesh(const std::string& path, MeshPtr mesh);
+    kore::MeshPtr getMesh(const std::string& path, const std::string& id);
+
   private:
     ResourceManager(void);
     virtual ~ResourceManager(void);
 
-    std::map<std::string, kore::MeshPtr> _meshes;
+    std::map<std::string, std::map<std::string, kore::MeshPtr>> _meshes; // filepath, id, mesh
+    std::map<std::string, std::map<std::string, kore::MeshPtr>> _cameras; // filepath, id, camera
     std::vector<kore::ShaderPtr> _shader;
   };
 };

@@ -1,0 +1,3 @@
+- Meshes in loaded files have unique names
+- Eeach component is bound max once per scene node
+- Components can be attached to multiple nodes
