@@ -21,22 +21,13 @@
 #include "KoRE/SceneNode.h"
 
 kore::SceneNodeComponent::SceneNodeComponent()
-  : _id(UINT_INVALID),
-  _node(NULL) {
+  : _id(UINT_INVALID) {
 }
 
 kore::SceneNodeComponent::~SceneNodeComponent() {
 }
 
 void kore::SceneNodeComponent::attachTo(kore::SceneNodePtr& node) {
-}
-
-const kore::SceneNodePtr&
-kore::SceneNodeComponent::getNode(void) const {
-    return _node;
-}
-
-void kore::SceneNodeComponent::setNode(const kore::SceneNodePtr& node) {
 }
 
 const kore::EComponentType kore::SceneNodeComponent::getType(void) const {

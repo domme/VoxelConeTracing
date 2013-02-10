@@ -46,7 +46,9 @@ namespace kore {
 
     void loadSceneGraph(const aiNode* ainode,
                         SceneNodePtr& node,
+                        const aiScene* aiscene,
                         const std::string& szScenePath);
+    glm::mat4 glmMatFromAiMat(const aiMatrix4x4& aiMat) const;
     Assimp::Importer _aiImporter;
   };
 };

@@ -37,14 +37,15 @@ namespace kore {
     static MeshLoader* getInstance();
     virtual ~MeshLoader();
 
+    /*
     SceneNodePtr loadScene(const std::string& szScenePath,
                            const bool bUseBuffers);
     MeshPtr loadSingleMesh(const std::string& szMeshPath,
                            const bool bUseBuffers);
+    */
 
     kore::MeshPtr loadMesh(const aiScene* paiScene,
-                           const uint uMeshIdx,
-                           const bool bUseBuffers = true);
+                           const uint uMeshIdx);
 
   private:
     MeshLoader();

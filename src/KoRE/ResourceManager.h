@@ -32,6 +32,7 @@
 
 namespace kore {
   enum EImportOptions {
+    NO_OPTIONS = 0,
     USE_BUFFERS = 0x00000001
   };
 
@@ -45,19 +46,21 @@ namespace kore {
                                  ->getRootNode());
     // adds all resources from a specific file
     void loadResources(const std::string& filename);
-
-    // deprecated
-    kore::MeshPtr loadSingleMesh(const std::string& filename, uint importFlags);
-
     void addMesh(const std::string& path, MeshPtr mesh);
     kore::MeshPtr getMesh(const std::string& path, const std::string& id);
 
   private:
+    typedef std::map<std::string, std::map<std::string, kore::MeshPtr>>
+      ResourceMapT;
+
     ResourceManager(void);
     virtual ~ResourceManager(void);
+    bool hasKey(const ResourceMapT& map, const std::string& key);
+    bool hasKey(const std::map<std::string, kore::MeshPtr>& map,
+                const std::string& key);
 
-    std::map<std::string, std::map<std::string, kore::MeshPtr>> _meshes; // filepath, id, mesh
-    std::map<std::string, std::map<std::string, kore::MeshPtr>> _cameras; // filepath, id, camera
+    ResourceMapT _meshes; // filepath, id, mesh
+    ResourceMapT _cameras; // filepath, id, camera
     std::vector<kore::ShaderPtr> _shader;
   };
 };

@@ -79,7 +79,8 @@ const std::vector<kore::SceneNodeComponentPtr>
     return _components;
 }
 
-const kore::SceneNodeComponentPtr kore::SceneNode::getComponent(EComponentType type) const {
+const kore::SceneNodeComponentPtr
+kore::SceneNode::getComponent(EComponentType type) const {
   for (unsigned int i = 0; i < _components.size(); ++i) {
     if (_components[i]->getType() == type) return _components[i];
   }
@@ -161,13 +162,15 @@ void kore::SceneNode::getSceneNodesByTag(const uint tag,
   }
 }
 
-void kore::SceneNode::getSceneNodesByName(const std::string name,
+void kore::SceneNode::getSceneNodesByName(const std::string& name,
                                           std::vector<SceneNodePtr>& vNodes) {
+  if (_name == name) {
+    // TODO(dlazarek) Dangerous: Assuming 'this' is on heap
+    vNodes.push_back(SceneNodePtr(this));
+  }
+
   for (uint iChild = 0; iChild < _children.size(); ++iChild) {
     // If there is at least one bit set in both tags, the child is added
-    if (_children[iChild]->getName() == name) {
-      vNodes.push_back(_children[iChild]);
-      _children[iChild]->getSceneNodesByName(name, vNodes);
-    }
+    _children[iChild]->getSceneNodesByName(name, vNodes);
   }
 }

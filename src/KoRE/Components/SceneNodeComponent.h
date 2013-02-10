@@ -39,14 +39,11 @@ namespace kore {
      /// Checks if this component is of the same type as the other component
     virtual bool isCompatibleWith(const SceneNodeComponent& otherComponent) const = 0;
     virtual void attachTo(SceneNodePtr& node);
-    void setNode(const SceneNodePtr& node);
-    const SceneNodePtr& getNode(void) const;
     const EComponentType getType(void) const;
     uint getID(void) const;
 
   protected:
     uint _id;
-    SceneNodePtr _node;
     EComponentType _type;
   };
   typedef std::shared_ptr<SceneNodeComponent> SceneNodeComponentPtr;

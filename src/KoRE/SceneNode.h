@@ -29,12 +29,14 @@
 namespace kore {
     typedef std::shared_ptr<SceneNode> SceneNodePtr;
     class SceneNode {
-    friend class MeshLoader;
+    friend class MeshLoader;  // TODO(dlazarek) maybe not needed anymore
+    friend class SceneLoader;
   public:
     SceneNode(void);
     virtual ~SceneNode(void);
     bool isCompatibleWith(const SceneNode& otherNode) const;
-    bool isCompatibleWith(const SceneNode& otherNode, EComponentType types) const;
+    bool isCompatibleWith(const SceneNode& otherNode,
+                          EComponentType types) const;
     const SceneNodePtr& getParent(void) const;
     const std::vector<SceneNodePtr>& getChildren() const;
     const std::vector<SceneNodeComponentPtr> getComponents() const;
@@ -45,7 +47,7 @@ namespace kore {
     const Transform* getTransform(void) const;
     void getSceneNodesByTag(const uint tag,
                               std::vector<SceneNodePtr>& vNodes);
-    void getSceneNodesByName(const std::string name,
+    void getSceneNodesByName(const std::string& name,
                              std::vector<SceneNodePtr>& vNodes);
     void setParent(const SceneNodePtr& parent);
     void addChild(const SceneNodePtr& child);

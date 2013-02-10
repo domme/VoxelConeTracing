@@ -23,7 +23,6 @@
 #include "KoRE/MeshLoader.h"
 #include "KoRE/Transform.h"
 
-
 kore::MeshLoader* kore::MeshLoader::getInstance() {
   static MeshLoader clInstance;
   return &clInstance;
@@ -57,7 +56,7 @@ const aiScene* kore::MeshLoader::readScene(const std::string& szScenePath) {
   return pAiScene;
 }
 
-
+/*
 kore::MeshPtr
 kore::MeshLoader::loadSingleMesh(const std::string& szMeshPath,
                                  const bool bUseBuffers) {
@@ -76,7 +75,9 @@ kore::MeshLoader::loadSingleMesh(const std::string& szMeshPath,
 
     return loadMesh(pAiScene, 0, bUseBuffers);
 }
+*/
 
+/*
 kore::SceneNodePtr
 kore::MeshLoader::loadScene(const std::string& szScenePath,
                             const bool bUseBuffers) {
@@ -96,52 +97,18 @@ kore::MeshLoader::loadScene(const std::string& szScenePath,
                 bUseBuffers);
   return koreSceneRootNode;
 }
-
+*/
 
 void kore::MeshLoader::loadChildNode(const aiScene* paiScene,
                                      const aiNode* paiNode,
                                      SceneNodePtr& parentNode,
                                      const bool bUseBuffers) {
-    SceneNodePtr koreNode(new SceneNode);
-    koreNode->_transform.local = glmMatFromAiMat(paiNode->mTransformation);
-    koreNode->_parent = parentNode;
-    koreNode->_dirty = true;
-    koreNode->_name = paiNode->mName.C_Str();
-    parentNode->_children.push_back(koreNode);
-
-    // Load the first mesh as a component of this node.
-    // Further meshes have to be loaded into duplicate nodes
-    if (paiNode->mNumMeshes > 0) {
-        MeshPtr mesh = loadMesh(paiScene,
-                                paiNode->mMeshes[0],
-                                bUseBuffers);
-        koreNode->_components.push_back(mesh);
-        mesh->setNode(koreNode);
-    }
-
-    // Make additional copies for any more meshes
-    for (uint iMesh = 1; iMesh < paiNode->mNumMeshes; ++iMesh) {
-        SceneNodePtr copyNode(new SceneNode);
-        copyNode->_transform.local = glmMatFromAiMat(paiNode->mTransformation);
-        copyNode->_parent = parentNode;
-        copyNode->_dirty = true;
-        parentNode->_children.push_back(copyNode);
-        MeshPtr mesh = loadMesh(paiScene,
-                                paiNode->mMeshes[iMesh],
-                                bUseBuffers);
-        copyNode->_components.push_back(mesh);
-    }
-
-    for (uint iChild = 0; iChild < paiNode->mNumChildren; ++iChild) {
-        loadChildNode(paiScene, paiNode->mChildren[iChild], koreNode,
-                      bUseBuffers);
-    }
+    
 }
 
 kore::MeshPtr
     kore::MeshLoader::loadMesh(const aiScene* pAiScene,
-                               const uint uMeshIdx,
-                               const bool bUseBuffers) {
+                               const uint uMeshIdx) {
     kore::MeshPtr pMesh(new kore::Mesh);
     aiMesh* pAiMesh = pAiScene->mMeshes[ 0 ];
     pMesh->_numVertices = pAiMesh->mNumVertices;
@@ -179,10 +146,7 @@ kore::MeshPtr
         loadFaceIndices(pAiMesh, pMesh);
     }
 
-    if (bUseBuffers) {
-      pMesh->createAttributeBuffers(BUFFERTYPE_INTERLEAVED);
-    }
-
+    pMesh->createAttributeBuffers(BUFFERTYPE_INTERLEAVED);
     return pMesh;
 }
 
@@ -322,12 +286,4 @@ void kore::MeshLoader::
   att.byteSize = kore::DatatypeUtil::getSizeFromGLdatatype(att.type);
   att.data = pVertexData;
   pMesh->_attributes.push_back(att);
-}
-
-glm::mat4 kore::MeshLoader::glmMatFromAiMat(const aiMatrix4x4& aiMat) {
-  // Note: ai-matrix is row-major, but glm::mat4 is column-major
-  return glm::mat4(aiMat.a1, aiMat.b1, aiMat.c1, aiMat.d1,
-                   aiMat.a2, aiMat.b2, aiMat.c2, aiMat.d2,
-                   aiMat.a3, aiMat.b3, aiMat.c3, aiMat.d3,
-                   aiMat.a4, aiMat.b4, aiMat.c4, aiMat.d4);
 }

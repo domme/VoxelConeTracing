@@ -89,11 +89,14 @@ int main(void) {
   // the new way...
   // TODO(dospelt) whole scene loading with all components
   kore::ResourceManager::getInstance()->loadScene("./assets/meshes/cube.dae");
-  
-  // the old way...
+  kore::SceneManager* pScene = kore::SceneManager::getInstance();
+
+  std::vector<kore::SceneNodePtr> vNodes;
+  kore::SceneManager::getInstance()->getSceneNodesByName("Cube", vNodes);
+
   kore::MeshPtr pTestMesh =
-      kore::ResourceManager::getInstance()->
-      loadSingleMesh("./assets/meshes/cube.dae", kore::USE_BUFFERS);
+    std::static_pointer_cast<kore::Mesh>
+    (vNodes[0]->getComponent(kore::COMPONENT_MESH));
 
   // load shader
   kore::ShaderPtr pSimpleShader(new kore::Shader);

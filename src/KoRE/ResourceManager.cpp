@@ -46,21 +46,29 @@ void kore::ResourceManager::loadResources(const std::string& filename) {
   kore::SceneLoader::getInstance()->loadRessources(filename);
 }
 
-// deprecated
-kore::MeshPtr
-kore::ResourceManager::loadSingleMesh(const std::string& filename,
-                                      uint importFlags) {
-  bool bUseBuffers = (importFlags & USE_BUFFERS) != 0;
-
-  kore::MeshPtr pNewScene =
-    MeshLoader::getInstance()->loadSingleMesh(filename, bUseBuffers);
-    return pNewScene;
-}
-
 void kore::ResourceManager::addMesh(const std::string& path, MeshPtr mesh) {
+  if (!hasKey(_meshes, path)) {
+    std::map<std::string, kore::MeshPtr> internalMap;
+    _meshes[path] = internalMap;
+  }
+
   _meshes[path][mesh->getName()] = mesh;
 }
 
 kore::MeshPtr kore::ResourceManager::getMesh(const std::string& path, const std::string& id) {
+  if (!hasKey(_meshes, path) || !hasKey(_meshes[path], id)) {
+    return MeshPtr();  // NULL
+  }
+
   return _meshes[path][id];
+}
+
+bool kore::ResourceManager::hasKey( const ResourceMapT& map, const std::string& key ) {
+   return std::find(map.begin(), map.end(), key) != map.end();
+}
+
+bool kore::ResourceManager::hasKey(const std::map<std::string,
+                                                  kore::MeshPtr>& map,
+                                   const std::string& key ) {
+  return std::find(map.begin(), map.end(), key) != map.end();
 }
