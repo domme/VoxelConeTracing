@@ -56,19 +56,19 @@ void kore::ResourceManager::addMesh(const std::string& path, MeshPtr mesh) {
 }
 
 kore::MeshPtr kore::ResourceManager::getMesh(const std::string& path, const std::string& id) {
-  if (!hasKey(_meshes, path) || !hasKey(_meshes[path], id)) {
+  if (!hasKey(_meshes, path)) {
     return MeshPtr();  // NULL
   }
 
   return _meshes[path][id];
 }
 
-bool kore::ResourceManager::hasKey( const ResourceMapT& map, const std::string& key ) {
-   return std::find(map.begin(), map.end(), key) != map.end();
+bool kore::ResourceManager::hasKey(const ResourceMapT& map, const std::string& key) {
+   return map.count(key) > 0;
 }
 
 bool kore::ResourceManager::hasKey(const std::map<std::string,
                                                   kore::MeshPtr>& map,
                                    const std::string& key ) {
-  return std::find(map.begin(), map.end(), key) != map.end();
+  return map.count(key) > 0;
 }
