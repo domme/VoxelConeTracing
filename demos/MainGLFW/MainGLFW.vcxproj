@@ -273,58 +273,6 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="CMakeLists.txt">
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Building Custom Rule E:/Users/Dominik/Documents/GitHub/KoRE/demos/MainGLFW/CMakeLists.txt</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">setlocal
-"E:\Programme\CMake 2.8\bin\cmake.exe" -HE:/Users/Dominik/Documents/GitHub/KoRE -BE:/Users/Dominik/Documents/GitHub/KoRE --check-stamp-file E:\Users\Dominik\Documents\GitHub\KoRE\demos\MainGLFW\CMakeFiles\generate.stamp
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">E:/Users/Dominik/Documents/GitHub/KoRE/demos/MainGLFW/CMakeLists.txt;E:\Users\Dominik\Documents\GitHub\KoRE\demos\MainGLFW\CMakeLists.txt;E:\Users\Dominik\Documents\GitHub\KoRE\demos\MainGLFW\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">E:\Users\Dominik\Documents\GitHub\KoRE\demos\MainGLFW\CMakeFiles\generate.stamp</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Building Custom Rule E:/Users/Dominik/Documents/GitHub/KoRE/demos/MainGLFW/CMakeLists.txt</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">setlocal
-"E:\Programme\CMake 2.8\bin\cmake.exe" -HE:/Users/Dominik/Documents/GitHub/KoRE -BE:/Users/Dominik/Documents/GitHub/KoRE --check-stamp-file E:\Users\Dominik\Documents\GitHub\KoRE\demos\MainGLFW\CMakeFiles\generate.stamp
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">E:/Users/Dominik/Documents/GitHub/KoRE/demos/MainGLFW/CMakeLists.txt;E:\Users\Dominik\Documents\GitHub\KoRE\demos\MainGLFW\CMakeLists.txt;E:\Users\Dominik\Documents\GitHub\KoRE\demos\MainGLFW\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">E:\Users\Dominik\Documents\GitHub\KoRE\demos\MainGLFW\CMakeFiles\generate.stamp</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">Building Custom Rule E:/Users/Dominik/Documents/GitHub/KoRE/demos/MainGLFW/CMakeLists.txt</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">setlocal
-"E:\Programme\CMake 2.8\bin\cmake.exe" -HE:/Users/Dominik/Documents/GitHub/KoRE -BE:/Users/Dominik/Documents/GitHub/KoRE --check-stamp-file E:\Users\Dominik\Documents\GitHub\KoRE\demos\MainGLFW\CMakeFiles\generate.stamp
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">E:/Users/Dominik/Documents/GitHub/KoRE/demos/MainGLFW/CMakeLists.txt;E:\Users\Dominik\Documents\GitHub\KoRE\demos\MainGLFW\CMakeLists.txt;E:\Users\Dominik\Documents\GitHub\KoRE\demos\MainGLFW\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">E:\Users\Dominik\Documents\GitHub\KoRE\demos\MainGLFW\CMakeFiles\generate.stamp</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">Building Custom Rule E:/Users/Dominik/Documents/GitHub/KoRE/demos/MainGLFW/CMakeLists.txt</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">setlocal
-"E:\Programme\CMake 2.8\bin\cmake.exe" -HE:/Users/Dominik/Documents/GitHub/KoRE -BE:/Users/Dominik/Documents/GitHub/KoRE --check-stamp-file E:\Users\Dominik\Documents\GitHub\KoRE\demos\MainGLFW\CMakeFiles\generate.stamp
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">E:/Users/Dominik/Documents/GitHub/KoRE/demos/MainGLFW/CMakeLists.txt;E:\Users\Dominik\Documents\GitHub\KoRE\demos\MainGLFW\CMakeLists.txt;E:\Users\Dominik\Documents\GitHub\KoRE\demos\MainGLFW\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">E:\Users\Dominik\Documents\GitHub\KoRE\demos\MainGLFW\CMakeFiles\generate.stamp</Outputs>
-    </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>

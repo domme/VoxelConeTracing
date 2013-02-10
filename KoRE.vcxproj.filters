@@ -128,9 +128,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="CMakeLists.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <Filter Include="Source Files">
       <UniqueIdentifier>{5478D136-F5FD-4898-934B-61B4E35F0066}</UniqueIdentifier>
     </Filter>
