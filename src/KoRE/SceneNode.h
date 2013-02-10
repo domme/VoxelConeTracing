@@ -24,7 +24,7 @@
 #include <string>
 #include "KoRE/Common.h"
 #include "KoRE/Components/SceneNodeComponent.h"
-#include "KoRE/Transform.h"
+#include "KoRE/Components/Transform.h"
 
 namespace kore {
     typedef std::shared_ptr<SceneNode> SceneNodePtr;
@@ -40,11 +40,11 @@ namespace kore {
     const SceneNodePtr& getParent(void) const;
     const std::vector<SceneNodePtr>& getChildren() const;
     const std::vector<SceneNodeComponentPtr> getComponents() const;
+    const TransformPtr getTransform(void) const;
     const SceneNodeComponentPtr getComponent(EComponentType type) const;
     const uint64 getID(void) const;
     const uint getTag(void) const;
     const std::string getName(void) const;
-    const Transform* getTransform(void) const;
     void getSceneNodesByTag(const uint tag,
                               std::vector<SceneNodePtr>& vNodes);
     void getSceneNodesByName(const std::string& name,
@@ -70,8 +70,8 @@ namespace kore {
     SceneNodePtr _parent;
     std::vector<SceneNodePtr> _children;
     std::vector<SceneNodeComponentPtr> _components;
-    Transform _transform;
     bool _dirty;  // if node has to be updated;
+    TransformPtr _transform;
   };
 };
 #endif  // CORE_INCLUDE_CORE_SCENENODE_H_

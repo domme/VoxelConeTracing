@@ -33,7 +33,7 @@ kore::Mesh::Mesh(void)
     _VBOloc(GLUINT_HANDLE_INVALID),
     _IBOloc(GLUINT_HANDLE_INVALID),
     SceneNodeComponent() {
-        _type = COMPONENT_MESH;
+  _type = COMPONENT_MESH;
 }
 
 kore::Mesh::~Mesh(void) {
@@ -65,7 +65,6 @@ bool kore::Mesh::isCompatibleWith(const kore::SceneNodeComponent&
   if (otherComponent.getType() != getType()) {
     return false;
   }
-
   const kore::Mesh& otherMesh = static_cast<const kore::Mesh&>(otherComponent);
 
   if (_attributes.size() != otherMesh._attributes.size()) {
@@ -93,6 +92,10 @@ bool kore::Mesh::isCompatibleWith(const kore::SceneNodeComponent&
   return bSameAttributes;
 }
 
+const kore::ShaderInputPtr kore::Mesh::getShaderInput(const std::string& name) const {
+  return ShaderInputPtr(NULL);
+}
+
 const bool kore::Mesh::usesVBO() const {
   return _VBOloc != GLUINT_HANDLE_INVALID;
 }
@@ -111,10 +114,6 @@ const GLuint kore::Mesh::getVAO() const {
 
 const GLuint kore::Mesh::getIBO() const {
   return _IBOloc;
-}
-
-bool kore::Mesh::loadFromFile(const std::string& file) {
-  return false;
 }
 
 int kore::Mesh::getNumAttributes(void) {

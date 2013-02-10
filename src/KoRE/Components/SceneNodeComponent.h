@@ -21,10 +21,12 @@
 #define CORE_INCLUDE_CORE_SCENENODECOMPONENT_H_
 
 #include "KoRE/Common.h"
+#include "KoRE/DataTypes.h"
 
 namespace kore {
   enum EComponentType {
     COMPONENT_UNKNOWN,
+    COMPONENT_TRANSFORM,
     COMPONENT_MESH,
     COMPONENT_CAMERA,
     COMPONENT_VALUES
@@ -38,8 +40,10 @@ namespace kore {
     virtual ~SceneNodeComponent(void);
      /// Checks if this component is of the same type as the other component
     virtual bool isCompatibleWith(const SceneNodeComponent& otherComponent) const = 0;
+    virtual const ShaderInputPtr getShaderInput(const std::string& name) const = 0;
     virtual void attachTo(SceneNodePtr& node);
     const EComponentType getType(void) const;
+
     uint getID(void) const;
 
   protected:

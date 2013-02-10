@@ -147,6 +147,7 @@ kore::BindUniform::~BindUniform(void) {
 void kore::BindUniform::connect(const kore::ShaderInput* componentUni,
   GLuint shaderID,
   const kore::ShaderInput* shaderUni) {
+    if(!componentUni || !shaderUni);
     if (componentUni->type != shaderUni->type
       || shaderID == GLUINT_HANDLE_INVALID
       || componentUni->size != shaderUni->size) {

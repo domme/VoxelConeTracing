@@ -64,7 +64,7 @@ namespace kore {
     Mesh(void);
     virtual ~Mesh(void);
     virtual bool isCompatibleWith(const SceneNodeComponent& otherComponent) const;
-    bool loadFromFile(const std::string& file);
+    virtual const ShaderInputPtr getShaderInput(const std::string& name) const;
     int getNumAttributes(void);
     const std::vector<kore::MeshAttributeArray>& getAttributes() const;
 

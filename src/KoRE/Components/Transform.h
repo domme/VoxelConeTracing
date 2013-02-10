@@ -21,16 +21,25 @@
 #define CORE_INCLUDE_CORE_TRANSFORM_H_
 
 #include <glm/glm.hpp>
-namespace kore {
-  class Transform {
-  public:
-    Transform(void)
-        : global(glm::mat4(1.0f)),
-          local(glm::mat4(1.0f)) {}
+#include "KoRE/Components/SceneNodeComponent.h"
+#include "KoRE/DataTypes.h"
 
-    ~Transform(void) {}
+namespace kore {
+  class Transform : public SceneNodeComponent{
+  public:
+    Transform(void);
+    virtual ~Transform(void);
+
+    bool isCompatibleWith(const SceneNodeComponent& otherComponent) const;
+    const ShaderInputPtr getShaderInput(const std::string& name) const;
+
     glm::mat4 global;
     glm::mat4 local;
+
+  private:
+    ShaderInputPtr _siglobal;
+    ShaderInputPtr _silocal;
   };
+  typedef std::shared_ptr<kore::Transform> TransformPtr;
 };
 #endif  // CORE_INCLUDE_CORE_TRANSFORM_H_

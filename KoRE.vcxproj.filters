@@ -58,21 +58,12 @@
     <ClCompile Include="src\KoRE\SceneLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\KoRE\Components\Transform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\KoRE\Common.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\KoRE\Components\Camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\KoRE\Components\Mesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\KoRE\Components\SceneNodeComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\KoRE\Components\Values.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\KoRE\DataTypes.h">
@@ -81,25 +72,10 @@
     <ClInclude Include="src\KoRE\Log.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\KoRE\MeshLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\KoRE\Operations\BindAttribute.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\KoRE\Operations\BindUniform.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\KoRE\Operations\Operation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\KoRE\Operations\RenderMesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\KoRE\Operations\SelectNodes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\KoRE\ProjectLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\KoRE\RenderManager.h">
@@ -120,11 +96,38 @@
     <ClInclude Include="src\KoRE\StdAfx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\KoRE\Transform.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="src\KoRE\Components\Mesh.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\Components\Transform.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\Components\Values.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\Components\Camera.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\Components\SceneNodeComponent.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\Operations\BindAttribute.h">
+      <Filter>Header Files\Operations</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\Operations\BindUniform.h">
+      <Filter>Header Files\Operations</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\Operations\RenderMesh.h">
+      <Filter>Header Files\Operations</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\MeshLoader.h">
+      <Filter>Header Files\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\ProjectLoader.h">
+      <Filter>Header Files\Loader</Filter>
     </ClInclude>
     <ClInclude Include="src\KoRE\SceneLoader.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Loader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -133,6 +136,15 @@
     </Filter>
     <Filter Include="Header Files">
       <UniqueIdentifier>{B2CAFB9F-3CC6-4001-9271-B3473E941102}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Components">
+      <UniqueIdentifier>{1fc6c413-ae68-49a7-8660-82b329e19200}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Operations">
+      <UniqueIdentifier>{b37e9797-44a5-449a-a67e-8177e7ca7ade}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Loader">
+      <UniqueIdentifier>{367ae898-049c-455f-8b67-adbefae4bc06}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

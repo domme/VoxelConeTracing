@@ -5,6 +5,7 @@
 
 #include "KoRE/ResourceManager.h"
 #include "KoRE/MeshLoader.h"
+#include "KoRE/Components/Transform.h"
 
 kore::SceneLoader* kore::SceneLoader::getInstance(){
   static SceneLoader instance;
@@ -68,7 +69,8 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
                                        const aiScene* aiscene,
                                        const std::string& szScenePath) {
     SceneNodePtr koreNode(new SceneNode);
-    koreNode->_transform.local = glmMatFromAiMat(ainode->mTransformation);
+    // TOOOOOODOOOOO
+    //static_cast<kore::Transform>(koreNode->getComponent(COMPONENT_TRANSFORM))->local = glmMatFromAiMat(ainode->mTransformation);
     koreNode->_parent = node;
     koreNode->_dirty = true;
     koreNode->_name = ainode->mName.C_Str();
@@ -87,7 +89,8 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
     // Make additional copies for any more meshes
     for (uint iMesh = 1; iMesh < ainode->mNumMeshes; ++iMesh) {
       SceneNodePtr copyNode(new SceneNode);
-      copyNode->_transform.local = glmMatFromAiMat(ainode->mTransformation);
+      // TOOOOOODOOOOO
+      //copyNode->_transform.local = glmMatFromAiMat(ainode->mTransformation);
       copyNode->_parent = node;
       copyNode->_dirty = true;
       node->_children.push_back(copyNode);

@@ -21,7 +21,7 @@
 #include <string>
 #include "KoRE/Log.h"
 #include "KoRE/MeshLoader.h"
-#include "KoRE/Transform.h"
+#include "KoRE/Components/Transform.h"
 
 kore::MeshLoader* kore::MeshLoader::getInstance() {
   static MeshLoader clInstance;

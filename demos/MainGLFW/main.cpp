@@ -132,6 +132,11 @@ int main(void) {
       pSimpleShader->getProgramLocation(),
       pSimpleShader->getUniformByName("view"));
 
+    /*kore::BindUniformPtr pModelBind(new kore::BindUniform);
+    pModelBind->connect(vRenderNodes[i]->getTransform()->getShaderInput("model Matrix").get(),
+      pSimpleShader->getProgramLocation(),
+      pSimpleShader->getUniformByName("model"));*/
+
     kore::BindUniformPtr pProjBind(new kore::BindUniform);
     pProjBind->connect(pCamera->getShaderInput("projection Matrix").get(),
       pSimpleShader->getProgramLocation(),
@@ -143,6 +148,7 @@ int main(void) {
     pOp->setShader(pSimpleShader);
 
     kore::RenderManager::getInstance()->addOperation(pViewBind);
+    // kore::RenderManager::getInstance()->addOperation(pModelBind);
     kore::RenderManager::getInstance()->addOperation(pProjBind);
     kore::RenderManager::getInstance()->addOperation(pPosAttBind);
     kore::RenderManager::getInstance()->addOperation(pNormAttBind);

@@ -31,8 +31,7 @@ kore::SceneNode::SceneNode(void)
                         _parent(NULL),
                         _dirty(true) {
   _id = kore::SceneManager::getInstance()->createID();
-  _transform.global = glm::mat4(1.0f);
-  _transform.local = glm::mat4(1.0f);
+  _transform = TransformPtr(new Transform);
 }
 
 kore::SceneNode::~SceneNode(void) {
@@ -87,6 +86,10 @@ kore::SceneNode::getComponent(EComponentType type) const {
   return NULL;
 }
 
+const kore::TransformPtr kore::SceneNode::getTransform() const {
+  return _transform;
+}
+
 const uint64 kore::SceneNode::getID(void) const {
   return _id;
 }
@@ -97,11 +100,6 @@ const uint kore::SceneNode::getTag(void) const {
 
 const std::string kore::SceneNode::getName(void) const {
   return _name;
-}
-
-
-const kore::Transform* kore::SceneNode::getTransform(void) const {
-  return &_transform;
 }
 
 void kore::SceneNode::setParent(const SceneNodePtr& parent) {
@@ -127,9 +125,9 @@ const bool kore::SceneNode::needsUpdate(void) const {
 void kore::SceneNode::update(void) {
   if (needsUpdate()) {
     if (_parent) {
-      _transform.global = _parent->getTransform()->global * _transform.local;
+      _transform->global = _parent->getTransform()->global * _transform->local;
     } else {
-      _transform.global = _transform.local;
+      _transform->global = _transform->local;
     }
   }
   for (unsigned int i = 0; i < _children.size(); i++) {
@@ -139,7 +137,7 @@ void kore::SceneNode::update(void) {
 }
 
 void kore::SceneNode::translate(const glm::vec3& dir) {
-  _transform.local = glm::translate(_transform.local, dir);
+  _transform->local = glm::translate(_transform->local, dir);
   _dirty = true;
 }
 
