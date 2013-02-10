@@ -76,6 +76,12 @@ void kore::SceneManager::
   _root->getSceneNodesByName(name, vSceneNodes);
 }
 
+void kore::SceneManager::
+getSceneNodesByComponent(const EComponentType componentType,
+                           std::vector<SceneNodePtr>& vSceneNodes) {
+  _root->getSceneNodesByComponent(componentType, vSceneNodes);
+}
+
 kore::SceneNodePtr kore::SceneManager::getRootNode() {
   return _root;
 }

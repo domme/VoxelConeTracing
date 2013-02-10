@@ -49,6 +49,8 @@ namespace kore {
                               std::vector<SceneNodePtr>& vNodes);
     void getSceneNodesByName(const std::string& name,
                              std::vector<SceneNodePtr>& vNodes);
+    void getSceneNodesByComponent(const EComponentType componentType,
+                                  std::vector<SceneNodePtr>& vNodes);
     void setParent(const SceneNodePtr& parent);
     void addChild(const SceneNodePtr& child);
     void setTag(const std::string& tagname);

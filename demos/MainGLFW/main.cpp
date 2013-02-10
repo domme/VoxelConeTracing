@@ -85,57 +85,69 @@ int main(void) {
     "GLEW version: %s\n",
     reinterpret_cast<const char*>(glewGetString(GLEW_VERSION)));
 
-  // load resources
-  // the new way...
-  // TODO(dospelt) whole scene loading with all components
-  kore::ResourceManager::getInstance()->loadScene("./assets/meshes/Test_LightCamera.dae");
-  kore::SceneManager* pScene = kore::SceneManager::getInstance();
-
-  std::vector<kore::SceneNodePtr> vNodes;
-  kore::SceneManager::getInstance()->getSceneNodesByName("Cube", vNodes);
-
-  kore::MeshPtr pTestMesh =
-    std::static_pointer_cast<kore::Mesh>
-    (vNodes[0]->getComponent(kore::COMPONENT_MESH));
-
   // load shader
   kore::ShaderPtr pSimpleShader(new kore::Shader);
-  pSimpleShader->loadShader( "./assets/shader/simple.vp", GL_VERTEX_SHADER);
-  pSimpleShader->loadShader( "./assets/shader/simple.fp", GL_FRAGMENT_SHADER);
+  pSimpleShader->loadShader("./assets/shader/normalColor.vp",
+                            GL_VERTEX_SHADER);
+  pSimpleShader->loadShader("./assets/shader/normalColor.fp",
+                            GL_FRAGMENT_SHADER);
   pSimpleShader->initShader();
 
   kore::CameraPtr pCamera(new kore::Camera);
-  pCamera->setView(glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f),
-                   glm::vec3(0.0f, 0.0f, 0.0f),
-                   glm::vec3(0.0f, 1.0f, 0.0f)));
+  pCamera->setView(glm::lookAt(glm::vec3(0.0f, 10.0f, 20.0f),
+    glm::vec3(0.0f, 0.0f, 0.0f),
+    glm::vec3(0.0f, 1.0f, 0.0f)));
   pCamera->setProjectionPersp(60.0f, 800.0f, 600.0f, 1.0f, 100.0f);
 
-  // Bind Uniform-Ops
-  // Bind Attribute-Ops
-  kore::BindAttributePtr pPosAttBind (new kore::BindAttribute);
-  pPosAttBind->connect(pTestMesh,
-                       pTestMesh->getAttributeByName("v_position"),
-                       pSimpleShader->getAttributeByName("v_position"));
+  // load resources
+  // the new way...
+  // TODO(dospelt) whole scene loading with all components
+  kore::ResourceManager::getInstance()->
+                            loadScene("./assets/meshes/Test_LightCamera.dae");
+  kore::SceneManager* pScene = kore::SceneManager::getInstance();
 
-  kore::BindUniformPtr pViewBind(new kore::BindUniform);
-  pViewBind->connect(pCamera->getShaderInput("view Matrix").get(),
-                     pSimpleShader->getProgramLocation(),
-                     pSimpleShader->getUniformByName("view"));
+  std::vector<kore::SceneNodePtr> vRenderNodes;
+  kore::SceneManager::getInstance()->
+                  getSceneNodesByComponent(kore::COMPONENT_MESH, vRenderNodes);
 
-  kore::BindUniformPtr pProjBind(new kore::BindUniform);
-  pProjBind->connect(pCamera->getShaderInput("projection Matrix").get(),
-                    pSimpleShader->getProgramLocation(),
-                    pSimpleShader->getUniformByName("projection"));
+  for (uint i = 0; i < vRenderNodes.size(); ++i) {
+    kore::MeshPtr pTestMesh =
+      std::static_pointer_cast<kore::Mesh>
+      (vRenderNodes[i]->getComponent(kore::COMPONENT_MESH));
 
-  kore::RenderMeshOpPtr pOp(new kore::RenderMesh);
-  pOp->setCamera(pCamera);
-  pOp->setMesh(pTestMesh);
-  pOp->setShader(pSimpleShader);
+    // Bind Uniform-Ops
+    // Bind Attribute-Ops
+    kore::BindAttributePtr pPosAttBind (new kore::BindAttribute);
+    pPosAttBind->connect(pTestMesh,
+      pTestMesh->getAttributeByName("v_position"),
+      pSimpleShader->getAttributeByName("v_position"));
 
-  kore::RenderManager::getInstance()->addOperation(pViewBind);
-  kore::RenderManager::getInstance()->addOperation(pProjBind);
-  kore::RenderManager::getInstance()->addOperation(pPosAttBind);
-  kore::RenderManager::getInstance()->addOperation(pOp);
+    kore::BindAttributePtr pNormAttBind (new kore::BindAttribute);
+    pNormAttBind->connect(pTestMesh,
+      pTestMesh->getAttributeByName("v_normal"),
+      pSimpleShader->getAttributeByName("v_normal"));
+
+    kore::BindUniformPtr pViewBind(new kore::BindUniform);
+    pViewBind->connect(pCamera->getShaderInput("view Matrix").get(),
+      pSimpleShader->getProgramLocation(),
+      pSimpleShader->getUniformByName("view"));
+
+    kore::BindUniformPtr pProjBind(new kore::BindUniform);
+    pProjBind->connect(pCamera->getShaderInput("projection Matrix").get(),
+      pSimpleShader->getProgramLocation(),
+      pSimpleShader->getUniformByName("projection"));
+
+    kore::RenderMeshOpPtr pOp(new kore::RenderMesh);
+    pOp->setCamera(pCamera);
+    pOp->setMesh(pTestMesh);
+    pOp->setShader(pSimpleShader);
+
+    kore::RenderManager::getInstance()->addOperation(pViewBind);
+    kore::RenderManager::getInstance()->addOperation(pProjBind);
+    kore::RenderManager::getInstance()->addOperation(pPosAttBind);
+    kore::RenderManager::getInstance()->addOperation(pNormAttBind);
+    kore::RenderManager::getInstance()->addOperation(pOp);
+  }
 
   glClearColor(1.0f,1.0f,1.0f,1.0f);
 

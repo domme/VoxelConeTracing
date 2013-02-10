@@ -174,3 +174,16 @@ void kore::SceneNode::getSceneNodesByName(const std::string& name,
     _children[iChild]->getSceneNodesByName(name, vNodes);
   }
 }
+
+void kore::SceneNode::
+getSceneNodesByComponent(const EComponentType componentType,
+                         std::vector<SceneNodePtr>& vNodes ) {
+  if (getComponent(componentType) != NULL) {
+    // TODO(dlazarek) Dangerous: Assuming 'this' is on heap
+    vNodes.push_back(SceneNodePtr(this));
+  }
+
+  for (uint iChild = 0; iChild < _children.size(); ++iChild) {
+    _children[iChild]->getSceneNodesByComponent(componentType, vNodes);
+  }
+}

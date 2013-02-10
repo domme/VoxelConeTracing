@@ -41,6 +41,8 @@ namespace kore {
                             std::vector<SceneNodePtr>& vSceneNodes);
     void getSceneNodesByName(const std::string& name,
                              std::vector<SceneNodePtr>& vSceneNodes);
+    void getSceneNodesByComponent(const EComponentType componentType,
+                                    std::vector<SceneNodePtr>& vSceneNodes);
   private:
   private:
     SceneManager(void);
