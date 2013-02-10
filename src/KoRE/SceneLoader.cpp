@@ -48,14 +48,14 @@ void kore::SceneLoader::loadRessources(const std::string& szScenePath) {
   }
   
   if (pAiScene->HasMeshes()) {
-    for (uint i = 0; i>pAiScene->mNumMeshes; ++i) {
+    for (uint i = 0; i < pAiScene->mNumMeshes; ++i) {
       ResourceManager::getInstance()
         ->addMesh(szScenePath,
                   MeshLoader::getInstance()->loadMesh(pAiScene,i));
     }
   }
   if (pAiScene->HasCameras()) {
-    for (uint i = 0; i>pAiScene->mNumCameras; ++i) {
+    for (uint i = 0; i < pAiScene->mNumCameras; ++i) {
       /*ResourceManager::getInstance()
         ->addCamera(szScenePath,
         CameraLoader::getInstance()->loadCamera(pAiScene,i));*/

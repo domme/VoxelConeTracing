@@ -88,7 +88,7 @@ int main(void) {
   // load resources
   // the new way...
   // TODO(dospelt) whole scene loading with all components
-  kore::ResourceManager::getInstance()->loadScene("./assets/meshes/cube.dae");
+  kore::ResourceManager::getInstance()->loadScene("./assets/meshes/Test_LightCamera.dae");
   kore::SceneManager* pScene = kore::SceneManager::getInstance();
 
   std::vector<kore::SceneNodePtr> vNodes;
