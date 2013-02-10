@@ -42,10 +42,12 @@ void kore::BindAttribute::execute(void) {
   if (_mesh->usesVBO()) {
     _renderManager->bindVBO(_mesh->getVBO());
     glVertexAttribPointer(_shaderInput->location, _meshAttPtr->numComponents,
-      _meshAttPtr->componentType, GL_FALSE, _meshAttPtr->stride, BUFFER_OFFSET((uint)_meshAttPtr->data));
+      _meshAttPtr->componentType, GL_FALSE, _meshAttPtr->stride, 
+                                    BUFFER_OFFSET((uint)_meshAttPtr->data));
   } else {
     glVertexAttribPointer(_shaderInput->location, _meshAttPtr->numComponents,
-      _meshAttPtr->componentType, GL_FALSE, _meshAttPtr->stride, _meshAttPtr->data);
+      _meshAttPtr->componentType, GL_FALSE, _meshAttPtr->stride,
+                                                        _meshAttPtr->data);
   }
 }
 
