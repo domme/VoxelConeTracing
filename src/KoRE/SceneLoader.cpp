@@ -77,12 +77,12 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
 
     // Load the first mesh as a component of this node.
     // Further meshes have to be loaded into duplicate nodes
-
     if (ainode->mNumMeshes > 0) {
-      MeshPtr mesh = ResourceManager::getInstance()
-                    ->getMesh(szScenePath,
-                              std::string(aiscene->mMeshes[ainode->mMeshes[0]]
-                                                             ->mName.C_Str()));
+      const aiMesh* aimesh = aiscene->mMeshes[ainode->mMeshes[0]];
+      std::string meshName = MeshLoader::getInstance()->
+                                       getMeshName(aimesh, ainode->mMeshes[0]);
+      MeshPtr mesh = ResourceManager::getInstance()->
+                                                getMesh(szScenePath, meshName);
       koreNode->_components.push_back(mesh);
 
     // Make additional copies for any more meshes
@@ -92,10 +92,13 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
       copyNode->_parent = node;
       copyNode->_dirty = true;
       node->_children.push_back(copyNode);
-      MeshPtr mesh = ResourceManager::getInstance()
-        ->getMesh(szScenePath,
-        std::string(aiscene->mMeshes[ainode->mMeshes[iMesh]]
-                                          ->mName.C_Str()));
+      
+      const aiMesh* aimesh = aiscene->mMeshes[ainode->mMeshes[iMesh]];
+      std::string meshName = MeshLoader::getInstance()->
+                                   getMeshName(aimesh, ainode->mMeshes[iMesh]);
+      MeshPtr mesh = ResourceManager::getInstance()->
+                                            getMesh(szScenePath, meshName);
+
       copyNode->_components.push_back(mesh);
     }
   }

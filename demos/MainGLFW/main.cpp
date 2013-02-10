@@ -37,6 +37,8 @@
 #include "KoRE/ResourceManager.h"
 #include "KoRE/RenderManager.h"
 
+kore::SceneNodePtr rotationNode;
+
 int main(void) {
   int running = GL_TRUE;
 
@@ -85,6 +87,11 @@ int main(void) {
     "GLEW version: %s\n",
     reinterpret_cast<const char*>(glewGetString(GLEW_VERSION)));
 
+  glEnable(GL_DEPTH_TEST);
+  
+  glEnable(GL_CULL_FACE);
+  glCullFace(GL_BACK);
+
   // load shader
   kore::ShaderPtr pSimpleShader(new kore::Shader);
   pSimpleShader->loadShader("./assets/shader/normalColor.vp",
@@ -94,7 +101,7 @@ int main(void) {
   pSimpleShader->initShader();
 
   kore::CameraPtr pCamera(new kore::Camera);
-  pCamera->setView(glm::lookAt(glm::vec3(0.0f, 10.0f, 20.0f),
+  pCamera->setView(glm::lookAt(glm::vec3(19.0f, 13.0f, -17.4f),
     glm::vec3(0.0f, 0.0f, 0.0f),
     glm::vec3(0.0f, 1.0f, 0.0f)));
   pCamera->setProjectionPersp(60.0f, 800.0f, 600.0f, 1.0f, 100.0f);
@@ -157,9 +164,16 @@ int main(void) {
 
   glClearColor(1.0f,1.0f,1.0f,1.0f);
 
+  std::vector<kore::SceneNodePtr> vBigCubeNodes;
+  pScene->getSceneNodesByName("BigCube", vBigCubeNodes);
+  rotationNode = vBigCubeNodes[0];
+
   // Main loop
   while (running) {
     kore::SceneManager::getInstance()->update();
+    
+    rotationNode->rotate(0.01f, glm::vec3(0.0f, 0.0f, 1.0f));
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     kore::RenderManager::getInstance()->renderFrame();
     glfwSwapBuffers();

@@ -142,6 +142,7 @@ void kore::SceneNode::translate(const glm::vec3& dir) {
 }
 
 void kore::SceneNode::rotate(const GLfloat& angle, const glm::vec3& axis) {
+  _transform->_local = glm::rotate(_transform->_local, angle, axis);
   _dirty = true;
 }
 

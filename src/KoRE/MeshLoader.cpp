@@ -37,8 +37,7 @@ kore::MeshLoader::~MeshLoader() {
 
 const aiScene* kore::MeshLoader::readScene(const std::string& szScenePath) {
   const aiScene* pAiScene = _aiImporter.ReadFile(szScenePath,
-      aiProcess_JoinIdenticalVertices | aiProcess_Triangulate |
-      aiProcess_JoinIdenticalVertices);
+      aiProcess_JoinIdenticalVertices | aiProcess_Triangulate);
 
   if (!pAiScene) {
     Log::getInstance()->write("[ERROR] Scene-file could not be loaded: %s",
@@ -110,13 +109,13 @@ kore::MeshPtr
     kore::MeshLoader::loadMesh(const aiScene* pAiScene,
                                const uint uMeshIdx) {
     kore::MeshPtr pMesh(new kore::Mesh);
-    aiMesh* pAiMesh = pAiScene->mMeshes[ 0 ];
+    aiMesh* pAiMesh = pAiScene->mMeshes[uMeshIdx];
     pMesh->_numVertices = pAiMesh->mNumVertices;
 
     // TODO(dlazarek): Make more flexible here:
     pMesh->_primitiveType = GL_TRIANGLES;
 
-    pMesh->_name = pAiMesh->mName.C_Str();
+    pMesh->_name = getMeshName(pAiMesh, uMeshIdx);
 
     if (pAiMesh->HasPositions()) {
         loadVertexPositions(pAiMesh, pMesh);
@@ -149,6 +148,20 @@ kore::MeshPtr
     pMesh->createAttributeBuffers(BUFFERTYPE_INTERLEAVED);
     return pMesh;
 }
+
+std::string kore::MeshLoader::getMeshName(const aiMesh* paiMesh,
+                                          const uint uMeshIdx) {
+  std::string returnName;
+   if (paiMesh->mName.length > 0) {
+    returnName = std::string(paiMesh->mName.C_Str());
+  } else {
+    char szNameBuf[100];
+    sprintf(szNameBuf, "%i", uMeshIdx);
+    returnName = std::string(&szNameBuf[0]);
+  }
+  return returnName;
+}
+
 
 void kore::MeshLoader::
     loadVertexPositions(const aiMesh* pAiMesh,
