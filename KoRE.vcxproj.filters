@@ -61,6 +61,9 @@
     <ClCompile Include="src\KoRE\Components\Transform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\KoRE\Timer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\KoRE\Common.h">
@@ -128,6 +131,9 @@
     </ClInclude>
     <ClInclude Include="src\KoRE\SceneLoader.h">
       <Filter>Header Files\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\Timer.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

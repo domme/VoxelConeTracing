@@ -25,6 +25,7 @@
 #include <map>
 #include "KoRE/Common.h"
 #include "KoRE/Components/Mesh.h"
+#include "KoRE/Components/Camera.h"
 #include "KoRE/Shader.h"
 #include "KoRE/SceneNode.h"
 #include "KoRE/SceneManager.h"
@@ -47,7 +48,10 @@ namespace kore {
     // adds all resources from a specific file
     void loadResources(const std::string& filename);
     void addMesh(const std::string& path, MeshPtr mesh);
+    void addCamera(const std::string& path, CameraPtr camera);
     kore::MeshPtr getMesh(const std::string& path, const std::string& id);
+    kore::CameraPtr getCamera(const std::string& path, const std::string& id);
+
 
   private:
     typedef std::map<std::string, std::map<std::string, kore::MeshPtr>>

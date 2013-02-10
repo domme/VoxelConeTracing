@@ -203,6 +203,7 @@
     </Midl>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\KoRE\Timer.cpp" />
     <ClInclude Include="src\KoRE\Common.h" />
     <ClInclude Include="src\KoRE\Components\Camera.h" />
     <ClInclude Include="src\KoRE\Components\Mesh.h" />
@@ -245,6 +246,7 @@
     <ClCompile Include="src\KoRE\SceneNode.cpp" />
     <ClCompile Include="src\KoRE\Shader.cpp" />
     <ClCompile Include="src\KoRE\StdAfx.cpp" />
+    <ClInclude Include="src\KoRE\Timer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

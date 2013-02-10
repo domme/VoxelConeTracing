@@ -6,6 +6,7 @@
 #include "KoRE/ResourceManager.h"
 #include "KoRE/MeshLoader.h"
 #include "KoRE/Components/Transform.h"
+#include "KoRE/Components/Camera.h"
 
 kore::SceneLoader* kore::SceneLoader::getInstance(){
   static SceneLoader instance;
@@ -55,11 +56,17 @@ void kore::SceneLoader::loadRessources(const std::string& szScenePath) {
                   MeshLoader::getInstance()->loadMesh(pAiScene,i));
     }
   }
+
   if (pAiScene->HasCameras()) {
     for (uint i = 0; i < pAiScene->mNumCameras; ++i) {
-      /*ResourceManager::getInstance()
-        ->addCamera(szScenePath,
-        CameraLoader::getInstance()->loadCamera(pAiScene,i));*/
+      const aiCamera* pAiCamera = pAiScene->mCameras[i];
+      CameraPtr pCamera(new Camera);
+      float yFovDeg = glm::degrees(pAiCamera->mHorizontalFOV)
+                     / pAiCamera->mAspect;
+      pCamera->setProjectionPersp(yFovDeg,
+                                  pAiCamera->mAspect,
+                                  pAiCamera->mClipPlaneNear,
+                                  pAiCamera->mClipPlaneFar);
     }
   }
 }
@@ -69,7 +76,8 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
                                        const aiScene* aiscene,
                                        const std::string& szScenePath) {
     SceneNodePtr koreNode(new SceneNode);
-    koreNode->getTransform()->_local = glmMatFromAiMat(ainode->mTransformation);
+    koreNode->getTransform()->_local =
+                                      glmMatFromAiMat(ainode->mTransformation);
     koreNode->_parent = node;
     koreNode->_dirty = true;
     koreNode->_name = ainode->mName.C_Str();

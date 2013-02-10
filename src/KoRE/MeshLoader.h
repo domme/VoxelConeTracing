@@ -58,6 +58,7 @@ namespace kore {
                        const aiNode* paiNode,
                        SceneNodePtr& parentNode,
                        const bool bUseBuffers);
+
     void loadVertexPositions(const aiMesh* pAiMesh,
                              kore::MeshPtr& pMesh);
 

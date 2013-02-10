@@ -80,6 +80,9 @@ class Camera : public SceneNodeComponent {
      void      setProjectionPersp(float yFov_deg, float fWidth,
                                    float fHeight, float fNear, float fFar);
 
+     void      setProjectionPersp(float yFov_deg, float fAspect,
+                                  float fNear, float fFar);
+
      void      setProjectionOrtho(float fLeft, float fRight,
                                    float fBottom, float fTop,
                                    float fNear, float fFar);

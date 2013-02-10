@@ -36,6 +36,7 @@
 #include "KoRE/Operations/BindUniform.h"
 #include "KoRE/ResourceManager.h"
 #include "KoRE/RenderManager.h"
+#include "KoRE/Timer.h"
 
 kore::SceneNodePtr rotationNode;
 
@@ -168,11 +169,15 @@ int main(void) {
   pScene->getSceneNodesByName("BigCube", vBigCubeNodes);
   rotationNode = vBigCubeNodes[0];
 
+  kore::Timer the_timer;
+  the_timer.start();
+  double time = 0;
   // Main loop
   while (running) {
+    time = the_timer.timeSinceLastCall();
     kore::SceneManager::getInstance()->update();
     
-    rotationNode->rotate(0.01f, glm::vec3(0.0f, 0.0f, 1.0f));
+    rotationNode->rotate(90 * time, glm::vec3(0.0f, 0.0f, 1.0f));
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     kore::RenderManager::getInstance()->renderFrame();

@@ -228,6 +228,27 @@ void kore::Camera::setProjectionPersp(float yFov_deg, float fWidth,
     paramsChanged();
 }
 
+void kore::Camera::setProjectionPersp(float yFov_deg, float fAspect,
+                                      float fNear, float fFar) {
+  float fWidth = 1;
+  float fHeight = fWidth * fAspect;
+
+  _matProjection = glm::perspectiveFov(yFov_deg, fWidth, fHeight, fNear, fFar);
+  _fNear = fNear;
+  _fFar = fFar;
+  _fFovDeg = yFov_deg;
+  _bIsOrtho = false;
+  _fWidth = fWidth;
+  _fHeight = fHeight;
+
+  // Calculate focal length
+  float fFovHor2 = glm::atan(
+    getAspectRatio() * glm::tan(getFovRad() / 2.0f));
+
+  _fFocalLength = 1.0f / glm::tan(fFovHor2);
+  paramsChanged();
+}
+
 void kore::Camera::paramsChanged() {
     _matViewProj = _matProjection * _matView;
     updateFrustumPlanes();
