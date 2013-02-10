@@ -11,9 +11,6 @@ KoRE_Log.txt
 *.exe
 *.pdb
 *.ilk
-*.sln
-*.vcxproj
-*.filters
 *.user
 *.suo
 *.sdf
