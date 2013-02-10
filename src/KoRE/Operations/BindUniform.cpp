@@ -147,8 +147,9 @@ kore::BindUniform::~BindUniform(void) {
 void kore::BindUniform::connect(const kore::ShaderInput* componentUni,
   GLuint shaderID,
   const kore::ShaderInput* shaderUni) {
-    if(!componentUni || !shaderUni);
-    if (componentUni->type != shaderUni->type
+    if(!componentUni
+      || !shaderUni
+      || componentUni->type != shaderUni->type
       || shaderID == GLUINT_HANDLE_INVALID
       || componentUni->size != shaderUni->size) {
         _componentUniform = NULL;
@@ -168,6 +169,10 @@ void kore::BindUniform::reset(void) {
 }
 
 void kore::BindUniform::execute(void) {
+  if(!_componentUniform) {
+    Log::getInstance()->write("[ERROR] Uniform binding undefined");
+    return;
+  }
   switch (_componentUniform->type) {
     case GL_FLOAT_VEC2:
       glProgramUniform2fv(_shaderID, _shaderUniform->location, 1,

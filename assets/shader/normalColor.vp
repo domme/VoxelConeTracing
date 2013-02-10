@@ -5,11 +5,12 @@ layout(location = 1) in vec3 v_normal;
 
 uniform mat4 projection;
 uniform mat4 view;
+uniform mat4 model;
 
 smooth out vec3 normal;
 
 void main()
 {
-  gl_Position = projection * view * vec4(v_position, 1.0f);
-  normal = ( view * vec4(v_normal, 0.0) ).xyz; //Yes, I know this is wrong... just for displaying-purposes - I promise! ;)
+  gl_Position = projection * view * model * vec4(v_position, 1.0f);
+  normal = ( view * model * vec4(v_normal, 0.0) ).xyz; //Yes, I know this is wrong... just for displaying-purposes - I promise! ;)
 }

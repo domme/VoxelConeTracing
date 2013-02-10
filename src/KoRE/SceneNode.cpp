@@ -31,7 +31,7 @@ kore::SceneNode::SceneNode(void)
                         _parent(NULL),
                         _dirty(true) {
   _id = kore::SceneManager::getInstance()->createID();
-  _transform = TransformPtr(new Transform);
+  _transform = TransformPtr(new Transform());
 }
 
 kore::SceneNode::~SceneNode(void) {
@@ -125,9 +125,9 @@ const bool kore::SceneNode::needsUpdate(void) const {
 void kore::SceneNode::update(void) {
   if (needsUpdate()) {
     if (_parent) {
-      _transform->global = _parent->getTransform()->global * _transform->local;
+      _transform->_global = _parent->getTransform()->_global * _transform->_local;
     } else {
-      _transform->global = _transform->local;
+      _transform->_global = _transform->_local;
     }
   }
   for (unsigned int i = 0; i < _children.size(); i++) {
@@ -137,7 +137,7 @@ void kore::SceneNode::update(void) {
 }
 
 void kore::SceneNode::translate(const glm::vec3& dir) {
-  _transform->local = glm::translate(_transform->local, dir);
+  _transform->_local = glm::translate(_transform->_local, dir);
   _dirty = true;
 }
 

@@ -33,8 +33,8 @@ namespace kore {
     bool isCompatibleWith(const SceneNodeComponent& otherComponent) const;
     const ShaderInputPtr getShaderInput(const std::string& name) const;
 
-    glm::mat4 global;
-    glm::mat4 local;
+    glm::mat4 _global;
+    glm::mat4 _local;
 
   private:
     ShaderInputPtr _siglobal;
