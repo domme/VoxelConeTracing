@@ -30,7 +30,7 @@
 #include <ctime>
 
 #include "KoRE/Shader.h"
-#include "KoRE/Components/Mesh.h"
+#include "KoRE/Components/MeshComponent.h"
 #include "KoRE/Operations/RenderMesh.h"
 #include "KoRE/Operations/BindAttribute.h"
 #include "KoRE/Operations/BindUniform.h"
@@ -119,8 +119,8 @@ int main(void) {
                   getSceneNodesByComponent(kore::COMPONENT_MESH, vRenderNodes);
 
   for (uint i = 0; i < vRenderNodes.size(); ++i) {
-    kore::MeshPtr pTestMesh =
-      std::static_pointer_cast<kore::Mesh>
+    kore::MeshComponentPtr pTestMesh =
+      std::static_pointer_cast<kore::MeshComponent>
       (vRenderNodes[i]->getComponent(kore::COMPONENT_MESH));
 
     // Bind Uniform-Ops

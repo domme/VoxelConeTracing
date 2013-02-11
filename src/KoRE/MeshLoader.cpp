@@ -105,10 +105,10 @@ void kore::MeshLoader::loadChildNode(const aiScene* paiScene,
     
 }
 
-kore::MeshPtr
+kore::MeshComponentPtr
     kore::MeshLoader::loadMesh(const aiScene* pAiScene,
                                const uint uMeshIdx) {
-    kore::MeshPtr pMesh(new kore::Mesh);
+    kore::MeshComponentPtr pMesh(new kore::MeshComponent);
     aiMesh* pAiMesh = pAiScene->mMeshes[uMeshIdx];
     pMesh->_numVertices = pAiMesh->mNumVertices;
 
@@ -165,7 +165,7 @@ std::string kore::MeshLoader::getMeshName(const aiMesh* paiMesh,
 
 void kore::MeshLoader::
     loadVertexPositions(const aiMesh* pAiMesh,
-                         kore::MeshPtr& pMesh ) {
+                         kore::MeshComponentPtr& pMesh ) {
     unsigned int allocSize = pAiMesh->mNumVertices * 3 * 4;
     void* pVertexData = malloc(allocSize);
     memcpy(pVertexData, pAiMesh->mVertices,
@@ -184,7 +184,7 @@ void kore::MeshLoader::
 
 void kore::MeshLoader::
     loadVertexNormals(const aiMesh* pAiMesh,
-                       kore::MeshPtr& pMesh ) {
+                       kore::MeshComponentPtr& pMesh ) {
     unsigned int allocSize = pAiMesh->mNumVertices * 3 * 4;
     void* pVertexData = malloc(allocSize);
     memcpy(pVertexData, pAiMesh->mNormals,
@@ -203,7 +203,7 @@ void kore::MeshLoader::
 
 void kore::MeshLoader::
     loadVertexTangents(const aiMesh* pAiMesh,
-                       kore::MeshPtr& pMesh) {
+                       kore::MeshComponentPtr& pMesh) {
     unsigned int allocSize = pAiMesh->mNumVertices * 3 * 4;
     void* pVertexData = malloc(allocSize);
     memcpy(pVertexData, pAiMesh->mTangents,
@@ -222,7 +222,7 @@ void kore::MeshLoader::
 
 void kore::MeshLoader::
     loadFaceIndices(const aiMesh* pAiMesh,
-                     kore::MeshPtr& pMesh ) {
+                     kore::MeshComponentPtr& pMesh ) {
     for (unsigned int iFace = 0; iFace < pAiMesh->mNumFaces; ++iFace) {
         aiFace& rAiFace = pAiMesh->mFaces[iFace];
         for (unsigned int iIndex = 0; iIndex < rAiFace.mNumIndices; ++iIndex) {
@@ -233,7 +233,7 @@ void kore::MeshLoader::
 
 void kore::MeshLoader::
     loadVertexColors(const aiMesh* pAiMesh,
-                      kore::MeshPtr& pMesh,
+                      kore::MeshComponentPtr& pMesh,
                       unsigned int iColorSet) {
     unsigned int allocSize =
         pAiMesh->mNumVertices * 4 * pAiMesh->GetNumColorChannels();
@@ -269,7 +269,7 @@ void kore::MeshLoader::
 
 void kore::MeshLoader::
   loadVertexTextureCoords(const aiMesh* pAiMesh,
-                           kore::MeshPtr& pMesh,
+                           kore::MeshComponentPtr& pMesh,
                            unsigned int iUVset) {
   unsigned int allocSize =
     pAiMesh->mNumVertices * 4 * pAiMesh->GetNumUVChannels();

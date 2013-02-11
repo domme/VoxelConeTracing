@@ -28,7 +28,7 @@ kore::RenderMesh::RenderMesh(void)
     kore::Operation() {
 }
 
-kore::RenderMesh::RenderMesh(const kore::MeshPtr& mesh,
+kore::RenderMesh::RenderMesh(const kore::MeshComponentPtr& mesh,
                                  const kore::CameraPtr& camera,
                                  const kore::ShaderPtr& shader)
                                  : _mesh(mesh),
@@ -85,11 +85,11 @@ void kore::RenderMesh::reset(void) {
   setExecuted(false);
 }
 
-const kore::MeshPtr& kore::RenderMesh::getMesh() const {
+const kore::MeshComponentPtr& kore::RenderMesh::getMesh() const {
     return _mesh;
 }
 
-void kore::RenderMesh::setMesh(const kore::MeshPtr& mesh) {
+void kore::RenderMesh::setMesh(const kore::MeshComponentPtr& mesh) {
     _mesh = mesh;
 }
 

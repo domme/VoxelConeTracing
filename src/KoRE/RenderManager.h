@@ -23,7 +23,7 @@
 #include <list>
 #include "KoRE/Common.h"
 #include "KoRE/Operations/Operation.h"
-#include "KoRE/Components/Mesh.h"
+#include "KoRE/Components/MeshComponent.h"
 #include "KoRE/Components/Camera.h"
 #include "KoRE/Shader.h"
 

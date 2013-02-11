@@ -209,7 +209,7 @@
     <ClCompile Include="src\KoRE\Timer.cpp" />
     <ClInclude Include="src\KoRE\Common.h" />
     <ClInclude Include="src\KoRE\Components\Camera.h" />
-    <ClInclude Include="src\KoRE\Components\Mesh.h" />
+    <ClInclude Include="src\KoRE\Components\MeshComponent.h" />
     <ClInclude Include="src\KoRE\Components\SceneNodeComponent.h" />
     <ClInclude Include="src\KoRE\Components\Transform.h" />
     <ClInclude Include="src\KoRE\Components\Values.h" />
@@ -232,7 +232,7 @@
     <ClInclude Include="src\KoRE\Shader.h" />
     <ClInclude Include="src\KoRE\StdAfx.h" />
     <ClCompile Include="src\KoRE\Components\Camera.cpp" />
-    <ClCompile Include="src\KoRE\Components\Mesh.cpp" />
+    <ClCompile Include="src\KoRE\Components\MeshComponent.cpp" />
     <ClCompile Include="src\KoRE\Components\SceneNodeComponent.cpp" />
     <ClCompile Include="src\KoRE\Components\Transform.cpp" />
     <ClCompile Include="src\KoRE\DataTypes.cpp" />

@@ -28,8 +28,7 @@
 #include "KoRE/Common.h"
 
 #include "KoRE/SceneNode.h"
-#include "KoRE/Components/Mesh.h"
-
+#include "KoRE/Components/MeshComponent.h"
 
 namespace kore {
   class MeshLoader {
@@ -44,7 +43,7 @@ namespace kore {
                            const bool bUseBuffers);
     */
 
-    kore::MeshPtr loadMesh(const aiScene* paiScene,
+    kore::MeshComponentPtr loadMesh(const aiScene* paiScene,
                            const uint uMeshIdx);
 
     std::string getMeshName(const aiMesh* paiMesh,
@@ -63,23 +62,23 @@ namespace kore {
                        const bool bUseBuffers);
 
     void loadVertexPositions(const aiMesh* pAiMesh,
-                             kore::MeshPtr& pMesh);
+                             kore::MeshComponentPtr& pMesh);
 
     void loadVertexNormals(const aiMesh* pAiMesh,
-                           kore::MeshPtr& pMesh);
+                           kore::MeshComponentPtr& pMesh);
 
     void loadVertexTangents(const aiMesh* pAiMesh,
-                            kore::MeshPtr& pMesh);
+                            kore::MeshComponentPtr& pMesh);
 
     void loadFaceIndices(const aiMesh* pAiMesh,
-                         kore::MeshPtr& pMesh);
+                         kore::MeshComponentPtr& pMesh);
 
     void loadVertexTextureCoords(const aiMesh* pAiMesh,
-                                 kore::MeshPtr& pMesh,
+                                 kore::MeshComponentPtr& pMesh,
                                  const unsigned int iUVset);
 
     void loadVertexColors(const aiMesh* pAiMesh,
-                          kore::MeshPtr& pMesh,
+                          kore::MeshComponentPtr& pMesh,
                           const unsigned int iColorSet);
 
     glm::mat4 glmMatFromAiMat(const aiMatrix4x4& aiMat);

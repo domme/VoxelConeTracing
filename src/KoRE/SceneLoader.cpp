@@ -113,7 +113,7 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
       const aiMesh* aimesh = aiscene->mMeshes[ainode->mMeshes[0]];
       std::string meshName = MeshLoader::getInstance()->
                                        getMeshName(aimesh, ainode->mMeshes[0]);
-      MeshPtr mesh = ResourceManager::getInstance()->
+      MeshComponentPtr mesh = ResourceManager::getInstance()->
                                                 getMesh(szScenePath, meshName);
       node->_components.push_back(mesh);
 
@@ -128,7 +128,7 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
       const aiMesh* aimesh = aiscene->mMeshes[ainode->mMeshes[iMesh]];
       std::string meshName = MeshLoader::getInstance()->
                                    getMeshName(aimesh, ainode->mMeshes[iMesh]);
-      MeshPtr mesh = ResourceManager::getInstance()->
+      MeshComponentPtr mesh = ResourceManager::getInstance()->
                                             getMesh(szScenePath, meshName);
 
       copyNode->_components.push_back(mesh);

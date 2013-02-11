@@ -25,7 +25,7 @@
 #include "KoRE/MeshLoader.h"
 #include "KoRE/SceneLoader.h"
 #include "KoRE/Log.h"
-#include "KoRE/Components/Mesh.h"
+#include "KoRE/Components/MeshComponent.h"
 
 kore::ResourceManager* kore::ResourceManager::getInstance(void) {
   static kore::ResourceManager theInstance;
@@ -47,7 +47,7 @@ void kore::ResourceManager::loadResources(const std::string& filename) {
   kore::SceneLoader::getInstance()->loadRessources(filename);
 }
 
-void kore::ResourceManager::addMesh(const std::string& path, MeshPtr mesh) {
+void kore::ResourceManager::addMesh(const std::string& path, MeshComponentPtr mesh) {
   if (!hasKey(_meshes, path)) {
     InnerResourceMapT internalMap;
     _meshes[path] = internalMap;
@@ -67,13 +67,13 @@ void kore::ResourceManager::addCamera(const std::string& path,
   _cameras[path][camera->getName()] = camera;
 }
 
-kore::MeshPtr kore::ResourceManager::getMesh(const std::string& path,
+kore::MeshComponentPtr kore::ResourceManager::getMesh(const std::string& path,
                                              const std::string& id) {
   if (!hasKey(_meshes, path)) {
-    return MeshPtr();  // NULL
+    return MeshComponentPtr();  // NULL
   }
 
-  return std::static_pointer_cast<kore::Mesh>(_meshes[path][id]);
+  return std::static_pointer_cast<kore::MeshComponent>(_meshes[path][id]);
 }
 
 kore::CameraPtr kore::ResourceManager::getCamera(const std::string& path,

@@ -4,9 +4,6 @@
     <ClCompile Include="src\KoRE\Components\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\KoRE\Components\Mesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\KoRE\Components\SceneNodeComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -70,7 +67,12 @@
     <ClCompile Include="src\KoRE\TextureLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source Files\Texture.cpp" />
+    <ClCompile Include="src\KoRE\Components\MeshComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Files\Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\KoRE\Common.h">
@@ -105,9 +107,6 @@
     </ClInclude>
     <ClInclude Include="src\KoRE\StdAfx.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\KoRE\Components\Mesh.h">
-      <Filter>Header Files\Components</Filter>
     </ClInclude>
     <ClInclude Include="src\KoRE\Components\Transform.h">
       <Filter>Header Files\Components</Filter>
@@ -150,6 +149,9 @@
     </ClInclude>
     <ClInclude Include="src\KoRE\Texture.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\Components\MeshComponent.h">
+      <Filter>Header Files\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

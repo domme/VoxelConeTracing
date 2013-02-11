@@ -24,7 +24,7 @@
 #include <vector>
 #include <map>
 #include "KoRE/Common.h"
-#include "KoRE/Components/Mesh.h"
+#include "KoRE/Components/MeshComponent.h"
 #include "KoRE/Components/Camera.h"
 #include "KoRE/Shader.h"
 #include "KoRE/SceneNode.h"
@@ -47,9 +47,9 @@ namespace kore {
                                  ->getRootNode());
     // adds all resources from a specific file
     void loadResources(const std::string& filename);
-    void addMesh(const std::string& path, MeshPtr mesh);
+    void addMesh(const std::string& path, MeshComponentPtr mesh);
     void addCamera(const std::string& path, CameraPtr camera);
-    kore::MeshPtr getMesh(const std::string& path, const std::string& id);
+    kore::MeshComponentPtr getMesh(const std::string& path, const std::string& id);
     kore::CameraPtr getCamera(const std::string& path, const std::string& id);
 
 

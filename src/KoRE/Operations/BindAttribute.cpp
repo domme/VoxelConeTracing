@@ -25,7 +25,7 @@ kore::BindAttribute::BindAttribute(void) : _meshAttPtr(NULL),
                                            kore::Operation() {
 }
 
-kore::BindAttribute::BindAttribute(const kore::MeshPtr mesh,
+kore::BindAttribute::BindAttribute(const kore::MeshComponentPtr mesh,
                                    const kore::MeshAttributeArray* meshAtt,
                                    const kore::ShaderInput* shaderAtt) :
                                    kore::Operation() {
@@ -57,7 +57,7 @@ void kore::BindAttribute::update(void) {
 void kore::BindAttribute::reset(void) {
 }
 
-void kore::BindAttribute::connect(const kore::MeshPtr mesh,
+void kore::BindAttribute::connect(const kore::MeshComponentPtr mesh,
                                   const kore::MeshAttributeArray* meshAtt,
                                   const kore::ShaderInput* shaderAtt) {
   _mesh = mesh;

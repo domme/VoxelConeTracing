@@ -20,13 +20,13 @@
 #include <string>
 #include <vector>
 
-#include "KoRE/Components/Mesh.h"
+#include "KoRE/Components/MeshComponent.h"
 #include "KoRE/ResourceManager.h"
 #include "KoRE/DataTypes.h"
 #include "KoRE/Log.h"
 
 
-kore::Mesh::Mesh(void)
+kore::MeshComponent::MeshComponent(void)
     : _numVertices(0),
     _primitiveType(GL_TRIANGLES),
     _VAOloc(GLUINT_HANDLE_INVALID),
@@ -36,7 +36,7 @@ kore::Mesh::Mesh(void)
   _type = COMPONENT_MESH;
 }
 
-kore::Mesh::~Mesh(void) {
+kore::MeshComponent::~MeshComponent(void) {
     // Free all attribute-data.
     // This has to be done more sophisticated in a future version
     if (!usesVBO()) {  // In case of VBO, the data-pointers are already freed
@@ -60,12 +60,12 @@ kore::Mesh::~Mesh(void) {
     }
 }
 
-bool kore::Mesh::isCompatibleWith(const kore::SceneNodeComponent&
+bool kore::MeshComponent::isCompatibleWith(const kore::SceneNodeComponent&
                                   otherComponent) const {
   if (otherComponent.getType() != getType()) {
     return false;
   }
-  const kore::Mesh& otherMesh = static_cast<const kore::Mesh&>(otherComponent);
+  const kore::MeshComponent& otherMesh = static_cast<const kore::MeshComponent&>(otherComponent);
 
   if (_attributes.size() != otherMesh._attributes.size()) {
     return false;
@@ -93,60 +93,60 @@ bool kore::Mesh::isCompatibleWith(const kore::SceneNodeComponent&
   return bSameAttributes;
 }
 
-const kore::ShaderInputPtr kore::Mesh::getShaderInput(const std::string& name) const {
+const kore::ShaderInputPtr kore::MeshComponent::getShaderInput(const std::string& name) const {
   return ShaderInputPtr(NULL);
 }
 
-const bool kore::Mesh::usesVBO() const {
+const bool kore::MeshComponent::usesVBO() const {
   return _VBOloc != GLUINT_HANDLE_INVALID;
 }
 
-const bool kore::Mesh::usesIBO() const {
+const bool kore::MeshComponent::usesIBO() const {
   return _IBOloc != GLUINT_HANDLE_INVALID;
 }
 
-const GLuint kore::Mesh::getVBO() const {
+const GLuint kore::MeshComponent::getVBO() const {
   return _VBOloc;
 }
 
-const GLuint kore::Mesh::getVAO() const {
+const GLuint kore::MeshComponent::getVAO() const {
   return _VAOloc;
 }
 
-const GLuint kore::Mesh::getIBO() const {
+const GLuint kore::MeshComponent::getIBO() const {
   return _IBOloc;
 }
 
-int kore::Mesh::getNumAttributes(void) {
+int kore::MeshComponent::getNumAttributes(void) {
   return _attributes.size();
 }
 
 const std::vector<kore::MeshAttributeArray>&
-kore::Mesh::getAttributes() const {
+kore::MeshComponent::getAttributes() const {
     return _attributes;
 }
 
-const unsigned int kore::Mesh::getNumVertices() const {
+const unsigned int kore::MeshComponent::getNumVertices() const {
     return _numVertices;
 }
 
-const std::string& kore::Mesh::getName() const {
+const std::string& kore::MeshComponent::getName() const {
     return _name;
 }
 
-const GLenum kore::Mesh::getPrimitiveType() const {
+const GLenum kore::MeshComponent::getPrimitiveType() const {
     return _primitiveType;
 }
 
-const bool kore::Mesh::hasIndices() const {
+const bool kore::MeshComponent::hasIndices() const {
     return _indices.size() > 0;
 }
 
-const std::vector<unsigned int>& kore::Mesh::getIndices() const {
+const std::vector<unsigned int>& kore::MeshComponent::getIndices() const {
     return _indices;
 }
 
-const kore::MeshAttributeArray* kore::Mesh::
+const kore::MeshAttributeArray* kore::MeshComponent::
     getAttributeByName(const std::string& szName) const {
         for (unsigned int i = 0; i < _attributes.size(); ++i) {
             if (_attributes[i].name == szName) {
@@ -156,7 +156,7 @@ const kore::MeshAttributeArray* kore::Mesh::
         return NULL;
 }
 
-void kore::Mesh::createAttributeBuffers(const kore::EMeshBufferType bufferType) {
+void kore::MeshComponent::createAttributeBuffers(const kore::EMeshBufferType bufferType) {
 
   if (_attributes.size() == 0) {
     Log::getInstance()->write("[ERROR] Can't create GL buffer objects for Mesh"

@@ -28,7 +28,7 @@
 #include "KoRE/Common.h"
 
 #include "KoRE/SceneNode.h"
-#include "KoRE/Components/Mesh.h"
+#include "KoRE/Components/MeshComponent.h"
 
 
 namespace kore {

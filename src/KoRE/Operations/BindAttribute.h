@@ -21,25 +21,25 @@
 #define CORE_INCLUDE_CORE_BINDATTRIBUTEOP_H_
 
 #include "KoRE/Operations/Operation.h"
-#include "KoRE/Components/Mesh.h"
+#include "KoRE/Components/MeshComponent.h"
 #include "KoRE/Shader.h"
 
 namespace kore {
   class BindAttribute: public Operation {
   public:
     BindAttribute(void);
-    BindAttribute( const MeshPtr mesh,
+    BindAttribute( const MeshComponentPtr mesh,
                    const MeshAttributeArray* meshAtt,
                    const ShaderInput* shaderAtt);
     virtual ~BindAttribute(void);
     virtual void execute(void);
     virtual void update(void);
     virtual void reset(void);
-    void connect(const MeshPtr mesh,
+    void connect(const MeshComponentPtr mesh,
                  const MeshAttributeArray* meshAtt,
                  const ShaderInput* shaderAtt);
   private:
-    MeshPtr _mesh;
+    MeshComponentPtr _mesh;
     const MeshAttributeArray* _meshAttPtr;
     const ShaderInput* _shaderInput;
     

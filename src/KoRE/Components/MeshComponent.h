@@ -55,14 +55,14 @@ namespace kore {
   };
   typedef std::shared_ptr<MeshAttributeArray> MeshAttributeArrayPtr;
 
-  class Mesh : public SceneNodeComponent {
+  class MeshComponent : public SceneNodeComponent {
     friend class SceneLoader;
     friend class MeshLoader;
     friend class MeshRenderComponent;
 
   public:
-    Mesh(void);
-    virtual ~Mesh(void);
+    MeshComponent(void);
+    virtual ~MeshComponent(void);
     virtual bool isCompatibleWith(const SceneNodeComponent& otherComponent) const;
     virtual const ShaderInputPtr getShaderInput(const std::string& name) const;
     int getNumAttributes(void);
@@ -94,6 +94,6 @@ namespace kore {
     GLuint                          _VAOloc;
     GLuint                          _IBOloc;
   };
-  typedef std::shared_ptr<kore::Mesh> MeshPtr;
+  typedef std::shared_ptr<kore::MeshComponent> MeshComponentPtr;
 };
 #endif  // CORE_INCLUDE_CORE_MESH_H_
