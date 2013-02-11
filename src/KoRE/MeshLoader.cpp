@@ -22,6 +22,8 @@
 #include "KoRE/Log.h"
 #include "KoRE/MeshLoader.h"
 #include "KoRE/Components/Transform.h"
+#include "KoRE/Components/MeshComponent.h"
+#include "KoRE/Mesh.h"
 
 kore::MeshLoader* kore::MeshLoader::getInstance() {
   static MeshLoader clInstance;
@@ -109,6 +111,7 @@ kore::MeshPtr
     kore::MeshLoader::loadMesh(const aiScene* pAiScene,
                                const uint uMeshIdx) {
     kore::MeshPtr pMesh(new kore::Mesh);
+  
     aiMesh* pAiMesh = pAiScene->mMeshes[uMeshIdx];
     pMesh->_numVertices = pAiMesh->mNumVertices;
 

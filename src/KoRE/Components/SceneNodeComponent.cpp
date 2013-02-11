@@ -37,3 +37,11 @@ const kore::EComponentType kore::SceneNodeComponent::getType(void) const {
 uint kore::SceneNodeComponent::getID(void) const {
   return _id;
 }
+
+const kore::ShaderInput*
+  kore::SceneNodeComponent::getShaderInput(const std::string& name) const {
+    for (uint i = 0; i < _shaderInputs.size(); ++i) {
+      if(_shaderInputs[i].name == name ) return &_shaderInputs[i];
+    }
+    return NULL;
+}

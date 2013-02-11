@@ -3,15 +3,17 @@
 kore::Transform::Transform(void) : _global(glm::mat4(1.0f)),
                                    _local(glm::mat4(1.0f)),
                                    kore::SceneNodeComponent() {
-  _siglobal = ShaderInputPtr(new ShaderInput());
-  _siglobal->type = GL_FLOAT_MAT4;
-  _siglobal->name = "model Matrix";
-  _siglobal->data = glm::value_ptr(_global);
+  ShaderInput input = ShaderInput();
+  input.type = GL_FLOAT_MAT4;
+  input.name = "model Matrix";
+  input.data = glm::value_ptr(_global);
+  _shaderInputs.push_back(input);
 
-  _silocal = ShaderInputPtr(new ShaderInput());
-  _silocal->type = GL_FLOAT_MAT4;
-  _silocal->name = "object Matrix";
-  _silocal->data = glm::value_ptr(_local);
+  input = ShaderInput();
+  input.type = GL_FLOAT_MAT4;
+  input.name = "object Matrix";
+  input.data = glm::value_ptr(_local);
+  _shaderInputs.push_back(input);
 
   _type = COMPONENT_TRANSFORM;
 }
@@ -19,12 +21,15 @@ kore::Transform::Transform(void) : _global(glm::mat4(1.0f)),
 kore::Transform::~Transform() {
 }
 
-bool kore::Transform::isCompatibleWith(const SceneNodeComponent& otherComponent) const {
+bool kore::Transform::
+isCompatibleWith(const SceneNodeComponent& otherComponent) const {
   return true;
 }
 
-const kore::ShaderInputPtr kore::Transform::getShaderInput(const std::string& name) const {
-  if (name == _siglobal->name) return _siglobal;
-  if (name == _silocal->name) return _silocal;
-  return ShaderInputPtr(NULL);
+void kore::Transform::setGlobal(const glm::mat4& global) {
+  _global = global;
+}
+
+void kore::Transform::setLocal(const glm::mat4& local) {
+  _local = local;
 }

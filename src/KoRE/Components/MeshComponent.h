@@ -17,31 +17,33 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CORE_INCLUDE_CORE_TRANSFORM_H_
-#define CORE_INCLUDE_CORE_TRANSFORM_H_
+#ifndef CORE_INCLUDE_CORE_MESHCOMPONENT_H_
+#define CORE_INCLUDE_CORE_MESHCOMPONENT_H_
 
-#include <glm/glm.hpp>
-#include "KoRE/Components/SceneNodeComponent.h"
+#include <string>
+#include <vector>
 #include "KoRE/DataTypes.h"
+#include "KoRE/Components/SceneNodeComponent.h"
+#include "KoRE/Mesh.h"
 
 namespace kore {
-  class Transform : public SceneNodeComponent{
+  class MeshComponent : public SceneNodeComponent {
+    friend class SceneLoader;
+    friend class MeshLoader;
+    friend class MeshRenderComponent;
+
   public:
-    Transform(void);
-    virtual ~Transform(void);
+    MeshComponent(void);
+    virtual ~MeshComponent(void);
 
-    bool isCompatibleWith(const SceneNodeComponent& otherComponent) const;
-
-    void setGlobal(const glm::mat4& global);
-    void setLocal(const glm::mat4& local);
-
-    inline  const glm::mat4& getGlobal() {return _global;}
-    inline const glm::mat4& getLocal(void) {return _local;}
+    virtual bool
+    isCompatibleWith(const SceneNodeComponent& otherComponent) const;
+    inline const MeshPtr& getMesh() {return _mesh;}
+    void setMesh(MeshPtr& mesh);
 
   private:
-    glm::mat4 _global;
-    glm::mat4 _local;
+    MeshPtr _mesh;
   };
-  typedef std::shared_ptr<kore::Transform> TransformPtr;
-}
-#endif  // CORE_INCLUDE_CORE_TRANSFORM_H_
+  typedef std::shared_ptr<kore::MeshComponent> MeshComponentPtr;
+};
+#endif  // CORE_INCLUDE_CORE_MESH_H_

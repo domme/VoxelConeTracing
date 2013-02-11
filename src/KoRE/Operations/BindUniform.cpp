@@ -324,7 +324,7 @@ break;
   case GL_SAMPLER_2D_SHADOW:
   case GL_SAMPLER_CUBE_SHADOW:
     glActiveTexture(_componentUniform->texUnit);
-    glProgramUniform1f(_shaderID, _shaderUniform->location, _componentUniform->texUnit);
+    glProgramUniform1ui(_shaderID, _shaderUniform->location, _componentUniform->texUnit);
   break;
 /*case GL_SAMPLER_1D_ARRAY:
 

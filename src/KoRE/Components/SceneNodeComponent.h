@@ -25,11 +25,11 @@
 
 namespace kore {
   enum EComponentType {
-    COMPONENT_UNKNOWN,
-    COMPONENT_TRANSFORM,
-    COMPONENT_MESH,
-    COMPONENT_CAMERA,
-    COMPONENT_VALUES
+    COMPONENT_UNKNOWN     = 0,
+    COMPONENT_TRANSFORM   = 0 << 1,
+    COMPONENT_MESH        = 0 << 2,
+    COMPONENT_CAMERA      = 0 << 3,
+    COMPONENT_VALUES      = 0 << 4
   };
 
   class SceneNode;
@@ -38,17 +38,23 @@ namespace kore {
   public:
     explicit SceneNodeComponent(void);
     virtual ~SceneNodeComponent(void);
-     /// Checks if this component is of the same type as the other component
+    /// Checks if this component is of the same type as the other component
     virtual bool isCompatibleWith(const SceneNodeComponent& otherComponent) const = 0;
-    virtual const ShaderInputPtr getShaderInput(const std::string& name) const = 0;
     virtual void attachTo(SceneNodePtr& node);
     const EComponentType getType(void) const;
+
+    const ShaderInput* getShaderInput(const std::string& name) const;
+
+    inline const std::vector<ShaderInput>&
+      getShaderInputs() {return _shaderInputs;}
 
     uint getID(void) const;
 
   protected:
+    std::string name;
     uint _id;
     EComponentType _type;
+    std::vector<ShaderInput> _shaderInputs;
   };
   typedef std::shared_ptr<SceneNodeComponent> SceneNodeComponentPtr;
 };

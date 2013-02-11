@@ -203,15 +203,24 @@
     </Midl>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\KoRE\Components\TexturesComponent.cpp" />
+    <ClCompile Include="src\KoRE\Loader\lodepng.cpp" />
+    <ClCompile Include="src\KoRE\Mesh.cpp" />
+    <ClCompile Include="src\KoRE\TextureLoader.cpp" />
     <ClCompile Include="src\KoRE\Timer.cpp" />
+    <ClCompile Include="Texture.cpp" />
     <ClInclude Include="src\KoRE\Common.h" />
     <ClInclude Include="src\KoRE\Components\Camera.h" />
-    <ClInclude Include="src\KoRE\Components\Mesh.h" />
+    <ClInclude Include="src\KoRE\Components\MeshComponent.h" />
     <ClInclude Include="src\KoRE\Components\SceneNodeComponent.h" />
+    <ClInclude Include="src\KoRE\Components\TexturesComponent.h" />
     <ClInclude Include="src\KoRE\Components\Transform.h" />
     <ClInclude Include="src\KoRE\Components\Values.h" />
     <ClInclude Include="src\KoRE\DataTypes.h" />
+    <ClInclude Include="src\KoRE\Loader\lodepng.h" />
+    <ClInclude Include="src\KoRE\Loader\TextureLoader.h" />
     <ClInclude Include="src\KoRE\Log.h" />
+    <ClInclude Include="src\KoRE\Mesh.h" />
     <ClInclude Include="src\KoRE\MeshLoader.h" />
     <ClInclude Include="src\KoRE\Operations\BindAttribute.h" />
     <ClInclude Include="src\KoRE\Operations\BindUniform.h" />
@@ -227,7 +236,7 @@
     <ClInclude Include="src\KoRE\Shader.h" />
     <ClInclude Include="src\KoRE\StdAfx.h" />
     <ClCompile Include="src\KoRE\Components\Camera.cpp" />
-    <ClCompile Include="src\KoRE\Components\Mesh.cpp" />
+    <ClCompile Include="src\KoRE\Components\MeshComponent.cpp" />
     <ClCompile Include="src\KoRE\Components\SceneNodeComponent.cpp" />
     <ClCompile Include="src\KoRE\Components\Transform.cpp" />
     <ClCompile Include="src\KoRE\DataTypes.cpp" />
@@ -246,6 +255,7 @@
     <ClCompile Include="src\KoRE\SceneNode.cpp" />
     <ClCompile Include="src\KoRE\Shader.cpp" />
     <ClCompile Include="src\KoRE\StdAfx.cpp" />
+    <ClInclude Include="src\KoRE\Texture.h" />
     <ClInclude Include="src\KoRE\Timer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

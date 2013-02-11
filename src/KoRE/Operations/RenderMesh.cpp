@@ -18,20 +18,20 @@
 */
 
 #include "KoRE/Operations/RenderMesh.h"
-#include "KoRE/RenderManager.h";
+#include "KoRE/RenderManager.h"
 #include <vector>
 
 kore::RenderMesh::RenderMesh(void)
-  : _mesh(NULL),
+  : _meshComponent(NULL),
     _camera(NULL),
     _shader(NULL),
     kore::Operation() {
 }
 
-kore::RenderMesh::RenderMesh(const kore::MeshPtr& mesh,
+kore::RenderMesh::RenderMesh(const kore::MeshComponentPtr& mesh,
                                  const kore::CameraPtr& camera,
                                  const kore::ShaderPtr& shader)
-                                 : _mesh(mesh),
+                                 : _meshComponent(mesh),
                                  _camera(camera),
                                  _shader(shader),
                                  kore::Operation() {
@@ -43,36 +43,42 @@ kore::RenderMesh::~RenderMesh(void) {
 void kore::RenderMesh::execute(void) {
     const std::vector<kore::ShaderInput>& vAttributes =
                                                     _shader->getAttributes();
+    const MeshPtr mesh = _meshComponent->getMesh();
+
+    if (mesh == NULL) {
+      return;
+    }
 
     _renderManager->useShaderProgram(_shader->getProgramLocation());
 
-    if (_mesh->usesVBO()) {
-      _renderManager->bindVBO(_mesh->getVBO());
+    if (mesh->usesVBO()) {
+      _renderManager->bindVBO(mesh->getVBO());
     } else {
       _renderManager->bindVBO(0);
     }
 
-    if (_mesh->usesIBO()) {
-      _renderManager->bindIBO(_mesh->getIBO());
+    if (mesh->usesIBO()) {
+      _renderManager->bindIBO(mesh->getIBO());
     } else {
       _renderManager->bindIBO(0);
     }
 
     // Indices but no IBO
-    if (_mesh->hasIndices() && !_mesh->usesIBO()) {
-      glDrawElements(_mesh->getPrimitiveType(), _mesh->getIndices().size(),
-                     GL_UNSIGNED_INT, &_mesh->getIndices()[0]);
+    if (mesh->hasIndices() && !mesh->usesIBO()) {
+      glDrawElements(mesh->getPrimitiveType(), mesh->getIndices().size(),
+                     GL_UNSIGNED_INT, &mesh->getIndices()[0]);
     }
 
     // Indices with IBO
-    else if (_mesh->hasIndices() && _mesh->usesIBO()) {
-      glDrawElements(_mesh->getPrimitiveType(), _mesh->getIndices().size(),
-                      GL_UNSIGNED_INT, BUFFER_OFFSET(0));
+    else if (mesh->hasIndices() && mesh->usesIBO()) {
+      glDrawElements(mesh->getPrimitiveType(), mesh->getIndices().size(),
+                     GL_UNSIGNED_INT, BUFFER_OFFSET(0));
     }
 
     // No Indices
-    else if (!_mesh->hasIndices()) {
-      glDrawArrays(_mesh->getPrimitiveType(), 0, _mesh->getNumVertices());
+    else if (!mesh->hasIndices()) {
+      glDrawArrays(mesh->getPrimitiveType(), 0,
+                   mesh->getNumVertices());
     }
 
   setExecuted(true);
@@ -85,12 +91,12 @@ void kore::RenderMesh::reset(void) {
   setExecuted(false);
 }
 
-const kore::MeshPtr& kore::RenderMesh::getMesh() const {
-    return _mesh;
+const kore::MeshComponentPtr& kore::RenderMesh::getMesh() const {
+    return _meshComponent;
 }
 
-void kore::RenderMesh::setMesh(const kore::MeshPtr& mesh) {
-    _mesh = mesh;
+void kore::RenderMesh::setMesh(const kore::MeshComponentPtr& mesh) {
+    _meshComponent = mesh;
 }
 
 const kore::CameraPtr& kore::RenderMesh::getCamera() const {

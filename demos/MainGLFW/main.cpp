@@ -28,14 +28,17 @@
 #include <stdio.h>
 #include <string>
 #include <ctime>
+#include <vector>
 
 #include "KoRE/Shader.h"
-#include "KoRE/Components/Mesh.h"
+#include "KoRE/Components/MeshComponent.h"
 #include "KoRE/Operations/RenderMesh.h"
 #include "KoRE/Operations/BindAttribute.h"
 #include "KoRE/Operations/BindUniform.h"
 #include "KoRE/ResourceManager.h"
 #include "KoRE/RenderManager.h"
+#include "KoRE/Components/Camera.h"
+#include "KoRE/SceneNode.h"
 #include "KoRE/Timer.h"
 
 kore::SceneNodePtr rotationNode;
@@ -119,40 +122,40 @@ int main(void) {
                   getSceneNodesByComponent(kore::COMPONENT_MESH, vRenderNodes);
 
   for (uint i = 0; i < vRenderNodes.size(); ++i) {
-    kore::MeshPtr pTestMesh =
-      std::static_pointer_cast<kore::Mesh>
+    kore::MeshComponentPtr pMeshComponent =
+      std::static_pointer_cast<kore::MeshComponent>
       (vRenderNodes[i]->getComponent(kore::COMPONENT_MESH));
 
     // Bind Uniform-Ops
     // Bind Attribute-Ops
     kore::BindAttributePtr pPosAttBind (new kore::BindAttribute);
-    pPosAttBind->connect(pTestMesh,
-      pTestMesh->getAttributeByName("v_position"),
+    pPosAttBind->connect(pMeshComponent,
+      pMeshComponent->getMesh()->getAttributeByName("v_position"),
       pSimpleShader->getAttributeByName("v_position"));
 
     kore::BindAttributePtr pNormAttBind (new kore::BindAttribute);
-    pNormAttBind->connect(pTestMesh,
-      pTestMesh->getAttributeByName("v_normal"),
+    pNormAttBind->connect(pMeshComponent,
+      pMeshComponent->getMesh()->getAttributeByName("v_normal"),
       pSimpleShader->getAttributeByName("v_normal"));
 
     kore::BindUniformPtr pModelBind(new kore::BindUniform);
-    pModelBind->connect(vRenderNodes[i]->getTransform()->getShaderInput("model Matrix").get(),
+    pModelBind->connect(vRenderNodes[i]->getTransform()->getShaderInput("model Matrix"),
       pSimpleShader->getProgramLocation(),
       pSimpleShader->getUniformByName("model"));
 
     kore::BindUniformPtr pViewBind(new kore::BindUniform);
-    pViewBind->connect(pCamera->getShaderInput("view Matrix").get(),
+    pViewBind->connect(pCamera->getShaderInput("view Matrix"),
       pSimpleShader->getProgramLocation(),
       pSimpleShader->getUniformByName("view"));
 
     kore::BindUniformPtr pProjBind(new kore::BindUniform);
-    pProjBind->connect(pCamera->getShaderInput("projection Matrix").get(),
+    pProjBind->connect(pCamera->getShaderInput("projection Matrix"),
       pSimpleShader->getProgramLocation(),
       pSimpleShader->getUniformByName("projection"));
 
     kore::RenderMeshOpPtr pOp(new kore::RenderMesh);
     pOp->setCamera(pCamera);
-    pOp->setMesh(pTestMesh);
+    pOp->setMesh(pMeshComponent);
     pOp->setShader(pSimpleShader);
 
     kore::RenderManager::getInstance()->addOperation(pViewBind);
@@ -177,7 +180,7 @@ int main(void) {
     time = the_timer.timeSinceLastCall();
     kore::SceneManager::getInstance()->update();
     
-    rotationNode->rotate(90 * time, glm::vec3(0.0f, 0.0f, 1.0f));
+    rotationNode->rotate(90.0f * static_cast<float>(time), glm::vec3(0.0f, 0.0f, 1.0f));
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     kore::RenderManager::getInstance()->renderFrame();

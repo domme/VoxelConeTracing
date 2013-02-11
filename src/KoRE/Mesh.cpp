@@ -20,7 +20,7 @@
 #include <string>
 #include <vector>
 
-#include "KoRE/Components/Mesh.h"
+#include "KoRE/Mesh.h"
 #include "KoRE/ResourceManager.h"
 #include "KoRE/DataTypes.h"
 #include "KoRE/Log.h"
@@ -31,9 +31,7 @@ kore::Mesh::Mesh(void)
     _primitiveType(GL_TRIANGLES),
     _VAOloc(GLUINT_HANDLE_INVALID),
     _VBOloc(GLUINT_HANDLE_INVALID),
-    _IBOloc(GLUINT_HANDLE_INVALID),
-    SceneNodeComponent() {
-  _type = COMPONENT_MESH;
+    _IBOloc(GLUINT_HANDLE_INVALID) {
 }
 
 kore::Mesh::~Mesh(void) {
@@ -60,13 +58,8 @@ kore::Mesh::~Mesh(void) {
     }
 }
 
-bool kore::Mesh::isCompatibleWith(const kore::SceneNodeComponent&
-                                  otherComponent) const {
-  if (otherComponent.getType() != getType()) {
-    return false;
-  }
-  const kore::Mesh& otherMesh = static_cast<const kore::Mesh&>(otherComponent);
 
+bool kore::Mesh::isCompatibleWith(const Mesh& otherMesh) {
   if (_attributes.size() != otherMesh._attributes.size()) {
     return false;
   }
@@ -76,25 +69,23 @@ bool kore::Mesh::isCompatibleWith(const kore::SceneNodeComponent&
     const MeshAttributeArray& att = _attributes[iAtt];
 
     for (unsigned int iAttOther = 0; iAttOther < _attributes.size();
-                                                                ++iAttOther) {
-      const MeshAttributeArray& attOther = otherMesh._attributes[iAttOther];
+      ++iAttOther) {
+        const MeshAttributeArray& attOther = otherMesh._attributes[iAttOther];
 
-      bSameAttributes = attOther.type == att.type &&
-                        attOther.componentType == att.componentType &&
-                        attOther.name == att.name &&
-                        attOther.byteSize == att.byteSize &&
-                        attOther.numComponents == att.numComponents;
-      if (bSameAttributes)
-        break;
+        bSameAttributes = attOther.type == att.type &&
+          attOther.componentType == att.componentType &&
+          attOther.name == att.name &&
+          attOther.byteSize == att.byteSize &&
+          attOther.numComponents == att.numComponents;
+        if (bSameAttributes) {
+          break; 
+        }
     }
   }
 
   return bSameAttributes;
 }
 
-const kore::ShaderInputPtr kore::Mesh::getShaderInput(const std::string& name) const {
-  return ShaderInputPtr(NULL);
-}
 
 const bool kore::Mesh::usesVBO() const {
   return _VBOloc != GLUINT_HANDLE_INVALID;
@@ -155,7 +146,8 @@ const kore::MeshAttributeArray* kore::Mesh::
         return NULL;
 }
 
-void kore::Mesh::createAttributeBuffers(const kore::EMeshBufferType bufferType) {
+void kore::Mesh::
+createAttributeBuffers(const kore::EMeshBufferType bufferType) {
 
   if (_attributes.size() == 0) {
     Log::getInstance()->write("[ERROR] Can't create GL buffer objects for Mesh"
@@ -185,7 +177,7 @@ void kore::Mesh::createAttributeBuffers(const kore::EMeshBufferType bufferType) 
   // into the buffer
   uint byteOffset = 0;
   if (bufferType == BUFFERTYPE_SEQUENTIAL) {
-    for (int iAtt = 0; iAtt < _attributes.size(); ++iAtt) {
+    for (uint iAtt = 0; iAtt < _attributes.size(); ++iAtt) {
       MeshAttributeArray& rAttArray = _attributes[iAtt];
       uint attribArrayByteSize = rAttArray.byteSize *
                                (rAttArray.numValues / rAttArray.numComponents);
@@ -245,7 +237,7 @@ void kore::Mesh::createAttributeBuffers(const kore::EMeshBufferType bufferType) 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, uIBO);
 
     // TODO(dlazarek) implement other index-sizes (currently assumung a 
-    // byte-size of 4 for each element
+    // byte-size of 4 for each element)
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,
                  _indices.size() * 4,
                  &_indices[0],

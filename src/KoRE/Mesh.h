@@ -23,10 +23,8 @@
 #include <string>
 #include <vector>
 #include "KoRE/DataTypes.h"
-#include "KoRE/Components/SceneNodeComponent.h"
 
 namespace kore {
-
   enum EMeshBufferType {
     BUFFERTYPE_INTERLEAVED,
     BUFFERTYPE_SEQUENTIAL
@@ -55,16 +53,17 @@ namespace kore {
   };
   typedef std::shared_ptr<MeshAttributeArray> MeshAttributeArrayPtr;
 
-  class Mesh : public SceneNodeComponent {
+  class Mesh {
     friend class SceneLoader;
     friend class MeshLoader;
     friend class MeshRenderComponent;
 
   public:
     Mesh(void);
-    virtual ~Mesh(void);
-    virtual bool isCompatibleWith(const SceneNodeComponent& otherComponent) const;
-    virtual const ShaderInputPtr getShaderInput(const std::string& name) const;
+    ~Mesh(void);
+
+    bool isCompatibleWith(const Mesh& other);
+
     int getNumAttributes(void);
     const std::vector<kore::MeshAttributeArray>& getAttributes() const;
 

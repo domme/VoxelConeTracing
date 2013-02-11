@@ -45,6 +45,5 @@ namespace kore {
                                  // application (only valid for component-
                                  // uniforms.
   };
-  typedef std::shared_ptr<ShaderInput> ShaderInputPtr;
 };
 #endif  // CORE_INCLUDE_CORE_DATATYPES_H_

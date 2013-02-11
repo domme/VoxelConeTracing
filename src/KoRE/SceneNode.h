@@ -29,7 +29,6 @@
 namespace kore {
     typedef std::shared_ptr<SceneNode> SceneNodePtr;
     class SceneNode {
-    friend class MeshLoader;  // TODO(dlazarek) maybe not needed anymore
     friend class SceneLoader;
   public:
     SceneNode(void);

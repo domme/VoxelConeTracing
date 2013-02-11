@@ -21,7 +21,7 @@
 #define CORE_INCLUDE_CORE_RENDERMESHOP_H_
 
 #include "KoRE/Operations/Operation.h"
-#include "KoRE/Components/Mesh.h"
+#include "KoRE/Components/MeshComponent.h"
 #include "KoRE/Components/Camera.h"
 #include "KoRE/Shader.h"
 
@@ -29,7 +29,7 @@ namespace kore {
   class RenderMesh: public Operation {
   public:
     explicit RenderMesh(void);
-    explicit RenderMesh(const kore::MeshPtr& mesh,
+    explicit RenderMesh(const kore::MeshComponentPtr& mesh,
                           const kore::CameraPtr& camera,
                           const kore::ShaderPtr& shader);
 
@@ -38,8 +38,8 @@ namespace kore {
     virtual void update(void);
     virtual void reset(void);
 
-    const kore::MeshPtr& getMesh() const;
-    void setMesh(const kore::MeshPtr& mesh);
+    const kore::MeshComponentPtr& getMesh() const;
+    void setMesh(const kore::MeshComponentPtr& mesh);
 
     const kore::CameraPtr& getCamera() const;
     void setCamera(const kore::CameraPtr& camera);
@@ -48,7 +48,7 @@ namespace kore {
     void setShader(const kore::ShaderPtr& shader);
 
   private:
-    kore::MeshPtr _mesh;
+    kore::MeshComponentPtr _meshComponent;
 
     kore::CameraPtr _camera;
     kore::ShaderPtr _shader;

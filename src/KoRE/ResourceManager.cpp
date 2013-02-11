@@ -25,7 +25,7 @@
 #include "KoRE/MeshLoader.h"
 #include "KoRE/SceneLoader.h"
 #include "KoRE/Log.h"
-#include "KoRE/Components/Mesh.h"
+#include "KoRE/Components/MeshComponent.h"
 
 kore::ResourceManager* kore::ResourceManager::getInstance(void) {
   static kore::ResourceManager theInstance;
@@ -38,7 +38,8 @@ kore::ResourceManager::ResourceManager(void) {
 kore::ResourceManager::~ResourceManager(void) {
 }
 
-void kore::ResourceManager::loadScene(const std::string& filename, SceneNodePtr parent) {
+void kore::ResourceManager::loadScene(const std::string& filename,
+                                      SceneNodePtr parent) {
   kore::SceneLoader::getInstance()->loadScene(filename, parent);
 }
 
@@ -46,29 +47,53 @@ void kore::ResourceManager::loadResources(const std::string& filename) {
   kore::SceneLoader::getInstance()->loadRessources(filename);
 }
 
-void kore::ResourceManager::addMesh(const std::string& path, MeshPtr mesh) {
-  if (!hasKey(_meshes, path)) {
-    std::map<std::string, kore::MeshPtr> internalMap;
+void kore::ResourceManager::addMesh(const std::string& path,
+                                    MeshPtr mesh) {
+  if (!(_meshes.count(path) > 0)) {
+    InnerMeshMapT internalMap;
     _meshes[path] = internalMap;
   }
 
   _meshes[path][mesh->getName()] = mesh;
 }
 
-kore::MeshPtr kore::ResourceManager::getMesh(const std::string& path, const std::string& id) {
-  if (!hasKey(_meshes, path)) {
+void kore::ResourceManager::addCamera(const std::string& path,
+                                      kore::CameraPtr camera ) {
+  if (!(_cameras.count(path) > 0)) {
+    InnerResourceMapT internalMap;
+    _cameras[path] = internalMap;
+  }
+
+  _cameras[path][camera->getName()] = camera;
+}
+
+void kore::ResourceManager::addTexture(const std::string& path,
+                                       kore::TexturePtr texture) {
+  _textures[path] = texture;
+}
+
+kore::MeshPtr kore::ResourceManager::getMesh(const std::string& path,
+                                             const std::string& id) {
+  if (!(_meshes.count(path) > 0)) {
     return MeshPtr();  // NULL
   }
 
-  return _meshes[path][id];
+  return std::static_pointer_cast<kore::Mesh>(_meshes[path][id]);
 }
 
-bool kore::ResourceManager::hasKey(const ResourceMapT& map, const std::string& key) {
-   return map.count(key) > 0;
+kore::CameraPtr kore::ResourceManager::getCamera(const std::string& path,
+                                                 const std::string& id) {
+  if (!(_cameras.count(path) > 0)) {
+    return CameraPtr();  // NULL
+  }
+
+  return std::static_pointer_cast<kore::Camera>(_cameras[path][id]);
 }
 
-bool kore::ResourceManager::hasKey(const std::map<std::string,
-                                                  kore::MeshPtr>& map,
-                                   const std::string& key ) {
-  return map.count(key) > 0;
+kore::TexturePtr kore::ResourceManager::getTexture(const std::string& path) {
+  /*if(_textures.count(path) == 0) {
+    return TexturePtr();  // NULL
+  }
+  return _textures[path];*/
+  return (_textures.count(path) == 0)?TexturePtr():_textures[path];
 }
