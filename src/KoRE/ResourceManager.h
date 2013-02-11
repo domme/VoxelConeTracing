@@ -24,34 +24,34 @@
 #include <vector>
 #include <map>
 #include "KoRE/Common.h"
-#include "KoRE/Components/MeshComponent.h"
+#include "KoRE/Mesh.h"
 #include "KoRE/Components/Camera.h"
 #include "KoRE/Shader.h"
+#include "KoRE/Texture.h"
 #include "KoRE/SceneNode.h"
 #include "KoRE/SceneManager.h"
 
 
 namespace kore {
-  enum EImportOptions {
-    NO_OPTIONS = 0,
-    USE_BUFFERS = 0x00000001
-  };
-
   class ResourceManager {
   public:
     static ResourceManager *getInstance(void);
+
     // reads a scene file and creates all nodes and components within a scene graph
     void loadScene(const std::string& filename,
                                  SceneNodePtr parent =
                                  kore::SceneManager::getInstance()
                                  ->getRootNode());
+
     // adds all resources from a specific file
     void loadResources(const std::string& filename);
-    void addMesh(const std::string& path, MeshComponentPtr mesh);
-    void addCamera(const std::string& path, CameraPtr camera);
-    kore::MeshComponentPtr getMesh(const std::string& path, const std::string& id);
-    kore::CameraPtr getCamera(const std::string& path, const std::string& id);
 
+    void addMesh(const std::string& path, MeshPtr mesh);
+    void addCamera(const std::string& path, CameraPtr camera);
+    void addTexture(const std::string& path, TexturePtr texture);
+    kore::MeshPtr getMesh(const std::string& path, const std::string& id);
+    kore::CameraPtr getCamera(const std::string& path, const std::string& id);
+    kore::TexturePtr getTexture(const std::string& path);
 
   private:
     typedef std::map<std::string, kore::SceneNodeComponentPtr>
@@ -60,13 +60,18 @@ namespace kore {
     typedef std::map<std::string, InnerResourceMapT>
             OuterResourceMapT;
 
+    typedef std::map<std::string, kore::MeshPtr>
+            InnerMeshMapT;
+
+    typedef std::map<std::string, InnerMeshMapT>
+            OuterMeshMapT;
+
     ResourceManager(void);
     virtual ~ResourceManager(void);
-    bool hasKey(const OuterResourceMapT& map, const std::string& key);
-    bool hasKey(const InnerResourceMapT& map, const std::string& key);
 
-    OuterResourceMapT _meshes; // filepath, id, mesh
+    OuterMeshMapT _meshes; // filepath, id, mesh
     OuterResourceMapT _cameras; // filepath, id, camera
+    std::map<std::string, TexturePtr> _textures; // filepath, texture
     std::vector<kore::ShaderPtr> _shader;
   };
 };

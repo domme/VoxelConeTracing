@@ -45,66 +45,65 @@ kore::Camera::Camera()
         kore::SceneNodeComponent() {
 
   // setup bindings
-  ShaderInputPtr tmp = ShaderInputPtr(new ShaderInput());
-  
-  tmp->type = GL_FLOAT_MAT4;
-  tmp->name = "view Matrix";
-  tmp->data = glm::value_ptr(_matView);
-  _uniforms.push_back(tmp);
+  ShaderInput tmp;
+  tmp.type = GL_FLOAT_MAT4;
+  tmp.name = "view Matrix";
+  tmp.data = glm::value_ptr(_matView);
+  _shaderInputs.push_back(tmp);
 
-  tmp = ShaderInputPtr(new ShaderInput());
-  tmp->type = GL_FLOAT_MAT4;
-  tmp->name = "inverse view Matrix";
-  tmp->data = glm::value_ptr(_matViewInverse);
-  _uniforms.push_back(tmp);
+  tmp = ShaderInput();
+  tmp.type = GL_FLOAT_MAT4;
+  tmp.name = "inverse view Matrix";
+  tmp.data = glm::value_ptr(_matViewInverse);
+  _shaderInputs.push_back(tmp);
 
-  tmp = ShaderInputPtr(new ShaderInput());
-  tmp->type = GL_FLOAT_MAT4;
-  tmp->name = "projection Matrix";
-  tmp->data = glm::value_ptr(_matProjection);
-  _uniforms.push_back(tmp);
+  tmp = ShaderInput();
+  tmp.type = GL_FLOAT_MAT4;
+  tmp.name = "projection Matrix";
+  tmp.data = glm::value_ptr(_matProjection);
+  _shaderInputs.push_back(tmp);
 
-  tmp = ShaderInputPtr(new ShaderInput());
-  tmp->type = GL_FLOAT_MAT4;
-  tmp->name = "view projection Matrix";
-  tmp->data = glm::value_ptr(_matViewProj);
-  _uniforms.push_back(tmp);
+  tmp = ShaderInput();
+  tmp.type = GL_FLOAT_MAT4;
+  tmp.name = "view projection Matrix";
+  tmp.data = glm::value_ptr(_matViewProj);
+  _shaderInputs.push_back(tmp);
 
-  tmp = ShaderInputPtr(new ShaderInput());
-  tmp->type = GL_FLOAT;
-  tmp->name = "FOV degree";
-  tmp->data = &_fFovDeg;
-  _uniforms.push_back(tmp);
+  tmp = ShaderInput();
+  tmp.type = GL_FLOAT;
+  tmp.name = "FOV degree";
+  tmp.data = &_fFovDeg;
+  _shaderInputs.push_back(tmp);
 
-  tmp = ShaderInputPtr(new ShaderInput());
-  tmp->type = GL_FLOAT;
-  tmp->name = "near Plane";
-  tmp->data = &_fNear;
-  _uniforms.push_back(tmp);
+  tmp = ShaderInput();
+  tmp.type = GL_FLOAT;
+  tmp.name = "near Plane";
+  tmp.data = &_fNear;
+  _shaderInputs.push_back(tmp);
 
-  tmp = ShaderInputPtr(new ShaderInput());
-  tmp->type = GL_FLOAT;
-  tmp->name = "far Plane";
-  tmp->data = &_fFar;
-  _uniforms.push_back(tmp);
+  tmp = ShaderInput();
+  tmp.type = GL_FLOAT;
+  tmp.name = "far Plane";
+  tmp.data = &_fFar;
+  _shaderInputs.push_back(tmp);
 
-  tmp = ShaderInputPtr(new ShaderInput());
-  tmp->type = GL_FLOAT;
-  tmp->name = "focal length";
-  tmp->data = &_fFocalLength;
-  _uniforms.push_back(tmp);
+  tmp = ShaderInput();
+  tmp.type = GL_FLOAT;
+  tmp.name = "focal length";
+  tmp.data = &_fFocalLength;
+  _shaderInputs.push_back(tmp);
 
-  tmp = ShaderInputPtr(new ShaderInput());
-  tmp->type = GL_FLOAT;
-  tmp->name = "width";
-  tmp->data = &_fWidth;
-  _uniforms.push_back(tmp);
+  tmp = ShaderInput();
+  tmp.type = GL_FLOAT;
+  tmp.name = "width";
+  tmp.data = &_fWidth;
+  _shaderInputs.push_back(tmp);
 
-  tmp = ShaderInputPtr(new ShaderInput());
-  tmp->type = GL_FLOAT;
-  tmp->name = "height";
-  tmp->data = &_fHeight;
-  _uniforms.push_back(tmp);
+  tmp = ShaderInput();
+  tmp.type = GL_FLOAT;
+  tmp.name = "height";
+  tmp.data = &_fHeight;
+  _shaderInputs.push_back(tmp);
 
   _type = COMPONENT_CAMERA;
 }
@@ -163,13 +162,6 @@ glm::vec3 kore::Camera::getPosition() const {
     return glm::vec3(_matViewInverse[ 3 ]);
 }
 
-const kore::ShaderInputPtr kore::Camera::getShaderInput(const std::string& name) const {
-    for (uint i = 0; i < _uniforms.size(); ++i) {
-      if(_uniforms[i]->name == name ) return _uniforms[i];
-    }
-    return ShaderInputPtr(NULL);
-}
-
 void kore::Camera::setPosition(const glm::vec3& v3Pos) {
     // Directly set the position to the inverse view-matirx
     _matViewInverse[ 3 ] = glm::vec4(v3Pos, 1.0f);
@@ -190,7 +182,6 @@ void kore::Camera::setPosition(const glm::vec3& v3Pos) {
 
     paramsChanged();
 }
-
 
 void kore::Camera::setView(const glm::mat4& rNewMatView) {
     _matView = rNewMatView;

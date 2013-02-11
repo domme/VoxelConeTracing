@@ -17,44 +17,16 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CORE_INCLUDE_CORE_MESH_H_
-#define CORE_INCLUDE_CORE_MESH_H_
+#ifndef CORE_INCLUDE_CORE_MESHCOMPONENT_H_
+#define CORE_INCLUDE_CORE_MESHCOMPONENT_H_
 
 #include <string>
 #include <vector>
 #include "KoRE/DataTypes.h"
 #include "KoRE/Components/SceneNodeComponent.h"
+#include "KoRE/Mesh.h"
 
 namespace kore {
-
-  enum EMeshBufferType {
-    BUFFERTYPE_INTERLEAVED,
-    BUFFERTYPE_SEQUENTIAL
-  };
-
-  struct MeshAttributeArray {
-      MeshAttributeArray()
-        : name("undefined"),
-          type(0),
-          componentType(0),
-          numValues(0),
-          numComponents(0),
-          byteSize(0),
-          stride(0),
-          data(NULL) {}
-      std::string name;
-      GLenum type;              // e.g. GL_VEC3
-      GLenum componentType;     // e.g. GL_FLOAT
-      uint numValues;            // number of componentTypes (e.g. floats)
-      uint numComponents;        // number of components per vertex
-                                 // (3 for vec3)
-      uint byteSize;             // size in bytes of one attribute
-      uint stride;               // byte-offset between two successive elements
-      void* data;
-
-  };
-  typedef std::shared_ptr<MeshAttributeArray> MeshAttributeArrayPtr;
-
   class MeshComponent : public SceneNodeComponent {
     friend class SceneLoader;
     friend class MeshLoader;
@@ -63,36 +35,14 @@ namespace kore {
   public:
     MeshComponent(void);
     virtual ~MeshComponent(void);
-    virtual bool isCompatibleWith(const SceneNodeComponent& otherComponent) const;
-    virtual const ShaderInputPtr getShaderInput(const std::string& name) const;
-    int getNumAttributes(void);
-    const std::vector<kore::MeshAttributeArray>& getAttributes() const;
 
-    const kore::MeshAttributeArray*
-      getAttributeByName(const std::string& szName) const;
-
-    void createAttributeBuffers(const EMeshBufferType bufferType);
-
-    const std::vector<unsigned int>& getIndices() const;
-    const unsigned int getNumVertices() const;
-    const bool hasIndices() const;
-    const GLenum getPrimitiveType() const;
-    const std::string& getName() const;
-    const GLuint getVBO() const;
-    const GLuint getVAO() const;
-    const GLuint getIBO() const;
-    const bool usesVBO() const;
-    const bool usesIBO() const;
+    virtual bool
+    isCompatibleWith(const SceneNodeComponent& otherComponent) const;
+    inline const MeshPtr& getMesh() {return _mesh;}
+    void setMesh(MeshPtr& mesh);
 
   private:
-    std::string                     _name;
-    std::vector<MeshAttributeArray> _attributes;
-    std::vector<unsigned int>       _indices;
-    unsigned int                    _numVertices;
-    GLenum                          _primitiveType;
-    GLuint                          _VBOloc;
-    GLuint                          _VAOloc;
-    GLuint                          _IBOloc;
+    MeshPtr _mesh;
   };
   typedef std::shared_ptr<kore::MeshComponent> MeshComponentPtr;
 };

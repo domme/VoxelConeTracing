@@ -79,8 +79,7 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
                                        const aiScene* aiscene,
                                        const std::string& szScenePath) {
     SceneNodePtr node(new SceneNode);
-    node->getTransform()->_local =
-                                      glmMatFromAiMat(ainode->mTransformation);
+    node->getTransform()->setLocal(glmMatFromAiMat(ainode->mTransformation));
     node->_parent = parentNode;
     node->_dirty = true;
     node->_name = ainode->mName.C_Str();
@@ -113,14 +112,16 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
       const aiMesh* aimesh = aiscene->mMeshes[ainode->mMeshes[0]];
       std::string meshName = MeshLoader::getInstance()->
                                        getMeshName(aimesh, ainode->mMeshes[0]);
-      MeshComponentPtr mesh = ResourceManager::getInstance()->
+      MeshPtr mesh = ResourceManager::getInstance()->
                                                 getMesh(szScenePath, meshName);
-      node->_components.push_back(mesh);
+      MeshComponentPtr meshComponent(new MeshComponent);
+      meshComponent->setMesh(mesh);
+      node->_components.push_back(meshComponent);
 
     // Make additional copies for any more meshes
     for (uint iMesh = 1; iMesh < ainode->mNumMeshes; ++iMesh) {
       SceneNodePtr copyNode(new SceneNode);
-      copyNode->_transform->_local = glmMatFromAiMat(ainode->mTransformation);
+      copyNode->_transform->setLocal(glmMatFromAiMat(ainode->mTransformation));
       copyNode->_parent = parentNode;
       copyNode->_dirty = true;
       parentNode->_children.push_back(copyNode);
@@ -128,10 +129,11 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
       const aiMesh* aimesh = aiscene->mMeshes[ainode->mMeshes[iMesh]];
       std::string meshName = MeshLoader::getInstance()->
                                    getMeshName(aimesh, ainode->mMeshes[iMesh]);
-      MeshComponentPtr mesh = ResourceManager::getInstance()->
+      MeshPtr mesh = ResourceManager::getInstance()->
                                             getMesh(szScenePath, meshName);
-
-      copyNode->_components.push_back(mesh);
+      MeshComponentPtr meshComponent(new MeshComponent);
+      meshComponent->setMesh(mesh);
+      copyNode->_components.push_back(meshComponent);
     }
   }
 

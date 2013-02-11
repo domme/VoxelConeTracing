@@ -31,15 +31,17 @@ namespace kore {
     virtual ~Transform(void);
 
     bool isCompatibleWith(const SceneNodeComponent& otherComponent) const;
-    const ShaderInputPtr getShaderInput(const std::string& name) const;
 
-    glm::mat4 _global;
-    glm::mat4 _local;
+    void setGlobal(const glm::mat4& global);
+    void setLocal(const glm::mat4& local);
+
+    inline  const glm::mat4& getGlobal() {return _global;}
+    inline const glm::mat4& getLocal(void) {return _local;}
 
   private:
-    ShaderInputPtr _siglobal;
-    ShaderInputPtr _silocal;
+    glm::mat4 _global;
+    glm::mat4 _local;
   };
   typedef std::shared_ptr<kore::Transform> TransformPtr;
-};
+}
 #endif  // CORE_INCLUDE_CORE_TRANSFORM_H_

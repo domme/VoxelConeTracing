@@ -38,7 +38,6 @@ namespace kore {
 
   private:
     std::string _name;
-    std::vector<ShaderInput> _values;
   };
 };
 #endif  // CORE_INCLUDE_CORE_VALUES_H_

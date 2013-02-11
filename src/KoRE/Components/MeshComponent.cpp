@@ -26,232 +26,35 @@
 #include "KoRE/Log.h"
 
 
-kore::MeshComponent::MeshComponent(void)
-    : _numVertices(0),
-    _primitiveType(GL_TRIANGLES),
-    _VAOloc(GLUINT_HANDLE_INVALID),
-    _VBOloc(GLUINT_HANDLE_INVALID),
-    _IBOloc(GLUINT_HANDLE_INVALID),
-    SceneNodeComponent() {
+kore::MeshComponent::MeshComponent(void) 
+   : SceneNodeComponent() {
   _type = COMPONENT_MESH;
 }
 
 kore::MeshComponent::~MeshComponent(void) {
-    // Free all attribute-data.
-    // This has to be done more sophisticated in a future version
-    if (!usesVBO()) {  // In case of VBO, the data-pointers are already freed
-      for (unsigned int i = 0; i < _attributes.size(); ++i) {
-        if (_attributes[ i ].data) {
-          free(_attributes[ i ].data);
-        }
-      }
-    }
-
-    if (_IBOloc != GLUINT_HANDLE_INVALID) {
-      glDeleteBuffers(1, &_IBOloc);
-    }
-
-    if (_VBOloc != GLUINT_HANDLE_INVALID) {
-      glDeleteBuffers(1, &_VBOloc);
-    }
-
-    if(_VAOloc != GLUINT_HANDLE_INVALID) {
-      glDeleteBuffers(1, &_VAOloc);
-    }
 }
 
 bool kore::MeshComponent::isCompatibleWith(const kore::SceneNodeComponent&
-                                  otherComponent) const {
+                                           otherComponent) const {
   if (otherComponent.getType() != getType()) {
     return false;
   }
-  const kore::MeshComponent& otherMesh = static_cast<const kore::MeshComponent&>(otherComponent);
+  
+  const kore::MeshComponent& otherMeshComp = 
+    static_cast<const kore::MeshComponent&>(otherComponent);
 
-  if (_attributes.size() != otherMesh._attributes.size()) {
+  if ((_mesh == NULL && otherMeshComp._mesh != NULL) ||
+      (_mesh != NULL && otherMeshComp._mesh == NULL)) {
     return false;
   }
 
-  bool bSameAttributes = false;
-  for (unsigned int iAtt = 0; iAtt < _attributes.size(); ++iAtt) {
-    const MeshAttributeArray& att = _attributes[iAtt];
-
-    for (unsigned int iAttOther = 0; iAttOther < _attributes.size();
-                                                                ++iAttOther) {
-      const MeshAttributeArray& attOther = otherMesh._attributes[iAttOther];
-
-      bSameAttributes = attOther.type == att.type &&
-                        attOther.componentType == att.componentType &&
-                        attOther.name == att.name &&
-                        attOther.byteSize == att.byteSize &&
-                        attOther.numComponents == att.numComponents;
-      if (bSameAttributes) {
-        break; 
-      }
-    }
+  if (_mesh != NULL && otherMeshComp._mesh != NULL) {
+    return _mesh->isCompatibleWith(*otherMeshComp._mesh);
+  } else {
+    return true;
   }
-
-  return bSameAttributes;
 }
 
-const kore::ShaderInputPtr kore::MeshComponent::getShaderInput(const std::string& name) const {
-  return ShaderInputPtr(NULL);
-}
-
-const bool kore::MeshComponent::usesVBO() const {
-  return _VBOloc != GLUINT_HANDLE_INVALID;
-}
-
-const bool kore::MeshComponent::usesIBO() const {
-  return _IBOloc != GLUINT_HANDLE_INVALID;
-}
-
-const GLuint kore::MeshComponent::getVBO() const {
-  return _VBOloc;
-}
-
-const GLuint kore::MeshComponent::getVAO() const {
-  return _VAOloc;
-}
-
-const GLuint kore::MeshComponent::getIBO() const {
-  return _IBOloc;
-}
-
-int kore::MeshComponent::getNumAttributes(void) {
-  return _attributes.size();
-}
-
-const std::vector<kore::MeshAttributeArray>&
-kore::MeshComponent::getAttributes() const {
-    return _attributes;
-}
-
-const unsigned int kore::MeshComponent::getNumVertices() const {
-    return _numVertices;
-}
-
-const std::string& kore::MeshComponent::getName() const {
-    return _name;
-}
-
-const GLenum kore::MeshComponent::getPrimitiveType() const {
-    return _primitiveType;
-}
-
-const bool kore::MeshComponent::hasIndices() const {
-    return _indices.size() > 0;
-}
-
-const std::vector<unsigned int>& kore::MeshComponent::getIndices() const {
-    return _indices;
-}
-
-const kore::MeshAttributeArray* kore::MeshComponent::
-    getAttributeByName(const std::string& szName) const {
-        for (unsigned int i = 0; i < _attributes.size(); ++i) {
-            if (_attributes[i].name == szName) {
-                return &_attributes[i];
-            }
-        }
-        return NULL;
-}
-
-void kore::MeshComponent::createAttributeBuffers(const kore::EMeshBufferType bufferType) {
-
-  if (_attributes.size() == 0) {
-    Log::getInstance()->write("[ERROR] Can't create GL buffer objects for Mesh"
-                              "%s because it has no loaded attributes!",
-                              _name.c_str());
-    return;
-  }
-  
-  GLuint uVBO;
-  glGenBuffers(1, &uVBO);
-
-  // Determine byte-size needed for the VBO
-  uint uBufferSizeByte = 0;
-  for (uint iAtt = 0; iAtt < _attributes.size(); ++iAtt) {
-    MeshAttributeArray& rAttArray = _attributes[iAtt];
-    uBufferSizeByte += rAttArray.byteSize *
-                      (rAttArray.numValues / rAttArray.numComponents);
-  }
-
-  glBindBuffer(GL_ARRAY_BUFFER, uVBO);
-  glBufferData(GL_ARRAY_BUFFER,
-              (uBufferSizeByte),
-               NULL,
-               GL_STATIC_DRAW );
-
-  // In case of sequential layout: add all attribute arrays sequentially 
-  // into the buffer
-  uint byteOffset = 0;
-  if (bufferType == BUFFERTYPE_SEQUENTIAL) {
-    for (int iAtt = 0; iAtt < _attributes.size(); ++iAtt) {
-      MeshAttributeArray& rAttArray = _attributes[iAtt];
-      uint attribArrayByteSize = rAttArray.byteSize *
-                               (rAttArray.numValues / rAttArray.numComponents);
-
-      glBufferSubData(GL_ARRAY_BUFFER,
-                      byteOffset,
-                      attribArrayByteSize,
-                      rAttArray.data);
-
-      free(rAttArray.data);  // Delete the attribute-list
-      rAttArray.data = reinterpret_cast<void*>(byteOffset);  // Data now has the value of the offset in the 
-                           // VBO to this attribute list.
-                           // (always 0 for sequential layout)
-      rAttArray.stride = 0;
-      byteOffset += attribArrayByteSize;
-    }
-  } else if (bufferType == BUFFERTYPE_INTERLEAVED) {
-    uint stride = 0;
-    const uint numVertices = _numVertices;
-    for (uint iVert = 0; iVert < numVertices; ++iVert) {
-      stride = 0;
-      for(uint iAtt = 0; iAtt < _attributes.size(); ++iAtt) {
-        MeshAttributeArray& rAttArray = _attributes[iAtt];
-        stride += rAttArray.byteSize;
-        // Calculate the address of the current element.
-        // Note: We are assuming that every attribute consists of floats here
-        float* pDataPointer = static_cast<float*>(rAttArray.data);
-        pDataPointer = &pDataPointer[iVert * rAttArray.numComponents];
-
-        glBufferSubData(GL_ARRAY_BUFFER,
-                        byteOffset,
-                        rAttArray.byteSize,
-                        pDataPointer);
-        byteOffset += rAttArray.byteSize;
-      }  // End Attributes
-    }  // End Vertices
-
-    // Now loop through attributes again to delete the attribute list and set 
-    // the correct offset value.
-    uint offset = 0;
-    for(uint iAtt = 0; iAtt < _attributes.size(); ++iAtt) {
-      MeshAttributeArray& rAttArray = _attributes[iAtt];
-      free(rAttArray.data);
-      rAttArray.data = reinterpret_cast<void*>(offset);
-      rAttArray.stride = stride;
-      offset += rAttArray.byteSize;
-    }
-  }  // End Interleaved
-
-  _VBOloc = uVBO;
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-  // Load indices into IBO
-  if (_indices.size() > 0) {
-    GLuint uIBO;
-    glGenBuffers(1, &uIBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, uIBO);
-
-    // TODO(dlazarek) implement other index-sizes (currently assumung a 
-    // byte-size of 4 for each element
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                 _indices.size() * 4,
-                 &_indices[0],
-                 GL_STATIC_DRAW);
-    _IBOloc = uIBO;
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-  }
+void kore::MeshComponent::setMesh(MeshPtr& mesh) {
+  _mesh = mesh;
 }

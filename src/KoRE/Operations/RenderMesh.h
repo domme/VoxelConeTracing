@@ -48,7 +48,7 @@ namespace kore {
     void setShader(const kore::ShaderPtr& shader);
 
   private:
-    kore::MeshComponentPtr _mesh;
+    kore::MeshComponentPtr _meshComponent;
 
     kore::CameraPtr _camera;
     kore::ShaderPtr _shader;

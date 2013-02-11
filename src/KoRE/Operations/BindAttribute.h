@@ -39,10 +39,9 @@ namespace kore {
                  const MeshAttributeArray* meshAtt,
                  const ShaderInput* shaderAtt);
   private:
-    MeshComponentPtr _mesh;
+    MeshComponentPtr _meshComponent;
     const MeshAttributeArray* _meshAttPtr;
     const ShaderInput* _shaderInput;
-    
   };
   typedef std::shared_ptr<BindAttribute> BindAttributePtr;
 };

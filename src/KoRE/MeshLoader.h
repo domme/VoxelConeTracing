@@ -43,7 +43,7 @@ namespace kore {
                            const bool bUseBuffers);
     */
 
-    kore::MeshComponentPtr loadMesh(const aiScene* paiScene,
+    kore::MeshPtr loadMesh(const aiScene* paiScene,
                            const uint uMeshIdx);
 
     std::string getMeshName(const aiMesh* paiMesh,
@@ -62,23 +62,23 @@ namespace kore {
                        const bool bUseBuffers);
 
     void loadVertexPositions(const aiMesh* pAiMesh,
-                             kore::MeshComponentPtr& pMesh);
+                             kore::MeshPtr& pMesh);
 
     void loadVertexNormals(const aiMesh* pAiMesh,
-                           kore::MeshComponentPtr& pMesh);
+                           kore::MeshPtr& pMesh);
 
     void loadVertexTangents(const aiMesh* pAiMesh,
-                            kore::MeshComponentPtr& pMesh);
+                            kore::MeshPtr& pMesh);
 
     void loadFaceIndices(const aiMesh* pAiMesh,
-                         kore::MeshComponentPtr& pMesh);
+                         kore::MeshPtr& pMesh);
 
     void loadVertexTextureCoords(const aiMesh* pAiMesh,
-                                 kore::MeshComponentPtr& pMesh,
+                                 kore::MeshPtr& pMesh,
                                  const unsigned int iUVset);
 
     void loadVertexColors(const aiMesh* pAiMesh,
-                          kore::MeshComponentPtr& pMesh,
+                          kore::MeshPtr& pMesh,
                           const unsigned int iColorSet);
 
     glm::mat4 glmMatFromAiMat(const aiMatrix4x4& aiMat);

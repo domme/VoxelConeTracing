@@ -204,19 +204,24 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source Files\Texture.cpp" />
+    <ClCompile Include="src\KoRE\Components\TexturesComponent.cpp" />
     <ClCompile Include="src\KoRE\Loader\lodepng.cpp" />
+    <ClCompile Include="src\KoRE\Mesh.cpp" />
     <ClCompile Include="src\KoRE\TextureLoader.cpp" />
     <ClCompile Include="src\KoRE\Timer.cpp" />
+    <ClCompile Include="Texture.cpp" />
     <ClInclude Include="src\KoRE\Common.h" />
     <ClInclude Include="src\KoRE\Components\Camera.h" />
     <ClInclude Include="src\KoRE\Components\MeshComponent.h" />
     <ClInclude Include="src\KoRE\Components\SceneNodeComponent.h" />
+    <ClInclude Include="src\KoRE\Components\TexturesComponent.h" />
     <ClInclude Include="src\KoRE\Components\Transform.h" />
     <ClInclude Include="src\KoRE\Components\Values.h" />
     <ClInclude Include="src\KoRE\DataTypes.h" />
     <ClInclude Include="src\KoRE\Loader\lodepng.h" />
     <ClInclude Include="src\KoRE\Loader\TextureLoader.h" />
     <ClInclude Include="src\KoRE\Log.h" />
+    <ClInclude Include="src\KoRE\Mesh.h" />
     <ClInclude Include="src\KoRE\MeshLoader.h" />
     <ClInclude Include="src\KoRE\Operations\BindAttribute.h" />
     <ClInclude Include="src\KoRE\Operations\BindUniform.h" />

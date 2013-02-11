@@ -60,7 +60,7 @@ bool kore::SceneNode::isCompatibleWith(const SceneNode& otherNode) const {
 
 bool kore::SceneNode::isCompatibleWith(const SceneNode& otherNode,
                                        const EComponentType types) const {
-  // TODO(dominik) Implement multiple type comparison
+  // TODO(dospelt) Implement multiple type comparison
   return false;
 }
 
@@ -125,9 +125,10 @@ const bool kore::SceneNode::needsUpdate(void) const {
 void kore::SceneNode::update(void) {
   if (needsUpdate()) {
     if (_parent) {
-      _transform->_global = _parent->getTransform()->_global * _transform->_local;
+      _transform->setGlobal(_parent->getTransform()->getGlobal() *
+                            _transform->getLocal());
     } else {
-      _transform->_global = _transform->_local;
+      _transform->setGlobal(_transform->getLocal());
     }
   }
   for (unsigned int i = 0; i < _children.size(); i++) {
@@ -137,12 +138,12 @@ void kore::SceneNode::update(void) {
 }
 
 void kore::SceneNode::translate(const glm::vec3& dir) {
-  _transform->_local = glm::translate(_transform->_local, dir);
+  _transform->setLocal(glm::translate(_transform->getLocal(), dir));
   _dirty = true;
 }
 
 void kore::SceneNode::rotate(const GLfloat& angle, const glm::vec3& axis) {
-  _transform->_local = glm::rotate(_transform->_local, angle, axis);
+  _transform->setLocal(glm::rotate(_transform->getLocal(), angle, axis));
   _dirty = true;
 }
 

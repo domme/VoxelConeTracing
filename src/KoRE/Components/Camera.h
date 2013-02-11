@@ -72,7 +72,7 @@ class Camera : public SceneNodeComponent {
      glm::vec3 getSide() const;
      glm::vec3 getForward() const;
      glm::vec3 getUp() const;
-     const ShaderInputPtr getShaderInput(const std::string& name) const;
+     
      void      setPosition(const glm::vec3& v3Pos);
      void      moveForward(float fSpeed);
      void      moveSideways(float fSpeed);
@@ -128,7 +128,6 @@ class Camera : public SceneNodeComponent {
      void        rotateViewQuat(const float angle, const glm::vec3 v3Axis);
 
      std::string _name;
-     std::vector<ShaderInputPtr> _uniforms;
 };
 typedef std::shared_ptr<kore::Camera> CameraPtr;
 }
