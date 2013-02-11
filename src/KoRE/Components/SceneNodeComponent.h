@@ -44,6 +44,7 @@ namespace kore {
     virtual void attachTo(SceneNodePtr& node);
     const EComponentType getType(void) const;
 
+
     uint getID(void) const;
 
   protected:

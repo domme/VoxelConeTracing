@@ -54,17 +54,19 @@ namespace kore {
 
 
   private:
-    typedef std::map<std::string, std::map<std::string, kore::MeshPtr>>
-      ResourceMapT;
+    typedef std::map<std::string, kore::SceneNodeComponentPtr>
+            InnerResourceMapT;
+
+    typedef std::map<std::string, InnerResourceMapT>
+            OuterResourceMapT;
 
     ResourceManager(void);
     virtual ~ResourceManager(void);
-    bool hasKey(const ResourceMapT& map, const std::string& key);
-    bool hasKey(const std::map<std::string, kore::MeshPtr>& map,
-                const std::string& key);
+    bool hasKey(const OuterResourceMapT& map, const std::string& key);
+    bool hasKey(const InnerResourceMapT& map, const std::string& key);
 
-    ResourceMapT _meshes; // filepath, id, mesh
-    ResourceMapT _cameras; // filepath, id, camera
+    OuterResourceMapT _meshes; // filepath, id, mesh
+    OuterResourceMapT _cameras; // filepath, id, camera
     std::vector<kore::ShaderPtr> _shader;
   };
 };

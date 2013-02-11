@@ -84,8 +84,9 @@ bool kore::Mesh::isCompatibleWith(const kore::SceneNodeComponent&
                         attOther.name == att.name &&
                         attOther.byteSize == att.byteSize &&
                         attOther.numComponents == att.numComponents;
-      if (bSameAttributes)
-        break;
+      if (bSameAttributes) {
+        break; 
+      }
     }
   }
 

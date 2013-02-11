@@ -64,6 +64,13 @@
     <ClCompile Include="src\KoRE\Timer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\KoRE\Loader\lodepng.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KoRE\TextureLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Files\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\KoRE\Common.h">
@@ -133,6 +140,15 @@
       <Filter>Header Files\Loader</Filter>
     </ClInclude>
     <ClInclude Include="src\KoRE\Timer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\Loader\lodepng.h">
+      <Filter>Header Files\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\Loader\TextureLoader.h">
+      <Filter>Header Files\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\Texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

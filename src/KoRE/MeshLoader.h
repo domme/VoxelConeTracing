@@ -50,6 +50,9 @@ namespace kore {
     std::string getMeshName(const aiMesh* paiMesh,
                             const uint uMeshIdx);
 
+    std::string getCameraName(const aiCamera* paiCamera,
+                              const uint uSceneCameraIdx);
+
   private:
     MeshLoader();
     const aiScene* readScene(const std::string& szScenePath);
@@ -80,7 +83,6 @@ namespace kore {
                           const unsigned int iColorSet);
 
     glm::mat4 glmMatFromAiMat(const aiMatrix4x4& aiMat);
-
     Assimp::Importer _aiImporter;
   };
 };

@@ -34,34 +34,38 @@ class Camera : public SceneNodeComponent {
  public:
      Camera();
      virtual ~Camera();
-     virtual bool isCompatibleWith(const SceneNodeComponent& otherComponent) const;
+     virtual bool
+     isCompatibleWith(const SceneNodeComponent& otherComponent) const;
 
-     const glm::mat4&  getView() const           {return _matView;}
-     const glm::mat4&  getProjection() const     {return _matProjection;}
-     const glm::mat4   getViewProjection() const {return _matViewProj;}
+     inline const std::string& getName() const {return _name;}
+     inline void setName(const std::string& name) {_name = name;}
 
-     glm::mat4 const   getViewInvT() const
+     inline const glm::mat4&  getView() const           {return _matView;}
+     inline const glm::mat4&  getProjection() const     {return _matProjection;}
+     inline const glm::mat4   getViewProjection() const {return _matViewProj;}
+
+     inline glm::mat4 const   getViewInvT() const
      {return glm::transpose(glm::inverse(_matView));}
 
-     glm::mat4 const   getViewInv() const
+     inline glm::mat4 const   getViewInv() const
      {return glm::inverse(_matView);}
 
-     glm::mat4 const   getViewInvInvT() const
+     inline glm::mat4 const   getViewInvInvT() const
      {return glm::inverse(getViewInvT());}
 
-     glm::mat4 const   getViewT() const
+     inline glm::mat4 const   getViewT() const
      {return glm::transpose(_matView);}
 
-     void              setFarPlane(float fFar) {_fFar = fFar;}
-     float             getFarPlane() const       {return _fFar;}
-     float             getNearPlane() const      {return _fNear;}
+     inline void              setFarPlane(float fFar) {_fFar = fFar;}
+     inline float             getFarPlane() const       {return _fFar;}
+     inline float             getNearPlane() const      {return _fNear;}
 
-     float             getFovRad() const
+     inline float             getFovRad() const
      {return glm::radians(_fFovDeg);}
 
-     float             getFovDeg() const         {return _fFovDeg;}
+     inline float             getFovDeg() const         {return _fFovDeg;}
 
-     float             getAspectRatio() const
+     inline float             getAspectRatio() const
      {return _fWidth / _fHeight;}
 
      glm::vec3 getPosition() const;
@@ -123,6 +127,7 @@ class Camera : public SceneNodeComponent {
      void        paramsChanged();
      void        rotateViewQuat(const float angle, const glm::vec3 v3Axis);
 
+     std::string _name;
      std::vector<ShaderInputPtr> _uniforms;
 };
 typedef std::shared_ptr<kore::Camera> CameraPtr;

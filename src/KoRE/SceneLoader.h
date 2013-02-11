@@ -49,6 +49,8 @@ namespace kore {
                         const aiScene* aiscene,
                         const std::string& szScenePath);
     glm::mat4 glmMatFromAiMat(const aiMatrix4x4& aiMat) const;
+    std::string getCameraName(const aiCamera* pAiCamera,
+                              const uint uCameraSceneIndex);
     Assimp::Importer _aiImporter;
   };
 };
