@@ -208,7 +208,6 @@
     <ClCompile Include="src\KoRE\Mesh.cpp" />
     <ClCompile Include="src\KoRE\TextureLoader.cpp" />
     <ClCompile Include="src\KoRE\Timer.cpp" />
-    <ClCompile Include="Texture.cpp" />
     <ClInclude Include="src\KoRE\Common.h" />
     <ClInclude Include="src\KoRE\Components\Camera.h" />
     <ClInclude Include="src\KoRE\Components\MeshComponent.h" />
