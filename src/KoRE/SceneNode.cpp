@@ -124,6 +124,10 @@ void kore::SceneNode::addChild(const SceneNodePtr& child) {
   _children.push_back(child);
 }
 
+void kore::SceneNode::addComponent(const SceneNodeComponentPtr& component) {
+  _components.push_back(component);
+}
+
 void kore::SceneNode::setTag(const std::string& tagname) {
   _tag = kore::SceneManager::getInstance()->getTag(tagname);
 }

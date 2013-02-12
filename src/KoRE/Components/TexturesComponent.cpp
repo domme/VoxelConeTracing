@@ -1,5 +1,10 @@
 #include "KoRE/Components/TexturesComponent.h"
 
+kore::TexturesComponent::TexturesComponent(void) {
+}
+
+kore::TexturesComponent::~TexturesComponent(void) {
+}
 bool kore::TexturesComponent::
 isCompatibleWith(const SceneNodeComponent& otherComponent) const {
   if(otherComponent.getType() != _type) {

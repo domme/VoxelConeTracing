@@ -8,7 +8,7 @@
 #include "KoRE/Components/Transform.h"
 #include "KoRE/Components/Camera.h"
 
-kore::SceneLoader* kore::SceneLoader::getInstance(){
+kore::SceneLoader* kore::SceneLoader::getInstance() {
   static SceneLoader instance;
   return &instance;
 }

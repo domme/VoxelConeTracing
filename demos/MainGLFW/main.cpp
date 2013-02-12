@@ -32,6 +32,7 @@
 
 #include "KoRE/Shader.h"
 #include "KoRE/Components/MeshComponent.h"
+#include "KoRE/Components/TexturesComponent.h"
 #include "KoRE/Operations/RenderMesh.h"
 #include "KoRE/Operations/BindAttribute.h"
 #include "KoRE/Operations/BindUniform.h"
@@ -104,6 +105,9 @@ int main(void) {
                             GL_FRAGMENT_SHADER);
   pSimpleShader->initShader();
 
+  kore::ResourceManager::getInstance()->loadTexture("./assets/textures/checkerboard.png");
+
+
   kore::CameraPtr pCamera(new kore::Camera);
   pCamera->setView(glm::lookAt(glm::vec3(19.0f, 13.0f, -17.4f),
     glm::vec3(0.0f, 0.0f, 0.0f),
@@ -114,7 +118,6 @@ int main(void) {
   // TODO(dospelt) whole scene loading with all components
   kore::ResourceManager::getInstance()->
                             loadScene("./assets/meshes/TestEnv.dae");
-  kore::SceneManager* pScene = kore::SceneManager::getInstance();
 
   std::vector<kore::SceneNodePtr> vRenderNodes;
   kore::SceneManager::getInstance()->
@@ -124,6 +127,13 @@ int main(void) {
     kore::MeshComponentPtr pMeshComponent =
       std::static_pointer_cast<kore::MeshComponent>
       (vRenderNodes[i]->getComponent(kore::COMPONENT_MESH));
+
+    // Add Texture
+    kore::TexturesComponentPtr tcp =
+        kore::TexturesComponentPtr(new kore::TexturesComponent());
+    tcp->addTexture(kore::ResourceManager::getInstance()
+       ->getTexture("./assets/textures/checkerboard.png"));
+    vRenderNodes[i]->addComponent(tcp);
 
     // Bind Attribute-Ops
     kore::BindAttributePtr pPosAttBind (new kore::BindAttribute);
@@ -135,6 +145,11 @@ int main(void) {
     pNormAttBind->connect(pMeshComponent,
       pMeshComponent->getMesh()->getAttributeByName("v_normal"),
       pSimpleShader->getAttributeByName("v_normal"));
+
+    kore::BindAttributePtr pUVAttBind (new kore::BindAttribute);
+    pUVAttBind->connect(pMeshComponent,
+      pMeshComponent->getMesh()->getAttributeByName("v_uv0"),
+      pSimpleShader->getAttributeByName("v_uv0"));
 
     // Bind Uniform-Ops
     kore::BindUniformPtr pModelBind(new kore::BindUniform);
@@ -162,13 +177,15 @@ int main(void) {
     kore::RenderManager::getInstance()->addOperation(pProjBind);
     kore::RenderManager::getInstance()->addOperation(pPosAttBind);
     kore::RenderManager::getInstance()->addOperation(pNormAttBind);
+    kore::RenderManager::getInstance()->addOperation(pUVAttBind);
     kore::RenderManager::getInstance()->addOperation(pOp);
   }
 
   glClearColor(1.0f,1.0f,1.0f,1.0f);
 
   std::vector<kore::SceneNodePtr> vBigCubeNodes;
-  pScene->getSceneNodesByName("Cube", vBigCubeNodes);
+  kore::SceneManager::getInstance()->
+      getSceneNodesByName("Cube", vBigCubeNodes);
   rotationNode = vBigCubeNodes[0];
 
   kore::Timer the_timer;

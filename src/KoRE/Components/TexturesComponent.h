@@ -52,6 +52,7 @@ namespace kore {
     uint _numTextures;
     std::vector<GLuint> _sampler;
   };
+  typedef std::shared_ptr<kore::TexturesComponent> TexturesComponentPtr;
 }
 
 #endif  // KORE_COMPONENTS_TEXTURESCOMPONENT

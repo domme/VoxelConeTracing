@@ -91,13 +91,15 @@ kore::MeshPtr
     // Load all texture coord-sets
     unsigned int iUVset = 0;
     while (pAiMesh->HasTextureCoords(iUVset)) {
-        loadVertexTextureCoords(pAiMesh, pMesh, iUVset++);
+        loadVertexTextureCoords(pAiMesh, pMesh, iUVset);
+        ++iUVset;
     }
 
     // Load all vertex color sets
     unsigned int iColorSet = 0;
     while (pAiMesh->HasVertexColors(iColorSet)) {
-        loadVertexColors(pAiMesh, pMesh, iColorSet++);
+        loadVertexColors(pAiMesh, pMesh, iColorSet);
+        ++iColorSet;
     }
 
     if (pAiMesh->HasFaces()) {
@@ -128,7 +130,7 @@ void kore::MeshLoader::
     unsigned int allocSize = pAiMesh->mNumVertices * 3 * 4;
     void* pVertexData = malloc(allocSize);
     memcpy(pVertexData, pAiMesh->mVertices,
-           allocSize);
+      allocSize);
 
     kore::MeshAttributeArray att;
     att.name = "v_position";

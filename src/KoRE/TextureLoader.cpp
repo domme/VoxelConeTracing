@@ -24,6 +24,11 @@
 #include "KoRE/Texture.h"
 
 
+kore::TextureLoader* kore::TextureLoader::getInstance() {
+  static TextureLoader instance;
+  return &instance;
+}
+
 void kore::TextureLoader::loadTexture(const std::string& filepath) {
 
   std::vector<unsigned char> imageData;
@@ -43,7 +48,7 @@ void kore::TextureLoader::loadTexture(const std::string& filepath) {
                                     filepath,
                                     lodepng_error_text(err));
   } else {
-    kore::TexturePtr tex;
+    kore::TexturePtr tex = TexturePtr(new Texture());
     LodePNGColorMode& color = pngState.info_raw;
 
     tex->_xres = width;
@@ -63,5 +68,16 @@ void kore::TextureLoader::loadTexture(const std::string& filepath) {
                    GL_RGBA,
                    GL_UNSIGNED_BYTE,
                    reinterpret_cast<GLvoid*>(&imageData[0]));
+    ResourceManager::getInstance()->addTexture(filepath, tex);
   }
+}
+
+kore::TextureLoader::~TextureLoader( void )
+{
+
+}
+
+kore::TextureLoader::TextureLoader( void )
+{
+
 }

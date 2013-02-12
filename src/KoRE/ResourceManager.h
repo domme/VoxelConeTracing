@@ -46,6 +46,9 @@ namespace kore {
     // adds all resources from a specific file
     void loadResources(const std::string& filename);
 
+    // load a single texture
+    void loadTexture(const std::string& filename);
+
     void addMesh(const std::string& path, MeshPtr mesh);
     void addCamera(const std::string& path, CameraPtr camera);
     void addTexture(const std::string& path, TexturePtr texture);

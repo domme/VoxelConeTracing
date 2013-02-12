@@ -41,7 +41,7 @@ class Camera : public SceneNodeComponent {
      inline void setName(const std::string& name) {_name = name;}
 
      inline const glm::mat4&  getView() const           {return _matView;}
-     inline const glm::mat4&  getProjection() const     {return _matProjection;}
+     inline const glm::mat4&  getProjection() const   {return _matProjection;}
      inline const glm::mat4   getViewProjection() const {return _matViewProj;}
 
      inline glm::mat4 const   getViewInvT() const

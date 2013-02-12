@@ -2,8 +2,13 @@
 out vec4 out_color;
 
 smooth in vec3 normal;
+in vec3 UV;
+uniform sampler2D tex;
 
 void main(void)
 {
-	out_color = vec4( normal, 1.0 );
+	// very basic lighting
+	vec3 dir_light = vec3(0, 1, -0.5);
+	float test = max(dot(normal, normalize(dir_light)), 0);
+	out_color = vec4(UV.x, UV.y, UV.z, 1) * test; // texture coming soon, UV has to be used in order to be present in active shader attributes
 }

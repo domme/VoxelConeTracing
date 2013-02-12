@@ -76,6 +76,9 @@
     <ClCompile Include="src\KoRE\Mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\KoRE\Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\KoRE\Common.h">

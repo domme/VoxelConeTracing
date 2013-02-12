@@ -24,6 +24,7 @@
 #include "KoRE/ResourceManager.h"
 #include "KoRE/MeshLoader.h"
 #include "KoRE/SceneLoader.h"
+#include "KoRE/Loader/TextureLoader.h"
 #include "KoRE/Log.h"
 #include "KoRE/Components/MeshComponent.h"
 
@@ -47,9 +48,13 @@ void kore::ResourceManager::loadResources(const std::string& filename) {
   kore::SceneLoader::getInstance()->loadRessources(filename);
 }
 
+void kore::ResourceManager::loadTexture(const std::string& filename) {
+  kore::TextureLoader::getInstance()->loadTexture(filename);
+}
+
 void kore::ResourceManager::addMesh(const std::string& path,
                                     MeshPtr mesh) {
-  if ((!_meshes.count(path) > 0)) {
+  if (!(_meshes.count(path) > 0)) {
     InnerMeshMapT internalMap;
     _meshes[path] = internalMap;
   }

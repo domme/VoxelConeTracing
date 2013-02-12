@@ -6,9 +6,11 @@
 namespace kore {
   class TextureLoader {
   public:
-    explicit TextureLoader(void);
+    static TextureLoader* getInstance();
     ~TextureLoader(void);
     void loadTexture(const std::string& filepath);
+  private:
+    TextureLoader(void);
   };
 }
 
