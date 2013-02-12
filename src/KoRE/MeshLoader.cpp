@@ -36,7 +36,6 @@ kore::MeshLoader::MeshLoader() {
 kore::MeshLoader::~MeshLoader() {
 }
 
-
 const aiScene* kore::MeshLoader::readScene(const std::string& szScenePath) {
   const aiScene* pAiScene = _aiImporter.ReadFile(szScenePath,
       aiProcess_JoinIdenticalVertices | aiProcess_Triangulate);
@@ -56,49 +55,6 @@ const aiScene* kore::MeshLoader::readScene(const std::string& szScenePath) {
   }
   return pAiScene;
 }
-
-/*
-kore::MeshPtr
-kore::MeshLoader::loadSingleMesh(const std::string& szMeshPath,
-                                 const bool bUseBuffers) {
-    const aiScene* pAiScene = readScene(szMeshPath);
-
-    if (!pAiScene) {
-        return MeshPtr(NULL);
-    }
-
-    if (pAiScene->mNumMeshes > 1) {
-        Log::getInstance()->write("[WARNING] Mesh file contains more than"
-                                  "one mesh but it is"
-                                  "loaded as a single mesh: %s",
-                                  szMeshPath.c_str());
-    }
-
-    return loadMesh(pAiScene, 0, bUseBuffers);
-}
-*/
-
-/*
-kore::SceneNodePtr
-kore::MeshLoader::loadScene(const std::string& szScenePath,
-                            const bool bUseBuffers) {
-  const aiScene* pAiScene = readScene(szScenePath);
-
-  if (!pAiScene) {
-    return SceneNodePtr(NULL);
-  }
-
-  SceneNodePtr koreSceneRootNode(new SceneNode);
-  koreSceneRootNode->_name =
-      szScenePath.substr(szScenePath.find_last_of("/")+1);
-  // Load scene nodes recursively and return:
-  loadChildNode(pAiScene,
-                pAiScene->mRootNode,
-                koreSceneRootNode,
-                bUseBuffers);
-  return koreSceneRootNode;
-}
-*/
 
 void kore::MeshLoader::loadChildNode(const aiScene* paiScene,
                                      const aiNode* paiNode,
@@ -134,14 +90,14 @@ kore::MeshPtr
 
     // Load all texture coord-sets
     unsigned int iUVset = 0;
-    while (pAiMesh->HasTextureCoords(iUVset++)) {
-        loadVertexTextureCoords(pAiMesh, pMesh, iUVset);
+    while (pAiMesh->HasTextureCoords(iUVset)) {
+        loadVertexTextureCoords(pAiMesh, pMesh, iUVset++);
     }
 
     // Load all vertex color sets
     unsigned int iColorSet = 0;
-    while (pAiMesh->HasVertexColors(iColorSet++)) {
-        loadVertexColors(pAiMesh, pMesh, iColorSet);
+    while (pAiMesh->HasVertexColors(iColorSet)) {
+        loadVertexColors(pAiMesh, pMesh, iColorSet++);
     }
 
     if (pAiMesh->HasFaces()) {
@@ -274,8 +230,11 @@ void kore::MeshLoader::
   loadVertexTextureCoords(const aiMesh* pAiMesh,
                            kore::MeshPtr& pMesh,
                            unsigned int iUVset) {
+  // Note(dospelt) assimp imports always vec3 texcoords
+  // TODO(dospelt) check which coordinates are used with
+  // pAiMesh->mNumUVComponents[i] and adapt the MeshAttributeArray
   unsigned int allocSize =
-    pAiMesh->mNumVertices * 4 * pAiMesh->GetNumUVChannels();
+    pAiMesh->mNumVertices *12; //size of vec3
   void* pVertexData = malloc(allocSize);
   memcpy(pVertexData, pAiMesh->mTextureCoords[iUVset], allocSize);
 
@@ -283,10 +242,10 @@ void kore::MeshLoader::
   char szNameBuf[20];
   sprintf(szNameBuf, "v_uv%i", iUVset);
   att.name = std::string(&szNameBuf[0]);
-  att.numValues = pAiMesh->mNumVertices * pAiMesh->GetNumUVChannels();
-  att.numComponents = pAiMesh->GetNumUVChannels();
+  att.numValues = pAiMesh->mNumVertices * 3;
+  att.numComponents = 3;
 
-  if (pAiMesh->GetNumUVChannels() == 2) {
+  /*if (pAiMesh->GetNumUVChannels() == 2) {
     att.type = GL_FLOAT_VEC2;
   } else if (pAiMesh->GetNumUVChannels() == 3) {
       att.type = GL_FLOAT_VEC3;
@@ -296,8 +255,8 @@ void kore::MeshLoader::
                               pMesh->getName().c_str());
     free(pVertexData);
     return;
-  }
-
+  }*/
+  att.type = GL_FLOAT_VEC3;
   att.componentType = GL_FLOAT;
   att.byteSize = kore::DatatypeUtil::getSizeFromGLdatatype(att.type);
   att.data = pVertexData;

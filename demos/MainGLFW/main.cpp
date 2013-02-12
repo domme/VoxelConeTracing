@@ -111,10 +111,9 @@ int main(void) {
   pCamera->setProjectionPersp(60.0f, 800.0f, 600.0f, 1.0f, 100.0f);
 
   // load resources
-  // the new way...
   // TODO(dospelt) whole scene loading with all components
   kore::ResourceManager::getInstance()->
-                            loadScene("./assets/meshes/Test_LightCamera.dae");
+                            loadScene("./assets/meshes/TestEnv.dae");
   kore::SceneManager* pScene = kore::SceneManager::getInstance();
 
   std::vector<kore::SceneNodePtr> vRenderNodes;
@@ -126,7 +125,6 @@ int main(void) {
       std::static_pointer_cast<kore::MeshComponent>
       (vRenderNodes[i]->getComponent(kore::COMPONENT_MESH));
 
-    // Bind Uniform-Ops
     // Bind Attribute-Ops
     kore::BindAttributePtr pPosAttBind (new kore::BindAttribute);
     pPosAttBind->connect(pMeshComponent,
@@ -138,6 +136,7 @@ int main(void) {
       pMeshComponent->getMesh()->getAttributeByName("v_normal"),
       pSimpleShader->getAttributeByName("v_normal"));
 
+    // Bind Uniform-Ops
     kore::BindUniformPtr pModelBind(new kore::BindUniform);
     pModelBind->connect(vRenderNodes[i]->getTransform()->getShaderInput("model Matrix"),
       pSimpleShader->getProgramLocation(),
@@ -169,7 +168,7 @@ int main(void) {
   glClearColor(1.0f,1.0f,1.0f,1.0f);
 
   std::vector<kore::SceneNodePtr> vBigCubeNodes;
-  pScene->getSceneNodesByName("BigCube", vBigCubeNodes);
+  pScene->getSceneNodesByName("Cube", vBigCubeNodes);
   rotationNode = vBigCubeNodes[0];
 
   kore::Timer the_timer;

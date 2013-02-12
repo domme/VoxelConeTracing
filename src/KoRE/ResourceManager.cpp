@@ -49,7 +49,7 @@ void kore::ResourceManager::loadResources(const std::string& filename) {
 
 void kore::ResourceManager::addMesh(const std::string& path,
                                     MeshPtr mesh) {
-  if (!(_meshes.count(path) > 0)) {
+  if ((!_meshes.count(path) > 0)) {
     InnerMeshMapT internalMap;
     _meshes[path] = internalMap;
   }

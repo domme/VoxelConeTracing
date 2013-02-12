@@ -26,10 +26,10 @@
 namespace kore {
   enum EComponentType {
     COMPONENT_UNKNOWN     = 0,
-    COMPONENT_TRANSFORM   = 0 << 1,
-    COMPONENT_MESH        = 0 << 2,
-    COMPONENT_CAMERA      = 0 << 3,
-    COMPONENT_VALUES      = 0 << 4
+    COMPONENT_TRANSFORM   = 1 << 0,
+    COMPONENT_MESH        = 1 << 1,
+    COMPONENT_CAMERA      = 1 << 2,
+    COMPONENT_VALUES      = 1 << 3
   };
 
   class SceneNode;
