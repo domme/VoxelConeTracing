@@ -70,12 +70,10 @@
     <ClCompile Include="src\KoRE\Components\MeshComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source Files\Texture.cpp">
+    <ClCompile Include="src\KoRE\Components\TexturesComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\KoRE\Mesh.cpp" />
-    <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="src\KoRE\Components\TexturesComponent.cpp">
+    <ClCompile Include="src\KoRE\Mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
