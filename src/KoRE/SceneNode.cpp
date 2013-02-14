@@ -126,6 +126,7 @@ void kore::SceneNode::addChild(const SceneNodePtr& child) {
 
 void kore::SceneNode::addComponent(const SceneNodeComponentPtr& component) {
   _components.push_back(component);
+  component->attachTo(SceneNodePtr(this));
 }
 
 void kore::SceneNode::setTag(const std::string& tagname) {
@@ -148,24 +149,98 @@ void kore::SceneNode::update(void) {
     } else {
       _transform->setGlobal(_transform->getLocal());
     }
+    for (uint iComp = 0; iComp < _components.size(); ++iComp) {
+      _components[iComp]->transformChanged(_transform);
+    }
   }
-  for (unsigned int i = 0; i < _children.size(); i++) {
+  for (unsigned int i = 0; i < _children.size(); ++i) {
     _children[i]->update();
   }
   _dirty = false;
 }
 
-void kore::SceneNode::translate(const glm::vec3& dir) {
-  _transform->setLocal(glm::translate(_transform->getLocal(), dir));
+ 
+void
+ kore::SceneNode::translate(const glm::vec3& dir,
+                          const ETransfpomSpace relativeTo /*=SPACE_LOCAL*/) {
+  if (relativeTo == SPACE_WORLD) {
+    glm::vec4 v4Dir(dir, 0.0f);
+    v4Dir = glm::inverse(_transform->getGlobal()) * v4Dir;
+    _transform->setLocal(glm::translate(_transform->getLocal(),
+                                        glm::vec3(v4Dir)));
+  } else {
+    _transform->setLocal(glm::translate(_transform->getLocal(), dir));
+  }
+
   _dirty = true;
 }
 
-void kore::SceneNode::rotate(const GLfloat& angle, const glm::vec3& axis) {
-  _transform->setLocal(glm::rotate(_transform->getLocal(), angle, axis));
+void kore::SceneNode::
+  setTranslation(const glm::vec3& position,
+                 const ETransfpomSpace relativeTo /*= SPACE_LOCAL*/) {
+   glm::mat4 local = _transform->getLocal();
+  if (relativeTo == SPACE_WORLD) {
+    glm::vec3 localPos = glm::vec3(glm::inverse(_transform->getGlobal()) *
+                                   glm::vec4(position, 1.0f));
+    local[3] = glm::vec4(localPos, 1.0f);
+  } else {
+    local[3] = glm::vec4(position, 1.0f);
+  }
+  _transform->setLocal(local);
   _dirty = true;
 }
 
-void kore::SceneNode::scale(const glm::vec3& dim) {
+
+
+void kore::SceneNode::rotate(const GLfloat& angle, const glm::vec3& axis,
+                          const ETransfpomSpace relativeTo /*=SPACE_LOCAL*/) {
+   if (relativeTo == SPACE_WORLD) {
+    glm::vec4 v4Axis(axis, 0.0f);
+    v4Axis = glm::inverse(_transform->getGlobal()) * v4Axis;
+    _transform->setLocal(glm::rotate(_transform->getLocal(),
+                                      angle,
+                                      glm::vec3(v4Axis)));
+   } else {
+     _transform->setLocal(glm::rotate(_transform->getLocal(), angle, axis));
+   }
+
+  _dirty = true;
+}
+
+// TODO(dlazarek): Implement space-changes
+void kore::SceneNode::scale(const glm::vec3& dim,
+                          const ETransfpomSpace relativeTo /*=SPACE_LOCAL*/) {
+  _dirty = true;
+}
+
+void kore::SceneNode::setOrientation(const glm::vec3& v3Side,
+                                     const glm::vec3& v3Up,
+                                     const glm::vec3& v3Forward,
+                        const ETransfpomSpace relativeTo /*= SPACE_LOCAL*/ ) {
+  glm::mat4 newMat;
+  if (relativeTo == SPACE_WORLD) {
+    glm::mat4 matGlobalI =
+      glm::inverse(_transform->getGlobal());
+
+    glm::vec3 localSide =
+      glm::normalize(glm::vec3(matGlobalI * glm::vec4(v3Side, 0.0f)));
+
+    glm::vec3 localUp =
+      glm::normalize(glm::vec3(matGlobalI * glm::vec4(v3Up, 0.0f)));
+
+    glm::vec3 localForward =
+      glm::normalize(glm::vec3(matGlobalI * glm::vec4(v3Forward, 0.0f)));
+
+    newMat[0] = glm::vec4(localSide, newMat[0][3]);
+    newMat[1] = glm::vec4(localUp, newMat[1][3]);
+    newMat[2] = glm::vec4(localForward, newMat[2][3]);
+
+  } else {
+    newMat[0] = glm::vec4(v3Side, newMat[0][3]);
+    newMat[1] = glm::vec4(v3Up, newMat[1][3]);
+    newMat[2] = glm::vec4(v3Forward, newMat[2][3]);
+  }
+  _transform->setLocal(newMat);
   _dirty = true;
 }
 

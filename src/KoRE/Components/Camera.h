@@ -37,6 +37,11 @@ class Camera : public SceneNodeComponent {
      virtual bool
      isCompatibleWith(const SceneNodeComponent& otherComponent) const;
 
+     /** This method is called whenever the transform of the SceneNode is 
+         changed
+     */
+     virtual void transformChanged(const TransformPtr& newTransform);
+
      inline const std::string& getName() const {return _name;}
      inline void setName(const std::string& name) {_name = name;}
 
@@ -72,8 +77,7 @@ class Camera : public SceneNodeComponent {
      glm::vec3 getSide() const;
      glm::vec3 getForward() const;
      glm::vec3 getUp() const;
-     
-     void      setPosition(const glm::vec3& v3Pos);
+
      void      moveForward(float fSpeed);
      void      moveSideways(float fSpeed);
      void      setView(const glm::mat4& rNewMatView);
@@ -93,10 +97,6 @@ class Camera : public SceneNodeComponent {
 
      std::vector<glm::vec3>  getWSfrustumCorners();
      void      rotateFromMouseMove(float dx, float dy);
-
-     void      setOrientation(const glm::vec3& v3Side,
-                               const glm::vec3& v3Up,
-                               const glm::vec3& v3Forward);
 
  private:
      enum EFrustumPlane {

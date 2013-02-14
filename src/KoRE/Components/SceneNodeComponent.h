@@ -34,6 +34,8 @@ namespace kore {
 
   class SceneNode;
   typedef std::shared_ptr<SceneNode> SceneNodePtr;
+  class Transform;
+  typedef std::shared_ptr<Transform> TransformPtr;
   class SceneNodeComponent {
   public:
     explicit SceneNodeComponent(void);
@@ -41,6 +43,7 @@ namespace kore {
     /// Checks if this component is of the same type as the other component
     virtual bool isCompatibleWith(const SceneNodeComponent& otherComponent) const = 0;
     virtual void attachTo(SceneNodePtr& node);
+    virtual void transformChanged(const TransformPtr& newTransform);
     const EComponentType getType(void) const;
 
     const ShaderInput* getShaderInput(const std::string& name) const;
@@ -53,6 +56,7 @@ namespace kore {
   protected:
     std::string name;
     uint _id;
+    SceneNodePtr _sceneNode;
     EComponentType _type;
     std::vector<ShaderInput> _shaderInputs;
   };

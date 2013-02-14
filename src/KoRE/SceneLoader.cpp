@@ -102,7 +102,7 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
       CameraPtr pCamera = ResourceManager::getInstance()
                                             ->getCamera(szScenePath, camName);
       if (pCamera != NULL) {
-        node->_components.push_back(pCamera);
+        node->addComponent(pCamera);
       }
     }
 
@@ -116,7 +116,7 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
                                                 getMesh(szScenePath, meshName);
       MeshComponentPtr meshComponent(new MeshComponent);
       meshComponent->setMesh(mesh);
-      node->_components.push_back(meshComponent);
+      node->addComponent(meshComponent);
 
     // Make additional copies for any more meshes
     for (uint iMesh = 1; iMesh < ainode->mNumMeshes; ++iMesh) {
@@ -133,7 +133,7 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
                                             getMesh(szScenePath, meshName);
       MeshComponentPtr meshComponent(new MeshComponent);
       meshComponent->setMesh(mesh);
-      copyNode->_components.push_back(meshComponent);
+      copyNode->addComponent(meshComponent);
     }
   }
 

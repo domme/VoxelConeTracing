@@ -28,6 +28,7 @@
 #include "KoRE/Components/Camera.h"
 #include "KoRE/RenderManager.h"
 #include "KoRE/DataTypes.h"
+#include "KoRE/SceneNode.h"
 
 kore::Camera::Camera()
        :_fMovementSpeed(50.0f),
@@ -111,34 +112,18 @@ kore::Camera::Camera()
 kore::Camera::~Camera() {
 }
 
-void kore::Camera::setOrientation(const glm::vec3& v3Side,
-                            const glm::vec3& v3Up,
-                            const glm::vec3& v3Forward) {
-    _matViewInverse[0] = glm::vec4(v3Side, 0.0f);
-    _matViewInverse[1] = glm::vec4(v3Up, 0.0f);
-    _matViewInverse[2] = glm::vec4(v3Forward, 0.0f);
-
-    // TODO(dlazarek): Maybe improve this method by setting the
-    // transposed upper 3x3-matrix of the ViewMatrix and then
-    // just call paramsChanged() m_matView = glm::inverse(m_matViewInverse);
-
-    // The rotational component of the view-matrix is the transpose
-    // of the rotational component of the inverse view-matrix
-    _matView[0] = glm::vec4(v3Side.x, v3Up.x, v3Forward.x, 0.0f);
-    _matView[1] = glm::vec4(v3Side.y, v3Up.y, v3Forward.y, 0.0f);
-    _matView[2] = glm::vec4(v3Side.z, v3Up.z, v3Forward.z, 0.0f);
-
-    // Call SetPosition to trigger re-calculation of the translation
-    // component in the view-matrix with respect to the new basis-vectors
-    setPosition(getPosition());
-}
-
-
 bool kore::Camera::
 isCompatibleWith(const SceneNodeComponent& otherComponent) const {
   return true;
 }
 
+void kore::Camera::transformChanged(const TransformPtr& newTransform) {
+  SceneNodeComponent::transformChanged(newTransform);
+
+  _matView = glm::inverse(newTransform->getGlobal());
+  _matViewInverse = newTransform->getGlobal();
+  paramsChanged();
+}
 
 glm::vec3 kore::Camera::getSide() const {
     // Note: assume the camera's view matrix is not scaled
@@ -160,27 +145,6 @@ glm::vec3 kore::Camera::getForward() const {
 
 glm::vec3 kore::Camera::getPosition() const {
     return glm::vec3(_matViewInverse[ 3 ]);
-}
-
-void kore::Camera::setPosition(const glm::vec3& v3Pos) {
-    // Directly set the position to the inverse view-matirx
-    _matViewInverse[ 3 ] = glm::vec4(v3Pos, 1.0f);
-
-    // Now calculate the inverse translation for the
-    // view-matrix as a linear combination of the rotational basis-vectors
-    glm::vec3 v3Side = getSide();
-    glm::vec3 v3Up = getUp();
-    glm::vec3 v3Forward = getForward();
-
-    glm::vec3 v3ViewSide = glm::vec3(v3Side.x, v3Up.x, v3Forward.x);
-    glm::vec3 v3ViewUp = glm::vec3(v3Side.y, v3Up.y, v3Forward.y);
-    glm::vec3 v3ViewForward = glm::vec3(v3Side.z, v3Up.z, v3Forward.z);
-
-    _matView[ 3 ] = glm::vec4(v3ViewSide * -v3Pos.x +
-                                v3ViewUp * -v3Pos.y +
-                                v3ViewForward * -v3Pos.z, 1.0f);
-
-    paramsChanged();
 }
 
 void kore::Camera::setView(const glm::mat4& rNewMatView) {
@@ -221,8 +185,8 @@ void kore::Camera::setProjectionPersp(float yFov_deg, float fWidth,
 
 void kore::Camera::setProjectionPersp(float yFov_deg, float fAspect,
                                       float fNear, float fFar) {
-  float fWidth = 1;
-  float fHeight = fWidth * fAspect;
+  float fWidth = 1.0f;
+  float fHeight = fWidth / fAspect;
 
   _matProjection = glm::perspectiveFov(yFov_deg, fWidth, fHeight, fNear, fFar);
   _fNear = fNear;
@@ -272,15 +236,27 @@ void kore::Camera::rotateViewQuat(const float angle, const glm::vec3 v3Axis) {
     v3Side = glm::normalize(v3Side);
     v3Up = glm::cross(v3View, v3Side);
     v3Up = glm::normalize(v3Up);
-    setOrientation(v3Side, v3Up, v3View);
+
+    if (_sceneNode) {
+      _sceneNode->setOrientation(v3Side, v3Up, v3View);
+    }
 }
 
 void kore::Camera::moveForward(float fSpeed) {
-    setPosition(getPosition() - getForward() * fSpeed);
+  if (!_sceneNode) {
+    return;
+  }
+
+  _sceneNode->setTranslation(getPosition() - getForward() * fSpeed,
+                             SPACE_WORLD);
 }
 
 void kore::Camera::moveSideways(float fSpeed) {
-    setPosition(getPosition() + getSide() * fSpeed);
+  if (!_sceneNode) {
+    return;
+  }
+
+  _sceneNode->setTranslation(getPosition() + getSide() * fSpeed, SPACE_WORLD);
 }
 
 std::vector<glm::vec3> kore::Camera::getWSfrustumCorners() {

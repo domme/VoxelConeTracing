@@ -27,6 +27,10 @@
 #include "KoRE/Components/Transform.h"
 
 namespace kore {
+  enum ETransfpomSpace {
+    SPACE_LOCAL,
+    SPACE_WORLD
+  };
     typedef std::shared_ptr<SceneNode> SceneNodePtr;
     class SceneNode {
     friend class SceneLoader;
@@ -59,9 +63,23 @@ namespace kore {
     const bool needsUpdate(void) const;
     void update(void);
 
-    void translate(const glm::vec3& dir);
-    void rotate(const GLfloat& angle, const glm::vec3& axis);
-    void scale(const glm::vec3& dim);
+    void translate(const glm::vec3& dir,
+                   const ETransfpomSpace relativeTo = SPACE_LOCAL);
+
+    void setTranslation(const glm::vec3& position,
+                        const ETransfpomSpace relativeTo = SPACE_LOCAL);
+
+    void rotate(const GLfloat& angle, const glm::vec3& axis, 
+                const ETransfpomSpace relativeTo = SPACE_LOCAL);
+
+    void scale(const glm::vec3& dim,
+               const ETransfpomSpace relativeTo = SPACE_LOCAL);
+
+    void setOrientation(const glm::vec3& v3Side,
+                        const glm::vec3& v3Up,
+                        const glm::vec3& v3Forward,
+                        const ETransfpomSpace relativeTo = SPACE_LOCAL);
+
 
   private:
     uint64 _id;

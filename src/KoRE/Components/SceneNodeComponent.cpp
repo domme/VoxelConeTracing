@@ -18,20 +18,28 @@
 */
 
 #include "KoRE/Components/SceneNodeComponent.h"
+#include "KoRE/Components/Transform.h"
 #include "KoRE/SceneNode.h"
 
 kore::SceneNodeComponent::SceneNodeComponent()
-  : _id(UINT_INVALID) {
+  : _id(UINT_INVALID),
+    _sceneNode(NULL),
+    _type(COMPONENT_UNKNOWN) {
 }
 
 kore::SceneNodeComponent::~SceneNodeComponent() {
 }
 
 void kore::SceneNodeComponent::attachTo(kore::SceneNodePtr& node) {
+  _sceneNode = node;
 }
 
 const kore::EComponentType kore::SceneNodeComponent::getType(void) const {
   return _type;
+}
+
+void 
+kore::SceneNodeComponent::transformChanged(const TransformPtr& newTransform) {
 }
 
 uint kore::SceneNodeComponent::getID(void) const {

@@ -43,6 +43,7 @@
 #include "KoRE/Timer.h"
 
 kore::SceneNodePtr rotationNode;
+kore::CameraPtr pCamera;
 
 int main(void) {
   int running = GL_TRUE;
@@ -107,12 +108,13 @@ int main(void) {
 
   kore::ResourceManager::getInstance()->loadTexture("./assets/textures/checkerboard.png");
 
-
+/*
   kore::CameraPtr pCamera(new kore::Camera);
   pCamera->setView(glm::lookAt(glm::vec3(19.0f, 13.0f, -17.4f),
     glm::vec3(0.0f, 0.0f, 0.0f),
     glm::vec3(0.0f, 1.0f, 0.0f)));
-  pCamera->setProjectionPersp(60.0f, 800.0f, 600.0f, 1.0f, 100.0f);
+  pCamera->setProjectionPersp(60.0f, 800.0f, 600.0f, 1.0f, 100.0f); 
+  */
 
   // load resources
   // TODO(dospelt) whole scene loading with all components
@@ -123,6 +125,13 @@ int main(void) {
   kore::SceneManager::getInstance()->
                   getSceneNodesByComponent(kore::COMPONENT_MESH, vRenderNodes);
 
+ kore::SceneNodePtr pCameraNode = kore::SceneManager::getInstance()->
+                  getSceneNodeByComponent(kore::COMPONENT_CAMERA);
+
+  pCamera = 
+    std::static_pointer_cast<kore::Camera>(
+    pCameraNode->getComponent(kore::COMPONENT_CAMERA));
+ 
   for (uint i = 0; i < vRenderNodes.size(); ++i) {
     kore::MeshComponentPtr pMeshComponent =
       std::static_pointer_cast<kore::MeshComponent>
