@@ -58,5 +58,6 @@ typedef double float64;
 #define SAFE_DELETE(p) if (p) { delete p; p = NULL; }
 #define SAFE_DELETE_ARR(p) if (p[ 0 ]) delete[] p;
 #define BUFFER_OFFSET(i) (reinterpret_cast<char*>(NULL + (i)))
+//#define STATIC_ASSERT(expression) {int __static_assert_checkArray[1]; __static_assert_checkArray[expression];}
 
 #endif  // CORE_INCLUDE_CORE_COMMON_H_

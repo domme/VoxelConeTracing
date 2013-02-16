@@ -29,6 +29,23 @@ kore::RenderManager* kore::RenderManager::getInstance(void) {
 }
 
 kore::RenderManager::RenderManager(void) {
+  _vTexTargetMap[GL_TEXTURE_1D] =                   TEXTURE_1D;
+  _vTexTargetMap[GL_TEXTURE_2D] =                   TEXTURE_2D;
+  _vTexTargetMap[GL_TEXTURE_3D] =                   TEXTURE_3D;
+  _vTexTargetMap[GL_TEXTURE_1D_ARRAY] =             TEXTURE_1D_ARRAY;
+  _vTexTargetMap[GL_TEXTURE_2D_ARRAY] =             TEXTURE_2D_ARRAY;
+  _vTexTargetMap[GL_TEXTURE_RECTANGLE] =            TEXTURE_RECTANGLE;
+  _vTexTargetMap[GL_TEXTURE_CUBE_MAP] =             TEXTURE_CUBE_MAP;
+  _vTexTargetMap[GL_TEXTURE_CUBE_MAP_ARRAY] =       TEXTURE_CUBE_MAP_ARRAY;
+  _vTexTargetMap[GL_TEXTURE_BUFFER] =               TEXTURE_BUFFER;
+  _vTexTargetMap[GL_TEXTURE_2D_MULTISAMPLE] =       TEXTURE_2D_MULTISAMPLE;
+  _vTexTargetMap[GL_TEXTURE_2D_MULTISAMPLE_ARRAY] =
+                                                TEXTURE_2D_MULTISAMPLE_ARRAY;
+
+  if (_vTexTargetMap.size() != NUM_TEXTURE_TARGETS) {
+    Log::getInstance()->write("[ERROR] Not all texture targets where"
+                              "added into the textureTargetMap");
+  }
 }
 
 kore::RenderManager::~RenderManager(void) {
@@ -109,6 +126,14 @@ void kore::RenderManager::useShaderProgram(const GLuint shaderProgram) {
   }
 }
 
-
-
+void kore::RenderManager::bindTexture(const GLuint textureUnit,
+                                      const GLuint textureTarget,
+                                      const GLuint textureHandle) {
+  uint uTexTargetIndex = _vTexTargetMap[textureTarget];
+  if (_boundTextures[textureUnit][uTexTargetIndex] != textureHandle) {
+    glActiveTexture(GL_TEXTURE0 + textureUnit);
+    glBindTexture(textureTarget, textureHandle);
+    _boundTextures[textureUnit][uTexTargetIndex] = textureHandle;
+  }
+}
 //////////////////////////////////////////////////////////////////////////

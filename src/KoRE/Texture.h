@@ -9,7 +9,8 @@ namespace kore {
   public:
     explicit Texture(void);
     ~Texture(void);
-    
+    inline GLuint getTargetType() const {return _type;}
+    inline GLuint getHandle() const {return _handle;}
 
   private:
     GLuint _handle;

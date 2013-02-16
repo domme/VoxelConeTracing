@@ -21,24 +21,30 @@
 #define CORE_INCLUDE_CORE_BINDTEXTUREOP_H_
 
 #include "KoRE/Operations/Operation.h"
-#include "KoRE/Components/TexturesComponent.h"
-#include "KoRE/Shader.h"
+#include "KoRE/Texture.h"
+#include "KoRE/RenderManager.h"
 
 namespace kore {
   class BindTexture: public Operation {
   public:
     BindTexture(void);
-    BindTexture(const TexturesComponentPtr textureComp,
+    BindTexture(const TexturePtr tex,
+                const GLuint samplerHandle,
                 const uint texUnit);
     virtual ~BindTexture(void);
     virtual void execute(void);
     virtual void update(void);
     virtual void reset(void);
-    void connect(const TexturesComponent* textureComp,
+    void connect(const TexturePtr tex,
+                 const GLuint samplerHandle,
                  const uint texUnit);
   private:
-    TexturesComponentPtr _meshComponent;
+    TexturePtr _texture;
+    GLuint _samplerHandle;
     uint _textureUnit;
+    RenderManager* _renderManager;
+
+    void init();
   };
   typedef std::shared_ptr<BindTexture> BindTexturePtr;
 };

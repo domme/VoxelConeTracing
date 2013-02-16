@@ -33,6 +33,30 @@ namespace kore {
     INSERT_AFTER
   };
 
+  // Usage of this enum (dlazarek):
+  // Add new texture-targets whenever the OpenGL API updates so that 
+  // NUM_TEXTURE_TARGETS always holds the value of the number of available
+  // texture targets on the compiled system. 
+  // Use preprocessor #ifdefs to conditionally include targets on machines
+  // with more advanced OpenGL-versions in the future to maintain backwards-
+  // compatibility.
+  enum ETextureTargets {
+    TEXTURE_1D = 0,
+    TEXTURE_2D,
+    TEXTURE_3D,
+    TEXTURE_1D_ARRAY,
+    TEXTURE_2D_ARRAY,
+    TEXTURE_RECTANGLE,
+    TEXTURE_CUBE_MAP,
+    TEXTURE_CUBE_MAP_ARRAY,
+    TEXTURE_BUFFER,
+    TEXTURE_2D_MULTISAMPLE,
+    TEXTURE_2D_MULTISAMPLE_ARRAY,
+
+    NUM_TEXTURE_TARGETS
+  };
+  //////////////////////////////////////////////////////////////////////////
+
   class RenderManager {
   public:
     static RenderManager *getInstance(void);
@@ -48,6 +72,9 @@ namespace kore {
     void bindVBO(const GLuint vbo);
     void bindIBO(const GLuint ibo);
     void useShaderProgram(const GLuint shaderProgram);
+    void bindTexture(const GLuint textureUnit,
+                     const GLuint textureTarget,
+                     const GLuint textureHandle);
     //////////////////////////////////////////////////////////////////////////
 
   private:
@@ -64,6 +91,9 @@ namespace kore {
     GLuint _vbo;
     GLuint _ibo;
     GLuint _shaderProgram;
+    GLuint _boundTextures[GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS]
+                         [NUM_TEXTURE_TARGETS];
+    std::map<GLuint, uint> _vTexTargetMap;
     //////////////////////////////////////////////////////////////////////////
   };
 };
