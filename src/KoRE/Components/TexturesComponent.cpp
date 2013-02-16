@@ -28,8 +28,6 @@ void kore::
     return;
   }
 
-  _vTextures.push_back(tex);
-
   if (sampler == NULL) {
     TextureSamplerPtr newSampler(new TextureSampler);
     newSampler->create(GL_SAMPLER_2D,

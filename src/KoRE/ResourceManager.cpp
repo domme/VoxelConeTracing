@@ -48,8 +48,9 @@ void kore::ResourceManager::loadResources(const std::string& filename) {
   kore::SceneLoader::getInstance()->loadRessources(filename);
 }
 
-void kore::ResourceManager::loadTexture(const std::string& filename) {
-  kore::TextureLoader::getInstance()->loadTexture(filename);
+kore::TexturePtr
+  kore::ResourceManager::loadTexture(const std::string& filename) {
+    return kore::TextureLoader::getInstance()->loadTexture(filename);
 }
 
 void kore::ResourceManager::addMesh(const std::string& path,

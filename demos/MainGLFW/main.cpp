@@ -41,6 +41,7 @@
 #include "KoRE/Components/Camera.h"
 #include "KoRE/SceneNode.h"
 #include "KoRE/Timer.h"
+#include "KoRE/Texture.h"
 
 kore::SceneNodePtr rotationNode;
 kore::CameraPtr pCamera;
@@ -105,8 +106,6 @@ int main(void) {
   pSimpleShader->loadShader("./assets/shader/normalColor.fp",
                             GL_FRAGMENT_SHADER);
   pSimpleShader->initShader();
-
-  kore::ResourceManager::getInstance()->loadTexture("./assets/textures/checkerboard.png");
 
 /*
   kore::CameraPtr pCamera(new kore::Camera);
@@ -176,6 +175,9 @@ int main(void) {
       pSimpleShader->getProgramLocation(),
       pSimpleShader->getUniformByName("projection"));
 
+   // kore::BindUniformPtr pTextureUnitBind(new kore::BindUniform);
+    //pTextureUnitBind->connect()
+
     kore::RenderMeshOpPtr pOp(new kore::RenderMesh);
     pOp->setCamera(pCamera);
     pOp->setMesh(pMeshComponent);
@@ -196,6 +198,24 @@ int main(void) {
   kore::SceneManager::getInstance()->
       getSceneNodesByName("Cube", vBigCubeNodes);
   rotationNode = vBigCubeNodes[0];
+
+
+  //////////////////////////////////////////////////////////////////////////
+  // Texture-Setup test
+  //////////////////////////////////////////////////////////////////////////
+  kore::TexturePtr testTexture =
+    kore::ResourceManager::getInstance()->
+    loadTexture("./assets/textures/checkerboard.png");
+
+  kore::TexturesComponentPtr textureComp(new kore::TexturesComponent);
+  textureComp->addTexture(testTexture);
+
+  rotationNode->addComponent(textureComp);
+
+
+
+  //////////////////////////////////////////////////////////////////////////
+
 
   kore::Timer the_timer;
   the_timer.start();

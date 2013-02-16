@@ -23,14 +23,20 @@
 #include "KoRE/Log.h"
 #include "KoRE/Texture.h"
 
+kore::TextureLoader::TextureLoader(void) {
+}
+
+kore::TextureLoader::~TextureLoader(void) {
+}
 
 kore::TextureLoader* kore::TextureLoader::getInstance() {
   static TextureLoader instance;
   return &instance;
 }
 
-void kore::TextureLoader::loadTexture(const std::string& filepath) {
-
+kore::TexturePtr
+  kore::TextureLoader::loadTexture(const std::string& filepath) {
+  
   std::vector<unsigned char> imageData;
   std::vector<unsigned char> buffer;
 
@@ -69,15 +75,7 @@ void kore::TextureLoader::loadTexture(const std::string& filepath) {
                    GL_UNSIGNED_BYTE,
                    reinterpret_cast<GLvoid*>(&imageData[0]));
     ResourceManager::getInstance()->addTexture(filepath, tex);
+    return tex;
   }
-}
-
-kore::TextureLoader::~TextureLoader( void )
-{
-
-}
-
-kore::TextureLoader::TextureLoader( void )
-{
-
+  return TexturePtr();
 }
