@@ -200,11 +200,52 @@ int main(void) {
   kore::Timer the_timer;
   the_timer.start();
   double time = 0;
+  float cameraMoveSpeed = 0.01f;
+  
+  int oldMouseX = 0;
+  int oldMouseY = 0;
+  glfwGetMousePos(&oldMouseX,&oldMouseY);
+
+
   // Main loop
   while (running) {
     time = the_timer.timeSinceLastCall();
     kore::SceneManager::getInstance()->update();
+
+    if (glfwGetKey(GLFW_KEY_UP) == GLFW_PRESS) {
+      pCamera->moveForward(cameraMoveSpeed);
+    }
+
+    if (glfwGetKey(GLFW_KEY_DOWN) == GLFW_PRESS) {
+      pCamera->moveForward(-cameraMoveSpeed);
+    }
+
+    if (glfwGetKey(GLFW_KEY_LEFT) == GLFW_PRESS) {
+      pCamera->moveSideways(-cameraMoveSpeed);
+    }
+
+    if (glfwGetKey(GLFW_KEY_RIGHT) == GLFW_PRESS) {
+      pCamera->moveSideways(cameraMoveSpeed);
+    }
+
+    int mouseX = 0;
+    int mouseY = 0;
+    glfwGetMousePos(&mouseX,&mouseY);
+
+    int mouseMoveX = mouseX - oldMouseX;
+    int mouseMoveY = mouseY - oldMouseY;
+
+    if (glfwGetMouseButton(GLFW_MOUSE_BUTTON_1) == GLFW_PRESS ) {
+      if (glm::abs(mouseMoveX) > 0 || glm::abs(mouseMoveY) > 0) {
+        pCamera->rotateFromMouseMove((float)-mouseMoveX / 5.0f,
+                                     (float)-mouseMoveY / 5.0f);
+      }
+    }
+
+    oldMouseX = mouseX;
+    oldMouseY = mouseY;
     
+
     rotationNode->rotate(90.0f * static_cast<float>(time), glm::vec3(0.0f, 0.0f, 1.0f));
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

@@ -224,7 +224,7 @@ void kore::Camera::rotateFromMouseMove(float dx, float dy) {
 }
 
 void kore::Camera::rotateViewQuat(const float angle, const glm::vec3 v3Axis) {
-    glm::vec3 v3View = getForward();
+   /* glm::vec3 v3View = getForward();
     glm::vec3 v3Up(0.0f, 1.0f, 0.0f);
     glm::quat quatView(0, v3View);
     glm::quat quatViewResult = glm::rotate(quatView, angle, v3Axis);
@@ -235,10 +235,11 @@ void kore::Camera::rotateViewQuat(const float angle, const glm::vec3 v3Axis) {
     glm::vec3 v3Side = glm::cross(v3Up, v3View);
     v3Side = glm::normalize(v3Side);
     v3Up = glm::cross(v3View, v3Side);
-    v3Up = glm::normalize(v3Up);
+    v3Up = glm::normalize(v3Up); */
 
     if (_sceneNode) {
-      _sceneNode->setOrientation(v3Side, v3Up, v3View);
+      _sceneNode->rotate(angle, v3Axis, SPACE_WORLD);
+     // _sceneNode->setOrientation(v3Side, v3Up, v3View, SPACE_WORLD);
     }
 }
 
@@ -247,8 +248,7 @@ void kore::Camera::moveForward(float fSpeed) {
     return;
   }
 
-  _sceneNode->setTranslation(getPosition() - getForward() * fSpeed,
-                             SPACE_WORLD);
+  _sceneNode->translate(-getForward() * fSpeed, SPACE_WORLD);
 }
 
 void kore::Camera::moveSideways(float fSpeed) {
@@ -256,7 +256,7 @@ void kore::Camera::moveSideways(float fSpeed) {
     return;
   }
 
-  _sceneNode->setTranslation(getPosition() + getSide() * fSpeed, SPACE_WORLD);
+  _sceneNode->translate(getSide() * fSpeed, SPACE_WORLD);
 }
 
 std::vector<glm::vec3> kore::Camera::getWSfrustumCorners() {
