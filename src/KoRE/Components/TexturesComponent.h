@@ -22,35 +22,24 @@
 #include <vector>
 #include "KoRE/Components/SceneNodeComponent.h"
 #include "KoRE/Texture.h"
+#include "KoRE/TextureSampler.h"
 #include "KoRE/DataTypes.h"
 
 namespace kore {
-  struct TextureSampler {
-    TextureSampler() 
-        : type(GL_SAMPLER_2D),
-        wrap(glm::uvec3(GL_REPEAT)),
-        magfilter(GL_LINEAR),
-        minfilter(GL_LINEAR_MIPMAP_LINEAR),
-        handle(GLUINT_HANDLE_INVALID){}
-    GLuint type;
-    glm::uvec3 wrap;
-    GLuint magfilter;
-    GLuint minfilter;
-    GLuint handle;
-  };
   class TexturesComponent : public SceneNodeComponent {
   public:
     explicit TexturesComponent(void);
     ~TexturesComponent(void);
     virtual bool isCompatibleWith(const SceneNodeComponent& otherComponent) const;
-    const uint getNumTextures(void) const;
+    inline const uint getNumTextures(void) const {return _vTextures.size();}
     void addTexture(TexturePtr tex,
                     bool mipmap = true,
-                    GLenum wrap = GL_REPEAT);
+                    GLenum wrap = GL_REPEAT,
+                    const TextureSamplerPtr sampler = TextureSamplerPtr());
 
   private:
-    uint _numTextures;
-    std::vector<GLuint> _sampler;
+    std::vector<TexturePtr> _vTextures;
+    std::vector<TextureSamplerPtr> _vSamplers;
   };
   typedef std::shared_ptr<kore::TexturesComponent> TexturesComponentPtr;
 }

@@ -209,6 +209,7 @@
     <ClCompile Include="src\KoRE\Operations\BindTexture.cpp" />
     <ClCompile Include="src\KoRE\Texture.cpp" />
     <ClCompile Include="src\KoRE\TextureLoader.cpp" />
+    <ClCompile Include="src\KoRE\TextureSampler.cpp" />
     <ClCompile Include="src\KoRE\Timer.cpp" />
     <ClInclude Include="src\KoRE\Common.h" />
     <ClInclude Include="src\KoRE\Components\Camera.h" />
@@ -258,6 +259,7 @@
     <ClCompile Include="src\KoRE\Shader.cpp" />
     <ClCompile Include="src\KoRE\StdAfx.cpp" />
     <ClInclude Include="src\KoRE\Texture.h" />
+    <ClInclude Include="src\KoRE\TextureSampler.h" />
     <ClInclude Include="src\KoRE\Timer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

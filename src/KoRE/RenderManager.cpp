@@ -136,4 +136,15 @@ void kore::RenderManager::bindTexture(const GLuint textureUnit,
     _boundTextures[textureUnit][uTexTargetIndex] = textureHandle;
   }
 }
-//////////////////////////////////////////////////////////////////////////
+
+void kore::RenderManager::bindSampler(const GLuint textureUnit,
+                                      const GLuint samplerHandle) {
+  if (_boundSamplers[textureUnit] != samplerHandle) {
+    glActiveTexture(GL_TEXTURE0 + textureUnit);
+    glBindSampler(textureUnit, samplerHandle);
+    _boundSamplers[textureUnit] = samplerHandle;
+  }
+}
+
+
+

@@ -75,6 +75,9 @@ namespace kore {
     void bindTexture(const GLuint textureUnit,
                      const GLuint textureTarget,
                      const GLuint textureHandle);
+    void bindSampler(const GLuint textureUnit,
+                     const GLuint samplerHandle);
+
     //////////////////////////////////////////////////////////////////////////
 
   private:
@@ -93,6 +96,7 @@ namespace kore {
     GLuint _shaderProgram;
     GLuint _boundTextures[GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS]
                          [NUM_TEXTURE_TARGETS];
+    GLuint _boundSamplers[GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS];
     std::map<GLuint, uint> _vTexTargetMap;
     //////////////////////////////////////////////////////////////////////////
   };

@@ -22,6 +22,7 @@
 
 #include "KoRE/Operations/Operation.h"
 #include "KoRE/Texture.h"
+#include "KoRE/TextureSampler.h"
 #include "KoRE/RenderManager.h"
 
 namespace kore {
@@ -29,18 +30,18 @@ namespace kore {
   public:
     BindTexture(void);
     BindTexture(const TexturePtr tex,
-                const GLuint samplerHandle,
+                const TextureSamplerPtr sampler,
                 const uint texUnit);
     virtual ~BindTexture(void);
     virtual void execute(void);
     virtual void update(void);
     virtual void reset(void);
     void connect(const TexturePtr tex,
-                 const GLuint samplerHandle,
+                 const TextureSamplerPtr sampler,
                  const uint texUnit);
   private:
     TexturePtr _texture;
-    GLuint _samplerHandle;
+    TextureSamplerPtr _sampler;
     uint _textureUnit;
     RenderManager* _renderManager;
 

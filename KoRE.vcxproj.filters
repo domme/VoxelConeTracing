@@ -82,6 +82,7 @@
     <ClCompile Include="src\KoRE\Timer.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\KoRE\TextureSampler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\KoRE\MeshLoader.h">
@@ -171,6 +172,7 @@
     <ClInclude Include="src\KoRE\Operations\BindTexture.h">
       <Filter>src\Operations</Filter>
     </ClInclude>
+    <ClInclude Include="src\KoRE\TextureSampler.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
