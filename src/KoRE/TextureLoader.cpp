@@ -63,6 +63,7 @@ kore::TexturePtr
 
     glGenTextures(1, &tex->_handle);
     glBindTexture(GL_TEXTURE_2D, tex->_handle);
+
     //Pass the actual Texture Data
     if(color.colortype == LCT_RGB)
       glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8, width, height, 0,

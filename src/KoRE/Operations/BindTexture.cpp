@@ -30,10 +30,10 @@ void kore::BindTexture::connect(const TexturePtr tex,
 }
 
 void kore::BindTexture::execute(void) {
-  _renderManager->bindSampler(_textureUnit, _sampler->getHandle());
   _renderManager->bindTexture(_textureUnit,
                               _texture->getTargetType(),
                               _texture->getHandle());
+  _renderManager->bindSampler(_textureUnit, _sampler->getHandle());
 }
 
 void kore::BindTexture::update(void) {

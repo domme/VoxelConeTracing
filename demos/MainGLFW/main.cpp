@@ -49,13 +49,17 @@ kore::SceneNodePtr rotationNode;
 kore::CameraPtr pCamera;
 
 int main(void) {
-  kore::GLerror::gl_ErrorCheckStart();
+  
   int running = GL_TRUE;
 
   // Initialize GLFW
   if (!glfwInit()) {
     exit(EXIT_FAILURE);
   }
+
+  glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 4);
+  glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 2);
+  glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
   // Open an OpenGL window
   if (!glfwOpenWindow(800, 600, 0, 0, 0, 0, 0, 0, GLFW_WINDOW)) {
@@ -115,7 +119,7 @@ int main(void) {
   //////////////////////////////////////////////////////////////////////////
   kore::TexturePtr testTexture =
     kore::ResourceManager::getInstance()->
-    loadTexture("./assets/textures/checkerboard.png");
+    loadTexture("./assets/textures/Crate.png");
   //////////////////////////////////////////////////////////////////////////
 
 
@@ -141,8 +145,6 @@ int main(void) {
       (vRenderNodes[i]->getComponent(kore::COMPONENT_MESH));
 
     // Add Texture
-    kore::TexturePtr tex = testTexture;
-
     kore::TexturesComponentPtr tcp =
         kore::TexturesComponentPtr(new kore::TexturesComponent());
     tcp->addTexture(testTexture);
@@ -197,13 +199,21 @@ int main(void) {
     kore::RenderManager::getInstance()->addOperation(pViewBind);
     kore::RenderManager::getInstance()->addOperation(pModelBind);
     kore::RenderManager::getInstance()->addOperation(pProjBind);
-    kore::RenderManager::getInstance()->addOperation(pTextureUnitBind);
-    kore::RenderManager::getInstance()->addOperation(pTextureBind);
+    //kore::RenderManager::getInstance()->addOperation(pTextureUnitBind);
+    //kore::RenderManager::getInstance()->addOperation(pTextureBind);
     kore::RenderManager::getInstance()->addOperation(pPosAttBind);
     kore::RenderManager::getInstance()->addOperation(pNormAttBind);
     kore::RenderManager::getInstance()->addOperation(pUVAttBind);
     kore::RenderManager::getInstance()->addOperation(pRenderOp);
   }
+
+  kore::GLerror::gl_ErrorCheckStart();
+  glUseProgram(pSimpleShader->getProgramLocation());
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, testTexture->getHandle());
+  glBindSampler(0, 1);
+  glUniform1i(pSimpleShader->getUniformByName("tex")->location, 0);
+  kore::GLerror::gl_ErrorCheckFinish();
 
   glClearColor(1.0f,1.0f,1.0f,1.0f);
 
@@ -224,7 +234,7 @@ int main(void) {
   int oldMouseY = 0;
   glfwGetMousePos(&oldMouseX,&oldMouseY);
   
-  kore::GLerror::gl_ErrorCheckFinish();
+  
 
   // Main loop
   while (running) {
