@@ -34,19 +34,10 @@
     <ClCompile Include="src\KoRE\DataTypes.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\KoRE\Loader\lodepng.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\KoRE\Log.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\KoRE\Mesh.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\KoRE\MeshLoader.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\KoRE\ProjectLoader.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\KoRE\RenderManager.cpp">
@@ -56,9 +47,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\KoRE\ResourceManager.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\KoRE\SceneLoader.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\KoRE\SceneManager.cpp">
@@ -76,30 +64,29 @@
     <ClCompile Include="src\KoRE\Texture.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\KoRE\TextureLoader.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\KoRE\Timer.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\KoRE\TextureSampler.cpp" />
+    <ClCompile Include="src\KoRE\TextureSampler.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KoRE\Loader\MeshLoader.cpp">
+      <Filter>src\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KoRE\Loader\ProjectLoader.cpp">
+      <Filter>src\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KoRE\Loader\SceneLoader.cpp">
+      <Filter>src\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KoRE\Loader\TextureLoader.cpp">
+      <Filter>src\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KoRE\Loader\lodepng.cpp">
+      <Filter>src\Loader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\KoRE\MeshLoader.h">
-      <Filter>src\Loader</Filter>
-    </ClInclude>
-    <ClInclude Include="src\KoRE\ProjectLoader.h">
-      <Filter>src\Loader</Filter>
-    </ClInclude>
-    <ClInclude Include="src\KoRE\SceneLoader.h">
-      <Filter>src\Loader</Filter>
-    </ClInclude>
-    <ClInclude Include="src\KoRE\Loader\lodepng.h">
-      <Filter>src\Loader</Filter>
-    </ClInclude>
-    <ClInclude Include="src\KoRE\Loader\TextureLoader.h">
-      <Filter>src\Loader</Filter>
-    </ClInclude>
     <ClInclude Include="src\KoRE\Operations\BindUniform.h">
       <Filter>src\Operations</Filter>
     </ClInclude>
@@ -172,7 +159,24 @@
     <ClInclude Include="src\KoRE\Operations\BindTexture.h">
       <Filter>src\Operations</Filter>
     </ClInclude>
-    <ClInclude Include="src\KoRE\TextureSampler.h" />
+    <ClInclude Include="src\KoRE\TextureSampler.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\Loader\lodepng.h">
+      <Filter>src\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\Loader\MeshLoader.h">
+      <Filter>src\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\Loader\ProjectLoader.h">
+      <Filter>src\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\Loader\SceneLoader.h">
+      <Filter>src\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\Loader\TextureLoader.h">
+      <Filter>src\Loader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">

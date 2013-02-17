@@ -2,10 +2,10 @@
 
 #include <stdio.h>
 
-#include "ResourceManager.h"
-#include "SceneManager.h"
-#include "RenderManager.h"
-#include "Log.h"
+#include "KoRE/ResourceManager.h"
+#include "KoRE/SceneManager.h"
+#include "KoRE/RenderManager.h"
+#include "KoRE/Log.h"
 
 const bool kore::ProjectLoader::loadProject(const std::string& path) const {
   FILE* kore_file = fopen(path.c_str(), "rb");

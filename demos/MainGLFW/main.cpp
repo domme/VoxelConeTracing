@@ -145,10 +145,10 @@ int main(void) {
       (vRenderNodes[i]->getComponent(kore::COMPONENT_MESH));
 
     // Add Texture
-    kore::TexturesComponentPtr tcp =
+    /*kore::TexturesComponentPtr tcp =
         kore::TexturesComponentPtr(new kore::TexturesComponent());
     tcp->addTexture(testTexture);
-    vRenderNodes[i]->addComponent(tcp);
+    vRenderNodes[i]->addComponent(tcp);*/
 
     // Bind Attribute-Ops
     kore::BindAttributePtr pPosAttBind (new kore::BindAttribute);
@@ -182,14 +182,14 @@ int main(void) {
       pSimpleShader->getProgramLocation(),
       pSimpleShader->getUniformByName("projection"));
 
-    kore::BindTexturePtr pTextureBind(new kore::BindTexture);
+    /*kore::BindTexturePtr pTextureBind(new kore::BindTexture);
     pTextureBind->connect(testTexture, tcp->getSampler(0),
                           pSimpleShader->getUniformByName("tex")->texUnit);
 
     kore::BindUniformPtr pTextureUnitBind(new kore::BindUniform);
     pTextureUnitBind->connect(pSimpleShader->getUniformByName("tex"), // Note(dlazarek): There is no component-uniform for assigning texture units
                               pSimpleShader->getProgramLocation(),    // to sampler uniforms. all information needed is already in the shader uniform.
-                              pSimpleShader->getUniformByName("tex"));
+                              pSimpleShader->getUniformByName("tex"));*/
 
     kore::RenderMeshOpPtr pRenderOp(new kore::RenderMesh);
     pRenderOp->setCamera(pCamera);
@@ -197,8 +197,8 @@ int main(void) {
     pRenderOp->setShader(pSimpleShader);
 
     kore::RenderManager::getInstance()->addOperation(pViewBind);
-    kore::RenderManager::getInstance()->addOperation(pModelBind);
-    kore::RenderManager::getInstance()->addOperation(pProjBind);
+    //kore::RenderManager::getInstance()->addOperation(pModelBind);
+    //kore::RenderManager::getInstance()->addOperation(pProjBind);
     //kore::RenderManager::getInstance()->addOperation(pTextureUnitBind);
     //kore::RenderManager::getInstance()->addOperation(pTextureBind);
     kore::RenderManager::getInstance()->addOperation(pPosAttBind);
@@ -206,14 +206,13 @@ int main(void) {
     kore::RenderManager::getInstance()->addOperation(pUVAttBind);
     kore::RenderManager::getInstance()->addOperation(pRenderOp);
   }
-
-  kore::GLerror::gl_ErrorCheckStart();
+  /*kore::GLerror::gl_ErrorCheckStart();
   glUseProgram(pSimpleShader->getProgramLocation());
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, testTexture->getHandle());
   glBindSampler(0, 1);
   glUniform1i(pSimpleShader->getUniformByName("tex")->location, 0);
-  kore::GLerror::gl_ErrorCheckFinish();
+  kore::GLerror::gl_ErrorCheckFinish();*/
 
   glClearColor(1.0f,1.0f,1.0f,1.0f);
 

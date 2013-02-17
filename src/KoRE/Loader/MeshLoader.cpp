@@ -20,7 +20,7 @@
 #include <assimp/postprocess.h>
 #include <string>
 #include "KoRE/Log.h"
-#include "KoRE/MeshLoader.h"
+#include "KoRE/Loader/MeshLoader.h"
 #include "KoRE/Components/Transform.h"
 #include "KoRE/Components/MeshComponent.h"
 #include "KoRE/Mesh.h"
