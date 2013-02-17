@@ -46,6 +46,9 @@ namespace kore {
     void constructShaderInfo(const GLenum activeType,
                              std::vector<ShaderInput>& rInputVector);
 
+    bool isSamplerType(const GLuint uniformType);
+
+
     std::string _name;
     std::vector<ShaderInput> _attributes;
     std::vector<ShaderInput> _uniforms;

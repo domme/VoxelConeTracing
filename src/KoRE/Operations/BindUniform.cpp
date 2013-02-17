@@ -323,124 +323,39 @@ break;
   case GL_SAMPLER_1D_SHADOW:
   case GL_SAMPLER_2D_SHADOW:
   case GL_SAMPLER_CUBE_SHADOW:
+  case GL_SAMPLER_1D_ARRAY:
+  case GL_SAMPLER_2D_ARRAY:
+  case GL_SAMPLER_1D_ARRAY_SHADOW:
+  case GL_SAMPLER_2D_ARRAY_SHADOW:
+  case GL_SAMPLER_2D_MULTISAMPLE:
+  case GL_SAMPLER_2D_MULTISAMPLE_ARRAY:
+  case GL_SAMPLER_BUFFER:
+  case GL_SAMPLER_2D_RECT:
+  case GL_SAMPLER_2D_RECT_SHADOW:
+  case GL_INT_SAMPLER_1D:
+  case GL_INT_SAMPLER_2D:
+  case GL_INT_SAMPLER_3D:
+  case GL_INT_SAMPLER_CUBE:
+  case GL_INT_SAMPLER_1D_ARRAY:
+  case GL_INT_SAMPLER_2D_ARRAY:
+  case GL_INT_SAMPLER_2D_MULTISAMPLE:
+  case GL_INT_SAMPLER_2D_MULTISAMPLE_ARRAY:
+  case GL_INT_SAMPLER_BUFFER:
+  case GL_INT_SAMPLER_2D_RECT:
+  case GL_UNSIGNED_INT_SAMPLER_1D:
+  case GL_UNSIGNED_INT_SAMPLER_2D:
+  case GL_UNSIGNED_INT_SAMPLER_3D:
+  case GL_UNSIGNED_INT_SAMPLER_CUBE:
+  case GL_UNSIGNED_INT_SAMPLER_1D_ARRAY:
+  case GL_UNSIGNED_INT_SAMPLER_2D_ARRAY:
+  case GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE:
+  case GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE_ARRAY:
+  case GL_UNSIGNED_INT_SAMPLER_BUFFER:
+  case GL_UNSIGNED_INT_SAMPLER_2D_RECT:
     glActiveTexture(GL_TEXTURE0 + _componentUniform->texUnit);
     glProgramUniform1ui(_shaderID, _shaderUniform->location, _componentUniform->texUnit);
   break;
-/*case GL_SAMPLER_1D_ARRAY:
-
-break;
-
-  case GL_SAMPLER_2D_ARRAY: 
-
-break;
-
-  case GL_SAMPLER_1D_ARRAY_SHADOW: 
-
-break;
-
-  case GL_SAMPLER_2D_ARRAY_SHADOW: 
-
-break;
-
-  case GL_SAMPLER_2D_MULTISAMPLE: 
-
-break;
-
-  case GL_SAMPLER_2D_MULTISAMPLE_ARRAY: 
-
-break;
-
-break;
-
-  case GL_SAMPLER_BUFFER:
-
-break;
-
-  case GL_SAMPLER_2D_RECT: 
-
-break;
-
-  case GL_SAMPLER_2D_RECT_SHADOW: 
-
-break;
-
-  case GL_INT_SAMPLER_1D: 
-
-break;
-
-  case GL_INT_SAMPLER_2D: 
-
-break;
-
-  case GL_INT_SAMPLER_3D: 
-
-break;
-
-  case GL_INT_SAMPLER_CUBE: 
-
-break;
-
-  case GL_INT_SAMPLER_1D_ARRAY: 
-
-break;
-
-  case GL_INT_SAMPLER_2D_ARRAY: 
-
-break;
-
-  case GL_INT_SAMPLER_2D_MULTISAMPLE: 
-
-break;
-
-  case GL_INT_SAMPLER_2D_MULTISAMPLE_ARRAY: 
-
-break;
-
-  case GL_INT_SAMPLER_BUFFER: 
-
-break;
-
-  case GL_INT_SAMPLER_2D_RECT: 
-
-break;
-
-  case GL_UNSIGNED_INT_SAMPLER_1D: 
-
-break;
-
-  case GL_UNSIGNED_INT_SAMPLER_2D: 
-
-break;
-
-  case GL_UNSIGNED_INT_SAMPLER_3D: 
-
-break;
-
-  case GL_UNSIGNED_INT_SAMPLER_CUBE: 
-
-break;
-
-  case GL_UNSIGNED_INT_SAMPLER_1D_ARRAY: 
-
-break;
-
-  case GL_UNSIGNED_INT_SAMPLER_2D_ARRAY: 
-
-break;
-
-  case GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE: 
-
-break;
-
-  case GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE_ARRAY: 
-
-break;
-
-  case GL_UNSIGNED_INT_SAMPLER_BUFFER: 
-
-break;
-
-  case GL_UNSIGNED_INT_SAMPLER_2D_RECT: 
+/*
 
 break;
 
