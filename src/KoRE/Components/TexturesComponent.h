@@ -31,7 +31,10 @@ namespace kore {
     explicit TexturesComponent(void);
     ~TexturesComponent(void);
     virtual bool isCompatibleWith(const SceneNodeComponent& otherComponent) const;
+
     inline const uint getNumTextures(void) const {return _vTextures.size();}
+    inline const TextureSamplerPtr getSampler(const uint idx) const {return _vSamplers[idx];}
+
     void addTexture(TexturePtr tex,
                     bool mipmap = true,
                     GLenum wrap = GL_REPEAT,

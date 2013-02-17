@@ -30,6 +30,7 @@
 #include <ctime>
 #include <vector>
 
+#include "KoRE/GLerror.h"
 #include "KoRE/Shader.h"
 #include "KoRE/Components/MeshComponent.h"
 #include "KoRE/Components/TexturesComponent.h"
@@ -48,6 +49,7 @@ kore::SceneNodePtr rotationNode;
 kore::CameraPtr pCamera;
 
 int main(void) {
+  kore::GLerror::gl_ErrorCheckStart();
   int running = GL_TRUE;
 
   // Initialize GLFW
@@ -108,6 +110,15 @@ int main(void) {
                             GL_FRAGMENT_SHADER);
   pSimpleShader->initShader();
 
+  //////////////////////////////////////////////////////////////////////////
+  // Texture-Setup test
+  //////////////////////////////////////////////////////////////////////////
+  kore::TexturePtr testTexture =
+    kore::ResourceManager::getInstance()->
+    loadTexture("./assets/textures/checkerboard.png");
+  //////////////////////////////////////////////////////////////////////////
+
+
   // load resources
   // TODO(dospelt) whole scene loading with all components
   kore::ResourceManager::getInstance()->
@@ -130,10 +141,11 @@ int main(void) {
       (vRenderNodes[i]->getComponent(kore::COMPONENT_MESH));
 
     // Add Texture
+    kore::TexturePtr tex = testTexture;
+
     kore::TexturesComponentPtr tcp =
         kore::TexturesComponentPtr(new kore::TexturesComponent());
-    tcp->addTexture(kore::ResourceManager::getInstance()
-       ->getTexture("./assets/textures/checkerboard.png"));
+    tcp->addTexture(testTexture);
     vRenderNodes[i]->addComponent(tcp);
 
     // Bind Attribute-Ops
@@ -168,21 +180,29 @@ int main(void) {
       pSimpleShader->getProgramLocation(),
       pSimpleShader->getUniformByName("projection"));
 
-   // kore::BindUniformPtr pTextureUnitBind(new kore::BindUniform);
-    //pTextureUnitBind->connect()
+    kore::BindTexturePtr pTextureBind(new kore::BindTexture);
+    pTextureBind->connect(testTexture, tcp->getSampler(0),
+                          pSimpleShader->getUniformByName("tex")->texUnit);
 
-    kore::RenderMeshOpPtr pOp(new kore::RenderMesh);
-    pOp->setCamera(pCamera);
-    pOp->setMesh(pMeshComponent);
-    pOp->setShader(pSimpleShader);
+    kore::BindUniformPtr pTextureUnitBind(new kore::BindUniform);
+    pTextureUnitBind->connect(pSimpleShader->getUniformByName("tex"), // Note(dlazarek): There is no component-uniform for assigning texture units
+                              pSimpleShader->getProgramLocation(),    // to sampler uniforms. all information needed is already in the shader uniform.
+                              pSimpleShader->getUniformByName("tex"));
+
+    kore::RenderMeshOpPtr pRenderOp(new kore::RenderMesh);
+    pRenderOp->setCamera(pCamera);
+    pRenderOp->setMesh(pMeshComponent);
+    pRenderOp->setShader(pSimpleShader);
 
     kore::RenderManager::getInstance()->addOperation(pViewBind);
     kore::RenderManager::getInstance()->addOperation(pModelBind);
     kore::RenderManager::getInstance()->addOperation(pProjBind);
+    kore::RenderManager::getInstance()->addOperation(pTextureUnitBind);
+    kore::RenderManager::getInstance()->addOperation(pTextureBind);
     kore::RenderManager::getInstance()->addOperation(pPosAttBind);
     kore::RenderManager::getInstance()->addOperation(pNormAttBind);
     kore::RenderManager::getInstance()->addOperation(pUVAttBind);
-    kore::RenderManager::getInstance()->addOperation(pOp);
+    kore::RenderManager::getInstance()->addOperation(pRenderOp);
   }
 
   glClearColor(1.0f,1.0f,1.0f,1.0f);
@@ -193,24 +213,6 @@ int main(void) {
   rotationNode = vBigCubeNodes[0];
 
 
-  //////////////////////////////////////////////////////////////////////////
-  // Texture-Setup test
-  //////////////////////////////////////////////////////////////////////////
-  kore::TexturePtr testTexture =
-    kore::ResourceManager::getInstance()->
-    loadTexture("./assets/textures/checkerboard.png");
-
-  kore::TexturesComponentPtr textureComp(new kore::TexturesComponent);
-  textureComp->addTexture(testTexture);
-
-  rotationNode->addComponent(textureComp);
-
-  //kore::BindTexturePtr bindtex(new kore::BindTexture);
-  //bindtex->connect(ResourceManager::getInstance()->getTexture("bla"),)
-
-
-
-  //////////////////////////////////////////////////////////////////////////
 
 
   kore::Timer the_timer;
@@ -221,7 +223,8 @@ int main(void) {
   int oldMouseX = 0;
   int oldMouseY = 0;
   glfwGetMousePos(&oldMouseX,&oldMouseY);
-
+  
+  kore::GLerror::gl_ErrorCheckFinish();
 
   // Main loop
   while (running) {
@@ -264,9 +267,11 @@ int main(void) {
 
     rotationNode->rotate(90.0f * static_cast<float>(time), glm::vec3(0.0f, 0.0f, 1.0f));
 
+    kore::GLerror::gl_ErrorCheckStart();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     kore::RenderManager::getInstance()->renderFrame();
     glfwSwapBuffers();
+    kore::GLerror::gl_ErrorCheckFinish();
     // Check if ESC key was pressed or window was closed
     running = !glfwGetKey(GLFW_KEY_ESC) && glfwGetWindowParam(GLFW_OPENED);
   }

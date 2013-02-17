@@ -46,6 +46,12 @@ kore::RenderManager::RenderManager(void) {
     Log::getInstance()->write("[ERROR] Not all texture targets where"
                               "added into the textureTargetMap");
   }
+
+  memset(_boundTextures, 0, sizeof(GLuint) *
+                            GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS *
+                            NUM_TEXTURE_TARGETS);
+  memset(_boundSamplers, 0, sizeof(GLuint) * 
+                            GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS);
 }
 
 kore::RenderManager::~RenderManager(void) {

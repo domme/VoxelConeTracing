@@ -35,3 +35,9 @@ void kore::BindTexture::execute(void) {
                               _texture->getTargetType(),
                               _texture->getHandle());
 }
+
+void kore::BindTexture::update(void) {
+}
+
+void kore::BindTexture::reset(void) {
+}

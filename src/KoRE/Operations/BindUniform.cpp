@@ -353,7 +353,7 @@ break;
   case GL_UNSIGNED_INT_SAMPLER_BUFFER:
   case GL_UNSIGNED_INT_SAMPLER_2D_RECT:
     glActiveTexture(GL_TEXTURE0 + _componentUniform->texUnit);
-    glProgramUniform1ui(_shaderID, _shaderUniform->location, _componentUniform->texUnit);
+    glProgramUniform1i(_shaderID, _shaderUniform->location, _componentUniform->texUnit);
   break;
 /*
 
