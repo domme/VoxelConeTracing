@@ -36,6 +36,7 @@
 #include "KoRE/Operations/RenderMesh.h"
 #include "KoRE/Operations/BindAttribute.h"
 #include "KoRE/Operations/BindUniform.h"
+#include "KoRE/Operations/BindTexture.h"
 #include "KoRE/ResourceManager.h"
 #include "KoRE/RenderManager.h"
 #include "KoRE/Components/Camera.h"
@@ -106,14 +107,6 @@ int main(void) {
   pSimpleShader->loadShader("./assets/shader/normalColor.fp",
                             GL_FRAGMENT_SHADER);
   pSimpleShader->initShader();
-
-/*
-  kore::CameraPtr pCamera(new kore::Camera);
-  pCamera->setView(glm::lookAt(glm::vec3(19.0f, 13.0f, -17.4f),
-    glm::vec3(0.0f, 0.0f, 0.0f),
-    glm::vec3(0.0f, 1.0f, 0.0f)));
-  pCamera->setProjectionPersp(60.0f, 800.0f, 600.0f, 1.0f, 100.0f); 
-  */
 
   // load resources
   // TODO(dospelt) whole scene loading with all components
@@ -212,6 +205,9 @@ int main(void) {
 
   rotationNode->addComponent(textureComp);
 
+  //kore::BindTexturePtr bindtex(new kore::BindTexture);
+  //bindtex->connect(ResourceManager::getInstance()->getTexture("bla"),)
+
 
 
   //////////////////////////////////////////////////////////////////////////
@@ -220,7 +216,7 @@ int main(void) {
   kore::Timer the_timer;
   the_timer.start();
   double time = 0;
-  float cameraMoveSpeed = 0.01f;
+  float cameraMoveSpeed = 4.0f;
   
   int oldMouseX = 0;
   int oldMouseY = 0;
@@ -233,19 +229,19 @@ int main(void) {
     kore::SceneManager::getInstance()->update();
 
     if (glfwGetKey(GLFW_KEY_UP) == GLFW_PRESS) {
-      pCamera->moveForward(cameraMoveSpeed);
+      pCamera->moveForward(cameraMoveSpeed * time);
     }
 
     if (glfwGetKey(GLFW_KEY_DOWN) == GLFW_PRESS) {
-      pCamera->moveForward(-cameraMoveSpeed);
+      pCamera->moveForward(-cameraMoveSpeed * time);
     }
 
     if (glfwGetKey(GLFW_KEY_LEFT) == GLFW_PRESS) {
-      pCamera->moveSideways(-cameraMoveSpeed);
+      pCamera->moveSideways(-cameraMoveSpeed * time);
     }
 
     if (glfwGetKey(GLFW_KEY_RIGHT) == GLFW_PRESS) {
-      pCamera->moveSideways(cameraMoveSpeed);
+      pCamera->moveSideways(cameraMoveSpeed * time);
     }
 
     int mouseX = 0;
