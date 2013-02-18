@@ -69,6 +69,7 @@ namespace kore {
     bool hasOperation(const OperationPtr& op);
 
     // The OpenGL-State wrapper functions go here:
+    void bindVAO(const GLuint vao);
     void bindVBO(const GLuint vbo);
     void bindIBO(const GLuint ibo);
     void useShaderProgram(const GLuint shaderProgram);
@@ -91,6 +92,7 @@ namespace kore {
     const Shader* _activeShader;
 
     // OpenGL-States:
+    GLuint _vao;
     GLuint _vbo;
     GLuint _ibo;
     GLuint _shaderProgram;

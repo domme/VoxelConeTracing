@@ -50,12 +50,7 @@ void kore::RenderMesh::execute(void) {
     }
 
     _renderManager->useShaderProgram(_shader->getProgramLocation());
-
-    if (mesh->usesVBO()) {
-      _renderManager->bindVBO(mesh->getVBO());
-    } else {
-      _renderManager->bindVBO(0);
-    }
+    _renderManager->bindVBO(mesh->getVBO());
 
     if (mesh->usesIBO()) {
       _renderManager->bindIBO(mesh->getIBO());

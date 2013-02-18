@@ -7,8 +7,9 @@ uniform sampler2D tex;
 
 void main(void)
 {
-	// very basic lighting
-	vec3 dir_light = vec3(0, -1, -0.5);
-	float lighting = max(dot(normal, normalize(dir_light)), 0) + 1.0f;
-	out_color = vec4(texture2D(tex, vec2(UV.x, UV.y)).xyz * lighting, 1.0);
+    // very basic lighting
+    vec3 dir_light = vec3(0, -1, -0.5);
+    float lighting = max(dot(normal, normalize(dir_light)), 0) + 1.0f;
+    out_color = vec4(texture2D(tex, vec2(UV.x, UV.y)).xyz * lighting, 1.0);
+    //out_color = vec4(UV.x,UV.y,0.0,1.0)*lighting;
 }

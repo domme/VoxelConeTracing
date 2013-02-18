@@ -31,7 +31,7 @@ void kore::
   if (sampler == NULL) {
     TextureSamplerPtr newSampler(new TextureSampler);
     newSampler->create(GL_SAMPLER_2D,
-                       glm::uvec3(GL_REPEAT, GL_REPEAT, GL_REPEAT),
+                       glm::uvec3(wrap, wrap, wrap),
                        GL_LINEAR,
                        GL_LINEAR_MIPMAP_LINEAR);
     _vSamplers.push_back(newSampler);

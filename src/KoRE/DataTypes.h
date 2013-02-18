@@ -39,7 +39,7 @@ namespace kore {
     GLuint size;                 // number of components in units of type
                                  // (currently this is always 1)
     GLuint texUnit;
-    GLint location;
+    GLint location;              // location of attribute in shader
     std::string name;
     void* data;                  // Pointer to the data-source in the
                                  // application (only valid for component-

@@ -119,6 +119,13 @@ void kore::RenderManager::bindVBO(const GLuint vbo) {
   }
 }
 
+void kore::RenderManager::bindVAO(const GLuint vao) {
+  if (_vao != vao) {
+      _vao = vao;
+      glBindVertexArray(vao);
+  }
+}
+
 void kore::RenderManager::bindIBO( const GLuint ibo ) {
   if (_ibo != ibo) {
     _ibo = ibo;
@@ -152,6 +159,3 @@ void kore::RenderManager::bindSampler(const GLuint textureUnit,
     _boundSamplers[textureUnit] = samplerHandle;
   }
 }
-
-
-

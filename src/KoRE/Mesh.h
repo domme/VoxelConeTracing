@@ -1,5 +1,5 @@
 /*
-  Copyright © 2012 The KoRE Project
+  Copyright (c) 2012 The KoRE Project
 
   This file is part of KoRE.
 
@@ -80,7 +80,6 @@ namespace kore {
     const GLuint getVBO() const;
     const GLuint getVAO() const;
     const GLuint getIBO() const;
-    const bool usesVBO() const;
     const bool usesIBO() const;
 
   private:

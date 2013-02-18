@@ -18,6 +18,7 @@
 */
 #include "KoRE/Operations/BindAttribute.h"
 #include "KoRE/RenderManager.h"
+#include "KoRE/GLerror.h"
 
 kore::BindAttribute::BindAttribute(void) : _meshAttPtr(NULL),
                                            _shaderInput(NULL),
@@ -38,25 +39,15 @@ kore::BindAttribute::~BindAttribute(void) {
 
 void kore::BindAttribute::execute(void) {
   glEnableVertexAttribArray(_shaderInput->location);
-
   const kore::MeshPtr mesh = _meshComponent->getMesh();
-
-  if (mesh->usesVBO()) {
-    _renderManager->bindVBO(mesh->getVBO());
-    glVertexAttribPointer(_shaderInput->location,
-                          _meshAttPtr->numComponents,
-                          _meshAttPtr->componentType,
-                          GL_FALSE,
-                          _meshAttPtr->stride,
-                          BUFFER_OFFSET((uint)_meshAttPtr->data));
-  } else {
-    glVertexAttribPointer(_shaderInput->location,
-                          _meshAttPtr->numComponents,
-                          _meshAttPtr->componentType,
-                          GL_FALSE,
-                          _meshAttPtr->stride,
-                          _meshAttPtr->data);
-  }
+  _renderManager->bindVAO(mesh->getVAO());
+  _renderManager->bindVBO(mesh->getVBO());
+  glVertexAttribPointer(_shaderInput->location,
+                        _meshAttPtr->numComponents,
+                        _meshAttPtr->componentType,
+                        GL_FALSE,
+                        _meshAttPtr->stride,
+                        BUFFER_OFFSET((uint)_meshAttPtr->data));
 }
 
 void kore::BindAttribute::update(void) {

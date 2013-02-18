@@ -57,9 +57,9 @@ int main(void) {
     exit(EXIT_FAILURE);
   }
 
-  /*glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 4);
-  glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 2);
-  glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);*/
+  glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 4);
+  glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 3);
+  glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
   // Open an OpenGL window
   if (!glfwOpenWindow(800, 600, 0, 0, 0, 0, 0, 0, GLFW_WINDOW)) {
@@ -71,6 +71,7 @@ int main(void) {
   glfwSwapInterval(0);
 
   // initialize GLEW
+  glewExperimental = GL_TRUE;
   if (glewInit()) {
     glfwTerminate();
     exit(EXIT_FAILURE);
@@ -118,6 +119,7 @@ int main(void) {
   pSimpleShader->loadShader("./assets/shader/normalColor.fp",
                             GL_FRAGMENT_SHADER);
   pSimpleShader->initShader();
+
   // load resources
   kore::ResourceManager::getInstance()
     ->loadScene("./assets/meshes/TestEnv.dae");
@@ -146,7 +148,7 @@ int main(void) {
 
     // Add Texture
     kore::TexturesComponentPtr tcp =
-        kore::TexturesComponentPtr(new kore::TexturesComponent());
+        kore::TexturesComponentPtr(new kore::TexturesComponent);
     tcp->addTexture(testTexture);
     vRenderNodes[i]->addComponent(tcp);
 
@@ -184,13 +186,13 @@ int main(void) {
 
     /*kore::BindTexturePtr pTextureBind(new kore::BindTexture);
     pTextureBind->connect(testTexture, tcp->getSampler(0),
-                          pSimpleShader->getUniformByName("tex")->texUnit);
+                          pSimpleShader->getUniformByName("tex")->texUnit);*/
 
-    kore::BindUniformPtr pTextureUnitBind(new kore::BindUniform);
+    /*kore::BindUniformPtr pTextureUnitBind(new kore::BindUniform);
     pTextureUnitBind->connect(pSimpleShader->getUniformByName("tex"), // Note(dlazarek): There is no component-uniform for assigning texture units
                               pSimpleShader->getProgramLocation(),    // to sampler uniforms. all information needed is already in the shader uniform.
                               pSimpleShader->getUniformByName("tex"));*/
-
+ 
     kore::RenderMeshOpPtr pRenderOp(new kore::RenderMesh);
     pRenderOp->setCamera(pCamera);
     pRenderOp->setMesh(pMeshComponent);
@@ -208,10 +210,13 @@ int main(void) {
   }
   
   /*kore::GLerror::gl_ErrorCheckStart();
+  kore::TexturesComponentPtr pTexComp =
+    std::static_pointer_cast<kore::TexturesComponent>
+    (vRenderNodes[i]->getComponent(kore::COMPONENT_MESH));
   glUseProgram(pSimpleShader->getProgramLocation());
   glActiveTexture(GL_TEXTURE0);
+  glBindSampler(GL_TEXTURE0, tcp->);
   glBindTexture(GL_TEXTURE_2D, testTexture->getHandle());
-  glBindSampler(0, 1);
   glUniform1i(pSimpleShader->getUniformByName("tex")->location, 0);
   kore::GLerror::gl_ErrorCheckFinish();*/
 
@@ -220,7 +225,7 @@ int main(void) {
     ->getSceneNodesByName("Cube", vBigCubeNodes);
   rotationNode = vBigCubeNodes[0];
 
-   glClearColor(1.0f,1.0f,1.0f,1.0f);
+  glClearColor(1.0f,1.0f,1.0f,1.0f);
 
   kore::Timer the_timer;
   the_timer.start();
