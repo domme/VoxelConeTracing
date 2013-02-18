@@ -186,9 +186,9 @@ int main(void) {
 
     /*kore::BindTexturePtr pTextureBind(new kore::BindTexture);
     pTextureBind->connect(testTexture, tcp->getSampler(0),
-                          pSimpleShader->getUniformByName("tex")->texUnit);*/
+                          pSimpleShader->getUniformByName("tex")->texUnit);
 
-    /*kore::BindUniformPtr pTextureUnitBind(new kore::BindUniform);
+    kore::BindUniformPtr pTextureUnitBind(new kore::BindUniform);
     pTextureUnitBind->connect(pSimpleShader->getUniformByName("tex"), // Note(dlazarek): There is no component-uniform for assigning texture units
                               pSimpleShader->getProgramLocation(),    // to sampler uniforms. all information needed is already in the shader uniform.
                               pSimpleShader->getUniformByName("tex"));*/
@@ -208,18 +208,20 @@ int main(void) {
     //kore::RenderManager::getInstance()->addOperation(pTextureBind);
     kore::RenderManager::getInstance()->addOperation(pRenderOp);
   }
-  
-  /*kore::GLerror::gl_ErrorCheckStart();
-  kore::TexturesComponentPtr pTexComp =
-    std::static_pointer_cast<kore::TexturesComponent>
-    (vRenderNodes[i]->getComponent(kore::COMPONENT_MESH));
-  glUseProgram(pSimpleShader->getProgramLocation());
-  glActiveTexture(GL_TEXTURE0);
-  glBindSampler(GL_TEXTURE0, tcp->);
-  glBindTexture(GL_TEXTURE_2D, testTexture->getHandle());
-  glUniform1i(pSimpleShader->getUniformByName("tex")->location, 0);
-  kore::GLerror::gl_ErrorCheckFinish();*/
 
+  ////////////////////////////////////////////////////////
+  GLuint samplerhandle;
+  glGenSamplers(1, &samplerhandle);
+  glBindSampler(0, samplerhandle);
+  
+  glUseProgram(pSimpleShader->getProgramLocation());
+  glUniform1i(pSimpleShader->getUniformByName("tex")->location, 0); //Texture unit 0 is for base images.
+
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, testTexture->getHandle());
+  glBindSampler(0, samplerhandle);
+
+  ////////////////////////////////////////////////////////////////////
   std::vector<kore::SceneNodePtr> vBigCubeNodes;
   kore::SceneManager::getInstance()
     ->getSceneNodesByName("Cube", vBigCubeNodes);

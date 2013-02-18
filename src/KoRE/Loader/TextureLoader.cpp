@@ -62,6 +62,7 @@ kore::TexturePtr
     tex->_yres = height;
     tex->_type = GL_TEXTURE_2D;
 
+    glActiveTexture(GL_TEXTURE0);
     glGenTextures(1, &tex->_handle);
     glBindTexture(GL_TEXTURE_2D, tex->_handle);
 

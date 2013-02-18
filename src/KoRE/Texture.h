@@ -14,6 +14,7 @@ namespace kore {
 
   private:
     GLuint _handle;
+    GLuint _unit;
     std:: string _resourcepath;
     uint _xres;
     uint _yres;

@@ -2,6 +2,7 @@
 
 kore::Texture::Texture()
                     : _handle(GLUINT_HANDLE_INVALID),
+                      _unit(GL_TEXTURE0),
                       _resourcepath(""),
                       _xres(0),
                       _yres(0),
