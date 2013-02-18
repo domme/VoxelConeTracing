@@ -42,6 +42,10 @@ void kore::SelectNodes::update() {}
 
 void kore::SelectNodes::reset() {}
 
+bool kore::SelectNodes::isValid(void) {
+  return false;
+}
+
 void kore::SelectNodes::append(const SceneNodePtr& root, const uint tag) {
   // TODO(someone): tag matching
   // if (tagmatch) {

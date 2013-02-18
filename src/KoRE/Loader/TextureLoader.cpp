@@ -49,10 +49,11 @@ kore::TexturePtr
   uint err = lodepng::decode(imageData, width, height, pngState, buffer);
 
   if ( err != 0) {
-    kore::Log::getInstance()->write("[ERROR] Failed to load texture: "
-                                    "\"%s\":\n\t%s\n",
-                                    filepath,
+    kore::Log::getInstance()->write("[ERROR] Failed to load texture '%s' :\n"
+                                    "\t%s\n",
+                                    filepath.c_str(),
                                     lodepng_error_text(err));
+    return TexturePtr(NULL);
   } else {
     kore::TexturePtr tex = TexturePtr(new Texture());
     LodePNGColorMode& color = pngState.info_raw;
@@ -76,7 +77,9 @@ kore::TexturePtr
                    GL_UNSIGNED_BYTE,
                    reinterpret_cast<GLvoid*>(&imageData[0]));
     ResourceManager::getInstance()->addTexture(filepath, tex);
+    kore::Log::getInstance()
+      ->write("[DEBUG] Texture '%s' successfully loaded\n",
+              filepath.c_str());
     return tex;
   }
-  return TexturePtr();
 }

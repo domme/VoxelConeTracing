@@ -22,8 +22,8 @@
 #include <sys/stat.h>
 #include <string>
 #include "KoRE/ResourceManager.h"
-#include "KoRE/MeshLoader.h"
-#include "KoRE/SceneLoader.h"
+#include "KoRE/Loader/MeshLoader.h"
+#include "KoRE/Loader/SceneLoader.h"
 #include "KoRE/Loader/TextureLoader.h"
 #include "KoRE/Log.h"
 #include "KoRE/Components/MeshComponent.h"

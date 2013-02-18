@@ -41,6 +41,12 @@ kore::Shader::~Shader(void) {
 }
 
 bool kore::Shader::loadShader(const std::string& file, GLenum shadertype) {
+  if (_name == "") {
+    _name = file.substr(file.find_last_of("/")+1,
+                        file.find_last_of(".")
+                        - (file.find_last_of("/")+1));
+  }
+
   std::string* prog;
   switch (shadertype) {
   case GL_VERTEX_SHADER:
@@ -67,7 +73,7 @@ bool kore::Shader::loadShader(const std::string& file, GLenum shadertype) {
 
   if (code_file == NULL) {
     kore::Log::getInstance()->write(
-      "[ERROR] Could not open shader program %s\n", file.c_str());
+      "[ERROR] Could not open shader program '%s'\n", file.c_str());
     return false;
   }
 
@@ -134,17 +140,18 @@ bool kore::Shader::initShader(void) {
     GLchar * infoLog = new GLchar[infologLen];
     if (infoLog == NULL) {
       kore::Log::getInstance()->write(
-        "[ERROR] Could not allocate ShaderInfoLog buffer");
+        "[ERROR] Could not allocate ShaderInfoLog buffer from '%s'\n",
+        _name.c_str());
     }
     int charsWritten = 0;
     glGetProgramInfoLog(_shaderID, infologLen, &charsWritten, infoLog);
     std::string shaderlog = infoLog;
     kore::Log::getInstance()->write(
-      "[DEBUG] Program Log %s\n", shaderlog.c_str());
+      "[DEBUG] '%s' program Log %s\n", _name.c_str(), shaderlog.c_str());
     free(infoLog);
   } else {
     kore::Log::getInstance()->write(
-      "[DEBUG] Program compiled\n");
+      "[DEBUG] Program '%s' compiled\n", _name.c_str());
   }
 
   _attributes.clear();
@@ -213,8 +220,8 @@ void kore::Shader::constructShaderInfo(const GLenum activeType,
 
     // For Uniform texture-types: add the textureUnit-field
     if (activeType == GL_ACTIVE_UNIFORMS) {
-      uint texUnit = 0;
-      for (int i = 0; i < rInputVector.size(); ++i) {
+      GLuint texUnit = 0;
+      for (uint i = 0; i < rInputVector.size(); ++i) {
         if (isSamplerType(rInputVector[i].type)) {
           rInputVector[i].texUnit = texUnit;
           ++texUnit;
@@ -268,27 +275,27 @@ bool kore::Shader::isSamplerType(const GLuint uniformType) {
 }
 
 const kore::ShaderInput*
-kore::Shader::getAttributeByName( const std::string& name ) const {
+kore::Shader::getAttributeByName(const std::string& name) const {
   for (uint i = 0; i < _attributes.size(); ++i) {
     if (_attributes[i].name == name) {
       return &_attributes[i];
     }
   }
 
-  Log::getInstance()->write("[ERROR] Attribute %s not found in shader %s",
+  Log::getInstance()->write("[ERROR] Attribute '%s' not found in shader '%s'\n",
                             name.c_str(), _name.c_str());
   return NULL;
 }
 
 const kore::ShaderInput*
-kore::Shader::getUniformByName( const std::string& name ) const {
+kore::Shader::getUniformByName(const std::string& name) const {
   for (uint i = 0; i < _uniforms.size(); ++i) {
     if (_uniforms[i].name == name) {
       return &_uniforms[i];
     }
   }
 
-  Log::getInstance()->write("[ERROR] Uniform %s not found in shader %s",
+  Log::getInstance()->write("[ERROR] Uniform '%s' not found in shader '%s'",
     name.c_str(), _name.c_str());
   return NULL;
 }

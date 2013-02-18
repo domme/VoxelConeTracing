@@ -52,6 +52,7 @@ namespace kore {
     std::string getCameraName(const aiCamera* pAiCamera,
                               const uint uCameraSceneIndex);
     Assimp::Importer _aiImporter;
+    uint _nodecount, _cameracount, _meshcount;
   };
 };
 #endif  // CORE_INCLUDE_CORE_SCENELOADER_H_

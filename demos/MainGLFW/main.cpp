@@ -57,9 +57,9 @@ int main(void) {
     exit(EXIT_FAILURE);
   }
 
-  glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 4);
+  /*glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 4);
   glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 2);
-  glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);*/
 
   // Open an OpenGL window
   if (!glfwOpenWindow(800, 600, 0, 0, 0, 0, 0, 0, GLFW_WINDOW)) {
@@ -82,27 +82,32 @@ int main(void) {
   // log versions
   int GLFWmajor, GLFWminor, GLFWrev;
   glfwGetVersion(&GLFWmajor, &GLFWminor, &GLFWrev);
-  kore::Log::getInstance()->write(
-    "Render Device: %s\n",
-    reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
-  kore::Log::getInstance()->write(
-    "Vendor: %s\n",
-    reinterpret_cast<const char*>(glGetString(GL_VENDOR)));
-  kore::Log::getInstance()->write(
-    "OpenGL version: %s\n",
-    reinterpret_cast<const char*>(glGetString(GL_VERSION)));
-  kore::Log::getInstance()->write(
-    "GLSL version: %s\n",
-    reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
-  kore::Log::getInstance()->write(
-    "GLFW version %i.%i.%i\n",
-    GLFWmajor, GLFWminor, GLFWrev);
-  kore::Log::getInstance()->write(
-    "GLEW version: %s\n",
-    reinterpret_cast<const char*>(glewGetString(GLEW_VERSION)));
+  kore::Log::getInstance()
+    ->write("Render Device: %s\n",
+            reinterpret_cast<const char*>(
+            glGetString(GL_RENDERER)));
+  kore::Log::getInstance()
+    ->write("Vendor: %s\n",
+            reinterpret_cast<const char*>(
+            glGetString(GL_VENDOR)));
+  kore::Log::getInstance()
+    ->write("OpenGL version: %s\n",
+            reinterpret_cast<const char*>(
+            glGetString(GL_VERSION)));
+  kore::Log::getInstance()
+    ->write("GLSL version: %s\n",
+             reinterpret_cast<const char*>(
+             glGetString(GL_SHADING_LANGUAGE_VERSION)));
+  kore::Log::getInstance()
+    ->write("GLFW version %i.%i.%i\n",
+             GLFWmajor, GLFWminor, GLFWrev);
+  kore::Log::getInstance()
+    ->write("GLEW version: %s\n",
+            reinterpret_cast<const char*>(
+            glewGetString(GLEW_VERSION)));
 
+  // enable culling and depthtest
   glEnable(GL_DEPTH_TEST);
-  
   glEnable(GL_CULL_FACE);
   glCullFace(GL_BACK);
 
@@ -113,42 +118,37 @@ int main(void) {
   pSimpleShader->loadShader("./assets/shader/normalColor.fp",
                             GL_FRAGMENT_SHADER);
   pSimpleShader->initShader();
-
-  //////////////////////////////////////////////////////////////////////////
-  // Texture-Setup test
-  //////////////////////////////////////////////////////////////////////////
-  kore::TexturePtr testTexture =
-    kore::ResourceManager::getInstance()->
-    loadTexture("./assets/textures/Crate.png");
-  //////////////////////////////////////////////////////////////////////////
-
-
   // load resources
-  // TODO(dospelt) whole scene loading with all components
   kore::ResourceManager::getInstance()->
                             loadScene("./assets/meshes/TestEnv.dae");
 
+  // texture loading
+  kore::TexturePtr testTexture =
+    kore::ResourceManager::getInstance()->
+    loadTexture("./assets/textures/Crate.png");
+
+  // find camera
+  kore::SceneNodePtr pCameraNode = kore::SceneManager::getInstance()
+    ->getSceneNodeByComponent(kore::COMPONENT_CAMERA);
+  pCamera = std::static_pointer_cast<kore::Camera>(
+            pCameraNode->getComponent(kore::COMPONENT_CAMERA));
+
+  // select render nodes
   std::vector<kore::SceneNodePtr> vRenderNodes;
   kore::SceneManager::getInstance()->
                   getSceneNodesByComponent(kore::COMPONENT_MESH, vRenderNodes);
 
- kore::SceneNodePtr pCameraNode = kore::SceneManager::getInstance()->
-                  getSceneNodeByComponent(kore::COMPONENT_CAMERA);
-
-  pCamera = 
-    std::static_pointer_cast<kore::Camera>(
-    pCameraNode->getComponent(kore::COMPONENT_CAMERA));
- 
+  // init operations
   for (uint i = 0; i < vRenderNodes.size(); ++i) {
     kore::MeshComponentPtr pMeshComponent =
       std::static_pointer_cast<kore::MeshComponent>
       (vRenderNodes[i]->getComponent(kore::COMPONENT_MESH));
 
     // Add Texture
-    /*kore::TexturesComponentPtr tcp =
+    kore::TexturesComponentPtr tcp =
         kore::TexturesComponentPtr(new kore::TexturesComponent());
     tcp->addTexture(testTexture);
-    vRenderNodes[i]->addComponent(tcp);*/
+    vRenderNodes[i]->addComponent(tcp);
 
     // Bind Attribute-Ops
     kore::BindAttributePtr pPosAttBind (new kore::BindAttribute);
@@ -196,16 +196,17 @@ int main(void) {
     pRenderOp->setMesh(pMeshComponent);
     pRenderOp->setShader(pSimpleShader);
 
-    kore::RenderManager::getInstance()->addOperation(pViewBind);
-    //kore::RenderManager::getInstance()->addOperation(pModelBind);
-    //kore::RenderManager::getInstance()->addOperation(pProjBind);
-    //kore::RenderManager::getInstance()->addOperation(pTextureUnitBind);
-    //kore::RenderManager::getInstance()->addOperation(pTextureBind);
     kore::RenderManager::getInstance()->addOperation(pPosAttBind);
     kore::RenderManager::getInstance()->addOperation(pNormAttBind);
     kore::RenderManager::getInstance()->addOperation(pUVAttBind);
+    kore::RenderManager::getInstance()->addOperation(pModelBind);
+    kore::RenderManager::getInstance()->addOperation(pViewBind);
+    kore::RenderManager::getInstance()->addOperation(pProjBind);
+    //kore::RenderManager::getInstance()->addOperation(pTextureUnitBind);
+    //kore::RenderManager::getInstance()->addOperation(pTextureBind);
     kore::RenderManager::getInstance()->addOperation(pRenderOp);
   }
+  
   /*kore::GLerror::gl_ErrorCheckStart();
   glUseProgram(pSimpleShader->getProgramLocation());
   glActiveTexture(GL_TEXTURE0);
@@ -214,15 +215,12 @@ int main(void) {
   glUniform1i(pSimpleShader->getUniformByName("tex")->location, 0);
   kore::GLerror::gl_ErrorCheckFinish();*/
 
-  glClearColor(1.0f,1.0f,1.0f,1.0f);
-
   std::vector<kore::SceneNodePtr> vBigCubeNodes;
-  kore::SceneManager::getInstance()->
-      getSceneNodesByName("Cube", vBigCubeNodes);
+  kore::SceneManager::getInstance()
+    ->getSceneNodesByName("Cube", vBigCubeNodes);
   rotationNode = vBigCubeNodes[0];
 
-
-
+   glClearColor(1.0f,1.0f,1.0f,1.0f);
 
   kore::Timer the_timer;
   the_timer.start();
@@ -232,28 +230,26 @@ int main(void) {
   int oldMouseX = 0;
   int oldMouseY = 0;
   glfwGetMousePos(&oldMouseX,&oldMouseY);
-  
-  
 
   // Main loop
   while (running) {
     time = the_timer.timeSinceLastCall();
-    kore::SceneManager::getInstance()->update();
+    //kore::SceneManager::getInstance()->update();
 
     if (glfwGetKey(GLFW_KEY_UP) == GLFW_PRESS) {
-      pCamera->moveForward(cameraMoveSpeed * time);
+      pCamera->moveForward(cameraMoveSpeed * static_cast<float>(time));
     }
 
     if (glfwGetKey(GLFW_KEY_DOWN) == GLFW_PRESS) {
-      pCamera->moveForward(-cameraMoveSpeed * time);
+      pCamera->moveForward(-cameraMoveSpeed * static_cast<float>(time));
     }
 
     if (glfwGetKey(GLFW_KEY_LEFT) == GLFW_PRESS) {
-      pCamera->moveSideways(-cameraMoveSpeed * time);
+      pCamera->moveSideways(-cameraMoveSpeed * static_cast<float>(time));
     }
 
     if (glfwGetKey(GLFW_KEY_RIGHT) == GLFW_PRESS) {
-      pCamera->moveSideways(cameraMoveSpeed * time);
+      pCamera->moveSideways(cameraMoveSpeed * static_cast<float>(time));
     }
 
     int mouseX = 0;
@@ -281,6 +277,7 @@ int main(void) {
     kore::RenderManager::getInstance()->renderFrame();
     glfwSwapBuffers();
     kore::GLerror::gl_ErrorCheckFinish();
+
     // Check if ESC key was pressed or window was closed
     running = !glfwGetKey(GLFW_KEY_ESC) && glfwGetWindowParam(GLFW_OPENED);
   }

@@ -91,6 +91,10 @@ void kore::RenderMesh::reset(void) {
   setExecuted(false);
 }
 
+bool kore::RenderMesh::isValid(void) {
+  return false;
+}
+
 const kore::MeshComponentPtr& kore::RenderMesh::getMesh() const {
     return _meshComponent;
 }

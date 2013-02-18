@@ -26,6 +26,7 @@ namespace kore {
   class Log {
   public:
     static Log *getInstance(void);
+    /// write to file and/or console
     void write(const char* format, ...);
   private:
     Log(void);

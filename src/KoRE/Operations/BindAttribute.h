@@ -35,6 +35,7 @@ namespace kore {
     virtual void execute(void);
     virtual void update(void);
     virtual void reset(void);
+    virtual bool isValid(void);
     void connect(const MeshComponentPtr mesh,
                  const MeshAttributeArray* meshAtt,
                  const ShaderInput* shaderAtt);

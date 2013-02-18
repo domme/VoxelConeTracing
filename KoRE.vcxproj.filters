@@ -43,9 +43,6 @@
     <ClCompile Include="src\KoRE\RenderManager.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\KoRE\Operations\RenderMesh.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\KoRE\ResourceManager.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -84,6 +81,9 @@
     </ClCompile>
     <ClCompile Include="src\KoRE\Loader\lodepng.cpp">
       <Filter>src\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KoRE\Operations\RenderMesh.cpp">
+      <Filter>src\Operations</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -127,9 +127,6 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\KoRE\RenderManager.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\KoRE\Operations\RenderMesh.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\KoRE\ResourceManager.h">
@@ -176,6 +173,9 @@
     </ClInclude>
     <ClInclude Include="src\KoRE\Loader\TextureLoader.h">
       <Filter>src\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\Operations\RenderMesh.h">
+      <Filter>src\Operations</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

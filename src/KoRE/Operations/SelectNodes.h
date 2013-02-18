@@ -43,6 +43,7 @@ namespace kore {
     virtual void execute(void);
     virtual void update(void);
     virtual void reset(void);
+    virtual bool isValid(void);
   private:
     void append(const SceneNodePtr& root, const uint tag);
     void append(const SceneNodePtr& root, const std::string &name);

@@ -31,6 +31,7 @@ namespace kore {
     virtual void execute(void) = 0;
     virtual void update(void) = 0;
     virtual void reset(void) = 0;
+    virtual bool isValid(void) = 0;
     void setExecuted(bool flag);
     bool getExecuted(void);
 

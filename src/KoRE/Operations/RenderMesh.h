@@ -37,6 +37,7 @@ namespace kore {
     virtual void execute(void);
     virtual void update(void);
     virtual void reset(void);
+    virtual bool isValid(void);
 
     const kore::MeshComponentPtr& getMesh() const;
     void setMesh(const kore::MeshComponentPtr& mesh);

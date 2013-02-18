@@ -41,3 +41,7 @@ void kore::BindTexture::update(void) {
 
 void kore::BindTexture::reset(void) {
 }
+
+bool kore::BindTexture::isValid(void) {
+  return false;
+}

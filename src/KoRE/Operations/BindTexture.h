@@ -36,6 +36,7 @@ namespace kore {
     virtual void execute(void);
     virtual void update(void);
     virtual void reset(void);
+    virtual bool isValid(void);
     void connect(const TexturePtr tex,
                  const TextureSamplerPtr sampler,
                  const uint texUnit);

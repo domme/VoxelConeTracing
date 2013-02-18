@@ -32,7 +32,7 @@ namespace kore {
     SPACE_WORLD
   };
     typedef std::shared_ptr<SceneNode> SceneNodePtr;
-    class SceneNode {
+  class SceneNode {
     friend class SceneLoader;
   public:
     SceneNode(void);
@@ -79,8 +79,6 @@ namespace kore {
                         const glm::vec3& v3Up,
                         const glm::vec3& v3Forward,
                         const ETransfpomSpace relativeTo = SPACE_LOCAL);
-
-
   private:
     uint64 _id;
     uint _tag;

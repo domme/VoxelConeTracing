@@ -43,13 +43,19 @@ void kore::BindAttribute::execute(void) {
 
   if (mesh->usesVBO()) {
     _renderManager->bindVBO(mesh->getVBO());
-    glVertexAttribPointer(_shaderInput->location, _meshAttPtr->numComponents,
-      _meshAttPtr->componentType, GL_FALSE, _meshAttPtr->stride, 
-                                    BUFFER_OFFSET((uint)_meshAttPtr->data));
+    glVertexAttribPointer(_shaderInput->location,
+                          _meshAttPtr->numComponents,
+                          _meshAttPtr->componentType,
+                          GL_FALSE,
+                          _meshAttPtr->stride,
+                          BUFFER_OFFSET((uint)_meshAttPtr->data));
   } else {
-    glVertexAttribPointer(_shaderInput->location, _meshAttPtr->numComponents,
-      _meshAttPtr->componentType, GL_FALSE, _meshAttPtr->stride,
-                                                        _meshAttPtr->data);
+    glVertexAttribPointer(_shaderInput->location,
+                          _meshAttPtr->numComponents,
+                          _meshAttPtr->componentType,
+                          GL_FALSE,
+                          _meshAttPtr->stride,
+                          _meshAttPtr->data);
   }
 }
 
@@ -57,6 +63,10 @@ void kore::BindAttribute::update(void) {
 }
 
 void kore::BindAttribute::reset(void) {
+}
+
+bool kore::BindAttribute::isValid(void) {
+  return false;
 }
 
 void kore::BindAttribute::connect(const kore::MeshComponentPtr mesh,

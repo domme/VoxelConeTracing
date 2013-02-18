@@ -106,8 +106,9 @@ void kore::RenderManager::addOperation(const OperationPtr& op,
 }
 
 bool kore::RenderManager::hasOperation(const OperationPtr& op) {
-    return std::find(_operations.begin(), _operations.end(), op) !=
-                                                             _operations.end();
+  return std::find(_operations.begin(),
+                   _operations.end(), op)
+                   != _operations.end();
 }
 
 // OpenGL-Wrappers:

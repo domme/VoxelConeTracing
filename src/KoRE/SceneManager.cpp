@@ -1,5 +1,5 @@
 /*
-  Copyright ï¿œ 2012 The KoRE Project
+  Copyright (c) 2012 The KoRE Project
 
   This file is part of KoRE.
 
@@ -32,6 +32,7 @@ kore::SceneManager::SceneManager(void)
                             _tagcount(0) {
   addTag("DEFAULT");
   _root = SceneNodePtr(new SceneNode());
+  _root->setName("ROOT");
 }
 
 kore::SceneManager::~SceneManager(void) {
