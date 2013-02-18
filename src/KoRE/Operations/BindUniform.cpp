@@ -252,9 +252,8 @@ void kore::BindUniform::execute(void) {
                        static_cast<GLfloat*>(_componentUniform->data));
   break;
   case GL_FLOAT_MAT4:
-        glProgramUniformMatrix4fv(_shaderID, _shaderUniform->location, 1,
-                           GL_FALSE,
-                           static_cast<GLfloat*>(_componentUniform->data));
+    glProgramUniformMatrix4fv(_shaderID, _shaderUniform->location, 1, GL_FALSE,
+                              static_cast<GLfloat*>(_componentUniform->data));
   break;
   case GL_FLOAT_MAT2x3: 
     glProgramUniformMatrix2x3fv(_shaderID, _shaderUniform->location, 1,

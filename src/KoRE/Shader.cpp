@@ -157,8 +157,17 @@ bool kore::Shader::initShader(void) {
   _attributes.clear();
   _uniforms.clear();
   constructShaderInfo(GL_ACTIVE_ATTRIBUTES, _attributes);
+  for (uint i = 0; i < _attributes.size(); i++) {
+    kore::Log::getInstance()->write("\tAttribute '%s' at location %i\n",
+                                    _attributes[i].name.c_str(),
+                                    _attributes[i].location);
+  }
   constructShaderInfo(GL_ACTIVE_UNIFORMS, _uniforms);
-
+  for (uint j = 0; j < _uniforms.size(); j++) {
+    kore::Log::getInstance()->write("\tUniform '%s' at location %i\n",
+                                    _uniforms[j].name.c_str(),
+                                    _uniforms[j].location);
+  }
   return success == GL_TRUE;
 }
 

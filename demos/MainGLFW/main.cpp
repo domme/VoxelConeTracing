@@ -119,8 +119,8 @@ int main(void) {
                             GL_FRAGMENT_SHADER);
   pSimpleShader->initShader();
   // load resources
-  kore::ResourceManager::getInstance()->
-                            loadScene("./assets/meshes/TestEnv.dae");
+  kore::ResourceManager::getInstance()
+    ->loadScene("./assets/meshes/TestEnv.dae");
 
   // texture loading
   kore::TexturePtr testTexture =
@@ -234,7 +234,7 @@ int main(void) {
   // Main loop
   while (running) {
     time = the_timer.timeSinceLastCall();
-    //kore::SceneManager::getInstance()->update();
+    kore::SceneManager::getInstance()->update();
 
     if (glfwGetKey(GLFW_KEY_UP) == GLFW_PRESS) {
       pCamera->moveForward(cameraMoveSpeed * static_cast<float>(time));
