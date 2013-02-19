@@ -18,27 +18,27 @@
 #endif
 
 QT_BEGIN_MOC_NAMESPACE
-struct qt_meta_stringdata_kore__SceneViewer_t {
+struct qt_meta_stringdata_koregui__SceneViewer_t {
     QByteArrayData data[4];
-    char stringdata[35];
+    char stringdata[38];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
-    offsetof(qt_meta_stringdata_kore__SceneViewer_t, stringdata) + ofs \
+    offsetof(qt_meta_stringdata_koregui__SceneViewer_t, stringdata) + ofs \
         - idx * sizeof(QByteArrayData) \
     )
-static const qt_meta_stringdata_kore__SceneViewer_t qt_meta_stringdata_kore__SceneViewer = {
+static const qt_meta_stringdata_koregui__SceneViewer_t qt_meta_stringdata_koregui__SceneViewer = {
     {
-QT_MOC_LITERAL(0, 0, 17),
-QT_MOC_LITERAL(1, 18, 6),
-QT_MOC_LITERAL(2, 25, 0),
-QT_MOC_LITERAL(3, 26, 7)
+QT_MOC_LITERAL(0, 0, 20),
+QT_MOC_LITERAL(1, 21, 6),
+QT_MOC_LITERAL(2, 28, 0),
+QT_MOC_LITERAL(3, 29, 7)
     },
-    "kore::SceneViewer\0zoomIn\0\0zoomOut\0"
+    "koregui::SceneViewer\0zoomIn\0\0zoomOut\0"
 };
 #undef QT_MOC_LITERAL
 
-static const uint qt_meta_data_kore__SceneViewer[] = {
+static const uint qt_meta_data_koregui__SceneViewer[] = {
 
  // content:
        7,       // revision
@@ -62,7 +62,7 @@ static const uint qt_meta_data_kore__SceneViewer[] = {
        0        // eod
 };
 
-void kore::SceneViewer::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+void koregui::SceneViewer::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
 {
     if (_c == QMetaObject::InvokeMetaMethod) {
         SceneViewer *_t = static_cast<SceneViewer *>(_o);
@@ -75,26 +75,26 @@ void kore::SceneViewer::qt_static_metacall(QObject *_o, QMetaObject::Call _c, in
     Q_UNUSED(_a);
 }
 
-const QMetaObject kore::SceneViewer::staticMetaObject = {
-    { &QGraphicsView::staticMetaObject, qt_meta_stringdata_kore__SceneViewer.data,
-      qt_meta_data_kore__SceneViewer,  qt_static_metacall, 0, 0}
+const QMetaObject koregui::SceneViewer::staticMetaObject = {
+    { &QGraphicsView::staticMetaObject, qt_meta_stringdata_koregui__SceneViewer.data,
+      qt_meta_data_koregui__SceneViewer,  qt_static_metacall, 0, 0}
 };
 
 
-const QMetaObject *kore::SceneViewer::metaObject() const
+const QMetaObject *koregui::SceneViewer::metaObject() const
 {
     return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
 }
 
-void *kore::SceneViewer::qt_metacast(const char *_clname)
+void *koregui::SceneViewer::qt_metacast(const char *_clname)
 {
     if (!_clname) return 0;
-    if (!strcmp(_clname, qt_meta_stringdata_kore__SceneViewer.stringdata))
+    if (!strcmp(_clname, qt_meta_stringdata_koregui__SceneViewer.stringdata))
         return static_cast<void*>(const_cast< SceneViewer*>(this));
     return QGraphicsView::qt_metacast(_clname);
 }
 
-int kore::SceneViewer::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+int koregui::SceneViewer::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
     _id = QGraphicsView::qt_metacall(_c, _id, _a);
     if (_id < 0)
