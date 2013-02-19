@@ -20,22 +20,33 @@ isCompatibleWith(const SceneNodeComponent& otherComponent) const {
 
 void kore::
   TexturesComponent::addTexture(TexturePtr tex,
-                                bool mipmap /*= true*/,
-                                GLenum wrap /*= GL_REPEAT*/,
+                                const bool useMipMaps /*=true*/,
                                 const TextureSamplerPtr sampler /*= NULL*/ ) {
   if (std::find(_vTextures.begin(),
                 _vTextures.end(), tex) != _vTextures.end()) {
     return;
   }
 
+  TextureSamplerPtr texSampler;
+
   if (sampler == NULL) {
     TextureSamplerPtr newSampler(new TextureSampler);
     newSampler->create(GL_SAMPLER_2D,
-                       glm::uvec3(wrap, wrap, wrap),
+                       glm::uvec3(GL_REPEAT, GL_REPEAT, GL_REPEAT),
                        GL_LINEAR,
-                       GL_LINEAR_MIPMAP_LINEAR);
-    _vSamplers.push_back(newSampler);
+                       useMipMaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR);
+    texSampler = newSampler; 
   } else {
-    _vSamplers.push_back(sampler);
+    texSampler = sampler;
   }
+
+  _vSamplers.push_back(texSampler);
+
+  ShaderInput shaderInput;
+  shaderInput.name = tex->getName();
+  shaderInput.samplerLocation = texSampler->getHandle();
+  shaderInput.texLocation = tex->getHandle();
+  shaderInput.texTarget = tex->getTargetType();
+  _shaderInputs.push_back(shaderInput);
+  // Tex unit is defined by shader
 }

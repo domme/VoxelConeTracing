@@ -38,9 +38,16 @@ namespace kore {
     GLenum type;                 // e.g. GL_FLOAT_VEC3
     GLuint size;                 // number of components in units of type
                                  // (currently this is always 1)
-    GLuint texUnit;
     GLint location;              // location of attribute in shader
     std::string name;
+    
+    // Only used for texture-types:
+    GLuint texTarget;
+    GLuint texUnit;
+    GLuint texLocation;
+    GLuint samplerLocation;
+    //////////////////////////////////////////////////////////////////////////
+
     void* data;                  // Pointer to the data-source in the
                                  // application (only valid for component-
                                  // uniforms.

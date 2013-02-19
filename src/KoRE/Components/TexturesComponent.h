@@ -36,8 +36,7 @@ namespace kore {
     inline const TextureSamplerPtr getSampler(const uint idx) const {return _vSamplers[idx];}
 
     void addTexture(TexturePtr tex,
-                    bool mipmap = true,
-                    GLenum wrap = GL_REPEAT,
+                    const bool useMipMaps = true,
                     const TextureSamplerPtr sampler = TextureSamplerPtr());
 
   private:
