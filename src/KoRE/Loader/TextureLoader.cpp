@@ -77,6 +77,7 @@ kore::TexturePtr
                    GL_RGBA,
                    GL_UNSIGNED_BYTE,
                    reinterpret_cast<GLvoid*>(&imageData[0]));
+    glGenerateMipmap(GL_TEXTURE_2D);
     ResourceManager::getInstance()->addTexture(filepath, tex);
     kore::Log::getInstance()
       ->write("[DEBUG] Texture '%s' successfully loaded\n",

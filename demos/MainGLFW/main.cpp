@@ -58,7 +58,7 @@ int main(void) {
   }
 
   glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 4);
-  glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 3);
+  glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 2);
   glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
   // Open an OpenGL window
@@ -184,14 +184,14 @@ int main(void) {
       pSimpleShader->getProgramLocation(),
       pSimpleShader->getUniformByName("projection"));
 
-    /*kore::BindTexturePtr pTextureBind(new kore::BindTexture);
+    kore::BindTexturePtr pTextureBind(new kore::BindTexture);
     pTextureBind->connect(testTexture, tcp->getSampler(0),
                           pSimpleShader->getUniformByName("tex")->texUnit);
 
     kore::BindUniformPtr pTextureUnitBind(new kore::BindUniform);
     pTextureUnitBind->connect(pSimpleShader->getUniformByName("tex"), // Note(dlazarek): There is no component-uniform for assigning texture units
                               pSimpleShader->getProgramLocation(),    // to sampler uniforms. all information needed is already in the shader uniform.
-                              pSimpleShader->getUniformByName("tex"));*/
+                              pSimpleShader->getUniformByName("tex"));
  
     kore::RenderMeshOpPtr pRenderOp(new kore::RenderMesh);
     pRenderOp->setCamera(pCamera);
@@ -204,13 +204,13 @@ int main(void) {
     kore::RenderManager::getInstance()->addOperation(pModelBind);
     kore::RenderManager::getInstance()->addOperation(pViewBind);
     kore::RenderManager::getInstance()->addOperation(pProjBind);
-    //kore::RenderManager::getInstance()->addOperation(pTextureUnitBind);
-    //kore::RenderManager::getInstance()->addOperation(pTextureBind);
+    kore::RenderManager::getInstance()->addOperation(pTextureUnitBind);
+    kore::RenderManager::getInstance()->addOperation(pTextureBind);
     kore::RenderManager::getInstance()->addOperation(pRenderOp);
   }
 
   ////////////////////////////////////////////////////////
-  GLuint samplerhandle;
+  /*GLuint samplerhandle;
   glGenSamplers(1, &samplerhandle);
   glBindSampler(0, samplerhandle);
   
@@ -219,7 +219,7 @@ int main(void) {
 
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, testTexture->getHandle());
-  glBindSampler(0, samplerhandle);
+  glBindSampler(0, samplerhandle); */
 
   ////////////////////////////////////////////////////////////////////
   std::vector<kore::SceneNodePtr> vBigCubeNodes;
