@@ -93,6 +93,7 @@
       <AssemblerListingLocation>Debug</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <ProgramDataBaseFileName>$(SolutionDir)lib/Debug/KoRE.pdb</ProgramDataBaseFileName>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;GLFW_INCLUDE_GL3;CMAKE_INTDIR=\"Debug\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -222,6 +223,7 @@
     <ClInclude Include="src\KoRE\Components\Transform.h" />
     <ClInclude Include="src\KoRE\Components\Values.h" />
     <ClInclude Include="src\KoRE\DataTypes.h" />
+    <ClInclude Include="src\KoRE\GLerror.h" />
     <ClInclude Include="src\KoRE\Loader\lodepng.h" />
     <ClInclude Include="src\KoRE\Loader\MeshLoader.h" />
     <ClInclude Include="src\KoRE\Loader\ProjectLoader.h" />

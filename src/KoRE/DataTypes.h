@@ -40,17 +40,27 @@ namespace kore {
                                  // (currently this is always 1)
     GLint location;              // location of attribute in shader
     std::string name;
-    
-    // Only used for texture-types:
-    GLuint texTarget;
     GLuint texUnit;
-    GLuint texLocation;
-    GLuint samplerLocation;
-    //////////////////////////////////////////////////////////////////////////
 
-    void* data;                  // Pointer to the data-source in the
-                                 // application (only valid for component-
-                                 // uniforms.
+    // Note(dlazarek): Guys, please keep this doc below updated! ;)
+    /************************************************************************/
+    /* Usages of the "data"- variable                                       */
+    /************************************************************************/
+    /*
+      The data-field is intended for two use-cases:
+      1) (For App-Side ShaderInputs): 
+        To provide the data that is needed in the shader. This can be anything
+        this specific shaderinput needs. 
+        In KoRE it is mainly used to pass the attribute-data of meshes to the
+        shader (disabled in core-profile) or to provide a byte-offset into a
+        VBO (core-profile).
+        Texture-type ShaderInputs use it to store a pointer to a textureInfo
+        object that holds necessary information about the texture being bound.
+
+      2) (For Shader-Side ShaderInputs):
+        (Nothing up til now!)
+    */
+     void* data;
   };
 };
 #endif  // CORE_INCLUDE_CORE_DATATYPES_H_

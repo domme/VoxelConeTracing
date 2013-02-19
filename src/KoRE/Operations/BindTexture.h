@@ -1,5 +1,5 @@
 /*
-  Copyright © 2012 The KoRE Project
+  Copyright ? 2012 The KoRE Project
 
   This file is part of KoRE.
 
@@ -30,7 +30,8 @@ namespace kore {
   public:
     BindTexture(void);
     BindTexture(const ShaderInput* texInput,
-      const ShaderInput* shaderInput);
+                const GLuint shaderProgramLoc,                
+                const ShaderInput* shaderInput);
 
     virtual ~BindTexture(void);
     virtual void execute(void);
@@ -38,10 +39,12 @@ namespace kore {
     virtual void reset(void);
     virtual bool isValid(void);
     void connect(const ShaderInput* texInput,
+                 const GLuint shaderProgramLoc,
                  const ShaderInput* shaderInput);
   private:
     const ShaderInput* _textureInput;
     const ShaderInput* _shaderInput;
+    GLuint _shaderProgramLoc;
 
     RenderManager* _renderManager;
 

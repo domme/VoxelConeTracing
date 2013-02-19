@@ -13,5 +13,5 @@ void main(void)
    // out_color = vec4(texture(tex, vec2(UV.x, UV.y)).xyz * lighting, 1.0);
     //out_color.z = lighting;
     //out_color = vec4(UV.x,UV.y,1.0,1.0)*lighting;
-	out_color = texture(tex, vec2(UV.x, UV.y))*lighting;
+    out_color = texture(tex, vec2(UV.x, UV.y))*lighting;
 }

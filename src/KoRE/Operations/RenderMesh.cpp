@@ -19,6 +19,7 @@
 
 #include "KoRE/Operations/RenderMesh.h"
 #include "KoRE/RenderManager.h"
+#include "KoRE/GLerror.h"
 #include <vector>
 
 kore::RenderMesh::RenderMesh(void)
@@ -41,6 +42,7 @@ kore::RenderMesh::~RenderMesh(void) {
 }
 
 void kore::RenderMesh::execute(void) {
+    GLerror::gl_ErrorCheckStart();
     const std::vector<kore::ShaderInput>& vAttributes =
                                                     _shader->getAttributes();
     const MeshPtr mesh = _meshComponent->getMesh();
@@ -77,6 +79,7 @@ void kore::RenderMesh::execute(void) {
     }
 
   setExecuted(true);
+  GLerror::gl_ErrorCheckFinish("RenderMeshOperation " + mesh->getName());
 }
 
 void kore::RenderMesh::update(void) {

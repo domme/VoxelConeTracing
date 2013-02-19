@@ -17,11 +17,6 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "KoRE/Operations/BindUniform.h"
-#include "KoRE/Shader.h"
-#include "KoRE/DataTypes.h"
-#include "KoRE/Log.h"
-
 /*GL_FLOAT
   GL_FLOAT_VEC2
   GL_FLOAT_VEC3
@@ -127,6 +122,12 @@
   GL_UNSIGNED_INT_IMAGE_2D_MULTISAMPLE
   GL_UNSIGNED_INT_IMAGE_2D_MULTISAMPLE_ARRAY*/
 
+#include "KoRE/Operations/BindUniform.h"
+#include "KoRE/Shader.h"
+#include "KoRE/DataTypes.h"
+#include "KoRE/Log.h"
+#include "KoRE/GLerror.h"
+
 kore::BindUniform::BindUniform(void)
                            :_componentUniform(NULL),
                             _shaderUniform(NULL),
@@ -178,6 +179,8 @@ void kore::BindUniform::execute(void) {
     Log::getInstance()->write("[ERROR] Uniform binding undefined");
     return;
   }
+
+  GLerror::gl_ErrorCheckStart();
   switch (_componentUniform->type) {
     case GL_FLOAT_VEC2:
       glProgramUniform2fv(_shaderID, _shaderUniform->location, 1,
@@ -486,4 +489,6 @@ break; */
      kore::Log::getInstance()->write("[ERROR] Unknown uniform binding\n");
     break;
   }
+  GLerror::gl_ErrorCheckFinish("BindUniformOperation: " +
+                                _shaderUniform->name);
 }

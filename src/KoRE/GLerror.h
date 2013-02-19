@@ -1,5 +1,5 @@
-/*
-  Copyright © 2012 The KoRE Project
+ï»¿/*
+  Copyright ï¿½ 2012 The KoRE Project
 
   This file is part of KoRE.
 
@@ -30,31 +30,31 @@ namespace kore {
       glGetError();
     }
 
-    static void gl_ErrorCheckFinish() {
+    static void gl_ErrorCheckFinish(const std::string message) {
       GLenum err = glGetError();
 
       Log* pLog = Log::getInstance();
       switch( err ) {
       case GL_INVALID_ENUM: {
-        pLog->write("[GL-ERROR] INVALID ENUM");
+        pLog->write("[GL-ERROR] INVALID ENUM: %s\n", message.c_str());
       }break;
       case GL_INVALID_VALUE: {
-           pLog->write("[GL-ERROR] INVALID VALUE");
+           pLog->write("[GL-ERROR] INVALID VALUE: %s\n", message.c_str());
       }break;
       case GL_INVALID_OPERATION: {
-        pLog->write("[GL-ERROR] INVALID OPERATION");
+        pLog->write("[GL-ERROR] INVALID OPERATION: %s\n", message.c_str());
       }break;
       case GL_STACK_OVERFLOW: {
-        pLog->write("[GL-ERROR] STACK OVERFLOW");
+        pLog->write("[GL-ERROR] STACK OVERFLOW: %s\n", message.c_str());
       }break;
       case GL_STACK_UNDERFLOW: {
-        pLog->write("[GL-ERROR] STACK UNDERFLOW");
+        pLog->write("[GL-ERROR] STACK UNDERFLOW: %s\n", message.c_str());
       }break;
       case GL_OUT_OF_MEMORY: {
-         pLog->write("[GL-ERROR] OUT OF MEMORY");
+         pLog->write("[GL-ERROR] OUT OF MEMORY: %s\n", message.c_str());
       }break;
       case GL_TABLE_TOO_LARGE: {
-         pLog->write("[GL-ERROR] TABLE TOO LARGE" );
+         pLog->write("[GL-ERROR] TABLE TOO LARGE: %s\n", message.c_str());
       }break;
      }
     }

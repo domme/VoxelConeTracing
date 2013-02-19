@@ -38,6 +38,7 @@ kore::BindAttribute::~BindAttribute(void) {
 }
 
 void kore::BindAttribute::execute(void) {
+  GLerror::gl_ErrorCheckStart();
   glEnableVertexAttribArray(_shaderInput->location);
   const kore::MeshPtr mesh = _meshComponent->getMesh();
   _renderManager->bindVAO(mesh->getVAO());
@@ -48,6 +49,7 @@ void kore::BindAttribute::execute(void) {
                         GL_FALSE,
                         _meshAttPtr->stride,
                         BUFFER_OFFSET((uint)_meshAttPtr->data));
+  GLerror::gl_ErrorCheckFinish("BindAttribute " + _shaderInput->name);
 }
 
 void kore::BindAttribute::update(void) {

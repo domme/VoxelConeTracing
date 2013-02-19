@@ -48,8 +48,13 @@
 kore::SceneNodePtr rotationNode;
 kore::CameraPtr pCamera;
 
+/*void CALLBACK DebugLog(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, GLvoid* userParams) {
+  //Log::getInstance()->write("[ERROR] Type: %s, Source: %s, Severity: %s\n", 
+    //  glGetStringForType(type).c_str(),)
+  kore::Log::getInstance()->write("[GL-ERROR]\n");
+} */
+
 int main(void) {
-  
   int running = GL_TRUE;
 
   // Initialize GLFW
@@ -58,8 +63,9 @@ int main(void) {
   }
 
   glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 4);
-  glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 2);
+  glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 1);
   glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  glfwOpenWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 
   // Open an OpenGL window
   if (!glfwOpenWindow(800, 600, 0, 0, 0, 0, 0, 0, GLFW_WINDOW)) {
@@ -76,10 +82,11 @@ int main(void) {
     glfwTerminate();
     exit(EXIT_FAILURE);
   }
+  
 
   // Init gl-states
   // glEnable(GL_VERTEX_ARRAY);
-
+    
   // log versions
   int GLFWmajor, GLFWminor, GLFWrev;
   glfwGetVersion(&GLFWmajor, &GLFWminor, &GLFWrev);
@@ -106,12 +113,15 @@ int main(void) {
     ->write("GLEW version: %s\n",
             reinterpret_cast<const char*>(
             glewGetString(GLEW_VERSION)));
+  
 
   // enable culling and depthtest
+  
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_CULL_FACE);
   glCullFace(GL_BACK);
 
+  
   // load shader
   kore::ShaderPtr pSimpleShader(new kore::Shader);
   pSimpleShader->loadShader("./assets/shader/normalColor.vp",
@@ -142,15 +152,18 @@ int main(void) {
 
   // init operations
   for (uint i = 0; i < vRenderNodes.size(); ++i) {
+    
     kore::MeshComponentPtr pMeshComponent =
       std::static_pointer_cast<kore::MeshComponent>
       (vRenderNodes[i]->getComponent(kore::COMPONENT_MESH));
-
+    
     // Add Texture
+    kore::GLerror::gl_ErrorCheckStart();
     kore::TexturesComponentPtr pTexComponent =
         kore::TexturesComponentPtr(new kore::TexturesComponent);
     pTexComponent->addTexture(testTexture);
     vRenderNodes[i]->addComponent(pTexComponent);
+    kore::GLerror::gl_ErrorCheckFinish("Initialization");
 
     // Bind Attribute-Ops
     kore::BindAttributePtr pPosAttBind (new kore::BindAttribute);
@@ -167,6 +180,7 @@ int main(void) {
     pUVAttBind->connect(pMeshComponent,
       pMeshComponent->getMesh()->getAttributeByName("v_uv0"),
       pSimpleShader->getAttributeByName("v_uv0"));
+    
 
     // Bind Uniform-Ops
     kore::BindUniformPtr pModelBind(new kore::BindUniform);
@@ -185,7 +199,9 @@ int main(void) {
       pSimpleShader->getUniformByName("projection"));
 
     kore::BindTexturePtr pTextureBind(new kore::BindTexture);
-    pTextureBind->connect(pTexComponent->getShaderInput(testTexture->getName()), pSimpleShader->getUniformByName("tex"));
+    pTextureBind->connect(pTexComponent->getShaderInput(testTexture->getName()),
+                          pSimpleShader->getProgramLocation(),
+                          pSimpleShader->getUniformByName("tex"));
 
     kore::RenderMeshOpPtr pRenderOp(new kore::RenderMesh);
     pRenderOp->setCamera(pCamera);
@@ -221,6 +237,8 @@ int main(void) {
   rotationNode = vBigCubeNodes[0];
 
   glClearColor(1.0f,1.0f,1.0f,1.0f);
+
+  
 
   kore::Timer the_timer;
   the_timer.start();
@@ -273,10 +291,10 @@ int main(void) {
     rotationNode->rotate(90.0f * static_cast<float>(time), glm::vec3(0.0f, 0.0f, 1.0f));
 
     kore::GLerror::gl_ErrorCheckStart();
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT |GL_STENCIL_BUFFER_BIT);
     kore::RenderManager::getInstance()->renderFrame();
     glfwSwapBuffers();
-    kore::GLerror::gl_ErrorCheckFinish();
+    kore::GLerror::gl_ErrorCheckFinish("Main Loop");
 
     // Check if ESC key was pressed or window was closed
     running = !glfwGetKey(GLFW_KEY_ESC) && glfwGetWindowParam(GLFW_OPENED);

@@ -4,6 +4,9 @@ kore::TexturesComponent::TexturesComponent(void) {
 }
 
 kore::TexturesComponent::~TexturesComponent(void) {
+  for (int i = 0; i < _vTextureInfos.size(); ++i) {
+    SAFE_DELETE(_vTextureInfos[i]);
+  }
 }
 
 bool kore::TexturesComponent::
@@ -42,11 +45,15 @@ void kore::
 
   _vSamplers.push_back(texSampler);
 
+  STextureInfo* texInfo = new STextureInfo;
+  texInfo->texLocation = tex->getHandle();
+  texInfo->texTarget = tex->getTargetType();
+  texInfo->samplerLocation = texSampler->getHandle();
+  _vTextureInfos.push_back(texInfo);
+
   ShaderInput shaderInput;
   shaderInput.name = tex->getName();
-  shaderInput.samplerLocation = texSampler->getHandle();
-  shaderInput.texLocation = tex->getHandle();
-  shaderInput.texTarget = tex->getTargetType();
+  shaderInput.data = texInfo;
   _shaderInputs.push_back(shaderInput);
   // Tex unit is defined by shader
 }

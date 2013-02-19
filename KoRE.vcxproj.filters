@@ -177,6 +177,9 @@
     <ClInclude Include="src\KoRE\Operations\RenderMesh.h">
       <Filter>src\Operations</Filter>
     </ClInclude>
+    <ClInclude Include="src\KoRE\GLerror.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">

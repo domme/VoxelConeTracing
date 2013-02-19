@@ -4,6 +4,12 @@
 #include "KoRE/Common.h"
 
 namespace kore {
+  struct STextureInfo {
+    GLuint texTarget;
+    GLuint texLocation;
+    GLuint samplerLocation;
+  };
+
   class Texture {
   friend class TextureLoader;
   public:

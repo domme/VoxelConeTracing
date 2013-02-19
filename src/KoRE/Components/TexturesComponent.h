@@ -1,5 +1,5 @@
-/*
-  Copyright © 2012 The KoRE Project
+ï»¿/*
+  Copyright ï¿½ 2012 The KoRE Project
 
   This file is part of KoRE.
 
@@ -42,6 +42,7 @@ namespace kore {
   private:
     std::vector<TexturePtr> _vTextures;
     std::vector<TextureSamplerPtr> _vSamplers;
+    std::vector<STextureInfo*> _vTextureInfos;
   };
   typedef std::shared_ptr<kore::TexturesComponent> TexturesComponentPtr;
 }
