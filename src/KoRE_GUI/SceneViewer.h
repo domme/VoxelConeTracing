@@ -2,9 +2,9 @@
 #define SCENEVIEWER_H
 
 #include <QGraphicsView>
-//#include "KoRE/SceneNode.h"
+#include "KoRE/SceneNode.h"
 
-namespace kore {
+namespace koregui {
   class SceneViewer : public QGraphicsView {
       Q_OBJECT
 
@@ -13,7 +13,7 @@ namespace kore {
       //SceneViewer(kore::SceneNode *root, QWidget *parent = 0);
       ~SceneViewer();
 
-      //void showTree(kore::SceneNode *root);
+      void showScene(kore::SceneNode *root);
 
   public slots:
     void zoomIn() {scale(1.2,1.2);}
@@ -21,8 +21,8 @@ namespace kore {
 
   private:
       QGraphicsScene _scene;
-      //void clearTree(void);
-      //void createNode(kore::SceneNode *sourcenode);
+      void clearScene(void);
+      void createNode(kore::SceneNode *sourcenode);
   };
 }
 #endif  // SCENEVIEWER_H
