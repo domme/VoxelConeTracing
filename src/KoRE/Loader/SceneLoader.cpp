@@ -7,6 +7,7 @@
 #include "KoRE/Loader/MeshLoader.h"
 #include "KoRE/Components/Transform.h"
 #include "KoRE/Components/Camera.h"
+#include "KoRE/Components/LightComponent.h"
 
 kore::SceneLoader* kore::SceneLoader::getInstance() {
   static SceneLoader instance;
@@ -87,6 +88,28 @@ void kore::SceneLoader::loadRessources(const std::string& szScenePath) {
       _cameracount++;
     }
   }
+
+  if (pAiScene->HasLights()) {
+    for (uint i = 0; i < pAiScene->mNumLights; ++i) {
+      const aiLight* pAiLight = pAiScene->mLights[i];
+      LightComponentPtr pLight(new LightComponent);
+      pLight->setName(getLightName(pAiLight, i));
+      
+      pLight->_color = glm::vec3(pAiLight->mColorDiffuse.r,
+                                 pAiLight->mColorDiffuse.g,
+                                 pAiLight->mColorDiffuse.b);
+      pLight->_intensity = glm::length(pLight->_color);
+      pLight->_color = glm::normalize(pLight->_color);
+
+      pLight->_falloffStart = 0.0f;
+      pLight->_falloffEnd = 10.0f;  // TODO(dlazarek): find this info in the ai-light
+      
+      ResourceManager::getInstance()->addLight(szScenePath, pLight);
+      _lightcount++;
+    }
+  }
+
+
 }
 
 void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
@@ -100,6 +123,27 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
     node->_name = ainode->mName.C_Str();
     parentNode->_children.push_back(node);
     _nodecount++;
+
+    // Load light if this node has one
+    uint lightIndex = UINT_INVALID;
+    for (uint i = 0; i < aiscene->mNumLights; ++i) {
+      const aiLight* pAiLight = aiscene->mLights[i];
+      std::string lightName = std::string(pAiLight->mName.C_Str());
+      if (lightName == node->_name) {
+        lightIndex = i;
+        break;
+      }
+    }
+
+    if (lightIndex != UINT_INVALID) {
+      const aiLight* pAiLight = aiscene->mLights[lightIndex];
+      std::string lightName = getLightName(pAiLight, lightIndex);
+      LightComponentPtr pLight = ResourceManager::getInstance()
+                      ->getLight(szScenePath, lightName);
+      if (pLight != NULL) {
+        node->addComponent(pLight);
+      }
+    }
 
     // Determine if this node has a camera
     uint camIndex = UINT_INVALID;
@@ -180,4 +224,20 @@ std::string kore::SceneLoader::getCameraName(const aiCamera* paiCamera,
                               "information for this camera.");
   }
   return camName;
+}
+
+std::string kore::SceneLoader::getLightName(const aiLight* pAiLight,
+                                            const uint uSceneLightIndex) {
+  std::string lightName = "";
+  if (pAiLight->mName.length > 0) {
+    lightName = std::string(pAiLight->mName.C_Str());
+  } else {
+    char lightNameBuf[100];
+    sprintf(lightNameBuf, "%i", uSceneLightIndex);
+    lightName = std::string(&lightNameBuf[0]);
+    Log::getInstance()->write("[WARNING] Trying to load a light without a"
+                              "name. As a result, there will be no sceneNode"
+                              "information for this light.");
+  }
+  return lightName;
 }

@@ -29,6 +29,7 @@
 
 #include "KoRE/SceneNode.h"
 #include "KoRE/Components/MeshComponent.h"
+#include "KoRE/Components/LightComponent.h"
 
 
 namespace kore {
@@ -51,8 +52,11 @@ namespace kore {
     glm::mat4 glmMatFromAiMat(const aiMatrix4x4& aiMat) const;
     std::string getCameraName(const aiCamera* pAiCamera,
                               const uint uCameraSceneIndex);
+    std::string getLightName(const aiLight* pAiLight,
+                              const uint uLightSceneIndex);
+
     Assimp::Importer _aiImporter;
-    uint _nodecount, _cameracount, _meshcount;
+    uint _nodecount, _cameracount, _meshcount, _lightcount;
   };
 };
 #endif  // CORE_INCLUDE_CORE_SCENELOADER_H_

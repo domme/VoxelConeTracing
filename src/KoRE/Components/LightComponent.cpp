@@ -10,6 +10,7 @@ kore::LightComponent::LightComponent()
     _falloffEnd(10.0f),
     _positionWS(0.0f, 0.0f, 0.0f),
     _directionWS(0.0f, 0.0f, 0.0f) {
+  _type = COMPONENT_LIGHT;
   init();
 }
 

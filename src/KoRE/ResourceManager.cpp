@@ -73,6 +73,16 @@ void kore::ResourceManager::addCamera(const std::string& path,
   _cameras[path][camera->getName()] = camera;
 }
 
+void kore::ResourceManager::addLight(const std::string& path,
+                                     LightComponentPtr light) {
+  if (!(_lights.count(path) > 0)) {
+    InnerResourceMapT internalMap;
+    _lights[path] = internalMap;
+  }
+
+  _lights[path][light->getName()] = light;
+}
+
 void kore::ResourceManager::addTexture(const std::string& path,
                                        kore::TexturePtr texture) {
   _textures[path] = texture;
@@ -94,6 +104,16 @@ kore::CameraPtr kore::ResourceManager::getCamera(const std::string& path,
   }
 
   return std::static_pointer_cast<kore::Camera>(_cameras[path][id]);
+}
+
+kore::LightComponentPtr 
+  kore::ResourceManager::
+  getLight(const std::string& path, const std::string& id) {
+    if (!(_lights.count(path) > 0)) {
+      return LightComponentPtr();  // NULL
+    }
+
+    return std::static_pointer_cast<kore::LightComponent>(_lights[path][id]);
 }
 
 kore::TexturePtr kore::ResourceManager::getTexture(const std::string& path) {

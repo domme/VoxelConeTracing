@@ -46,6 +46,7 @@
 #include "KoRE/Texture.h"
 
 kore::SceneNodePtr rotationNode;
+kore::SceneNodePtr lightNode;
 kore::CameraPtr pCamera;
 
 /*void CALLBACK DebugLog(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, GLvoid* userParams) {
@@ -145,6 +146,12 @@ int main(void) {
   pCamera = std::static_pointer_cast<kore::Camera>(
             pCameraNode->getComponent(kore::COMPONENT_CAMERA));
 
+  // find light
+  lightNode = kore::SceneManager::getInstance()
+    ->getSceneNodeByComponent(kore::COMPONENT_LIGHT);
+  kore::LightComponentPtr pLight = std::static_pointer_cast<kore::LightComponent>(
+    lightNode->getComponent(kore::COMPONENT_LIGHT));
+
   // select render nodes
   std::vector<kore::SceneNodePtr> vRenderNodes;
   kore::SceneManager::getInstance()->
@@ -203,6 +210,10 @@ int main(void) {
                           pSimpleShader->getProgramLocation(),
                           pSimpleShader->getUniformByName("tex"));
 
+
+    kore::BindUniformPtr pLightPosBind(new kore::BindUniform);
+    pLightPosBind->connect(pLight->getShaderInput("position"), pSimpleShader->getProgramLocation(), pSimpleShader->getUniformByName("pointlightPos"));
+
     kore::RenderMeshOpPtr pRenderOp(new kore::RenderMesh);
     pRenderOp->setCamera(pCamera);
     pRenderOp->setMesh(pMeshComponent);
@@ -214,6 +225,7 @@ int main(void) {
     kore::RenderManager::getInstance()->addOperation(pModelBind);
     kore::RenderManager::getInstance()->addOperation(pViewBind);
     kore::RenderManager::getInstance()->addOperation(pProjBind);
+    kore::RenderManager::getInstance()->addOperation(pLightPosBind);
     kore::RenderManager::getInstance()->addOperation(pTextureBind);
     kore::RenderManager::getInstance()->addOperation(pRenderOp);
   }
@@ -289,6 +301,7 @@ int main(void) {
     
 
     rotationNode->rotate(90.0f * static_cast<float>(time), glm::vec3(0.0f, 0.0f, 1.0f));
+    //lightNode->rotate(-40.0f * static_cast<float>(time), glm::vec3(0.0f, 0.0f, 1.0f), kore::SPACE_WORLD);
 
     kore::GLerror::gl_ErrorCheckStart();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT |GL_STENCIL_BUFFER_BIT);

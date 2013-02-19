@@ -45,8 +45,13 @@ namespace kore {
     isCompatibleWith(const SceneNodeComponent& otherComponent) const;
     virtual void transformChanged(const TransformPtr& newTransform);
 
+    inline void setName(const std::string& name) {_name = name;}
+    inline const std::string& getName() const {return _name;}
+
   private:
     ELightType _lightType;
+    std::string _name;
+
     glm::vec3 _color;
     float _intensity;
     float _falloffStart;
@@ -56,6 +61,7 @@ namespace kore {
 
     void init();
   };
+  typedef std::shared_ptr<LightComponent> LightComponentPtr;
 }
 
 #endif  // CORE_INCLUDE_CORE_LIGHTCOMPONENT_H_

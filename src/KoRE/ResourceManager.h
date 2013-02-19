@@ -26,6 +26,7 @@
 #include "KoRE/Common.h"
 #include "KoRE/Mesh.h"
 #include "KoRE/Components/Camera.h"
+#include "KoRE/Components/LightComponent.h"
 #include "KoRE/Shader.h"
 #include "KoRE/Texture.h"
 #include "KoRE/SceneNode.h"
@@ -52,9 +53,13 @@ namespace kore {
     void addMesh(const std::string& path, MeshPtr mesh);
     void addCamera(const std::string& path, CameraPtr camera);
     void addTexture(const std::string& path, TexturePtr texture);
+    void addLight(const std::string& path, LightComponentPtr light);
     kore::MeshPtr getMesh(const std::string& path, const std::string& id);
     kore::CameraPtr getCamera(const std::string& path, const std::string& id);
+    kore::LightComponentPtr getLight(const std::string& path,
+                                     const std::string& id);
     kore::TexturePtr getTexture(const std::string& path);
+
 
   private:
     typedef std::map<std::string, kore::SceneNodeComponentPtr>
@@ -74,6 +79,7 @@ namespace kore {
 
     OuterMeshMapT _meshes; // filepath, id, mesh
     OuterResourceMapT _cameras; // filepath, id, camera
+    OuterResourceMapT _lights; // filepath, id, light
     std::map<std::string, TexturePtr> _textures; // filepath, texture
     std::vector<kore::ShaderPtr> _shader;
   };
