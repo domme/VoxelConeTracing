@@ -20,9 +20,7 @@ Debug/*
 Kore.dir/*
 Win32/*
 */obj/*
-demos/MainGLFW/KoRE_Log.txt
 demos/MainGLFW/MainGLFW.dir/*
-core_d.lib
 KoRE.lib
 lib
 bin
