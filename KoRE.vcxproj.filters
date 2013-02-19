@@ -85,6 +85,9 @@
     <ClCompile Include="src\KoRE\Operations\RenderMesh.cpp">
       <Filter>src\Operations</Filter>
     </ClCompile>
+    <ClCompile Include="src\KoRE\Components\LightComponent.cpp">
+      <Filter>src\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\KoRE\Operations\BindUniform.h">
@@ -179,6 +182,9 @@
     </ClInclude>
     <ClInclude Include="src\KoRE\GLerror.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\Components\LightComponent.h">
+      <Filter>src\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

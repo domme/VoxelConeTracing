@@ -204,6 +204,7 @@
     </Midl>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\KoRE\Components\LightComponent.cpp" />
     <ClCompile Include="src\KoRE\Components\TexturesComponent.cpp" />
     <ClCompile Include="src\KoRE\Loader\lodepng.cpp" />
     <ClCompile Include="src\KoRE\Loader\MeshLoader.cpp" />
@@ -217,6 +218,7 @@
     <ClCompile Include="src\KoRE\Timer.cpp" />
     <ClInclude Include="src\KoRE\Common.h" />
     <ClInclude Include="src\KoRE\Components\Camera.h" />
+    <ClInclude Include="src\KoRE\Components\LightComponent.h" />
     <ClInclude Include="src\KoRE\Components\MeshComponent.h" />
     <ClInclude Include="src\KoRE\Components\SceneNodeComponent.h" />
     <ClInclude Include="src\KoRE\Components\TexturesComponent.h" />
