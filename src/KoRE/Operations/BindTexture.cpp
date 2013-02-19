@@ -1,17 +1,15 @@
 #include "KoRE/Operations/BindTexture.h"
 
 kore::BindTexture::BindTexture()
-: _texture(),
-  _textureUnit(UINT_INVALID),
-  _sampler(TextureSamplerPtr()) {
+: _textureInput(NULL),
+  _shaderInput(NULL) {
     init();
 }
 
-kore::BindTexture::BindTexture(const kore::TexturePtr tex,
-                               const kore::TextureSamplerPtr sampler,
-                               const uint texUnit) {
+kore::BindTexture::BindTexture(const kore::ShaderInput* texInput,
+                               const kore::ShaderInput* shaderInput) {
   init();
-  connect(tex, sampler, texUnit);
+  connect(texInput, shaderInput);
 }
 
 void kore::BindTexture::init() {
@@ -21,19 +19,20 @@ void kore::BindTexture::init() {
 kore::BindTexture::~BindTexture(void) {
 }
 
-void kore::BindTexture::connect(const TexturePtr tex,
-                                const TextureSamplerPtr sampler,
-                                const uint texUnit) {
-  _texture = tex;
-  _sampler = sampler;
-  _textureUnit = texUnit;
+void kore::BindTexture::connect(const kore::ShaderInput* texInput,
+                                const kore::ShaderInput* shaderInput) {
+  _textureInput = texInput;
+  _shaderInput = shaderInput;
 }
 
 void kore::BindTexture::execute(void) {
-  _renderManager->bindTexture(_textureUnit,
-                              _texture->getTargetType(),
-                              _texture->getHandle());
-  _renderManager->bindSampler(_textureUnit, _sampler->getHandle());
+  _renderManager->activeTexture(_shaderInput->texUnit);
+  glUniform1i(_shaderInput->location, _shaderInput->texUnit);
+  _renderManager->bindTexture(_shaderInput->texUnit,
+                              _textureInput->texTarget,
+                              _textureInput->texLocation);
+  _renderManager->bindSampler(_shaderInput->texUnit,
+                              _textureInput->samplerLocation);
 }
 
 void kore::BindTexture::update(void) {

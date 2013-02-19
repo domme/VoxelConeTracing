@@ -11,6 +11,7 @@ namespace kore {
     ~Texture(void);
     inline GLuint getTargetType() const {return _type;}
     inline GLuint getHandle() const {return _handle;}
+    inline const std::string& getName() const {return _resourcepath;}
 
   private:
     GLuint _handle;

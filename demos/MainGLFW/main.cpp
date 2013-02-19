@@ -147,10 +147,10 @@ int main(void) {
       (vRenderNodes[i]->getComponent(kore::COMPONENT_MESH));
 
     // Add Texture
-    kore::TexturesComponentPtr tcp =
+    kore::TexturesComponentPtr pTexComponent =
         kore::TexturesComponentPtr(new kore::TexturesComponent);
-    tcp->addTexture(testTexture);
-    vRenderNodes[i]->addComponent(tcp);
+    pTexComponent->addTexture(testTexture);
+    vRenderNodes[i]->addComponent(pTexComponent);
 
     // Bind Attribute-Ops
     kore::BindAttributePtr pPosAttBind (new kore::BindAttribute);
@@ -185,14 +185,8 @@ int main(void) {
       pSimpleShader->getUniformByName("projection"));
 
     kore::BindTexturePtr pTextureBind(new kore::BindTexture);
-    pTextureBind->connect(testTexture, tcp->getSampler(0),
-                          pSimpleShader->getUniformByName("tex")->texUnit);
+    pTextureBind->connect(pTexComponent->getShaderInput(testTexture->getName()), pSimpleShader->getUniformByName("tex"));
 
-    kore::BindUniformPtr pTextureUnitBind(new kore::BindUniform);
-    pTextureUnitBind->connect(pSimpleShader->getUniformByName("tex"), // Note(dlazarek): There is no component-uniform for assigning texture units
-                              pSimpleShader->getProgramLocation(),    // to sampler uniforms. all information needed is already in the shader uniform.
-                              pSimpleShader->getUniformByName("tex"));
- 
     kore::RenderMeshOpPtr pRenderOp(new kore::RenderMesh);
     pRenderOp->setCamera(pCamera);
     pRenderOp->setMesh(pMeshComponent);
@@ -204,7 +198,6 @@ int main(void) {
     kore::RenderManager::getInstance()->addOperation(pModelBind);
     kore::RenderManager::getInstance()->addOperation(pViewBind);
     kore::RenderManager::getInstance()->addOperation(pProjBind);
-    kore::RenderManager::getInstance()->addOperation(pTextureUnitBind);
     kore::RenderManager::getInstance()->addOperation(pTextureBind);
     kore::RenderManager::getInstance()->addOperation(pRenderOp);
   }

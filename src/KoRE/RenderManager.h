@@ -78,6 +78,12 @@ namespace kore {
                      const GLuint textureHandle);
     void bindSampler(const GLuint textureUnit,
                      const GLuint samplerHandle);
+    /**
+      Sets the active texture unit(glActiveTexture).
+      Note that the argument is an index to a texture unit (e.g. the "i" in
+      glActiveTexture(GL_TEXTURE0 + i)
+    */
+    void activeTexture(const GLuint activeTextureUnitIndex);
 
     //////////////////////////////////////////////////////////////////////////
 
@@ -92,6 +98,7 @@ namespace kore {
     const Shader* _activeShader;
 
     // OpenGL-States:
+    GLuint _activeTextureUnitIndex;
     GLuint _vao;
     GLuint _vbo;
     GLuint _ibo;

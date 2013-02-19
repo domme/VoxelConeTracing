@@ -145,7 +145,7 @@ void kore::RenderManager::bindTexture(const GLuint textureUnit,
                                       const GLuint textureHandle) {
   uint uTexTargetIndex = _vTexTargetMap[textureTarget];
   if (_boundTextures[textureUnit][uTexTargetIndex] != textureHandle) {
-    glActiveTexture(GL_TEXTURE0 + textureUnit);
+    activeTexture(textureUnit);
     glBindTexture(textureTarget, textureHandle);
     _boundTextures[textureUnit][uTexTargetIndex] = textureHandle;
   }
@@ -154,8 +154,15 @@ void kore::RenderManager::bindTexture(const GLuint textureUnit,
 void kore::RenderManager::bindSampler(const GLuint textureUnit,
                                       const GLuint samplerHandle) {
   if (_boundSamplers[textureUnit] != samplerHandle) {
-    glActiveTexture(GL_TEXTURE0 + textureUnit);
+    activeTexture(textureUnit);
     glBindSampler(textureUnit, samplerHandle);
     _boundSamplers[textureUnit] = samplerHandle;
+  }
+}
+
+void kore::RenderManager::activeTexture(const GLuint activeTextureUnitIndex) {
+  if(_activeTextureUnitIndex != activeTextureUnitIndex) {
+    _activeTextureUnitIndex = activeTextureUnitIndex;
+    glActiveTexture(GL_TEXTURE0 + activeTextureUnitIndex);
   }
 }

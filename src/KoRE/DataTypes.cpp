@@ -26,6 +26,8 @@ kore::ShaderInput::ShaderInput(void)
                                 texUnit(GLUINT_HANDLE_INVALID),
                                 location(GLINT_HANDLE_INVALID),
                                 name("UNDEFINED"),
+                                texLocation(GLUINT_HANDLE_INVALID),
+                                samplerLocation(GLUINT_HANDLE_INVALID),
                                 data(NULL) {
 }
 

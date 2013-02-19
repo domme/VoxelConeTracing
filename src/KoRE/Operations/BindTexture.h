@@ -29,21 +29,20 @@ namespace kore {
   class BindTexture: public Operation {
   public:
     BindTexture(void);
-    BindTexture(const TexturePtr tex,
-                const TextureSamplerPtr sampler,
-                const uint texUnit);
+    BindTexture(const ShaderInput* texInput,
+      const ShaderInput* shaderInput);
+
     virtual ~BindTexture(void);
     virtual void execute(void);
     virtual void update(void);
     virtual void reset(void);
     virtual bool isValid(void);
-    void connect(const TexturePtr tex,
-                 const TextureSamplerPtr sampler,
-                 const uint texUnit);
+    void connect(const ShaderInput* texInput,
+                 const ShaderInput* shaderInput);
   private:
-    TexturePtr _texture;
-    TextureSamplerPtr _sampler;
-    uint _textureUnit;
+    const ShaderInput* _textureInput;
+    const ShaderInput* _shaderInput;
+
     RenderManager* _renderManager;
 
     void init();
