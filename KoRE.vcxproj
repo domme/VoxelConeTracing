@@ -206,6 +206,7 @@
   <ItemGroup>
     <ClCompile Include="src\KoRE\Components\LightComponent.cpp" />
     <ClCompile Include="src\KoRE\Components\TexturesComponent.cpp" />
+    <ClCompile Include="src\KoRE\FrameBuffer.cpp" />
     <ClCompile Include="src\KoRE\Loader\lodepng.cpp" />
     <ClCompile Include="src\KoRE\Loader\MeshLoader.cpp" />
     <ClCompile Include="src\KoRE\Loader\ProjectLoader.cpp" />

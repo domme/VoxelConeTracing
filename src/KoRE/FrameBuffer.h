@@ -1,5 +1,5 @@
 /*
-  Copyright © 2012 The KoRE Project
+  Copyright (c) 2012 The KoRE Project
 
   This file is part of KoRE.
 
@@ -21,13 +21,35 @@
 #define SRC_KORE_FRAMEBUFFER_H_
 
 #include "KoRE/Log.h"
+#include "KoRE/Common.h"
+#include "KoRE/DataTypes.h"
+#include "KoRE/Texture.h"
+#include "KoRE/TextureSampler.h"
 
 namespace kore {
-
   class FrameBuffer {
   public:
     FrameBuffer(void);
     virtual ~FrameBuffer(void);
+
+    inline const GLuint getHandle() const {return _handle;}
+    const TexturePtr getTextureByName(const std::string& name) const;
+
+    void addTextureAttachment(TexturePtr ptr, GLuint attatchment);
+    void addTextureAttachement(uint textwidth,
+                               uint texheight,
+                               GLuint format,
+                               GLuint internalFormat,
+                               GLuint pixelType,
+                               const std::string& name,
+                               GLuint attatchment);
+
+  private:
+    std::vector<ShaderInput> _textureOutputs;
+    std::vector<TexturePtr> _textures;
+    std::vector<TextureSamplerPtr> _textureSamplers;
+
+    GLuint _handle;
   };
 };
 #endif  // SRC_KORE_FRAMEBUFFER_H_

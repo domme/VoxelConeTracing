@@ -30,7 +30,7 @@ namespace kore {
       glGetError();
     }
 
-    static void gl_ErrorCheckFinish(const std::string message) {
+    static void gl_ErrorCheckFinish(const std::string& message) {
       GLenum err = glGetError();
 
       Log* pLog = Log::getInstance();
@@ -57,6 +57,35 @@ namespace kore {
          pLog->write("[GL-ERROR] TABLE TOO LARGE: %s\n", message.c_str());
       }break;
      }
+    }
+
+    static void gl_ValidateFBO(const std::string& message) {
+      GLenum error = glCheckFramebufferStatus(GL_FRAMEBUFFER );
+
+      Log* pLog = Log::getInstance();
+
+      switch( error ) {
+        case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+          pLog->write("[FRAMEBUFFER-ERROR]"
+            " GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT: %s\n", message.c_str());
+        break;
+        case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
+          pLog->write("FRAMEBUFFER-ERROR]"
+      " GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT: %s\n", message.c_str());
+        break;
+        case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
+          pLog->write("[FRAMEBUFFER-ERROR]"
+            " GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER: %s\n", message.c_str());
+        break;
+        case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
+          pLog->write("[FRAMEBUFFER-ERROR]"
+            "GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER: %s\n", message.c_str());
+        break;
+        case GL_FRAMEBUFFER_UNSUPPORTED:
+          pLog->write("[FRAMEBUFFER-ERROR]"
+            "GL_FRAMEBUFFER_UNSUPPORTED: %s\n", message.c_str());
+        break;
+      }
     }
   };  // end class
 }  // end namespace

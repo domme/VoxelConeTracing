@@ -52,6 +52,8 @@ kore::RenderManager::RenderManager(void) {
                             NUM_TEXTURE_TARGETS);
   memset(_boundSamplers, 0, sizeof(GLuint) * 
                             GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS);
+
+  memset(_boundFrameBuffers, 0, sizeof(GLuint) * 2);
 }
 
 kore::RenderManager::~RenderManager(void) {
@@ -164,5 +166,27 @@ void kore::RenderManager::activeTexture(const GLuint activeTextureUnitIndex) {
   if(_activeTextureUnitIndex != activeTextureUnitIndex) {
     _activeTextureUnitIndex = activeTextureUnitIndex;
     glActiveTexture(GL_TEXTURE0 + activeTextureUnitIndex);
+  }
+}
+
+void kore::RenderManager::bindFrameBuffer(const GLuint fboTarget,
+                                          const GLuint fboHandle) {
+  if (fboTarget == GL_FRAMEBUFFER) {
+    if (_boundFrameBuffers[READ_FRAMEBUFFER] != fboHandle ||
+        _boundFrameBuffers[DRAW_FRAMEBUFFER] != fboHandle) {
+      _boundFrameBuffers[READ_FRAMEBUFFER] = fboHandle;
+      _boundFrameBuffers[DRAW_FRAMEBUFFER] = fboHandle;
+      glBindFramebuffer(GL_FRAMEBUFFER, fboHandle);
+    } else if (fboTarget == GL_READ_FRAMEBUFFER) {
+      if (_boundFrameBuffers[READ_FRAMEBUFFER] != fboHandle) {
+        _boundFrameBuffers[READ_FRAMEBUFFER] = fboHandle;
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, fboHandle);
+      } 
+    } else if (fboHandle == GL_DRAW_FRAMEBUFFER) {
+      if (_boundFrameBuffers[DRAW_FRAMEBUFFER]) {
+        _boundFrameBuffers[DRAW_FRAMEBUFFER] = fboHandle;
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fboHandle);
+      }
+    }
   }
 }

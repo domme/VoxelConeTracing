@@ -88,6 +88,9 @@
     <ClCompile Include="src\KoRE\Components\LightComponent.cpp">
       <Filter>src\Components</Filter>
     </ClCompile>
+    <ClCompile Include="src\KoRE\FrameBuffer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\KoRE\Operations\BindUniform.h">

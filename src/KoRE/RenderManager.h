@@ -55,6 +55,11 @@ namespace kore {
 
     NUM_TEXTURE_TARGETS
   };
+
+  enum EFrameBufferTargets {
+    DRAW_FRAMEBUFFER = 0,
+    READ_FRAMEBUFFER = 1
+  };
   //////////////////////////////////////////////////////////////////////////
 
   class RenderManager {
@@ -78,6 +83,8 @@ namespace kore {
                      const GLuint textureHandle);
     void bindSampler(const GLuint textureUnit,
                      const GLuint samplerHandle);
+    void bindFrameBuffer(const GLuint fboTarget,
+                         const GLuint fboHandle);
     /**
       Sets the active texture unit(glActiveTexture).
       Note that the argument is an index to a texture unit (e.g. the "i" in
@@ -106,6 +113,7 @@ namespace kore {
     GLuint _boundTextures[GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS]
                          [NUM_TEXTURE_TARGETS];
     GLuint _boundSamplers[GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS];
+    GLuint _boundFrameBuffers[2];
     std::map<GLuint, uint> _vTexTargetMap;
     //////////////////////////////////////////////////////////////////////////
   };

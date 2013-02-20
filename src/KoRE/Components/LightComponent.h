@@ -1,5 +1,5 @@
 /*
-  Copyright © 2012 The KoRE Project
+  Copyright ï¿½ 2012 The KoRE Project
 
   This file is part of KoRE.
 
@@ -52,10 +52,12 @@ namespace kore {
     ELightType _lightType;
     std::string _name;
 
-    glm::vec3 _color;
     float _intensity;
     float _falloffStart;
     float _falloffEnd;
+    float _spotExp;
+
+    glm::vec3 _color;
     glm::vec3 _positionWS;
     glm::vec3 _directionWS;
 
