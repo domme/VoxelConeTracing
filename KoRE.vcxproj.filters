@@ -186,6 +186,9 @@
     <ClInclude Include="src\KoRE\Components\LightComponent.h">
       <Filter>src\Components</Filter>
     </ClInclude>
+    <ClInclude Include="src\KoRE\FrameBuffer.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">

@@ -225,6 +225,7 @@
     <ClInclude Include="src\KoRE\Components\Transform.h" />
     <ClInclude Include="src\KoRE\Components\Values.h" />
     <ClInclude Include="src\KoRE\DataTypes.h" />
+    <ClInclude Include="src\KoRE\FrameBuffer.h" />
     <ClInclude Include="src\KoRE\GLerror.h" />
     <ClInclude Include="src\KoRE\Loader\lodepng.h" />
     <ClInclude Include="src\KoRE\Loader\MeshLoader.h" />
