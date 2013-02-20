@@ -26,6 +26,10 @@
 #include "KoRE/Components/SceneNodeComponent.h"
 #include "KoRE/Components/Transform.h"
 
+namespace koregui {
+  class NodeItem;
+}
+
 namespace kore {
   enum ETransfpomSpace {
     SPACE_LOCAL,
@@ -34,6 +38,7 @@ namespace kore {
     typedef std::shared_ptr<SceneNode> SceneNodePtr;
   class SceneNode {
     friend class SceneLoader;
+    friend class koregui::NodeItem;
   public:
     SceneNode(void);
     virtual ~SceneNode(void);

@@ -5,6 +5,9 @@
 koregui::SceneViewer::SceneViewer(QWidget *parent) : QGraphicsView(parent) {
   _scene.setBackgroundBrush(QBrush(Qt::darkGray));
   setScene(&_scene);
+
+  // setCacheMode(QGraphicsItem::CacheMode::DeviceCoordinateCache);
+  setMinimumSize(800,600);
 }
 
 koregui::SceneViewer::~SceneViewer() {
