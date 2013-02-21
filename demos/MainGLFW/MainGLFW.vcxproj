@@ -100,7 +100,7 @@
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;GLFW_INCLUDE_GL3;CMAKE_INTDIR="Debug";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AssemblerListingLocation>Debug</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)</ObjectFileName>
-      <ProgramDataBaseFileName>E:/Users/Dominik/Documents/GitHub/KoRE/bin/Debug/MainGLFW.pdb</ProgramDataBaseFileName>
+      <ProgramDataBaseFileName>$(OutDir)\MainGLFW.pdb</ProgramDataBaseFileName>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;GLFW_INCLUDE_GL3;CMAKE_INTDIR=\"Debug\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -276,8 +276,8 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="E:/Users/Dominik/Documents/GitHub/KoRE/KoRE.vcxproj">
-      <Project>03ADC7CD-D9FA-4B74-ABA0-C4CC0E8868C1</Project>
+    <ProjectReference Include="..\..\KoRE.vcxproj">
+      <Project>{03adc7cd-d9fa-4b74-aba0-c4cc0e8868c1}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
