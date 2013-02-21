@@ -28,7 +28,7 @@ namespace kore {
   class BindUniform: public Operation {
   public:
     BindUniform(void);
-    BindUniform(const ShaderInput* componentUni,
+    BindUniform(const ShaderData* componentUni,
                  GLuint shaderID,
                  const ShaderInput* shaderUni);
     virtual ~BindUniform(void);
@@ -36,11 +36,11 @@ namespace kore {
     virtual void update(void);
     virtual void reset(void);
     virtual bool isValid(void);
-    void connect(const ShaderInput* componentUni,
+    void connect(const ShaderData* componentUni,
                  GLuint shaderID,
                  const ShaderInput* shaderUni);
   private:
-    const ShaderInput* _componentUniform;
+    const ShaderData* _componentUniform;
     const ShaderInput* _shaderUniform;
     GLuint _shaderID;
   };

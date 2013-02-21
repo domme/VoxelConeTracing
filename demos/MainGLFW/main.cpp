@@ -44,6 +44,7 @@
 #include "KoRE/SceneNode.h"
 #include "KoRE/Timer.h"
 #include "KoRE/Texture.h"
+#include "KoRE/FrameBuffer.h"
 
 kore::SceneNodePtr rotationNode;
 kore::SceneNodePtr lightNode;
@@ -61,10 +62,11 @@ int main(void) {
   // Initialize GLFW
   if (!glfwInit()) {
     exit(EXIT_FAILURE);
+    kore::Log::getInstance()->write("[ERROR] could not load window manager\n");
   }
 
-  glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 4);
-  glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 1);
+  glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 3);
+  glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 3);
   glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   glfwOpenWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 
@@ -114,7 +116,9 @@ int main(void) {
     ->write("GLEW version: %s\n",
             reinterpret_cast<const char*>(
             glewGetString(GLEW_VERSION)));
-  
+
+
+  // kore::FrameBufferPtr frabuf = kore::FrameBufferPtr(new kore::FrameBuffer);
 
   // enable culling and depthtest
   
@@ -191,28 +195,28 @@ int main(void) {
 
     // Bind Uniform-Ops
     kore::BindUniformPtr pModelBind(new kore::BindUniform);
-    pModelBind->connect(vRenderNodes[i]->getTransform()->getShaderInput("model Matrix"),
+    pModelBind->connect(vRenderNodes[i]->getTransform()->getShaderData("model Matrix"),
       pSimpleShader->getProgramLocation(),
       pSimpleShader->getUniformByName("model"));
 
     kore::BindUniformPtr pViewBind(new kore::BindUniform);
-    pViewBind->connect(pCamera->getShaderInput("view Matrix"),
+    pViewBind->connect(pCamera->getShaderData("view Matrix"),
       pSimpleShader->getProgramLocation(),
       pSimpleShader->getUniformByName("view"));
 
     kore::BindUniformPtr pProjBind(new kore::BindUniform);
-    pProjBind->connect(pCamera->getShaderInput("projection Matrix"),
+    pProjBind->connect(pCamera->getShaderData("projection Matrix"),
       pSimpleShader->getProgramLocation(),
       pSimpleShader->getUniformByName("projection"));
 
     kore::BindTexturePtr pTextureBind(new kore::BindTexture);
-    pTextureBind->connect(pTexComponent->getShaderInput(testTexture->getName()),
+    pTextureBind->connect(pTexComponent->getShaderData(testTexture->getName()),
                           pSimpleShader->getProgramLocation(),
                           pSimpleShader->getUniformByName("tex"));
 
 
     kore::BindUniformPtr pLightPosBind(new kore::BindUniform);
-    pLightPosBind->connect(pLight->getShaderInput("position"), pSimpleShader->getProgramLocation(), pSimpleShader->getUniformByName("pointlightPos"));
+    pLightPosBind->connect(pLight->getShaderData("position"), pSimpleShader->getProgramLocation(), pSimpleShader->getUniformByName("pointlightPos"));
 
     kore::RenderMeshOpPtr pRenderOp(new kore::RenderMesh);
     pRenderOp->setCamera(pCamera);

@@ -46,65 +46,65 @@ kore::Camera::Camera()
         kore::SceneNodeComponent() {
 
   // setup bindings
-  ShaderInput tmp;
+  ShaderData tmp;
   tmp.type = GL_FLOAT_MAT4;
   tmp.name = "view Matrix";
   tmp.data = glm::value_ptr(_matView);
-  _shaderInputs.push_back(tmp);
+  _shaderData.push_back(tmp);
 
-  tmp = ShaderInput();
+  tmp = ShaderData();
   tmp.type = GL_FLOAT_MAT4;
   tmp.name = "inverse view Matrix";
   tmp.data = glm::value_ptr(_matViewInverse);
-  _shaderInputs.push_back(tmp);
+  _shaderData.push_back(tmp);
 
-  tmp = ShaderInput();
+  tmp = ShaderData();
   tmp.type = GL_FLOAT_MAT4;
   tmp.name = "projection Matrix";
   tmp.data = glm::value_ptr(_matProjection);
-  _shaderInputs.push_back(tmp);
+  _shaderData.push_back(tmp);
 
-  tmp = ShaderInput();
+  tmp = ShaderData();
   tmp.type = GL_FLOAT_MAT4;
   tmp.name = "view projection Matrix";
   tmp.data = glm::value_ptr(_matViewProj);
-  _shaderInputs.push_back(tmp);
+  _shaderData.push_back(tmp);
 
-  tmp = ShaderInput();
+  tmp = ShaderData();
   tmp.type = GL_FLOAT;
   tmp.name = "FOV degree";
   tmp.data = &_fFovDeg;
-  _shaderInputs.push_back(tmp);
+  _shaderData.push_back(tmp);
 
-  tmp = ShaderInput();
+  tmp = ShaderData();
   tmp.type = GL_FLOAT;
   tmp.name = "near Plane";
   tmp.data = &_fNear;
-  _shaderInputs.push_back(tmp);
+  _shaderData.push_back(tmp);
 
-  tmp = ShaderInput();
+  tmp = ShaderData();
   tmp.type = GL_FLOAT;
   tmp.name = "far Plane";
   tmp.data = &_fFar;
-  _shaderInputs.push_back(tmp);
+  _shaderData.push_back(tmp);
 
-  tmp = ShaderInput();
+  tmp = ShaderData();
   tmp.type = GL_FLOAT;
   tmp.name = "focal length";
   tmp.data = &_fFocalLength;
-  _shaderInputs.push_back(tmp);
+  _shaderData.push_back(tmp);
 
-  tmp = ShaderInput();
+  tmp = ShaderData();
   tmp.type = GL_FLOAT;
   tmp.name = "width";
   tmp.data = &_fWidth;
-  _shaderInputs.push_back(tmp);
+  _shaderData.push_back(tmp);
 
-  tmp = ShaderInput();
+  tmp = ShaderData();
   tmp.type = GL_FLOAT;
   tmp.name = "height";
   tmp.data = &_fHeight;
-  _shaderInputs.push_back(tmp);
+  _shaderData.push_back(tmp);
 
   _type = COMPONENT_CAMERA;
 }

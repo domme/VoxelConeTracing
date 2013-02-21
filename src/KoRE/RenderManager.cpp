@@ -22,6 +22,7 @@
 
 #include "KoRE/RenderManager.h"
 #include "KoRE/Log.h"
+#include "KoRE/GLerror.h"
 
 kore::RenderManager* kore::RenderManager::getInstance(void) {
   static kore::RenderManager theInstance;

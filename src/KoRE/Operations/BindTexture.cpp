@@ -2,17 +2,17 @@
 #include "KoRE/GLerror.h"
 
 kore::BindTexture::BindTexture()
-: _textureInput(NULL),
+: _textureData(NULL),
   _shaderProgramLoc(GLUINT_HANDLE_INVALID),
   _shaderInput(NULL) {
     init();
 }
 
-kore::BindTexture::BindTexture(const kore::ShaderInput* texInput,
+kore::BindTexture::BindTexture(const kore::ShaderData* texData,
                                const GLuint shaderProgramLoc,
                                const kore::ShaderInput* shaderInput) {
   init();
-  connect(texInput, shaderProgramLoc, shaderInput);
+  connect(texData, shaderProgramLoc, shaderInput);
 }
 
 void kore::BindTexture::init() {
@@ -22,10 +22,10 @@ void kore::BindTexture::init() {
 kore::BindTexture::~BindTexture(void) {
 }
 
-void kore::BindTexture::connect(const kore::ShaderInput* texInput,
+void kore::BindTexture::connect(const kore::ShaderData* texData,
                                 const GLuint shaderProgramLoc,
                                 const kore::ShaderInput* shaderInput) {
-  _textureInput = texInput;
+  _textureData = texData;
   _shaderProgramLoc = shaderProgramLoc;
   _shaderInput = shaderInput;
 }
@@ -35,7 +35,7 @@ void kore::BindTexture::execute(void) {
   _renderManager->activeTexture(_shaderInput->texUnit);
   glProgramUniform1i(_shaderProgramLoc, _shaderInput->location,
                       static_cast<GLint>(_shaderInput->texUnit));
-  STextureInfo* pTexInfo = static_cast<STextureInfo*>(_textureInput->data);
+  STextureInfo* pTexInfo = static_cast<STextureInfo*>(_textureData->data);
 
   _renderManager->bindTexture(_shaderInput->texUnit,
                               pTexInfo->texTarget,

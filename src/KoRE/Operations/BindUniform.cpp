@@ -135,7 +135,7 @@ kore::BindUniform::BindUniform(void)
                             kore::Operation() {
 }
 
-kore::BindUniform::BindUniform(const ShaderInput* componentUni,
+kore::BindUniform::BindUniform(const ShaderData* componentUni,
                                GLuint shaderID,
                                const ShaderInput* shaderUni)
                               : kore::Operation() {
@@ -145,7 +145,7 @@ kore::BindUniform::BindUniform(const ShaderInput* componentUni,
 kore::BindUniform::~BindUniform(void) {
 }
 
-void kore::BindUniform::connect(const kore::ShaderInput* componentUni,
+void kore::BindUniform::connect(const kore::ShaderData* componentUni,
   GLuint shaderID,
   const kore::ShaderInput* shaderUni) {
     if(!componentUni
@@ -359,8 +359,9 @@ void kore::BindUniform::execute(void) {
   case GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE_ARRAY:
   case GL_UNSIGNED_INT_SAMPLER_BUFFER:
   case GL_UNSIGNED_INT_SAMPLER_2D_RECT:
-    glActiveTexture(GL_TEXTURE0 + _componentUniform->texUnit);
-    glProgramUniform1i(_shaderID, _shaderUniform->location, _componentUniform->texUnit);
+    //glActiveTexture(GL_TEXTURE0 + _componentUniform->texUnit);
+    //glProgramUniform1i(_shaderID, _shaderUniform->location, _componentUniform->texUnit);
+    kore::Log::getInstance()->write("[ERROR] sampler type was adressed as uniform");
   break;
 /*
 

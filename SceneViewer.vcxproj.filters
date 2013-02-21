@@ -38,6 +38,9 @@
     <ClInclude Include="src\KoRE_GUI\NodeItem.h">
       <Filter>Header Dateien</Filter>
     </ClInclude>
+    <ClInclude Include="src\KoRE_GUI\ShaderDataItem.h">
+      <Filter>Header Dateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="src\KoRE_GUI\SceneViewer.h">

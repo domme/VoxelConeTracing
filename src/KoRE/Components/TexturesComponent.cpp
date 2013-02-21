@@ -51,9 +51,9 @@ void kore::
   texInfo->samplerLocation = texSampler->getHandle();
   _vTextureInfos.push_back(texInfo);
 
-  ShaderInput shaderInput;
-  shaderInput.name = tex->getName();
-  shaderInput.data = texInfo;
-  _shaderInputs.push_back(shaderInput);
+  ShaderData shaderdata;
+  shaderdata.name = tex->getName();
+  shaderdata.data = texInfo;
+  _shaderData.push_back(shaderdata);
   // Tex unit is defined by shader
 }

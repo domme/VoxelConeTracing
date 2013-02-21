@@ -47,10 +47,10 @@ namespace kore {
     virtual void transformChanged(const TransformPtr& newTransform);
     const EComponentType getType(void) const;
 
-    const ShaderInput* getShaderInput(const std::string& name) const;
+    const ShaderData* getShaderData(const std::string& name) const;
 
-    inline const std::vector<ShaderInput>&
-      getShaderInputs() {return _shaderInputs;}
+    inline const std::vector<ShaderData>&
+      getShaderInputs() {return _shaderData;}
 
     uint getID(void) const;
 
@@ -59,7 +59,7 @@ namespace kore {
     uint _id;
     SceneNodePtr _sceneNode;
     EComponentType _type;
-    std::vector<ShaderInput> _shaderInputs;
+    std::vector<ShaderData> _shaderData;
   };
   typedef std::shared_ptr<SceneNodeComponent> SceneNodeComponentPtr;
 };

@@ -3,17 +3,17 @@
 kore::Transform::Transform(void) : _global(glm::mat4(1.0f)),
                                    _local(glm::mat4(1.0f)),
                                    kore::SceneNodeComponent() {
-  ShaderInput input = ShaderInput();
+  ShaderData input = ShaderData();
   input.type = GL_FLOAT_MAT4;
   input.name = "model Matrix";
   input.data = glm::value_ptr(_global);
-  _shaderInputs.push_back(input);
+  _shaderData.push_back(input);
 
-  input = ShaderInput();
+  input = ShaderData();
   input.type = GL_FLOAT_MAT4;
   input.name = "object Matrix";
   input.data = glm::value_ptr(_local);
-  _shaderInputs.push_back(input);
+  _shaderData.push_back(input);
 
   _type = COMPONENT_TRANSFORM;
 }

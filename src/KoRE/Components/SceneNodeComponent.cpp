@@ -46,10 +46,10 @@ uint kore::SceneNodeComponent::getID(void) const {
   return _id;
 }
 
-const kore::ShaderInput*
-  kore::SceneNodeComponent::getShaderInput(const std::string& name) const {
-    for (uint i = 0; i < _shaderInputs.size(); ++i) {
-      if(_shaderInputs[i].name == name ) return &_shaderInputs[i];
+const kore::ShaderData*
+  kore::SceneNodeComponent::getShaderData(const std::string& name) const {
+    for (uint i = 0; i < _shaderData.size(); ++i) {
+      if(_shaderData[i].name == name ) return &_shaderData[i];
     }
     return NULL;
 }

@@ -29,7 +29,7 @@ namespace kore {
   class BindTexture: public Operation {
   public:
     BindTexture(void);
-    BindTexture(const ShaderInput* texInput,
+    BindTexture(const ShaderData* texData,
                 const GLuint shaderProgramLoc,                
                 const ShaderInput* shaderInput);
 
@@ -38,11 +38,11 @@ namespace kore {
     virtual void update(void);
     virtual void reset(void);
     virtual bool isValid(void);
-    void connect(const ShaderInput* texInput,
+    void connect(const ShaderData* texData,
                  const GLuint shaderProgramLoc,
                  const ShaderInput* shaderInput);
   private:
-    const ShaderInput* _textureInput;
+    const ShaderData* _textureData;
     const ShaderInput* _shaderInput;
     GLuint _shaderProgramLoc;
 

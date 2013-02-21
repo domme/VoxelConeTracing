@@ -15,7 +15,7 @@ koregui::NodeItem::~NodeItem(void) {
 }
 
 void koregui::NodeItem::refresh(void) {
-  _nodeheight = 40 + (_sceneNode->_components.size() * 30);
+  _nodeheight = 70 + (_sceneNode->_components.size() * 30);
 }
 
 QRectF koregui::NodeItem::boundingRect() const {
@@ -37,6 +37,8 @@ void koregui::NodeItem::paint(QPainter* painter, const QStyleOptionGraphicsItem*
   painter->setFont(font);
   painter->drawStaticText(10,10, t);
 
+  b.setStyle(Qt::BrushStyle::BDiagPattern);
+
   for (uint i = 0; i<_sceneNode->_components.size(); i++) {
     switch (_sceneNode->_components[i]->getType()) {
     case kore::COMPONENT_TRANSFORM:
@@ -48,12 +50,14 @@ void koregui::NodeItem::paint(QPainter* painter, const QStyleOptionGraphicsItem*
     case kore::COMPONENT_CAMERA:
       b.setColor(Qt::GlobalColor::green);
       break;
+    case kore::COMPONENT_LIGHT:
+      b.setColor(Qt::GlobalColor::darkCyan);
+      break;
     case kore::COMPONENT_UNKNOWN:
     default:
       b.setColor(Qt::GlobalColor::red);
     }
-    
     painter->setBrush(b);
-    painter->drawRect(0, 30 + (i * 30), 100, 30);
+    painter->drawRect(0, 60 + (i * 30), 100, 30);
   }
 }

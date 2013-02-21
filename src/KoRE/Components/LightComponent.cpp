@@ -35,46 +35,46 @@ void kore::LightComponent::transformChanged(const TransformPtr& newTransform) {
 
 void kore::LightComponent::init() {
 
-  ShaderInput input;
+  ShaderData input;
   input.type = GL_FLOAT;
   input.name = "intensity";
   input.data = &_intensity;
-  _shaderInputs.push_back(input);
+  _shaderData.push_back(input);
 
-  input = ShaderInput();
+  input = ShaderData();
   input.type = GL_FLOAT;
   input.name = "falloff start";
   input.data = &_falloffStart;
-  _shaderInputs.push_back(input);
+  _shaderData.push_back(input);
 
-  input = ShaderInput();
+  input = ShaderData();
   input.type = GL_FLOAT;
   input.name = "falloff end";
   input.data = &_falloffEnd;
-  _shaderInputs.push_back(input);
+  _shaderData.push_back(input);
 
-  input = ShaderInput();
+  input = ShaderData();
   input.type = GL_FLOAT;
   input.name = "spot exponent";
   input.data = &_spotExp;
-  _shaderInputs.push_back(input);
+  _shaderData.push_back(input);
 
-  input = ShaderInput();
+  input = ShaderData();
   input.type = GL_FLOAT_VEC3;
   input.name = "color";
   input.data = glm::value_ptr(_color);
-  _shaderInputs.push_back(input);
+  _shaderData.push_back(input);
 
-  input = ShaderInput();
+  input = ShaderData();
   input.type = GL_FLOAT_VEC3;
   input.name = "position";
   input.data = glm::value_ptr(_positionWS);
-  _shaderInputs.push_back(input);
+  _shaderData.push_back(input);
 
-  input = ShaderInput();
+  input = ShaderData();
   input.type = GL_FLOAT_VEC3;
   input.name = "direction";
   input.data = glm::value_ptr(_positionWS);
-  _shaderInputs.push_back(input);
+  _shaderData.push_back(input);
 
 }

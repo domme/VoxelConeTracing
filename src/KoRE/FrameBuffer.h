@@ -51,5 +51,6 @@ namespace kore {
 
     GLuint _handle;
   };
+  typedef std::shared_ptr<FrameBuffer> FrameBufferPtr;
 };
 #endif  // SRC_KORE_FRAMEBUFFER_H_
