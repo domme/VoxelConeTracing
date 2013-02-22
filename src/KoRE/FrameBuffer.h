@@ -22,7 +22,7 @@
 
 #include "KoRE/Log.h"
 #include "KoRE/Common.h"
-#include "KoRE/DataTypes.h"
+#include "KoRE/ShaderInput.h"
 #include "KoRE/Texture.h"
 #include "KoRE/TextureSampler.h"
 

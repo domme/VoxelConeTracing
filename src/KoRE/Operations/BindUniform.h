@@ -17,11 +17,12 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CORE_INCLUDE_CORE_BINDUNIFORMOP_H_
-#define CORE_INCLUDE_CORE_BINDUNIFORMOP_H_
+#ifndef CORE_INCLUDE_CORE_BINDUNIFORM_H_
+#define CORE_INCLUDE_CORE_BINDUNIFORM_H_
 
 #include "KoRE/Operations/Operation.h"
-#include "KoRE/DataTypes.h"
+#include "KoRE/ShaderData.h"
+#include "KoRE/ShaderInput.h"
 #include "KoRE/Shader.h"
 
 namespace kore {
@@ -29,21 +30,19 @@ namespace kore {
   public:
     BindUniform(void);
     BindUniform(const ShaderData* componentUni,
-                 GLuint shaderID,
-                 const ShaderInput* shaderUni);
+                const ShaderInput* shaderUni);
     virtual ~BindUniform(void);
     virtual void execute(void);
     virtual void update(void);
     virtual void reset(void);
     virtual bool isValid(void);
     void connect(const ShaderData* componentUni,
-                 GLuint shaderID,
                  const ShaderInput* shaderUni);
   private:
     const ShaderData* _componentUniform;
     const ShaderInput* _shaderUniform;
-    GLuint _shaderID;
+    GLuint _shaderHandle;
   };
   typedef std::shared_ptr<BindUniform> BindUniformPtr;
 };
-#endif  // CORE_INCLUDE_CORE_BINDUNIFORMOP_H_
+#endif  // CORE_INCLUDE_CORE_BINDUNIFORM_H_

@@ -20,35 +20,41 @@
 #include "KoRE/RenderManager.h"
 #include "KoRE/GLerror.h"
 
-kore::BindAttribute::BindAttribute(void) : _meshAttPtr(NULL),
-                                           _shaderInput(NULL),
-                                           _meshComponent(NULL),
+kore::BindAttribute::BindAttribute(void) : _shaderInput(NULL),
+                                           _meshInfo(NULL),
                                            kore::Operation() {
 }
 
-kore::BindAttribute::BindAttribute(const kore::MeshComponentPtr mesh,
-                                   const kore::MeshAttributeArray* meshAtt,
-                                   const kore::ShaderInput* shaderAtt) :
+kore::BindAttribute::BindAttribute(const kore::ShaderData* meshData,
+                                   const kore::ShaderInput* shaderInput) :
                                    kore::Operation() {
-  connect(mesh, meshAtt, shaderAtt);
+  connect(meshData, shaderInput);
 }
 
 
 kore::BindAttribute::~BindAttribute(void) {
 }
 
+void kore::BindAttribute::connect(const kore::ShaderData* meshData,
+                                  const kore::ShaderInput* shaderInput) {
+  _shaderInput = shaderInput;
+  _meshInfo = static_cast<const SMeshInformation*>(meshData->data);
+}
+
 void kore::BindAttribute::execute(void) {
+  const MeshPtr& mesh = _meshInfo->mesh;
+  const MeshAttributeArray* meshAtt = _meshInfo->meshAtt;
+
   GLerror::gl_ErrorCheckStart();
   glEnableVertexAttribArray(_shaderInput->location);
-  const kore::MeshPtr mesh = _meshComponent->getMesh();
   _renderManager->bindVAO(mesh->getVAO());
   _renderManager->bindVBO(mesh->getVBO());
   glVertexAttribPointer(_shaderInput->location,
-                        _meshAttPtr->numComponents,
-                        _meshAttPtr->componentType,
+                        meshAtt->numComponents,
+                        meshAtt->componentType,
                         GL_FALSE,
-                        _meshAttPtr->stride,
-                        BUFFER_OFFSET((uint)_meshAttPtr->data));
+                        meshAtt->stride,
+                        BUFFER_OFFSET((uint)meshAtt->data));
   GLerror::gl_ErrorCheckFinish("BindAttribute " + _shaderInput->name);
 }
 
@@ -60,12 +66,4 @@ void kore::BindAttribute::reset(void) {
 
 bool kore::BindAttribute::isValid(void) {
   return false;
-}
-
-void kore::BindAttribute::connect(const kore::MeshComponentPtr mesh,
-                                  const kore::MeshAttributeArray* meshAtt,
-                                  const kore::ShaderInput* shaderAtt) {
-  _meshComponent = mesh;
-  _meshAttPtr = meshAtt;
-  _shaderInput = shaderAtt;
 }

@@ -1,5 +1,5 @@
 /*
-  Copyright Â© 2012 The KoRE Project
+  Copyright © 2012 The KoRE Project
 
   This file is part of KoRE.
 
@@ -17,17 +17,23 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CORE_INCLUDE_CORE_DATATYPES_H_
-#define CORE_INCLUDE_CORE_DATATYPES_H_
+#ifndef KORE_SRC_DATATYPES_H_
+#define KORE_SRC_DATATYPES_H_
 
-#include <string>
 #include "KoRE/Common.h"
-#include "KoRE/Log.h"
 
 namespace kore {
-  class DatatypeUtil {
+  class ShaderData {
   public:
-    static unsigned int getSizeFromGLdatatype(GLenum datatype);
+    ShaderData(void);
+    virtual ~ShaderData(void) {};
+
+    GLenum type;                 // e.g. GL_FLOAT_VEC3
+    GLuint size;                 // number of components in units of type
+    // (currently this is always 1)
+    std::string name;
+    void* data;
   };
 }
-#endif  // CORE_INCLUDE_CORE_DATATYPES_H_
+
+#endif

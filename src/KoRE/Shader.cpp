@@ -26,7 +26,7 @@ const unsigned int BUFSIZE = 100;  // Buffer length for shader-element names
 
 kore::Shader::Shader(void)
 : _name(""),
-  _shaderID(GLUINT_HANDLE_INVALID) {
+  _programHandle(GLUINT_HANDLE_INVALID) {
   _attributes.clear();
   _uniforms.clear();
   _name.clear();
@@ -87,14 +87,14 @@ bool kore::Shader::loadShader(const std::string& file, GLenum shadertype) {
 
 bool kore::Shader::initShader(void) {
   GLuint vert_sh, geom_sh, frag_sh, tess_ctrl, tess_eval;
-  _shaderID = glCreateProgram();
+  _programHandle = glCreateProgram();
   const char* tmp_prog;
   if (!_vertex_prog.empty()) {
     tmp_prog = _vertex_prog.c_str();
     vert_sh = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vert_sh, 1, &tmp_prog, 0);
     glCompileShader(vert_sh);
-    glAttachShader(_shaderID, vert_sh);
+    glAttachShader(_programHandle, vert_sh);
     _vertex_prog.clear();
   }
   if (!_geometry_prog.empty()) {
@@ -102,7 +102,7 @@ bool kore::Shader::initShader(void) {
     geom_sh = glCreateShader(GL_GEOMETRY_SHADER);
     glShaderSource(geom_sh, 1, &tmp_prog, 0);
     glCompileShader(geom_sh);
-    glAttachShader(_shaderID, geom_sh);
+    glAttachShader(_programHandle, geom_sh);
     _geometry_prog.clear();
   }
   if (!_fragment_prog.empty()) {
@@ -110,7 +110,7 @@ bool kore::Shader::initShader(void) {
     frag_sh = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(frag_sh, 1, &tmp_prog, 0);
     glCompileShader(frag_sh);
-    glAttachShader(_shaderID, frag_sh);
+    glAttachShader(_programHandle, frag_sh);
     _fragment_prog.clear();
   }
   if (!_tess_ctrl.empty()) {
@@ -118,7 +118,7 @@ bool kore::Shader::initShader(void) {
     tess_ctrl = glCreateShader(GL_TESS_CONTROL_SHADER);
     glShaderSource(tess_ctrl, 1, &tmp_prog, 0);
     glCompileShader(tess_ctrl);
-    glAttachShader(_shaderID, tess_ctrl);
+    glAttachShader(_programHandle, tess_ctrl);
     _tess_ctrl.clear();
   }
   if (!_tess_eval.empty()) {
@@ -126,16 +126,16 @@ bool kore::Shader::initShader(void) {
     tess_eval = glCreateShader(GL_TESS_EVALUATION_SHADER);
     glShaderSource(tess_eval, 1, &tmp_prog, 0);
     glCompileShader(tess_eval);
-    glAttachShader(_shaderID, tess_eval);
+    glAttachShader(_programHandle, tess_eval);
     _tess_eval.clear();
   }
 
-  glLinkProgram(_shaderID);
+  glLinkProgram(_programHandle);
   GLint success;
-  glGetProgramiv(_shaderID, GL_LINK_STATUS, &success);
+  glGetProgramiv(_programHandle, GL_LINK_STATUS, &success);
 
   int infologLen = 0;
-  glGetProgramiv(_shaderID, GL_INFO_LOG_LENGTH, &infologLen);
+  glGetProgramiv(_programHandle, GL_INFO_LOG_LENGTH, &infologLen);
   if (infologLen > 1) {
     GLchar * infoLog = new GLchar[infologLen];
     if (infoLog == NULL) {
@@ -144,7 +144,7 @@ bool kore::Shader::initShader(void) {
         _name.c_str());
     }
     int charsWritten = 0;
-    glGetProgramInfoLog(_shaderID, infologLen, &charsWritten, infoLog);
+    glGetProgramInfoLog(_programHandle, infologLen, &charsWritten, infoLog);
     std::string shaderlog = infoLog;
     kore::Log::getInstance()->write(
       "[DEBUG] '%s' program Log %s\n", _name.c_str(), shaderlog.c_str());
@@ -176,11 +176,11 @@ GLuint kore::Shader::getAttributeLocation(const std::string &name) {
 }
 
 GLuint kore::Shader::getUniformLocation(const std::string &name) {
-  return glGetUniformLocation(_shaderID, name.c_str());
+  return glGetUniformLocation(_programHandle, name.c_str());
 }
 
 GLuint kore::Shader::getProgramLocation() {
-    return _shaderID;
+    return _programHandle;
 }
 
 const std::vector<kore::ShaderInput>& kore::Shader::getAttributes() const {
@@ -195,7 +195,7 @@ void kore::Shader::constructShaderInfo(const GLenum activeType,
                                 std::vector<kore::ShaderInput>& rInputVector) {
     GLint iNumActiveElements = 0;
 
-    glGetProgramiv(_shaderID,
+    glGetProgramiv(_programHandle,
                     activeType,
                     &iNumActiveElements);
 
@@ -207,13 +207,13 @@ void kore::Shader::constructShaderInfo(const GLenum activeType,
         GLint iElementLoc = -1;
 
         if (activeType == GL_ACTIVE_ATTRIBUTES) {
-            glGetActiveAttrib(_shaderID, i, BUFSIZE, &iActualNameLength,
+            glGetActiveAttrib(_programHandle, i, BUFSIZE, &iActualNameLength,
                               &iElementSize, &eElementType, szNameBuf);
-            iElementLoc = glGetAttribLocation(_shaderID, szNameBuf);
+            iElementLoc = glGetAttribLocation(_programHandle, szNameBuf);
         } else {
-            glGetActiveUniform(_shaderID, i, BUFSIZE, &iActualNameLength,
+            glGetActiveUniform(_programHandle, i, BUFSIZE, &iActualNameLength,
                 &iElementSize, &eElementType, szNameBuf);
-            iElementLoc = glGetUniformLocation(_shaderID, szNameBuf);
+            iElementLoc = glGetUniformLocation(_programHandle, szNameBuf);
         }
 
         std::string szName = std::string(szNameBuf);
@@ -223,6 +223,7 @@ void kore::Shader::constructShaderInfo(const GLenum activeType,
         element.type = eElementType;
         element.size = iElementSize;
         element.location = iElementLoc;
+        element.programHandle = _programHandle;
 
         rInputVector.push_back(element);
     }
@@ -284,7 +285,7 @@ bool kore::Shader::isSamplerType(const GLuint uniformType) {
 }
 
 const kore::ShaderInput*
-kore::Shader::getAttributeByName(const std::string& name) const {
+kore::Shader::getAttribute(const std::string& name) const {
   for (uint i = 0; i < _attributes.size(); ++i) {
     if (_attributes[i].name == name) {
       return &_attributes[i];
@@ -297,7 +298,7 @@ kore::Shader::getAttributeByName(const std::string& name) const {
 }
 
 const kore::ShaderInput*
-kore::Shader::getUniformByName(const std::string& name) const {
+kore::Shader::getUniform(const std::string& name) const {
   for (uint i = 0; i < _uniforms.size(); ++i) {
     if (_uniforms[i].name == name) {
       return &_uniforms[i];

@@ -49,8 +49,8 @@ namespace kore {
       uint byteSize;             // size in bytes of one attribute
       uint stride;               // byte-offset between two successive elements
       void* data;
-
   };
+
   typedef std::shared_ptr<MeshAttributeArray> MeshAttributeArrayPtr;
 
   class Mesh {
@@ -93,5 +93,11 @@ namespace kore {
     GLuint                          _IBOloc;
   };
   typedef std::shared_ptr<kore::Mesh> MeshPtr;
-};
+
+  struct SMeshInformation {
+    MeshPtr mesh;
+    const MeshAttributeArray* meshAtt;
+  };
+}
+
 #endif  // CORE_INCLUDE_CORE_MESH_H_

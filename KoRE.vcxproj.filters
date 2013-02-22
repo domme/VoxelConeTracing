@@ -91,6 +91,12 @@
     <ClCompile Include="src\KoRE\FrameBuffer.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\KoRE\ShaderInput.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KoRE\ShaderData.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\KoRE\Operations\BindUniform.h">
@@ -190,6 +196,12 @@
       <Filter>src\Components</Filter>
     </ClInclude>
     <ClInclude Include="src\KoRE\FrameBuffer.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\ShaderInput.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\ShaderData.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

@@ -28,21 +28,16 @@ namespace kore {
   class BindAttribute: public Operation {
   public:
     BindAttribute(void);
-    BindAttribute( const MeshComponentPtr mesh,
-                   const MeshAttributeArray* meshAtt,
-                   const ShaderInput* shaderAtt);
+    BindAttribute(const ShaderData* meshData, const ShaderInput* shaderInput);
     virtual ~BindAttribute(void);
     virtual void execute(void);
     virtual void update(void);
     virtual void reset(void);
     virtual bool isValid(void);
-    void connect(const MeshComponentPtr mesh,
-                 const MeshAttributeArray* meshAtt,
-                 const ShaderInput* shaderAtt);
+    void connect(const ShaderData* meshData, const ShaderInput* shaderInput);
   private:
-    MeshComponentPtr _meshComponent;
-    const MeshAttributeArray* _meshAttPtr;
     const ShaderInput* _shaderInput;
+    const SMeshInformation* _meshInfo;
   };
   typedef std::shared_ptr<BindAttribute> BindAttributePtr;
 };

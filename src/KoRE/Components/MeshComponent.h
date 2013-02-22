@@ -43,6 +43,8 @@ namespace kore {
 
   private:
     MeshPtr _mesh;
+
+    void destroyAttributes();
   };
   typedef std::shared_ptr<kore::MeshComponent> MeshComponentPtr;
 };

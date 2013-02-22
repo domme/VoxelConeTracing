@@ -21,7 +21,7 @@
 #define CORE_INCLUDE_CORE_SCENENODECOMPONENT_H_
 
 #include "KoRE/Common.h"
-#include "KoRE/DataTypes.h"
+#include "KoRE/ShaderData.h"
 
 namespace kore {
   enum EComponentType {
@@ -46,7 +46,7 @@ namespace kore {
     virtual void attachTo(SceneNodePtr& node);
     virtual void transformChanged(const TransformPtr& newTransform);
     const EComponentType getType(void) const;
-    const ShaderData* getShaderDataByName(const std::string& name) const;
+    const ShaderData* getShaderData(const std::string& name) const;
 
     inline const std::vector<ShaderData>&
       getShaderData() {return _shaderData;}

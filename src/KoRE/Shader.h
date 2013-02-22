@@ -22,7 +22,7 @@
 
 #include <string>
 #include <vector>
-#include "KoRE/DataTypes.h"
+#include "KoRE/ShaderInput.h"
 #include "KoRE/Common.h"
 
 namespace kore {
@@ -37,8 +37,8 @@ namespace kore {
     GLuint getAttributeLocation(const std::string &name);
     GLuint getUniformLocation(const std::string &name);
     GLuint getProgramLocation();
-    const ShaderInput* getAttributeByName(const std::string& name) const;
-    const ShaderInput* getUniformByName(const std::string& name) const;
+    const ShaderInput* getAttribute(const std::string& name) const;
+    const ShaderInput* getUniform(const std::string& name) const;
     const std::vector<ShaderInput>& getAttributes() const;
     const std::vector<ShaderInput>& getUniforms() const;
 
@@ -61,7 +61,7 @@ namespace kore {
     std::string _tess_ctrl;
     std::string _tess_eval;
 
-    GLuint _shaderID;
+    GLuint _programHandle;
   };
   typedef std::shared_ptr<kore::Shader> ShaderPtr;
 };

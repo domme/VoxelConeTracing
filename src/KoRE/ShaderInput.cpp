@@ -1,5 +1,5 @@
 /*
-  Copyright Â© 2012 The KoRE Project
+  Copyright © 2012 The KoRE Project
 
   This file is part of KoRE.
 
@@ -17,17 +17,12 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CORE_INCLUDE_CORE_DATATYPES_H_
-#define CORE_INCLUDE_CORE_DATATYPES_H_
+#include "KoRE/ShaderInput.h"
 
-#include <string>
-#include "KoRE/Common.h"
-#include "KoRE/Log.h"
-
-namespace kore {
-  class DatatypeUtil {
-  public:
-    static unsigned int getSizeFromGLdatatype(GLenum datatype);
-  };
+kore::ShaderInput::ShaderInput(void)
+  : type(GL_NONE),
+  size(1),
+  texUnit(GLUINT_HANDLE_INVALID),
+  location(GLINT_HANDLE_INVALID),
+  name("UNDEFINED") {
 }
-#endif  // CORE_INCLUDE_CORE_DATATYPES_H_

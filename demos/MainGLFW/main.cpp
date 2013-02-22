@@ -178,45 +178,38 @@ int main(void) {
 
     // Bind Attribute-Ops
     kore::BindAttributePtr pPosAttBind (new kore::BindAttribute);
-    pPosAttBind->connect(pMeshComponent,
-      pMeshComponent->getMesh()->getAttributeByName("v_position"),
-      pSimpleShader->getAttributeByName("v_position"));
+    pPosAttBind->connect(pMeshComponent->getShaderData("v_position"),
+                         pSimpleShader->getAttribute("v_position"));
 
     kore::BindAttributePtr pNormAttBind (new kore::BindAttribute);
-    pNormAttBind->connect(pMeshComponent,
-      pMeshComponent->getMesh()->getAttributeByName("v_normal"),
-      pSimpleShader->getAttributeByName("v_normal"));
+    pNormAttBind->connect(pMeshComponent->getShaderData("v_normal"),
+                          pSimpleShader->getAttribute("v_normal"));
 
     kore::BindAttributePtr pUVAttBind (new kore::BindAttribute);
-    pUVAttBind->connect(pMeshComponent,
-      pMeshComponent->getMesh()->getAttributeByName("v_uv0"),
-      pSimpleShader->getAttributeByName("v_uv0"));
+    pUVAttBind->connect(pMeshComponent->getShaderData("v_uv0"),
+                        pSimpleShader->getAttribute("v_uv0"));
     
-
     // Bind Uniform-Ops
     kore::BindUniformPtr pModelBind(new kore::BindUniform);
     pModelBind->connect(vRenderNodes[i]->getTransform()->getShaderData("model Matrix"),
-      pSimpleShader->getProgramLocation(),
-      pSimpleShader->getUniformByName("model"));
+                        pSimpleShader->getUniform("model"));
 
     kore::BindUniformPtr pViewBind(new kore::BindUniform);
     pViewBind->connect(pCamera->getShaderData("view Matrix"),
-      pSimpleShader->getProgramLocation(),
-      pSimpleShader->getUniformByName("view"));
+                       pSimpleShader->getUniform("view"));
 
     kore::BindUniformPtr pProjBind(new kore::BindUniform);
     pProjBind->connect(pCamera->getShaderData("projection Matrix"),
-      pSimpleShader->getProgramLocation(),
-      pSimpleShader->getUniformByName("projection"));
+                       pSimpleShader->getUniform("projection"));
 
     kore::BindTexturePtr pTextureBind(new kore::BindTexture);
     pTextureBind->connect(pTexComponent->getShaderData(testTexture->getName()),
-                          pSimpleShader->getProgramLocation(),
-                          pSimpleShader->getUniformByName("tex"));
+                          pSimpleShader->getUniform("tex"));
 
 
     kore::BindUniformPtr pLightPosBind(new kore::BindUniform);
-    pLightPosBind->connect(pLight->getShaderData("position"), pSimpleShader->getProgramLocation(), pSimpleShader->getUniformByName("pointlightPos"));
+    pLightPosBind->connect(pLight->getShaderData("position"),
+                           pSimpleShader->getUniform("pointlightPos"));
 
     kore::RenderMeshOpPtr pRenderOp(new kore::RenderMesh);
     pRenderOp->setCamera(pCamera);

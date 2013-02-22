@@ -32,6 +32,7 @@ kore::MeshComponent::MeshComponent(void)
 }
 
 kore::MeshComponent::~MeshComponent(void) {
+  destroyAttributes();
 }
 
 bool kore::MeshComponent::isCompatibleWith(const kore::SceneNodeComponent&
@@ -56,12 +57,29 @@ bool kore::MeshComponent::isCompatibleWith(const kore::SceneNodeComponent&
 }
 
 void kore::MeshComponent::setMesh(MeshPtr& mesh) {
+  destroyAttributes();
+
   _mesh = mesh;
-  std::vector<MeshAttributeArray> att = _mesh->getAttributes();
-  for (uint i = 0; i < att.size(); i++) {
+  const std::vector<MeshAttributeArray>& vMeshAttributes =
+                                                  _mesh->getAttributes();
+  for (uint i = 0; i < vMeshAttributes.size(); i++) {
     ShaderData data;
-    data.type = att[i].type;
-    data.name = att[i].name;
+    data.type = vMeshAttributes[i].type;
+    data.name = vMeshAttributes[i].name;
+
+    SMeshInformation* meshInfo = new SMeshInformation;
+    meshInfo->mesh = _mesh;
+    meshInfo->meshAtt = &vMeshAttributes[i];
+    data.data = meshInfo;
+
     _shaderData.push_back(data);
   }
+}
+
+void kore::MeshComponent::destroyAttributes() {
+  for (uint i = 0; i < _shaderData.size(); ++i) {
+    SAFE_DELETE(_shaderData[i].data);
+  }
+
+  _shaderData.clear();
 }

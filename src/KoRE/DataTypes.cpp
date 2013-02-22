@@ -20,21 +20,6 @@
 #include "KoRE/Common.h"
 // GLUINT_HANDLE_INVALID
 
-kore::ShaderInput::ShaderInput(void)
-                              : type(GL_NONE),
-                                size(1),
-                                texUnit(GLUINT_HANDLE_INVALID),
-                                location(GLINT_HANDLE_INVALID),
-                                name("UNDEFINED") {
-}
-
-kore::ShaderData::ShaderData(void)
-                              : type(GL_NONE),
-                                size(1),
-                                name("UNDEFINED"),
-                                data(NULL){
-}
-
 unsigned int kore::DatatypeUtil::getSizeFromGLdatatype(GLenum datatype) {
     switch (datatype) {
         case GL_FLOAT_VEC2:

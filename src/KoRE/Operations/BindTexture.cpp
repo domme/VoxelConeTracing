@@ -3,16 +3,14 @@
 
 kore::BindTexture::BindTexture()
 : _textureData(NULL),
-  _shaderProgramLoc(GLUINT_HANDLE_INVALID),
   _shaderInput(NULL) {
     init();
 }
 
 kore::BindTexture::BindTexture(const kore::ShaderData* texData,
-                               const GLuint shaderProgramLoc,
                                const kore::ShaderInput* shaderInput) {
   init();
-  connect(texData, shaderProgramLoc, shaderInput);
+  connect(texData, shaderInput);
 }
 
 void kore::BindTexture::init() {
@@ -23,11 +21,10 @@ kore::BindTexture::~BindTexture(void) {
 }
 
 void kore::BindTexture::connect(const kore::ShaderData* texData,
-                                const GLuint shaderProgramLoc,
                                 const kore::ShaderInput* shaderInput) {
   _textureData = texData;
-  _shaderProgramLoc = shaderProgramLoc;
   _shaderInput = shaderInput;
+  _shaderProgramLoc = shaderInput->programHandle;
 }
 
 void kore::BindTexture::execute(void) {

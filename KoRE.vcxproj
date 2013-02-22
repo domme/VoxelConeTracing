@@ -214,6 +214,8 @@
     <ClCompile Include="src\KoRE\Loader\TextureLoader.cpp" />
     <ClCompile Include="src\KoRE\Mesh.cpp" />
     <ClCompile Include="src\KoRE\Operations\BindTexture.cpp" />
+    <ClCompile Include="src\KoRE\ShaderData.cpp" />
+    <ClCompile Include="src\KoRE\ShaderInput.cpp" />
     <ClCompile Include="src\KoRE\Texture.cpp" />
     <ClCompile Include="src\KoRE\TextureSampler.cpp" />
     <ClCompile Include="src\KoRE\Timer.cpp" />
@@ -246,6 +248,8 @@
     <ClInclude Include="src\KoRE\SceneManager.h" />
     <ClInclude Include="src\KoRE\SceneNode.h" />
     <ClInclude Include="src\KoRE\Shader.h" />
+    <ClInclude Include="src\KoRE\ShaderData.h" />
+    <ClInclude Include="src\KoRE\ShaderInput.h" />
     <ClInclude Include="src\KoRE\StdAfx.h" />
     <ClCompile Include="src\KoRE\Components\Camera.cpp" />
     <ClCompile Include="src\KoRE\Components\MeshComponent.cpp" />
