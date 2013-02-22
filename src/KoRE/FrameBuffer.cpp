@@ -46,7 +46,7 @@ void kore::FrameBuffer::addTextureAttachement(uint textwidth,
 
 const kore::TexturePtr
   kore::FrameBuffer::getTextureByName( const std::string& name ) const {
-    for(int i = 0; i < _textures.size(); ++i) {
+    for(uint i = 0; i < _textures.size(); ++i) {
       if (_textures[i]->getName() == name) {
         return _textures[i];
       }

@@ -46,11 +46,10 @@ namespace kore {
     virtual void attachTo(SceneNodePtr& node);
     virtual void transformChanged(const TransformPtr& newTransform);
     const EComponentType getType(void) const;
-
-    const ShaderData* getShaderData(const std::string& name) const;
+    const ShaderData* getShaderDataByName(const std::string& name) const;
 
     inline const std::vector<ShaderData>&
-      getShaderInputs() {return _shaderData;}
+      getShaderData() {return _shaderData;}
 
     uint getID(void) const;
 

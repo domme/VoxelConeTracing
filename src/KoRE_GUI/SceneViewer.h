@@ -10,10 +10,9 @@ namespace koregui {
 
   public:
       SceneViewer(QWidget *parent = 0);
-      //SceneViewer(kore::SceneNode *root, QWidget *parent = 0);
       ~SceneViewer();
 
-      void showScene(kore::SceneNode *root);
+      void showScene(kore::SceneNodePtr root);
 
   public slots:
     void zoomIn() {scale(1.2,1.2);}
@@ -22,7 +21,7 @@ namespace koregui {
   private:
       QGraphicsScene _scene;
       void clearScene(void);
-      void createNode(kore::SceneNode *sourcenode);
+      void createNode(kore::SceneNodePtr sourcenode);
   };
 }
 #endif  // SCENEVIEWER_H

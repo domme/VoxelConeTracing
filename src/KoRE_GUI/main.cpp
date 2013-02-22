@@ -20,6 +20,6 @@ int main(int argc, char *argv[])
 
     // do stuff
     kore::ResourceManager::getInstance()->loadScene("./assets/meshes/TestEnv.dae");
-    view.showScene(kore::SceneManager::getInstance()->getRootNode().get());
+    view.showScene(kore::SceneManager::getInstance()->getRootNode());
     return app.exec();
 }

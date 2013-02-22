@@ -1,13 +1,12 @@
-#include "NodeItem.h"
+#include "KoRE_GUI/NodeItem.h"
 #include <QPainter>
-#include <QCursor>
 #include <QStaticText>
+#include "KoRE_GUI/ShaderDataItem.h"
 
-koregui::NodeItem::NodeItem(kore::SceneNode* sceneNode, QGraphicsItem* parent) : QGraphicsItem(parent) {
-  //setCursor(QCursor(Qt::OpenHandCursor));
+koregui::NodeItem::NodeItem(kore::SceneNodePtr sceneNode, QGraphicsItem* parent)
+                            : _sceneNode(sceneNode),
+                              QGraphicsItem(parent) {
   setFlag(QGraphicsItem::ItemIsMovable, true);
-  //QGraphicsItem::ItemIsSelectable
-  _sceneNode = sceneNode;
   refresh();
 }
 
@@ -15,49 +14,84 @@ koregui::NodeItem::~NodeItem(void) {
 }
 
 void koregui::NodeItem::refresh(void) {
-  _nodeheight = 70 + (_sceneNode->_components.size() * 30);
+  _nodeheight = 0;
+  _nodeheight += 40; // node name
+  std::vector<kore::SceneNodeComponentPtr> components = _sceneNode->getComponents();
+   for (uint i = 0; i<components.size(); i++) {
+     
+     std::vector<kore::ShaderData>sdata = components[i]->getShaderData();
+     for (uint j = 0; j < sdata.size(); j++) {
+       ShaderDataItem* dataitem =  new ShaderDataItem(sdata[j], this);
+       dataitem->setPos(0, 10 + _nodeheight + j * 30 );
+     }
+     _nodeheight += components[i]->getShaderData().size() * 30;
+   }
+   _nodeheight += 20; // lower cap
+  _nodewidth = 200;
 }
 
 QRectF koregui::NodeItem::boundingRect() const {
-  return QRectF(0, 0, 100, _nodeheight);
+  return QRectF(0, 0, _nodewidth, _nodeheight);
 }
 
 void koregui::NodeItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) {
+  uint currentheight = 0;
   QBrush b;
-  b.setColor(Qt::GlobalColor::lightGray);
+  QPen p;
+  p.setWidth(2);
+  p.setJoinStyle(Qt::PenJoinStyle::RoundJoin);
+  p.setStyle(Qt::PenStyle::NoPen);
+  b.setColor(QColor(44,44,44));
   b.setStyle(Qt::BrushStyle::SolidPattern);
-  //b.setStyle(Qt::BrushStyle::BDiagPattern);
+  painter->setPen(p);
   painter->setBrush(b);
-  painter->drawRoundedRect(QRect(0, 0, 100, _nodeheight), 10, 10);
-  
+  painter->drawRoundedRect(QRect(0, 0, _nodewidth, _nodeheight), 10, 10);
+
   QFont font("Times");
-  //font.setBold(true);
+  font.setBold(true);
   font.setPointSize(12);
-  QStaticText t(_sceneNode->getName().c_str());
   painter->setFont(font);
-  painter->drawStaticText(10,10, t);
 
-  b.setStyle(Qt::BrushStyle::BDiagPattern);
+  QStaticText text;
+  text.setText(_sceneNode->getName().c_str());
+  p.setColor(QColor(255,255,255));
+  p.setStyle(Qt::PenStyle::SolidLine);
+  painter->setPen(p);
+  painter->drawStaticText(10,10, text);
+  p.setStyle(Qt::PenStyle::NoPen);
+  painter->setPen(p);
 
-  for (uint i = 0; i<_sceneNode->_components.size(); i++) {
-    switch (_sceneNode->_components[i]->getType()) {
+  currentheight+= 40;
+  std::vector<kore::SceneNodeComponentPtr> components = _sceneNode->getComponents();
+  for (uint i = 0; i<components.size(); i++) {
+
+    std::vector<kore::ShaderData>sdata = components[i]->getShaderData();
+    (i%2)?b.setColor(QColor(44,44,44)):b.setColor(QColor(55,55,55));
+    painter->setBrush(b);
+    painter->drawRect(0, currentheight, 200, sdata.size() * 30);
+
+    switch (components[i]->getType()) {
     case kore::COMPONENT_TRANSFORM:
-      b.setColor(Qt::GlobalColor::blue);
+      b.setColor(QColor(35,203,173));
       break;
     case kore::COMPONENT_MESH:
-      b.setColor(Qt::GlobalColor::yellow);
+      b.setColor(QColor(252,210,89));
       break;
     case kore::COMPONENT_CAMERA:
-      b.setColor(Qt::GlobalColor::green);
+      b.setColor(QColor(199,89,214));
       break;
     case kore::COMPONENT_LIGHT:
-      b.setColor(Qt::GlobalColor::darkCyan);
+      b.setColor(QColor(250,123,28));
       break;
     case kore::COMPONENT_UNKNOWN:
     default:
       b.setColor(Qt::GlobalColor::red);
     }
+
+    // draw component color
     painter->setBrush(b);
-    painter->drawRect(0, 60 + (i * 30), 100, 30);
+    painter->drawRect(0, currentheight, 10, sdata.size() * 30);
+
+    currentheight += sdata.size() * 30;
   }
 }

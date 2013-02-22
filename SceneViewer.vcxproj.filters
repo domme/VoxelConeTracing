@@ -72,5 +72,8 @@
     <ClCompile Include="src\KoRE_GUI\GLWindow.cpp">
       <Filter>Source Dateien</Filter>
     </ClCompile>
+    <ClCompile Include="src\KoRE_GUI\ShaderDataItem.cpp">
+      <Filter>Source Dateien</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -32,6 +32,7 @@ kore::SceneNode::SceneNode(void)
                         _dirty(true) {
   _id = kore::SceneManager::getInstance()->createID();
   _transform = TransformPtr(new Transform());
+  _components.push_back(_transform);
 }
 
 kore::SceneNode::~SceneNode(void) {

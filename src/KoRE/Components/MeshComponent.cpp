@@ -57,4 +57,11 @@ bool kore::MeshComponent::isCompatibleWith(const kore::SceneNodeComponent&
 
 void kore::MeshComponent::setMesh(MeshPtr& mesh) {
   _mesh = mesh;
+  std::vector<MeshAttributeArray> att = _mesh->getAttributes();
+  for (uint i = 0; i < att.size(); i++) {
+    ShaderData data;
+    data.type = att[i].type;
+    data.name = att[i].name;
+    _shaderData.push_back(data);
+  }
 }

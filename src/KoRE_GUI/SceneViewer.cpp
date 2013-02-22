@@ -14,7 +14,7 @@ koregui::SceneViewer::~SceneViewer() {
   //clearTree();
 }
 
-void koregui::SceneViewer::showScene(kore::SceneNode *root) {
+void koregui::SceneViewer::showScene(kore::SceneNodePtr root) {
   clearScene();
   createNode(root);
 }
@@ -28,11 +28,11 @@ void koregui::SceneViewer::clearScene(void) {
   }
 }
 
-void koregui::SceneViewer::createNode(kore::SceneNode *sourcenode) {
+void koregui::SceneViewer::createNode(kore::SceneNodePtr sourcenode) {
   NodeItem* nodeItem = new NodeItem(sourcenode);
   std::vector<kore::SceneNodePtr> pnode = sourcenode->getChildren();
   for (unsigned int i = 0; i<pnode.size(); i++) {
-    createNode(pnode[i].get());
+    createNode(pnode[i]);
   }
   nodeItem->setPos(0, 0);
   _scene.addItem(nodeItem);
