@@ -36,13 +36,18 @@ namespace kore {
     const TexturePtr getTextureByName(const std::string& name) const;
 
     void addTextureAttachment(TexturePtr ptr, GLuint attatchment);
-    void addTextureAttachement(uint textwidth,
+    void addTextureAttachment(uint textwidth,
                                uint texheight,
                                GLuint format,
                                GLuint internalFormat,
                                GLuint pixelType,
                                const std::string& name,
                                GLuint attatchment);
+
+    /*! \brief Checks this FBO for "Framebuffer completeness"
+    *          The results of this check are written to the Log.
+    * \return True, if this FBO succeeds the check, false otherwise */
+    bool checkFBOcompleteness();
 
   private:
     std::vector<ShaderInput> _textureOutputs;

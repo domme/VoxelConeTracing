@@ -19,6 +19,8 @@
 
 #include "KoRE/FrameBuffer.h"
 #include "KoRE/RenderManager.h"
+#include "KoRE/Log.h"
+#include "KoRE/GLerror.h"
 
 kore::FrameBuffer::FrameBuffer(void)
 : _handle(GLUINT_HANDLE_INVALID) {
@@ -30,18 +32,32 @@ kore::FrameBuffer::~FrameBuffer(void) {
   glDeleteFramebuffers(1, &_handle);
 }
 
-void kore::FrameBuffer::addTextureAttachment(TexturePtr ptr, GLuint attatchment) {
+void kore::FrameBuffer::addTextureAttachment(TexturePtr ptr,
+                                             GLuint attatchment) {
+  kore::RenderManager::getInstance()->bindFrameBuffer(GL_FRAMEBUFFER, _handle);
+  kore::RenderManager::getInstance()->
+                                  bindTexture(ptr->getTargetType(), _handle);
 
+  glFramebufferTexture2D(GL_FRAMEBUFFER, attatchment, ptr->getTargetType(),
+                         ptr->getHandle(), 0);
 }
 
-void kore::FrameBuffer::addTextureAttachement(uint textwidth,
+void kore::FrameBuffer::addTextureAttachment(uint textwidth,
                                               uint texheight,
                                               GLuint format,
                                               GLuint internalFormat,
                                               GLuint pixelType,
-                          
                                               const std::string& name,
                                               GLuint attatchment ) {
+  TexturePtr pTex(new Texture);
+  bool bSuccess = pTex->create(textwidth, texheight, 0, format,
+                  0, internalFormat, pixelType, name);
+  if (bSuccess) {
+    addTextureAttachment(pTex, attatchment);
+  } else {
+    Log::getInstance()->write("[ERROR] Requested Texture could not be"
+                              "created for the FBO");
+  }
 }
 
 const kore::TexturePtr
@@ -53,4 +69,13 @@ const kore::TexturePtr
     }
 
     return TexturePtr(NULL);
+}
+
+bool kore::FrameBuffer::checkFBOcompleteness() {
+  if (_handle == GLUINT_HANDLE_INVALID) {
+    return false;
+  }
+
+  RenderManager::getInstance()->bindFrameBuffer(GL_FRAMEBUFFER, _handle);
+  return GLerror::gl_ValidateFBO("");
 }

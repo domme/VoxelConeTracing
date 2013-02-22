@@ -55,6 +55,8 @@ kore::RenderManager::RenderManager(void) {
                             GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS);
 
   memset(_boundFrameBuffers, 0, sizeof(GLuint) * 2);
+
+  activeTexture(GL_TEXTURE0);  // Activate texture unit 0 by default
 }
 
 kore::RenderManager::~RenderManager(void) {
@@ -152,6 +154,11 @@ void kore::RenderManager::bindTexture(const GLuint textureUnit,
     glBindTexture(textureTarget, textureHandle);
     _boundTextures[textureUnit][uTexTargetIndex] = textureHandle;
   }
+}
+
+void kore::RenderManager::bindTexture(const GLuint textureTarget,
+                                      const GLuint textureHandle) {
+  bindTexture(_activeTextureUnitIndex, textureTarget, textureHandle);
 }
 
 void kore::RenderManager::bindSampler(const GLuint textureUnit,

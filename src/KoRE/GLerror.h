@@ -30,7 +30,7 @@ namespace kore {
       glGetError();
     }
 
-    static void gl_ErrorCheckFinish(const std::string& message) {
+    static bool gl_ErrorCheckFinish(const std::string& message) {
       GLenum err = glGetError();
 
       Log* pLog = Log::getInstance();
@@ -57,9 +57,11 @@ namespace kore {
          pLog->write("[GL-ERROR] TABLE TOO LARGE: %s\n", message.c_str());
       }break;
      }
+
+      return err == GL_NO_ERROR;
     }
 
-    static void gl_ValidateFBO(const std::string& message) {
+    static bool gl_ValidateFBO(const std::string& message) {
       GLenum error = glCheckFramebufferStatus(GL_FRAMEBUFFER );
 
       Log* pLog = Log::getInstance();
@@ -86,6 +88,8 @@ namespace kore {
             "GL_FRAMEBUFFER_UNSUPPORTED: %s\n", message.c_str());
         break;
       }
+
+      return error == GL_NO_ERROR;
     }
   };  // end class
 }  // end namespace

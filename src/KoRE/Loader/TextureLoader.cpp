@@ -57,31 +57,36 @@ kore::TexturePtr
   } else {
     kore::TexturePtr tex = TexturePtr(new Texture());
     LodePNGColorMode& color = pngState.info_raw;
-
-    tex->_xres = width;
-    tex->_yres = height;
-    tex->_type = GL_TEXTURE_2D;
-
-    glActiveTexture(GL_TEXTURE0);
-    glGenTextures(1, &tex->_handle);
-    glBindTexture(GL_TEXTURE_2D, tex->_handle);
+    
+    GLuint texTarget = GL_TEXTURE_2D;
+    uint border = 0;
+    GLuint format;
+    GLuint internalFormat;
+    GLuint pixelType;
 
     //Pass the actual Texture Data
-    if(color.colortype == LCT_RGB)
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8, width, height, 0,
-                   GL_RGB,
-                   GL_UNSIGNED_BYTE,
-                   reinterpret_cast<GLvoid*>(&imageData[0]));
-    else if(color.colortype == LCT_RGBA)
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, width, height, 0,
-                   GL_RGBA,
-                   GL_UNSIGNED_BYTE,
-                   reinterpret_cast<GLvoid*>(&imageData[0]));
-    glGenerateMipmap(GL_TEXTURE_2D);
-    ResourceManager::getInstance()->addTexture(filepath, tex);
-    kore::Log::getInstance()
-      ->write("[DEBUG] Texture '%s' successfully loaded\n",
-              filepath.c_str());
-    return tex;
+    if(color.colortype == LCT_RGB) {
+      internalFormat = GL_SRGB8;
+      format = GL_RGB;
+      pixelType = GL_UNSIGNED_BYTE; 
+    } else if(color.colortype == LCT_RGBA) {
+      internalFormat = GL_SRGB8_ALPHA8;
+      format = GL_RGBA;
+      pixelType = GL_UNSIGNED_BYTE;
+    }
+
+    if (tex->create(width, height, 0, format, 0, internalFormat, pixelType, filepath, &imageData[0])) {
+      ResourceManager::getInstance()->addTexture(filepath, tex);
+      kore::Log::getInstance()
+        ->write("[DEBUG] Texture '%s' successfully loaded\n",
+        filepath.c_str());
+      tex->genMipmapHierarchy();
+      return tex;
+    } else {
+      kore::Log::getInstance()
+        ->write("[ERROR] Texture '%s' could not be loaded\n",
+        filepath.c_str());
+      return TexturePtr();
+    }
   }
 }

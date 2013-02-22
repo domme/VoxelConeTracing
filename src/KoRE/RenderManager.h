@@ -81,6 +81,8 @@ namespace kore {
     void bindTexture(const GLuint textureUnit,
                      const GLuint textureTarget,
                      const GLuint textureHandle);
+    void bindTexture(const GLuint textureTarget,
+                     const GLuint textureHandle);
     void bindSampler(const GLuint textureUnit,
                      const GLuint samplerHandle);
     void bindFrameBuffer(const GLuint fboTarget,
