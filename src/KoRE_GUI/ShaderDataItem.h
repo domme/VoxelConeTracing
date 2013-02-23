@@ -2,7 +2,7 @@
 #define SHADERNODEITEM_H_
 
 #include <QGraphicsItem>
-#include "KoRE/DataTypes.h"
+#include "KoRE/ShaderData.h"
 
 namespace koregui {
   class ShaderDataItem : public QGraphicsItem {

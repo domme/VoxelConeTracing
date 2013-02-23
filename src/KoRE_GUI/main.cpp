@@ -13,12 +13,12 @@ int main(int argc, char *argv[])
 
     // initialize Qt
     QApplication app(argc, argv);
-    GLWindow win;
-    win.show();
     koregui::SceneViewer view;
     view.show();
 
     // do stuff
+    // need of GL-Context
+    GLWindow win;
     kore::ResourceManager::getInstance()->loadScene("./assets/meshes/TestEnv.dae");
     view.showScene(kore::SceneManager::getInstance()->getRootNode());
     return app.exec();

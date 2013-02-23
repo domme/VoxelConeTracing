@@ -14,7 +14,12 @@ namespace koregui {
 
     void refresh(void);
     QRectF boundingRect() const;
-    void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget);
+    void paint(QPainter* painter,
+               const QStyleOptionGraphicsItem* option,
+               QWidget* widget);
+
+    inline int getHeight(void) {return _nodeheight;};
+    inline int getWidth(void) {return _nodewidth;};
   private:
     kore::SceneNodePtr _sceneNode;
     uint _nodeheight;

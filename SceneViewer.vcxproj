@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\KoRE_GUI\NodePathItem.h" />
     <ClInclude Include="src\KoRE_GUI\ShaderDataItem.h" />
     <CustomBuild Include="src\KoRE_GUI\GLWindow.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
@@ -47,6 +48,7 @@
     <ClCompile Include="src\KoRE_GUI\GLWindow.cpp" />
     <ClCompile Include="src\KoRE_GUI\main.cpp" />
     <ClCompile Include="src\KoRE_GUI\NodeItem.cpp" />
+    <ClCompile Include="src\KoRE_GUI\NodePathItem.cpp" />
     <ClCompile Include="src\KoRE_GUI\SceneViewer.cpp" />
     <ClCompile Include="src\KoRE_GUI\ShaderDataItem.cpp" />
   </ItemGroup>

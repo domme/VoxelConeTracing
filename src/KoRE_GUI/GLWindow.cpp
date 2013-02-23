@@ -121,5 +121,5 @@ void GLWindow::update() {
 }
 
 void GLWindow::keyPressEvent(QKeyEvent * evnt) {
-    if (evnt->key() == Qt::Key_Escape) QGuiApplication::quit();
+    //if (evnt->key() == Qt::Key_Escape) QGuiApplication::quit();
 }

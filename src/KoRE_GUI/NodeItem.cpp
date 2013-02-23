@@ -47,7 +47,7 @@ void koregui::NodeItem::paint(QPainter* painter, const QStyleOptionGraphicsItem*
   painter->setBrush(b);
   painter->drawRoundedRect(QRect(0, 0, _nodewidth, _nodeheight), 10, 10);
 
-  QFont font("Times");
+  QFont font("Arial");
   font.setBold(true);
   font.setPointSize(12);
   painter->setFont(font);
