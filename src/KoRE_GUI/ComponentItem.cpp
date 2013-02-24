@@ -106,14 +106,15 @@ void koregui::ComponentItem::paint(QPainter* painter,
   }
 }
 
-void koregui::ComponentItem::mouseReleaseEvent(QGraphicsSceneMouseEvent * event){
+void koregui::ComponentItem::mousePressEvent(QGraphicsSceneMouseEvent * event){
   QGraphicsItem::mousePressEvent(event);
-  if (event->button() == Qt::MouseButton::LeftButton) {
-    QPointF p = event->buttonDownPos(Qt::MouseButton::LeftButton);
-    if (p.x() < 10) {
+  kore::Log::getInstance()->write("Möp!\n");
+  if (event->button() == Qt::MouseButton::RightButton) {
+    //QPointF p = event->buttonDownPos(Qt::MouseButton::LeftButton);
+    //if (p.x() < 10) {
       _expanded = !_expanded;
       refresh();
-    }
+    //}
   }
 }
 

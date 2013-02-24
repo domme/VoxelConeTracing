@@ -6,7 +6,7 @@
 #include "KoRE_GUI/NodePathItem.h"
 
 koregui::SceneViewer::SceneViewer(QWidget *parent) : QGraphicsView(parent) {
-  //setDragMode(ScrollHandDrag);
+  setDragMode(ScrollHandDrag);
   //setDragMode(RubberBandDrag);
   _scene.setBackgroundBrush(QBrush(Qt::darkGray));
   setScene(&_scene);
@@ -62,6 +62,15 @@ int koregui::SceneViewer::estimateTreeWidth(kore::SceneNodePtr sourcenode) {
   return width;
 }
 
-void koregui::SceneViewer::keyPressEvent(QKeyEvent * evnt) {
-  if (evnt->key() == Qt::Key_Escape) QGuiApplication::quit();
+void koregui::SceneViewer::keyPressEvent(QKeyEvent * event) {
+  if (event->key() == Qt::Key_Escape) QGuiApplication::quit();
+  QGraphicsView::keyPressEvent(event);
 }
+
+void koregui::SceneViewer::wheelEvent(QWheelEvent *event) {
+  float scaleFactor = pow((double)2, -event->delta() / 240.0);
+  scale(scaleFactor, scaleFactor);
+  //QGraphicsView::wheelEvent(event);
+}
+
+

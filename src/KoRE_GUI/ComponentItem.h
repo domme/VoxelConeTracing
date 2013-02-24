@@ -22,7 +22,7 @@ namespace koregui {
     void paint(QPainter* painter,
       const QStyleOptionGraphicsItem* option,
       QWidget* widget);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);
+    void mousePressEvent(QGraphicsSceneMouseEvent * event);
 
   private:
     kore::SceneNodeComponentPtr _component;

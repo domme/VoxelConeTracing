@@ -21,7 +21,8 @@ namespace koregui {
 
 
   protected:
-    void keyPressEvent(QKeyEvent* evnt);
+    void keyPressEvent(QKeyEvent* event);
+    void wheelEvent(QWheelEvent *event);
 
   private:
       QGraphicsScene _scene;

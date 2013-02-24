@@ -2,6 +2,7 @@
 #include <QPainter>
 #include <QCursor>
 #include <QStaticText>
+#include <QToolTip>
 
 koregui::ShaderDataItem::ShaderDataItem(kore::ShaderData* data,
                                         QGraphicsItem* parent)
