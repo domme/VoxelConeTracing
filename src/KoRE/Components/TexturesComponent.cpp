@@ -25,21 +25,16 @@ isCompatibleWith(const SceneNodeComponent& otherComponent) const {
 void kore::
   TexturesComponent::addTexture(TexturePtr tex,
                                 const bool useMipMaps /*=true*/,
-                                const TextureSamplerPtr sampler /*= NULL*/ ) {
+                                const TextureSampler* sampler /*= NULL*/ ) {
   if (std::find(_vTextures.begin(),
                 _vTextures.end(), tex) != _vTextures.end()) {
     return;
   }
 
-  TextureSamplerPtr texSampler;
+   const TextureSampler* texSampler;
 
   if (sampler == NULL) {
-    TextureSamplerPtr newSampler(new TextureSampler);
-    newSampler->create(GL_SAMPLER_2D,
-                       glm::uvec3(GL_REPEAT, GL_REPEAT, GL_REPEAT),
-                       GL_LINEAR,
-                       useMipMaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR);
-    texSampler = newSampler; 
+    texSampler = ResourceManager::getInstance()->getTextureSampler(GL_SAMPLER_2D, GL_REPEAT, GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR);
   } else {
     texSampler = sampler;
   }

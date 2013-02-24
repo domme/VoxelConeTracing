@@ -33,15 +33,15 @@ namespace kore {
     virtual bool isCompatibleWith(const SceneNodeComponent& otherComponent) const;
 
     inline const uint getNumTextures(void) const {return _vTextures.size();}
-    inline const TextureSamplerPtr getSampler(const uint idx) const {return _vSamplers[idx];}
+    inline const TextureSampler* getSampler(const uint idx) const {return _vSamplers[idx];}
 
     void addTexture(TexturePtr tex,
                     const bool useMipMaps = true,
-                    const TextureSamplerPtr sampler = TextureSamplerPtr());
+                    const TextureSampler* sampler = NULL);
 
   private:
     std::vector<TexturePtr> _vTextures;
-    std::vector<TextureSamplerPtr> _vSamplers;
+    std::vector<const TextureSampler*> _vSamplers;
     std::vector<STextureInfo*> _vTextureInfos;
   };
   typedef std::shared_ptr<kore::TexturesComponent> TexturesComponentPtr;

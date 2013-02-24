@@ -27,6 +27,10 @@ namespace kore {
     TextureSampler(); 
     ~TextureSampler();
 
+    /*! \brief Get the matching Sampler-Type from a texture target type
+              (e.g. GL_TEXTURE_2D -> GL_SAMPLER_2D) */
+    static GLuint getSamplerTypeFromTexType(const GLuint texType);
+
     /*! \brief Retrieve the OpenGL-handle for this sampler object */
     inline GLuint getHandle() const {return _handle;}
 
