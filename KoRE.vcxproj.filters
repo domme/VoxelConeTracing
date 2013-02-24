@@ -97,6 +97,9 @@
     <ClCompile Include="src\KoRE\ShaderData.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\KoRE\ShaderOutput.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\KoRE\Operations\BindUniform.h">
@@ -202,6 +205,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\KoRE\ShaderData.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\ShaderOutput.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

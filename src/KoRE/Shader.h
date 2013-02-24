@@ -23,6 +23,7 @@
 #include <string>
 #include <vector>
 #include "KoRE/ShaderInput.h"
+#include "KoRE/ShaderOutput.h"
 #include "KoRE/Common.h"
 
 namespace kore {
@@ -41,12 +42,15 @@ namespace kore {
     const ShaderInput* getUniform(const std::string& name) const;
     const std::vector<ShaderInput>& getAttributes() const;
     const std::vector<ShaderInput>& getUniforms() const;
+    const std::vector<ShaderOutput>& getOutputs() const;
 
   private:
     void getAttributeInfo();
     void getUniformInfo();
-    void constructShaderInfo(const GLenum activeType,
+    void constructShaderInputInfo(const GLenum activeType,
                              std::vector<ShaderInput>& rInputVector);
+
+    void constructShaderOutputInfo(std::vector<ShaderOutput>& rOutputVector);
 
     bool isSamplerType(const GLuint uniformType);
 
@@ -54,6 +58,7 @@ namespace kore {
     std::string _name;
     std::vector<ShaderInput> _attributes;
     std::vector<ShaderInput> _uniforms;
+    std::vector<ShaderOutput> _outputs;
 
     std::string _vertex_prog;
     std::string _geometry_prog;
