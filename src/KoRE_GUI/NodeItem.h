@@ -4,7 +4,7 @@
 #include <vector>
 #include <QGraphicsItem>
 #include "KoRE/SceneNode.h"
-#include "KoRE_GUI/ShaderDataItem.h"
+#include "KoRE_GUI/ComponentItem.h"
 
 namespace koregui {
   class NodeItem : public QGraphicsItem {
@@ -25,7 +25,7 @@ namespace koregui {
     uint _nodeheight;
     uint _nodewidth;
 
-    std::vector<ShaderDataItem*> _shaderDataItems;
+    std::vector<ComponentItem*> _componentItems;
     QGraphicsScene* _scene;
   };
 }

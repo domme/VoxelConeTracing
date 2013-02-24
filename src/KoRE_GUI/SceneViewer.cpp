@@ -31,9 +31,10 @@ void koregui::SceneViewer::clearScene(void) {
   }
 }
 
-koregui::NodeItem* koregui::SceneViewer::createNode(kore::SceneNodePtr sourcenode,
-                                      int x,
-                                      int y) {
+koregui::NodeItem* koregui::SceneViewer
+  ::createNode(kore::SceneNodePtr sourcenode,
+               int x,
+               int y) {
   NodeItem* nodeItem = new NodeItem(sourcenode);
   nodeItem->setPos(x, y);
   _scene.addItem(nodeItem);

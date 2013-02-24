@@ -48,8 +48,9 @@ namespace kore {
     const EComponentType getType(void) const;
     const ShaderData* getShaderData(const std::string& name) const;
 
-    inline const std::vector<ShaderData>&
+    inline std::vector<ShaderData>&
       getShaderData() {return _shaderData;}
+
 
     uint getID(void) const;
 

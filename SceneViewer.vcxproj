@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\KoRE_GUI\ComponentItem.h" />
     <ClInclude Include="src\KoRE_GUI\NodePathItem.h" />
     <ClInclude Include="src\KoRE_GUI\ShaderDataItem.h" />
     <CustomBuild Include="src\KoRE_GUI\GLWindow.h">
@@ -36,6 +37,7 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\KoRE_GUI\ComponentItem.cpp" />
     <ClCompile Include="src\KoRE_GUI\GeneratedFiles\Debug\moc_GLWindow.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
