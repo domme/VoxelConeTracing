@@ -1,3 +1,26 @@
+/*
+  Copyright (c) 2012 The KoRE Project
+
+  This file is part of KoRE.
+
+  KoRE is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  KoRE is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/************************************************************************/
+/* \author Dominik Ospelt                                               */
+/************************************************************************/
+
 #include "NodePathItem.h"
 #include <QPainter>
 
@@ -20,12 +43,13 @@ QRectF koregui::NodePathItem::boundingRect() const {
 void koregui::NodePathItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) {
   QPointF start = _start->pos() + QPointF(_start->getWidth()/2, _start->getHeight());
   QPointF dest = _end->pos() + QPointF(_start->getWidth()/2, 0);
+  QPointF dist = QPointF(0, (dest.y()- start.y())/2);
+  //QPointF help2 = 
 
   QPainterPath path;
   path.moveTo(start);
-  path.cubicTo(start + QPointF(0,50),
-               dest - QPointF(0,50),
-               dest);
+
+  path.cubicTo(start + dist, dest - dist, dest);
 
   prepareGeometryChange();
   _path = path;

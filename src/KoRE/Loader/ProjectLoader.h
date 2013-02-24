@@ -26,12 +26,12 @@ namespace kore {
   class ProjectLoader {
   public:
     static ProjectLoader* getInstance();
-    ~ProjectLoader();
+    ~ProjectLoader(){};
 
     void loadProject(const std::string& path) const;
     void saveProject(const std::string& path) const;
   private:
-    ProjectLoader(void);
+    ProjectLoader(void){};
   };
 };
 #endif  // SRC_KORE_PROJECTLOADER_H_

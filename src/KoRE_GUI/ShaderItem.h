@@ -21,38 +21,34 @@
 /* \author Dominik Ospelt                                               */
 /************************************************************************/
 
-#ifndef SCENEVIEWER_H
-#define SCENEVIEWER_H
+#ifndef SHADERITEM_H_
+#define SHADERITEM_H_
 
-#include <QGraphicsView>
-#include "KoRE/SceneNode.h"
-#include "KoRE_GUI/NodeItem.h"
+#include <QGraphicsItem>
+#include "KoRE/Shader.h"
 
 namespace koregui {
-  class SceneViewer : public QGraphicsView {
-      Q_OBJECT
-
+  class ShaderItem : public QGraphicsItem {
   public:
-      SceneViewer(QWidget *parent = 0);
-      ~SceneViewer();
+    ShaderItem(kore::ShaderPtr shader,
+                  QGraphicsItem* parent = 0);
+    ~ShaderItem(void);
 
-      void showScene(kore::SceneNodePtr root);
-
-  public slots:
-    void zoomIn() {scale(1.2,1.2);}
-    void zoomOut() {scale(1/1.2,1/1.2);}
-
+    void refresh(void);
+    inline int getHeight(void) {return _shaderheight;};
+    inline int getWidth(void) {return _shaderwidth;};
 
   protected:
-    void keyPressEvent(QKeyEvent* event);
-    void wheelEvent(QWheelEvent *event);
+    QRectF boundingRect() const;
+    void paint(QPainter* painter,
+      const QStyleOptionGraphicsItem* option,
+      QWidget* widget);
+    void mousePressEvent(QGraphicsSceneMouseEvent * event);
 
   private:
-      QGraphicsScene _scene;
-      void clearScene(void);
-      //returns pixel width of children;
-      NodeItem* createNode(kore::SceneNodePtr sourcenode, int x, int y);
-      int estimateTreeWidth(kore::SceneNodePtr sourcenode);
+    kore::ShaderPtr _shader;
+    uint _shaderwidth;
+    uint _shaderheight;
   };
 }
-#endif // SCENEVIEWER_H
+#endif  // SHADERITEM_H_

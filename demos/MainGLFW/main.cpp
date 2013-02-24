@@ -295,7 +295,6 @@ int main(void) {
 
     oldMouseX = mouseX;
     oldMouseY = mouseY;
-    
 
     rotationNode->rotate(90.0f * static_cast<float>(time), glm::vec3(0.0f, 0.0f, 1.0f));
     //lightNode->rotate(-40.0f * static_cast<float>(time), glm::vec3(0.0f, 0.0f, 1.0f), kore::SPACE_WORLD);
@@ -311,7 +310,7 @@ int main(void) {
   }
 
   // Test XML writing
-  kore::ResourceManager::getInstance()->saveProject("KoRE_XML.kore");
+  kore::ResourceManager::getInstance()->saveProject("xmltest.kore");
 
   // Close window and terminate GLFW
   glfwTerminate();

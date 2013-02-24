@@ -13,28 +13,24 @@ kore::ProjectLoader* kore::ProjectLoader::getInstance() {
   return &instance;
 }
 
-void kore::ProjectLoader::loadProject( const std::string& path ) const {
-
+void kore::ProjectLoader::loadProject(const std::string& path) const {
+  kore::Log::getInstance()->write("[Debug] project loading not yet implemented\n");
 }
 
-void kore::ProjectLoader::saveProject( const std::string& path ) const {
+void kore::ProjectLoader::saveProject(const std::string& path) const {
   TiXmlDocument doc;  
   //TiXmlElement* msg;
   TiXmlDeclaration* decl = new TiXmlDeclaration("1.0", "", "yes");
   doc.LinkEndChild(decl);
 
-  TiXmlElement * resources = new TiXmlElement("KoRE_Resources");
+  TiXmlElement* resources = new TiXmlElement("Resources");
   doc.LinkEndChild(resources);
 
   TiXmlComment * comment = new TiXmlComment();
-  comment->SetValue("TestComment" );  
+  comment->SetValue("PhysicObject information");  
   resources->LinkEndChild(comment);
 
-  /*TiXmlComment * comment = new TiXmlComment();
-  comment->SetValue(" PhysicObject information " );  
-  root->LinkEndChild(comment);
-
-  for(unsigned int i = 0; i < mDynObjects->size(); i++){
+  /*for(unsigned int i = 0; i < mDynObjects->size(); i++){
     TiXmlElement * po = new TiXmlElement( "PhysicsObject" );
     po->SetAttribute("name", mDynObjects->at(i)->getName().c_str());
     root->LinkEndChild(po);
@@ -55,5 +51,10 @@ void kore::ProjectLoader::saveProject( const std::string& path ) const {
     }
   }*/
 
-  doc.SaveFile(path.c_str()); 
+  doc.SaveFile(path.c_str());
+  /*if(!doc.SaveFile(path.c_str())) {
+    kore::Log::getInstance()->write("[ERROR] could not write file '%s'\n");
+  } else {
+    kore::Log::getInstance()->write("[Debug] writing file '%s'\n");
+  }*/
 }

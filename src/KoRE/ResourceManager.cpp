@@ -50,11 +50,11 @@ void kore::ResourceManager::loadResources(const std::string& filename) {
 }
 
 void kore::ResourceManager::saveProject(const std::string& filename) {
-  //kore::ProjectLoader::getInstance()->loadProject(filename);
+  kore::ProjectLoader::getInstance()->saveProject(filename);
 }
 
 void kore::ResourceManager::loadProject(const std::string& filename) {
-  //kore::ProjectLoader::getInstance()->saveProject(filename);
+  kore::ProjectLoader::getInstance()->loadProject(filename);
 }
 
 kore::TexturePtr
@@ -140,7 +140,7 @@ const kore::TextureSampler*
                     const GLuint minFilter, const GLuint magFilter) {
   // First look for a sampler that satisfies the provided properties
   glm::uvec3 wrappings(wrappingS, wrappingT, wrappingR);
-  for (int i = 0; i < _textureSamplers.size(); ++i) {
+  for (uint i = 0; i < _textureSamplers.size(); ++i) {
     if (_textureSamplers[i].getType() == type &&
         _textureSamplers[i].getWrapping() == wrappings &&
         _textureSamplers[i].getMagFilter() == magFilter &&
