@@ -31,14 +31,25 @@
 #include "KoRE/Texture.h"
 #include "KoRE/SceneNode.h"
 #include "KoRE/SceneManager.h"
+#include "KoRE/TextureSampler.h"
 
+// TODO(dlazarek/dospelt) Are Cameras and Lights really needed in the resourceManager??
 
 namespace kore {
   class ResourceManager {
   public:
     static ResourceManager *getInstance(void);
 
-    // reads a scene file and creates all nodes and components within a scene graph
+    /* \brief saves KoRE's status
+    */
+    void saveProject(const std::string& filename);
+
+    /* \brief load KoRE's status
+    */
+    void loadProject(const std::string& filename);
+
+    // reads a scene file and creates all nodes and
+    // components within a scene graph
     void loadScene(const std::string& filename,
                                  SceneNodePtr parent =
                                  kore::SceneManager::getInstance()
@@ -60,6 +71,23 @@ namespace kore {
                                      const std::string& id);
     kore::TexturePtr getTexture(const std::string& path);
 
+    /*! \brief Returns the OpenGL texture sampler object with the provided 
+    *          properties. 
+    * If a sampler with the provided properties already exists, the pointer to 
+    * that sampler is simply returned. Otherwise, a new sampler object is
+    * created and returned.
+    * \param wrappingS The OpenGL-Wrap mode in S/U-direction (e.g. GL_REPEAT)
+    * \param wrappingT The OpenGL-Wrap mode in T/V-direction (e.g. GL_REPEAT)
+    * \param wrappingR The OpenGL-Wrap mode in R-direction (e.g. GL_REPEAT)
+    * \param minFilter The OpenGL-Minification filter (e.g. GL_LINEAR)
+    * \param magFilter The OpenGL-Magnification filter (e.g. GL_LINEAR)
+    * \param type The OpenGL-Sampler type (e.g. GL_SAMPLER_2D)
+    * \return The pointer to the sampler-object.
+    */
+    const TextureSampler*
+      getTextureSampler(const GLuint type, const GLuint wrappingS,
+                        const GLuint wrappingT, const GLuint wrappingR,
+                        const GLuint minFilter, const GLuint magFilter);
 
   private:
     typedef std::map<std::string, kore::SceneNodeComponentPtr>
@@ -82,6 +110,7 @@ namespace kore {
     OuterResourceMapT _lights; // filepath, id, light
     std::map<std::string, TexturePtr> _textures; // filepath, texture
     std::vector<kore::ShaderPtr> _shader;
+    std::vector<kore::TextureSampler> _textureSamplers;
   };
 };
 #endif  // CORE_INCLUDE_CORE_RESOURCEMANAGER_H_

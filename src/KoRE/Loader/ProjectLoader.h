@@ -17,18 +17,21 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CORE_INCLUDE_CORE_RESOURCEMANAGER_H_
-#define CORE_INCLUDE_CORE_RESOURCEMANAGER_H_
+#ifndef SRC_KORE_PROJECTLOADER_H_
+#define SRC_KORE_PROJECTLOADER_H_
 
 #include <string>
 
 namespace kore {
   class ProjectLoader {
   public:
+    static ProjectLoader* getInstance();
+    ~ProjectLoader();
+
+    void loadProject(const std::string& path) const;
+    void saveProject(const std::string& path) const;
+  private:
     ProjectLoader(void);
-    virtual ~ProjectLoader(void);
-    const bool loadProject(const std::string& path) const;
-    const bool saveProject(const std::string& path) const;
   };
 };
-#endif  // CORE_INCLUDE_CORE_RESOURCEMANAGER_H_
+#endif  // SRC_KORE_PROJECTLOADER_H_

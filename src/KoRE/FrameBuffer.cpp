@@ -40,6 +40,10 @@ void kore::FrameBuffer::addTextureAttachment(TexturePtr ptr,
 
   glFramebufferTexture2D(GL_FRAMEBUFFER, attatchment, ptr->getTargetType(),
                          ptr->getHandle(), 0);
+  _textures.push_back(ptr);
+  
+  // TODO(dlazarek): Create Sampler-object and append it to list
+  // TODO(dlazarek): Create ShaderData from combination of texture and sampler <- !Problem!
 }
 
 void kore::FrameBuffer::addTextureAttachment(uint textwidth,

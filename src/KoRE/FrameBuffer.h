@@ -22,7 +22,7 @@
 
 #include "KoRE/Log.h"
 #include "KoRE/Common.h"
-#include "KoRE/ShaderInput.h"
+#include "KoRE/ShaderData.h"
 #include "KoRE/Texture.h"
 #include "KoRE/TextureSampler.h"
 
@@ -50,7 +50,7 @@ namespace kore {
     bool checkFBOcompleteness();
 
   private:
-    std::vector<ShaderInput> _textureOutputs;
+    std::vector<ShaderData> _textureOutputs;
     std::vector<TexturePtr> _textures;
     std::vector<TextureSamplerPtr> _textureSamplers;
 

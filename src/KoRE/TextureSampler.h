@@ -27,9 +27,33 @@ namespace kore {
     TextureSampler(); 
     ~TextureSampler();
 
+    /*! \brief Retrieve the OpenGL-handle for this sampler object */
     inline GLuint getHandle() const {return _handle;}
 
-    void create(const GLuint type,
+    /*!
+    *\brief Retrieve the wrapping modes in the order S, T, R (e.g. GL_REPEAT)
+    */
+    inline const glm::uvec3& getWrapping() const {return _wrapping;}
+
+    /*! \brief Retrieve the magnification filter mode (e.g. GL_LINEAR) */
+    inline const GLuint getMagFilter() const {return _magfilter;}
+    
+    /*! \brief Retrieve the minification filter mode (e.g. GL_LINEAR) */
+    inline const GLuint getMinFilter() const {return _minfilter;}
+
+    /*! \brief Retrieve the sampler type (e.g. GL_SAMPLER_2D) */
+    inline const GLuint getType() const {return _type;}
+
+    /*! \brief Create this sampler object with the provided paramters. If this
+               Sampler object is already created, it is destroyed first.
+    * \param type The sampler-type (e.g. GL_SAMPLER_2D)
+    * \param wrapping The wrapping-modes for directions S, T, R
+    * (e.g. GL_REPEAT)
+    * \param minfilter The OpenGL minification filter (e.g. GL_LINEAR)
+    * \param magfilter The OpenGL magnification filter (e.g. GL_LINEAR)
+    * \return True, if the sampler creation was successful, false otherwise.
+    */
+    bool create(const GLuint type,
       const glm::uvec3& wrapping,
       const GLuint magfilter,
       const GLuint minfilter);

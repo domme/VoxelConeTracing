@@ -310,6 +310,9 @@ int main(void) {
     running = !glfwGetKey(GLFW_KEY_ESC) && glfwGetWindowParam(GLFW_OPENED);
   }
 
+  // Test XML writing
+  kore::ResourceManager::getInstance()->saveProject("KoRE_XML.kore");
+
   // Close window and terminate GLFW
   glfwTerminate();
 

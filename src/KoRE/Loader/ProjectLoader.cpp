@@ -1,51 +1,59 @@
 #include "ProjectLoader.h"
 
-#include <stdio.h>
+#include <tinyxml/tinyxml.h>
+#include <tinyxml/tinystr.h>
 
 #include "KoRE/ResourceManager.h"
 #include "KoRE/SceneManager.h"
 #include "KoRE/RenderManager.h"
 #include "KoRE/Log.h"
 
-const bool kore::ProjectLoader::loadProject(const std::string& path) const {
-  FILE* kore_file = fopen(path.c_str(), "rb");
-  if (kore_file == NULL) {
-    kore::Log::getInstance()->write(
-      "[ERROR] Could not open file \"%s\"\n", path.c_str());
-    return false;
-  }
-  // TODO(dospelt) implement in 3 steps
-
-  // read all ressources             -> from ResourceManager
-  int t;
-  fread(&t ,sizeof(int), 1, kore_file);
-
-  // read scenegraph and components  -> from SceneManager
-  // read connections and operations -> from RenderManager
-  fclose(kore_file);
-  kore::Log::getInstance()->write(
-    "[DEBUG] Reading file completed: \"%s\"\n", path.c_str());
-  return true;
+kore::ProjectLoader* kore::ProjectLoader::getInstance() {
+  static ProjectLoader instance;
+  return &instance;
 }
 
-const bool kore::ProjectLoader::saveProject(const std::string& path) const {
+void kore::ProjectLoader::loadProject( const std::string& path ) const {
 
-  FILE* kore_file = fopen(path.c_str(), "wb");
-  if (kore_file == NULL) {
-    kore::Log::getInstance()->write(
-      "[ERROR] Could not write file \"%s\"\n", path.c_str());
-    return false;
-  }
-  // TODO(dospelt) implement in 3 steps
+}
 
-  // write all ressources             -> from ResourceManager
-  int t = 42;
-  fwrite(&t ,sizeof(int), 1, kore_file);
+void kore::ProjectLoader::saveProject( const std::string& path ) const {
+  TiXmlDocument doc;  
+  //TiXmlElement* msg;
+  TiXmlDeclaration* decl = new TiXmlDeclaration("1.0", "", "yes");
+  doc.LinkEndChild(decl);
 
-  // write scenegraph and components  -> from SceneManager
-  // write connections and operations -> from RenderManager
-  fclose(kore_file);
-  kore::Log::getInstance()->write(
-    "[DEBUG] Writing file completed: \"%s\"\n", path.c_str());
-  return true;
+  TiXmlElement * resources = new TiXmlElement("KoRE_Resources");
+  doc.LinkEndChild(resources);
+
+  TiXmlComment * comment = new TiXmlComment();
+  comment->SetValue("TestComment" );  
+  resources->LinkEndChild(comment);
+
+  /*TiXmlComment * comment = new TiXmlComment();
+  comment->SetValue(" PhysicObject information " );  
+  root->LinkEndChild(comment);
+
+  for(unsigned int i = 0; i < mDynObjects->size(); i++){
+    TiXmlElement * po = new TiXmlElement( "PhysicsObject" );
+    po->SetAttribute("name", mDynObjects->at(i)->getName().c_str());
+    root->LinkEndChild(po);
+
+    for(int j = 0; j < mDynObjects->at(i)->getNumShapes(); j++){
+
+      TiXmlElement * shape = new TiXmlElement( "Shape" );
+
+      Ogre::String s;
+      ShapeType st =  mDynObjects->at(i)->getShapeType(j);
+      switch(st){
+      case TYPE_BOX: s = "Box"; break;
+      case TYPE_SPHERE: s = "Sphere"; break;
+      case TYPE_CAPSULE: s = "Capsule"; break;
+      }
+      shape->SetAttribute("type", s.c_str());
+      po->LinkEndChild(shape);
+    }
+  }*/
+
+  doc.SaveFile(path.c_str()); 
 }

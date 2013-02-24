@@ -25,6 +25,7 @@
 #include "KoRE/Loader/MeshLoader.h"
 #include "KoRE/Loader/SceneLoader.h"
 #include "KoRE/Loader/TextureLoader.h"
+#include "KoRE/Loader/ProjectLoader.h"
 #include "KoRE/Log.h"
 #include "KoRE/Components/MeshComponent.h"
 
@@ -46,6 +47,14 @@ void kore::ResourceManager::loadScene(const std::string& filename,
 
 void kore::ResourceManager::loadResources(const std::string& filename) {
   kore::SceneLoader::getInstance()->loadRessources(filename);
+}
+
+void kore::ResourceManager::saveProject(const std::string& filename) {
+  //kore::ProjectLoader::getInstance()->loadProject(filename);
+}
+
+void kore::ResourceManager::loadProject(const std::string& filename) {
+  //kore::ProjectLoader::getInstance()->saveProject(filename);
 }
 
 kore::TexturePtr
@@ -122,4 +131,33 @@ kore::TexturePtr kore::ResourceManager::getTexture(const std::string& path) {
   }
   return _textures[path];*/
   return (_textures.count(path) == 0)?TexturePtr():_textures[path];
+}
+
+const kore::TextureSampler*
+  kore::ResourceManager::
+  getTextureSampler(const GLuint type, const GLuint wrappingS,
+                    const GLuint wrappingT, const GLuint wrappingR,
+                    const GLuint minFilter, const GLuint magFilter) {
+  // First look for a sampler that satisfies the provided properties
+  glm::uvec3 wrappings(wrappingS, wrappingT, wrappingR);
+  for (int i = 0; i < _textureSamplers.size(); ++i) {
+    if (_textureSamplers[i].getType() == type &&
+        _textureSamplers[i].getWrapping() == wrappings &&
+        _textureSamplers[i].getMagFilter() == magFilter &&
+        _textureSamplers[i].getMinFilter() == minFilter) {
+          return &_textureSamplers[i];
+    }
+  }
+
+  // Otherwise: Construct a new Sampler
+  TextureSampler sampler;
+  bool success = sampler.create(type, wrappings, magFilter, minFilter);
+
+  if (!success) {
+    Log::getInstance()->write("[ERROR] TextureSampler creation failed!");
+    return NULL;
+  }
+
+  _textureSamplers.push_back(sampler);
+  return &_textureSamplers[_textureSamplers.size() - 1];
 }
