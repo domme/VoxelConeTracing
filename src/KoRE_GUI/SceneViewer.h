@@ -19,8 +19,10 @@ namespace koregui {
     void zoomIn() {scale(1.2,1.2);}
     void zoomOut() {scale(1/1.2,1/1.2);}
 
+
   protected:
-    void keyPressEvent(QKeyEvent* evnt);
+    void keyPressEvent(QKeyEvent* event);
+    void wheelEvent(QWheelEvent *event);
 
   private:
       QGraphicsScene _scene;

@@ -7,6 +7,7 @@ koregui::NodePathItem::NodePathItem(NodeItem* start,
                                   : _start(start),
                                     _end(end),
                                     QGraphicsItem(parent){
+  setAcceptedMouseButtons(Qt::NoButton);
 }
 
 koregui::NodePathItem::~NodePathItem(void) {
