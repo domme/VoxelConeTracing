@@ -91,17 +91,17 @@
     <ClCompile Include="src\KoRE\ShaderOutput.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\KoRE\Operations\StandardOp.cpp">
-      <Filter>src\Operations\StandardOps</Filter>
+    <ClCompile Include="src\KoRE\Operations\BindOperations\StandardOp.cpp">
+      <Filter>src\Operations\BindOperations</Filter>
     </ClCompile>
-    <ClCompile Include="src\KoRE\Operations\BindUniform.cpp">
-      <Filter>src\Operations\StandardOps</Filter>
+    <ClCompile Include="src\KoRE\Operations\BindOperations\BindAttribute.cpp">
+      <Filter>src\Operations\BindOperations</Filter>
     </ClCompile>
-    <ClCompile Include="src\KoRE\Operations\BindTexture.cpp">
-      <Filter>src\Operations\StandardOps</Filter>
+    <ClCompile Include="src\KoRE\Operations\BindOperations\BindTexture.cpp">
+      <Filter>src\Operations\BindOperations</Filter>
     </ClCompile>
-    <ClCompile Include="src\KoRE\Operations\BindAttribute.cpp">
-      <Filter>src\Operations\StandardOps</Filter>
+    <ClCompile Include="src\KoRE\Operations\BindOperations\BindUniform.cpp">
+      <Filter>src\Operations\BindOperations</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -204,17 +204,17 @@
     <ClInclude Include="src\KoRE\ShaderOutput.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\KoRE\Operations\StandardOp.h">
-      <Filter>src\Operations\StandardOps</Filter>
+    <ClInclude Include="src\KoRE\Operations\BindOperations\BindUniform.h">
+      <Filter>src\Operations\BindOperations</Filter>
     </ClInclude>
-    <ClInclude Include="src\KoRE\Operations\BindUniform.h">
-      <Filter>src\Operations\StandardOps</Filter>
+    <ClInclude Include="src\KoRE\Operations\BindOperations\StandardOp.h">
+      <Filter>src\Operations\BindOperations</Filter>
     </ClInclude>
-    <ClInclude Include="src\KoRE\Operations\BindTexture.h">
-      <Filter>src\Operations\StandardOps</Filter>
+    <ClInclude Include="src\KoRE\Operations\BindOperations\BindAttribute.h">
+      <Filter>src\Operations\BindOperations</Filter>
     </ClInclude>
-    <ClInclude Include="src\KoRE\Operations\BindAttribute.h">
-      <Filter>src\Operations\StandardOps</Filter>
+    <ClInclude Include="src\KoRE\Operations\BindOperations\BindTexture.h">
+      <Filter>src\Operations\BindOperations</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -230,8 +230,8 @@
     <Filter Include="src\Components">
       <UniqueIdentifier>{1fc6c413-ae68-49a7-8660-82b329e19200}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Operations\StandardOps">
-      <UniqueIdentifier>{6a7248e6-de5c-4b35-89f5-678e9b32e696}</UniqueIdentifier>
+    <Filter Include="src\Operations\BindOperations">
+      <UniqueIdentifier>{56a10190-b170-447c-abca-fa80048741a1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
