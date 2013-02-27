@@ -159,6 +159,23 @@ bool kore::Shader::initShader(void) {
   _attributes.clear();
   _uniforms.clear();
   _outputs.clear();
+
+  constructShaderInputInfo(GL_ACTIVE_ATTRIBUTES, _attributes);
+  for (uint i = 0; i < _attributes.size(); i++) {
+      kore::Log::getInstance()->write("\tAttribute '%s' at location %i\n",
+          _attributes[i].name.c_str(),
+          _attributes[i].location);
+  }
+  constructShaderInputInfo(GL_ACTIVE_UNIFORMS, _uniforms);
+  for (uint j = 0; j < _uniforms.size(); j++) {
+      kore::Log::getInstance()->write("\tUniform '%s' at location %i\n",
+          _uniforms[j].name.c_str(),
+          _uniforms[j].location);
+  }
+
+  /*
+  /* OpenGL 4.3 or arb_program_interface_query needed 
+  /*
   constructShaderInputInfo(GL_PROGRAM_INPUT, _attributes);
   for (uint i = 0; i < _attributes.size(); i++) {
     kore::Log::getInstance()->write("\tAttribute '%s' at location %i\n",
@@ -176,6 +193,7 @@ bool kore::Shader::initShader(void) {
       kore::Log::getInstance()->write("\tOutput '%s'\n",
           _outputs[j].name.c_str());
   }
+  */
   
   return success == GL_TRUE;
 }
@@ -208,10 +226,18 @@ void kore::Shader::constructShaderInputInfo(const GLenum activeType,
                                 std::vector<kore::ShaderInput>& rInputVector) {
     GLint iNumActiveElements = 0;
 
+    /*
+    /* OpenGL 4.3 or arb_program_interface_query needed 
+    /*
     glGetProgramInterfaceiv(_programHandle, activeType, GL_ACTIVE_RESOURCES, 
         &iNumActiveElements);
 
     const GLenum properties[3] = {GL_TYPE, GL_NAME_LENGTH, GL_LOCATION};
+    */
+
+    glGetProgramiv(_programHandle,
+        activeType,
+        &iNumActiveElements);
 
     for (int i = 0; i < iNumActiveElements; ++i) {
         GLchar szNameBuf[BUFSIZE];
@@ -220,7 +246,9 @@ void kore::Shader::constructShaderInputInfo(const GLenum activeType,
         GLenum eElementType;
         GLint iElementLoc = -1;
 
-        
+        /*
+        /* OpenGL 4.3 or arb_program_interface_query needed 
+        /*
         GLint values[3];       
         glGetProgramResourceiv(_programHandle, activeType, i, 3, properties, 
             BUFSIZE, NULL, values);
@@ -231,9 +259,22 @@ void kore::Shader::constructShaderInputInfo(const GLenum activeType,
 
         glGetProgramResourceName(_programHandle, activeType, i, BUFSIZE, 
             &iActualNameLength, szNameBuf);
+        */
+        
+        
+        
+        if (activeType == GL_ACTIVE_ATTRIBUTES) {
+            glGetActiveAttrib(_programHandle, i, BUFSIZE, &iActualNameLength,
+                &iElementSize, &eElementType, szNameBuf);
+            iElementLoc = glGetAttribLocation(_programHandle, szNameBuf);
+        }
+        if (activeType == GL_ACTIVE_UNIFORMS){
+            glGetActiveUniform(_programHandle, i, BUFSIZE, &iActualNameLength,
+                &iElementSize, &eElementType, szNameBuf);
+            iElementLoc = glGetUniformLocation(_programHandle, szNameBuf);
+        }
 
         std::string szName = std::string(szNameBuf);
-
         ShaderInput element;
         element.name = szName;
         element.type = eElementType;
@@ -244,6 +285,9 @@ void kore::Shader::constructShaderInputInfo(const GLenum activeType,
         rInputVector.push_back(element);
     }
 
+    /*
+    /* OpenGL 4.3 or arb_program_interface_query needed 
+    /*
     // For Uniform texture-types: add the textureUnit-field
     if (activeType == GL_UNIFORM) {
       GLuint texUnit = 0;
@@ -253,6 +297,18 @@ void kore::Shader::constructShaderInputInfo(const GLenum activeType,
           ++texUnit;
         }
       }
+    }
+    */
+
+    // For Uniform texture-types: add the textureUnit-field
+    if (activeType == GL_ACTIVE_UNIFORMS) {
+        GLuint texUnit = 0;
+        for (uint i = 0; i < rInputVector.size(); ++i) {
+            if (isSamplerType(rInputVector[i].type)) {
+                rInputVector[i].texUnit = texUnit;
+                ++texUnit;
+            }
+        }
     }
 }
 
