@@ -31,20 +31,9 @@ void kore::
     return;
   }
 
-   const TextureSampler* texSampler;
-
-  if (sampler == NULL) {
-    texSampler = ResourceManager::getInstance()->getTextureSampler(GL_SAMPLER_2D, GL_REPEAT, GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR);
-  } else {
-    texSampler = sampler;
-  }
-
-  _vSamplers.push_back(texSampler);
-
   STextureInfo* texInfo = new STextureInfo;
   texInfo->texLocation = tex->getHandle();
   texInfo->texTarget = tex->getTargetType();
-  texInfo->samplerLocation = texSampler->getHandle();
   _vTextureInfos.push_back(texInfo);
 
   ShaderData shaderdata;

@@ -76,18 +76,11 @@ namespace kore {
     * If a sampler with the provided properties already exists, the pointer to 
     * that sampler is simply returned. Otherwise, a new sampler object is
     * created and returned.
-    * \param wrappingS The OpenGL-Wrap mode in S/U-direction (e.g. GL_REPEAT)
-    * \param wrappingT The OpenGL-Wrap mode in T/V-direction (e.g. GL_REPEAT)
-    * \param wrappingR The OpenGL-Wrap mode in R-direction (e.g. GL_REPEAT)
-    * \param minFilter The OpenGL-Minification filter (e.g. GL_LINEAR)
-    * \param magFilter The OpenGL-Magnification filter (e.g. GL_LINEAR)
-    * \param type The OpenGL-Sampler type (e.g. GL_SAMPLER_2D)
+    * \param properties The properties of the requested sampler.
     * \return The pointer to the sampler-object.
     */
     const TextureSampler*
-      getTextureSampler(const GLuint type, const GLuint wrappingS,
-                        const GLuint wrappingT, const GLuint wrappingR,
-                        const GLuint minFilter, const GLuint magFilter);
+      getTextureSampler(const TexSamplerProperties& properties);
 
   private:
     typedef std::map<std::string, kore::SceneNodeComponentPtr>

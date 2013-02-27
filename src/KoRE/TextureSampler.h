@@ -22,6 +22,34 @@
 
 #include "KoRE/Common.h"
 namespace kore {
+  struct TexSamplerProperties {
+    TexSamplerProperties() :
+      type(GL_SAMPLER_2D),
+      wrapping(glm::uvec3(GL_REPEAT)),
+      magfilter(GL_LINEAR),
+      minfilter(GL_LINEAR_MIPMAP_LINEAR) {
+    }
+
+    bool operator== (const TexSamplerProperties& other) const {
+      return    type == other.type
+              && wrapping == other.wrapping
+              && magfilter == other.magfilter
+              && minfilter == other.minfilter;
+    }
+
+    /// The sampler-type (e.g. GL_SAMPLER_2D)
+    GLuint type;
+
+    ///  The wrapping-modes for directions S, T, R (e.g. GL_REPEAT)
+    glm::uvec3 wrapping;
+
+    /// The OpenGL magnification filter (e.g. GL_LINEAR)
+    GLuint magfilter;
+
+    /// The OpenGL minification filter (e.g. GL_LINEAR)
+    GLuint minfilter;
+  };
+
   class TextureSampler {
   public:
     TextureSampler(); 
@@ -34,39 +62,18 @@ namespace kore {
     /*! \brief Retrieve the OpenGL-handle for this sampler object */
     inline GLuint getHandle() const {return _handle;}
 
-    /*!
-    *\brief Retrieve the wrapping modes in the order S, T, R (e.g. GL_REPEAT)
-    */
-    inline const glm::uvec3& getWrapping() const {return _wrapping;}
+    /*! \brief Retrieve the properties of this sampler. */
+    inline const TexSamplerProperties& getProperties() const
+                                                      {return _properties;}
 
-    /*! \brief Retrieve the magnification filter mode (e.g. GL_LINEAR) */
-    inline const GLuint getMagFilter() const {return _magfilter;}
-    
-    /*! \brief Retrieve the minification filter mode (e.g. GL_LINEAR) */
-    inline const GLuint getMinFilter() const {return _minfilter;}
-
-    /*! \brief Retrieve the sampler type (e.g. GL_SAMPLER_2D) */
-    inline const GLuint getType() const {return _type;}
-
-    /*! \brief Create this sampler object with the provided paramters. If this
+    /*! \brief Create this sampler object with the provided properties. If this
                Sampler object is already created, it is destroyed first.
-    * \param type The sampler-type (e.g. GL_SAMPLER_2D)
-    * \param wrapping The wrapping-modes for directions S, T, R
-    * (e.g. GL_REPEAT)
-    * \param minfilter The OpenGL minification filter (e.g. GL_LINEAR)
-    * \param magfilter The OpenGL magnification filter (e.g. GL_LINEAR)
     * \return True, if the sampler creation was successful, false otherwise.
     */
-    bool create(const GLuint type,
-      const glm::uvec3& wrapping,
-      const GLuint magfilter,
-      const GLuint minfilter);
+    bool create(const TexSamplerProperties& properties);
 
   private:
-    GLuint _type;
-    glm::uvec3 _wrapping;
-    GLuint _magfilter;
-    GLuint _minfilter;
+    TexSamplerProperties _properties;
     GLuint _handle;
 
     void destroy();

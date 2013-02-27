@@ -22,6 +22,7 @@
 #include "KoRE/Shader.h"
 #include "KoRE/Log.h"
 #include "KoRE/Operations/Operation.h"
+#include "KoRE/ResourceManager.h"
 
 const unsigned int BUFSIZE = 100;  // Buffer length for shader-element names
 
@@ -303,10 +304,20 @@ void kore::Shader::constructShaderInputInfo(const GLenum activeType,
 
     // For Uniform texture-types: add the textureUnit-field
     if (activeType == GL_ACTIVE_UNIFORMS) {
+        ResourceManager* resourceManager = ResourceManager::getInstance();
         GLuint texUnit = 0;
         for (uint i = 0; i < rInputVector.size(); ++i) {
             if (isSamplerType(rInputVector[i].type)) {
                 rInputVector[i].texUnit = texUnit;
+
+                TexSamplerProperties samplerProperties;
+                samplerProperties.type = rInputVector[i].type;
+                
+                const TextureSampler* sampler =
+                  resourceManager->getTextureSampler(samplerProperties);
+
+                _vSamplers.push_back(sampler);
+
                 ++texUnit;
             }
         }
@@ -423,4 +434,15 @@ kore::Shader::getUniform(const std::string& name) const {
   Log::getInstance()->write("[ERROR] Uniform '%s' not found in shader '%s'",
     name.c_str(), _name.c_str());
   return NULL;
+}
+
+void kore::Shader::setSamplerProperties(const uint idx,
+                                   const TexSamplerProperties& properties) {
+  if (idx > _vSamplers.size() - 1
+      || properties == _vSamplers[idx]->getProperties()) {
+        return;
+  }
+
+  _vSamplers[idx] = ResourceManager::getInstance()->
+                                    getTextureSampler(properties);
 }

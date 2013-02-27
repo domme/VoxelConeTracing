@@ -26,6 +26,7 @@
 #include "KoRE/ShaderOutput.h"
 #include "KoRE/Common.h"
 #include "KoRE/OperationOwner.h"
+#include "KoRE/TextureSampler.h"
 
 namespace kore {
   class Operation;
@@ -46,6 +47,27 @@ namespace kore {
     const std::vector<ShaderInput>& getUniforms() const;
     const std::vector<ShaderOutput>& getOutputs() const;
 
+    /*! \brief Retrieve the number of texture-samplers this shader uses.
+               Note that this is the same number as sampler-type uniforms.
+        \return The number of texture samplers. */
+    inline const uint GetNumTexSamplers() const {return _vSamplers.size();}
+
+    /*! \brief Retrieve a Texture sampler at a given index.
+    *   \pram idx The index of the sampler in the list.
+    *             this index is the same as the textureUnit of the
+    *             corresponding texture.
+    *   \return The textureSampler at index/texUnit idx. */
+    inline const TextureSampler*
+      getSampler(const uint idx) const {return _vSamplers[idx];}
+
+    /*! \brief Set the properties of the sampler at index/textureUnit idx to
+     *          the provided properties.
+     * \param idx The index/textureUnit of the sampler to set.
+     * \param properties The requested new properties.
+     */
+    void setSamplerProperties(const uint idx,
+                              const TexSamplerProperties& properties);
+
   private:
     void getAttributeInfo();
     void getUniformInfo();
@@ -60,6 +82,9 @@ namespace kore {
     std::vector<ShaderInput> _attributes;
     std::vector<ShaderInput> _uniforms;
     std::vector<ShaderOutput> _outputs;
+
+    std::vector<const TextureSampler*> _vSamplers;
+
 
     std::string _vertex_prog;
     std::string _geometry_prog;

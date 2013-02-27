@@ -1,30 +1,23 @@
 #include "KoRE/TextureSampler.h"
 #include "KoRE/GLerror.h"
 
-kore::TextureSampler::TextureSampler()
-  : _type(GL_SAMPLER_2D),
-    _wrapping(glm::uvec3(GL_REPEAT)),
-    _magfilter(GL_LINEAR),
-    _minfilter(GL_LINEAR_MIPMAP_LINEAR),
-    _handle(GLUINT_HANDLE_INVALID) {}
+kore::TextureSampler::TextureSampler() 
+  : _handle(GLUINT_HANDLE_INVALID) {}
 
 kore::TextureSampler::~TextureSampler() {
   destroy();
 }
 
-bool kore::TextureSampler::create(const GLuint type,
-                                  const glm::uvec3& wrapping,
-                                  const GLuint magfilter,
-                                  const GLuint minfilter) {
+bool kore::TextureSampler::create(const TexSamplerProperties& properties) {
   destroy();
 
   GLerror::gl_ErrorCheckStart();
   glGenSamplers(1, &_handle);
-  glSamplerParameteri(_handle, GL_TEXTURE_WRAP_S, wrapping.s);
-  glSamplerParameteri(_handle, GL_TEXTURE_WRAP_T, wrapping.t);
-  glSamplerParameteri(_handle, GL_TEXTURE_WRAP_R, wrapping.r);
-  glSamplerParameteri(_handle, GL_TEXTURE_MAG_FILTER, magfilter);
-  glSamplerParameteri(_handle, GL_TEXTURE_MIN_FILTER, minfilter);
+  glSamplerParameteri(_handle, GL_TEXTURE_WRAP_S, properties.wrapping.s);
+  glSamplerParameteri(_handle, GL_TEXTURE_WRAP_T, properties.wrapping.t);
+  glSamplerParameteri(_handle, GL_TEXTURE_WRAP_R, properties.wrapping.r);
+  glSamplerParameteri(_handle, GL_TEXTURE_MAG_FILTER, properties.magfilter);
+  glSamplerParameteri(_handle, GL_TEXTURE_MIN_FILTER, properties.minfilter);
   //glSamplerParameterf(_handle, GL_TEXTURE_MAX_ANISOTROPY_EXT, 16.0f);
   return GLerror::gl_ErrorCheckFinish("GenSampler");
 }

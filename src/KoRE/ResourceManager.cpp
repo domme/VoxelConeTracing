@@ -135,23 +135,17 @@ kore::TexturePtr kore::ResourceManager::getTexture(const std::string& path) {
 
 const kore::TextureSampler*
   kore::ResourceManager::
-  getTextureSampler(const GLuint type, const GLuint wrappingS,
-                    const GLuint wrappingT, const GLuint wrappingR,
-                    const GLuint minFilter, const GLuint magFilter) {
+  getTextureSampler(const TexSamplerProperties& properties) {
   // First look for a sampler that satisfies the provided properties
-  glm::uvec3 wrappings(wrappingS, wrappingT, wrappingR);
   for (uint i = 0; i < _textureSamplers.size(); ++i) {
-    if (_textureSamplers[i].getType() == type &&
-        _textureSamplers[i].getWrapping() == wrappings &&
-        _textureSamplers[i].getMagFilter() == magFilter &&
-        _textureSamplers[i].getMinFilter() == minFilter) {
+    if (_textureSamplers[i].getProperties() == properties) {
           return &_textureSamplers[i];
     }
   }
 
   // Otherwise: Construct a new Sampler
   TextureSampler sampler;
-  bool success = sampler.create(type, wrappings, magFilter, minFilter);
+  bool success = sampler.create(properties);
 
   if (!success) {
     Log::getInstance()->write("[ERROR] TextureSampler creation failed!");

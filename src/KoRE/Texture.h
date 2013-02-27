@@ -7,7 +7,6 @@ namespace kore {
   struct STextureInfo {
     GLuint texTarget;
     GLuint texLocation;
-    GLuint samplerLocation;
   };
 
   class Texture {
@@ -28,8 +27,11 @@ namespace kore {
     * \param internalFormat The internal pixel-format (e.g. GL_RGBA8)
     * \param pixelType The Datatype of the pixels (e.g. GL_FLOAT)
     * \param name The KoRE-internal name of the Texture (be creative! ;) )
-    * \param pixelData Pointer to the pixels. If this parameter is not provided, an empty texture will be created (e.g. for use with FBOs)
-    * \return True, if the creation was successful, False if creation failed (see Log for infos why)
+    * \param pixelData Pointer to the pixels.
+             If this parameter is not provided,
+             an empty texture will be created (e.g. for use with FBOs)
+    * \return True, if the creation was successful,
+              False if creation failed (see Log for infos why)
     */
     bool create(uint width, uint height, uint depth,
       GLuint format, uint border, GLuint internalFormat,

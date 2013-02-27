@@ -23,6 +23,7 @@
 kore::SelectNodes::SelectNodes(const uint tag,
                                const SceneNodePtr& root,
                                ESortingType type) {
+  _type = OP_SELECTNODES;
   append(root, tag);
   // TODO(someone): sorting
 }
@@ -31,6 +32,7 @@ kore::SelectNodes::SelectNodes(const std::string& name,
                                const SceneNodePtr& root,
                                ESortingType type,
                                bool partial_match) {
+  _type = OP_SELECTNODES;
   append(root, name);
   // TODO(someone): sorting
 }
