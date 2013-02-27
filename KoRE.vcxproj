@@ -213,6 +213,7 @@
     <ClCompile Include="src\KoRE\Loader\SceneLoader.cpp" />
     <ClCompile Include="src\KoRE\Loader\TextureLoader.cpp" />
     <ClCompile Include="src\KoRE\Mesh.cpp" />
+    <ClCompile Include="src\KoRE\OperationOwner.cpp" />
     <ClCompile Include="src\KoRE\Operations\BindOperations\BindAttribute.cpp" />
     <ClCompile Include="src\KoRE\Operations\BindOperations\BindTexture.cpp" />
     <ClCompile Include="src\KoRE\Operations\BindOperations\BindUniform.cpp" />
@@ -242,6 +243,7 @@
     <ClInclude Include="src\KoRE\Loader\TextureLoader.h" />
     <ClInclude Include="src\KoRE\Log.h" />
     <ClInclude Include="src\KoRE\Mesh.h" />
+    <ClInclude Include="src\KoRE\OperationOwner.h" />
     <ClInclude Include="src\KoRE\Operations\BindOperations\BindAttribute.h" />
     <ClInclude Include="src\KoRE\Operations\BindOperations\BindTexture.h" />
     <ClInclude Include="src\KoRE\Operations\BindOperations\BindUniform.h" />

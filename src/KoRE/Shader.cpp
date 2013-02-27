@@ -27,7 +27,8 @@ const unsigned int BUFSIZE = 100;  // Buffer length for shader-element names
 
 kore::Shader::Shader(void)
 : _name(""),
-  _programHandle(GLUINT_HANDLE_INVALID) {
+  _programHandle(GLUINT_HANDLE_INVALID),
+  OperationOwner() {
   _attributes.clear();
   _uniforms.clear();
   _outputs.clear();
@@ -423,20 +424,3 @@ kore::Shader::getUniform(const std::string& name) const {
     name.c_str(), _name.c_str());
   return NULL;
 }
-
-void kore::Shader::addOperation(const Operation* operation) {
-  if (std::find(_vOperations.begin(), _vOperations.end(), operation)
-    != _vOperations.end()) {
-      return;  // operation already in the list.
-  }
-
-  _vOperations.push_back(operation);
-}
-
-void kore::Shader::removeOperation(const Operation* operation) {
-  auto iter = std::find(_vOperations.begin(), _vOperations.end(), operation);
-  if (iter != _vOperations.end()) {
-    _vOperations.erase(iter);
-  }
-}
-
