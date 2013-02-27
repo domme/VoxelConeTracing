@@ -28,6 +28,7 @@ kore::SceneNodeComponent::SceneNodeComponent()
 }
 
 kore::SceneNodeComponent::~SceneNodeComponent() {
+
 }
 
 void kore::SceneNodeComponent::attachTo(kore::SceneNodePtr& node) {
