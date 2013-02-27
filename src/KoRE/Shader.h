@@ -27,6 +27,7 @@
 #include "KoRE/Common.h"
 
 namespace kore {
+  class Operation;
   class Shader {
   public:
     Shader(void);
@@ -44,6 +45,16 @@ namespace kore {
     const std::vector<ShaderInput>& getUniforms() const;
     const std::vector<ShaderOutput>& getOutputs() const;
 
+   /*! \brief Add an operation to the list of operations connecting this shader
+             component to something else (e.g. a component in most cases).
+        \param operation The Operation to add.
+    */
+    void addOperation(const Operation* operation);
+
+    /*! \brief Remove an operation from the list of operations.
+        \param operation The Operation which should be destroyed */
+    void removeOperation(const Operation* operation);
+
   private:
     void getAttributeInfo();
     void getUniformInfo();
@@ -59,6 +70,7 @@ namespace kore {
     std::vector<ShaderInput> _attributes;
     std::vector<ShaderInput> _uniforms;
     std::vector<ShaderOutput> _outputs;
+    std::vector<const Operation*> _vOperations;
 
     std::string _vertex_prog;
     std::string _geometry_prog;

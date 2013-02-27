@@ -1,5 +1,5 @@
 /*
-  Copyright Â© 2012 The KoRE Project
+  Copyright © 2012 The KoRE Project
 
   This file is part of KoRE.
 
@@ -17,24 +17,31 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "KoRE/Operations/Operation.h"
-#include "Kore/RenderManager.h"
 
-kore::Operation::Operation(void)
-  : _executed(false),
-    _executeOnce(false),
-    _type(OP_UNDEFINED) {
-    _renderManager = RenderManager::getInstance();
+#include "KoRE/Operations/StandardOp.h"
+#include "KoRE/Components/SceneNodeComponent.h"
+#include "KoRE/Shader.h"
+#include "KoRE/RenderManager.h"
+
+kore::StandardOp::StandardOp()
+  : _component(NULL),
+    _componentUniform(NULL),
+    _shader(NULL),
+    _shaderUniform(NULL),
+    kore::Operation() {
 }
 
-kore::Operation::~Operation(void) {
-  //destroy();
+kore::StandardOp::~StandardOp() {
 }
 
-bool kore::Operation::getExecuted(void) {
-  return _executed;
-}
+void kore::StandardOp::destroy(void) {
+  if (_component) {
+    _component->removeOperation(this);
+  }
 
-void kore::Operation::setExecuted(bool flag) {
-  _executed = flag;
+  if (_shader) {
+    _shader->removeOperation(this);
+  }
+
+  _renderManager->removeOperation(this);
 }

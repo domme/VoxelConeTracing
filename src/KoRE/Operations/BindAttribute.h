@@ -20,23 +20,24 @@
 #ifndef CORE_INCLUDE_CORE_BINDATTRIBUTEOP_H_
 #define CORE_INCLUDE_CORE_BINDATTRIBUTEOP_H_
 
-#include "KoRE/Operations/Operation.h"
+#include "KoRE/Operations/StandardOp.h"
 #include "KoRE/Components/MeshComponent.h"
 #include "KoRE/Shader.h"
 
 namespace kore {
-  class BindAttribute: public Operation {
+  class BindAttribute: public StandardOp {
   public:
     BindAttribute(void);
-    BindAttribute(const ShaderData* meshData, const ShaderInput* shaderInput);
+    BindAttribute(const ShaderData* meshData, const ShaderInput* shaderInput,
+                  SceneNodeComponent* component, Shader* shader);
     virtual ~BindAttribute(void);
     virtual void execute(void);
     virtual void update(void);
     virtual void reset(void);
     virtual bool isValid(void);
-    void connect(const ShaderData* meshData, const ShaderInput* shaderInput);
+    void connect(const ShaderData* meshData, const ShaderInput* shaderInput,
+                 SceneNodeComponent* component, Shader* shader);
   private:
-    const ShaderInput* _shaderInput;
     const SMeshInformation* _meshInfo;
   };
   typedef std::shared_ptr<BindAttribute> BindAttributePtr;

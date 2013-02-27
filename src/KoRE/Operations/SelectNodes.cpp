@@ -18,6 +18,7 @@
 */
 
 #include "KoRE/Operations/SelectNodes.h"
+#include "KoRE/RenderManager.h"
 
 kore::SelectNodes::SelectNodes(const uint tag,
                                const SceneNodePtr& root,
@@ -63,4 +64,8 @@ void kore::SelectNodes::append(const SceneNodePtr& root, const std::string& name
   for (unsigned int i = 0; root->getChildren().size(); ++i) {
     append(root->getChildren()[i], name);
   }
+}
+
+void kore::SelectNodes::destroy() {
+  _renderManager->removeOperation(this);
 }

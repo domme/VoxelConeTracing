@@ -20,27 +20,29 @@
 #ifndef CORE_INCLUDE_CORE_BINDUNIFORM_H_
 #define CORE_INCLUDE_CORE_BINDUNIFORM_H_
 
-#include "KoRE/Operations/Operation.h"
+#include "KoRE/Operations/StandardOp.h"
 #include "KoRE/ShaderData.h"
 #include "KoRE/ShaderInput.h"
 #include "KoRE/Shader.h"
 
 namespace kore {
-  class BindUniform: public Operation {
+  class BindUniform: public StandardOp {
   public:
     BindUniform(void);
     BindUniform(const ShaderData* componentUni,
-                const ShaderInput* shaderUni);
+                const ShaderInput* shaderUni,
+                SceneNodeComponent* component,
+                Shader* shader);
     virtual ~BindUniform(void);
     virtual void execute(void);
     virtual void update(void);
     virtual void reset(void);
     virtual bool isValid(void);
     void connect(const ShaderData* componentUni,
-                 const ShaderInput* shaderUni);
+                 const ShaderInput* shaderUni,
+                 SceneNodeComponent* component,
+                 Shader* shader);
   private:
-    const ShaderData* _componentUniform;
-    const ShaderInput* _shaderUniform;
     GLuint _shaderHandle;
   };
   typedef std::shared_ptr<BindUniform> BindUniformPtr;

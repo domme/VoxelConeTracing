@@ -55,3 +55,19 @@ const kore::ShaderData* kore::SceneNodeComponent::
     }
     return NULL;
 }
+
+void kore::SceneNodeComponent::addOperation(const Operation* operation) {
+  if (std::find(_vOperations.begin(), _vOperations.end(), operation)
+    != _vOperations.end()) {
+    return;  // operation already in the list.
+  }
+
+  _vOperations.push_back(operation);
+}
+
+void kore::SceneNodeComponent::removeOperation(const Operation* operation) {
+  auto iter = std::find(_vOperations.begin(), _vOperations.end(), operation);
+  if (iter != _vOperations.end()) {
+    _vOperations.erase(iter);
+  }
+}

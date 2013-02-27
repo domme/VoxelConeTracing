@@ -23,25 +23,30 @@
 #include "KoRE/ShaderData.h"
 #include "KoRE/Log.h"
 #include "KoRE/GLerror.h"
+#include "KoRE/Components/SceneNodeComponent.h"
 
 kore::BindUniform::BindUniform(void)
-                           :_componentUniform(NULL),
-                            _shaderUniform(NULL),
-                            _shaderHandle(GLUINT_HANDLE_INVALID),
-                            kore::Operation() {
+                           :_shaderHandle(GLUINT_HANDLE_INVALID),
+                            kore::StandardOp() {
+  _type = OP_BINDUNIFORM;
 }
 
 kore::BindUniform::BindUniform(const ShaderData* componentUni,
-                               const ShaderInput* shaderUni)
-                              : kore::Operation() {
-  connect(componentUni,shaderUni);
+                               const ShaderInput* shaderUni,
+                               SceneNodeComponent* component,
+                               Shader* shader)
+                              : kore::StandardOp() {
+  _type = OP_BINDUNIFORM;
+  connect(componentUni,shaderUni, component, shader);
 }
 
 kore::BindUniform::~BindUniform(void) {
 }
 
 void kore::BindUniform::connect(const kore::ShaderData* componentUni,
-                                const kore::ShaderInput* shaderUni) {
+                                const kore::ShaderInput* shaderUni,
+                                SceneNodeComponent* component,
+                                Shader* shader) {
     if(!componentUni
       || !shaderUni
       || componentUni->type != shaderUni->type
@@ -51,9 +56,17 @@ void kore::BindUniform::connect(const kore::ShaderData* componentUni,
         _shaderUniform = NULL;
         _shaderHandle = GLUINT_HANDLE_INVALID;
     } else {
+      destroy();
+
       _componentUniform = componentUni;
       _shaderUniform = shaderUni;
       _shaderHandle = shaderUni->programHandle;
+
+      _component = component;
+      _shader = shader;
+
+      _component->addOperation(this);
+      _shader->addOperation(this);
     }
 }
 

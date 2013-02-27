@@ -116,6 +116,21 @@ bool kore::RenderManager::hasOperation(const OperationPtr& op) {
                    != _operations.end();
 }
 
+void kore::RenderManager::removeOperation(const Operation* op) {
+  auto operationIt = _operations.begin();
+  for (; operationIt != _operations.end(); ++operationIt)  {
+    if ((*operationIt).get() == op) {
+      _operations.erase(operationIt);
+      break;
+    }
+  }
+  
+}
+
+void kore::RenderManager::removeOperation(const OperationPtr& op) {
+  removeOperation(op.get());
+}
+
 // OpenGL-Wrappers:
 void kore::RenderManager::bindVBO(const GLuint vbo) {
   if (_vbo != vbo) {

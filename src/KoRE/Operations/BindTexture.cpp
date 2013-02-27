@@ -2,44 +2,55 @@
 #include "KoRE/GLerror.h"
 
 kore::BindTexture::BindTexture()
-: _textureData(NULL),
-  _shaderInput(NULL) {
+: StandardOp() {
     init();
 }
 
 kore::BindTexture::BindTexture(const kore::ShaderData* texData,
-                               const kore::ShaderInput* shaderInput) {
+                               const kore::ShaderInput* shaderInput,
+                               SceneNodeComponent* component,
+                               Shader* shader) 
+: StandardOp() {
   init();
-  connect(texData, shaderInput);
+  connect(texData, shaderInput, component, shader);
 }
 
 void kore::BindTexture::init() {
-  _renderManager = RenderManager::getInstance();
+  _type = OP_BINDTEXTURE;
 }
 
 kore::BindTexture::~BindTexture(void) {
 }
 
 void kore::BindTexture::connect(const kore::ShaderData* texData,
-                                const kore::ShaderInput* shaderInput) {
-  _textureData = texData;
-  _shaderInput = shaderInput;
+                                const kore::ShaderInput* shaderInput,
+                                SceneNodeComponent* component,
+                                Shader* shader) {
+  destroy();
+  _componentUniform = texData;
+  _shaderUniform = shaderInput;
   _shaderProgramLoc = shaderInput->programHandle;
+
+  _shader = shader;
+  _component = component;
+
+  _shader->addOperation(this);
+  _component->addOperation(this);
 }
 
 void kore::BindTexture::execute(void) {
   GLerror::gl_ErrorCheckStart();
-  _renderManager->activeTexture(_shaderInput->texUnit);
-  glProgramUniform1i(_shaderProgramLoc, _shaderInput->location,
-                      static_cast<GLint>(_shaderInput->texUnit));
-  STextureInfo* pTexInfo = static_cast<STextureInfo*>(_textureData->data);
+  _renderManager->activeTexture(_shaderUniform->texUnit);
+  glProgramUniform1i(_shaderProgramLoc, _shaderUniform->location,
+                      static_cast<GLint>(_shaderUniform->texUnit));
+  STextureInfo* pTexInfo = static_cast<STextureInfo*>(_componentUniform->data);
 
-  _renderManager->bindTexture(_shaderInput->texUnit,
+  _renderManager->bindTexture(_shaderUniform->texUnit,
                               pTexInfo->texTarget,
                               pTexInfo->texLocation);
-  _renderManager->bindSampler(_shaderInput->texUnit,
+  _renderManager->bindSampler(_shaderUniform->texUnit,
                               pTexInfo->samplerLocation);
-  GLerror::gl_ErrorCheckFinish("BindTextureOperation " + _shaderInput->name);
+  GLerror::gl_ErrorCheckFinish("BindTextureOperation " + _shaderUniform->name);
 }
 
 void kore::BindTexture::update(void) {

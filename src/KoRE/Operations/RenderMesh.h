@@ -39,6 +39,12 @@ namespace kore {
     virtual void reset(void);
     virtual bool isValid(void);
 
+    virtual void destroy();
+
+    void connect(const kore::MeshComponentPtr& mesh,
+                 const kore::CameraPtr& camera,
+                 const kore::ShaderPtr& shader);
+
     const kore::MeshComponentPtr& getMesh() const;
     void setMesh(const kore::MeshComponentPtr& mesh);
 

@@ -21,6 +21,7 @@
 #include <string>
 #include "KoRE/Shader.h"
 #include "KoRE/Log.h"
+#include "KoRE/Operations/Operation.h"
 
 const unsigned int BUFSIZE = 100;  // Buffer length for shader-element names
 
@@ -365,5 +366,21 @@ kore::Shader::getUniform(const std::string& name) const {
   Log::getInstance()->write("[ERROR] Uniform '%s' not found in shader '%s'",
     name.c_str(), _name.c_str());
   return NULL;
+}
+
+void kore::Shader::addOperation(const Operation* operation) {
+  if (std::find(_vOperations.begin(), _vOperations.end(), operation)
+    != _vOperations.end()) {
+      return;  // operation already in the list.
+  }
+
+  _vOperations.push_back(operation);
+}
+
+void kore::Shader::removeOperation(const Operation* operation) {
+  auto iter = std::find(_vOperations.begin(), _vOperations.end(), operation);
+  if (iter != _vOperations.end()) {
+    _vOperations.erase(iter);
+  }
 }
 

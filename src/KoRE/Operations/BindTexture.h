@@ -20,17 +20,19 @@
 #ifndef CORE_INCLUDE_CORE_BINDTEXTUREOP_H_
 #define CORE_INCLUDE_CORE_BINDTEXTUREOP_H_
 
-#include "KoRE/Operations/Operation.h"
+#include "KoRE/Operations/StandardOp.h"
 #include "KoRE/Texture.h"
 #include "KoRE/TextureSampler.h"
 #include "KoRE/RenderManager.h"
 
 namespace kore {
-  class BindTexture: public Operation {
+  class BindTexture: public StandardOp {
   public:
     BindTexture(void);
     BindTexture(const ShaderData* texData,
-                const ShaderInput* shaderInput);
+                const ShaderInput* shaderInput,
+                SceneNodeComponent* component,
+                Shader* shader);
 
     virtual ~BindTexture(void);
     virtual void execute(void);
@@ -38,13 +40,11 @@ namespace kore {
     virtual void reset(void);
     virtual bool isValid(void);
     void connect(const ShaderData* texData,
-                 const ShaderInput* shaderInput);
+                 const ShaderInput* shaderInput,
+                 SceneNodeComponent* component,
+                 Shader* shader);
   private:
-    const ShaderData* _textureData;
-    const ShaderInput* _shaderInput;
     GLuint _shaderProgramLoc;
-
-    RenderManager* _renderManager;
 
     void init();
   };

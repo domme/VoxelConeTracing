@@ -1,5 +1,5 @@
 /*
-  Copyright Â© 2012 The KoRE Project
+  Copyright © 2012 The KoRE Project
 
   This file is part of KoRE.
 
@@ -17,48 +17,35 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CORE_INCLUDE_CORE_OPERATION_H_
-#define CORE_INCLUDE_CORE_OPERATION_H_
+#ifndef SRC_KORE_OPERATION_H_
+#define SRC_KORE_OPERATION_H_
 
-#include <memory>
+#include "KoRE/Common.h"
+#include "KoRE/Operations/Operation.h"
+#include "KoRE/ShaderInput.h"
+#include "KoRE/ShaderData.h"
 
 namespace kore {
-  enum EOperationType {
-    OP_UNDEFINED,
-
-    OP_BINDATTRIBUTE,
-    OP_BINDUNIFORM,
-    OP_BINDTEXTURE,
-    OP_RENDERMESH,
-    OP_SELECTNODES
-  };
-
-  class RenderManager;
-  class Operation {
+  class SceneNodeComponent;
+  class Shader;
+  class StandardOp : public Operation {
   public:
-    Operation(void);
-    virtual ~Operation(void);
-    virtual void execute(void) = 0;
-    virtual void update(void) = 0;
-    virtual void reset(void) = 0;
-    virtual bool isValid(void) = 0;
+    StandardOp();
+    virtual ~StandardOp();
 
     /*! \brief Destroy this operation. Based on the operation-subclass, this
     *          method will pass the destroy-message to the components/shader
     *          this Operation combines. */
-    virtual void destroy(void) = 0;
-
-    void setExecuted(bool flag);
-    bool getExecuted(void);
-
-    inline const EOperationType getType() const {return _type;}
+    virtual void destroy(void);
 
   protected:
-    EOperationType _type;
-    bool _executeOnce;
-    bool _executed;
-    RenderManager* _renderManager;
+    const ShaderData* _componentUniform;
+    const ShaderInput* _shaderUniform;
+    SceneNodeComponent* _component;
+    Shader* _shader;
   };
-  typedef std::shared_ptr<Operation> OperationPtr;
 }
-#endif  // CORE_INCLUDE_CORE_OPERATION_H_
+
+
+
+#endif  // SRC_KORE_OPERATION_H_

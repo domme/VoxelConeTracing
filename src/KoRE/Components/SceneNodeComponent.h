@@ -22,6 +22,7 @@
 
 #include "KoRE/Common.h"
 #include "KoRE/ShaderData.h"
+#include "KoRE/Operations/Operation.h"
 
 namespace kore {
   enum EComponentType {
@@ -45,12 +46,25 @@ namespace kore {
     virtual bool isCompatibleWith(const SceneNodeComponent& otherComponent) const = 0;
     virtual void attachTo(SceneNodePtr& node);
     virtual void transformChanged(const TransformPtr& newTransform);
+
+    /*! \brief Add an operation to the list of operations connecting this
+               component to something else (e.g. a shader in most cases).
+        \param operation The Operation to add.
+    */
+    void addOperation(const Operation* operation);
+
+    /*! \brief Remove an operation from the list of operations.
+        \param operation The Operation which should be destroyed */
+    void removeOperation(const Operation* operation);
+
     const EComponentType getType(void) const;
     const ShaderData* getShaderData(const std::string& name) const;
 
-    inline std::vector<ShaderData>&
-      getShaderData() {return _shaderData;}
+    inline const std::vector<ShaderData>&
+      getShaderData() const {return _shaderData;}
 
+    inline const std::vector<const Operation*>&
+      getOperations() const {return _vOperations;}
 
     uint getID(void) const;
 
@@ -60,6 +74,7 @@ namespace kore {
     SceneNodePtr _sceneNode;
     EComponentType _type;
     std::vector<ShaderData> _shaderData;
+    std::vector<const Operation*> _vOperations;
   };
   typedef std::shared_ptr<SceneNodeComponent> SceneNodeComponentPtr;
 };

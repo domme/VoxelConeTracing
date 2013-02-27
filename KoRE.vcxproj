@@ -214,6 +214,7 @@
     <ClCompile Include="src\KoRE\Loader\TextureLoader.cpp" />
     <ClCompile Include="src\KoRE\Mesh.cpp" />
     <ClCompile Include="src\KoRE\Operations\BindTexture.cpp" />
+    <ClCompile Include="src\KoRE\Operations\StandardOp.cpp" />
     <ClCompile Include="src\KoRE\ShaderData.cpp" />
     <ClCompile Include="src\KoRE\ShaderInput.cpp" />
     <ClCompile Include="src\KoRE\ShaderOutput.cpp" />
@@ -244,6 +245,7 @@
     <ClInclude Include="src\KoRE\Operations\Operation.h" />
     <ClInclude Include="src\KoRE\Operations\RenderMesh.h" />
     <ClInclude Include="src\KoRE\Operations\SelectNodes.h" />
+    <ClInclude Include="src\KoRE\Operations\StandardOp.h" />
     <ClInclude Include="src\KoRE\RenderManager.h" />
     <ClInclude Include="src\KoRE\ResourceManager.h" />
     <ClInclude Include="src\KoRE\SceneManager.h" />
