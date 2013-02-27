@@ -47,6 +47,7 @@ namespace kore {
     virtual void attachTo(SceneNodePtr& node);
     virtual void transformChanged(const TransformPtr& newTransform);
 
+
     /*! \brief Add an operation to the list of operations connecting this
                component to something else (e.g. a shader in most cases).
         \param operation The Operation to add.
@@ -75,6 +76,8 @@ namespace kore {
     EComponentType _type;
     std::vector<ShaderData> _shaderData;
     std::vector<const Operation*> _vOperations;
+
+    virtual void destroy();
   };
   typedef std::shared_ptr<SceneNodeComponent> SceneNodeComponentPtr;
 };

@@ -1,5 +1,5 @@
 /*
-  Copyright ? 2012 The KoRE Project
+  Copyright (c) 2012 The KoRE Project
 
   This file is part of KoRE.
 
@@ -17,25 +17,22 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "KoRE/Common.h"
-
-#ifndef KORE_SRC_SHADERINPUT_H_
-#define KORE_SRC_SHADERINPUT_H_
-
+#ifndef SRC_KORE_COMPATIBLENODEGROUP_H_
+#define SRC_KORE_COMPATIBLENODEGROUP_H_
+#include <vector>
+#include <map>
+#include "KoRE/Components/SceneNodeComponent.h"
 namespace kore {
-  class ShaderInput {
+  class CompatibleNodeGroup {
   public:
-    ShaderInput(void);
-    virtual ~ShaderInput(void) {};
+    CompatibleNodeGroup();
+    ~CompatibleNodeGroup();
 
-    GLenum type;                 // e.g. GL_FLOAT_VEC3
-    GLuint size;                 // number of components in units of type
-    // (currently this is always 1)
-    GLint location;              // location of attribute in shader
-    std::string name;
-    GLuint texUnit;
-    GLuint programHandle;
+  private:
+    std::map<std::string, ShaderData> _datalist;
+    std::map<> _
+    std::map<EComponentType, > _compcomp;
+    
   };
 }
-
-#endif  // KORE_SRC_SHADERINPUT_H_
+#endif  // SRC_KORE_COMPATIBLENODEGROUP_H_

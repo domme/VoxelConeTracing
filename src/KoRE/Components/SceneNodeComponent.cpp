@@ -28,7 +28,7 @@ kore::SceneNodeComponent::SceneNodeComponent()
 }
 
 kore::SceneNodeComponent::~SceneNodeComponent() {
-
+  destroy();
 }
 
 void kore::SceneNodeComponent::attachTo(kore::SceneNodePtr& node) {
@@ -70,5 +70,23 @@ void kore::SceneNodeComponent::removeOperation(const Operation* operation) {
   auto iter = std::find(_vOperations.begin(), _vOperations.end(), operation);
   if (iter != _vOperations.end()) {
     _vOperations.erase(iter);
+  }
+}
+
+void kore::SceneNodeComponent::destroy() {
+  std::vector<Operation*> tmpOperationList;
+
+  for (int i = 0; i < _vOperations.size(); ++i) {
+    // This const cast is ugly but neccessary at the moment...
+    tmpOperationList.push_back(const_cast<Operation*>(_vOperations[i]));
+  }
+
+  for (int i = 0; i < tmpOperationList.size(); ++i) {
+    tmpOperationList[i]->destroy();
+  }
+
+  if (_vOperations.size() > 0) {
+    Log::getInstance()->write("[WARNING] Not all Component-Operations were"
+                              "deleted with SceneNodeComponent::destroy");
   }
 }

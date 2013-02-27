@@ -216,6 +216,9 @@
     <ClInclude Include="src\KoRE\Operations\BindOperations\BindTexture.h">
       <Filter>src\Operations\BindOperations</Filter>
     </ClInclude>
+    <ClInclude Include="src\KoRE\CompatibleNodeGroup.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
