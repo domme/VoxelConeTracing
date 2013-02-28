@@ -9,23 +9,52 @@ namespace kore {
     GLuint texLocation;
   };
 
-  class Texture {
+  struct STextureProperties {
+    STextureProperties()
+      : width(0),
+        height(0),
+        depth(0),
+        border(0),
+        pixelType(GLUINT_HANDLE_INVALID),
+        targetType(GLUINT_HANDLE_INVALID),
+        format(GLUINT_HANDLE_INVALID) {
+    }
 
+    /// The x-resolution of the texture.
+    uint width;
+
+    /// The y-resolution of the texture.
+    uint height;
+
+    /// The z-resolution of the texture.
+    uint depth;
+
+    /// The Texture-type (e.g. GL_TEXTURE2D). Has to correspond to the resolution.
+    GLuint targetType;
+
+    /// The border-size in pixels for this texture.
+    uint border;
+
+    /// The Format of the texture (e.g. GL_RGBA).
+    GLuint format;
+
+    /// The Pixel type of the texture (e.g. GL_FLOAT, GL_UNSIGNED_BYTE,...).
+    GLuint pixelType;
+
+    /// The Internal format (e.g. GL_RGBA8, GL_FLOAT32,...).
+    GLuint internalFormat;
+  };
+
+  class Texture {
   public:
     explicit Texture(void);
     ~Texture(void);
-    inline GLuint getTargetType() const {return _type;}
+    inline const STextureProperties& getProperties() {return _properties;}
     inline GLuint getHandle() const {return _handle;}
     inline const std::string& getName() const {return _resourcepath;}
 
     /*! \brief Creates and allocates an empty texture.
-    * \param width The width in pixels
-    * \param height The height in pixels (may be 0 for a 1D-Texture)
-    * \param depth The depth in pixels(may be 0 for a 1D- or 2D-Texture)
-    * \param format The OpenGL-Format (e.g. GL_RGBA)
-    * \param border The pixel-width of the texture-border (may be 0)
-    * \param internalFormat The internal pixel-format (e.g. GL_RGBA8)
-    * \param pixelType The Datatype of the pixels (e.g. GL_FLOAT)
+    * \param properties The requested texture properties.
     * \param name The KoRE-internal name of the Texture (be creative! ;) )
     * \param pixelData Pointer to the pixels.
              If this parameter is not provided,
@@ -33,10 +62,8 @@ namespace kore {
     * \return True, if the creation was successful,
               False if creation failed (see Log for infos why)
     */
-    bool create(uint width, uint height, uint depth,
-      GLuint format, uint border, GLuint internalFormat,
-      GLuint pixelType, const std::string& name,
-      const GLvoid* pixelData = NULL);
+    bool create(const STextureProperties& properties, const std::string& name,
+                const GLvoid* pixelData = NULL);
 
     /*! \brief Generates a mipmap-hierarchy for this texture.
     *          Only valid for non-empty textures */
@@ -45,13 +72,7 @@ namespace kore {
   private:
     GLuint _handle;
     std:: string _resourcepath;
-    uint _xres;
-    uint _yres;
-    uint _zres;
-    GLuint _type;
-    GLuint _format;
-    GLuint _pixelType;
-    GLuint _internalFormat;
+    STextureProperties _properties;
 
     void destroy();
   };

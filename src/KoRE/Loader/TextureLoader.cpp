@@ -58,24 +58,24 @@ kore::TexturePtr
     kore::TexturePtr tex = TexturePtr(new Texture());
     LodePNGColorMode& color = pngState.info_raw;
     
-    GLuint texTarget = GL_TEXTURE_2D;
-    uint border = 0;
-    GLuint format;
-    GLuint internalFormat;
-    GLuint pixelType;
+    STextureProperties texProperties;
+    texProperties.targetType = GL_TEXTURE_2D;
+    texProperties.border = 0;
+    texProperties.width = width;
+    texProperties.height = height;
 
     //Pass the actual Texture Data
     if(color.colortype == LCT_RGB) {
-      internalFormat = GL_SRGB8;
-      format = GL_RGB;
-      pixelType = GL_UNSIGNED_BYTE; 
+      texProperties.internalFormat = GL_SRGB8;
+      texProperties.format = GL_RGB;
+      texProperties.pixelType = GL_UNSIGNED_BYTE; 
     } else if(color.colortype == LCT_RGBA) {
-      internalFormat = GL_SRGB8_ALPHA8;
-      format = GL_RGBA;
-      pixelType = GL_UNSIGNED_BYTE;
+      texProperties.internalFormat = GL_SRGB8_ALPHA8;
+      texProperties.format = GL_RGBA;
+      texProperties.pixelType = GL_UNSIGNED_BYTE;
     }
 
-    if (tex->create(width, height, 0, format, 0, internalFormat, pixelType, filepath, &imageData[0])) {
+    if (tex->create(texProperties, filepath, &imageData[0])) {
       ResourceManager::getInstance()->addTexture(filepath, tex);
       kore::Log::getInstance()
         ->write("[DEBUG] Texture '%s' successfully loaded\n",

@@ -25,24 +25,34 @@
 #include "KoRE/ShaderData.h"
 #include "KoRE/Texture.h"
 #include "KoRE/TextureSampler.h"
+#include "KoRE/OperationOwner.h"
 
 namespace kore {
-  class FrameBuffer {
+  class FrameBuffer : public OperationOwner {
   public:
     FrameBuffer(void);
     virtual ~FrameBuffer(void);
 
     inline const GLuint getHandle() const {return _handle;}
-    const TexturePtr getTextureByName(const std::string& name) const;
+    const TexturePtr getTexture(const std::string& name) const;
 
-    void addTextureAttachment(TexturePtr ptr, GLuint attatchment);
-    void addTextureAttachment(uint textwidth,
-                               uint texheight,
-                               GLuint format,
-                               GLuint internalFormat,
-                               GLuint pixelType,
-                               const std::string& name,
-                               GLuint attatchment);
+    /*! \brief Add a texture as an attatchment to the framebuffer.
+    *   \param ptr The pointer to the texture to add as attatchment.
+    *   \param attatchment The OpenGL attatchment-point to attatch.
+                            the texture to (e.g. GL_COLOR_ATTATCHMENT0).
+    */
+    void addTextureAttachment(const TexturePtr& ptr, GLuint attatchment);
+
+    /*! \brief Request creation of a texture with the provided properties and
+    *          attatch it to the FrameBuffer.
+    *   \param properties The texture-properties to create the texture from.
+    *   \param name       The name of the texture-attatchment and the texture.
+    *   \param attatchment The OpenGL attatchment-point to attatch
+                           the texture to (e.g. GL_COLOR_ATTATCHMENT0).
+    */
+    void addTextureAttachment(const STextureProperties& properties,
+                              const std::string& name,
+                              const GLuint attatchment);
 
     /*! \brief Checks this FBO for "Framebuffer completeness"
     *          The results of this check are written to the Log.
@@ -51,9 +61,8 @@ namespace kore {
 
   private:
     std::vector<ShaderData> _textureOutputs;
-    std::vector<TexturePtr> _textures;
-    std::vector<TextureSamplerPtr> _textureSamplers;
-
+    std::vector<const TexturePtr> _textures;
+    std::vector<STextureInfo*> _textureInfos;
     GLuint _handle;
   };
   typedef std::shared_ptr<FrameBuffer> FrameBufferPtr;

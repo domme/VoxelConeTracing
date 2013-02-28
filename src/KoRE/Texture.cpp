@@ -4,31 +4,35 @@
 
 kore::Texture::Texture()
                     : _handle(GLUINT_HANDLE_INVALID),
-                      _resourcepath(""),
-                      _xres(0),
-                      _yres(0),
-                      _zres(0),
-                      _pixelType(GLUINT_HANDLE_INVALID),
-                      _type(GLUINT_HANDLE_INVALID),
-                      _format(GLUINT_HANDLE_INVALID) {
+                      _resourcepath("")
+                     {
 }
 
 kore::Texture::~Texture() {
   destroy();
 }
 
-bool kore::Texture::create(uint width, uint height, uint depth,
-                           GLuint format, uint border, GLuint internalFormat, 
-                           GLuint pixelType, const std::string& name,
+bool kore::Texture::create(const STextureProperties& properties,
+                           const std::string& name,
                            const GLvoid* pixelData /*= NULL*/) {
   GLuint texTarget;
 
-  if (width > 0 && height == 0 && depth == 0) {
+  if (properties.width > 0 && properties.height == 0 && properties.depth == 0 
+    && properties.targetType == GL_TEXTURE_1D) {
+
     texTarget = GL_TEXTURE_1D;
-  } else if (width > 0 && height > 0 && depth == 0) {
+
+  } else if (properties.width > 0 && properties.height > 0 
+            && properties.depth == 0
+            && properties.targetType == GL_TEXTURE_2D) {
+
     texTarget = GL_TEXTURE_2D;
-  } else if (width > 0 && height > 0 && depth > 0) {
+
+  } else if (properties.width > 0 && properties.height > 0 &&
+             properties.depth > 0 && properties.targetType == GL_TEXTURE_3D) {
+
     texTarget = GL_TEXTURE_3D;
+
   } else {
     Log::getInstance()->write("[ERROR] Invalid texture dimensions provided");
     return false;
@@ -41,14 +45,37 @@ bool kore::Texture::create(uint width, uint height, uint depth,
   glBindTexture(texTarget, _handle);
   
   if (texTarget == GL_TEXTURE_1D) {
-    glTexImage1D(texTarget, 0, internalFormat, width, border, format,
-                 pixelType, pixelData);
+    glTexImage1D(texTarget,
+                 0,
+                 properties.internalFormat,
+                 properties.width,
+                 properties.border,
+                 properties.format,
+                 properties.pixelType,
+                 pixelData);
+
   } else if (texTarget == GL_TEXTURE_2D) {
-    glTexImage2D(texTarget, 0, internalFormat, width, height,
-                border, format, pixelType, pixelData);
+    glTexImage2D(texTarget,
+                 0,
+                 properties.internalFormat,
+                 properties.width,
+                 properties.height,
+                 properties.border,
+                 properties.format,
+                 properties.pixelType,
+                 pixelData);
+
   } else {
-    glTexImage3D(texTarget, 0, internalFormat, width, height, depth,
-                  border, format, pixelType, pixelData);
+    glTexImage3D(texTarget,
+                 0,
+                 properties.internalFormat,
+                 properties.width,
+                 properties.height,
+                 properties.depth,
+                 properties.border,
+                 properties.format,
+                 properties.pixelType,
+                 pixelData);
   }
 
   bool bSuccess = GLerror::gl_ErrorCheckFinish("Texture::create()");
@@ -58,25 +85,17 @@ bool kore::Texture::create(uint width, uint height, uint depth,
   }
 
   _resourcepath = name;
-  _xres = width;
-  _yres = height;
-  _zres = depth;
-  _format = format;
-  _internalFormat = internalFormat;
-  _pixelType = pixelType;
-  _type  = texTarget;
+  _properties = properties;
 
   return true;
 }
 
-
 void kore::Texture::genMipmapHierarchy() {
   if (_handle != GLUINT_HANDLE_INVALID) {
-    glBindTexture(_type, _handle);
-    glGenerateMipmap(_type);
+    glBindTexture(_properties.targetType, _handle);
+    glGenerateMipmap(_properties.targetType);
   }
 }
-
 
 void kore::Texture::destroy() {
   if (_handle == GLUINT_HANDLE_INVALID) {
@@ -85,12 +104,6 @@ void kore::Texture::destroy() {
 
   glDeleteTextures(1, &_handle);
   _handle = GLUINT_HANDLE_INVALID;
-  _xres = 0;
-  _yres = 0;
-  _zres = 0;
   _resourcepath = "";
-  _format = GLUINT_HANDLE_INVALID;
-  _internalFormat = GLUINT_HANDLE_INVALID;
-  _pixelType = GLUINT_HANDLE_INVALID;
-  _type = GLUINT_HANDLE_INVALID;
+  _properties = STextureProperties();
 }

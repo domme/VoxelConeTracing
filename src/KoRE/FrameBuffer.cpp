@@ -30,32 +30,47 @@ kore::FrameBuffer::FrameBuffer(void)
 
 kore::FrameBuffer::~FrameBuffer(void) {
   glDeleteFramebuffers(1, &_handle);
+
+  for (uint i = 0; i < _textureInfos.size(); ++i) {
+    SAFE_DELETE(_textureInfos[i]);
+  }
 }
 
-void kore::FrameBuffer::addTextureAttachment(TexturePtr ptr,
+void kore::FrameBuffer::addTextureAttachment(const TexturePtr& tex,
                                              GLuint attatchment) {
+  if (std::find(_textures.begin(), _textures.end(), tex) != _textures.end()) {
+    return;
+  }
+
   kore::RenderManager::getInstance()->bindFrameBuffer(GL_FRAMEBUFFER, _handle);
   kore::RenderManager::getInstance()->
-                                  bindTexture(ptr->getTargetType(), _handle);
+                         bindTexture(tex->getProperties().targetType, _handle);
 
-  glFramebufferTexture2D(GL_FRAMEBUFFER, attatchment, ptr->getTargetType(),
-                         ptr->getHandle(), 0);
-  _textures.push_back(ptr);
-  
-  // TODO(dlazarek): Create Sampler-object and append it to list
-  // TODO(dlazarek): Create ShaderData from combination of texture and sampler <- !Problem!
+  glFramebufferTexture2D(GL_FRAMEBUFFER,
+                         attatchment,
+                         tex->getProperties().targetType,
+                         tex->getHandle(), 0);
+  _textures.push_back(tex);
+
+  STextureInfo* texInfo = new STextureInfo;
+  texInfo->texLocation = tex->getHandle();
+  texInfo->texTarget = tex->getProperties().targetType;
+  _textureInfos.push_back(texInfo);
+
+  ShaderData textureData;
+  textureData.name = tex->getName();
+  textureData.type =
+    TextureSampler::getSamplerTypeFromTexType(tex->getProperties().targetType);
+  textureData.data = texInfo;
+  _textureOutputs.push_back(textureData);
 }
 
-void kore::FrameBuffer::addTextureAttachment(uint textwidth,
-                                              uint texheight,
-                                              GLuint format,
-                                              GLuint internalFormat,
-                                              GLuint pixelType,
-                                              const std::string& name,
-                                              GLuint attatchment ) {
+void kore::FrameBuffer::
+      addTextureAttachment(const STextureProperties& properties,
+                           const std::string& name,
+                           const GLuint attatchment ) {
   TexturePtr pTex(new Texture);
-  bool bSuccess = pTex->create(textwidth, texheight, 0, format,
-                  0, internalFormat, pixelType, name);
+  bool bSuccess = pTex->create(properties, name);
   if (bSuccess) {
     addTextureAttachment(pTex, attatchment);
   } else {
@@ -65,7 +80,7 @@ void kore::FrameBuffer::addTextureAttachment(uint textwidth,
 }
 
 const kore::TexturePtr
-  kore::FrameBuffer::getTextureByName( const std::string& name ) const {
+  kore::FrameBuffer::getTexture( const std::string& name ) const {
     for(uint i = 0; i < _textures.size(); ++i) {
       if (_textures[i]->getName() == name) {
         return _textures[i];
