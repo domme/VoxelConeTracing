@@ -204,6 +204,7 @@
     </Midl>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\KoRE\CompatibleNodeGroup.cpp" />
     <ClCompile Include="src\KoRE\Components\LightComponent.cpp" />
     <ClCompile Include="src\KoRE\Components\TexturesComponent.cpp" />
     <ClCompile Include="src\KoRE\FrameBuffer.cpp" />

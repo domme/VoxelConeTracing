@@ -34,7 +34,7 @@ koregui::ComponentItem::ComponentItem(kore::SceneNodeComponentPtr component,
                                       QGraphicsItem* parent) 
                                     : _component(component),
                                       QGraphicsItem(parent) {
-  std::vector<kore::ShaderData>& sdata = _component->getShaderData();
+  std::vector<kore::ShaderData> sdata = _component->getShaderData();
   for (uint i = 0; i < sdata.size(); i++) {
     ShaderDataItem* dataitem =  new ShaderDataItem(&sdata[i], this);
     _shaderDataItems.push_back(dataitem);

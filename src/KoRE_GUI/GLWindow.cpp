@@ -37,9 +37,6 @@
 
 #include "KoRE/Shader.h"
 #include "KoRE/Mesh.h"
-#include "KoRE/Operations/RenderMesh.h"
-#include "KoRE/Operations/BindAttribute.h"
-#include "KoRE/Operations/BindUniform.h"
 #include "KoRE/ResourceManager.h"
 #include "KoRE/RenderManager.h"
 
