@@ -76,7 +76,8 @@ namespace kore {
     
     std::string _name;
     uint64 _id;
-    ComponentProxy _compatibles;
+    ComponentProxy _dataCompatibles;
+    std::map<EComponentType, bool> _typeCompatibles;
     std::vector<SceneNodePtr> _nodes;
   };
 }

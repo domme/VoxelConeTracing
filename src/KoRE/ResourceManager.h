@@ -37,6 +37,7 @@
 
 namespace kore {
   class ResourceManager {
+  friend class ProjectLoader;
   public:
     static ResourceManager *getInstance(void);
 

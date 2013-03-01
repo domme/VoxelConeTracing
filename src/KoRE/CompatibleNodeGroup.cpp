@@ -28,6 +28,9 @@ kore::CompatibleNodeGroup::CompatibleNodeGroup() {
 }
 
 kore::CompatibleNodeGroup::~CompatibleNodeGroup() {
+  _typeCompatibles.clear();
+  _dataCompatibles.clear();
+  _nodes.clear();
 }
 
 void kore::CompatibleNodeGroup::addSceneNode(const SceneNodePtr node) {
@@ -63,24 +66,21 @@ void kore::CompatibleNodeGroup::removeSceneNode(const SceneNodePtr node) {
     _name.c_str());
 }
 
-
-
-bool kore::CompatibleNodeGroup::isCompatible(kore::EComponentType type) const{
-  // TODO(dospelt)
-  if (_compatibles.find(type) != _compatibles.end()) {
-    //for (std::map<kore::EComponentType, kore::CompatibleNodeGroup::ShaderDataProxy>::iterator it =_compatibles.begin(); it < _compatibles.end(); it++) {
-    _compatibles.begin();
-    //}
+bool kore::CompatibleNodeGroup::isCompatible(kore::EComponentType type) const {
+  if (_typeCompatibles.find(type) != _typeCompatibles.end()) {
+    return _typeCompatibles.find(type)->second;
   }
   return false;
 }
 
 bool kore::CompatibleNodeGroup::isCompatible(kore::EComponentType type,
-                                           const std::string& sdataname) const{
-  // TODO(dospelt)
-  if (_compatibles.find(type) != _compatibles.end()) {
-    //if (_compatibles[type]){
+                                          const std::string& sdataname) const {
+  if (_dataCompatibles.find(type) != _dataCompatibles.end()) {
+    ShaderDataProxy attlist =_dataCompatibles.find(type)->second;
+    if (attlist.find(sdataname) != attlist.end()) {
+      return attlist.find(sdataname)->second;
     }
+  }
   return false;
 }
 
@@ -111,9 +111,47 @@ const std::vector<const kore::ShaderData*>
 }
 
 void kore::CompatibleNodeGroup::refresh() {
-  _compatibles.clear();
-  for (uint i = 0; i < _nodes.size(); i++) {
-    // TODO(dospelt)
-    //for (uint j = 0)
+  _typeCompatibles.clear();
+  _dataCompatibles.clear();
+  if(_nodes.size() == 0) return;
+
+  // set compatibility for first node
+  std::vector<SceneNodeComponentPtr> components = _nodes[0]->getComponents();
+  for (uint i = 0; i < components.size(); i++) {
+    EComponentType type = components[i]->getType();
+    _typeCompatibles[type] = true;
+    std::vector<ShaderData> sdata = components[i]->getShaderData();
+    for (uint j = 0; j < sdata.size(); j++) {
+      std::string name = sdata[j].name;
+      _dataCompatibles[type][name] = true;
+    }
+  }
+  
+  // add each node and update compatibility
+  for (uint k = 1; k < _nodes.size(); k++) {
+    std::vector<SceneNodeComponentPtr> components = _nodes[k]->getComponents();
+    for (uint l = 0; l < components.size(); l++) {
+      EComponentType type = components[l]->getType();
+      // check if data is in map, otherwise add it false
+      std::vector<ShaderData> sdata = components[l]->getShaderData();
+      for (uint m = 0; m < sdata.size(); m++) {
+        std::string name = sdata[m].name;
+        if(_dataCompatibles[type].find(name) == _dataCompatibles[type].end()) {
+          _dataCompatibles[type][name] = false;
+        }
+      }
+      // check if we have data in map that is not in the current component
+      for(ShaderDataProxy::iterator it = _dataCompatibles[type].begin();
+          it != _dataCompatibles[type].end();
+          it++) {
+            if(components[l]->getShaderData(it->first) == NULL) {
+              _dataCompatibles[type][it->first] = false;
+            }
+      }
+      // check if component type is in map, otherwise add it false
+      if(_typeCompatibles.find(type) == _typeCompatibles.end()) {
+        _typeCompatibles[type] = false;
+      }
+    }
   }
 }

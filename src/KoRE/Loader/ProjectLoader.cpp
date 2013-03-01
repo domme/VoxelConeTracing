@@ -2,6 +2,9 @@
 
 #include <tinyxml/tinyxml.h>
 #include <tinyxml/tinystr.h>
+#include <string>
+#include <time.h>
+#include <map>
 
 #include "KoRE/ResourceManager.h"
 #include "KoRE/SceneManager.h"
@@ -14,47 +17,60 @@ kore::ProjectLoader* kore::ProjectLoader::getInstance() {
 }
 
 void kore::ProjectLoader::loadProject(const std::string& path) const {
+  // TODO(dospelt)
   kore::Log::getInstance()->write("[Debug] project loading not yet implemented\n");
 }
 
 void kore::ProjectLoader::saveProject(const std::string& path) const {
-  TiXmlDocument doc;  
-  //TiXmlElement* msg;
+  ResourceManager* ResMgr = ResourceManager::getInstance();
+
+  TiXmlDocument doc;
   TiXmlDeclaration* decl = new TiXmlDeclaration("1.0", "", "yes");
   doc.LinkEndChild(decl);
 
+  TiXmlComment * comment = new TiXmlComment();
+  time_t rawtime;
+  time(&rawtime);
+  comment->SetValue(ctime(&rawtime));
+  doc.LinkEndChild(comment);
+
+  // Resources
   TiXmlElement* resources = new TiXmlElement("Resources");
   doc.LinkEndChild(resources);
 
-  TiXmlComment * comment = new TiXmlComment();
-  comment->SetValue("PhysicObject information");  
-  resources->LinkEndChild(comment);
+  // Textures
+  TiXmlElement* texture;
+  std::map<std::string, TexturePtr>::iterator texIt;
+  for(texIt = ResMgr->_textures.begin();
+      texIt != ResMgr->_textures.end();
+      texIt++) {
+    texture = new TiXmlElement("Texture");
+    STextureProperties prop = texIt->second->getProperties();
+    texture->SetAttribute("name", texIt->second->getName().c_str());
+    texture->SetAttribute("width", prop.width);
+    texture->SetAttribute("height", prop.height);
+    resources->LinkEndChild(texture);
+  }
 
-  /*for(unsigned int i = 0; i < mDynObjects->size(); i++){
-    TiXmlElement * po = new TiXmlElement( "PhysicsObject" );
-    po->SetAttribute("name", mDynObjects->at(i)->getName().c_str());
-    root->LinkEndChild(po);
+  // TODO(dospelt) the rest
 
-    for(int j = 0; j < mDynObjects->at(i)->getNumShapes(); j++){
+  TiXmlElement* scene = new TiXmlElement("Scene");
+  doc.LinkEndChild(scene);
 
-      TiXmlElement * shape = new TiXmlElement( "Shape" );
+  
 
-      Ogre::String s;
-      ShapeType st =  mDynObjects->at(i)->getShapeType(j);
-      switch(st){
-      case TYPE_BOX: s = "Box"; break;
-      case TYPE_SPHERE: s = "Sphere"; break;
-      case TYPE_CAPSULE: s = "Capsule"; break;
-      }
-      shape->SetAttribute("type", s.c_str());
-      po->LinkEndChild(shape);
-    }
-  }*/
-
-  doc.SaveFile(path.c_str());
-  /*if(!doc.SaveFile(path.c_str())) {
-    kore::Log::getInstance()->write("[ERROR] could not write file '%s'\n");
+  // finally, save to file
+  if(doc.SaveFile(path.c_str())) {
+    kore::Log::getInstance()->write("[Debug] writing file '%s'\n",
+                                    path.c_str());
   } else {
-    kore::Log::getInstance()->write("[Debug] writing file '%s'\n");
-  }*/
+    kore::Log::getInstance()->write("[ERROR] could not write file '%s'\n",
+                                    path.c_str());
+  }
+
+  // TODO(dospelt) runtime error when deleting created pointers.
+  // it seems they get automatically deleted when saving File -> tinyxmlDoku?
+
+  // delete resources;
+  // delete comment;
 }

@@ -1,4 +1,7 @@
 <?xml version="1.0" standalone="yes" ?>
+<!--Fri Mar 01 13:53:48 2013
+-->
 <Resources>
-    <!--PhysicObject information-->
+    <Texture name="./assets/textures/Crate.png" width="512" height="512" />
 </Resources>
+<Scene />

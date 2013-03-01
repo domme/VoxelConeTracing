@@ -21,6 +21,8 @@
 #define SRC_KORE_PROJECTLOADER_H_
 
 #include <string>
+#include <tinyxml/tinyxml.h>
+#include "KoRE/SceneNode.h"
 
 namespace kore {
   class ProjectLoader {
@@ -30,7 +32,9 @@ namespace kore {
 
     void loadProject(const std::string& path) const;
     void saveProject(const std::string& path) const;
+
   private:
+    void saveSceneNode(TiXmlElement* scene, SceneNodePtr node);
     ProjectLoader(void){};
   };
 };
