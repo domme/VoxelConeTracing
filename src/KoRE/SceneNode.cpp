@@ -39,7 +39,7 @@ kore::SceneNode::~SceneNode(void) {
 }
 
 
-bool kore::SceneNode::isCompatibleWith(const SceneNode& otherNode) const {
+/*bool kore::SceneNode::isCompatibleWith(const SceneNode& otherNode) const {
   if (_components.size() != otherNode._components.size()) {
     return false;
   }
@@ -77,7 +77,7 @@ bool kore::SceneNode::isCompatibleWith(const SceneNode& otherNode,
     }
   }
   return bCompatible;
-}
+}*/
 
 
 const kore::SceneNodePtr& kore::SceneNode::getParent(void) const {

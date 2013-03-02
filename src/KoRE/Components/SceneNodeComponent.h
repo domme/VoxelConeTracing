@@ -42,9 +42,6 @@ namespace kore {
   public:
     explicit SceneNodeComponent(void);
     virtual ~SceneNodeComponent(void);
-    /// Checks if this component is of the same type as the other component
-    virtual bool
-       isCompatibleWith(const SceneNodeComponent& otherComponent) const = 0;
 
     virtual void attachTo(SceneNodePtr& node);
     virtual void transformChanged(const TransformPtr& newTransform);
@@ -53,7 +50,7 @@ namespace kore {
     const ShaderData* getShaderData(const std::string& name) const;
 
     inline const std::vector<ShaderData>&
-    getShaderData() const {return _shaderData;}
+    getShaderData() const {return _shaderData;};
     uint getID(void) const;
 
   protected:

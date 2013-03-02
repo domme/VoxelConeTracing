@@ -35,7 +35,7 @@ kore::MeshComponent::~MeshComponent(void) {
   destroyAttributes();
 }
 
-bool kore::MeshComponent::isCompatibleWith(const kore::SceneNodeComponent&
+/*bool kore::MeshComponent::isCompatibleWith(const kore::SceneNodeComponent&
                                            otherComponent) const {
   if (otherComponent.getType() != getType()) {
     return false;
@@ -54,7 +54,7 @@ bool kore::MeshComponent::isCompatibleWith(const kore::SceneNodeComponent&
   } else {
     return true;
   }
-}
+}*/
 
 void kore::MeshComponent::setMesh(MeshPtr& mesh) {
   destroyAttributes();
@@ -72,6 +72,7 @@ void kore::MeshComponent::setMesh(MeshPtr& mesh) {
     meshInfo->meshAtt = &vMeshAttributes[i];
     data.data = meshInfo;
 
+    data.component = this;
     _shaderData.push_back(data);
   }
 }

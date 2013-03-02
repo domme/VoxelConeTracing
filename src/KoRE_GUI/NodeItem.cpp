@@ -26,7 +26,7 @@
 #include <QStaticText>
 #include <QCursor>
 
-koregui::NodeItem::NodeItem(kore::SceneNodePtr sceneNode,
+koregui::NodeItem::NodeItem(kore::SceneNode* sceneNode,
                             QGraphicsItem* parent)
                             : _sceneNode(sceneNode),
                               QGraphicsItem(parent) {
@@ -37,7 +37,7 @@ koregui::NodeItem::NodeItem(kore::SceneNodePtr sceneNode,
   std::vector<kore::SceneNodeComponentPtr> components =
     _sceneNode->getComponents();
     for (uint i = 0; i<components.size(); i++) {
-      ComponentItem* compItem = new ComponentItem(components[i], this);
+      ComponentItem* compItem = new ComponentItem(components[i].get(), this);
       _componentItems.push_back(compItem);
    }
   refresh();
@@ -75,7 +75,7 @@ void koregui::NodeItem::paint(QPainter* painter,
   b.setStyle(Qt::BrushStyle::SolidPattern);
   painter->setPen(p);
   painter->setBrush(b);
-  painter->drawRoundedRect(QRect(0, 0, _nodewidth, _nodeheight), 10, 10);
+  painter->drawRect(0, 0, _nodewidth, _nodeheight);
 
   font.setBold(true);
   font.setPointSize(12);

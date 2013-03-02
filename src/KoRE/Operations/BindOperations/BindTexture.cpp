@@ -7,12 +7,10 @@ kore::BindTexture::BindTexture()
 }
 
 kore::BindTexture::BindTexture(const kore::ShaderData* texData,
-                               const kore::ShaderInput* shaderInput,
-                               SceneNodeComponent* component,
-                               Shader* shader) 
+                               const kore::ShaderInput* shaderInput) 
 : StandardOp() {
   init();
-  connect(texData, shaderInput, component, shader);
+  connect(texData, shaderInput);
 }
 
 void kore::BindTexture::init() {
@@ -23,15 +21,13 @@ kore::BindTexture::~BindTexture(void) {
 }
 
 void kore::BindTexture::connect(const kore::ShaderData* texData,
-                                const kore::ShaderInput* shaderInput,
-                                SceneNodeComponent* component,
-                                Shader* shader) {
+                                const kore::ShaderInput* shaderInput) {
   _componentUniform = texData;
   _shaderUniform = shaderInput;
   _shaderProgramLoc = shaderInput->programHandle;
 
-  _shader = shader;
-  _component = component;
+  _shader = shaderInput->shader;
+  _component = texData->component;
 }
 
 void kore::BindTexture::execute(void) {

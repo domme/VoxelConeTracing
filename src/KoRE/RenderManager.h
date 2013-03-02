@@ -109,7 +109,6 @@ namespace kore {
 
     typedef std::list<OperationPtr> OperationList;
     OperationList _operations;
-    const Shader* _activeShader;
 
     // OpenGL-States:
     GLuint _activeTextureUnitIndex;

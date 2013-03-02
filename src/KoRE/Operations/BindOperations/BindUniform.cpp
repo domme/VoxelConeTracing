@@ -32,21 +32,17 @@ kore::BindUniform::BindUniform(void)
 }
 
 kore::BindUniform::BindUniform(const ShaderData* componentUni,
-                               const ShaderInput* shaderUni,
-                               SceneNodeComponent* component,
-                               Shader* shader)
+                               const ShaderInput* shaderUni)
                               : kore::StandardOp() {
   _type = OP_BINDUNIFORM;
-  connect(componentUni,shaderUni, component, shader);
+  connect(componentUni,shaderUni);
 }
 
 kore::BindUniform::~BindUniform(void) {
 }
 
 void kore::BindUniform::connect(const kore::ShaderData* componentUni,
-                                const kore::ShaderInput* shaderUni,
-                                SceneNodeComponent* component,
-                                Shader* shader) {
+                                const kore::ShaderInput* shaderUni) {
     if(!componentUni
       || !shaderUni
       || componentUni->type != shaderUni->type
@@ -61,8 +57,8 @@ void kore::BindUniform::connect(const kore::ShaderData* componentUni,
       _shaderUniform = shaderUni;
       _shaderHandle = shaderUni->programHandle;
 
-      _component = component;
-      _shader = shader;
+      _component = componentUni->component;
+      _shader = shaderUni->shader;
     }
 }
 

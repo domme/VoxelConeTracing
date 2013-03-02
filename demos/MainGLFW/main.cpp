@@ -1,5 +1,5 @@
 /*
-  Copyright @ 2012 The KoRE Project
+  Copyright (c) 2012 The KoRE Project
 
   This file is part of KoRE.
 
@@ -85,7 +85,6 @@ int main(void) {
     glfwTerminate();
     exit(EXIT_FAILURE);
   }
-  
 
   // Init gl-states
   // glEnable(GL_VERTEX_ARRAY);
@@ -117,16 +116,11 @@ int main(void) {
             reinterpret_cast<const char*>(
             glewGetString(GLEW_VERSION)));
 
-
-  // kore::FrameBufferPtr frabuf = kore::FrameBufferPtr(new kore::FrameBuffer);
-
   // enable culling and depthtest
-  
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_CULL_FACE);
   glCullFace(GL_BACK);
 
-  
   // load shader
   kore::ShaderPtr pSimpleShader(new kore::Shader);
   pSimpleShader->loadShader("./assets/shader/normalColor.vp",
@@ -179,53 +173,37 @@ int main(void) {
     // Bind Attribute-Ops
     kore::BindAttributePtr pPosAttBind (new kore::BindAttribute);
     pPosAttBind->connect(pMeshComponent->getShaderData("v_position"),
-                         pSimpleShader->getAttribute("v_position"),
-                         pMeshComponent.get(),
-                         pSimpleShader.get());
+                         pSimpleShader->getAttribute("v_position"));
 
     kore::BindAttributePtr pNormAttBind (new kore::BindAttribute);
     pNormAttBind->connect(pMeshComponent->getShaderData("v_normal"),
-                          pSimpleShader->getAttribute("v_normal"),
-                          pMeshComponent.get(),
-                          pSimpleShader.get());
+                          pSimpleShader->getAttribute("v_normal"));
 
     kore::BindAttributePtr pUVAttBind (new kore::BindAttribute);
     pUVAttBind->connect(pMeshComponent->getShaderData("v_uv0"),
-                        pSimpleShader->getAttribute("v_uv0"),
-                        pMeshComponent.get(),
-                        pSimpleShader.get());
+                        pSimpleShader->getAttribute("v_uv0"));
     
     // Bind Uniform-Ops
     kore::BindUniformPtr pModelBind(new kore::BindUniform);
     pModelBind->connect(vRenderNodes[i]->getTransform()->getShaderData("model Matrix"),
-                        pSimpleShader->getUniform("model"),
-                        pMeshComponent.get(),
-                        pSimpleShader.get());
+                        pSimpleShader->getUniform("model"));
 
     kore::BindUniformPtr pViewBind(new kore::BindUniform);
     pViewBind->connect(pCamera->getShaderData("view Matrix"),
-                       pSimpleShader->getUniform("view"),
-                       pCamera.get(),
-                       pSimpleShader.get());
+                       pSimpleShader->getUniform("view"));
 
     kore::BindUniformPtr pProjBind(new kore::BindUniform);
     pProjBind->connect(pCamera->getShaderData("projection Matrix"),
-                       pSimpleShader->getUniform("projection"),
-                       pCamera.get(),
-                       pSimpleShader.get());
+                       pSimpleShader->getUniform("projection"));
 
     kore::BindTexturePtr pTextureBind(new kore::BindTexture);
     pTextureBind->connect(pTexComponent->getShaderData(testTexture->getName()),
-                          pSimpleShader->getUniform("tex"),
-                          pTexComponent.get(),
-                          pSimpleShader.get());
+                          pSimpleShader->getUniform("tex"));
 
 
     kore::BindUniformPtr pLightPosBind(new kore::BindUniform);
     pLightPosBind->connect(pLight->getShaderData("position"),
-                           pSimpleShader->getUniform("pointlightPos"),
-                           pLight.get(),
-                           pSimpleShader.get());
+                           pSimpleShader->getUniform("pointlightPos"));
 
     kore::RenderMeshOpPtr pRenderOp(new kore::RenderMesh);
     pRenderOp->setCamera(pCamera);
@@ -243,27 +221,12 @@ int main(void) {
     kore::RenderManager::getInstance()->addOperation(pRenderOp);
   }
 
-  ////////////////////////////////////////////////////////
-  /*GLuint samplerhandle;
-  glGenSamplers(1, &samplerhandle);
-  glBindSampler(0, samplerhandle);
-  
-  glUseProgram(pSimpleShader->getProgramLocation());
-  glUniform1i(pSimpleShader->getUniformByName("tex")->location, 0); //Texture unit 0 is for base images.
-
-  glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, testTexture->getHandle());
-  glBindSampler(0, samplerhandle); */
-
-  ////////////////////////////////////////////////////////////////////
   std::vector<kore::SceneNodePtr> vBigCubeNodes;
   kore::SceneManager::getInstance()
     ->getSceneNodesByName("Cube", vBigCubeNodes);
   rotationNode = vBigCubeNodes[0];
 
   glClearColor(1.0f,1.0f,1.0f,1.0f);
-
-  
 
   kore::Timer the_timer;
   the_timer.start();
@@ -279,19 +242,19 @@ int main(void) {
     time = the_timer.timeSinceLastCall();
     kore::SceneManager::getInstance()->update();
 
-    if (glfwGetKey(GLFW_KEY_UP) == GLFW_PRESS) {
+    if (glfwGetKey(GLFW_KEY_UP) || glfwGetKey('W')) {
       pCamera->moveForward(cameraMoveSpeed * static_cast<float>(time));
     }
 
-    if (glfwGetKey(GLFW_KEY_DOWN) == GLFW_PRESS) {
+    if (glfwGetKey(GLFW_KEY_DOWN) || glfwGetKey('S')) {
       pCamera->moveForward(-cameraMoveSpeed * static_cast<float>(time));
     }
 
-    if (glfwGetKey(GLFW_KEY_LEFT) == GLFW_PRESS) {
+    if (glfwGetKey(GLFW_KEY_LEFT) || glfwGetKey('A')) {
       pCamera->moveSideways(-cameraMoveSpeed * static_cast<float>(time));
     }
 
-    if (glfwGetKey(GLFW_KEY_RIGHT) == GLFW_PRESS) {
+    if (glfwGetKey(GLFW_KEY_RIGHT) || glfwGetKey('D')) {
       pCamera->moveSideways(cameraMoveSpeed * static_cast<float>(time));
     }
 

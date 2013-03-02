@@ -40,13 +40,13 @@ int main(int argc, char *argv[])
     koregui::SceneViewer sview;
     sview.show();
 
-    //koregui::RenderViewer rview;
-    //rview.show();
+    koregui::RenderViewer rview;
+    rview.show();
 
     // do stuff
     // need of GL-Context
     GLWindow win;
     kore::ResourceManager::getInstance()->loadScene("./assets/meshes/TestEnv.dae");
-    sview.showScene(kore::SceneManager::getInstance()->getRootNode());
+    sview.showScene(kore::SceneManager::getInstance()->getRootNode().get());
     return app.exec();
 }

@@ -32,7 +32,7 @@
 namespace koregui {
   class NodeItem : public QGraphicsItem {
   public:
-    NodeItem(kore::SceneNodePtr sceneNode, QGraphicsItem* parent = 0);
+    NodeItem(kore::SceneNode* sceneNode, QGraphicsItem* parent = 0);
     ~NodeItem(void);
 
     void refresh(void);
@@ -44,7 +44,7 @@ namespace koregui {
     inline int getHeight(void) {return _nodeheight;};
     inline int getWidth(void) {return _nodewidth;};
   private:
-    kore::SceneNodePtr _sceneNode;
+    kore::SceneNode* _sceneNode;
     uint _nodeheight;
     uint _nodewidth;
 

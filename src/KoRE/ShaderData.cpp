@@ -1,5 +1,5 @@
 /*
-  Copyright ? 2012 The KoRE Project
+  Copyright (c) 2012 The KoRE Project
 
   This file is part of KoRE.
 
@@ -23,5 +23,6 @@ kore::ShaderData::ShaderData(void)
   : type(GL_NONE),
   size(1),
   name("UNDEFINED"),
-  data(NULL){
+  data(NULL),
+  component(NULL) {
 }

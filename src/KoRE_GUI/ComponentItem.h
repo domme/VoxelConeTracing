@@ -31,7 +31,7 @@
 namespace koregui {
   class ComponentItem : public QGraphicsItem {
   public:
-    ComponentItem(kore::SceneNodeComponentPtr component,
+    ComponentItem(kore::SceneNodeComponent* component,
                   QGraphicsItem* parent = 0);
     ~ComponentItem(void);
 
@@ -48,7 +48,7 @@ namespace koregui {
     void mousePressEvent(QGraphicsSceneMouseEvent * event);
 
   private:
-    kore::SceneNodeComponentPtr _component;
+    kore::SceneNodeComponent* _component;
     std::vector<ShaderDataItem*> _shaderDataItems;
 
     uint _componentwidth;

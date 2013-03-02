@@ -1,5 +1,5 @@
 /*
-  Copyright ? 2012 The KoRE Project
+  Copyright (c) 2012 The KoRE Project
 
   This file is part of KoRE.
 
@@ -18,24 +18,24 @@
 */
 
 #include "KoRE/Common.h"
-#include "KoRE/Shader.h"
 
 #ifndef KORE_SRC_SHADERINPUT_H_
 #define KORE_SRC_SHADERINPUT_H_
 
 namespace kore {
+  class Shader;
   class ShaderInput {
   public:
     ShaderInput(void);
     virtual ~ShaderInput(void) {};
 
-    GLenum type;                 // e.g. GL_FLOAT_VEC3
-    GLuint size;                 // number of components in units of type
-    // (currently this is always 1)
-    GLint location;              // location of attribute in shader
-    std::string name;
-    GLuint texUnit;
-    GLuint programHandle;
+    GLenum type;             // e.g. GL_FLOAT_VEC3
+    GLuint size;             // number of components in units of type(always 1)
+    GLint location;          // location of attribute in shader
+    std::string name;        // input name
+    GLuint texUnit;          // if input is a texture, its GLhandle
+    GLuint programHandle;    // GLhandle of the shader program
+    Shader* shader;
   };
 }
 

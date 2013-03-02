@@ -36,7 +36,7 @@ namespace koregui {
       SceneViewer(QWidget *parent = 0);
       ~SceneViewer();
 
-      void showScene(kore::SceneNodePtr root);
+      void showScene(kore::SceneNode* root);
 
   public slots:
     void zoomIn() {scale(1.2,1.2);}
@@ -51,8 +51,8 @@ namespace koregui {
       QGraphicsScene _scene;
       void clearScene(void);
       //returns pixel width of children;
-      NodeItem* createNode(kore::SceneNodePtr sourcenode, int x, int y);
-      int estimateTreeWidth(kore::SceneNodePtr sourcenode);
+      NodeItem* createNode(kore::SceneNode* sourcenode, int x, int y);
+      int estimateTreeWidth(kore::SceneNode* sourcenode);
   };
 }
 #endif // SCENEVIEWER_H

@@ -28,15 +28,13 @@ namespace kore {
   class BindAttribute: public StandardOp {
   public:
     BindAttribute(void);
-    BindAttribute(const ShaderData* meshData, const ShaderInput* shaderInput,
-                  SceneNodeComponent* component, Shader* shader);
+    BindAttribute(const ShaderData* meshData, const ShaderInput* shaderInput);
     virtual ~BindAttribute(void);
     virtual void execute(void);
     virtual void update(void);
     virtual void reset(void);
     virtual bool isValid(void);
-    void connect(const ShaderData* meshData, const ShaderInput* shaderInput,
-                 SceneNodeComponent* component, Shader* shader);
+    void connect(const ShaderData* meshData, const ShaderInput* shaderInput);
   private:
     const SMeshInformation* _meshInfo;
   };

@@ -36,8 +36,6 @@ namespace kore {
     MeshComponent(void);
     virtual ~MeshComponent(void);
 
-    virtual bool
-    isCompatibleWith(const SceneNodeComponent& otherComponent) const;
     inline const MeshPtr& getMesh() {return _mesh;}
     void setMesh(MeshPtr& mesh);
 

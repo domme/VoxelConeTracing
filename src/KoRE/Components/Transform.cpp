@@ -7,23 +7,20 @@ kore::Transform::Transform(void) : _global(glm::mat4(1.0f)),
   input.type = GL_FLOAT_MAT4;
   input.name = "model Matrix";
   input.data = glm::value_ptr(_global);
+  input.component = this;
   _shaderData.push_back(input);
 
   input = ShaderData();
   input.type = GL_FLOAT_MAT4;
   input.name = "object Matrix";
   input.data = glm::value_ptr(_local);
+  input.component = this;
   _shaderData.push_back(input);
 
   _type = COMPONENT_TRANSFORM;
 }
 
 kore::Transform::~Transform() {
-}
-
-bool kore::Transform::
-isCompatibleWith(const SceneNodeComponent& otherComponent) const {
-  return true;
 }
 
 void kore::Transform::setGlobal(const glm::mat4& global) {

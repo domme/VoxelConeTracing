@@ -1,5 +1,5 @@
 /*
-  Copyright © 2012 The KoRE Project
+  Copyright (c) 2012 The KoRE Project
 
   This file is part of KoRE.
 
@@ -24,5 +24,7 @@ kore::ShaderInput::ShaderInput(void)
   size(1),
   texUnit(GLUINT_HANDLE_INVALID),
   location(GLINT_HANDLE_INVALID),
-  name("UNDEFINED") {
+  name("UNDEFINED"),
+  programHandle(GLUINT_HANDLE_INVALID),
+  shader(NULL){
 }

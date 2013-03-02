@@ -30,9 +30,9 @@
 namespace koregui {
   class ShaderDataItem : public QGraphicsItem {
   public:
-    ShaderDataItem(kore::ShaderData* data, QGraphicsItem* parent = 0);
+    ShaderDataItem(const kore::ShaderData* data, QGraphicsItem* parent = 0);
     ~ShaderDataItem(void);
-    inline kore::ShaderData* getData(void) {return _data;};
+    inline const kore::ShaderData* getData(void) {return _data;};
     void refresh(void);
 
   protected:
@@ -42,7 +42,7 @@ namespace koregui {
                QWidget* widget);
 
   private:
-    kore::ShaderData* _data;
+    const kore::ShaderData* _data;
   };
 }
 #endif  // SHADERDATAITEM_H_

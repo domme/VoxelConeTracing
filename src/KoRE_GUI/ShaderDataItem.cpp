@@ -27,7 +27,7 @@
 #include <QStaticText>
 #include <QToolTip>
 
-koregui::ShaderDataItem::ShaderDataItem(kore::ShaderData* data,
+koregui::ShaderDataItem::ShaderDataItem(const kore::ShaderData* data,
                                         QGraphicsItem* parent)
                                       : _data(data),
                                         QGraphicsItem(parent) {

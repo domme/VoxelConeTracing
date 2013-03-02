@@ -23,6 +23,7 @@
 #include "KoRE/Log.h"
 #include "KoRE/Operations/Operation.h"
 #include "KoRE/ResourceManager.h"
+#include "Kore/RenderManager.h"
 
 const unsigned int BUFSIZE = 100;  // Buffer length for shader-element names
 
@@ -282,6 +283,7 @@ void kore::Shader::constructShaderInputInfo(const GLenum activeType,
         element.size = iElementSize;
         element.location = iElementLoc;
         element.programHandle = _programHandle;
+        element.shader = this;
 
         rInputVector.push_back(element);
     }

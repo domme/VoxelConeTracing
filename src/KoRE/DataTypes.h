@@ -28,6 +28,8 @@ namespace kore {
   class DatatypeUtil {
   public:
     static unsigned int getSizeFromGLdatatype(GLenum datatype);
+    const std::string typeToString(GLenum datatype) const;
+    const GLenum stringToType(const std::string& type) const; 
   };
 }
 #endif  // CORE_INCLUDE_CORE_DATATYPES_H_

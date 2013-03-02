@@ -41,8 +41,6 @@ namespace kore {
     LightComponent();
     virtual ~LightComponent();
 
-    virtual bool
-    isCompatibleWith(const SceneNodeComponent& otherComponent) const;
     virtual void transformChanged(const TransformPtr& newTransform);
 
     inline void setName(const std::string& name) {_name = name;}

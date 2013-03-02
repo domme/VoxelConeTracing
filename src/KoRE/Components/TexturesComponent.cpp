@@ -10,18 +10,6 @@ kore::TexturesComponent::~TexturesComponent(void) {
   }
 }
 
-bool kore::TexturesComponent::
-isCompatibleWith(const SceneNodeComponent& otherComponent) const {
-  if(otherComponent.getType() != _type) {
-    return false;
-  } else {
-    const TexturesComponent& tmp 
-      = static_cast<const TexturesComponent&>(otherComponent);
-    // TODO(dospelt) component check
-    return false;
-  }
-}
-
 void kore::
   TexturesComponent::addTexture(TexturePtr tex,
                                 const bool useMipMaps /*=true*/,
@@ -37,8 +25,10 @@ void kore::
   _vTextureInfos.push_back(texInfo);
 
   ShaderData shaderdata;
+  shaderdata.type = GL_TEXTURE;
   shaderdata.name = tex->getName();
   shaderdata.data = texInfo;
+  shaderdata.component = this;
   _shaderData.push_back(shaderdata);
   // Tex unit is defined by shader
 }

@@ -25,13 +25,15 @@
 #include <QGuiApplication>
 #include <QKeyEvent>
 #include <QList>
+#include "KoRE_GUI/ShaderItem.h"
 
 koregui::RenderViewer::RenderViewer(QWidget *parent) : QGraphicsView(parent) {
   setDragMode(ScrollHandDrag);
-  //setDragMode(RubberBandDrag);
+  // setDragMode(RubberBandDrag);
   _scene.setBackgroundBrush(QBrush(Qt::darkGray));
   setScene(&_scene);
   setMinimumSize(800,600);
+  //koregui::ShaderItem* sitem() 
 }
 
 koregui::RenderViewer::~RenderViewer() {
@@ -54,9 +56,8 @@ void koregui::RenderViewer::keyPressEvent(QKeyEvent * event) {
 
 void koregui::RenderViewer::wheelEvent(QWheelEvent *event) {
   float scaleFactor = pow(2.0, event->delta() / 240.0);
-  qreal factor = transform().scale(scaleFactor, scaleFactor).mapRect(QRectF(0, 0, 1, 1)).width();
-  if (factor < 0.03 || factor > 2) return;
+  qreal factor = transform().scale(scaleFactor, scaleFactor)
+                            .mapRect(QRectF(0, 0, 1, 1)).width();
+  if (factor < 0.08 || factor > 2) return;
   scale(scaleFactor, scaleFactor);
 }
-
-

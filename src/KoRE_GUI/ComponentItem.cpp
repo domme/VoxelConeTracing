@@ -30,18 +30,19 @@
 #include "KoRE_GUI/NodeItem.h"
 #include "KoRE/ShaderData.h"
 
-koregui::ComponentItem::ComponentItem(kore::SceneNodeComponentPtr component,
+koregui::ComponentItem::ComponentItem(kore::SceneNodeComponent* component,
                                       QGraphicsItem* parent) 
                                     : _component(component),
                                       QGraphicsItem(parent) {
   std::vector<kore::ShaderData> sdata = _component->getShaderData();
   for (uint i = 0; i < sdata.size(); i++) {
-    ShaderDataItem* dataitem =  new ShaderDataItem(&sdata[i], this);
+    const kore::ShaderData* tmp = _component->getShaderData(sdata[i].name);
+    ShaderDataItem* dataitem =  new ShaderDataItem(tmp, this);
     _shaderDataItems.push_back(dataitem);
     dataitem->setVisible(true);
     dataitem->setPos(192, 30 + 30 * i);
   }
-  _expanded = true;
+  _expanded = false;
   refresh();
 }
 

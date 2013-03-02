@@ -30,7 +30,6 @@ namespace kore {
   public:
     explicit TexturesComponent(void);
     ~TexturesComponent(void);
-    virtual bool isCompatibleWith(const SceneNodeComponent& otherComponent) const;
 
     inline const uint getNumTextures(void) const {return _vTextures.size();}
     

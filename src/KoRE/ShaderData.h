@@ -1,5 +1,5 @@
 /*
-  Copyright ? 2012 The KoRE Project
+  Copyright (c) 2012 The KoRE Project
 
   This file is part of KoRE.
 
@@ -23,16 +23,17 @@
 #include "KoRE/Common.h"
 
 namespace kore {
+  class SceneNodeComponent;
   class ShaderData {
   public:
     ShaderData(void);
     virtual ~ShaderData(void) {};
 
-    GLenum type;                 // e.g. GL_FLOAT_VEC3
-    GLuint size;                 // number of components in units of type
-    // (currently this is always 1)
+    GLenum type;      // e.g. GL_FLOAT_VEC3
+    GLuint size;      // number of components in units of type (always 1)
     std::string name;
     void* data;
+    SceneNodeComponent* component;
   };
 }
 

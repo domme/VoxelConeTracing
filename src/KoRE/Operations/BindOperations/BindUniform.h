@@ -30,18 +30,14 @@ namespace kore {
   public:
     BindUniform(void);
     BindUniform(const ShaderData* componentUni,
-                const ShaderInput* shaderUni,
-                SceneNodeComponent* component,
-                Shader* shader);
+                const ShaderInput* shaderUni);
     virtual ~BindUniform(void);
     virtual void execute(void);
     virtual void update(void);
     virtual void reset(void);
     virtual bool isValid(void);
     void connect(const ShaderData* componentUni,
-                 const ShaderInput* shaderUni,
-                 SceneNodeComponent* component,
-                 Shader* shader);
+                 const ShaderInput* shaderUni);
   private:
     GLuint _shaderHandle;
   };

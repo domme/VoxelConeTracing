@@ -38,3 +38,16 @@ unsigned int kore::DatatypeUtil::getSizeFromGLdatatype(GLenum datatype) {
             break;
         }
 }
+
+const std::string kore::DatatypeUtil::typeToString(GLenum datatype) const {
+  switch (datatype) {
+  default:
+    return "GL_INVALID_ENUM";
+  }
+}
+
+const GLenum kore::DatatypeUtil::stringToType(const std::string& type) const {
+  if (type == "GL_INVALID_ENUM") return GL_INVALID_ENUM;
+  // [...] TODO(dospelt)
+  return GL_INVALID_ENUM;
+}

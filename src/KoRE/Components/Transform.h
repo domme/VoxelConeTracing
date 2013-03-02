@@ -30,8 +30,6 @@ namespace kore {
     Transform(void);
     virtual ~Transform(void);
 
-    bool isCompatibleWith(const SceneNodeComponent& otherComponent) const;
-
     void setGlobal(const glm::mat4& global);
     void setLocal(const glm::mat4& local);
 

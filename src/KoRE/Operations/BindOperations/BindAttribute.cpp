@@ -25,11 +25,9 @@ kore::BindAttribute::BindAttribute(void) : kore::StandardOp() {
 }
 
 kore::BindAttribute::BindAttribute(const ShaderData* meshData,
-                                   const ShaderInput* shaderInput,
-                                   SceneNodeComponent* component,
-                                   Shader* shader) :
-                                   kore::StandardOp() {
-  connect(meshData, shaderInput, component, shader);
+                                   const ShaderInput* shaderInput)
+                                   : kore::StandardOp() {
+  connect(meshData, shaderInput);
 }
 
 
@@ -37,14 +35,12 @@ kore::BindAttribute::~BindAttribute(void) {
 }
 
 void kore::BindAttribute::connect(const ShaderData* meshData,
-                                  const ShaderInput* shaderInput,
-                                  SceneNodeComponent* component,
-                                  Shader* shader) {
+                                  const ShaderInput* shaderInput) {
   _shaderUniform = shaderInput;
   _meshInfo = static_cast<const SMeshInformation*>(meshData->data);
 
-  _component = component;
-  _shader = shader;
+  _component = meshData->component;
+  _shader = shaderInput->shader;
 }
 
 void kore::BindAttribute::execute(void) {
