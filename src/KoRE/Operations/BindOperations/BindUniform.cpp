@@ -56,7 +56,6 @@ void kore::BindUniform::connect(const kore::ShaderData* componentUni,
         _shaderUniform = NULL;
         _shaderHandle = GLUINT_HANDLE_INVALID;
     } else {
-      destroy();
 
       _componentUniform = componentUni;
       _shaderUniform = shaderUni;
@@ -64,9 +63,6 @@ void kore::BindUniform::connect(const kore::ShaderData* componentUni,
 
       _component = component;
       _shader = shader;
-
-      _component->addOperation(this);
-      _shader->addOperation(this);
     }
 }
 

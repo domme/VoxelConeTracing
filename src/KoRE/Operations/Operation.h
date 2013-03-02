@@ -33,6 +33,8 @@ namespace kore {
     OP_SELECTNODES
   };
 
+  class SceneNodeComponent;
+  class Shader;
   class RenderManager;
   class Operation {
   public:
@@ -42,21 +44,12 @@ namespace kore {
     virtual void update(void) = 0;
     virtual void reset(void) = 0;
     virtual bool isValid(void) = 0;
-
-    /*! \brief Destroy this operation. Based on the operation-subclass, this
-    *          method will pass the destroy-message to the components/shader
-    *          this Operation combines. */
-    virtual void destroy(void) = 0;
-
-    void setExecuted(bool flag);
-    bool getExecuted(void);
+    virtual bool dependsOn(const void* thing) = 0;
 
     inline const EOperationType getType() const {return _type;}
 
   protected:
     EOperationType _type;
-    bool _executeOnce;
-    bool _executed;
     RenderManager* _renderManager;
   };
   typedef std::shared_ptr<Operation> OperationPtr;

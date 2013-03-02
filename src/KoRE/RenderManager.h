@@ -76,6 +76,8 @@ namespace kore {
     void removeOperation(const OperationPtr& op);
     void removeOperation(const Operation* op);
 
+    void onRemoveComponent(const SceneNodeComponent* comp);
+
     // The OpenGL-State wrapper functions go here:
     void bindVAO(const GLuint vao);
     void bindVBO(const GLuint vbo);

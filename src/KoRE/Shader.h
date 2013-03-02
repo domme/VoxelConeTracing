@@ -30,7 +30,7 @@
 
 namespace kore {
   class Operation;
-  class Shader : public OperationOwner {
+  class Shader {
   public:
     Shader(void);
     virtual ~Shader(void);

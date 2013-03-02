@@ -42,39 +42,16 @@ kore::RenderMesh::RenderMesh(const kore::MeshComponentPtr& mesh,
 }
 
 kore::RenderMesh::~RenderMesh(void) {
-  destroy();
 }
 
-void kore::RenderMesh::destroy() {
-  _renderManager->removeOperation(this);
-
-  if (_meshComponent) {
-    _meshComponent->removeOperation(this);
-  }
-
-  if (_shader) {
-    _shader->removeOperation(this);
-  }
-
-  if (_camera) {
-    _camera->removeOperation(this);
-  }
-}
 
 void kore::RenderMesh::connect(const kore::MeshComponentPtr& mesh,
                                const kore::CameraPtr& camera,
                                const kore::ShaderPtr& shader) {
-  destroy();
-
   _meshComponent = mesh;
   _shader = shader;
   _camera = camera;
-
-  _meshComponent->addOperation(this);
-  _shader->addOperation(this);
-  _camera->addOperation(this);
 }
-
 
 void kore::RenderMesh::execute(void) {
     GLerror::gl_ErrorCheckStart();
@@ -113,7 +90,6 @@ void kore::RenderMesh::execute(void) {
                    mesh->getNumVertices());
     }
 
-  setExecuted(true);
   GLerror::gl_ErrorCheckFinish("RenderMeshOperation " + mesh->getName());
 }
 
@@ -121,7 +97,6 @@ void kore::RenderMesh::update(void) {
 }
 
 void kore::RenderMesh::reset(void) {
-  setExecuted(false);
 }
 
 bool kore::RenderMesh::isValid(void) {
@@ -150,4 +125,10 @@ const kore::ShaderPtr& kore::RenderMesh::getShader() const {
 
 void kore::RenderMesh::setShader(const kore::ShaderPtr& shader) {
     _shader = shader;
+}
+
+bool kore::RenderMesh::dependsOn(const void* thing) {
+  return thing == _meshComponent.get() 
+       || thing == _shader.get()
+       || thing == _camera.get();
 }

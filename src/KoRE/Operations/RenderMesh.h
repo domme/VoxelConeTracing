@@ -38,8 +38,7 @@ namespace kore {
     virtual void update(void);
     virtual void reset(void);
     virtual bool isValid(void);
-
-    virtual void destroy();
+    virtual bool dependsOn(const void* thing);
 
     void connect(const kore::MeshComponentPtr& mesh,
                  const kore::CameraPtr& camera,

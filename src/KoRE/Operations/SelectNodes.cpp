@@ -71,3 +71,7 @@ void kore::SelectNodes::append(const SceneNodePtr& root, const std::string& name
 void kore::SelectNodes::destroy() {
   _renderManager->removeOperation(this);
 }
+
+bool kore::SelectNodes::dependsOn(const void* thing) {
+  return false;
+}

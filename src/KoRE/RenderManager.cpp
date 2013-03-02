@@ -213,3 +213,12 @@ void kore::RenderManager::bindFrameBuffer(const GLuint fboTarget,
     }
   }
 }
+
+void kore::RenderManager::onRemoveComponent(const SceneNodeComponent* comp) {
+  auto iter = _operations.begin();
+  for (; iter != _operations.end(); ++iter) {
+    if ((*iter)->dependsOn(static_cast<const void*>(comp))) {
+     _operations.erase(iter);
+    }
+  }
+}

@@ -18,6 +18,7 @@
 */
 
 #include "KoRE/Common.h"
+#include "KoRE/Shader.h"
 
 #ifndef KORE_SRC_SHADERINPUT_H_
 #define KORE_SRC_SHADERINPUT_H_

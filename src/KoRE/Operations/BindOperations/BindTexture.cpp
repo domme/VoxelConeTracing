@@ -26,16 +26,12 @@ void kore::BindTexture::connect(const kore::ShaderData* texData,
                                 const kore::ShaderInput* shaderInput,
                                 SceneNodeComponent* component,
                                 Shader* shader) {
-  destroy();
   _componentUniform = texData;
   _shaderUniform = shaderInput;
   _shaderProgramLoc = shaderInput->programHandle;
 
   _shader = shader;
   _component = component;
-
-  _shader->addOperation(this);
-  _component->addOperation(this);
 }
 
 void kore::BindTexture::execute(void) {

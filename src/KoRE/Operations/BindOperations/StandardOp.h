@@ -1,5 +1,5 @@
 /*
-  Copyright © 2012 The KoRE Project
+  Copyright (c) 2012 The KoRE Project
 
   This file is part of KoRE.
 
@@ -33,10 +33,7 @@ namespace kore {
     StandardOp();
     virtual ~StandardOp();
 
-    /*! \brief Destroy this operation. Based on the operation-subclass, this
-    *          method will pass the destroy-message to the components/shader
-    *          this Operation combines. */
-    virtual void destroy(void);
+    virtual bool dependsOn(const void* thing);
 
   protected:
     const ShaderData* _componentUniform;

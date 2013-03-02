@@ -23,7 +23,6 @@
 #include "KoRE/Common.h"
 #include "KoRE/ShaderData.h"
 #include "KoRE/Operations/Operation.h"
-#include "KoRE/OperationOwner.h"
 
 namespace kore {
   enum EComponentType {
@@ -39,7 +38,7 @@ namespace kore {
   typedef std::shared_ptr<SceneNode> SceneNodePtr;
   class Transform;
   typedef std::shared_ptr<Transform> TransformPtr;
-  class SceneNodeComponent : public OperationOwner {
+  class SceneNodeComponent {
   public:
     explicit SceneNodeComponent(void);
     virtual ~SceneNodeComponent(void);

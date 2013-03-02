@@ -28,17 +28,16 @@ const unsigned int BUFSIZE = 100;  // Buffer length for shader-element names
 
 kore::Shader::Shader(void)
 : _name(""),
-  _programHandle(GLUINT_HANDLE_INVALID),
-  OperationOwner() {
-  _attributes.clear();
-  _uniforms.clear();
-  _outputs.clear();
-  _name.clear();
-  _vertex_prog.clear();
-  _geometry_prog.clear();
-  _fragment_prog.clear();
-  _tess_ctrl.clear();
-  _tess_eval.clear();
+  _programHandle(GLUINT_HANDLE_INVALID) {
+    _attributes.clear();
+    _uniforms.clear();
+    _outputs.clear();
+    _name.clear();
+    _vertex_prog.clear();
+    _geometry_prog.clear();
+    _fragment_prog.clear();
+    _tess_ctrl.clear();
+    _tess_eval.clear();
 }
 
 kore::Shader::~Shader(void) {

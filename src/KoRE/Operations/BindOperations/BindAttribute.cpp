@@ -40,16 +40,11 @@ void kore::BindAttribute::connect(const ShaderData* meshData,
                                   const ShaderInput* shaderInput,
                                   SceneNodeComponent* component,
                                   Shader* shader) {
-  destroy();
-
   _shaderUniform = shaderInput;
   _meshInfo = static_cast<const SMeshInformation*>(meshData->data);
 
   _component = component;
   _shader = shader;
-
-  _component->addOperation(this);
-  _shader->addOperation(this);
 }
 
 void kore::BindAttribute::execute(void) {

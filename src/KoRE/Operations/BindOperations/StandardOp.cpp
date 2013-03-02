@@ -1,4 +1,4 @@
-﻿/*
+/*
   Copyright � 2012 The KoRE Project
 
   This file is part of KoRE.
@@ -34,14 +34,9 @@ kore::StandardOp::StandardOp()
 kore::StandardOp::~StandardOp() {
 }
 
-void kore::StandardOp::destroy(void) {
-  if (_component) {
-    _component->removeOperation(this);
-  }
-
-  if (_shader) {
-    _shader->removeOperation(this);
-  }
-
-  _renderManager->removeOperation(this);
+bool kore::StandardOp::dependsOn(const void* thing) {
+  return (    thing == _component
+          ||  thing == _componentUniform 
+          ||  thing == _shader
+          ||  thing == _shaderUniform);
 }
