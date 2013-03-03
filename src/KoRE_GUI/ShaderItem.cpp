@@ -53,12 +53,33 @@ QRectF koregui::ShaderItem::boundingRect() const {
 void koregui::ShaderItem::paint(QPainter* painter,
                                 const QStyleOptionGraphicsItem* option,
                                 QWidget* widget) {
-  QBrush b;
+  /*QBrush b;
   QPen p;
   QStaticText t;
-  QFont font("Consolas");
+  QFont font("Consolas");*/
 
-  painter->drawRect(0,0,200,200);
+  QBrush b;
+  QPen p;
+  QFont font("Arial");
+  QStaticText text;
+
+  p.setStyle(Qt::PenStyle::NoPen);
+  b.setColor(QColor(44,44,44));
+  b.setStyle(Qt::BrushStyle::SolidPattern);
+  painter->setPen(p);
+  painter->setBrush(b);
+  painter->drawRect(0, 0, _shaderwidth, _shaderheight);
+
+  font.setBold(true);
+  font.setPointSize(12);
+  painter->setFont(font);
+
+  //text.setText(_shader->getName().c_str());
+  text.setText("Dummy Shader");
+  p.setColor(QColor(255,255,255));
+  p.setStyle(Qt::PenStyle::SolidLine);
+  painter->setPen(p);
+  painter->drawStaticText(10,10, text);
 }
 
 void koregui::ShaderItem::mousePressEvent(QGraphicsSceneMouseEvent * event){

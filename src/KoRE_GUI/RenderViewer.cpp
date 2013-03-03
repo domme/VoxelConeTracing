@@ -29,7 +29,7 @@
 #include "KoRE/ResourceManager.h"
 
 koregui::RenderViewer::RenderViewer(QWidget *parent) : QGraphicsView(parent) {
-  //setDragMode(ScrollHandDrag);
+  setDragMode(ScrollHandDrag);
   // setDragMode(RubberBandDrag);
   _scene.setBackgroundBrush(QBrush(Qt::darkGray));
   setScene(&_scene);

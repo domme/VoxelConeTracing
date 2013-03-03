@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 The KoRE Project
+  Copyright � 2012 The KoRE Project
 
   This file is part of KoRE.
 
@@ -17,32 +17,25 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SRC_KORE_OPERATION_H_
-#define SRC_KORE_OPERATION_H_
 
-#include "KoRE/Common.h"
-#include "KoRE/Operations/Operation.h"
-#include "KoRE/ShaderInput.h"
-#include "KoRE/ShaderData.h"
+#include "KoRE/Operations/BindOperations/BindOperation.h"
+#include "KoRE/Components/SceneNodeComponent.h"
+#include "KoRE/RenderManager.h"
 
-namespace kore {
-  class SceneNodeComponent;
-  class Shader;
-  class StandardOp : public Operation {
-  public:
-    StandardOp();
-    virtual ~StandardOp();
-
-    virtual bool dependsOn(const void* thing);
-
-  protected:
-    const ShaderData* _componentUniform;
-    const ShaderInput* _shaderUniform;
-    SceneNodeComponent* _component;
-    Shader* _shader;
-  };
+kore::BindOperation::BindOperation()
+  : _component(NULL),
+    _componentUniform(NULL),
+    _shader(NULL),
+    _shaderUniform(NULL),
+    kore::Operation() {
 }
 
+kore::BindOperation::~BindOperation() {
+}
 
-
-#endif  // SRC_KORE_OPERATION_H_
+bool kore::BindOperation::dependsOn(const void* thing) {
+  return (    thing == _component
+          ||  thing == _componentUniform 
+          ||  thing == _shader
+          ||  thing == _shaderUniform);
+}

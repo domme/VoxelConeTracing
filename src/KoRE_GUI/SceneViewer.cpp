@@ -70,6 +70,7 @@ koregui::NodeItem* koregui::SceneViewer
                                           createNode(pnode[i].get(),
                                             startx + localwidth/2,
                                             y + nodeItem->getHeight() + 80));
+    path->setZValue(-1);
     _scene.addItem(path);
     startx += localwidth;
   }

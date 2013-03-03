@@ -30,14 +30,14 @@
 
 namespace kore {
   class Operation;
-  class Shader {
+  class ShaderProgram {
   public:
-    Shader(void);
-    virtual ~Shader(void);
+    ShaderProgram();
+    virtual ~ShaderProgram(void);
     /// load a single shader from file
     bool loadShader(const std::string& file, GLenum shadertype);
     /// compile and link shader program
-    bool initShader(void);
+    bool initShader(const std::string& name);
     GLuint getAttributeLocation(const std::string &name);
     GLuint getUniformLocation(const std::string &name);
     GLuint getProgramLocation();
@@ -85,15 +85,14 @@ namespace kore {
 
     std::vector<const TextureSampler*> _vSamplers;
 
-
-    std::string _vertex_prog;
-    std::string _geometry_prog;
-    std::string _fragment_prog;
-    std::string _tess_ctrl;
-    std::string _tess_eval;
+    GLuint _vertex_prog;
+    GLuint _geometry_prog;
+    GLuint _fragment_prog;
+    GLuint _tess_ctrl;
+    GLuint _tess_eval;
 
     GLuint _programHandle;
   };
-  typedef std::shared_ptr<kore::Shader> ShaderPtr;
+  typedef std::shared_ptr<kore::ShaderProgram> ShaderPtr;
 };
 #endif  // CORE_INCLUDE_CORE_SHADER_H_

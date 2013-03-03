@@ -23,7 +23,7 @@
 #define KORE_SRC_SHADERINPUT_H_
 
 namespace kore {
-  class Shader;
+  class ShaderProgram;
   class ShaderInput {
   public:
     ShaderInput(void);
@@ -35,7 +35,7 @@ namespace kore {
     std::string name;        // input name
     GLuint texUnit;          // if input is a texture, its GLhandle
     GLuint programHandle;    // GLhandle of the shader program
-    Shader* shader;
+    ShaderProgram* shader;
   };
 }
 

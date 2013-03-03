@@ -19,7 +19,7 @@
 
 #include <vector>
 #include <string>
-#include "KoRE/Shader.h"
+#include "KoRE/ShaderProgram.h"
 #include "KoRE/Log.h"
 #include "KoRE/Operations/Operation.h"
 #include "KoRE/ResourceManager.h"
@@ -27,33 +27,32 @@
 
 const unsigned int BUFSIZE = 100;  // Buffer length for shader-element names
 
-kore::Shader::Shader(void)
-: _name(""),
-  _programHandle(GLUINT_HANDLE_INVALID) {
-    _attributes.clear();
-    _uniforms.clear();
-    _outputs.clear();
-    _name.clear();
-    _vertex_prog.clear();
-    _geometry_prog.clear();
-    _fragment_prog.clear();
-    _tess_ctrl.clear();
-    _tess_eval.clear();
+kore::ShaderProgram::ShaderProgram()
+  : _name(""),
+  _programHandle(GLUINT_HANDLE_INVALID),
+  _vertex_prog(GLUINT_HANDLE_INVALID),
+  _geometry_prog(GLUINT_HANDLE_INVALID),
+  _fragment_prog(GLUINT_HANDLE_INVALID),
+  _tess_ctrl(GLUINT_HANDLE_INVALID),
+  _tess_eval(GLUINT_HANDLE_INVALID)
+  {
 }
 
-kore::Shader::~Shader(void) {
+kore::ShaderProgram::~ShaderProgram(void) {
 }
 
-bool kore::Shader::loadShader(const std::string& file, GLenum shadertype) {
-  if (_name == "") {
-    _name = file.substr(file.find_last_of("/")+1,
-                        file.find_last_of(".")
-                        - (file.find_last_of("/")+1));
-  }
+bool kore::ShaderProgram::loadShader(const std::string& file, GLenum shadertype) {
+  
+  
+  const char* tmp_prog;
+  GLuint shaderHandle;
 
-  kore::ResourceManager::getInstance()
-    ->addShader(file.substr(0, file.find_last_of(".")),
-                this);
+  switch
+  glShaderSource(vert_sh, 1, &tmp_prog, 0);
+  glCompileShader(vert_sh);
+  glAttachShader(_programHandle, vert_sh);
+
+  
 
   std::string* prog;
   switch (shadertype) {
@@ -93,50 +92,12 @@ bool kore::Shader::loadShader(const std::string& file, GLenum shadertype) {
   return true;
 }
 
-bool kore::Shader::initShader(void) {
-  GLuint vert_sh, geom_sh, frag_sh, tess_ctrl, tess_eval;
+bool kore::ShaderProgram::initShader(void) {
+  
   _programHandle = glCreateProgram();
-  const char* tmp_prog;
-  if (!_vertex_prog.empty()) {
-    tmp_prog = _vertex_prog.c_str();
-    vert_sh = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vert_sh, 1, &tmp_prog, 0);
-    glCompileShader(vert_sh);
-    glAttachShader(_programHandle, vert_sh);
-    _vertex_prog.clear();
-  }
-  if (!_geometry_prog.empty()) {
-    tmp_prog = _geometry_prog.c_str();
-    geom_sh = glCreateShader(GL_GEOMETRY_SHADER);
-    glShaderSource(geom_sh, 1, &tmp_prog, 0);
-    glCompileShader(geom_sh);
-    glAttachShader(_programHandle, geom_sh);
-    _geometry_prog.clear();
-  }
-  if (!_fragment_prog.empty()) {
-    tmp_prog = _fragment_prog.c_str();
-    frag_sh = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(frag_sh, 1, &tmp_prog, 0);
-    glCompileShader(frag_sh);
-    glAttachShader(_programHandle, frag_sh);
-    _fragment_prog.clear();
-  }
-  if (!_tess_ctrl.empty()) {
-    tmp_prog = _tess_ctrl.c_str();
-    tess_ctrl = glCreateShader(GL_TESS_CONTROL_SHADER);
-    glShaderSource(tess_ctrl, 1, &tmp_prog, 0);
-    glCompileShader(tess_ctrl);
-    glAttachShader(_programHandle, tess_ctrl);
-    _tess_ctrl.clear();
-  }
-  if (!_tess_eval.empty()) {
-    tmp_prog = _tess_eval.c_str();
-    tess_eval = glCreateShader(GL_TESS_EVALUATION_SHADER);
-    glShaderSource(tess_eval, 1, &tmp_prog, 0);
-    glCompileShader(tess_eval);
-    glAttachShader(_programHandle, tess_eval);
-    _tess_eval.clear();
-  }
+  
+  //if (_ver
+
 
   glLinkProgram(_programHandle);
   GLint success;
@@ -204,31 +165,31 @@ bool kore::Shader::initShader(void) {
   return success == GL_TRUE;
 }
 
-GLuint kore::Shader::getAttributeLocation(const std::string &name) {
+GLuint kore::ShaderProgram::getAttributeLocation(const std::string &name) {
   return 0;
 }
 
-GLuint kore::Shader::getUniformLocation(const std::string &name) {
+GLuint kore::ShaderProgram::getUniformLocation(const std::string &name) {
   return glGetUniformLocation(_programHandle, name.c_str());
 }
 
-GLuint kore::Shader::getProgramLocation() {
+GLuint kore::ShaderProgram::getProgramLocation() {
     return _programHandle;
 }
 
-const std::vector<kore::ShaderInput>& kore::Shader::getAttributes() const {
+const std::vector<kore::ShaderInput>& kore::ShaderProgram::getAttributes() const {
     return _attributes;
 }
 
-const std::vector<kore::ShaderInput>& kore::Shader::getUniforms() const {
+const std::vector<kore::ShaderInput>& kore::ShaderProgram::getUniforms() const {
     return _uniforms;
 }
 
-const std::vector<kore::ShaderOutput>& kore::Shader::getOutputs() const {
+const std::vector<kore::ShaderOutput>& kore::ShaderProgram::getOutputs() const {
     return _outputs;
 }
 
-void kore::Shader::constructShaderInputInfo(const GLenum activeType,
+void kore::ShaderProgram::constructShaderInputInfo(const GLenum activeType,
                                 std::vector<kore::ShaderInput>& rInputVector) {
     GLint iNumActiveElements = 0;
 
@@ -330,7 +291,7 @@ void kore::Shader::constructShaderInputInfo(const GLenum activeType,
 }
 
 
-void kore::Shader::constructShaderOutputInfo(std::vector<ShaderOutput>& 
+void kore::ShaderProgram::constructShaderOutputInfo(std::vector<ShaderOutput>& 
                                              rOutputVector) {
     GLint iNumActiveElements = 0;
 
@@ -371,7 +332,7 @@ void kore::Shader::constructShaderOutputInfo(std::vector<ShaderOutput>&
 
 
 
-bool kore::Shader::isSamplerType(const GLuint uniformType) {
+bool kore::ShaderProgram::isSamplerType(const GLuint uniformType) {
   switch (uniformType) {
     case GL_SAMPLER_1D:
     case GL_SAMPLER_2D:
@@ -416,7 +377,7 @@ bool kore::Shader::isSamplerType(const GLuint uniformType) {
 }
 
 const kore::ShaderInput*
-kore::Shader::getAttribute(const std::string& name) const {
+kore::ShaderProgram::getAttribute(const std::string& name) const {
   for (uint i = 0; i < _attributes.size(); ++i) {
     if (_attributes[i].name == name) {
       return &_attributes[i];
@@ -429,7 +390,7 @@ kore::Shader::getAttribute(const std::string& name) const {
 }
 
 const kore::ShaderInput*
-kore::Shader::getUniform(const std::string& name) const {
+kore::ShaderProgram::getUniform(const std::string& name) const {
   for (uint i = 0; i < _uniforms.size(); ++i) {
     if (_uniforms[i].name == name) {
       return &_uniforms[i];
@@ -441,7 +402,7 @@ kore::Shader::getUniform(const std::string& name) const {
   return NULL;
 }
 
-void kore::Shader::setSamplerProperties(const uint idx,
+void kore::ShaderProgram::setSamplerProperties(const uint idx,
                                    const TexSamplerProperties& properties) {
   if (idx > _vSamplers.size() - 1
       || properties == _vSamplers[idx]->getProperties()) {

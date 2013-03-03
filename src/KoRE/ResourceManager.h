@@ -27,7 +27,7 @@
 #include "KoRE/Mesh.h"
 #include "KoRE/Components/Camera.h"
 #include "KoRE/Components/LightComponent.h"
-#include "KoRE/Shader.h"
+#include "KoRE/ShaderProgram.h"
 #include "KoRE/Texture.h"
 #include "KoRE/SceneNode.h"
 #include "KoRE/SceneManager.h"
@@ -66,13 +66,19 @@ namespace kore {
     void addCamera(const std::string& path, CameraPtr camera);
     void addTexture(const std::string& path, TexturePtr texture);
     void addLight(const std::string& path, LightComponentPtr light);
-    void addShader(const std::string& path, Shader* shader);
+    void addShader(const std::string& path, GLuint shaderhandle);
     kore::MeshPtr getMesh(const std::string& path, const std::string& id);
     kore::CameraPtr getCamera(const std::string& path, const std::string& id);
     kore::LightComponentPtr getLight(const std::string& path,
                                      const std::string& id);
     kore::TexturePtr getTexture(const std::string& path);
-    kore::Shader* getShader(const std::string& path);
+
+    /*! \brief Returns a cached OpenGL shader object.
+    *   \param path The filepath to the shader-file.
+    *   \return Returns the handle to the shader object or
+                GLUINT_HANDLE_INVALID if there is no entry for this path yet.
+    */
+    GLuint getShaderHandle(const std::string& path);
 
     /*! \brief Returns the OpenGL texture sampler object with the provided 
     *          properties. 
@@ -105,7 +111,7 @@ namespace kore {
     OuterResourceMapT _cameras; // filepath, id, camera
     OuterResourceMapT _lights; // filepath, id, light
     std::map<std::string, kore::TexturePtr> _textures; // filepath, texture
-    std::map<std::string, kore::Shader*> _shader;
+    std::map<std::string, GLuint> _shaderHandles;
     std::vector<kore::TextureSampler> _textureSamplers;
   };
 };

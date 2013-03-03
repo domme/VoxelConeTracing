@@ -20,13 +20,13 @@
 #ifndef CORE_INCLUDE_CORE_BINDUNIFORM_H_
 #define CORE_INCLUDE_CORE_BINDUNIFORM_H_
 
-#include "KoRE/Operations/BindOperations/StandardOp.h"
+#include "KoRE/Operations/BindOperations/BindOperation.h"
 #include "KoRE/ShaderData.h"
 #include "KoRE/ShaderInput.h"
-#include "KoRE/Shader.h"
+#include "KoRE/ShaderProgram.h"
 
 namespace kore {
-  class BindUniform: public StandardOp {
+  class BindUniform: public BindOperation {
   public:
     BindUniform(void);
     BindUniform(const ShaderData* componentUni,

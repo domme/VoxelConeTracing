@@ -52,9 +52,9 @@ int main(int argc, char *argv[])
     kore::ResourceManager::getInstance()->loadScene("./assets/meshes/TestEnv.dae");
 
     // now widgets
-    //koregui::SceneViewer sview;
-    //sview.showScene(kore::SceneManager::getInstance()->getRootNode().get());
-    //sview.show();
+    koregui::SceneViewer sview;
+    sview.showScene(kore::SceneManager::getInstance()->getRootNode().get());
+    sview.show();
 
     koregui::RenderViewer rview;
     rview.show();

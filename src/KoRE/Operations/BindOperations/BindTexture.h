@@ -20,13 +20,13 @@
 #ifndef CORE_INCLUDE_CORE_BINDTEXTUREOP_H_
 #define CORE_INCLUDE_CORE_BINDTEXTUREOP_H_
 
-#include "KoRE/Operations/BindOperations/StandardOp.h"
+#include "KoRE/Operations/BindOperations/BindOperation.h"
 #include "KoRE/Texture.h"
 #include "KoRE/TextureSampler.h"
 #include "KoRE/RenderManager.h"
 
 namespace kore {
-  class BindTexture: public StandardOp {
+  class BindTexture: public BindOperation {
   public:
     BindTexture(void);
     BindTexture(const ShaderData* texData,

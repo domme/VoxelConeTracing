@@ -20,12 +20,12 @@
 #ifndef CORE_INCLUDE_CORE_BINDATTRIBUTEOP_H_
 #define CORE_INCLUDE_CORE_BINDATTRIBUTEOP_H_
 
-#include "KoRE/Operations/BindOperations/StandardOp.h"
+#include "KoRE/Operations/BindOperations/BindOperation.h"
 #include "KoRE/Components/MeshComponent.h"
-#include "KoRE/Shader.h"
+#include "KoRE/ShaderProgram.h"
 
 namespace kore {
-  class BindAttribute: public StandardOp {
+  class BindAttribute: public BindOperation {
   public:
     BindAttribute(void);
     BindAttribute(const ShaderData* meshData, const ShaderInput* shaderInput);

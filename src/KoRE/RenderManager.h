@@ -25,7 +25,7 @@
 #include "KoRE/Operations/Operation.h"
 #include "KoRE/Components/MeshComponent.h"
 #include "KoRE/Components/Camera.h"
-#include "KoRE/Shader.h"
+#include "KoRE/ShaderProgram.h"
 
 namespace kore {
   enum EOpInsertPos {
@@ -121,6 +121,7 @@ namespace kore {
     GLuint _boundSamplers[GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS];
     GLuint _boundFrameBuffers[2];
     std::map<GLuint, uint> _vTexTargetMap;
+    std::map<std::string, ShaderProgram*> _shaderProgramMap;
     //////////////////////////////////////////////////////////////////////////
   };
 };

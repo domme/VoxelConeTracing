@@ -217,7 +217,7 @@
     <ClCompile Include="src\KoRE\Operations\BindOperations\BindAttribute.cpp" />
     <ClCompile Include="src\KoRE\Operations\BindOperations\BindTexture.cpp" />
     <ClCompile Include="src\KoRE\Operations\BindOperations\BindUniform.cpp" />
-    <ClCompile Include="src\KoRE\Operations\BindOperations\StandardOp.cpp" />
+    <ClCompile Include="src\KoRE\Operations\BindOperations\BindOperation.cpp" />
     <ClCompile Include="src\KoRE\ShaderData.cpp" />
     <ClCompile Include="src\KoRE\ShaderInput.cpp" />
     <ClCompile Include="src\KoRE\ShaderOutput.cpp" />
@@ -246,7 +246,7 @@
     <ClInclude Include="src\KoRE\Operations\BindOperations\BindAttribute.h" />
     <ClInclude Include="src\KoRE\Operations\BindOperations\BindTexture.h" />
     <ClInclude Include="src\KoRE\Operations\BindOperations\BindUniform.h" />
-    <ClInclude Include="src\KoRE\Operations\BindOperations\StandardOp.h" />
+    <ClInclude Include="src\KoRE\Operations\BindOperations\BindOperation.h" />
     <ClInclude Include="src\KoRE\Operations\Operation.h" />
     <ClInclude Include="src\KoRE\Operations\RenderMesh.h" />
     <ClInclude Include="src\KoRE\Operations\SelectNodes.h" />
@@ -254,7 +254,7 @@
     <ClInclude Include="src\KoRE\ResourceManager.h" />
     <ClInclude Include="src\KoRE\SceneManager.h" />
     <ClInclude Include="src\KoRE\SceneNode.h" />
-    <ClInclude Include="src\KoRE\Shader.h" />
+    <ClInclude Include="src\KoRE\ShaderProgram.h" />
     <ClInclude Include="src\KoRE\ShaderData.h" />
     <ClInclude Include="src\KoRE\ShaderInput.h" />
     <ClInclude Include="src\KoRE\ShaderOutput.h" />
@@ -272,7 +272,7 @@
     <ClCompile Include="src\KoRE\ResourceManager.cpp" />
     <ClCompile Include="src\KoRE\SceneManager.cpp" />
     <ClCompile Include="src\KoRE\SceneNode.cpp" />
-    <ClCompile Include="src\KoRE\Shader.cpp" />
+    <ClCompile Include="src\KoRE\ShaderProgram.cpp" />
     <ClCompile Include="src\KoRE\StdAfx.cpp" />
     <ClInclude Include="src\KoRE\Texture.h" />
     <ClInclude Include="src\KoRE\TextureSampler.h" />

@@ -18,7 +18,7 @@
 */
 
 #include "KoRE/Operations/BindOperations/BindUniform.h"
-#include "KoRE/Shader.h"
+#include "KoRE/ShaderProgram.h"
 #include "KoRE/ShaderInput.h"
 #include "KoRE/ShaderData.h"
 #include "KoRE/Log.h"
@@ -27,13 +27,13 @@
 
 kore::BindUniform::BindUniform(void)
                            :_shaderHandle(GLUINT_HANDLE_INVALID),
-                            kore::StandardOp() {
+                            kore::BindOperation() {
   _type = OP_BINDUNIFORM;
 }
 
 kore::BindUniform::BindUniform(const ShaderData* componentUni,
                                const ShaderInput* shaderUni)
-                              : kore::StandardOp() {
+                              : kore::BindOperation() {
   _type = OP_BINDUNIFORM;
   connect(componentUni,shaderUni);
 }

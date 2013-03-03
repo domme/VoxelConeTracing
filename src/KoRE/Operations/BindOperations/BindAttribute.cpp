@@ -20,13 +20,13 @@
 #include "KoRE/RenderManager.h"
 #include "KoRE/GLerror.h"
 
-kore::BindAttribute::BindAttribute(void) : kore::StandardOp() {
+kore::BindAttribute::BindAttribute(void) : kore::BindOperation() {
   _type = OP_BINDATTRIBUTE;
 }
 
 kore::BindAttribute::BindAttribute(const ShaderData* meshData,
                                    const ShaderInput* shaderInput)
-                                   : kore::StandardOp() {
+                                   : kore::BindOperation() {
   connect(meshData, shaderInput);
 }
 

@@ -43,9 +43,6 @@
     <ClCompile Include="src\KoRE\SceneNode.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\KoRE\Shader.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\KoRE\StdAfx.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -91,9 +88,6 @@
     <ClCompile Include="src\KoRE\ShaderOutput.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\KoRE\Operations\BindOperations\StandardOp.cpp">
-      <Filter>src\Operations\BindOperations</Filter>
-    </ClCompile>
     <ClCompile Include="src\KoRE\Operations\BindOperations\BindAttribute.cpp">
       <Filter>src\Operations\BindOperations</Filter>
     </ClCompile>
@@ -105,6 +99,12 @@
     </ClCompile>
     <ClCompile Include="src\KoRE\CompatibleNodeGroup.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KoRE\ShaderProgram.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KoRE\Operations\BindOperations\BindOperation.cpp">
+      <Filter>src\Operations\BindOperations</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -151,9 +151,6 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\KoRE\SceneNode.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\KoRE\Shader.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\KoRE\StdAfx.h">
@@ -210,9 +207,6 @@
     <ClInclude Include="src\KoRE\Operations\BindOperations\BindUniform.h">
       <Filter>src\Operations\BindOperations</Filter>
     </ClInclude>
-    <ClInclude Include="src\KoRE\Operations\BindOperations\StandardOp.h">
-      <Filter>src\Operations\BindOperations</Filter>
-    </ClInclude>
     <ClInclude Include="src\KoRE\Operations\BindOperations\BindAttribute.h">
       <Filter>src\Operations\BindOperations</Filter>
     </ClInclude>
@@ -221,6 +215,12 @@
     </ClInclude>
     <ClInclude Include="src\KoRE\CompatibleNodeGroup.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\ShaderProgram.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\Operations\BindOperations\BindOperation.h">
+      <Filter>src\Operations\BindOperations</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

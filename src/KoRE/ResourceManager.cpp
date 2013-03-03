@@ -93,9 +93,9 @@ void kore::ResourceManager::addLight(const std::string& path,
 }
 
 void kore::ResourceManager::addShader(const std::string& name,
-                                      kore::Shader* shader){
-  if (_shader.find(name) == _shader.end())
-  _shader[name] = shader;
+                                      GLuint shaderhandle){
+  if (_shaderHandles.find(name) == _shaderHandles.end())
+  _shaderHandles[name] = shaderhandle;
 }
 
 void kore::ResourceManager::addTexture(const std::string& path,
@@ -132,37 +132,15 @@ kore::LightComponentPtr
 }
 
 kore::TexturePtr kore::ResourceManager::getTexture(const std::string& path) {
-  /*if(_textures.count(path) == 0) {
+  if(_textures.count(path) == 0) {
     return TexturePtr();  // NULL
   }
-  return _textures[path];*/
-  return (_textures.count(path) == 0)?TexturePtr():_textures[path];
+  return _textures[path];
 }
 
-
-kore::Shader* kore::ResourceManager::getShader(const std::string& path){
-  return (_shader.find(path) != _shader.end())?_shader[path]:NULL;
-}
-
-const kore::TextureSampler*
-  kore::ResourceManager::
-  getTextureSampler(const TexSamplerProperties& properties) {
-  // First look for a sampler that satisfies the provided properties
-  for (uint i = 0; i < _textureSamplers.size(); ++i) {
-    if (_textureSamplers[i].getProperties() == properties) {
-          return &_textureSamplers[i];
-    }
+GLuint kore::ResourceManager::getShaderHandle(const std::string& path) {
+  if(_shaderHandles.count(path) == 0) {
+    return GLUINT_HANDLE_INVALID;
   }
-
-  // Otherwise: Construct a new Sampler
-  TextureSampler sampler;
-  bool success = sampler.create(properties);
-
-  if (!success) {
-    Log::getInstance()->write("[ERROR] TextureSampler creation failed!");
-    return NULL;
-  }
-
-  _textureSamplers.push_back(sampler);
-  return &_textureSamplers[_textureSamplers.size() - 1];
+  return _shaderHandles[path];
 }

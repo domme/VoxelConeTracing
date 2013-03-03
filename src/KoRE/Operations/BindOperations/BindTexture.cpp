@@ -2,13 +2,13 @@
 #include "KoRE/GLerror.h"
 
 kore::BindTexture::BindTexture()
-: StandardOp() {
+: BindOperation() {
     init();
 }
 
 kore::BindTexture::BindTexture(const kore::ShaderData* texData,
                                const kore::ShaderInput* shaderInput) 
-: StandardOp() {
+: BindOperation() {
   init();
   connect(texData, shaderInput);
 }

@@ -23,7 +23,7 @@
 #include "KoRE/Operations/Operation.h"
 #include "KoRE/Components/MeshComponent.h"
 #include "KoRE/Components/Camera.h"
-#include "KoRE/Shader.h"
+#include "KoRE/ShaderProgram.h"
 
 namespace kore {
   class RenderMesh: public Operation {

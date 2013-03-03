@@ -122,7 +122,7 @@ int main(void) {
   glCullFace(GL_BACK);
 
   // load shader
-  kore::ShaderPtr pSimpleShader(new kore::Shader);
+  kore::ShaderPtr pSimpleShader(new kore::ShaderProgram);
   pSimpleShader->loadShader("./assets/shader/normalColor.vp",
                             GL_VERTEX_SHADER);
   pSimpleShader->loadShader("./assets/shader/normalColor.fp",
