@@ -56,6 +56,10 @@ kore::RenderManager::RenderManager(void) {
 
   memset(_boundFrameBuffers, 0, sizeof(GLuint) * 2);
 
+  memset(_drawBuffers, 0, sizeof(bool) * 
+                          KORE_MAX_FRAMEBUFFER_COUNT *
+                          GL_MAX_DRAW_BUFFERS);
+
   activeTexture(GL_TEXTURE0);  // Activate texture unit 0 by default
 }
 
@@ -149,6 +153,16 @@ void kore::RenderManager::removeOperation(const OperationPtr& op) {
   removeOperation(op.get());
 }
 
+
+void kore::RenderManager::onRemoveComponent(const SceneNodeComponent* comp) {
+  auto iter = _operations.begin();
+  for (; iter != _operations.end(); ++iter) {
+    if ((*iter)->dependsOn(static_cast<const void*>(comp))) {
+      _operations.erase(iter);
+    }
+  }
+}
+
 // OpenGL-Wrappers:
 void kore::RenderManager::bindVBO(const GLuint vbo) {
   if (_vbo != vbo) {
@@ -232,11 +246,28 @@ void kore::RenderManager::bindFrameBuffer(const GLuint fboTarget,
   }
 }
 
-void kore::RenderManager::onRemoveComponent(const SceneNodeComponent* comp) {
-  auto iter = _operations.begin();
-  for (; iter != _operations.end(); ++iter) {
-    if ((*iter)->dependsOn(static_cast<const void*>(comp))) {
-     _operations.erase(iter);
+void kore::RenderManager::drawBuffers(const GLuint fboHandle,
+                                      const uint num,
+                                      const GLuint* buffers) {
+  bool different = false;
+  for (uint i = 0; i < GL_MAX_DRAW_BUFFERS; ++i) {
+    bool hasBuffer = false;
+    for (uint iBuffer = 0; iBuffer < num; ++iBuffer) {
+      if (GL_COLOR_ATTACHMENT0 + i == buffers[iBuffer]) {
+        hasBuffer = true;
+        if (_drawBuffers[fboHandle][i] != true) {
+          _drawBuffers[fboHandle][i] = true;
+          different = true;
+        }
+      }
     }
+    if (!hasBuffer && _drawBuffers[fboHandle][i] == true) {
+      _drawBuffers[fboHandle][i] = false;
+      different = true;
+    }
+  }
+
+  if (different) {
+    glDrawBuffers(num, buffers);
   }
 }

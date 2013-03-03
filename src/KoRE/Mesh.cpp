@@ -29,21 +29,21 @@
 kore::Mesh::Mesh(void)
     : _numVertices(0),
     _primitiveType(GL_TRIANGLES),
-    _VAOloc(GLUINT_HANDLE_INVALID),
-    _VBOloc(GLUINT_HANDLE_INVALID),
-    _IBOloc(GLUINT_HANDLE_INVALID) {
+    _VAOloc(KORE_GLUINT_HANDLE_INVALID),
+    _VBOloc(KORE_GLUINT_HANDLE_INVALID),
+    _IBOloc(KORE_GLUINT_HANDLE_INVALID) {
 }
 
 kore::Mesh::~Mesh(void) {
-    if (_IBOloc != GLUINT_HANDLE_INVALID) {
+    if (_IBOloc != KORE_GLUINT_HANDLE_INVALID) {
       glDeleteBuffers(1, &_IBOloc);
     }
 
-    if (_VBOloc != GLUINT_HANDLE_INVALID) {
+    if (_VBOloc != KORE_GLUINT_HANDLE_INVALID) {
       glDeleteBuffers(1, &_VBOloc);
     }
 
-    if(_VAOloc != GLUINT_HANDLE_INVALID) {
+    if(_VAOloc != KORE_GLUINT_HANDLE_INVALID) {
       glDeleteBuffers(1, &_VAOloc);
     }
 }
@@ -77,7 +77,7 @@ bool kore::Mesh::isCompatibleWith(const Mesh& otherMesh) {
 }
 
 const bool kore::Mesh::usesIBO() const {
-  return _IBOloc != GLUINT_HANDLE_INVALID;
+  return _IBOloc != KORE_GLUINT_HANDLE_INVALID;
 }
 
 const GLuint kore::Mesh::getVBO() const {

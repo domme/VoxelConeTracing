@@ -43,10 +43,13 @@
 
 // Typedefs:
 typedef unsigned int uint;
-//typedef uint64_t uint64;
+// typedef uint64_t uint64;
 typedef long uint64;
 typedef glm::half float16;
 typedef double float64;
+
+// maximum number of FBO's that KoRE can handle
+#define MAX_FRAMEBUFFER_COUNT 64
 
 // Use this to indicate an invalid GL-handle of type GLuint
 #define GLUINT_HANDLE_INVALID 0xFFFFFFFF

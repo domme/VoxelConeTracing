@@ -22,9 +22,9 @@
 kore::ShaderInput::ShaderInput(void)
   : type(GL_NONE),
   size(1),
-  texUnit(GLUINT_HANDLE_INVALID),
-  location(GLINT_HANDLE_INVALID),
+  texUnit(KORE_GLUINT_HANDLE_INVALID),
+  location(KORE_GLINT_HANDLE_INVALID),
   name("UNDEFINED"),
-  programHandle(GLUINT_HANDLE_INVALID),
+  programHandle(KORE_GLUINT_HANDLE_INVALID),
   shader(NULL){
 }

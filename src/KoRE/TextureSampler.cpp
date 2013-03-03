@@ -2,7 +2,7 @@
 #include "KoRE/GLerror.h"
 
 kore::TextureSampler::TextureSampler() 
-  : _handle(GLUINT_HANDLE_INVALID) {}
+  : _handle(KORE_GLUINT_HANDLE_INVALID) {}
 
 kore::TextureSampler::~TextureSampler() {
   destroy();
@@ -23,9 +23,9 @@ bool kore::TextureSampler::create(const TexSamplerProperties& properties) {
 }
 
 void kore::TextureSampler::destroy() {
-  if (_handle != GLUINT_HANDLE_INVALID) {
+  if (_handle != KORE_GLUINT_HANDLE_INVALID) {
     glDeleteSamplers(1, &_handle);
-    _handle = GLUINT_HANDLE_INVALID;
+    _handle = KORE_GLUINT_HANDLE_INVALID;
   }
 }
 

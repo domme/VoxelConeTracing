@@ -56,7 +56,7 @@ void kore::BindAttribute::execute(void) {
                         meshAtt->componentType,
                         GL_FALSE,
                         meshAtt->stride,
-                        BUFFER_OFFSET((uint)meshAtt->data));
+                        KORE_BUFFER_OFFSET((uint)meshAtt->data));
   GLerror::gl_ErrorCheckFinish("BindAttribute " + _shaderUniform->name);
 }
 

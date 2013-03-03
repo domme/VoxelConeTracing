@@ -22,7 +22,7 @@
 #include "KoRE/SceneNode.h"
 
 kore::SceneNodeComponent::SceneNodeComponent()
-  : _id(UINT_INVALID),
+  : _id(KORE_UINT_INVALID),
     _sceneNode(NULL),
     _type(COMPONENT_UNKNOWN) {
 }

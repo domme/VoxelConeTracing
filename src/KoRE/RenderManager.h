@@ -1,5 +1,5 @@
 /*
-  Copyright © 2012 The KoRE Project
+  Copyright (c) 2012 The KoRE Project
 
   This file is part of KoRE.
 
@@ -96,13 +96,18 @@ namespace kore {
                      const GLuint samplerHandle);
     void bindFrameBuffer(const GLuint fboTarget,
                          const GLuint fboHandle);
+
+    /*! \brief Wrapper for glDrawBuffers(..) */
+    void drawBuffers(const GLuint fboHandle,
+                     const uint num,
+                     const GLuint* buffers);
+
     /**
       Sets the active texture unit(glActiveTexture).
       Note that the argument is an index to a texture unit (e.g. the "i" in
       glActiveTexture(GL_TEXTURE0 + i)
     */
     void activeTexture(const GLuint activeTextureUnitIndex);
-
     //////////////////////////////////////////////////////////////////////////
 
   private:
@@ -124,6 +129,8 @@ namespace kore {
                          [NUM_TEXTURE_TARGETS];
     GLuint _boundSamplers[GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS];
     GLuint _boundFrameBuffers[2];
+    bool   _drawBuffers[KORE_MAX_FRAMEBUFFER_COUNT]
+                       [GL_MAX_DRAW_BUFFERS];
     std::map<GLuint, uint> _vTexTargetMap;
     std::map<std::string, const ShaderProgram*> _shaderProgramMap;
     //////////////////////////////////////////////////////////////////////////

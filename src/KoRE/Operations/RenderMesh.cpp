@@ -81,7 +81,7 @@ void kore::RenderMesh::execute(void) {
     // Indices with IBO
     else if (mesh->hasIndices() && mesh->usesIBO()) {
       glDrawElements(mesh->getPrimitiveType(), mesh->getIndices().size(),
-                     GL_UNSIGNED_INT, BUFFER_OFFSET(0));
+                     GL_UNSIGNED_INT, KORE_BUFFER_OFFSET(0));
     }
 
     // No Indices

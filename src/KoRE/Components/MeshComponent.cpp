@@ -79,7 +79,7 @@ void kore::MeshComponent::setMesh(MeshPtr& mesh) {
 
 void kore::MeshComponent::destroyAttributes() {
   for (uint i = 0; i < _shaderData.size(); ++i) {
-    SAFE_DELETE(_shaderData[i].data);
+    KORE_SAFE_DELETE(_shaderData[i].data);
   }
 
   _shaderData.clear();
