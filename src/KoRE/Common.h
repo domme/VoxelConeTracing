@@ -49,6 +49,9 @@ typedef glm::half float16;
 typedef double float64;
 
 // maximum number of FBO's that KoRE can handle
+#define MAX_FRAMEBUFFER_COUNT 64
+
+// maximum number of FBO's that KoRE can handle
 #define KORE_MAX_FRAMEBUFFER_COUNT 64
 
 // Use this to indicate an invalid GL-handle of type GLuint
