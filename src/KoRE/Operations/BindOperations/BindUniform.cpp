@@ -26,7 +26,7 @@
 #include "KoRE/Components/SceneNodeComponent.h"
 
 kore::BindUniform::BindUniform(void)
-                           :_shaderHandle(GLUINT_HANDLE_INVALID),
+                           :_shaderHandle(KORE_GLUINT_HANDLE_INVALID),
                             kore::BindOperation() {
   _type = OP_BINDUNIFORM;
 }
@@ -46,11 +46,11 @@ void kore::BindUniform::connect(const kore::ShaderData* componentUni,
     if(!componentUni
       || !shaderUni
       || componentUni->type != shaderUni->type
-      || shaderUni->programHandle == GLUINT_HANDLE_INVALID
+      || shaderUni->programHandle == KORE_GLUINT_HANDLE_INVALID
       || componentUni->size != shaderUni->size) {
         _componentUniform = NULL;
         _shaderUniform = NULL;
-        _shaderHandle = GLUINT_HANDLE_INVALID;
+        _shaderHandle = KORE_GLUINT_HANDLE_INVALID;
     } else {
 
       _componentUniform = componentUni;

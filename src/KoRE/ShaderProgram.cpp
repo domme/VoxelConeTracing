@@ -29,12 +29,12 @@ const unsigned int BUFSIZE = 100;  // Buffer length for shader-element names
 
 kore::ShaderProgram::ShaderProgram()
   : _name(""),
-  _programHandle(GLUINT_HANDLE_INVALID),
-  _vertex_prog(GLUINT_HANDLE_INVALID),
-  _geometry_prog(GLUINT_HANDLE_INVALID),
-  _fragment_prog(GLUINT_HANDLE_INVALID),
-  _tess_ctrl(GLUINT_HANDLE_INVALID),
-  _tess_eval(GLUINT_HANDLE_INVALID)
+  _programHandle(KORE_GLUINT_HANDLE_INVALID),
+  _vertex_prog(KORE_GLUINT_HANDLE_INVALID),
+  _geometry_prog(KORE_GLUINT_HANDLE_INVALID),
+  _fragment_prog(KORE_GLUINT_HANDLE_INVALID),
+  _tess_ctrl(KORE_GLUINT_HANDLE_INVALID),
+  _tess_eval(KORE_GLUINT_HANDLE_INVALID)
   {
 }
 
@@ -45,7 +45,7 @@ kore::ShaderProgram::~ShaderProgram(void) {
 
 void kore::ShaderProgram::destroyProgram() {
   glDeleteProgram(_programHandle);
-  _programHandle = GLUINT_HANDLE_INVALID;
+  _programHandle = KORE_GLUINT_HANDLE_INVALID;
   _outputs.clear();
   _name = "";
   _uniforms.clear();
@@ -53,11 +53,11 @@ void kore::ShaderProgram::destroyProgram() {
 }
 
 void kore::ShaderProgram::destroyShaders() {
-  _vertex_prog = GLUINT_HANDLE_INVALID;
-  _geometry_prog = GLUINT_HANDLE_INVALID;
-  _fragment_prog = GLUINT_HANDLE_INVALID;
-  _tess_ctrl = GLUINT_HANDLE_INVALID;
-  _tess_eval = GLUINT_HANDLE_INVALID;
+  _vertex_prog = KORE_GLUINT_HANDLE_INVALID;
+  _geometry_prog = KORE_GLUINT_HANDLE_INVALID;
+  _fragment_prog = KORE_GLUINT_HANDLE_INVALID;
+  _tess_ctrl = KORE_GLUINT_HANDLE_INVALID;
+  _tess_eval = KORE_GLUINT_HANDLE_INVALID;
 }
 
 
@@ -65,7 +65,7 @@ bool kore::ShaderProgram::loadShader(const std::string& file,
                                      GLenum shadertype) {
   GLuint shaderHandle = ResourceManager::getInstance()->getShaderHandle(file);
   
-  if (shaderHandle == GLUINT_HANDLE_INVALID) {  // Shader not found in cache.
+  if (shaderHandle == KORE_GLUINT_HANDLE_INVALID) {  // Shader not found in cache.
     std::string progSrc;
     shaderHandle = glCreateShader(shadertype);
 
@@ -118,29 +118,29 @@ bool kore::ShaderProgram::loadShader(const std::string& file,
 }
 
 bool kore::ShaderProgram::initShader(const std::string& name) {
-  if (_programHandle != GLUINT_HANDLE_INVALID) {
+  if (_programHandle != KORE_GLUINT_HANDLE_INVALID) {
     destroyProgram();
   }
 
   _programHandle = glCreateProgram();
   
-  if (_vertex_prog != GLUINT_HANDLE_INVALID) {
+  if (_vertex_prog != KORE_GLUINT_HANDLE_INVALID) {
     glAttachShader(_programHandle, _vertex_prog);
   }
 
-  if (_fragment_prog != GLUINT_HANDLE_INVALID) {
+  if (_fragment_prog != KORE_GLUINT_HANDLE_INVALID) {
     glAttachShader(_programHandle, _fragment_prog);
   }
 
-  if (_geometry_prog != GLUINT_HANDLE_INVALID) {
+  if (_geometry_prog != KORE_GLUINT_HANDLE_INVALID) {
     glAttachShader(_programHandle, _geometry_prog);
   }
 
-  if (_tess_ctrl != GLUINT_HANDLE_INVALID) {
+  if (_tess_ctrl != KORE_GLUINT_HANDLE_INVALID) {
     glAttachShader(_programHandle, _tess_ctrl);
   }
 
-  if (_tess_eval != GLUINT_HANDLE_INVALID) {
+  if (_tess_eval != KORE_GLUINT_HANDLE_INVALID) {
     glAttachShader(_programHandle, _tess_eval);
   }
 

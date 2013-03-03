@@ -54,7 +54,7 @@ void kore::SceneManager::addTag(const std::string& name) {
 
 const uint kore::SceneManager::getTag(const std::string& name) {
   return (_tagmap.find(name) !=
-    _tagmap.end())?_tagmap.find(name)->second:TAG_INVALID;
+    _tagmap.end())?_tagmap.find(name)->second:KORE_TAG_INVALID;
 }
 
 void kore::SceneManager::
@@ -66,7 +66,7 @@ void kore::SceneManager::
 void kore::SceneManager::getSceneNodesByTag(const std::string& name,
                                      std::vector<SceneNodePtr>& vSceneNodes) {
   const uint uTag = getTag(name);
-  if (uTag != TAG_INVALID) {
+  if (uTag != KORE_TAG_INVALID) {
       getSceneNodesByTag(uTag, vSceneNodes);
   }
 }

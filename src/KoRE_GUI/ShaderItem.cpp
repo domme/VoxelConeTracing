@@ -30,10 +30,10 @@
 #include "KoRE/ShaderInput.h"
 #include "KoRE/ShaderData.h"
 
-koregui::ShaderItem::ShaderItem(kore::Shader* shader,
-                                      QGraphicsItem* parent) 
-                                    : _shader(shader),
-                                      QGraphicsItem(parent) {
+koregui::ShaderItem::ShaderItem(const kore::ShaderProgram* shader,
+                                QGraphicsItem* parent) 
+                              : _shader(const_cast<kore::ShaderProgram*>(shader)),
+                                QGraphicsItem(parent) {
   setFlag(QGraphicsItem::ItemIsMovable, true);
   refresh();
 }

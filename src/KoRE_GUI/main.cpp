@@ -42,19 +42,19 @@ int main(int argc, char *argv[])
     GLWindow win;
 
     // load kore resources and scene
-    kore::Shader* simpleShader = new kore::Shader();
+    kore::ShaderProgram* simpleShader = new kore::ShaderProgram();
     simpleShader->loadShader("./assets/shader/normalColor.vp",
       GL_VERTEX_SHADER);
     simpleShader->loadShader("./assets/shader/normalColor.fp",
       GL_FRAGMENT_SHADER);
-    simpleShader->initShader();
+    simpleShader->initShader("MegaShader");
 
     kore::ResourceManager::getInstance()->loadScene("./assets/meshes/TestEnv.dae");
 
     // now widgets
-    koregui::SceneViewer sview;
-    sview.showScene(kore::SceneManager::getInstance()->getRootNode().get());
-    sview.show();
+    //koregui::SceneViewer sview;
+    //sview.showScene(kore::SceneManager::getInstance()->getRootNode().get());
+    //sview.show();
 
     koregui::RenderViewer rview;
     rview.show();

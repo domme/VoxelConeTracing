@@ -15,9 +15,9 @@ namespace kore {
         height(0),
         depth(0),
         border(0),
-        pixelType(GLUINT_HANDLE_INVALID),
-        targetType(GLUINT_HANDLE_INVALID),
-        format(GLUINT_HANDLE_INVALID) {
+        pixelType(KORE_GLUINT_HANDLE_INVALID),
+        targetType(KORE_GLUINT_HANDLE_INVALID),
+        format(KORE_GLUINT_HANDLE_INVALID) {
     }
 
     /// The x-resolution of the texture.

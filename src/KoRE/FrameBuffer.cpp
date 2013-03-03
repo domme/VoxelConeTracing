@@ -23,7 +23,7 @@
 #include "KoRE/GLerror.h"
 
 kore::FrameBuffer::FrameBuffer(void)
-: _handle(GLUINT_HANDLE_INVALID) {
+: _handle(KORE_GLUINT_HANDLE_INVALID) {
   glGenFramebuffers(1, &_handle);
   kore::RenderManager::getInstance()->bindFrameBuffer(GL_FRAMEBUFFER, _handle);
 }
@@ -32,7 +32,7 @@ kore::FrameBuffer::~FrameBuffer(void) {
   glDeleteFramebuffers(1, &_handle);
 
   for (uint i = 0; i < _textureInfos.size(); ++i) {
-    SAFE_DELETE(_textureInfos[i]);
+    KORE_SAFE_DELETE(_textureInfos[i]);
   }
 }
 
@@ -91,7 +91,7 @@ const kore::TexturePtr
 }
 
 bool kore::FrameBuffer::checkFBOcompleteness() {
-  if (_handle == GLUINT_HANDLE_INVALID) {
+  if (_handle == KORE_GLUINT_HANDLE_INVALID) {
     return false;
   }
 

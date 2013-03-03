@@ -35,7 +35,7 @@
 #include <glm/gtc/matrix_inverse.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "KoRE/Shader.h"
+#include "KoRE/ShaderProgram.h"
 #include "KoRE/Mesh.h"
 #include "KoRE/ResourceManager.h"
 #include "KoRE/RenderManager.h"

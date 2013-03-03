@@ -6,7 +6,7 @@ kore::TexturesComponent::TexturesComponent(void) {
 
 kore::TexturesComponent::~TexturesComponent(void) {
   for (uint i = 0; i < _vTextureInfos.size(); ++i) {
-    SAFE_DELETE(_vTextureInfos[i]);
+    KORE_SAFE_DELETE(_vTextureInfos[i]);
   }
 }
 

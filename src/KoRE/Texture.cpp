@@ -3,7 +3,7 @@
 #include "KoRE/GLerror.h"
 
 kore::Texture::Texture()
-                    : _handle(GLUINT_HANDLE_INVALID),
+                    : _handle(KORE_GLUINT_HANDLE_INVALID),
                       _resourcepath("")
                      {
 }
@@ -91,19 +91,19 @@ bool kore::Texture::create(const STextureProperties& properties,
 }
 
 void kore::Texture::genMipmapHierarchy() {
-  if (_handle != GLUINT_HANDLE_INVALID) {
+  if (_handle != KORE_GLUINT_HANDLE_INVALID) {
     glBindTexture(_properties.targetType, _handle);
     glGenerateMipmap(_properties.targetType);
   }
 }
 
 void kore::Texture::destroy() {
-  if (_handle == GLUINT_HANDLE_INVALID) {
+  if (_handle == KORE_GLUINT_HANDLE_INVALID) {
     return;
   }
 
   glDeleteTextures(1, &_handle);
-  _handle = GLUINT_HANDLE_INVALID;
+  _handle = KORE_GLUINT_HANDLE_INVALID;
   _resourcepath = "";
   _properties = STextureProperties();
 }

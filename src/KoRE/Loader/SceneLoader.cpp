@@ -125,7 +125,7 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
     _nodecount++;
 
     // Load light if this node has one
-    uint lightIndex = UINT_INVALID;
+    uint lightIndex = KORE_UINT_INVALID;
     for (uint i = 0; i < aiscene->mNumLights; ++i) {
       const aiLight* pAiLight = aiscene->mLights[i];
       std::string lightName = std::string(pAiLight->mName.C_Str());
@@ -135,7 +135,7 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
       }
     }
 
-    if (lightIndex != UINT_INVALID) {
+    if (lightIndex != KORE_UINT_INVALID) {
       const aiLight* pAiLight = aiscene->mLights[lightIndex];
       std::string lightName = getLightName(pAiLight, lightIndex);
       LightComponentPtr pLight = ResourceManager::getInstance()
@@ -146,7 +146,7 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
     }
 
     // Determine if this node has a camera
-    uint camIndex = UINT_INVALID;
+    uint camIndex = KORE_UINT_INVALID;
     for (uint i = 0; i < aiscene->mNumCameras; ++i) {
       const aiCamera* pAiCam = aiscene->mCameras[i];
       std::string camName = std::string(pAiCam->mName.C_Str());
@@ -156,7 +156,7 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
       }
     }
 
-    if (camIndex != UINT_INVALID) {
+    if (camIndex != KORE_UINT_INVALID) {
       const aiCamera* pAiCam = aiscene->mCameras[camIndex];
       std::string camName = getCameraName(pAiCam, camIndex);
       CameraPtr pCamera = ResourceManager::getInstance()

@@ -137,7 +137,7 @@ kore::TexturePtr kore::ResourceManager::getTexture(const std::string& path) {
 
 GLuint kore::ResourceManager::getShaderHandle(const std::string& path) {
   if (_shaderHandles.count(path) == 0) {
-    return GLUINT_HANDLE_INVALID;
+    return KORE_GLUINT_HANDLE_INVALID;
   }
   return _shaderHandles[path];
 }

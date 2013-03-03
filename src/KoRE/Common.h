@@ -43,21 +43,24 @@
 
 // Typedefs:
 typedef unsigned int uint;
-//typedef uint64_t uint64;
+// typedef uint64_t uint64;
 typedef long uint64;
 typedef glm::half float16;
 typedef double float64;
 
-// Use this to indicate an invalid GL-handle of type GLuint
-#define GLUINT_HANDLE_INVALID 0xFFFFFFFF
-#define GLINT_HANDLE_INVALID -1
-#define UINT_INVALID 0xFFFFFFFF
-#define UINT64_INVALID 0xFFFFFFFFFFFFFFFF
-#define TAG_INVALID 0x00000000
+// maximum number of FBO's that KoRE can handle
+#define KORE_MAX_FRAMEBUFFER_COUNT 64
 
-#define SAFE_DELETE(p) if (p) { delete p; p = NULL; }
-#define SAFE_DELETE_ARR(p) if (p[ 0 ]) delete[] p;
-#define BUFFER_OFFSET(i) (reinterpret_cast<char*>(NULL + (i)))
+// Use this to indicate an invalid GL-handle of type GLuint
+#define KORE_GLUINT_HANDLE_INVALID 0xFFFFFFFF
+#define KORE_GLINT_HANDLE_INVALID -1
+#define KORE_UINT_INVALID 0xFFFFFFFF
+#define KORE_UINT64_INVALID 0xFFFFFFFFFFFFFFFF
+#define KORE_TAG_INVALID 0x00000000
+
+#define KORE_SAFE_DELETE(p) if (p) { delete p; p = NULL; }
+#define KORE_SAFE_DELETE_ARR(p) if (p[ 0 ]) delete[] p;
+#define KORE_BUFFER_OFFSET(i) (reinterpret_cast<char*>(NULL + (i)))
 //#define STATIC_ASSERT(expression) {int __static_assert_checkArray[1]; __static_assert_checkArray[expression-1];}
 
 
