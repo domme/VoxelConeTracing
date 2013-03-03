@@ -1,5 +1,5 @@
 /*
-  Copyright © 2012 The KoRE Project
+  Copyright (c) 2012 The KoRE Project
 
   This file is part of KoRE.
 
@@ -66,10 +66,28 @@ const glm::ivec2& kore::RenderManager::getRenderResolution() const {
     return _renderResolution;
 }
 
+const kore::ShaderProgram* kore::RenderManager
+  ::getShaderProgram(const std::string& name) {
+  if (_shaderProgramMap.count(name)) {
+    return _shaderProgramMap[name];
+  }
+  return NULL;
+}
+
 void kore::RenderManager::
     setRenderResolution(const glm::ivec2& newResolution) {
     _renderResolution = newResolution;
     resolutionChanged();
+}
+
+void kore::RenderManager::addShaderProgram(const std::string& name,
+                                           const ShaderProgram* program) {
+  if(_shaderProgramMap.count(name)> 0) {
+    kore::Log::getInstance()
+      ->write("[ERROR] Shader '%s' already in RenderManager\n", name.c_str());
+    return;
+  }
+  _shaderProgramMap[name] = program;
 }
 
 void kore::RenderManager::renderFrame(void) {

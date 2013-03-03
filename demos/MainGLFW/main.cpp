@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 The KoRE Project
+ Copyright (c) 2012 The KoRE Project
 
   This file is part of KoRE.
 
@@ -31,7 +31,7 @@
 #include <vector>
 
 #include "KoRE/GLerror.h"
-#include "KoRE/Shader.h"
+#include "KoRE/ShaderProgram.h"
 #include "KoRE/Components/MeshComponent.h"
 #include "KoRE/Components/TexturesComponent.h"
 #include "KoRE/Operations/RenderMesh.h"
@@ -127,7 +127,7 @@ int main(void) {
                             GL_VERTEX_SHADER);
   pSimpleShader->loadShader("./assets/shader/normalColor.fp",
                             GL_FRAGMENT_SHADER);
-  pSimpleShader->initShader();
+  pSimpleShader->initShader("cooler Shader");
 
   // load resources
   kore::ResourceManager::getInstance()

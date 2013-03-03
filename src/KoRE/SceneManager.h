@@ -29,6 +29,7 @@
 namespace kore {
   class SceneManager {
   public:
+    friend class ProjectLoader;
     static SceneManager *getInstance(void);
     uint64 createID(void);
     void update(void);

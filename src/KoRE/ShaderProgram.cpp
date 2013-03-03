@@ -39,93 +39,118 @@ kore::ShaderProgram::ShaderProgram()
 }
 
 kore::ShaderProgram::~ShaderProgram(void) {
+  destroyProgram();
+  destroyShaders();
 }
 
-bool kore::ShaderProgram::loadShader(const std::string& file, GLenum shadertype) {
-  
-  
-  const char* tmp_prog;
-  GLuint shaderHandle;
+void kore::ShaderProgram::destroyProgram() {
+  glDeleteProgram(_programHandle);
+  _programHandle = GLUINT_HANDLE_INVALID;
+  _outputs.clear();
+  _name = "";
+  _uniforms.clear();
+  _attributes.clear();
+}
 
-  switch
-  glShaderSource(vert_sh, 1, &tmp_prog, 0);
-  glCompileShader(vert_sh);
-  glAttachShader(_programHandle, vert_sh);
+void kore::ShaderProgram::destroyShaders() {
+  _vertex_prog = GLUINT_HANDLE_INVALID;
+  _geometry_prog = GLUINT_HANDLE_INVALID;
+  _fragment_prog = GLUINT_HANDLE_INVALID;
+  _tess_ctrl = GLUINT_HANDLE_INVALID;
+  _tess_eval = GLUINT_HANDLE_INVALID;
+}
 
+
+bool kore::ShaderProgram::loadShader(const std::string& file,
+                                     GLenum shadertype) {
+  GLuint shaderHandle = ResourceManager::getInstance()->getShaderHandle(file);
   
+  if (shaderHandle == GLUINT_HANDLE_INVALID) {  // Shader not found in cache.
+    std::string progSrc;
+    shaderHandle = glCreateShader(shadertype);
 
-  std::string* prog;
+    FILE *code_file = fopen(file.c_str(), "r");
+
+    if (code_file == NULL) {
+      kore::Log::getInstance()->write(
+        "[ERROR] Could not open shader program '%s'\n", file.c_str());
+      return false;
+    }
+
+    char f_char;
+    while (fread(&f_char, sizeof(f_char), 1, code_file) != 0) {
+      if (f_char != '\r') progSrc += f_char;
+    }
+    fclose(code_file);
+
+    const GLchar* src = progSrc.c_str();
+    glShaderSource(shaderHandle, 1, &src, 0);
+    glCompileShader(shaderHandle);
+
+    bool bSuccess = checkShaderCompileStatus(shaderHandle, file);
+    if (!bSuccess) {
+      glDeleteShader(shaderHandle);
+      return false;
+    }
+
+    ResourceManager::getInstance()->addShaderHandle(file, shaderHandle);
+  }
+
   switch (shadertype) {
   case GL_VERTEX_SHADER:
-    prog = &_vertex_prog;
-    break;
-  case GL_GEOMETRY_SHADER:
-    prog = &_geometry_prog;
+    _vertex_prog = shaderHandle;
     break;
   case GL_FRAGMENT_SHADER:
-    prog = &_fragment_prog;
+    _fragment_prog = shaderHandle;
+    break;
+  case GL_GEOMETRY_SHADER:
+    _geometry_prog = shaderHandle;
     break;
   case GL_TESS_CONTROL_SHADER:
-    prog = &_tess_ctrl;
+    _tess_ctrl = shaderHandle;
     break;
   case GL_TESS_EVALUATION_SHADER:
-    prog = &_tess_eval;
-    break;
-  default:
-    return false;
+    _tess_eval = shaderHandle;
     break;
   }
 
-  FILE *code_file = fopen(file.c_str(), "r");
-
-  if (code_file == NULL) {
-    kore::Log::getInstance()->write(
-      "[ERROR] Could not open shader program '%s'\n", file.c_str());
-    return false;
-  }
-  
-  char f_char;
-  while (fread(&f_char, sizeof(f_char), 1, code_file) != 0) {
-    if (f_char != '\r') prog->push_back(f_char);
-  }
-  fclose(code_file);
   return true;
 }
 
-bool kore::ShaderProgram::initShader(void) {
-  
-  _programHandle = glCreateProgram();
-  
-  //if (_ver
-
-
-  glLinkProgram(_programHandle);
-  GLint success;
-  glGetProgramiv(_programHandle, GL_LINK_STATUS, &success);
-
-  int infologLen = 0;
-  glGetProgramiv(_programHandle, GL_INFO_LOG_LENGTH, &infologLen);
-  if (infologLen > 1) {
-    GLchar * infoLog = new GLchar[infologLen];
-    if (infoLog == NULL) {
-      kore::Log::getInstance()->write(
-        "[ERROR] Could not allocate ShaderInfoLog buffer from '%s'\n",
-        _name.c_str());
-    }
-    int charsWritten = 0;
-    glGetProgramInfoLog(_programHandle, infologLen, &charsWritten, infoLog);
-    std::string shaderlog = infoLog;
-    kore::Log::getInstance()->write(
-      "[DEBUG] '%s' program Log %s\n", _name.c_str(), shaderlog.c_str());
-    free(infoLog);
-  } else {
-    kore::Log::getInstance()->write(
-      "[DEBUG] Program '%s' compiled\n", _name.c_str());
+bool kore::ShaderProgram::initShader(const std::string& name) {
+  if (_programHandle != GLUINT_HANDLE_INVALID) {
+    destroyProgram();
   }
 
-  _attributes.clear();
-  _uniforms.clear();
-  _outputs.clear();
+  _programHandle = glCreateProgram();
+  
+  if (_vertex_prog != GLUINT_HANDLE_INVALID) {
+    glAttachShader(_programHandle, _vertex_prog);
+  }
+
+  if (_fragment_prog != GLUINT_HANDLE_INVALID) {
+    glAttachShader(_programHandle, _fragment_prog);
+  }
+
+  if (_geometry_prog != GLUINT_HANDLE_INVALID) {
+    glAttachShader(_programHandle, _geometry_prog);
+  }
+
+  if (_tess_ctrl != GLUINT_HANDLE_INVALID) {
+    glAttachShader(_programHandle, _tess_ctrl);
+  }
+
+  if (_tess_eval != GLUINT_HANDLE_INVALID) {
+    glAttachShader(_programHandle, _tess_eval);
+  }
+
+  glLinkProgram(_programHandle);
+    
+  bool success = checkProgramLinkStatus(_programHandle, name);
+  if (!success) {
+    destroyProgram();
+    return false;
+  }
 
   constructShaderInputInfo(GL_ACTIVE_ATTRIBUTES, _attributes);
   for (uint i = 0; i < _attributes.size(); i++) {
@@ -141,7 +166,7 @@ bool kore::ShaderProgram::initShader(void) {
   }
 
   /*
-  /* OpenGL 4.3 or arb_program_interface_query needed 
+  /* OpenGL 4.3 or arb_program_interface_query needed
   /*
   constructShaderInputInfo(GL_PROGRAM_INPUT, _attributes);
   for (uint i = 0; i < _attributes.size(); i++) {
@@ -177,15 +202,18 @@ GLuint kore::ShaderProgram::getProgramLocation() {
     return _programHandle;
 }
 
-const std::vector<kore::ShaderInput>& kore::ShaderProgram::getAttributes() const {
+const std::vector<kore::ShaderInput>& kore::ShaderProgram
+  ::getAttributes() const {
     return _attributes;
 }
 
-const std::vector<kore::ShaderInput>& kore::ShaderProgram::getUniforms() const {
+const std::vector<kore::ShaderInput>& kore::ShaderProgram
+  ::getUniforms() const {
     return _uniforms;
 }
 
-const std::vector<kore::ShaderOutput>& kore::ShaderProgram::getOutputs() const {
+const std::vector<kore::ShaderOutput>& kore::ShaderProgram
+  ::getOutputs() const {
     return _outputs;
 }
 
@@ -330,7 +358,61 @@ void kore::ShaderProgram::constructShaderOutputInfo(std::vector<ShaderOutput>&
     }
  }
 
+bool kore::ShaderProgram::checkShaderCompileStatus(const GLuint shaderHandle,
+                                                   const std::string& name) {
+  GLint success;
+  GLint infologLen;
+  glGetShaderiv(shaderHandle, GL_COMPILE_STATUS, &success);
+  glGetShaderiv(shaderHandle, GL_INFO_LOG_LENGTH, &infologLen);
+  
+  if (infologLen > 1) {
+    GLchar * infoLog = new GLchar[infologLen];
+    if (infoLog == NULL) {
+      kore::Log::getInstance()->write(
+        "[ERROR] Could not allocate ShaderInfoLog buffer from '%s'\n",
+        name.c_str());
+    }
+    int charsWritten = 0;
+    glGetShaderInfoLog(shaderHandle, infologLen, &charsWritten, infoLog);
+    std::string shaderlog = infoLog;
+    kore::Log::getInstance()->write(
+      "[DEBUG] '%s' shader Log %s\n", name.c_str(), shaderlog.c_str());
+    free(infoLog);
+  } else {
+    kore::Log::getInstance()->write(
+      "[DEBUG] Shader '%s' compiled\n", name.c_str());
+  }
 
+  return success == GL_TRUE;
+}
+
+bool kore::ShaderProgram::checkProgramLinkStatus(const GLuint programHandle,
+                                                 const std::string& name) {
+  GLint success;
+  glGetProgramiv(programHandle, GL_LINK_STATUS, &success);
+
+  int infologLen = 0;
+  glGetProgramiv(programHandle, GL_INFO_LOG_LENGTH, &infologLen);
+  if (infologLen > 1) {
+    GLchar * infoLog = new GLchar[infologLen];
+    if (infoLog == NULL) {
+      kore::Log::getInstance()->write(
+        "[ERROR] Could not allocate ShaderInfoLog buffer from '%s'\n",
+        name.c_str());
+    }
+    int charsWritten = 0;
+    glGetProgramInfoLog(programHandle, infologLen, &charsWritten, infoLog);
+    std::string shaderlog = infoLog;
+    kore::Log::getInstance()->write(
+      "[DEBUG] '%s' program Log %s\n", name.c_str(), shaderlog.c_str());
+    free(infoLog);
+  } else {
+    kore::Log::getInstance()->write(
+      "[DEBUG] Program '%s' compiled\n", name.c_str());
+  }
+
+  return success == GL_TRUE;
+}
 
 bool kore::ShaderProgram::isSamplerType(const GLuint uniformType) {
   switch (uniformType) {

@@ -38,6 +38,9 @@ kore::ResourceManager::ResourceManager(void) {
 }
 
 kore::ResourceManager::~ResourceManager(void) {
+  for (auto it = _shaderHandles.begin(); it != _shaderHandles.end(); it++) {
+    glDeleteShader(it->second);
+  }
 }
 
 void kore::ResourceManager::loadScene(const std::string& filename,
@@ -92,12 +95,6 @@ void kore::ResourceManager::addLight(const std::string& path,
   _lights[path][light->getName()] = light;
 }
 
-void kore::ResourceManager::addShader(const std::string& name,
-                                      GLuint shaderhandle){
-  if (_shaderHandles.find(name) == _shaderHandles.end())
-  _shaderHandles[name] = shaderhandle;
-}
-
 void kore::ResourceManager::addTexture(const std::string& path,
                                        kore::TexturePtr texture) {
   _textures[path] = texture;
@@ -132,15 +129,45 @@ kore::LightComponentPtr
 }
 
 kore::TexturePtr kore::ResourceManager::getTexture(const std::string& path) {
-  if(_textures.count(path) == 0) {
+  if (_textures.count(path) == 0) {
     return TexturePtr();  // NULL
   }
   return _textures[path];
 }
 
 GLuint kore::ResourceManager::getShaderHandle(const std::string& path) {
-  if(_shaderHandles.count(path) == 0) {
+  if (_shaderHandles.count(path) == 0) {
     return GLUINT_HANDLE_INVALID;
   }
   return _shaderHandles[path];
+}
+
+void kore::ResourceManager::addShaderHandle(const std::string& path,
+                                            const GLuint handle) {
+  if (_shaderHandles.count(path) == 0) {
+    _shaderHandles[path] = handle;
+  }
+}
+
+const kore::TextureSampler*
+  kore::ResourceManager::
+  getTextureSampler(const TexSamplerProperties& properties) {
+    // First look for a sampler that satisfies the provided properties
+    for (uint i = 0; i < _textureSamplers.size(); ++i) {
+      if (_textureSamplers[i].getProperties() == properties) {
+        return &_textureSamplers[i];
+      }
+    }
+
+    // Otherwise: Construct a new Sampler
+    TextureSampler sampler;
+    bool success = sampler.create(properties);
+
+    if (!success) {
+      Log::getInstance()->write("[ERROR] TextureSampler creation failed!");
+      return NULL;
+    }
+
+    _textureSamplers.push_back(sampler);
+    return &_textureSamplers[_textureSamplers.size() - 1];
 }

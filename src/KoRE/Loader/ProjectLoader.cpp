@@ -56,12 +56,15 @@ void kore::ProjectLoader::saveProject(const std::string& path) const {
 
   TiXmlElement* scene = new TiXmlElement("Scene");
   doc.LinkEndChild(scene);
+  kore::SceneNodePtr root = kore::SceneManager::getInstance()->getRootNode();
+
+  //saveSceneNode(scene, root);
 
   
 
   // finally, save to file
   if(doc.SaveFile(path.c_str())) {
-    kore::Log::getInstance()->write("[Debug] writing file '%s'\n",
+    kore::Log::getInstance()->write("[DEBUG] writing file '%s'\n",
                                     path.c_str());
   } else {
     kore::Log::getInstance()->write("[ERROR] could not write file '%s'\n",

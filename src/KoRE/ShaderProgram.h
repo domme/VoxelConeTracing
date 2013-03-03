@@ -69,14 +69,23 @@ namespace kore {
                               const TexSamplerProperties& properties);
 
   private:
+    static bool checkShaderCompileStatus(const GLuint shaderHandle,
+                                         const std::string& name);
+
+    static bool checkProgramLinkStatus(const GLuint programHandle,
+                                       const std::string& name);
+
+    static bool isSamplerType(const GLuint uniformType);
+
+    void destroyProgram();
+    void destroyShaders();
+
     void getAttributeInfo();
     void getUniformInfo();
     void constructShaderInputInfo(const GLenum activeType,
                              std::vector<ShaderInput>& rInputVector);
 
     void constructShaderOutputInfo(std::vector<ShaderOutput>& rOutputVector);
-
-    bool isSamplerType(const GLuint uniformType);
 
     std::string _name;
     std::vector<ShaderInput> _attributes;

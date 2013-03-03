@@ -66,7 +66,6 @@ namespace kore {
     void addCamera(const std::string& path, CameraPtr camera);
     void addTexture(const std::string& path, TexturePtr texture);
     void addLight(const std::string& path, LightComponentPtr light);
-    void addShader(const std::string& path, GLuint shaderhandle);
     kore::MeshPtr getMesh(const std::string& path, const std::string& id);
     kore::CameraPtr getCamera(const std::string& path, const std::string& id);
     kore::LightComponentPtr getLight(const std::string& path,
@@ -79,6 +78,12 @@ namespace kore {
                 GLUINT_HANDLE_INVALID if there is no entry for this path yet.
     */
     GLuint getShaderHandle(const std::string& path);
+
+    /*! \brief Adds a shader handle to the cache. Subsequent shader-loadings 
+    *          can use getShaderHandle(..) to retrieve this cached handle and
+    *          do not have to load and compile the sources from file. */
+    void addShaderHandle(const std::string& path,
+                         const GLuint handle);
 
     /*! \brief Returns the OpenGL texture sampler object with the provided 
     *          properties. 

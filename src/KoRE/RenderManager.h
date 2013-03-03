@@ -66,11 +66,15 @@ namespace kore {
   public:
     static RenderManager *getInstance(void);
     const glm::ivec2& getRenderResolution() const;
+    const ShaderProgram* getShaderProgram(const std::string& name);
     void setRenderResolution(const glm::ivec2& newResolution);
     void renderFrame(void);
+    void addShaderProgram(const std::string& name,
+                          const ShaderProgram* program);
     void addOperation(const OperationPtr& op);
-    void addOperation(const OperationPtr& op, const OperationPtr& targetOp,
-                                                 const EOpInsertPos insertPos);
+    void addOperation(const OperationPtr& op,
+                      const OperationPtr& targetOp,
+                      const EOpInsertPos insertPos);
     bool hasOperation(const OperationPtr& op);
 
     void removeOperation(const OperationPtr& op);
@@ -121,7 +125,7 @@ namespace kore {
     GLuint _boundSamplers[GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS];
     GLuint _boundFrameBuffers[2];
     std::map<GLuint, uint> _vTexTargetMap;
-    std::map<std::string, ShaderProgram*> _shaderProgramMap;
+    std::map<std::string, const ShaderProgram*> _shaderProgramMap;
     //////////////////////////////////////////////////////////////////////////
   };
 };
