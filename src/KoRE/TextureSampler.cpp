@@ -97,6 +97,7 @@ GLuint kore::TextureSampler::getSamplerTypeFromTexType(const GLuint texType) {
   default:
     Log::getInstance()->write("[ERROR] No sampler-type for this texture"
                               "type defined");
+    return KORE_GLUINT_HANDLE_INVALID;
     break;
   }
 }
