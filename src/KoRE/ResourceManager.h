@@ -66,11 +66,13 @@ namespace kore {
     void addCamera(const std::string& path, CameraPtr camera);
     void addTexture(const std::string& path, TexturePtr texture);
     void addLight(const std::string& path, LightComponentPtr light);
+    void addShader(const std::string& path, Shader* shader);
     kore::MeshPtr getMesh(const std::string& path, const std::string& id);
     kore::CameraPtr getCamera(const std::string& path, const std::string& id);
     kore::LightComponentPtr getLight(const std::string& path,
                                      const std::string& id);
     kore::TexturePtr getTexture(const std::string& path);
+    kore::Shader* getShader(const std::string& path);
 
     /*! \brief Returns the OpenGL texture sampler object with the provided 
     *          properties. 
@@ -102,8 +104,8 @@ namespace kore {
     OuterMeshMapT _meshes; // filepath, id, mesh
     OuterResourceMapT _cameras; // filepath, id, camera
     OuterResourceMapT _lights; // filepath, id, light
-    std::map<std::string, TexturePtr> _textures; // filepath, texture
-    std::vector<kore::ShaderPtr> _shader;
+    std::map<std::string, kore::TexturePtr> _textures; // filepath, texture
+    std::map<std::string, kore::Shader*> _shader;
     std::vector<kore::TextureSampler> _textureSamplers;
   };
 };

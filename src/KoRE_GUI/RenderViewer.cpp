@@ -26,14 +26,18 @@
 #include <QKeyEvent>
 #include <QList>
 #include "KoRE_GUI/ShaderItem.h"
+#include "KoRE/ResourceManager.h"
 
 koregui::RenderViewer::RenderViewer(QWidget *parent) : QGraphicsView(parent) {
-  setDragMode(ScrollHandDrag);
+  //setDragMode(ScrollHandDrag);
   // setDragMode(RubberBandDrag);
   _scene.setBackgroundBrush(QBrush(Qt::darkGray));
   setScene(&_scene);
   setMinimumSize(800,600);
-  //koregui::ShaderItem* sitem() 
+  kore::Shader* shader = kore::ResourceManager::getInstance()->getShader("./assets/shader/normalColor");
+  koregui::ShaderItem* sitem = new koregui::ShaderItem(shader);
+  _scene.addItem(sitem);
+  sitem->setPos(0,0);
 }
 
 koregui::RenderViewer::~RenderViewer() {

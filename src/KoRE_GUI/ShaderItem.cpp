@@ -30,7 +30,7 @@
 #include "KoRE/ShaderInput.h"
 #include "KoRE/ShaderData.h"
 
-koregui::ShaderItem::ShaderItem(kore::ShaderPtr shader,
+koregui::ShaderItem::ShaderItem(kore::Shader* shader,
                                       QGraphicsItem* parent) 
                                     : _shader(shader),
                                       QGraphicsItem(parent) {
@@ -42,6 +42,8 @@ koregui::ShaderItem::~ShaderItem(void) {
 }
 
 void koregui::ShaderItem::refresh(void) {
+  _shaderheight = 200;
+  _shaderwidth = 200;
 }
 
 QRectF koregui::ShaderItem::boundingRect() const {

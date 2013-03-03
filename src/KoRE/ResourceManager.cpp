@@ -41,7 +41,7 @@ kore::ResourceManager::~ResourceManager(void) {
 }
 
 void kore::ResourceManager::loadScene(const std::string& filename,
-                                      SceneNodePtr parent) {
+                                      kore::SceneNodePtr parent) {
   kore::SceneLoader::getInstance()->loadScene(filename, parent);
 }
 
@@ -63,7 +63,7 @@ kore::TexturePtr
 }
 
 void kore::ResourceManager::addMesh(const std::string& path,
-                                    MeshPtr mesh) {
+                                    kore::MeshPtr mesh) {
   if (!(_meshes.count(path) > 0)) {
     InnerMeshMapT internalMap;
     _meshes[path] = internalMap;
@@ -83,13 +83,19 @@ void kore::ResourceManager::addCamera(const std::string& path,
 }
 
 void kore::ResourceManager::addLight(const std::string& path,
-                                     LightComponentPtr light) {
+                                     kore::LightComponentPtr light) {
   if (!(_lights.count(path) > 0)) {
     InnerResourceMapT internalMap;
     _lights[path] = internalMap;
   }
 
   _lights[path][light->getName()] = light;
+}
+
+void kore::ResourceManager::addShader(const std::string& name,
+                                      kore::Shader* shader){
+  if (_shader.find(name) == _shader.end())
+  _shader[name] = shader;
 }
 
 void kore::ResourceManager::addTexture(const std::string& path,
@@ -131,6 +137,11 @@ kore::TexturePtr kore::ResourceManager::getTexture(const std::string& path) {
   }
   return _textures[path];*/
   return (_textures.count(path) == 0)?TexturePtr():_textures[path];
+}
+
+
+kore::Shader* kore::ResourceManager::getShader(const std::string& path){
+  return (_shader.find(path) != _shader.end())?_shader[path]:NULL;
 }
 
 const kore::TextureSampler*

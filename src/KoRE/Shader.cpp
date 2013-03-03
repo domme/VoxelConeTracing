@@ -51,6 +51,10 @@ bool kore::Shader::loadShader(const std::string& file, GLenum shadertype) {
                         - (file.find_last_of("/")+1));
   }
 
+  kore::ResourceManager::getInstance()
+    ->addShader(file.substr(0, file.find_last_of(".")),
+                this);
+
   std::string* prog;
   switch (shadertype) {
   case GL_VERTEX_SHADER:

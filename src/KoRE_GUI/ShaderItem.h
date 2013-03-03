@@ -30,7 +30,7 @@
 namespace koregui {
   class ShaderItem : public QGraphicsItem {
   public:
-    ShaderItem(kore::ShaderPtr shader,
+    ShaderItem(kore::Shader* shader,
                   QGraphicsItem* parent = 0);
     ~ShaderItem(void);
 
@@ -46,7 +46,7 @@ namespace koregui {
     void mousePressEvent(QGraphicsSceneMouseEvent * event);
 
   private:
-    kore::ShaderPtr _shader;
+    kore::Shader* _shader;
     uint _shaderwidth;
     uint _shaderheight;
   };

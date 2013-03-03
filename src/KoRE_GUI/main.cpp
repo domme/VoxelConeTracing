@@ -37,16 +37,27 @@ int main(int argc, char *argv[])
 
     // initialize Qt
     QApplication app(argc, argv);
-    koregui::SceneViewer sview;
-    sview.show();
+
+    // need of GL-Context
+    GLWindow win;
+
+    // load kore resources and scene
+    kore::Shader* simpleShader = new kore::Shader();
+    simpleShader->loadShader("./assets/shader/normalColor.vp",
+      GL_VERTEX_SHADER);
+    simpleShader->loadShader("./assets/shader/normalColor.fp",
+      GL_FRAGMENT_SHADER);
+    simpleShader->initShader();
+
+    kore::ResourceManager::getInstance()->loadScene("./assets/meshes/TestEnv.dae");
+
+    // now widgets
+    //koregui::SceneViewer sview;
+    //sview.showScene(kore::SceneManager::getInstance()->getRootNode().get());
+    //sview.show();
 
     koregui::RenderViewer rview;
     rview.show();
 
-    // do stuff
-    // need of GL-Context
-    GLWindow win;
-    kore::ResourceManager::getInstance()->loadScene("./assets/meshes/TestEnv.dae");
-    sview.showScene(kore::SceneManager::getInstance()->getRootNode().get());
     return app.exec();
 }
