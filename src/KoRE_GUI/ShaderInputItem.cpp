@@ -21,31 +21,32 @@
 /* \author Dominik Ospelt                                               */
 /************************************************************************/
 
-#include "KoRE_GUI/ShaderDataItem.h"
+#include "KoRE_GUI/ShaderInputItem.h"
 #include <QPainter>
 #include <QCursor>
 #include <QStaticText>
 #include <QToolTip>
 
-koregui::ShaderDataItem::ShaderDataItem(const kore::ShaderData* data,
+koregui::ShaderInputItem::ShaderInputItem(const kore::ShaderInput* input,
                                         QGraphicsItem* parent)
-                                      : _data(data),
+                                      : _input(input),
                                         _op(NULL),
                                         QGraphicsItem(parent) {
+  // setCursor(QCursor(Qt::CursorShape::OpenHandCursor));
 }
 
-koregui::ShaderDataItem::~ShaderDataItem(void) {
+koregui::ShaderInputItem::~ShaderInputItem(void) {
 }
 
-void koregui::ShaderDataItem::refresh(void) {
+void koregui::ShaderInputItem::refresh(void) {
 
 }
 
-QRectF koregui::ShaderDataItem::boundingRect() const {
+QRectF koregui::ShaderInputItem::boundingRect() const {
   return QRectF(0, 0, 12, 12);
 }
 
-void koregui::ShaderDataItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) {
+void koregui::ShaderInputItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) {
   QPen p;
   p.setColor(QColor(44,44,44));
   p.setWidth(2);

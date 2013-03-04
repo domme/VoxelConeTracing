@@ -48,8 +48,7 @@ koregui::NodeItem::~NodeItem(void) {
 
 void koregui::NodeItem::refresh(void) {
   prepareGeometryChange();
-  _nodeheight = 0;
-  _nodeheight += 40; // place for node name
+  _nodeheight = 40; // place for node name
   for (uint i = 0; i<_componentItems.size(); i++) {
     _componentItems[i]->setPos(0, _nodeheight);
     _nodeheight += _componentItems[i]->getHeight();

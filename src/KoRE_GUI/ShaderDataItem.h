@@ -26,6 +26,7 @@
 
 #include <QGraphicsItem>
 #include "KoRE/ShaderData.h"
+#include "KoRE/Operations/BindOperations/BindOperation.h"
 
 namespace koregui {
   class ShaderDataItem : public QGraphicsItem {
@@ -43,6 +44,7 @@ namespace koregui {
 
   private:
     const kore::ShaderData* _data;
+    kore::BindOperation* _op;
   };
 }
 #endif  // SHADERDATAITEM_H_

@@ -21,7 +21,8 @@
 /* \author Dominik Ospelt                                               */
 /************************************************************************/
 
-#include "NodePathItem.h"
+#include "KoRE_GUI/NodePathItem.h"
+#include "KoRE_GUI/NodeItem.h"
 #include <QPainter>
 
 koregui::NodePathItem::NodePathItem(NodeItem* start,
@@ -29,7 +30,7 @@ koregui::NodePathItem::NodePathItem(NodeItem* start,
                                     QGraphicsItem* parent)
                                   : _start(start),
                                     _end(end),
-                                    QGraphicsItem(parent){
+                                    QGraphicsPathItem(parent){
   setAcceptedMouseButtons(Qt::NoButton);
 }
 
@@ -37,23 +38,18 @@ koregui::NodePathItem::~NodePathItem(void) {
 }
 
 QRectF koregui::NodePathItem::boundingRect() const {
-  return _path.boundingRect();
+  return path().boundingRect().adjusted(-2,-2,2,2);
 }
 
 void koregui::NodePathItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) {
-  QPointF start = _start->pos() + QPointF(_start->getWidth()/2, _start->getHeight());
-  QPointF dest = _end->pos() + QPointF(_start->getWidth()/2, 0);
+
+  QPointF start = mapFromItem(_start,_start->getWidth()/2,_start->getHeight());
+  QPointF dest = _end->pos() + QPointF(_end->getWidth()/2, 0);
   QPointF dist = QPointF(0, (dest.y()- start.y())/2);
-  //QPointF help2 = 
-
-  QPainterPath path;
-  path.moveTo(start);
-
+  QPainterPath path(start);
   path.cubicTo(start + dist, dest - dist, dest);
 
-  prepareGeometryChange();
-  _path = path;
+  setPath(path);
   painter->setPen(QPen(QColor(200, 200, 200), 3));
   painter->drawPath(path);
-  //painter->drawPolygon(poly);
 }

@@ -35,14 +35,59 @@ koregui::ShaderItem::ShaderItem(const kore::ShaderProgram* shader,
                               : _shader(const_cast<kore::ShaderProgram*>(shader)),
                                 QGraphicsItem(parent) {
   setFlag(QGraphicsItem::ItemIsMovable, true);
+  init();
   refresh();
 }
 
 koregui::ShaderItem::~ShaderItem(void) {
 }
 
+void koregui::ShaderItem::init(void) {
+  // destroy old shader inputs
+  if(_attributes.size() > 0) {
+    for (uint i = 0; i < _attributes.size(); i++) {
+      delete(_attributes[i]);
+    }
+    _attributes.clear();
+  }
+  if(_uniforms.size() > 0) {
+    for (uint j = 0; j < _uniforms.size(); j++) {
+      delete(_uniforms[j]);
+    }
+    _uniforms.clear();
+  }
+  if(_sampler.size() > 0) {
+    for (uint k = 0; k < _sampler.size(); k++) {
+      delete(_sampler[k]);
+    }
+    _sampler.clear();
+  }
+  // create inputs from shaderprogram object
+  int tmpheight = 40;
+  std::vector<kore::ShaderInput> sinput = _shader->getAttributes();
+  for (uint i = 0; i < sinput.size(); i++) {
+    const kore::ShaderInput* tmp = _shader->getAttribute(sinput[i].name);
+    ShaderInputItem* inpitem =  new ShaderInputItem(tmp, this);
+    _attributes.push_back(inpitem);
+    inpitem->setPos(-4, tmpheight + 30 * i);
+  }
+  tmpheight += 30 * sinput.size();
+  sinput = _shader->getUniforms();
+  for (uint j = 0; j < sinput.size(); j++) {
+    const kore::ShaderInput* tmp = _shader->getUniform(sinput[j].name);
+    ShaderInputItem* inpitem =  new ShaderInputItem(tmp, this);
+    _uniforms.push_back(inpitem);
+    inpitem->setPos(-4, tmpheight + 30 * j);
+  }
+}
+
 void koregui::ShaderItem::refresh(void) {
-  _shaderheight = 200;
+  prepareGeometryChange();
+  _shaderheight = 40; // place for shader name
+  _shaderheight += 30 * _attributes.size();
+  _shaderheight += 30 * _uniforms.size();
+  _shaderheight += 30 * _sampler.size();
+
   _shaderwidth = 200;
 }
 
@@ -74,12 +119,28 @@ void koregui::ShaderItem::paint(QPainter* painter,
   font.setPointSize(12);
   painter->setFont(font);
 
-  //text.setText(_shader->getName().c_str());
-  text.setText("Dummy Shader");
+  text.setText(_shader->getName().c_str());
   p.setColor(QColor(255,255,255));
   p.setStyle(Qt::PenStyle::SolidLine);
   painter->setPen(p);
   painter->drawStaticText(10,10, text);
+
+  font.setFamily("Consolas");
+  font.setPointSize(9);
+  p.setColor(QColor(200,200,200));
+  painter->setPen(p);
+  painter->setFont(font);
+
+  int tmpheight = 40;
+  for (uint i = 0; i<_attributes.size(); i++) {
+    text.setText(_attributes[i]->getInput()->name.c_str());
+     painter->drawStaticText(12,tmpheight + 30 * i, text);
+  }
+  tmpheight += 30 * _attributes.size();
+  for (uint i = 0; i<_uniforms.size(); i++) {
+    text.setText(_uniforms[i]->getInput()->name.c_str());
+    painter->drawStaticText(12,tmpheight + 30 * i, text);
+  }
 }
 
 void koregui::ShaderItem::mousePressEvent(QGraphicsSceneMouseEvent * event){

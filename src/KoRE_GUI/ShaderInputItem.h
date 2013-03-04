@@ -21,27 +21,30 @@
 /* \author Dominik Ospelt                                               */
 /************************************************************************/
 
-#ifndef NODEPATHITEM_H_
-#define NODEPATHITEM_H_
+#ifndef SHADERINPUTITEM_H_
+#define SHADERINPUTITEM_H_
 
-#include <QGraphicsPathItem>
-#include <QPainterPath>
+#include <QGraphicsItem>
+#include "KoRE/ShaderInput.h"
+#include "KoRE/Operations/BindOperations/BindOperation.h"
 
 namespace koregui {
-  class NodeItem;
-  class NodePathItem : public QGraphicsPathItem {
+  class ShaderInputItem : public QGraphicsItem {
   public:
-    NodePathItem(NodeItem* start, NodeItem* end, QGraphicsItem* parent = 0);
-    ~NodePathItem(void);
+    ShaderInputItem(const kore::ShaderInput* input, QGraphicsItem* parent = 0);
+    ~ShaderInputItem(void);
+    inline const kore::ShaderInput* getInput(void) {return _input;};
+    void refresh(void);
 
+  protected:
     QRectF boundingRect() const;
     void paint(QPainter* painter,
                const QStyleOptionGraphicsItem* option,
                QWidget* widget);
 
   private:
-    NodeItem* _start;
-    NodeItem* _end;
+    const kore::ShaderInput* _input;
+    kore::BindOperation* _op;
   };
 }
-#endif  // NODEPATHITEM_H_
+#endif  // SHADERINPUTITEM_H_

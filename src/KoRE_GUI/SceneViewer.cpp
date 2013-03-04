@@ -59,7 +59,6 @@ koregui::NodeItem* koregui::SceneViewer
                int x,
                int y) {
   NodeItem* nodeItem = new NodeItem(sourcenode);
-  nodeItem->setPos(x, y);
   _scene.addItem(nodeItem);
 
   std::vector<kore::SceneNodePtr> pnode = sourcenode->getChildren();
@@ -74,6 +73,7 @@ koregui::NodeItem* koregui::SceneViewer
     _scene.addItem(path);
     startx += localwidth;
   }
+  nodeItem->setPos(x, y);
   return nodeItem;
 }
 int koregui::SceneViewer::estimateTreeWidth(kore::SceneNode* sourcenode) {

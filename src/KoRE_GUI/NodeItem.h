@@ -28,6 +28,7 @@
 #include <QGraphicsItem>
 #include "KoRE/SceneNode.h"
 #include "KoRE_GUI/ComponentItem.h"
+#include "KoRE_GUI/NodePathItem.h"
 
 namespace koregui {
   class NodeItem : public QGraphicsItem {
@@ -49,6 +50,8 @@ namespace koregui {
     uint _nodewidth;
 
     std::vector<ComponentItem*> _componentItems;
+    NodePathItem* _parentPath;
+    std::vector<NodePathItem*> _childrenPaths;
     QGraphicsScene* _scene;
   };
 }

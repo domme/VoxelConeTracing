@@ -34,7 +34,7 @@ koregui::RenderViewer::RenderViewer(QWidget *parent) : QGraphicsView(parent) {
   _scene.setBackgroundBrush(QBrush(Qt::darkGray));
   setScene(&_scene);
   setMinimumSize(800,600);
-  const kore::ShaderProgram* shader = kore::RenderManager::getInstance()->getShaderProgram("./assets/shader/normalColor");
+  const kore::ShaderProgram* shader = kore::RenderManager::getInstance()->getShaderProgram("MegaShader");
   koregui::ShaderItem* sitem = new koregui::ShaderItem(shader);
   _scene.addItem(sitem);
   sitem->setPos(0,0);

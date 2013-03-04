@@ -26,6 +26,7 @@
 
 #include <QGraphicsItem>
 #include "KoRE/ShaderProgram.h"
+#include "KoRE_GUI/ShaderInputItem.h"
 
 namespace koregui {
   class ShaderItem : public QGraphicsItem {
@@ -34,6 +35,7 @@ namespace koregui {
                   QGraphicsItem* parent = 0);
     ~ShaderItem(void);
 
+    void init(void);
     void refresh(void);
     inline int getHeight(void) {return _shaderheight;};
     inline int getWidth(void) {return _shaderwidth;};
@@ -47,6 +49,9 @@ namespace koregui {
 
   private:
     kore::ShaderProgram* _shader;
+    std::vector<ShaderInputItem*> _attributes;
+    std::vector<ShaderInputItem*> _uniforms;
+    std::vector<ShaderInputItem*> _sampler;
     uint _shaderwidth;
     uint _shaderheight;
   };

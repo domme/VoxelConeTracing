@@ -186,7 +186,8 @@ bool kore::ShaderProgram::initShader(const std::string& name) {
           _outputs[j].name.c_str());
   }
   */
-  
+  _name = name;
+  kore::RenderManager::getInstance()->addShaderProgram(_name, this);
   return success == GL_TRUE;
 }
 
