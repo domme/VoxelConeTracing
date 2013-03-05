@@ -106,6 +106,9 @@
     <ClCompile Include="src\KoRE\Operations\BindOperations\BindOperation.cpp">
       <Filter>src\Operations\BindOperations</Filter>
     </ClCompile>
+    <ClCompile Include="src\KoRE\Operations\Sequence.cpp">
+      <Filter>src\Operations</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\KoRE\Operations\SelectNodes.h">
@@ -221,6 +224,9 @@
     </ClInclude>
     <ClInclude Include="src\KoRE\Operations\BindOperations\BindOperation.h">
       <Filter>src\Operations\BindOperations</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\Operations\Sequence.h">
+      <Filter>src\Operations</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
