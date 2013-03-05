@@ -49,7 +49,7 @@ namespace kore {
     const uint getTag(void) const;
     const std::string getName(void) const;
     void getSceneNodesByTag(const uint tag,
-                              std::vector<SceneNodePtr>& vNodes);
+                            std::vector<SceneNodePtr>& vNodes);
     void getSceneNodesByName(const std::string& name,
                              std::vector<SceneNodePtr>& vNodes);
     void getSceneNodesByComponent(const EComponentType componentType,
