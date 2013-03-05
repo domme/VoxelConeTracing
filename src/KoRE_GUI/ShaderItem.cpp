@@ -23,8 +23,10 @@
 
 #include "KoRE_GUI/ShaderItem.h"
 
+#include <QMenu>
 #include <QPainter>
 #include <QStaticText>
+#include <QCursor>
 #include <QGraphicsSceneMouseEvent>
 
 #include "KoRE/ShaderInput.h"
@@ -35,6 +37,7 @@ koregui::ShaderItem::ShaderItem(const kore::ShaderProgram* shader,
                               : _shader(const_cast<kore::ShaderProgram*>(shader)),
                                 QGraphicsItem(parent) {
   setFlag(QGraphicsItem::ItemIsMovable, true);
+  setCursor(QCursor(Qt::CursorShape::ArrowCursor));
   init();
   refresh();
 }
@@ -98,11 +101,6 @@ QRectF koregui::ShaderItem::boundingRect() const {
 void koregui::ShaderItem::paint(QPainter* painter,
                                 const QStyleOptionGraphicsItem* option,
                                 QWidget* widget) {
-  /*QBrush b;
-  QPen p;
-  QStaticText t;
-  QFont font("Consolas");*/
-
   QBrush b;
   QPen p;
   QFont font("Arial");
@@ -147,3 +145,11 @@ void koregui::ShaderItem::mousePressEvent(QGraphicsSceneMouseEvent * event){
   QGraphicsItem::mousePressEvent(event);
 }
 
+void koregui::ShaderItem::contextMenu(QPoint pos) {
+  QMenu menu("TEST2");
+  menu.addAction("megamega", 0, 0);
+  menu.addAction("soso", 0, 0);
+  //menu.addAction(...);
+  //menu.addAction(...);
+  menu.exec(pos);
+}

@@ -27,13 +27,14 @@
 #include <QGraphicsView>
 #include "KoRE/SceneNode.h"
 #include "KoRE_GUI/NodeItem.h"
+#include "KoRE_GUI/RenderViewer.h"
 
 namespace koregui {
   class SceneViewer : public QGraphicsView {
       Q_OBJECT
 
   public:
-      SceneViewer(QWidget *parent = 0);
+      SceneViewer(RenderViewer* renderview, QWidget *parent = 0);
       ~SceneViewer();
 
       void showScene(kore::SceneNode* root);
@@ -41,11 +42,16 @@ namespace koregui {
   public slots:
     void zoomIn() {scale(1.2,1.2);}
     void zoomOut() {scale(1/1.2,1/1.2);}
+    void addSelectionToRenderview();
 
 
   protected:
     void keyPressEvent(QKeyEvent* event);
+    void keyReleaseEvent(QKeyEvent * event);
     void wheelEvent(QWheelEvent *event);
+    void mousePressEvent(QMouseEvent * event);
+    void contextMenuEvent(QContextMenuEvent *event);
+
 
   private:
       QGraphicsScene _scene;
@@ -53,6 +59,8 @@ namespace koregui {
       //returns pixel width of children;
       NodeItem* createNode(kore::SceneNode* sourcenode, int x, int y);
       int estimateTreeWidth(kore::SceneNode* sourcenode);
+      std::vector<NodeItem*> _selectedNodes;
+      RenderViewer* _renderview;
   };
 }
 #endif // SCENEVIEWER_H

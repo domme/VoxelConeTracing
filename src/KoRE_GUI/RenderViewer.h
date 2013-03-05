@@ -31,8 +31,10 @@ namespace koregui {
       Q_OBJECT
 
   public:
-      RenderViewer(QWidget *parent = 0);
-      ~RenderViewer();
+    RenderViewer(QWidget *parent = 0);
+    ~RenderViewer();
+
+   void addSelection(const QList<QGraphicsItem*>& items);
 
 
   public slots:
@@ -42,6 +44,7 @@ namespace koregui {
   protected:
     void keyPressEvent(QKeyEvent* event);
     void wheelEvent(QWheelEvent *event);
+    void contextMenuEvent(QContextMenuEvent *event);
 
   private:
       void clearScene();

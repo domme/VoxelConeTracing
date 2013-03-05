@@ -25,6 +25,7 @@
 #include <QPainter>
 #include <QStaticText>
 #include <QCursor>
+#include <QGraphicsSceneMouseEvent>
 
 koregui::NodeItem::NodeItem(kore::SceneNode* sceneNode,
                             QGraphicsItem* parent)
@@ -32,7 +33,7 @@ koregui::NodeItem::NodeItem(kore::SceneNode* sceneNode,
                               QGraphicsItem(parent) {
 
   setFlag(QGraphicsItem::ItemIsMovable, true);
-  //setFlag(QGraphicsItem::ItemIsSelectable, true);
+  setFlag(QGraphicsItem::ItemIsSelectable, true);
   setCursor(QCursor(Qt::CursorShape::ArrowCursor));
   std::vector<kore::SceneNodeComponentPtr> components =
     _sceneNode->getComponents();
@@ -58,7 +59,7 @@ void koregui::NodeItem::refresh(void) {
 }
 
 QRectF koregui::NodeItem::boundingRect() const {
-  return QRectF(0, 0, _nodewidth, _nodeheight);
+  return QRectF(0-4, 0-4, _nodewidth+8, _nodeheight+8);
 }
 
 void koregui::NodeItem::paint(QPainter* painter,
@@ -69,10 +70,16 @@ void koregui::NodeItem::paint(QPainter* painter,
   QFont font("Arial");
   QStaticText text;
 
-  p.setStyle(Qt::PenStyle::NoPen);
-  b.setColor(QColor(44,44,44));
-  b.setStyle(Qt::BrushStyle::SolidPattern);
-  painter->setPen(p);
+   p.setStyle(Qt::PenStyle::NoPen);
+   painter->setPen(p);
+   b.setStyle(Qt::BrushStyle::SolidPattern);
+
+
+  if (isSelected()) {
+    b.setColor(QColor(77,77,77));
+  } else {
+    b.setColor(QColor(44,44,44));
+  }
   painter->setBrush(b);
   painter->drawRect(0, 0, _nodewidth, _nodeheight);
 
@@ -85,4 +92,13 @@ void koregui::NodeItem::paint(QPainter* painter,
   p.setStyle(Qt::PenStyle::SolidLine);
   painter->setPen(p);
   painter->drawStaticText(10,10, text);
+}
+
+void koregui::NodeItem::mousePressEvent(QGraphicsSceneMouseEvent * event) {
+  QGraphicsItem::mousePressEvent(event);
+  /*if (event->button() == Qt::MouseButton::LeftButton) {
+    //QPointF p = event->buttonDownPos(Qt::MouseButton::LeftButton);
+    //select();
+    //refresh();
+  }*/
 }

@@ -40,6 +40,8 @@ namespace koregui {
     inline int getHeight(void) {return _shaderheight;};
     inline int getWidth(void) {return _shaderwidth;};
 
+    void contextMenu(QPoint pos);
+
   protected:
     QRectF boundingRect() const;
     void paint(QPainter* painter,

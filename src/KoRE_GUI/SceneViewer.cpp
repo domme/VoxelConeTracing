@@ -21,16 +21,20 @@
 /* \author Dominik Ospelt                                               */
 /************************************************************************/
 
-#include "SceneViewer.h"
+#include "KoRE_GUI/SceneViewer.h"
 #include <QGuiApplication>
 #include <QKeyEvent>
 #include <QList>
+#include <QMenu>
+#include <QGraphicsScene>
+#include "KoRE_GUI/RenderViewer.h"
 #include "KoRE_GUI/NodeItem.h"
 #include "KoRE_GUI/NodePathItem.h"
 
-koregui::SceneViewer::SceneViewer(QWidget *parent) : QGraphicsView(parent) {
-  setDragMode(ScrollHandDrag);
-  //setDragMode(RubberBandDrag);
+koregui::SceneViewer::SceneViewer(koregui::RenderViewer* renderview, QWidget *parent)
+                                : _renderview(renderview),
+                                  QGraphicsView(parent) {
+  setDragMode(RubberBandDrag);
   _scene.setBackgroundBrush(QBrush(Qt::darkGray));
   setScene(&_scene);
   setMinimumSize(800,600);
@@ -88,7 +92,13 @@ int koregui::SceneViewer::estimateTreeWidth(kore::SceneNode* sourcenode) {
 
 void koregui::SceneViewer::keyPressEvent(QKeyEvent * event) {
   if (event->key() == Qt::Key_Escape) QGuiApplication::quit();
+  if (event->key() == Qt::Key_Shift) setDragMode(ScrollHandDrag);
   QGraphicsView::keyPressEvent(event);
+}
+
+void koregui::SceneViewer::keyReleaseEvent(QKeyEvent * event) {
+  if (event->key() == Qt::Key_Shift) setDragMode(RubberBandDrag);
+  QGraphicsView::keyReleaseEvent(event);
 }
 
 void koregui::SceneViewer::wheelEvent(QWheelEvent *event) {
@@ -100,4 +110,17 @@ void koregui::SceneViewer::wheelEvent(QWheelEvent *event) {
   //QGraphicsView::wheelEvent(event);
 }
 
+void koregui::SceneViewer::mousePressEvent(QMouseEvent * event) {
+  QGraphicsView::mousePressEvent(event);
+}
 
+void koregui::SceneViewer::contextMenuEvent(QContextMenuEvent *event) {
+  QMenu menu("TEST", this);
+  menu.addAction(QIcon("./assets/icons/testStar.png"), "Add Selection to Renderview", this, SLOT(addSelectionToRenderview()), (Qt::CTRL + Qt::Key_A));
+  menu.exec(event->globalPos());
+}
+
+void koregui::SceneViewer::addSelectionToRenderview() {
+  //
+  int i = _scene.selectedItems().size();
+}

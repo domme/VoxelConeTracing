@@ -23,8 +23,10 @@
 
 #include "KoRE_GUI/RenderViewer.h"
 #include <QGuiApplication>
+#include <QGraphicsItem>
 #include <QKeyEvent>
 #include <QList>
+#include <QMenu>
 #include "KoRE_GUI/ShaderItem.h"
 #include "KoRE/RenderManager.h"
 
@@ -64,4 +66,28 @@ void koregui::RenderViewer::wheelEvent(QWheelEvent *event) {
                             .mapRect(QRectF(0, 0, 1, 1)).width();
   if (factor < 0.08 || factor > 2) return;
   scale(scaleFactor, scaleFactor);
+}
+
+void koregui::RenderViewer::contextMenuEvent(QContextMenuEvent *event) {
+  ShaderItem* test = static_cast<ShaderItem*>(this->itemAt(event->pos()));
+  if (test) {
+    test->contextMenu(event->globalPos());
+    return;
+  }
+  QMenu menu("TEST", this);
+  menu.hideTearOffMenu();
+  menu.addAction(QIcon("./assets/icons/testStar.png"), "Add", this, SLOT(zoomIn()), (Qt::CTRL + Qt::Key_N));
+  menu.addAction("tu jenes", 0, 0);
+  QMenu* lvl2  = menu.addMenu("Totoal");
+  lvl2->addAction("Schnorch!", this, SLOT(zoomOut()));
+  lvl2->addAction("Blubb!", 0, 0);
+  //menu.addAction(...);
+  //menu.addAction(...);
+  menu.exec(event->globalPos());
+}
+
+void koregui::RenderViewer::addSelection(const QList<QGraphicsItem*>& items) {
+  for (uint i = 0; i < items.size(); i++) {
+    _scene.addItem(items[i]);
+  }
 }
