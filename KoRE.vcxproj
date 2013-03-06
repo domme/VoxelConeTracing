@@ -219,6 +219,8 @@
     <ClCompile Include="src\KoRE\Operations\BindOperations\BindUniform.cpp" />
     <ClCompile Include="src\KoRE\Operations\BindOperations\BindOperation.cpp" />
     <ClCompile Include="src\KoRE\Operations\Sequence.cpp" />
+    <ClCompile Include="src\KoRE\Operations\UseFBO.cpp" />
+    <ClCompile Include="src\KoRE\Operations\UseShaderProgram.cpp" />
     <ClCompile Include="src\KoRE\ShaderData.cpp" />
     <ClCompile Include="src\KoRE\ShaderInput.cpp" />
     <ClCompile Include="src\KoRE\ShaderOutput.cpp" />
@@ -252,6 +254,8 @@
     <ClInclude Include="src\KoRE\Operations\RenderMesh.h" />
     <ClInclude Include="src\KoRE\Operations\SelectNodes.h" />
     <ClInclude Include="src\KoRE\Operations\Sequence.h" />
+    <ClInclude Include="src\KoRE\Operations\UseFBO.h" />
+    <ClInclude Include="src\KoRE\Operations\UseShaderProgram.h" />
     <ClInclude Include="src\KoRE\RenderManager.h" />
     <ClInclude Include="src\KoRE\ResourceManager.h" />
     <ClInclude Include="src\KoRE\SceneManager.h" />

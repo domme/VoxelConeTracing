@@ -199,7 +199,7 @@ GLuint kore::ShaderProgram::getUniformLocation(const std::string &name) {
   return glGetUniformLocation(_programHandle, name.c_str());
 }
 
-GLuint kore::ShaderProgram::getProgramLocation() {
+GLuint kore::ShaderProgram::getProgramLocation() const {
     return _programHandle;
 }
 

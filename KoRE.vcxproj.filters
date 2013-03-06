@@ -109,6 +109,12 @@
     <ClCompile Include="src\KoRE\Operations\Sequence.cpp">
       <Filter>src\Operations</Filter>
     </ClCompile>
+    <ClCompile Include="src\KoRE\Operations\UseFBO.cpp">
+      <Filter>src\Operations</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KoRE\Operations\UseShaderProgram.cpp">
+      <Filter>src\Operations</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\KoRE\Operations\SelectNodes.h">
@@ -226,6 +232,12 @@
       <Filter>src\Operations\BindOperations</Filter>
     </ClInclude>
     <ClInclude Include="src\KoRE\Operations\Sequence.h">
+      <Filter>src\Operations</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\Operations\UseFBO.h">
+      <Filter>src\Operations</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\Operations\UseShaderProgram.h">
       <Filter>src\Operations</Filter>
     </ClInclude>
   </ItemGroup>
