@@ -24,21 +24,17 @@
 
 kore::RenderMesh::RenderMesh(void)
   : _meshComponent(NULL),
-    _camera(NULL),
     _shader(NULL),
     kore::Operation() {
       _type = OP_RENDERMESH;
 }
 
 kore::RenderMesh::RenderMesh(const kore::MeshComponentPtr& mesh,
-                                 const kore::CameraPtr& camera,
-                                 const kore::ShaderPtr& shader)
+                             const kore::ShaderPtr& shader)
                                  : _meshComponent(NULL),
-                                 _camera(NULL),
-                                 _shader(NULL),
                                  kore::Operation() {
   _type = OP_RENDERMESH;
-  connect(mesh, camera, shader);
+  connect(mesh, shader);
 }
 
 kore::RenderMesh::~RenderMesh(void) {
@@ -46,24 +42,24 @@ kore::RenderMesh::~RenderMesh(void) {
 
 
 void kore::RenderMesh::connect(const kore::MeshComponentPtr& mesh,
-                               const kore::CameraPtr& camera,
                                const kore::ShaderPtr& shader) {
   _meshComponent = mesh;
   _shader = shader;
-  _camera = camera;
 }
 
 void kore::RenderMesh::execute(void) {
     GLerror::gl_ErrorCheckStart();
-    const std::vector<kore::ShaderInput>& vAttributes =
-                                                    _shader->getAttributes();
     const MeshPtr mesh = _meshComponent->getMesh();
 
     if (mesh == NULL) {
       return;
     }
 
-    _renderManager->useShaderProgram(_shader->getProgramLocation());
+    // Note: Normally, this call is already handled by an an "UseShaderProgram"
+    // operation. You can uncomment the line below to ensure that the correct
+    // shader is bound, but it shouldn't be neccesary.
+    // _renderManager->useShaderProgram(_shader->getProgramLocation());
+
     _renderManager->bindVBO(mesh->getVBO());
 
     if (mesh->usesIBO()) {
@@ -111,14 +107,6 @@ void kore::RenderMesh::setMesh(const kore::MeshComponentPtr& mesh) {
     _meshComponent = mesh;
 }
 
-const kore::CameraPtr& kore::RenderMesh::getCamera() const {
-    return _camera;
-}
-
-void kore::RenderMesh::setCamera(const kore::CameraPtr& camera) {
-    _camera = camera;
-}
-
 const kore::ShaderPtr& kore::RenderMesh::getShader() const {
     return _shader;
 }
@@ -129,6 +117,5 @@ void kore::RenderMesh::setShader(const kore::ShaderPtr& shader) {
 
 bool kore::RenderMesh::dependsOn(const void* thing) {
   return thing == _meshComponent.get() 
-       || thing == _shader.get()
-       || thing == _camera.get();
+       || thing == _shader.get();
 }

@@ -22,22 +22,42 @@
 #include "KoRE/Log.h"
 #include "KoRE/GLerror.h"
 
+// Create the backbuffer as a static const sharedptr.
+const kore::FrameBuffer kore::FrameBuffer::BACKBUFFER(0);
+
 kore::FrameBuffer::FrameBuffer(void)
 : _handle(KORE_GLUINT_HANDLE_INVALID) {
+
   glGenFramebuffers(1, &_handle);
-  kore::RenderManager::getInstance()->bindFrameBuffer(GL_FRAMEBUFFER, _handle);
+}
+
+// Private constructor - only for internal use!
+kore::FrameBuffer::FrameBuffer(GLuint handle) {
+  _handle = handle;
 }
 
 kore::FrameBuffer::~FrameBuffer(void) {
+  destroy();
+}
+
+void kore::FrameBuffer::destroy() {
   glDeleteFramebuffers(1, &_handle);
+  _handle = 0;
 
   for (uint i = 0; i < _textureInfos.size(); ++i) {
     KORE_SAFE_DELETE(_textureInfos[i]);
   }
+
+  _textureOutputs.clear();
+  _textureInfos.clear();
 }
 
 void kore::FrameBuffer::addTextureAttachment(const TexturePtr& tex,
                                              GLuint attatchment) {
+  if (_handle == 0 || _handle == KORE_GLUINT_HANDLE_INVALID) {
+    return;
+  }
+
   if (std::find(_textures.begin(), _textures.end(), tex) != _textures.end()) {
     return;
   }

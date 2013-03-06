@@ -30,8 +30,7 @@ namespace kore {
   public:
     explicit RenderMesh(void);
     explicit RenderMesh(const kore::MeshComponentPtr& mesh,
-                          const kore::CameraPtr& camera,
-                          const kore::ShaderPtr& shader);
+                        const kore::ShaderPtr& shader);
 
     virtual ~RenderMesh(void);
     virtual void execute(void);
@@ -41,22 +40,16 @@ namespace kore {
     virtual bool dependsOn(const void* thing);
 
     void connect(const kore::MeshComponentPtr& mesh,
-                 const kore::CameraPtr& camera,
                  const kore::ShaderPtr& shader);
 
     const kore::MeshComponentPtr& getMesh() const;
     void setMesh(const kore::MeshComponentPtr& mesh);
-
-    const kore::CameraPtr& getCamera() const;
-    void setCamera(const kore::CameraPtr& camera);
 
     const kore::ShaderPtr& getShader() const;
     void setShader(const kore::ShaderPtr& shader);
 
   private:
     kore::MeshComponentPtr _meshComponent;
-
-    kore::CameraPtr _camera;
     kore::ShaderPtr _shader;
   };
   typedef std::shared_ptr<RenderMesh> RenderMeshOpPtr;

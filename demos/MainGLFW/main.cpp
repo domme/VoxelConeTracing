@@ -38,6 +38,8 @@
 #include "KoRE/Operations/BindOperations/BindAttribute.h"
 #include "KoRE/Operations/BindOperations/BindUniform.h"
 #include "KoRE/Operations/BindOperations/BindTexture.h"
+#include "KoRE/Operations/UseFBO.h"
+#include "KoRE/Operations/UseShaderProgram.h"
 #include "KoRE/ResourceManager.h"
 #include "KoRE/RenderManager.h"
 #include "KoRE/Components/Camera.h"
@@ -45,6 +47,7 @@
 #include "KoRE/Timer.h"
 #include "KoRE/Texture.h"
 #include "KoRE/FrameBuffer.h"
+
 
 kore::SceneNodePtr rotationNode;
 kore::SceneNodePtr lightNode;
@@ -205,10 +208,15 @@ int main(void) {
     pLightPosBind->connect(pLight->getShaderData("position"),
                            pSimpleShader->getUniform("pointlightPos"));
 
+    kore::UseShaderProgramPtr pUseShader(new kore::UseShaderProgram);
+    pUseShader->connect(pSimpleShader.get());
+
+   kore::UseFBOptr pUseFBO(new kore::UseFBO);
+   GLenum drawBuffers[] = {GL_COLOR_ATTACHMENT0};
+   pUseFBO->connect(&kore::FrameBuffer::BACKBUFFER, GL_FRAMEBUFFER, drawBuffers, 1);
+
     kore::RenderMeshOpPtr pRenderOp(new kore::RenderMesh);
-    pRenderOp->setCamera(pCamera);
-    pRenderOp->setMesh(pMeshComponent);
-    pRenderOp->setShader(pSimpleShader);
+    pRenderOp->connect(pMeshComponent, pSimpleShader);
 
     kore::RenderManager::getInstance()->addOperation(pPosAttBind);
     kore::RenderManager::getInstance()->addOperation(pNormAttBind);
@@ -218,6 +226,8 @@ int main(void) {
     kore::RenderManager::getInstance()->addOperation(pProjBind);
     kore::RenderManager::getInstance()->addOperation(pLightPosBind);
     kore::RenderManager::getInstance()->addOperation(pTextureBind);
+    kore::RenderManager::getInstance()->addOperation(pUseFBO);
+    kore::RenderManager::getInstance()->addOperation(pUseShader);
     kore::RenderManager::getInstance()->addOperation(pRenderOp);
   }
 

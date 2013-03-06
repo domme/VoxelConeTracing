@@ -28,10 +28,12 @@
 #include "KoRE/OperationOwner.h"
 
 namespace kore {
-  class FrameBuffer : public OperationOwner {
+  class FrameBuffer {
   public:
     FrameBuffer(void);
     virtual ~FrameBuffer(void);
+
+    static const FrameBuffer BACKBUFFER;
 
     inline const GLuint getHandle() const {return _handle;}
     const TexturePtr getTexture(const std::string& name) const;
@@ -59,7 +61,15 @@ namespace kore {
     * \return True, if this FBO succeeds the check, false otherwise */
     bool checkFBOcompleteness();
 
+    /*! \brief Destroys this FrameBuffer internally. Deletes all Texture-
+    *          Attatchments and sets the handle to "0". This FrameBuffer
+    *          essentially becomes the BackBuffer. */
+    void destroy();
+
   private:
+    /// Internal constructor - used for creating a FrameBuffer with a
+    /// specific handle (e.g. 0 for Backbuffer)
+    FrameBuffer(GLuint handle);
     std::vector<ShaderData> _textureOutputs;
     std::vector<const TexturePtr> _textures;
     std::vector<STextureInfo*> _textureInfos;
