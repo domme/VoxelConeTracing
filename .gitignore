@@ -25,3 +25,6 @@ KoRE.lib
 lib
 bin
 ext
+*.sln
+*.vcxproj
+*.filters
