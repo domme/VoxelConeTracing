@@ -1,0 +1,290 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|Win32">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|Win32">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGUID>{03ADC7CD-D9FA-4B74-ABA0-C4CC0E8868C1}</ProjectGUID>
+    <Keyword>Win32Proj</Keyword>
+    <Platform>Win32</Platform>
+    <ProjectName>KoRE</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\lib\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">KoRE.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">KoRE</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">E:\Users\Dominik\Documents\GitHub\KoRE\lib\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">KoRE.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">KoRE</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">E:\Users\Dominik\Documents\GitHub\KoRE\lib\MinSizeRel\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">KoRE.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">KoRE</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">E:\Users\Dominik\Documents\GitHub\KoRE\lib\RelWithDebInfo\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">KoRE.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">KoRE</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">.lib</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalOptions> /Zm1000 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(SolutionDir)ext/include;$(SolutionDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;GLFW_INCLUDE_GL3;CMAKE_INTDIR="Debug";_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>Debug</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(SolutionDir)lib/Debug/KoRE.pdb</ProgramDataBaseFileName>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;GLFW_INCLUDE_GL3;CMAKE_INTDIR=\"Debug\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>E:/Users/Dominik/Documents/GitHub/KoRE/ext/include;E:/Users/Dominik/Documents/GitHub/KoRE/src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>E:/Users/Dominik/Documents/GitHub/KoRE/ext/include;E:/Users/Dominik/Documents/GitHub/KoRE/src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalOptions> /Zm1000 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>E:/Users/Dominik/Documents/GitHub/KoRE/ext/include;E:/Users/Dominik/Documents/GitHub/KoRE/src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;GLFW_INCLUDE_GL3;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>Release</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>E:/Users/Dominik/Documents/GitHub/KoRE/lib/Release/KoRE.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;GLFW_INCLUDE_GL3;CMAKE_INTDIR=\"Release\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>E:/Users/Dominik/Documents/GitHub/KoRE/ext/include;E:/Users/Dominik/Documents/GitHub/KoRE/src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>E:/Users/Dominik/Documents/GitHub/KoRE/ext/include;E:/Users/Dominik/Documents/GitHub/KoRE/src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">
+    <ClCompile>
+      <AdditionalOptions> /Zm1000 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>E:/Users/Dominik/Documents/GitHub/KoRE/ext/include;E:/Users/Dominik/Documents/GitHub/KoRE/src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;GLFW_INCLUDE_GL3;CMAKE_INTDIR="MinSizeRel";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>MinSizeRel</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>E:/Users/Dominik/Documents/GitHub/KoRE/lib/MinSizeRel/KoRE.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;GLFW_INCLUDE_GL3;CMAKE_INTDIR=\"MinSizeRel\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>E:/Users/Dominik/Documents/GitHub/KoRE/ext/include;E:/Users/Dominik/Documents/GitHub/KoRE/src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>E:/Users/Dominik/Documents/GitHub/KoRE/ext/include;E:/Users/Dominik/Documents/GitHub/KoRE/src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">
+    <ClCompile>
+      <AdditionalOptions> /Zm1000 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>E:/Users/Dominik/Documents/GitHub/KoRE/ext/include;E:/Users/Dominik/Documents/GitHub/KoRE/src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;GLFW_INCLUDE_GL3;CMAKE_INTDIR="RelWithDebInfo";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>RelWithDebInfo</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>E:/Users/Dominik/Documents/GitHub/KoRE/lib/RelWithDebInfo/KoRE.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;GLFW_INCLUDE_GL3;CMAKE_INTDIR=\"RelWithDebInfo\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>E:/Users/Dominik/Documents/GitHub/KoRE/ext/include;E:/Users/Dominik/Documents/GitHub/KoRE/src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>E:/Users/Dominik/Documents/GitHub/KoRE/ext/include;E:/Users/Dominik/Documents/GitHub/KoRE/src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="src\KoRE\CompatibleNodeGroup.cpp" />
+    <ClCompile Include="src\KoRE\Components\LightComponent.cpp" />
+    <ClCompile Include="src\KoRE\Components\TexturesComponent.cpp" />
+    <ClCompile Include="src\KoRE\FrameBuffer.cpp" />
+    <ClCompile Include="src\KoRE\Loader\lodepng.cpp" />
+    <ClCompile Include="src\KoRE\Loader\MeshLoader.cpp" />
+    <ClCompile Include="src\KoRE\Loader\ProjectLoader.cpp" />
+    <ClCompile Include="src\KoRE\Loader\SceneLoader.cpp" />
+    <ClCompile Include="src\KoRE\Loader\TextureLoader.cpp" />
+    <ClCompile Include="src\KoRE\Mesh.cpp" />
+    <ClCompile Include="src\KoRE\Operations\BindOperations\BindAttribute.cpp" />
+    <ClCompile Include="src\KoRE\Operations\BindOperations\BindTexture.cpp" />
+    <ClCompile Include="src\KoRE\Operations\BindOperations\BindUniform.cpp" />
+    <ClCompile Include="src\KoRE\Operations\BindOperations\BindOperation.cpp" />
+    <ClCompile Include="src\KoRE\Operations\Sequence.cpp" />
+    <ClCompile Include="src\KoRE\Operations\UseFBO.cpp" />
+    <ClCompile Include="src\KoRE\Operations\UseShaderProgram.cpp" />
+    <ClCompile Include="src\KoRE\ShaderData.cpp" />
+    <ClCompile Include="src\KoRE\ShaderInput.cpp" />
+    <ClCompile Include="src\KoRE\ShaderOutput.cpp" />
+    <ClCompile Include="src\KoRE\Texture.cpp" />
+    <ClCompile Include="src\KoRE\TextureSampler.cpp" />
+    <ClCompile Include="src\KoRE\Timer.cpp" />
+    <ClInclude Include="src\KoRE\Common.h" />
+    <ClInclude Include="src\KoRE\CompatibleNodeGroup.h" />
+    <ClInclude Include="src\KoRE\Components\Camera.h" />
+    <ClInclude Include="src\KoRE\Components\LightComponent.h" />
+    <ClInclude Include="src\KoRE\Components\MeshComponent.h" />
+    <ClInclude Include="src\KoRE\Components\SceneNodeComponent.h" />
+    <ClInclude Include="src\KoRE\Components\TexturesComponent.h" />
+    <ClInclude Include="src\KoRE\Components\Transform.h" />
+    <ClInclude Include="src\KoRE\Components\Values.h" />
+    <ClInclude Include="src\KoRE\DataTypes.h" />
+    <ClInclude Include="src\KoRE\FrameBuffer.h" />
+    <ClInclude Include="src\KoRE\GLerror.h" />
+    <ClInclude Include="src\KoRE\Loader\lodepng.h" />
+    <ClInclude Include="src\KoRE\Loader\MeshLoader.h" />
+    <ClInclude Include="src\KoRE\Loader\ProjectLoader.h" />
+    <ClInclude Include="src\KoRE\Loader\SceneLoader.h" />
+    <ClInclude Include="src\KoRE\Loader\TextureLoader.h" />
+    <ClInclude Include="src\KoRE\Log.h" />
+    <ClInclude Include="src\KoRE\Mesh.h" />
+    <ClInclude Include="src\KoRE\Operations\BindOperations\BindAttribute.h" />
+    <ClInclude Include="src\KoRE\Operations\BindOperations\BindTexture.h" />
+    <ClInclude Include="src\KoRE\Operations\BindOperations\BindUniform.h" />
+    <ClInclude Include="src\KoRE\Operations\BindOperations\BindOperation.h" />
+    <ClInclude Include="src\KoRE\Operations\Operation.h" />
+    <ClInclude Include="src\KoRE\Operations\RenderMesh.h" />
+    <ClInclude Include="src\KoRE\Operations\SelectNodes.h" />
+    <ClInclude Include="src\KoRE\Operations\Sequence.h" />
+    <ClInclude Include="src\KoRE\Operations\UseFBO.h" />
+    <ClInclude Include="src\KoRE\Operations\UseShaderProgram.h" />
+    <ClInclude Include="src\KoRE\RenderManager.h" />
+    <ClInclude Include="src\KoRE\ResourceManager.h" />
+    <ClInclude Include="src\KoRE\SceneManager.h" />
+    <ClInclude Include="src\KoRE\SceneNode.h" />
+    <ClInclude Include="src\KoRE\ShaderProgram.h" />
+    <ClInclude Include="src\KoRE\ShaderData.h" />
+    <ClInclude Include="src\KoRE\ShaderInput.h" />
+    <ClInclude Include="src\KoRE\ShaderOutput.h" />
+    <ClInclude Include="src\KoRE\StdAfx.h" />
+    <ClCompile Include="src\KoRE\Components\Camera.cpp" />
+    <ClCompile Include="src\KoRE\Components\MeshComponent.cpp" />
+    <ClCompile Include="src\KoRE\Components\SceneNodeComponent.cpp" />
+    <ClCompile Include="src\KoRE\Components\Transform.cpp" />
+    <ClCompile Include="src\KoRE\DataTypes.cpp" />
+    <ClCompile Include="src\KoRE\Log.cpp" />
+    <ClCompile Include="src\KoRE\Operations\Operation.cpp" />
+    <ClCompile Include="src\KoRE\Operations\RenderMesh.cpp" />
+    <ClCompile Include="src\KoRE\Operations\SelectNodes.cpp" />
+    <ClCompile Include="src\KoRE\RenderManager.cpp" />
+    <ClCompile Include="src\KoRE\ResourceManager.cpp" />
+    <ClCompile Include="src\KoRE\SceneManager.cpp" />
+    <ClCompile Include="src\KoRE\SceneNode.cpp" />
+    <ClCompile Include="src\KoRE\ShaderProgram.cpp" />
+    <ClCompile Include="src\KoRE\StdAfx.cpp" />
+    <ClInclude Include="src\KoRE\Texture.h" />
+    <ClInclude Include="src\KoRE\TextureSampler.h" />
+    <ClInclude Include="src\KoRE\Timer.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

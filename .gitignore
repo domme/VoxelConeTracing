@@ -25,6 +25,10 @@ KoRE.lib
 lib
 bin
 ext
-*.sln
-*.vcxproj
-*.filters
+
+# Uncomment these lines to update master and then run
+# git rm -r --cached .  and a commit afterwards.
+###################################################
+#*.sln
+#*.vcxproj
+#*.filters
