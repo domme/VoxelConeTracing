@@ -32,7 +32,8 @@ koregui::ShaderInputItem::ShaderInputItem(const kore::ShaderInput* input,
                                       : _input(input),
                                         _op(NULL),
                                         QGraphicsItem(parent) {
-  // setCursor(QCursor(Qt::CursorShape::OpenHandCursor));
+  //setCursor(QCursor(Qt::CursorShape::WhatsThisCursor));
+  setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
 }
 
 koregui::ShaderInputItem::~ShaderInputItem(void) {

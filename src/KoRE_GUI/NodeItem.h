@@ -44,8 +44,8 @@ namespace koregui {
 
     inline int getHeight(void) {return _nodeheight;};
     inline int getWidth(void) {return _nodewidth;};
+    inline kore::SceneNode* getSceneNode(void) {return _sceneNode;};
 
-    void mousePressEvent(QGraphicsSceneMouseEvent * event);
   private:
     kore::SceneNode* _sceneNode;
     uint _nodeheight;

@@ -59,7 +59,6 @@ namespace koregui {
       //returns pixel width of children;
       NodeItem* createNode(kore::SceneNode* sourcenode, int x, int y);
       int estimateTreeWidth(kore::SceneNode* sourcenode);
-      std::vector<NodeItem*> _selectedNodes;
       RenderViewer* _renderview;
   };
 }

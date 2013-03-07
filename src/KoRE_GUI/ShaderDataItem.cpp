@@ -30,8 +30,11 @@
 koregui::ShaderDataItem::ShaderDataItem(const kore::ShaderData* data,
                                         QGraphicsItem* parent)
                                       : _data(data),
+                                        _mouseover(false),
                                         _op(NULL),
                                         QGraphicsItem(parent) {
+  setAcceptHoverEvents(true);
+  setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
 }
 
 koregui::ShaderDataItem::~ShaderDataItem(void) {
@@ -42,7 +45,7 @@ void koregui::ShaderDataItem::refresh(void) {
 }
 
 QRectF koregui::ShaderDataItem::boundingRect() const {
-  return QRectF(0, 0, 12, 12);
+  return QRectF(-2, -2, 16, 16);
 }
 
 void koregui::ShaderDataItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) {
@@ -55,5 +58,18 @@ void koregui::ShaderDataItem::paint(QPainter* painter, const QStyleOptionGraphic
   b.setStyle(Qt::BrushStyle::SolidPattern);
   painter->setBrush(b);
   painter->setPen(p);
-  painter->drawRect(0, 0, 12, 12);
+  if(_mouseover) {
+    painter->drawRect(-2, -2, 16, 16);
+  } else {
+   painter->drawRect(0, 0, 12, 12);
+  }
+}
+
+void koregui::ShaderDataItem::hoverEnterEvent(QGraphicsSceneHoverEvent * event) {
+  _mouseover = true;
+  QGraphicsItem::hoverEnterEvent(event);
+}
+void koregui::ShaderDataItem::hoverLeaveEvent(QGraphicsSceneHoverEvent * event) {
+  _mouseover = false;
+  QGraphicsItem::hoverLeaveEvent(event);
 }

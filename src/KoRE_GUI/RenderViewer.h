@@ -25,6 +25,7 @@
 #define SRC_KOREGUI_RENDERVIEWER_H_
 
 #include <QGraphicsView>
+#include "KoRE_GUI/NodeItem.h"
 
 namespace koregui {
   class RenderViewer : public QGraphicsView {
@@ -34,21 +35,24 @@ namespace koregui {
     RenderViewer(QWidget *parent = 0);
     ~RenderViewer();
 
-   void addSelection(const QList<QGraphicsItem*>& items);
+   void addSelection(const std::vector<NodeItem*>& nodes);
+   void createNode(kore::SceneNode* sourcenode, int x, int y);
 
 
   public slots:
-    void zoomIn() {scale(1.2,1.2);}
-    void zoomOut() {scale(1/1.2,1/1.2);}
+    void zoomIn(void) {scale(1.2,1.2);}
+    void zoomOut(void) {scale(1/1.2,1/1.2);}
 
   protected:
     void keyPressEvent(QKeyEvent* event);
+    void keyReleaseEvent(QKeyEvent * event);
     void wheelEvent(QWheelEvent *event);
     void contextMenuEvent(QContextMenuEvent *event);
 
   private:
       void clearScene();
       QGraphicsScene _scene;
+      std::vector<NodeItem*> _nodes;
   };
 }
 #endif // SRC_KOREGUI_RENDERVIEWER_H_

@@ -34,8 +34,9 @@
 koregui::SceneViewer::SceneViewer(koregui::RenderViewer* renderview, QWidget *parent)
                                 : _renderview(renderview),
                                   QGraphicsView(parent) {
+  setWindowTitle("SceneView");
   setDragMode(RubberBandDrag);
-  _scene.setBackgroundBrush(QBrush(Qt::darkGray));
+  _scene.setBackgroundBrush(QBrush(QColor(23,23,23)));
   setScene(&_scene);
   setMinimumSize(800,600);
 }
@@ -115,12 +116,16 @@ void koregui::SceneViewer::mousePressEvent(QMouseEvent * event) {
 }
 
 void koregui::SceneViewer::contextMenuEvent(QContextMenuEvent *event) {
-  QMenu menu("TEST", this);
+  QMenu menu("SceneContext", this);
   menu.addAction(QIcon("./assets/icons/testStar.png"), "Add Selection to Renderview", this, SLOT(addSelectionToRenderview()), (Qt::CTRL + Qt::Key_A));
   menu.exec(event->globalPos());
 }
 
 void koregui::SceneViewer::addSelectionToRenderview() {
-  //
-  int i = _scene.selectedItems().size();
+  QList<QGraphicsItem*> list = _scene.selectedItems();
+  std::vector<NodeItem*> nodes;
+  for(uint i = 0; i < list.size(); i++){
+    nodes.push_back(static_cast<NodeItem*>(list.at(i)));
+  }
+  _renderview->addSelection(nodes);
 }

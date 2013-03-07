@@ -31,9 +31,9 @@
 #include "KoRE/RenderManager.h"
 
 koregui::RenderViewer::RenderViewer(QWidget *parent) : QGraphicsView(parent) {
-  setDragMode(ScrollHandDrag);
+  setWindowTitle("RenderView");
   // setDragMode(RubberBandDrag);
-  _scene.setBackgroundBrush(QBrush(Qt::darkGray));
+  _scene.setBackgroundBrush(QBrush(QColor(23,23,23)));
   setScene(&_scene);
   setMinimumSize(800,600);
   const kore::ShaderProgram* shader = kore::RenderManager::getInstance()->getShaderProgram("MegaShader");
@@ -57,7 +57,14 @@ void koregui::RenderViewer::clearScene(void) {
 
 void koregui::RenderViewer::keyPressEvent(QKeyEvent * event) {
   if (event->key() == Qt::Key_Escape) QGuiApplication::quit();
+  if (event->key() == Qt::Key_Shift) setDragMode(ScrollHandDrag);
   QGraphicsView::keyPressEvent(event);
+}
+
+
+void koregui::RenderViewer::keyReleaseEvent(QKeyEvent * event) {
+  if (event->key() == Qt::Key_Shift) setDragMode(NoDrag);
+  QGraphicsView::keyReleaseEvent(event);
 }
 
 void koregui::RenderViewer::wheelEvent(QWheelEvent *event) {
@@ -74,20 +81,26 @@ void koregui::RenderViewer::contextMenuEvent(QContextMenuEvent *event) {
     test->contextMenu(event->globalPos());
     return;
   }
-  QMenu menu("TEST", this);
-  menu.hideTearOffMenu();
-  menu.addAction(QIcon("./assets/icons/testStar.png"), "Add", this, SLOT(zoomIn()), (Qt::CTRL + Qt::Key_N));
-  menu.addAction("tu jenes", 0, 0);
-  QMenu* lvl2  = menu.addMenu("Totoal");
-  lvl2->addAction("Schnorch!", this, SLOT(zoomOut()));
-  lvl2->addAction("Blubb!", 0, 0);
-  //menu.addAction(...);
-  //menu.addAction(...);
+  QMenu menu("RenderContext", this);
+  menu.addAction(QIcon("./assets/icons/testStar.png"),
+                 "Create", this, SLOT(zoomIn()),
+                 (Qt::CTRL + Qt::Key_N));
+  QMenu* lvl2  = menu.addMenu(QIcon("./assets/icons/testStar.png"), "Create");
+  lvl2->addAction("EmptyNode", this, SLOT(zoomOut()));
+  lvl2->addAction("Group", 0, 0);
   menu.exec(event->globalPos());
 }
 
-void koregui::RenderViewer::addSelection(const QList<QGraphicsItem*>& items) {
+void koregui::RenderViewer
+  ::addSelection(const std::vector<koregui::NodeItem*>& items) {
   for (uint i = 0; i < items.size(); i++) {
-    _scene.addItem(items[i]);
+    createNode(items[i]->getSceneNode(), 0,0);
   }
+}
+
+void koregui::RenderViewer
+  ::createNode(kore::SceneNode* sourcenode, int x, int y) {
+  NodeItem* nodeItem = new NodeItem(sourcenode);
+  _scene.addItem(nodeItem);
+  nodeItem->setPos(x, y);
 }
