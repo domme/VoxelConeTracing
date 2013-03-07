@@ -69,15 +69,12 @@ namespace kore {
     const ShaderProgram* getShaderProgram(const std::string& name);
     void setRenderResolution(const glm::ivec2& newResolution);
     void renderFrame(void);
-    void addShaderProgram(const std::string& name,
-                          const ShaderProgram* program);
-    void addOperation(const OperationPtr& op);
-    void addOperation(const OperationPtr& op,
-                      const OperationPtr& targetOp,
+    void addOperation(const Operation* op);
+    void addOperation(const Operation* op,
+                      const Operation* targetOp,
                       const EOpInsertPos insertPos);
-    bool hasOperation(const OperationPtr& op);
+    bool hasOperation(const Operation* op);
 
-    void removeOperation(const OperationPtr& op);
     void removeOperation(const Operation* op);
 
     void onRemoveComponent(const SceneNodeComponent* comp);
@@ -116,7 +113,7 @@ namespace kore {
     void resolutionChanged();
     glm::ivec2 _renderResolution;
 
-    typedef std::list<OperationPtr> OperationList;
+    typedef std::list<const Operation*> OperationList;
     OperationList _operations;
 
     // OpenGL-States:
@@ -132,7 +129,6 @@ namespace kore {
     bool   _drawBuffers[KORE_MAX_FRAMEBUFFER_COUNT]
                        [GL_MAX_DRAW_BUFFERS];
     std::map<GLuint, uint> _vTexTargetMap;
-    std::map<std::string, const ShaderProgram*> _shaderProgramMap;
     //////////////////////////////////////////////////////////////////////////
   };
 };

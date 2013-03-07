@@ -36,14 +36,15 @@ namespace kore {
     MeshComponent(void);
     virtual ~MeshComponent(void);
 
-    inline const MeshPtr& getMesh() {return _mesh;}
-    void setMesh(MeshPtr& mesh);
+    inline const Mesh* getMesh() const {return _mesh;}
+    inline Mesh* getMesh() {return _mesh;}
+
+    void setMesh(Mesh* mesh);
 
   private:
-    MeshPtr _mesh;
+    Mesh* _mesh;
 
     void destroyAttributes();
   };
-  typedef std::shared_ptr<kore::MeshComponent> MeshComponentPtr;
 };
 #endif  // CORE_INCLUDE_CORE_MESH_H_

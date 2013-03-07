@@ -51,8 +51,6 @@ namespace kore {
       void* data;
   };
 
-  typedef std::shared_ptr<MeshAttributeArray> MeshAttributeArrayPtr;
-
   class Mesh {
     friend class SceneLoader;
     friend class MeshLoader;
@@ -92,10 +90,9 @@ namespace kore {
     GLuint                          _VAOloc;
     GLuint                          _IBOloc;
   };
-  typedef std::shared_ptr<kore::Mesh> MeshPtr;
 
   struct SMeshInformation {
-    MeshPtr mesh;
+    Mesh* mesh;
     const MeshAttributeArray* meshAtt;
   };
 }

@@ -33,7 +33,7 @@ namespace kore {
     BindOperation();
     virtual ~BindOperation();
 
-    virtual bool dependsOn(const void* thing);
+    virtual bool dependsOn(const void* thing) const;
 
   protected:
     const ShaderData* _componentUniform;

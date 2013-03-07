@@ -49,7 +49,7 @@ namespace kore {
   public:
     explicit Texture(void);
     ~Texture(void);
-    inline const STextureProperties& getProperties() {return _properties;}
+    inline const STextureProperties& getProperties() const {return _properties;}
     inline GLuint getHandle() const {return _handle;}
     inline const std::string& getName() const {return _resourcepath;}
 
@@ -76,6 +76,5 @@ namespace kore {
 
     void destroy();
   };
-  typedef std::shared_ptr<kore::Texture> TexturePtr;
 }
 #endif  // SRC_KORE_TEXTURE_H_

@@ -32,13 +32,13 @@ namespace kore {
                Ignore if SceneNode is already part of the group.
         \param node The SceneNode to add.
     */
-    void addSceneNode(const SceneNodePtr node);
+    void addSceneNode(SceneNode* node);
 
     /*! \brief Remove SceneNode from the group and refresh compatibility list.
                Ignore if SceneNode is not part of the group.
         \param node The SceneNode to remove.
     */
-    void removeSceneNode(const SceneNodePtr node);
+    void removeSceneNode(const SceneNode* node);
 
     /*! \brief checks if a component type is compatible with the group.
         \param type ComponentType to check.
@@ -55,7 +55,7 @@ namespace kore {
         \param type The type the of SceneNodeComponents.
         \return Vector of SceneNodeComponents.
     */
-    const std::vector<SceneNodeComponentPtr>
+    const std::vector<SceneNodeComponent*>
       getComponents(EComponentType type) const;
 
     /*! \brief Gets all compatible ShaderData
@@ -78,7 +78,7 @@ namespace kore {
     uint64 _id;
     ComponentProxy _dataCompatibles;
     std::map<EComponentType, bool> _typeCompatibles;
-    std::vector<SceneNodePtr> _nodes;
+    std::vector<SceneNode*> _nodes;
   };
 }
 #endif  // SRC_KORE_COMPATIBLENODEGROUP_H_

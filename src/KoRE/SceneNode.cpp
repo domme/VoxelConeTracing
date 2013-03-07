@@ -31,7 +31,7 @@ kore::SceneNode::SceneNode(void)
                         _parent(NULL),
                         _dirty(true) {
   _id = kore::SceneManager::getInstance()->createID();
-  _transform = TransformPtr(new Transform());
+  _transform = new Transform;
   _components.push_back(_transform);
 }
 
@@ -80,28 +80,38 @@ bool kore::SceneNode::isCompatibleWith(const SceneNode& otherNode,
 }*/
 
 
-const kore::SceneNodePtr& kore::SceneNode::getParent(void) const {
+const kore::SceneNode* kore::SceneNode::getParent(void) const {
   return _parent;
 }
 
-const std::vector<kore::SceneNodePtr>& kore::SceneNode::getChildren() const {
+const std::vector<kore::SceneNode*>& kore::SceneNode::getChildren() const {
   return _children;
 }
 
-const std::vector<kore::SceneNodeComponentPtr>
+const std::vector<kore::SceneNodeComponent*>
     kore::SceneNode::getComponents() const {
     return _components;
 }
 
-const kore::SceneNodeComponentPtr
-kore::SceneNode::getComponent(EComponentType type) const {
-  for (unsigned int i = 0; i < _components.size(); ++i) {
-    if (_components[i]->getType() == type) return _components[i];
-  }
-  return NULL;
+kore::SceneNodeComponent*
+  kore::SceneNode::getComponent(const EComponentType type) {
+    for (unsigned int i = 0; i < _components.size(); ++i) {
+      if (_components[i]->getType() == type) return _components[i];
+    }
+    return NULL;
 }
 
-const kore::TransformPtr kore::SceneNode::getTransform() const {
+const kore::SceneNodeComponent*
+kore::SceneNode::getComponent(EComponentType type) const {
+  const EComponentType cType = type;
+  return getComponent(cType);
+}
+
+const kore::Transform* kore::SceneNode::getTransform() const {
+  return _transform;
+}
+
+kore::Transform* kore::SceneNode::getTransform() {
   return _transform;
 }
 
@@ -117,17 +127,17 @@ const std::string kore::SceneNode::getName(void) const {
   return _name;
 }
 
-void kore::SceneNode::setParent(const SceneNodePtr& parent) {
+void kore::SceneNode::setParent(SceneNode* parent) {
   _parent = parent;
 }
 
-void kore::SceneNode::addChild(const SceneNodePtr& child) {
+void kore::SceneNode::addChild(SceneNode* child) {
   _children.push_back(child);
 }
 
-void kore::SceneNode::addComponent(const SceneNodeComponentPtr& component) {
+void kore::SceneNode::addComponent(SceneNodeComponent* component) {
   _components.push_back(component);
-  component->attachTo(SceneNodePtr(this));
+  component->attachTo(this);
 }
 
 void kore::SceneNode::setTag(const std::string& tagname) {
@@ -246,7 +256,7 @@ void kore::SceneNode::setOrientation(const glm::vec3& v3Side,
 }
 
 void kore::SceneNode::getSceneNodesByTag(const uint tag,
-                                         std::vector<SceneNodePtr>& vNodes ) {
+                                         std::vector<SceneNode*>& vNodes ) {
   for (uint iChild = 0; iChild < _children.size(); ++iChild) {
       // If there is at least one bit set in both tags, the child is added
       if ((_children[iChild]->getTag() & tag) != 0) {
@@ -257,10 +267,9 @@ void kore::SceneNode::getSceneNodesByTag(const uint tag,
 }
 
 void kore::SceneNode::getSceneNodesByName(const std::string& name,
-                                          std::vector<SceneNodePtr>& vNodes) {
+                                          std::vector<SceneNode*>& vNodes) {
   if (_name == name) {
-    // TODO(dlazarek) Dangerous: Assuming 'this' is on heap
-    vNodes.push_back(SceneNodePtr(this));
+    vNodes.push_back(this);
   }
 
   for (uint iChild = 0; iChild < _children.size(); ++iChild) {
@@ -271,10 +280,10 @@ void kore::SceneNode::getSceneNodesByName(const std::string& name,
 
 void kore::SceneNode::
 getSceneNodesByComponent(const EComponentType componentType,
-                         std::vector<SceneNodePtr>& vNodes ) {
+                         std::vector<SceneNode*>& vNodes ) {
   if (getComponent(componentType) != NULL) {
     // TODO(dlazarek) Dangerous: Assuming 'this' is on heap
-    vNodes.push_back(SceneNodePtr(this));
+    vNodes.push_back(this);
   }
 
   for (uint iChild = 0; iChild < _children.size(); ++iChild) {

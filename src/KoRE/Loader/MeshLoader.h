@@ -37,13 +37,13 @@ namespace kore {
     virtual ~MeshLoader();
 
     /*
-    SceneNodePtr loadScene(const std::string& szScenePath,
+    SceneNode* loadScene(const std::string& szScenePath,
                            const bool bUseBuffers);
-    MeshPtr loadSingleMesh(const std::string& szMeshPath,
+    Mesh* loadSingleMesh(const std::string& szMeshPath,
                            const bool bUseBuffers);
     */
 
-    kore::MeshPtr loadMesh(const aiScene* paiScene,
+    kore::Mesh* loadMesh(const aiScene* paiScene,
                            const uint uMeshIdx);
 
     std::string getMeshName(const aiMesh* paiMesh,
@@ -58,27 +58,27 @@ namespace kore {
 
     void loadChildNode(const aiScene* paiScene,
                        const aiNode* paiNode,
-                       SceneNodePtr& parentNode,
+                       SceneNode* parentNode,
                        const bool bUseBuffers);
 
     void loadVertexPositions(const aiMesh* pAiMesh,
-                             kore::MeshPtr& pMesh);
+                             kore::Mesh* pMesh);
 
     void loadVertexNormals(const aiMesh* pAiMesh,
-                           kore::MeshPtr& pMesh);
+                           kore::Mesh* pMesh);
 
     void loadVertexTangents(const aiMesh* pAiMesh,
-                            kore::MeshPtr& pMesh);
+                            kore::Mesh* pMesh);
 
     void loadFaceIndices(const aiMesh* pAiMesh,
-                         kore::MeshPtr& pMesh);
+                         kore::Mesh* pMesh);
 
     void loadVertexTextureCoords(const aiMesh* pAiMesh,
-                                 kore::MeshPtr& pMesh,
+                                 kore::Mesh* pMesh,
                                  const unsigned int iUVset);
 
     void loadVertexColors(const aiMesh* pAiMesh,
-                          kore::MeshPtr& pMesh,
+                          kore::Mesh* pMesh,
                           const unsigned int iColorSet);
 
     glm::mat4 glmMatFromAiMat(const aiMatrix4x4& aiMat);

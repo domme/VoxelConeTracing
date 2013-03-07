@@ -50,7 +50,7 @@ kore::ResourceManager::~ResourceManager(void) {
 }
 
 void kore::ResourceManager::loadScene(const std::string& filename,
-                                      kore::SceneNodePtr parent) {
+                                      kore::SceneNode* parent) {
   kore::SceneLoader::getInstance()->loadScene(filename, parent);
 }
 
@@ -66,13 +66,13 @@ void kore::ResourceManager::loadProject(const std::string& filename) {
   kore::ProjectLoader::getInstance()->loadProject(filename);
 }
 
-kore::TexturePtr
+kore::Texture*
   kore::ResourceManager::loadTexture(const std::string& filename) {
     return kore::TextureLoader::getInstance()->loadTexture(filename);
 }
 
 void kore::ResourceManager::addMesh(const std::string& path,
-                                    kore::MeshPtr mesh) {
+                                    kore::Mesh* mesh) {
   if (!(_meshes.count(path) > 0)) {
     InnerMeshMapT internalMap;
     _meshes[path] = internalMap;
@@ -82,7 +82,7 @@ void kore::ResourceManager::addMesh(const std::string& path,
 }
 
 void kore::ResourceManager::addCamera(const std::string& path,
-                                      kore::CameraPtr camera ) {
+                                      kore::Camera* camera ) {
   if (!(_cameras.count(path) > 0)) {
     InnerResourceMapT internalMap;
     _cameras[path] = internalMap;
@@ -92,7 +92,7 @@ void kore::ResourceManager::addCamera(const std::string& path,
 }
 
 void kore::ResourceManager::addLight(const std::string& path,
-                                     kore::LightComponentPtr light) {
+                                     kore::LightComponent* light) {
   if (!(_lights.count(path) > 0)) {
     InnerResourceMapT internalMap;
     _lights[path] = internalMap;
@@ -102,41 +102,51 @@ void kore::ResourceManager::addLight(const std::string& path,
 }
 
 void kore::ResourceManager::addTexture(const std::string& path,
-                                       kore::TexturePtr texture) {
+                                       kore::Texture* texture) {
   _textures[path] = texture;
 }
 
-kore::MeshPtr kore::ResourceManager::getMesh(const std::string& path,
+void kore::ResourceManager::addShaderProgram(const std::string& name,
+                                           const ShaderProgram* program) {
+  if(_shaderProgramMap.count(name)> 0) {
+    kore::Log::getInstance()
+      ->write("[ERROR] Shader '%s' already in RenderManager\n", name.c_str());
+    return;
+  }
+  _shaderProgramMap[name] = program;
+}
+
+kore::Mesh* kore::ResourceManager::getMesh(const std::string& path,
                                              const std::string& id) {
   if (!(_meshes.count(path) > 0)) {
-    return MeshPtr();  // NULL
+    return NULL;
   }
 
-  return std::static_pointer_cast<kore::Mesh>(_meshes[path][id]);
+  return  static_cast<kore::Mesh*>(_meshes[path][id]);
 }
 
-kore::CameraPtr kore::ResourceManager::getCamera(const std::string& path,
+kore::Camera* kore::ResourceManager::getCamera(const std::string& path,
                                                  const std::string& id) {
   if (!(_cameras.count(path) > 0)) {
-    return CameraPtr();  // NULL
+    return NULL;
   }
 
-  return std::static_pointer_cast<kore::Camera>(_cameras[path][id]);
+  return static_cast<kore::Camera*>(_cameras[path][id]);
 }
 
-kore::LightComponentPtr 
+kore::LightComponent* 
   kore::ResourceManager::
   getLight(const std::string& path, const std::string& id) {
     if (!(_lights.count(path) > 0)) {
-      return LightComponentPtr();  // NULL
+      return NULL;
     }
 
-    return std::static_pointer_cast<kore::LightComponent>(_lights[path][id]);
+    return static_cast<kore::LightComponent*>(_lights[path][id]);
 }
 
-kore::TexturePtr kore::ResourceManager::getTexture(const std::string& path) {
+kore::Texture* kore::ResourceManager::getTexture(const std::string& path) {
   if (_textures.count(path) == 0) {
-    return TexturePtr();  // NULL
+    return NULL;
   }
   return _textures[path];
 }
@@ -146,6 +156,14 @@ GLuint kore::ResourceManager::getShaderHandle(const std::string& path) {
     return KORE_GLUINT_HANDLE_INVALID;
   }
   return _shaderHandles[path];
+}
+
+const kore::ShaderProgram* kore::ResourceManager
+  ::getShaderProgram(const std::string& name) const {
+  if (_shaderProgramMap.count(name)) {
+    return _shaderProgramMap.find(name)->second;
+  }
+  return NULL;
 }
 
 void kore::ResourceManager::addShaderHandle(const std::string& path,

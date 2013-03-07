@@ -11,7 +11,7 @@ kore::TexturesComponent::~TexturesComponent(void) {
 }
 
 void kore::
-  TexturesComponent::addTexture(TexturePtr tex,
+  TexturesComponent::addTexture(Texture* tex,
                                 const bool useMipMaps /*=true*/,
                                 const TextureSampler* sampler /*= NULL*/ ) {
   if (std::find(_vTextures.begin(),

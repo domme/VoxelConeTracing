@@ -33,7 +33,7 @@ kore::CompatibleNodeGroup::~CompatibleNodeGroup() {
   _nodes.clear();
 }
 
-void kore::CompatibleNodeGroup::addSceneNode(const SceneNodePtr node) {
+void kore::CompatibleNodeGroup::addSceneNode(SceneNode* node) {
   // check if node isn't already in group
   for (uint i = 0; i < _nodes.size(); i++) {
     if(node->getID() == _nodes[i]->getID()) {
@@ -49,10 +49,10 @@ void kore::CompatibleNodeGroup::addSceneNode(const SceneNodePtr node) {
   refresh();
 }
 
-void kore::CompatibleNodeGroup::removeSceneNode(const SceneNodePtr node) {
-  std::vector<SceneNodePtr>::iterator it = _nodes.begin();
+void kore::CompatibleNodeGroup::removeSceneNode(const SceneNode* node) {
+  std::vector<SceneNode*>::iterator it = _nodes.begin();
   while(it < _nodes.end()) {
-    if(node->getID() == it->get()->getID()) {
+    if(node->getID() == (*it)->getID()) {
       _nodes.erase(it);
       refresh();
       return;
@@ -84,9 +84,9 @@ bool kore::CompatibleNodeGroup::isCompatible(kore::EComponentType type,
   return false;
 }
 
-const std::vector<kore::SceneNodeComponentPtr>
+const std::vector<kore::SceneNodeComponent*>
   kore::CompatibleNodeGroup::getComponents(kore::EComponentType type) const {
-  std::vector<kore::SceneNodeComponentPtr> components;
+  std::vector<kore::SceneNodeComponent*> components;
   for (uint i = 0; i < _nodes.size(); i++) {
     if(_nodes[i]->getComponent(type) != NULL
        && isCompatible(type)) {
@@ -116,7 +116,7 @@ void kore::CompatibleNodeGroup::refresh() {
   if(_nodes.size() == 0) return;
 
   // set compatibility for first node
-  std::vector<SceneNodeComponentPtr> components = _nodes[0]->getComponents();
+  std::vector<SceneNodeComponent*> components = _nodes[0]->getComponents();
   for (uint i = 0; i < components.size(); i++) {
     EComponentType type = components[i]->getType();
     _typeCompatibles[type] = true;
@@ -129,7 +129,7 @@ void kore::CompatibleNodeGroup::refresh() {
   
   // add each node and update compatibility
   for (uint k = 1; k < _nodes.size(); k++) {
-    std::vector<SceneNodeComponentPtr> components = _nodes[k]->getComponents();
+    std::vector<SceneNodeComponent*> components = _nodes[k]->getComponents();
     for (uint l = 0; l < components.size(); l++) {
       EComponentType type = components[l]->getType();
       // check if data is in map, otherwise add it false

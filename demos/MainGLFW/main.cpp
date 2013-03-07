@@ -49,9 +49,9 @@
 #include "KoRE/FrameBuffer.h"
 
 
-kore::SceneNodePtr rotationNode;
-kore::SceneNodePtr lightNode;
-kore::CameraPtr pCamera;
+kore::SceneNode* rotationNode;
+kore::SceneNode* lightNode;
+kore::Camera* pCamera;
 
 /*void CALLBACK DebugLog(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, GLvoid* userParams) {
   //Log::getInstance()->write("[ERROR] Type: %s, Source: %s, Severity: %s\n", 
@@ -125,7 +125,7 @@ int main(void) {
   glCullFace(GL_BACK);
 
   // load shader
-  kore::ShaderPtr pSimpleShader(new kore::ShaderProgram);
+  kore::ShaderProgram* pSimpleShader = new kore::ShaderProgram;
   pSimpleShader->loadShader("./assets/shader/normalColor.vp",
                             GL_VERTEX_SHADER);
   pSimpleShader->loadShader("./assets/shader/normalColor.fp",
@@ -137,85 +137,84 @@ int main(void) {
     ->loadScene("./assets/meshes/TestEnv.dae");
 
   // texture loading
-  kore::TexturePtr testTexture =
+  kore::Texture* testTexture =
     kore::ResourceManager::getInstance()->
     loadTexture("./assets/textures/Crate.png");
 
   // find camera
-  kore::SceneNodePtr pCameraNode = kore::SceneManager::getInstance()
+  kore::SceneNode* pCameraNode = kore::SceneManager::getInstance()
     ->getSceneNodeByComponent(kore::COMPONENT_CAMERA);
-  pCamera = std::static_pointer_cast<kore::Camera>(
+  pCamera = static_cast<kore::Camera*>(
             pCameraNode->getComponent(kore::COMPONENT_CAMERA));
 
   // find light
   lightNode = kore::SceneManager::getInstance()
     ->getSceneNodeByComponent(kore::COMPONENT_LIGHT);
-  kore::LightComponentPtr pLight = std::static_pointer_cast<kore::LightComponent>(
+  kore::LightComponent* pLight = static_cast<kore::LightComponent*>(
     lightNode->getComponent(kore::COMPONENT_LIGHT));
 
   // select render nodes
-  std::vector<kore::SceneNodePtr> vRenderNodes;
+  std::vector<kore::SceneNode*> vRenderNodes;
   kore::SceneManager::getInstance()->
                   getSceneNodesByComponent(kore::COMPONENT_MESH, vRenderNodes);
 
   // init operations
   for (uint i = 0; i < vRenderNodes.size(); ++i) {
     
-    kore::MeshComponentPtr pMeshComponent =
-      std::static_pointer_cast<kore::MeshComponent>
+    kore::MeshComponent* pMeshComponent =
+      static_cast<kore::MeshComponent*>
       (vRenderNodes[i]->getComponent(kore::COMPONENT_MESH));
     
     // Add Texture
     kore::GLerror::gl_ErrorCheckStart();
-    kore::TexturesComponentPtr pTexComponent =
-        kore::TexturesComponentPtr(new kore::TexturesComponent);
+    kore::TexturesComponent* pTexComponent = new kore::TexturesComponent;
     pTexComponent->addTexture(testTexture);
     vRenderNodes[i]->addComponent(pTexComponent);
     kore::GLerror::gl_ErrorCheckFinish("Initialization");
 
     // Bind Attribute-Ops
-    kore::BindAttributePtr pPosAttBind (new kore::BindAttribute);
+    kore::BindAttribute* pPosAttBind (new kore::BindAttribute);
     pPosAttBind->connect(pMeshComponent->getShaderData("v_position"),
                          pSimpleShader->getAttribute("v_position"));
 
-    kore::BindAttributePtr pNormAttBind (new kore::BindAttribute);
+    kore::BindAttribute* pNormAttBind (new kore::BindAttribute);
     pNormAttBind->connect(pMeshComponent->getShaderData("v_normal"),
                           pSimpleShader->getAttribute("v_normal"));
 
-    kore::BindAttributePtr pUVAttBind (new kore::BindAttribute);
+    kore::BindAttribute* pUVAttBind (new kore::BindAttribute);
     pUVAttBind->connect(pMeshComponent->getShaderData("v_uv0"),
                         pSimpleShader->getAttribute("v_uv0"));
     
     // Bind Uniform-Ops
-    kore::BindUniformPtr pModelBind(new kore::BindUniform);
+    kore::BindUniform* pModelBind(new kore::BindUniform);
     pModelBind->connect(vRenderNodes[i]->getTransform()->getShaderData("model Matrix"),
                         pSimpleShader->getUniform("model"));
 
-    kore::BindUniformPtr pViewBind(new kore::BindUniform);
+    kore::BindUniform* pViewBind(new kore::BindUniform);
     pViewBind->connect(pCamera->getShaderData("view Matrix"),
                        pSimpleShader->getUniform("view"));
 
-    kore::BindUniformPtr pProjBind(new kore::BindUniform);
+    kore::BindUniform* pProjBind(new kore::BindUniform);
     pProjBind->connect(pCamera->getShaderData("projection Matrix"),
                        pSimpleShader->getUniform("projection"));
 
-    kore::BindTexturePtr pTextureBind(new kore::BindTexture);
+    kore::BindTexture* pTextureBind(new kore::BindTexture);
     pTextureBind->connect(pTexComponent->getShaderData(testTexture->getName()),
                           pSimpleShader->getUniform("tex"));
 
 
-    kore::BindUniformPtr pLightPosBind(new kore::BindUniform);
+    kore::BindUniform* pLightPosBind(new kore::BindUniform);
     pLightPosBind->connect(pLight->getShaderData("position"),
                            pSimpleShader->getUniform("pointlightPos"));
 
-    kore::UseShaderProgramPtr pUseShader(new kore::UseShaderProgram);
-    pUseShader->connect(pSimpleShader.get());
+    kore::UseShaderProgram* pUseShader(new kore::UseShaderProgram);
+    pUseShader->connect(pSimpleShader);
 
-   kore::UseFBOptr pUseFBO(new kore::UseFBO);
+   kore::UseFBO* pUseFBO(new kore::UseFBO);
    GLenum drawBuffers[] = {GL_COLOR_ATTACHMENT0};
    pUseFBO->connect(&kore::FrameBuffer::BACKBUFFER, GL_FRAMEBUFFER, drawBuffers, 1);
 
-    kore::RenderMeshOpPtr pRenderOp(new kore::RenderMesh);
+    kore::RenderMesh* pRenderOp = new kore::RenderMesh();
     pRenderOp->connect(pMeshComponent, pSimpleShader);
 
     kore::RenderManager::getInstance()->addOperation(pPosAttBind);
@@ -231,7 +230,7 @@ int main(void) {
     kore::RenderManager::getInstance()->addOperation(pRenderOp);
   }
 
-  std::vector<kore::SceneNodePtr> vBigCubeNodes;
+  std::vector<kore::SceneNode*> vBigCubeNodes;
   kore::SceneManager::getInstance()
     ->getSceneNodesByName("Cube", vBigCubeNodes);
   rotationNode = vBigCubeNodes[0];

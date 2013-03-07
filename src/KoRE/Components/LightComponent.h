@@ -41,7 +41,7 @@ namespace kore {
     LightComponent();
     virtual ~LightComponent();
 
-    virtual void transformChanged(const TransformPtr& newTransform);
+    virtual void transformChanged(const Transform* newTransform);
 
     inline void setName(const std::string& name) {_name = name;}
     inline const std::string& getName() const {return _name;}
@@ -61,7 +61,6 @@ namespace kore {
 
     void init();
   };
-  typedef std::shared_ptr<LightComponent> LightComponentPtr;
 }
 
 #endif  // CORE_INCLUDE_CORE_LIGHTCOMPONENT_H_

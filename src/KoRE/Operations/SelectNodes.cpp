@@ -21,7 +21,7 @@
 #include "KoRE/RenderManager.h"
 
 kore::SelectNodes::SelectNodes(const uint tag,
-                               const SceneNodePtr& root,
+                               const SceneNode* root,
                                ESortingType type) {
   _type = OP_SELECTNODES;
   append(root, tag);
@@ -29,7 +29,7 @@ kore::SelectNodes::SelectNodes(const uint tag,
 }
 
 kore::SelectNodes::SelectNodes(const std::string& name,
-                               const SceneNodePtr& root,
+                               const SceneNode* root,
                                ESortingType type,
                                bool partial_match) {
   _type = OP_SELECTNODES;
@@ -39,17 +39,17 @@ kore::SelectNodes::SelectNodes(const std::string& name,
 
 kore::SelectNodes::~SelectNodes() {}
 
-void kore::SelectNodes::execute() {}
+void kore::SelectNodes::execute() const {}
 
 void kore::SelectNodes::update() {}
 
 void kore::SelectNodes::reset() {}
 
-bool kore::SelectNodes::isValid(void) {
+bool kore::SelectNodes::isValid(void) const {
   return false;
 }
 
-void kore::SelectNodes::append(const SceneNodePtr& root, const uint tag) {
+void kore::SelectNodes::append(const SceneNode* root, const uint tag) {
   // TODO(someone): tag matching
   // if (tagmatch) {
   //   _nodes.push_back(root);
@@ -58,7 +58,7 @@ void kore::SelectNodes::append(const SceneNodePtr& root, const uint tag) {
     append(root->getChildren()[i], tag);
   }
 }
-void kore::SelectNodes::append(const SceneNodePtr& root, const std::string& name) {
+void kore::SelectNodes::append(const SceneNode* root, const std::string& name) {
   // TODO(someone) name matching
   // if (namematch) {
   //   _nodes.push_back(root);
@@ -72,6 +72,6 @@ void kore::SelectNodes::destroy() {
   _renderManager->removeOperation(this);
 }
 
-bool kore::SelectNodes::dependsOn(const void* thing) {
+bool kore::SelectNodes::dependsOn(const void* thing) const {
   return false;
 }

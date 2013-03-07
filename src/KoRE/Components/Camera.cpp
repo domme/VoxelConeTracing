@@ -117,7 +117,7 @@ isCompatibleWith(const SceneNodeComponent& otherComponent) const {
   return true;
 }
 
-void kore::Camera::transformChanged(const TransformPtr& newTransform) {
+void kore::Camera::transformChanged(const Transform* newTransform) {
   SceneNodeComponent::transformChanged(newTransform);
 
   _matView = glm::inverse(newTransform->getGlobal());

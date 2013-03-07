@@ -68,12 +68,12 @@ void kore::BindUniform::update(void) {
 void kore::BindUniform::reset(void) {
 }
 
-bool kore::BindUniform::isValid(void) {
+bool kore::BindUniform::isValid(void) const {
   return false;
 }
 
 
-void kore::BindUniform::execute(void) {
+void kore::BindUniform::execute(void) const {
   if(!_componentUniform) {
     Log::getInstance()->write("[ERROR] Uniform binding undefined");
     return;

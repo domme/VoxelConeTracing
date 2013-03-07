@@ -103,6 +103,5 @@ namespace kore {
 
     GLuint _programHandle;
   };
-  typedef std::shared_ptr<kore::ShaderProgram> ShaderPtr;
 };
 #endif  // CORE_INCLUDE_CORE_SHADER_H_

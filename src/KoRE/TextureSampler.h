@@ -78,7 +78,6 @@ namespace kore {
 
     void destroy();
   };
-  typedef std::shared_ptr<TextureSampler> TextureSamplerPtr;
 }
 
 #endif  // CORE_INCLUDE_CORE_TEXTURE_SAMPLER_H_

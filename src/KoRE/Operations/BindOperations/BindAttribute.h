@@ -30,14 +30,13 @@ namespace kore {
     BindAttribute(void);
     BindAttribute(const ShaderData* meshData, const ShaderInput* shaderInput);
     virtual ~BindAttribute(void);
-    virtual void execute(void);
+    virtual void execute(void) const;
     virtual void update(void);
     virtual void reset(void);
-    virtual bool isValid(void);
+    virtual bool isValid(void) const;
     void connect(const ShaderData* meshData, const ShaderInput* shaderInput);
   private:
     const SMeshInformation* _meshInfo;
   };
-  typedef std::shared_ptr<BindAttribute> BindAttributePtr;
 };
 #endif  // CORE_INCLUDE_CORE_BINDATTRIBUTEOP_H_

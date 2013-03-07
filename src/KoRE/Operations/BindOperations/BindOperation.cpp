@@ -33,7 +33,7 @@ kore::BindOperation::BindOperation()
 kore::BindOperation::~BindOperation() {
 }
 
-bool kore::BindOperation::dependsOn(const void* thing) {
+bool kore::BindOperation::dependsOn(const void* thing) const {
   return (    thing == _component
           ||  thing == _componentUniform 
           ||  thing == _shader

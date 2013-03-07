@@ -33,10 +33,10 @@ namespace kore {
                 const ShaderInput* shaderInput);
 
     virtual ~BindTexture(void);
-    virtual void execute(void);
+    virtual void execute(void) const;
     virtual void update(void);
     virtual void reset(void);
-    virtual bool isValid(void);
+    virtual bool isValid(void) const;
     void connect(const ShaderData* texData,
                  const ShaderInput* shaderInput);
   private:
@@ -44,6 +44,5 @@ namespace kore {
 
     void init();
   };
-  typedef std::shared_ptr<BindTexture> BindTexturePtr;
 };
 #endif  // CORE_INCLUDE_CORE_BINDTEXTUREOP_H_

@@ -34,17 +34,16 @@ namespace kore {
   };
 
   class SceneNodeComponent;
-  class Shader;
   class RenderManager;
   class Operation {
   public:
     Operation(void);
     virtual ~Operation(void);
-    virtual void execute(void) = 0;
+    virtual void execute(void) const = 0;
     virtual void update(void) = 0;
     virtual void reset(void) = 0;
-    virtual bool isValid(void) = 0;
-    virtual bool dependsOn(const void* thing) = 0;
+    virtual bool isValid(void) const = 0;
+    virtual bool dependsOn(const void* thing) const = 0;
 
     inline const EOperationType getType() const {return _type;}
 
@@ -52,6 +51,5 @@ namespace kore {
     EOperationType _type;
     RenderManager* _renderManager;
   };
-  typedef std::shared_ptr<Operation> OperationPtr;
 }
 #endif  // CORE_INCLUDE_CORE_OPERATION_H_

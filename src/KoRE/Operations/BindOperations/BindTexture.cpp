@@ -30,7 +30,7 @@ void kore::BindTexture::connect(const kore::ShaderData* texData,
   _component = texData->component;
 }
 
-void kore::BindTexture::execute(void) {
+void kore::BindTexture::execute(void) const {
   GLerror::gl_ErrorCheckStart();
   _renderManager->activeTexture(_shaderUniform->texUnit);
   glProgramUniform1i(_shaderProgramLoc, _shaderUniform->location,
@@ -59,6 +59,6 @@ void kore::BindTexture::update(void) {
 void kore::BindTexture::reset(void) {
 }
 
-bool kore::BindTexture::isValid(void) {
+bool kore::BindTexture::isValid(void) const {
   return false;
 }

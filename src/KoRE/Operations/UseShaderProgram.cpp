@@ -18,7 +18,7 @@ void kore::UseShaderProgram::connect(const ShaderProgram* program) {
   _program = program;
 }
 
-void kore::UseShaderProgram::execute(void) {
+void kore::UseShaderProgram::execute(void) const {
   _renderManager->useShaderProgram(_program->getProgramLocation());
 }
 
@@ -28,10 +28,10 @@ void kore::UseShaderProgram::update(void) {
 void kore::UseShaderProgram::reset(void) {
 }
 
-bool kore::UseShaderProgram::isValid(void) {
+bool kore::UseShaderProgram::isValid(void) const {
   return _program != NULL;
 }
 
-bool kore::UseShaderProgram::dependsOn(const void* thing) {
+bool kore::UseShaderProgram::dependsOn(const void* thing) const {
   return _program == thing;
 }

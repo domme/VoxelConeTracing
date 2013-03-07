@@ -56,7 +56,7 @@ kore::MeshComponent::~MeshComponent(void) {
   }
 }*/
 
-void kore::MeshComponent::setMesh(MeshPtr& mesh) {
+void kore::MeshComponent::setMesh(Mesh* mesh) {
   destroyAttributes();
 
   _mesh = mesh;

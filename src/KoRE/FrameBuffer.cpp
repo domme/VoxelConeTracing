@@ -52,7 +52,7 @@ void kore::FrameBuffer::destroy() {
   _textureInfos.clear();
 }
 
-void kore::FrameBuffer::addTextureAttachment(const TexturePtr& tex,
+void kore::FrameBuffer::addTextureAttachment(const Texture* tex,
                                              GLuint attatchment) {
   if (_handle == 0 || _handle == KORE_GLUINT_HANDLE_INVALID) {
     return;
@@ -89,7 +89,7 @@ void kore::FrameBuffer::
       addTextureAttachment(const STextureProperties& properties,
                            const std::string& name,
                            const GLuint attatchment ) {
-  TexturePtr pTex(new Texture);
+  Texture* pTex(new Texture);
   bool bSuccess = pTex->create(properties, name);
   if (bSuccess) {
     addTextureAttachment(pTex, attatchment);
@@ -99,7 +99,7 @@ void kore::FrameBuffer::
   }
 }
 
-const kore::TexturePtr
+const kore::Texture*
   kore::FrameBuffer::getTexture( const std::string& name ) const {
     for(uint i = 0; i < _textures.size(); ++i) {
       if (_textures[i]->getName() == name) {
@@ -107,7 +107,7 @@ const kore::TexturePtr
       }
     }
 
-    return TexturePtr(NULL);
+    return NULL;
 }
 
 bool kore::FrameBuffer::checkFBOcompleteness() {

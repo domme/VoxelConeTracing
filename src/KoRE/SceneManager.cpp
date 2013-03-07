@@ -31,7 +31,7 @@ kore::SceneManager::SceneManager(void)
                            :_idcount(0),
                             _tagcount(0) {
   addTag("DEFAULT");
-  _root = SceneNodePtr(new SceneNode());
+  _root = new SceneNode();
   _root->setName("ROOT");
 }
 
@@ -59,12 +59,12 @@ const uint kore::SceneManager::getTag(const std::string& name) {
 
 void kore::SceneManager::
   getSceneNodesByTag(const uint tag,
-                     std::vector<SceneNodePtr>& vSceneNodes) {
+                     std::vector<SceneNode*>& vSceneNodes) {
   _root->getSceneNodesByTag(tag, vSceneNodes);
 }
 
 void kore::SceneManager::getSceneNodesByTag(const std::string& name,
-                                     std::vector<SceneNodePtr>& vSceneNodes) {
+                                     std::vector<SceneNode*>& vSceneNodes) {
   const uint uTag = getTag(name);
   if (uTag != KORE_TAG_INVALID) {
       getSceneNodesByTag(uTag, vSceneNodes);
@@ -73,26 +73,26 @@ void kore::SceneManager::getSceneNodesByTag(const std::string& name,
 
 void kore::SceneManager::
   getSceneNodesByName(const std::string& name,
-                      std::vector<SceneNodePtr>& vSceneNodes) {
+                      std::vector<SceneNode*>& vSceneNodes) {
   _root->getSceneNodesByName(name, vSceneNodes);
 }
 
 void kore::SceneManager::
 getSceneNodesByComponent(const EComponentType componentType,
-                           std::vector<SceneNodePtr>& vSceneNodes) {
+                           std::vector<SceneNode*>& vSceneNodes) {
   _root->getSceneNodesByComponent(componentType, vSceneNodes);
 }
 
-kore::SceneNodePtr kore::SceneManager::
+kore::SceneNode* kore::SceneManager::
   getSceneNodeByComponent(const EComponentType componentType) {
-    std::vector<SceneNodePtr> vNodes;
+    std::vector<SceneNode*> vNodes;
     getSceneNodesByComponent(componentType, vNodes);
     if (vNodes.size() > 0) {
       return vNodes[0];
     }
-    return SceneNodePtr(NULL);
+    return NULL;
 }
 
-kore::SceneNodePtr kore::SceneManager::getRootNode() {
+kore::SceneNode* kore::SceneManager::getRootNode() {
   return _root;
 }

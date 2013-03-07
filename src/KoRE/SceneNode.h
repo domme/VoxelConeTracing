@@ -31,7 +31,7 @@ namespace kore {
     SPACE_LOCAL,
     SPACE_WORLD
   };
-    typedef std::shared_ptr<SceneNode> SceneNodePtr;
+
   class SceneNode {
     friend class SceneLoader;
   public:
@@ -40,23 +40,25 @@ namespace kore {
     // bool isCompatibleWith(const SceneNode& otherNode) const;
     // bool isCompatibleWith(const SceneNode& otherNode,
     //                       EComponentType types) const;
-    const SceneNodePtr& getParent(void) const;
-    const std::vector<SceneNodePtr>& getChildren() const;
-    const std::vector<SceneNodeComponentPtr> getComponents() const;
-    const TransformPtr getTransform(void) const;
-    const SceneNodeComponentPtr getComponent(EComponentType type) const;
+    const SceneNode* getParent(void) const;
+    const std::vector<SceneNode*>& getChildren() const;
+    const std::vector<SceneNodeComponent*> getComponents() const;
+    const Transform* getTransform(void) const;
+    kore::Transform* getTransform();
+    const SceneNodeComponent* getComponent(const EComponentType type) const;
+    SceneNodeComponent* getComponent(EComponentType type);
     const uint64 getID(void) const;
     const uint getTag(void) const;
     const std::string getName(void) const;
     void getSceneNodesByTag(const uint tag,
-                            std::vector<SceneNodePtr>& vNodes);
+                            std::vector<SceneNode*>& vNodes);
     void getSceneNodesByName(const std::string& name,
-                             std::vector<SceneNodePtr>& vNodes);
+                             std::vector<SceneNode*>& vNodes);
     void getSceneNodesByComponent(const EComponentType componentType,
-                                  std::vector<SceneNodePtr>& vNodes);
-    void setParent(const SceneNodePtr& parent);
-    void addChild(const SceneNodePtr& child);
-    void addComponent(const SceneNodeComponentPtr& component);
+                                  std::vector<SceneNode*>& vNodes);
+    void setParent(SceneNode* parent);
+    void addChild(SceneNode* child);
+    void addComponent(SceneNodeComponent* component);
     void setTag(const std::string& tagname);
     void setName(const std::string& name);
 
@@ -83,11 +85,11 @@ namespace kore {
     uint64 _id;
     uint _tag;
     std::string _name;
-    SceneNodePtr _parent;
-    std::vector<SceneNodePtr> _children;
-    std::vector<SceneNodeComponentPtr> _components;
+    SceneNode* _parent;
+    std::vector<SceneNode*> _children;
+    std::vector<SceneNodeComponent*> _components;
     bool _dirty;  // if node has to be updated;
-    TransformPtr _transform;
+    Transform* _transform;
   };
 };
 #endif  // CORE_INCLUDE_CORE_SCENENODE_H_

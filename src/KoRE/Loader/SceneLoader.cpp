@@ -24,7 +24,7 @@ kore::SceneLoader::~SceneLoader() {
 }
 
 void kore::SceneLoader::loadScene(const std::string& szScenePath,
-                                  SceneNodePtr parent) {
+                                  SceneNode* parent) {
   _nodecount = _cameracount = _meshcount = 0;
   loadRessources(szScenePath);
   const aiScene* pAiScene =
@@ -75,7 +75,7 @@ void kore::SceneLoader::loadRessources(const std::string& szScenePath) {
   if (pAiScene->HasCameras()) {
     for (uint i = 0; i < pAiScene->mNumCameras; ++i) {
       const aiCamera* pAiCamera = pAiScene->mCameras[i];
-      CameraPtr pCamera(new Camera);
+      Camera* pCamera(new Camera);
       pCamera->setName(getCameraName(pAiCamera, i));
       float yFovDeg = glm::degrees(pAiCamera->mHorizontalFOV)
                      / pAiCamera->mAspect;
@@ -92,7 +92,7 @@ void kore::SceneLoader::loadRessources(const std::string& szScenePath) {
   if (pAiScene->HasLights()) {
     for (uint i = 0; i < pAiScene->mNumLights; ++i) {
       const aiLight* pAiLight = pAiScene->mLights[i];
-      LightComponentPtr pLight(new LightComponent);
+      LightComponent* pLight(new LightComponent);
       pLight->setName(getLightName(pAiLight, i));
       
       pLight->_color = glm::vec3(pAiLight->mColorDiffuse.r,
@@ -113,10 +113,10 @@ void kore::SceneLoader::loadRessources(const std::string& szScenePath) {
 }
 
 void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
-                                       SceneNodePtr& parentNode,
+                                       SceneNode* parentNode,
                                        const aiScene* aiscene,
                                        const std::string& szScenePath) {
-    SceneNodePtr node(new SceneNode);
+    SceneNode* node = new SceneNode;
     node->getTransform()->setLocal(glmMatFromAiMat(ainode->mTransformation));
     node->_parent = parentNode;
     node->_dirty = true;
@@ -138,7 +138,7 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
     if (lightIndex != KORE_UINT_INVALID) {
       const aiLight* pAiLight = aiscene->mLights[lightIndex];
       std::string lightName = getLightName(pAiLight, lightIndex);
-      LightComponentPtr pLight = ResourceManager::getInstance()
+      LightComponent* pLight = ResourceManager::getInstance()
                       ->getLight(szScenePath, lightName);
       if (pLight != NULL) {
         node->addComponent(pLight);
@@ -159,7 +159,7 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
     if (camIndex != KORE_UINT_INVALID) {
       const aiCamera* pAiCam = aiscene->mCameras[camIndex];
       std::string camName = getCameraName(pAiCam, camIndex);
-      CameraPtr pCamera = ResourceManager::getInstance()
+      Camera* pCamera = ResourceManager::getInstance()
                                             ->getCamera(szScenePath, camName);
       if (pCamera != NULL) {
         node->addComponent(pCamera);
@@ -172,15 +172,15 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
       const aiMesh* aimesh = aiscene->mMeshes[ainode->mMeshes[0]];
       std::string meshName = MeshLoader::getInstance()
         ->getMeshName(aimesh, ainode->mMeshes[0]);
-      MeshPtr mesh = ResourceManager::getInstance()
+      Mesh* mesh = ResourceManager::getInstance()
         ->getMesh(szScenePath, meshName);
-      MeshComponentPtr meshComponent(new MeshComponent);
+      MeshComponent* meshComponent(new MeshComponent);
       meshComponent->setMesh(mesh);
       node->addComponent(meshComponent);
 
     // Make additional copies for any more meshes
     for (uint iMesh = 1; iMesh < ainode->mNumMeshes; ++iMesh) {
-      SceneNodePtr copyNode(new SceneNode);
+      SceneNode* copyNode(new SceneNode);
       copyNode->_transform->setLocal(glmMatFromAiMat(ainode->mTransformation));
       copyNode->_parent = parentNode;
       copyNode->_dirty = true;
@@ -189,9 +189,9 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
       const aiMesh* aimesh = aiscene->mMeshes[ainode->mMeshes[iMesh]];
       std::string meshName = MeshLoader::getInstance()
         ->getMeshName(aimesh, ainode->mMeshes[iMesh]);
-      MeshPtr mesh = ResourceManager::getInstance()
+      Mesh* mesh = ResourceManager::getInstance()
         ->getMesh(szScenePath, meshName);
-      MeshComponentPtr meshComponent(new MeshComponent);
+      MeshComponent* meshComponent(new MeshComponent);
       meshComponent->setMesh(mesh);
       copyNode->addComponent(meshComponent);
     }

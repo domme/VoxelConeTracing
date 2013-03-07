@@ -33,13 +33,12 @@ namespace kore {
     void setGlobal(const glm::mat4& global);
     void setLocal(const glm::mat4& local);
 
-    inline  const glm::mat4& getGlobal() {return _global;}
-    inline const glm::mat4& getLocal(void) {return _local;}
+    inline const glm::mat4& getGlobal() const {return _global;}
+    inline const glm::mat4& getLocal(void) const {return _local;}
 
   private:
     glm::mat4 _global;
     glm::mat4 _local;
   };
-  typedef std::shared_ptr<kore::Transform> TransformPtr;
 }
 #endif  // CORE_INCLUDE_CORE_TRANSFORM_H_

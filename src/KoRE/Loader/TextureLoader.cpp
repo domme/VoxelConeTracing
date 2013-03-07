@@ -34,7 +34,7 @@ kore::TextureLoader* kore::TextureLoader::getInstance() {
   return &instance;
 }
 
-kore::TexturePtr
+kore::Texture*
   kore::TextureLoader::loadTexture(const std::string& filepath) {
   
   std::vector<unsigned char> imageData;
@@ -53,9 +53,9 @@ kore::TexturePtr
                                     "\t%s\n",
                                     filepath.c_str(),
                                     lodepng_error_text(err));
-    return TexturePtr(NULL);
+    return NULL;
   } else {
-    kore::TexturePtr tex = TexturePtr(new Texture());
+    kore::Texture* tex = new Texture();
     LodePNGColorMode& color = pngState.info_raw;
     
     STextureProperties texProperties;
@@ -86,7 +86,8 @@ kore::TexturePtr
       kore::Log::getInstance()
         ->write("[ERROR] Texture '%s' could not be loaded\n",
         filepath.c_str());
-      return TexturePtr();
+      KORE_SAFE_DELETE(tex);
+      return NULL;
     }
   }
 }

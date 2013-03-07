@@ -30,7 +30,7 @@ kore::SceneNodeComponent::SceneNodeComponent()
 kore::SceneNodeComponent::~SceneNodeComponent() {
 }
 
-void kore::SceneNodeComponent::attachTo(kore::SceneNodePtr& node) {
+void kore::SceneNodeComponent::attachTo(kore::SceneNode* node) {
   _sceneNode = node;
 }
 
@@ -39,7 +39,7 @@ const kore::EComponentType kore::SceneNodeComponent::getType(void) const {
 }
 
 void 
-kore::SceneNodeComponent::transformChanged(const TransformPtr& newTransform) {
+kore::SceneNodeComponent::transformChanged(const Transform* newTransform) {
 }
 
 uint kore::SceneNodeComponent::getID(void) const {

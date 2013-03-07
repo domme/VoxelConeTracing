@@ -40,7 +40,7 @@ class Camera : public SceneNodeComponent {
      /** This method is called whenever the transform of the SceneNode is 
          changed
      */
-     virtual void transformChanged(const TransformPtr& newTransform);
+     virtual void transformChanged(const Transform* newTransform);
 
      inline const std::string& getName() const {return _name;}
      inline void setName(const std::string& name) {_name = name;}
@@ -129,7 +129,6 @@ class Camera : public SceneNodeComponent {
 
      std::string _name;
 };
-typedef std::shared_ptr<kore::Camera> CameraPtr;
 }
 
 #endif  // CORE_INCLUDE_CORE_CAMERA_H_

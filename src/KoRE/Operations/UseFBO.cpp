@@ -1,5 +1,5 @@
-/*
-  Copyright © 2012 The KoRE Project
+ï»¿/*
+  Copyright ï¿½ 2012 The KoRE Project
 
   This file is part of KoRE.
 
@@ -49,7 +49,7 @@ void kore::UseFBO::connect(const kore::FrameBuffer* frameBuffer,
   }
 }
 
-void kore::UseFBO::execute(void) {
+void kore::UseFBO::execute(void) const {
   _renderManager->
     bindFrameBuffer(_frameBufferTarget, _frameBuffer->getHandle());
 
@@ -64,10 +64,10 @@ void kore::UseFBO::update(void) {
 void kore::UseFBO::reset(void) {
 }
 
-bool kore::UseFBO::isValid(void) {
+bool kore::UseFBO::isValid(void) const {
   return _frameBuffer != NULL;
 }
 
-bool kore::UseFBO::dependsOn(const void* thing) {
+bool kore::UseFBO::dependsOn(const void* thing) const {
   return thing == _frameBuffer;
 }

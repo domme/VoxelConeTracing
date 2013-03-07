@@ -39,14 +39,14 @@ namespace kore {
     virtual ~SceneLoader();
 
     void loadScene(const std::string& szScenePath,
-                           SceneNodePtr parent);
+                           SceneNode* parent);
     void loadRessources(const std::string& szScenePath);
   private:
     SceneLoader();
     const aiScene* readScene(const std::string& szScenePath);
 
     void loadSceneGraph(const aiNode* ainode,
-                        SceneNodePtr& node,
+                        SceneNode* node,
                         const aiScene* aiscene,
                         const std::string& szScenePath);
     glm::mat4 glmMatFromAiMat(const aiMatrix4x4& aiMat) const;

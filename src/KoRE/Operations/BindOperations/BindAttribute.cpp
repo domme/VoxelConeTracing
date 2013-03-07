@@ -43,8 +43,8 @@ void kore::BindAttribute::connect(const ShaderData* meshData,
   _shader = shaderInput->shader;
 }
 
-void kore::BindAttribute::execute(void) {
-  const MeshPtr& mesh = _meshInfo->mesh;
+void kore::BindAttribute::execute(void) const {
+  const Mesh* mesh = _meshInfo->mesh;
   const MeshAttributeArray* meshAtt = _meshInfo->meshAtt;
 
   GLerror::gl_ErrorCheckStart();
@@ -66,6 +66,6 @@ void kore::BindAttribute::update(void) {
 void kore::BindAttribute::reset(void) {
 }
 
-bool kore::BindAttribute::isValid(void) {
+bool kore::BindAttribute::isValid(void) const {
   return false;
 }

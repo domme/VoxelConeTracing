@@ -36,14 +36,14 @@ namespace kore {
     static const FrameBuffer BACKBUFFER;
 
     inline const GLuint getHandle() const {return _handle;}
-    const TexturePtr getTexture(const std::string& name) const;
+    const Texture* getTexture(const std::string& name) const;
 
     /*! \brief Add a texture as an attatchment to the framebuffer.
     *   \param ptr The pointer to the texture to add as attatchment.
     *   \param attatchment The OpenGL attatchment-point to attatch.
                             the texture to (e.g. GL_COLOR_ATTATCHMENT0).
     */
-    void addTextureAttachment(const TexturePtr& ptr, GLuint attatchment);
+    void addTextureAttachment(const Texture* ptr, GLuint attatchment);
 
     /*! \brief Request creation of a texture with the provided properties and
     *          attatch it to the FrameBuffer.
@@ -71,10 +71,9 @@ namespace kore {
     /// specific handle (e.g. 0 for Backbuffer)
     FrameBuffer(GLuint handle);
     std::vector<ShaderData> _textureOutputs;
-    std::vector<const TexturePtr> _textures;
+    std::vector<const Texture*> _textures;
     std::vector<STextureInfo*> _textureInfos;
     GLuint _handle;
   };
-  typedef std::shared_ptr<FrameBuffer> FrameBufferPtr;
 };
 #endif  // SRC_KORE_FRAMEBUFFER_H_

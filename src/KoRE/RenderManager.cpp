@@ -70,33 +70,14 @@ const glm::ivec2& kore::RenderManager::getRenderResolution() const {
     return _renderResolution;
 }
 
-const kore::ShaderProgram* kore::RenderManager
-  ::getShaderProgram(const std::string& name) {
-  if (_shaderProgramMap.count(name)) {
-    return _shaderProgramMap[name];
-  }
-  return NULL;
-}
-
 void kore::RenderManager::
     setRenderResolution(const glm::ivec2& newResolution) {
     _renderResolution = newResolution;
     resolutionChanged();
 }
 
-void kore::RenderManager::addShaderProgram(const std::string& name,
-                                           const ShaderProgram* program) {
-  if(_shaderProgramMap.count(name)> 0) {
-    kore::Log::getInstance()
-      ->write("[ERROR] Shader '%s' already in RenderManager\n", name.c_str());
-    return;
-  }
-  _shaderProgramMap[name] = program;
-}
-
 void kore::RenderManager::renderFrame(void) {
-    OperationList::const_iterator it;
-    for (it = _operations.begin(); it != _operations.end(); ++it) {
+    for (auto it = _operations.begin(); it != _operations.end(); ++it) {
         (*it)->execute();
     }
 }
@@ -106,14 +87,14 @@ void kore::RenderManager::resolutionChanged() {
     // (e.g. GBuffer-Textures...)
 }
 
-void kore::RenderManager::addOperation(const OperationPtr& op) {
+void kore::RenderManager::addOperation(const Operation* op) {
     if (!hasOperation(op)) {
        _operations.push_back(op);
     }
 }
 
-void kore::RenderManager::addOperation(const OperationPtr& op,
-                                       const OperationPtr& targetOp,
+void kore::RenderManager::addOperation(const Operation* op,
+                                       const Operation* targetOp,
                                        const EOpInsertPos insertPos) {
      if (!hasOperation(targetOp) || hasOperation(op)) {
             return;
@@ -132,7 +113,7 @@ void kore::RenderManager::addOperation(const OperationPtr& op,
      }
 }
 
-bool kore::RenderManager::hasOperation(const OperationPtr& op) {
+bool kore::RenderManager::hasOperation(const Operation* op) {
   return std::find(_operations.begin(),
                    _operations.end(), op)
                    != _operations.end();
@@ -141,7 +122,7 @@ bool kore::RenderManager::hasOperation(const OperationPtr& op) {
 void kore::RenderManager::removeOperation(const Operation* op) {
   auto operationIt = _operations.begin();
   for (; operationIt != _operations.end(); ++operationIt)  {
-    if ((*operationIt).get() == op) {
+    if ((*operationIt) == op) {
       _operations.erase(operationIt);
       break;
     }
@@ -149,14 +130,10 @@ void kore::RenderManager::removeOperation(const Operation* op) {
   
 }
 
-void kore::RenderManager::removeOperation(const OperationPtr& op) {
-  removeOperation(op.get());
-}
 
 
 void kore::RenderManager::onRemoveComponent(const SceneNodeComponent* comp) {
-  auto iter = _operations.begin();
-  for (; iter != _operations.end(); ++iter) {
+  for (auto iter = _operations.begin(); iter != _operations.end(); ++iter) {
     if ((*iter)->dependsOn(static_cast<const void*>(comp))) {
       _operations.erase(iter);
     }

@@ -52,7 +52,7 @@ namespace kore {
     // reads a scene file and creates all nodes and
     // components within a scene graph
     void loadScene(const std::string& filename,
-                                 SceneNodePtr parent =
+                                 SceneNode* parent =
                                  kore::SceneManager::getInstance()
                                  ->getRootNode());
 
@@ -60,17 +60,22 @@ namespace kore {
     void loadResources(const std::string& filename);
 
     // load a single texture
-    TexturePtr loadTexture(const std::string& filename);
+    Texture* loadTexture(const std::string& filename);
 
-    void addMesh(const std::string& path, MeshPtr mesh);
-    void addCamera(const std::string& path, CameraPtr camera);
-    void addTexture(const std::string& path, TexturePtr texture);
-    void addLight(const std::string& path, LightComponentPtr light);
-    kore::MeshPtr getMesh(const std::string& path, const std::string& id);
-    kore::CameraPtr getCamera(const std::string& path, const std::string& id);
-    kore::LightComponentPtr getLight(const std::string& path,
+    void addMesh(const std::string& path, Mesh* mesh);
+    void addCamera(const std::string& path, Camera* camera);
+    void addTexture(const std::string& path, Texture* texture);
+    void addLight(const std::string& path, LightComponent* light);
+    void addShaderProgram(const std::string& name,
+                          const ShaderProgram* program);
+    kore::Mesh* getMesh(const std::string& path, const std::string& id);
+    kore::Camera* getCamera(const std::string& path, const std::string& id);
+    kore::LightComponent* getLight(const std::string& path,
                                      const std::string& id);
-    kore::TexturePtr getTexture(const std::string& path);
+    kore::Texture* getTexture(const std::string& path);
+
+    const kore::ShaderProgram* kore::ResourceManager
+      ::getShaderProgram(const std::string& name) const;
 
     /*! \brief Returns a cached OpenGL shader object.
     *   \param path The filepath to the shader-file.
@@ -97,13 +102,13 @@ namespace kore {
       getTextureSampler(const TexSamplerProperties& properties);
 
   private:
-    typedef std::map<std::string, kore::SceneNodeComponentPtr>
+    typedef std::map<std::string, kore::SceneNodeComponent*>
             InnerResourceMapT;
 
     typedef std::map<std::string, InnerResourceMapT>
             OuterResourceMapT;
 
-    typedef std::map<std::string, kore::MeshPtr>
+    typedef std::map<std::string, kore::Mesh*>
             InnerMeshMapT;
 
     typedef std::map<std::string, InnerMeshMapT>
@@ -115,8 +120,9 @@ namespace kore {
     OuterMeshMapT _meshes; // filepath, id, mesh
     OuterResourceMapT _cameras; // filepath, id, camera
     OuterResourceMapT _lights; // filepath, id, light
-    std::map<std::string, kore::TexturePtr> _textures; // filepath, texture
+    std::map<std::string, kore::Texture*> _textures; // filepath, texture
     std::map<std::string, GLuint> _shaderHandles;
+    std::map<std::string, const ShaderProgram*> _shaderProgramMap;
     std::vector<kore::TextureSampler*> _textureSamplers;
   };
 };

@@ -29,29 +29,28 @@ namespace kore {
   class RenderMesh: public Operation {
   public:
     explicit RenderMesh(void);
-    explicit RenderMesh(const kore::MeshComponentPtr& mesh,
-                        const kore::ShaderPtr& shader);
+    explicit RenderMesh(const kore::MeshComponent* mesh,
+                        const kore::ShaderProgram* shaderProgram);
 
     virtual ~RenderMesh(void);
-    virtual void execute(void);
+    virtual void execute(void) const;
     virtual void update(void);
     virtual void reset(void);
-    virtual bool isValid(void);
-    virtual bool dependsOn(const void* thing);
+    virtual bool isValid(void) const;
+    virtual bool dependsOn(const void* thing) const;
 
-    void connect(const kore::MeshComponentPtr& mesh,
-                 const kore::ShaderPtr& shader);
+    void connect(const kore::MeshComponent* mesh,
+                 const kore::ShaderProgram* shaderProgram);
 
-    const kore::MeshComponentPtr& getMesh() const;
-    void setMesh(const kore::MeshComponentPtr& mesh);
+    const kore::MeshComponent* getMesh() const;
+    void setMesh(const kore::MeshComponent* mesh);
 
-    const kore::ShaderPtr& getShader() const;
-    void setShader(const kore::ShaderPtr& shader);
+    const kore::ShaderProgram* getShader() const;
+    void setShader(const kore::ShaderProgram* shaderProgram);
 
   private:
-    kore::MeshComponentPtr _meshComponent;
-    kore::ShaderPtr _shader;
+    const kore::MeshComponent* _meshComponent;
+    const kore::ShaderProgram* _shaderProgram;
   };
-  typedef std::shared_ptr<RenderMesh> RenderMeshOpPtr;
 };
 #endif  // CORE_INCLUDE_CORE_RENDERMESHOP_H_
