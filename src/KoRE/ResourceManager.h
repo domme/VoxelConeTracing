@@ -117,7 +117,7 @@ namespace kore {
     OuterResourceMapT _lights; // filepath, id, light
     std::map<std::string, kore::TexturePtr> _textures; // filepath, texture
     std::map<std::string, GLuint> _shaderHandles;
-    std::vector<kore::TextureSampler> _textureSamplers;
+    std::vector<kore::TextureSampler*> _textureSamplers;
   };
 };
 #endif  // CORE_INCLUDE_CORE_RESOURCEMANAGER_H_

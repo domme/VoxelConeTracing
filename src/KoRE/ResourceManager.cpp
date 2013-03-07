@@ -41,6 +41,12 @@ kore::ResourceManager::~ResourceManager(void) {
   for (auto it = _shaderHandles.begin(); it != _shaderHandles.end(); it++) {
     glDeleteShader(it->second);
   }
+
+  for (int i = 0; i < _textureSamplers.size(); ++i) {
+    KORE_SAFE_DELETE(_textureSamplers[i]);
+  }
+
+  _textureSamplers.clear();
 }
 
 void kore::ResourceManager::loadScene(const std::string& filename,
@@ -154,14 +160,14 @@ const kore::TextureSampler*
   getTextureSampler(const TexSamplerProperties& properties) {
     // First look for a sampler that satisfies the provided properties
     for (uint i = 0; i < _textureSamplers.size(); ++i) {
-      if (_textureSamplers[i].getProperties() == properties) {
-        return &_textureSamplers[i];
+      if (_textureSamplers[i]->getProperties() == properties) {
+        return _textureSamplers[i];
       }
     }
 
     // Otherwise: Construct a new Sampler
-    TextureSampler sampler;
-    bool success = sampler.create(properties);
+    TextureSampler* sampler = new TextureSampler;
+    bool success = sampler->create(properties);
 
     if (!success) {
       Log::getInstance()->write("[ERROR] TextureSampler creation failed!");
@@ -169,5 +175,5 @@ const kore::TextureSampler*
     }
 
     _textureSamplers.push_back(sampler);
-    return &_textureSamplers[_textureSamplers.size() - 1];
+    return sampler;
 }
