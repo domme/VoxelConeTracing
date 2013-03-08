@@ -1,5 +1,5 @@
 /*
-  Copyright © 2012 The KoRE Project
+  Copyright (c) 2012 The KoRE Project
 
   This file is part of KoRE.
 
@@ -45,7 +45,6 @@ namespace kore {
     const std::vector<SceneNodeComponent*> getComponents() const;
     const Transform* getTransform(void) const;
     kore::Transform* getTransform();
-    const SceneNodeComponent* getComponent(const EComponentType type) const;
     SceneNodeComponent* getComponent(EComponentType type);
     const uint64 getID(void) const;
     const uint getTag(void) const;

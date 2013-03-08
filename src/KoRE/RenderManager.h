@@ -26,6 +26,7 @@
 #include "KoRE/Components/MeshComponent.h"
 #include "KoRE/Components/Camera.h"
 #include "KoRE/ShaderProgram.h"
+#include "KoRE/OutputBufferStage.h"
 
 namespace kore {
   enum EOpInsertPos {
@@ -115,6 +116,7 @@ namespace kore {
 
     typedef std::list<const Operation*> OperationList;
     OperationList _operations;
+    std::vector<OutputBufferStage*> _stages;
 
     // OpenGL-States:
     GLuint _activeTextureUnitIndex;

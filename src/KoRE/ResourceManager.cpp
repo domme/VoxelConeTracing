@@ -42,7 +42,7 @@ kore::ResourceManager::~ResourceManager(void) {
     glDeleteShader(it->second);
   }
 
-  for (int i = 0; i < _textureSamplers.size(); ++i) {
+  for (uint i = 0; i < _textureSamplers.size(); ++i) {
     KORE_SAFE_DELETE(_textureSamplers[i]);
   }
 

@@ -101,12 +101,6 @@ kore::SceneNodeComponent*
     return NULL;
 }
 
-const kore::SceneNodeComponent*
-kore::SceneNode::getComponent(EComponentType type) const {
-  const EComponentType cType = type;
-  return getComponent(cType);
-}
-
 const kore::Transform* kore::SceneNode::getTransform() const {
   return _transform;
 }

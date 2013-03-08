@@ -240,6 +240,15 @@
     <ClInclude Include="src\KoRE\Operations\UseShaderProgram.h">
       <Filter>src\Operations</Filter>
     </ClInclude>
+    <ClInclude Include="src\KoRE\OutputBufferStage.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\ProgramStage.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\NodeStage.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
