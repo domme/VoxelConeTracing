@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
     // now widgets
     koregui::RenderViewer rview;
     koregui::SceneViewer sview(&rview);
-    sview.showScene(kore::SceneManager::getInstance()->getRootNode().get());
+    sview.showScene(kore::SceneManager::getInstance()->getRootNode());
 
     sview.show();
     rview.show();

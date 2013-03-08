@@ -28,15 +28,17 @@
 #include <QList>
 #include <QMenu>
 #include "KoRE_GUI/ShaderItem.h"
-#include "KoRE/RenderManager.h"
+// #include "KoRE/RenderManager.h"
+#include "KoRE/ResourceManager.h"
 
 koregui::RenderViewer::RenderViewer(QWidget *parent) : QGraphicsView(parent) {
+  _mode = DEFAULT;
   setWindowTitle("RenderView");
   // setDragMode(RubberBandDrag);
   _scene.setBackgroundBrush(QBrush(QColor(23,23,23)));
   setScene(&_scene);
   setMinimumSize(800,600);
-  const kore::ShaderProgram* shader = kore::RenderManager::getInstance()->getShaderProgram("MegaShader");
+  const kore::ShaderProgram* shader = kore::ResourceManager::getInstance()->getShaderProgram("MegaShader");
   koregui::ShaderItem* sitem = new koregui::ShaderItem(shader);
   _scene.addItem(sitem);
   sitem->setPos(0,0);
@@ -89,6 +91,18 @@ void koregui::RenderViewer::contextMenuEvent(QContextMenuEvent *event) {
   lvl2->addAction("EmptyNode", this, SLOT(zoomOut()));
   lvl2->addAction("Group", 0, 0);
   menu.exec(event->globalPos());
+}
+
+void koregui::RenderViewer::mousePressEvent(QMouseEvent * event) {
+  QGraphicsView::mousePressEvent(event);
+}
+
+void koregui::RenderViewer::mouseReleaseEvent(QMouseEvent * event) {
+  QGraphicsView::mouseReleaseEvent(event);
+}
+
+void koregui::RenderViewer::mouseMoveEvent(QMouseEvent *event) {
+  QGraphicsView::mouseMoveEvent(event);
 }
 
 void koregui::RenderViewer

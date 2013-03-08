@@ -34,10 +34,10 @@ koregui::NodeItem::NodeItem(kore::SceneNode* sceneNode,
   setFlag(QGraphicsItem::ItemIsMovable, true);
   setFlag(QGraphicsItem::ItemIsSelectable, true);
   setCursor(QCursor(Qt::CursorShape::ArrowCursor));
-  std::vector<kore::SceneNodeComponentPtr> components =
+  std::vector<kore::SceneNodeComponent*> components =
     _sceneNode->getComponents();
     for (uint i = 0; i<components.size(); i++) {
-      ComponentItem* compItem = new ComponentItem(components[i].get(), this);
+      ComponentItem* compItem = new ComponentItem(components[i], this);
       _componentItems.push_back(compItem);
    }
   refresh();
