@@ -25,7 +25,6 @@
 #include "KoRE/ShaderData.h"
 #include "KoRE/Texture.h"
 #include "KoRE/TextureSampler.h"
-#include "KoRE/OperationOwner.h"
 
 namespace kore {
   class FrameBuffer {

@@ -115,6 +115,15 @@
     <ClCompile Include="src\KoRE\Operations\UseShaderProgram.cpp">
       <Filter>src\Operations</Filter>
     </ClCompile>
+    <ClCompile Include="src\KoRE\Operations\Passes\FrameBufferStage.cpp">
+      <Filter>src\Operations\Passes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KoRE\Operations\Passes\ShaderProgramPass.cpp">
+      <Filter>src\Operations\Passes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KoRE\Operations\Passes\NodePass.cpp">
+      <Filter>src\Operations\Passes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\KoRE\Operations\SelectNodes.h">
@@ -240,14 +249,14 @@
     <ClInclude Include="src\KoRE\Operations\UseShaderProgram.h">
       <Filter>src\Operations</Filter>
     </ClInclude>
-    <ClInclude Include="src\KoRE\OutputBufferStage.h">
-      <Filter>src</Filter>
+    <ClInclude Include="src\KoRE\Operations\Passes\NodePass.h">
+      <Filter>src\Operations\Passes</Filter>
     </ClInclude>
-    <ClInclude Include="src\KoRE\ProgramStage.h">
-      <Filter>src</Filter>
+    <ClInclude Include="src\KoRE\Operations\Passes\ShaderProgramPass.h">
+      <Filter>src\Operations\Passes</Filter>
     </ClInclude>
-    <ClInclude Include="src\KoRE\NodeStage.h">
-      <Filter>src</Filter>
+    <ClInclude Include="src\KoRE\Operations\Passes\FrameBufferStage.h">
+      <Filter>src\Operations\Passes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -265,6 +274,9 @@
     </Filter>
     <Filter Include="src\Operations\BindOperations">
       <UniqueIdentifier>{56a10190-b170-447c-abca-fa80048741a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Operations\Passes">
+      <UniqueIdentifier>{9e6360e3-47d5-4f77-86a1-18b3a8d60d2b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

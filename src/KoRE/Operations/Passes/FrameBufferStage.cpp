@@ -17,22 +17,4 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef KORE_NODESTAGE_H_
-#define KORE_NODESTAGE_H_
-
-#include <vector>
-#include "KoRE/SceneNode.h"
-
-namespace kore {
-  class NodeStage {
-  public:
-    NodeStage(void){};
-    ~NodeStage(void){};
-
-  private:
-    SceneNode* _node;
-    uint64 _id;
-    std::vector<Operation*> _operations;
-  };
-}
-#endif  // KORE_NODESTAGE_H_
+#include "KoRE/Operations/Passes/FrameBufferStage.h"

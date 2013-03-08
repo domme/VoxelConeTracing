@@ -25,7 +25,6 @@
 #include "KoRE/ShaderInput.h"
 #include "KoRE/ShaderOutput.h"
 #include "KoRE/Common.h"
-#include "KoRE/OperationOwner.h"
 #include "KoRE/TextureSampler.h"
 
 namespace kore {

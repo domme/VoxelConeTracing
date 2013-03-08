@@ -17,23 +17,4 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef KORE_PROGRAMSTAGE_H_
-#define KORE_PROGRAMSTAGE_H_
-
-#include <vector>
-#include "KoRE/ShaderProgram.h"
-#include "KoRE/NodeStage.h"
-
-namespace kore {
-  class ProgramStage {
-  public:
-    ProgramStage(void){};
-    ~ProgramStage(void){};
-
-  private:
-    ShaderProgram* _program;
-    uint64 _id;
-    std::vector<NodeStage*> _nodes;
-  };
-}
-#endif  // KORE_PROGRAMSTAGE_H_
+#include "KoRE/Operations/Passes/ShaderProgrampass.h"
