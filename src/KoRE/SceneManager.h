@@ -50,7 +50,7 @@ namespace kore {
   private:
     SceneManager(void);
     virtual ~SceneManager(void);
-    SceneNode* _root;
+    SceneNode _root;
     uint64 _idcount;
     uint _tagcount;
     std::map<std::string, uint> _tagmap;

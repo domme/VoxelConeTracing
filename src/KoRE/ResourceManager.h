@@ -122,7 +122,7 @@ namespace kore {
     OuterResourceMapT _lights; // filepath, id, light
     std::map<std::string, kore::Texture*> _textures; // filepath, texture
     std::map<std::string, GLuint> _shaderHandles;
-    std::map<std::string, const ShaderProgram*> _shaderProgramMap;
+    std::map<std::string, const ShaderProgram*> _shaderProgramMap; // filepath, program
     std::vector<kore::TextureSampler*> _textureSamplers;
   };
 };

@@ -38,13 +38,68 @@ kore::ResourceManager::ResourceManager(void) {
 }
 
 kore::ResourceManager::~ResourceManager(void) {
-  for (auto it = _shaderHandles.begin(); it != _shaderHandles.end(); it++) {
+  // Delete all shaders.
+  for (auto it = _shaderHandles.begin(); it != _shaderHandles.end(); ++it) {
     glDeleteShader(it->second);
   }
 
+  // Delete textures.
+  for (auto itPath = _textures.begin(); itPath != _textures.end(); ++itPath) {
+    KORE_SAFE_DELETE(itPath->second);
+  }
+
+  _textures.clear();
+
+  // Delete shaderPrograms.
+  for (auto it = _shaderProgramMap.begin();
+            it != _shaderProgramMap.end();
+            it) {
+    KORE_SAFE_DELETE(it->second);
+  }
+
+  _shaderProgramMap.clear();
+
+  // Delete all texture samplers.
   for (uint i = 0; i < _textureSamplers.size(); ++i) {
     KORE_SAFE_DELETE(_textureSamplers[i]);
   }
+
+  // Delete all mesh resources and entries.
+  for (auto itPath = _meshes.begin(); itPath != _meshes.end(); ++itPath) {
+    InnerMeshMapT& innerMap = itPath->second;
+    for (auto itId = innerMap.begin(); itId != innerMap.end(); ++itId) {
+      KORE_SAFE_DELETE(itId->second);
+      innerMap.erase(itId);
+    }
+    _meshes.erase(itPath);
+  }
+
+  _meshes.clear();
+
+  // Delete all camera resources and entries.
+  for (auto itPath = _cameras.begin(); itPath != _cameras.end(); ++itPath) {
+    InnerResourceMapT& innerMap = itPath->second;
+    for (auto itId = innerMap.begin(); itId != innerMap.end(); ++itId) {
+      KORE_SAFE_DELETE(itId->second);
+      innerMap.erase(itId);
+    }
+    _cameras.erase(itPath);
+  }
+
+  _cameras.clear();
+
+
+  // Delete all light resources and entries.
+  for (auto itPath = _lights.begin(); itPath != _lights.end(); ++itPath) {
+    InnerResourceMapT& innerMap = itPath->second;
+    for (auto itId = innerMap.begin(); itId != innerMap.end(); ++itId) {
+      KORE_SAFE_DELETE(itId->second);
+      innerMap.erase(itId);
+    }
+    _lights.erase(itPath);
+  }
+
+  _lights.clear();
 
   _textureSamplers.clear();
 }

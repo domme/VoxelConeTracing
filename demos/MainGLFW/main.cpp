@@ -125,12 +125,12 @@ int main(void) {
   glCullFace(GL_BACK);
 
   // load shader
-  kore::ShaderProgram* pSimpleShader = new kore::ShaderProgram;
-  pSimpleShader->loadShader("./assets/shader/normalColor.vp",
-                            GL_VERTEX_SHADER);
-  pSimpleShader->loadShader("./assets/shader/normalColor.fp",
-                            GL_FRAGMENT_SHADER);
-  pSimpleShader->initShader("cooler Shader");
+  kore::ShaderProgram* simpleShader = new kore::ShaderProgram;
+  simpleShader->loadShader("./assets/shader/normalColor.vp",
+                          GL_VERTEX_SHADER);
+  simpleShader->loadShader("./assets/shader/normalColor.fp",
+                          GL_FRAGMENT_SHADER);
+  simpleShader->initShader("cooler Shader");
 
   // load resources
   kore::ResourceManager::getInstance()
@@ -173,60 +173,59 @@ int main(void) {
     kore::GLerror::gl_ErrorCheckFinish("Initialization");
 
     // Bind Attribute-Ops
-    kore::BindAttribute* pPosAttBind (new kore::BindAttribute);
-    pPosAttBind->connect(pMeshComponent->getShaderData("v_position"),
-                         pSimpleShader->getAttribute("v_position"));
+    kore::BindAttribute* posAttBind =
+      new kore::BindAttribute(pMeshComponent->getShaderData("v_position"),
+                              simpleShader->getAttribute("v_position"));
 
-    kore::BindAttribute* pNormAttBind (new kore::BindAttribute);
-    pNormAttBind->connect(pMeshComponent->getShaderData("v_normal"),
-                          pSimpleShader->getAttribute("v_normal"));
+    kore::BindAttribute* normAttBind =
+      new kore::BindAttribute(pMeshComponent->getShaderData("v_normal"),
+                             simpleShader->getAttribute("v_normal"));
+                       
+    kore::BindAttribute* uvAttBind =
+      new kore::BindAttribute(pMeshComponent->getShaderData("v_uv0"),
+                              simpleShader->getAttribute("v_uv0"));
 
-    kore::BindAttribute* pUVAttBind (new kore::BindAttribute);
-    pUVAttBind->connect(pMeshComponent->getShaderData("v_uv0"),
-                        pSimpleShader->getAttribute("v_uv0"));
-    
     // Bind Uniform-Ops
-    kore::BindUniform* pModelBind(new kore::BindUniform);
-    pModelBind->connect(vRenderNodes[i]->getTransform()->getShaderData("model Matrix"),
-                        pSimpleShader->getUniform("model"));
+    kore::BindUniform* modelBind = 
+      new kore::BindUniform(vRenderNodes[i]->getTransform()->getShaderData("model Matrix"),
+                            simpleShader->getUniform("model"));
 
-    kore::BindUniform* pViewBind(new kore::BindUniform);
-    pViewBind->connect(pCamera->getShaderData("view Matrix"),
-                       pSimpleShader->getUniform("view"));
+    kore::BindUniform* viewBind =
+      new kore::BindUniform(pCamera->getShaderData("view Matrix"),
+                            simpleShader->getUniform("view"));
 
-    kore::BindUniform* pProjBind(new kore::BindUniform);
-    pProjBind->connect(pCamera->getShaderData("projection Matrix"),
-                       pSimpleShader->getUniform("projection"));
+    kore::BindUniform* projBind =
+      new kore::BindUniform(pCamera->getShaderData("projection Matrix"),
+                           simpleShader->getUniform("projection"));
 
-    kore::BindTexture* pTextureBind(new kore::BindTexture);
-    pTextureBind->connect(pTexComponent->getShaderData(testTexture->getName()),
-                          pSimpleShader->getUniform("tex"));
+    kore::BindTexture* texBind =
+      new kore::BindTexture(pTexComponent->getShaderData(testTexture->getName()),
+                            simpleShader->getUniform("tex"));
 
+    kore::BindUniform* lightPosBind =
+      new kore::BindUniform(pLight->getShaderData("position"),
+                            simpleShader->getUniform("pointlightPos"));
 
-    kore::BindUniform* pLightPosBind(new kore::BindUniform);
-    pLightPosBind->connect(pLight->getShaderData("position"),
-                           pSimpleShader->getUniform("pointlightPos"));
+    kore::UseShaderProgram* useShader =
+      new kore::UseShaderProgram(simpleShader);
 
-    kore::UseShaderProgram* pUseShader(new kore::UseShaderProgram);
-    pUseShader->connect(pSimpleShader);
-
-   kore::UseFBO* pUseFBO(new kore::UseFBO);
+   kore::UseFBO* useFBO = new kore::UseFBO;
    GLenum drawBuffers[] = {GL_COLOR_ATTACHMENT0};
-   pUseFBO->connect(&kore::FrameBuffer::BACKBUFFER, GL_FRAMEBUFFER, drawBuffers, 1);
+   useFBO->connect(&kore::FrameBuffer::BACKBUFFER, GL_FRAMEBUFFER, drawBuffers, 1);
 
     kore::RenderMesh* pRenderOp = new kore::RenderMesh();
-    pRenderOp->connect(pMeshComponent, pSimpleShader);
+    pRenderOp->connect(pMeshComponent, simpleShader);
 
-    kore::RenderManager::getInstance()->addOperation(pPosAttBind);
-    kore::RenderManager::getInstance()->addOperation(pNormAttBind);
-    kore::RenderManager::getInstance()->addOperation(pUVAttBind);
-    kore::RenderManager::getInstance()->addOperation(pModelBind);
-    kore::RenderManager::getInstance()->addOperation(pViewBind);
-    kore::RenderManager::getInstance()->addOperation(pProjBind);
-    kore::RenderManager::getInstance()->addOperation(pLightPosBind);
-    kore::RenderManager::getInstance()->addOperation(pTextureBind);
-    kore::RenderManager::getInstance()->addOperation(pUseFBO);
-    kore::RenderManager::getInstance()->addOperation(pUseShader);
+    kore::RenderManager::getInstance()->addOperation(posAttBind);
+    kore::RenderManager::getInstance()->addOperation(normAttBind);
+    kore::RenderManager::getInstance()->addOperation(uvAttBind);
+    kore::RenderManager::getInstance()->addOperation(modelBind);
+    kore::RenderManager::getInstance()->addOperation(viewBind);
+    kore::RenderManager::getInstance()->addOperation(projBind);
+    kore::RenderManager::getInstance()->addOperation(lightPosBind);
+    kore::RenderManager::getInstance()->addOperation(texBind);
+    kore::RenderManager::getInstance()->addOperation(useFBO);
+    kore::RenderManager::getInstance()->addOperation(useShader);
     kore::RenderManager::getInstance()->addOperation(pRenderOp);
   }
 

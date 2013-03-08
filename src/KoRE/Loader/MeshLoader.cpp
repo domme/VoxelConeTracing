@@ -66,7 +66,7 @@ void kore::MeshLoader::loadChildNode(const aiScene* paiScene,
 kore::Mesh*
     kore::MeshLoader::loadMesh(const aiScene* pAiScene,
                                const uint uMeshIdx) {
-    kore::Mesh* pMesh(new kore::Mesh);
+    kore::Mesh* pMesh = new kore::Mesh;
   
     aiMesh* pAiMesh = pAiScene->mMeshes[uMeshIdx];
     pMesh->_numVertices = pAiMesh->mNumVertices;

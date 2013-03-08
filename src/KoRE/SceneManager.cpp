@@ -31,8 +31,7 @@ kore::SceneManager::SceneManager(void)
                            :_idcount(0),
                             _tagcount(0) {
   addTag("DEFAULT");
-  _root = new SceneNode();
-  _root->setName("ROOT");
+  _root.setName("ROOT");
 }
 
 kore::SceneManager::~SceneManager(void) {
@@ -43,7 +42,7 @@ uint64 kore::SceneManager::createID(void) {
 }
 
 void kore::SceneManager::update(void) {
-  _root->update();
+  _root.update();
 }
 
 void kore::SceneManager::addTag(const std::string& name) {
@@ -60,7 +59,7 @@ const uint kore::SceneManager::getTag(const std::string& name) {
 void kore::SceneManager::
   getSceneNodesByTag(const uint tag,
                      std::vector<SceneNode*>& vSceneNodes) {
-  _root->getSceneNodesByTag(tag, vSceneNodes);
+  _root.getSceneNodesByTag(tag, vSceneNodes);
 }
 
 void kore::SceneManager::getSceneNodesByTag(const std::string& name,
@@ -74,13 +73,13 @@ void kore::SceneManager::getSceneNodesByTag(const std::string& name,
 void kore::SceneManager::
   getSceneNodesByName(const std::string& name,
                       std::vector<SceneNode*>& vSceneNodes) {
-  _root->getSceneNodesByName(name, vSceneNodes);
+  _root.getSceneNodesByName(name, vSceneNodes);
 }
 
 void kore::SceneManager::
 getSceneNodesByComponent(const EComponentType componentType,
                            std::vector<SceneNode*>& vSceneNodes) {
-  _root->getSceneNodesByComponent(componentType, vSceneNodes);
+  _root.getSceneNodesByComponent(componentType, vSceneNodes);
 }
 
 kore::SceneNode* kore::SceneManager::
@@ -94,5 +93,5 @@ kore::SceneNode* kore::SceneManager::
 }
 
 kore::SceneNode* kore::SceneManager::getRootNode() {
-  return _root;
+  return &_root;
 }

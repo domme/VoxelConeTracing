@@ -378,7 +378,7 @@ bool kore::ShaderProgram::checkShaderCompileStatus(const GLuint shaderHandle,
     std::string shaderlog = infoLog;
     kore::Log::getInstance()->write(
       "[DEBUG] '%s' shader Log %s\n", name.c_str(), shaderlog.c_str());
-    free(infoLog);
+    KORE_SAFE_DELETE_ARR(infoLog);
   } else {
     kore::Log::getInstance()->write(
       "[DEBUG] Shader '%s' compiled\n", name.c_str());
@@ -406,7 +406,7 @@ bool kore::ShaderProgram::checkProgramLinkStatus(const GLuint programHandle,
     std::string shaderlog = infoLog;
     kore::Log::getInstance()->write(
       "[DEBUG] '%s' program Log %s\n", name.c_str(), shaderlog.c_str());
-    free(infoLog);
+    KORE_SAFE_DELETE_ARR(infoLog);
   } else {
     kore::Log::getInstance()->write(
       "[DEBUG] Program '%s' compiled\n", name.c_str());

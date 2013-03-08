@@ -64,6 +64,18 @@ kore::RenderManager::RenderManager(void) {
 }
 
 kore::RenderManager::~RenderManager(void) {
+  // NOTE(dlazarek): Somehow we have can't delete a dereferenced list-iterator
+  //                 but have to copy all operations in a delete-list before.
+  std::vector<const Operation*> deleteOps;
+  deleteOps.reserve(_operations.size());
+
+  for (auto it = _operations.begin(); it != _operations.end(); it++) {
+    deleteOps.push_back((*it));
+  }
+
+  for (uint i = 0; i < deleteOps.size(); ++i) {
+    KORE_SAFE_DELETE(deleteOps[i]);
+  }
 }
 
 const glm::ivec2& kore::RenderManager::getRenderResolution() const {

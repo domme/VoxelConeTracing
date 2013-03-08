@@ -44,6 +44,12 @@ void kore::FrameBuffer::destroy() {
   glDeleteFramebuffers(1, &_handle);
   _handle = 0;
 
+  for (uint i = 0; i < _textures.size(); ++i) {
+    KORE_SAFE_DELETE(_textures[i]);
+  }
+
+  _textures.clear();
+
   for (uint i = 0; i < _textureInfos.size(); ++i) {
     KORE_SAFE_DELETE(_textureInfos[i]);
   }
@@ -89,13 +95,18 @@ void kore::FrameBuffer::
       addTextureAttachment(const STextureProperties& properties,
                            const std::string& name,
                            const GLuint attatchment ) {
-  Texture* pTex(new Texture);
+  if (_handle == 0 || _handle == KORE_GLUINT_HANDLE_INVALID) {
+    return;
+  }
+
+  Texture* pTex = new Texture;
   bool bSuccess = pTex->create(properties, name);
   if (bSuccess) {
     addTextureAttachment(pTex, attatchment);
   } else {
     Log::getInstance()->write("[ERROR] Requested Texture could not be"
                               "created for the FBO");
+    KORE_SAFE_DELETE(pTex);
   }
 }
 

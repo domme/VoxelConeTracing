@@ -75,7 +75,7 @@ void kore::SceneLoader::loadRessources(const std::string& szScenePath) {
   if (pAiScene->HasCameras()) {
     for (uint i = 0; i < pAiScene->mNumCameras; ++i) {
       const aiCamera* pAiCamera = pAiScene->mCameras[i];
-      Camera* pCamera(new Camera);
+      Camera* pCamera = new Camera;
       pCamera->setName(getCameraName(pAiCamera, i));
       float yFovDeg = glm::degrees(pAiCamera->mHorizontalFOV)
                      / pAiCamera->mAspect;
@@ -92,7 +92,7 @@ void kore::SceneLoader::loadRessources(const std::string& szScenePath) {
   if (pAiScene->HasLights()) {
     for (uint i = 0; i < pAiScene->mNumLights; ++i) {
       const aiLight* pAiLight = pAiScene->mLights[i];
-      LightComponent* pLight(new LightComponent);
+      LightComponent* pLight = new LightComponent;
       pLight->setName(getLightName(pAiLight, i));
       
       pLight->_color = glm::vec3(pAiLight->mColorDiffuse.r,
@@ -174,13 +174,13 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
         ->getMeshName(aimesh, ainode->mMeshes[0]);
       Mesh* mesh = ResourceManager::getInstance()
         ->getMesh(szScenePath, meshName);
-      MeshComponent* meshComponent(new MeshComponent);
+      MeshComponent* meshComponent = new MeshComponent;
       meshComponent->setMesh(mesh);
       node->addComponent(meshComponent);
 
     // Make additional copies for any more meshes
     for (uint iMesh = 1; iMesh < ainode->mNumMeshes; ++iMesh) {
-      SceneNode* copyNode(new SceneNode);
+      SceneNode* copyNode = new SceneNode;
       copyNode->_transform->setLocal(glmMatFromAiMat(ainode->mTransformation));
       copyNode->_parent = parentNode;
       copyNode->_dirty = true;
@@ -191,7 +191,7 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
         ->getMeshName(aimesh, ainode->mMeshes[iMesh]);
       Mesh* mesh = ResourceManager::getInstance()
         ->getMesh(szScenePath, meshName);
-      MeshComponent* meshComponent(new MeshComponent);
+      MeshComponent* meshComponent = new MeshComponent;
       meshComponent->setMesh(mesh);
       copyNode->addComponent(meshComponent);
     }

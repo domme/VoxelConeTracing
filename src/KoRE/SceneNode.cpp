@@ -36,6 +36,15 @@ kore::SceneNode::SceneNode(void)
 }
 
 kore::SceneNode::~SceneNode(void) {
+  for (uint i = 0; i < _children.size(); ++i) {
+    KORE_SAFE_DELETE(_children[i]);
+  }
+
+  _children.clear();
+
+  for (uint i = 0; i < _components.size(); ++i) {
+    KORE_SAFE_DELETE(_components[i]);
+  }
 }
 
 
