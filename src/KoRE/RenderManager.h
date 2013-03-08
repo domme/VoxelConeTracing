@@ -67,7 +67,6 @@ namespace kore {
   public:
     static RenderManager *getInstance(void);
     const glm::ivec2& getRenderResolution() const;
-    const ShaderProgram* getShaderProgram(const std::string& name);
     void setRenderResolution(const glm::ivec2& newResolution);
     void renderFrame(void);
     void addOperation(const Operation* op);

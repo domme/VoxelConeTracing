@@ -53,6 +53,9 @@
     <ClInclude Include="src\KoRE_GUI\ShaderInputItem.h">
       <Filter>Header Dateien</Filter>
     </ClInclude>
+    <ClInclude Include="src\KoRE_GUI\BindPathItem.h">
+      <Filter>Header Dateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="src\KoRE_GUI\SceneViewer.h">

@@ -30,6 +30,10 @@
 namespace koregui {
   class RenderViewer : public QGraphicsView {
       Q_OBJECT
+  enum EMouseMode {
+    DEFAULT,
+    LINK_DRAG
+  };
 
   public:
     RenderViewer(QWidget *parent = 0);
@@ -46,6 +50,9 @@ namespace koregui {
   protected:
     void keyPressEvent(QKeyEvent* event);
     void keyReleaseEvent(QKeyEvent * event);
+    void mousePressEvent(QMouseEvent * event);
+    void mouseReleaseEvent(QMouseEvent * event);
+    void mouseMoveEvent(QMouseEvent *event);
     void wheelEvent(QWheelEvent *event);
     void contextMenuEvent(QContextMenuEvent *event);
 
@@ -53,6 +60,7 @@ namespace koregui {
       void clearScene();
       QGraphicsScene _scene;
       std::vector<NodeItem*> _nodes;
+      EMouseMode _mode;
   };
 }
 #endif // SRC_KOREGUI_RENDERVIEWER_H_
