@@ -23,13 +23,15 @@
 #include "KoRE/RenderManager.h"
 #include "KoRE/Log.h"
 #include "KoRE/GLerror.h"
+#include "KoRE/Optimization/SimpleOptimizer.h"
 
 kore::RenderManager* kore::RenderManager::getInstance(void) {
   static kore::RenderManager theInstance;
   return &theInstance;
 }
 
-kore::RenderManager::RenderManager(void) {
+kore::RenderManager::RenderManager(void)
+  : _optimizer(NULL) {
   _vTexTargetMap[GL_TEXTURE_1D] =                   TEXTURE_1D;
   _vTexTargetMap[GL_TEXTURE_2D] =                   TEXTURE_2D;
   _vTexTargetMap[GL_TEXTURE_3D] =                   TEXTURE_3D;
@@ -76,6 +78,8 @@ kore::RenderManager::~RenderManager(void) {
   for (uint i = 0; i < deleteOps.size(); ++i) {
     KORE_SAFE_DELETE(deleteOps[i]);
   }
+
+  KORE_SAFE_DELETE(_optimizer);
 }
 
 const glm::ivec2& kore::RenderManager::getRenderResolution() const {
@@ -89,6 +93,14 @@ void kore::RenderManager::
 }
 
 void kore::RenderManager::renderFrame(void) {
+  if (_optimizer == NULL) {
+    setOptimizer(new SimpleOptimizer);
+  }
+
+  // For now, just optimize every frame... later do this only on changes
+  // in operations.
+  _optimizer->optimize(_frameBufferStages, _operations);
+
     for (auto it = _operations.begin(); it != _operations.end(); ++it) {
         (*it)->execute();
     }
@@ -98,6 +110,16 @@ void kore::RenderManager::resolutionChanged() {
     // Update all resolution-dependant resources here
     // (e.g. GBuffer-Textures...)
 }
+
+
+void kore::RenderManager::setOptimizer(const Optimizer* optimizer) {
+  if (_optimizer != NULL) {
+    KORE_SAFE_DELETE(_optimizer);
+  }
+
+  _optimizer = optimizer;
+}
+
 
 void kore::RenderManager::addOperation(const Operation* op) {
     if (!hasOperation(op)) {

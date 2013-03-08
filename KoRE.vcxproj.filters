@@ -115,14 +115,20 @@
     <ClCompile Include="src\KoRE\Operations\UseShaderProgram.cpp">
       <Filter>src\Operations</Filter>
     </ClCompile>
-    <ClCompile Include="src\KoRE\Operations\Passes\FrameBufferStage.cpp">
-      <Filter>src\Operations\Passes</Filter>
+    <ClCompile Include="src\KoRE\Passes\NodePass.cpp">
+      <Filter>src\Passes</Filter>
     </ClCompile>
-    <ClCompile Include="src\KoRE\Operations\Passes\ShaderProgramPass.cpp">
-      <Filter>src\Operations\Passes</Filter>
+    <ClCompile Include="src\KoRE\Passes\ShaderProgramPass.cpp">
+      <Filter>src\Passes</Filter>
     </ClCompile>
-    <ClCompile Include="src\KoRE\Operations\Passes\NodePass.cpp">
-      <Filter>src\Operations\Passes</Filter>
+    <ClCompile Include="src\KoRE\Passes\FrameBufferStage.cpp">
+      <Filter>src\Passes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KoRE\Optimization\Optimizer.cpp">
+      <Filter>src\Optimization</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KoRE\Optimization\SimpleOptimizer.cpp">
+      <Filter>src\Optimization</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -249,14 +255,20 @@
     <ClInclude Include="src\KoRE\Operations\UseShaderProgram.h">
       <Filter>src\Operations</Filter>
     </ClInclude>
-    <ClInclude Include="src\KoRE\Operations\Passes\NodePass.h">
-      <Filter>src\Operations\Passes</Filter>
+    <ClInclude Include="src\KoRE\Passes\FrameBufferStage.h">
+      <Filter>src\Passes</Filter>
     </ClInclude>
-    <ClInclude Include="src\KoRE\Operations\Passes\ShaderProgramPass.h">
-      <Filter>src\Operations\Passes</Filter>
+    <ClInclude Include="src\KoRE\Passes\NodePass.h">
+      <Filter>src\Passes</Filter>
     </ClInclude>
-    <ClInclude Include="src\KoRE\Operations\Passes\FrameBufferStage.h">
-      <Filter>src\Operations\Passes</Filter>
+    <ClInclude Include="src\KoRE\Passes\ShaderProgramPass.h">
+      <Filter>src\Passes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\Optimization\SimpleOptimizer.h">
+      <Filter>src\Optimization</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\Optimization\Optimizer.h">
+      <Filter>src\Optimization</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -275,8 +287,11 @@
     <Filter Include="src\Operations\BindOperations">
       <UniqueIdentifier>{56a10190-b170-447c-abca-fa80048741a1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Operations\Passes">
+    <Filter Include="src\Passes">
       <UniqueIdentifier>{9e6360e3-47d5-4f77-86a1-18b3a8d60d2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Optimization">
+      <UniqueIdentifier>{2dfa9b56-9e40-44a1-925f-cda5d4cff627}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

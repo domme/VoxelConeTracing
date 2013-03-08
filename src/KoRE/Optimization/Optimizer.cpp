@@ -17,4 +17,11 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "KoRE/Operations/Passes/FrameBufferStage.h"
+#include "KoRE/Optimization/Optimizer.h"
+
+kore::Optimizer::Optimizer() {
+}
+
+kore::Optimizer::~Optimizer() {
+}
+

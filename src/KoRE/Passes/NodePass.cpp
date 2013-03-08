@@ -17,23 +17,4 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef KORE_SHADERPROGRAMPASS_H_
-#define KORE_SHADERPROGRAMPASS_H_
-
-#include <vector>
-#include "KoRE/ShaderProgram.h"
-#include "KoRE/Operations/Passes/NodePass.h"
-
-namespace kore {
-  class ShaderProgramPass {
-  public:
-    ShaderProgramPass(void){};
-    ~ShaderProgramPass(void){};
-
-  private:
-    uint64 _id;
-    const ShaderProgram* _program;
-    std::vector<const NodePass*> _nodePasses;
-  };
-}
-#endif  // KORE_SHADERPROGRAMPASS_H_
+#include "KoRE/Passes/NodePass.h"

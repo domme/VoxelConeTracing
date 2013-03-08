@@ -17,23 +17,33 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef KORE_FRAMEBUFFERSTAGE_H_
-#define KORE_FRAMEBUFFERSTAGE_H_
+#ifndef KORE_SHADERPROGRAMPASS_H_
+#define KORE_SHADERPROGRAMPASS_H_
 
 #include <vector>
-#include "KoRE/FrameBuffer.h"
-#include "KoRE/Operations/Passes/ShaderProgramPass.h"
+#include "KoRE/ShaderProgram.h"
+#include "KoRE/Passes/NodePass.h"
 
 namespace kore {
-  class FrameBufferStage {
+  class ShaderProgramPass {
   public:
-    FrameBufferStage(void){};
-    ~FrameBufferStage(void){};
+    ShaderProgramPass(void);
+    ~ShaderProgramPass(void);
+
+    inline const std::vector<const NodePass*>&
+      getNodePasses() const {return _nodePasses;}
+
+    inline const std::vector<const Operation*>&
+      getStartupOperations() const {return _startupOperations;}
+
+    void setShaderProgram(const ShaderProgram* program);
 
   private:
-    const FrameBuffer* _frameBuffer;
     uint64 _id;
-    std::vector<const ShaderProgramPass*> _programPasses;
+    const ShaderProgram* _program;
+
+    std::vector<const Operation*> _startupOperations;
+    std::vector<const NodePass*> _nodePasses;
   };
 }
-#endif  // KORE_FRAMEBUFFERSTAGE_H_
+#endif  // KORE_SHADERPROGRAMPASS_H_

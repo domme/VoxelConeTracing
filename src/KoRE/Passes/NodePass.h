@@ -17,4 +17,26 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "KoRE/Operations/Passes/ShaderProgrampass.h"
+#ifndef KORE_NODESTAGE_H_
+#define KORE_NODESTAGE_H_
+
+#include <vector>
+#include "KoRE/SceneNode.h"
+#include "KoRE/Operations/Operation.h"
+
+namespace kore {
+  class NodePass {
+  public:
+    NodePass(void){};
+    ~NodePass(void){};
+
+    inline const std::vector<const Operation*>&
+      getOperations() const {return _operations;}
+
+  private:
+    const SceneNode* _node;
+    uint64 _id;
+    std::vector<const Operation*> _operations;
+  };
+}
+#endif  // KORE_NODESTAGE_H_

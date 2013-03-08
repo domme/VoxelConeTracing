@@ -26,7 +26,8 @@
 #include "KoRE/Components/MeshComponent.h"
 #include "KoRE/Components/Camera.h"
 #include "KoRE/ShaderProgram.h"
-#include "KoRE/Operations/Passes/FrameBufferStage.h"
+#include "KoRE/Passes/FrameBufferStage.h"
+#include "KoRE/Optimization/Optimizer.h"
 
 namespace kore {
   enum EOpInsertPos {
@@ -68,6 +69,7 @@ namespace kore {
     static RenderManager *getInstance(void);
     const glm::ivec2& getRenderResolution() const;
     void setRenderResolution(const glm::ivec2& newResolution);
+    void setOptimizer(const Optimizer* optimizer);
     void renderFrame(void);
     void addOperation(const Operation* op);
     void addOperation(const Operation* op,
@@ -111,7 +113,10 @@ namespace kore {
     RenderManager(void);
     virtual ~RenderManager(void);
     void resolutionChanged();
+
+
     glm::ivec2 _renderResolution;
+    const Optimizer* _optimizer;
 
     typedef std::list<const Operation*> OperationList;
     OperationList _operations;
