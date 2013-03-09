@@ -52,5 +52,9 @@ void kore::ShaderProgramPass::setShaderProgram(const ShaderProgram* program) {
   _startupOperations.push_back(pUseProgram);
 }
 
+void kore::ShaderProgramPass::addNodePass(const NodePass* node) {
+  _nodePasses.push_back(node);
+}
+
 
 

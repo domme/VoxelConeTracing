@@ -121,51 +121,6 @@ void kore::RenderManager::setOptimizer(const Optimizer* optimizer) {
 }
 
 
-void kore::RenderManager::addOperation(const Operation* op) {
-    if (!hasOperation(op)) {
-       _operations.push_back(op);
-    }
-}
-
-void kore::RenderManager::addOperation(const Operation* op,
-                                       const Operation* targetOp,
-                                       const EOpInsertPos insertPos) {
-     if (!hasOperation(targetOp) || hasOperation(op)) {
-            return;
-     }
-
-     OperationList::iterator it =
-         std::find(_operations.begin(), _operations.end(), targetOp);
-
-     switch (insertPos) {
-     case INSERT_AFTER:
-         _operations.insert(it, op);
-         break;
-     case INSERT_BEFORE:
-         _operations.insert(--it, op);
-         break;
-     }
-}
-
-bool kore::RenderManager::hasOperation(const Operation* op) {
-  return std::find(_operations.begin(),
-                   _operations.end(), op)
-                   != _operations.end();
-}
-
-void kore::RenderManager::removeOperation(const Operation* op) {
-  auto operationIt = _operations.begin();
-  for (; operationIt != _operations.end(); ++operationIt)  {
-    if ((*operationIt) == op) {
-      _operations.erase(operationIt);
-      break;
-    }
-  }
-  
-}
-
-
-
 void kore::RenderManager::onRemoveComponent(const SceneNodeComponent* comp) {
   for (auto iter = _operations.begin(); iter != _operations.end(); ++iter) {
     if ((*iter)->dependsOn(static_cast<const void*>(comp))) {
@@ -281,4 +236,8 @@ void kore::RenderManager::drawBuffers(const GLuint fboHandle,
   if (different) {
     glDrawBuffers(num, buffers);
   }
+}
+
+void kore::RenderManager::addFramebufferStage(const FrameBufferStage* stage) {
+  _frameBufferStages.push_back(stage);
 }

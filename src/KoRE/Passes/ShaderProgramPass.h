@@ -38,6 +38,8 @@ namespace kore {
 
     void setShaderProgram(const ShaderProgram* program);
 
+    void addNodePass(const NodePass* pass);
+
   private:
     uint64 _id;
     const ShaderProgram* _program;

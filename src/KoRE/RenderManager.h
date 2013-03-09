@@ -71,14 +71,8 @@ namespace kore {
     void setRenderResolution(const glm::ivec2& newResolution);
     void setOptimizer(const Optimizer* optimizer);
     void renderFrame(void);
-    void addOperation(const Operation* op);
-    void addOperation(const Operation* op,
-                      const Operation* targetOp,
-                      const EOpInsertPos insertPos);
-    bool hasOperation(const Operation* op);
-
-    void removeOperation(const Operation* op);
-
+    
+    void addFramebufferStage(const FrameBufferStage* stage);
     void onRemoveComponent(const SceneNodeComponent* comp);
 
     // The OpenGL-State wrapper functions go here:

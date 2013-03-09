@@ -27,11 +27,14 @@
 namespace kore {
   class NodePass {
   public:
-    NodePass(void){};
-    ~NodePass(void){};
+    NodePass(void);
+    ~NodePass(void);
 
     inline const std::vector<const Operation*>&
       getOperations() const {return _operations;}
+
+    void addOperation(const Operation* op);
+
 
   private:
     const SceneNode* _node;
