@@ -30,22 +30,22 @@ namespace kore {
     ShaderProgramPass(void);
     ~ShaderProgramPass(void);
 
-    inline const std::vector<const NodePass*>&
-      getNodePasses() const {return _nodePasses;}
+    inline std::vector<NodePass*>&
+      getNodePasses() {return _nodePasses;}
 
-    inline const std::vector<const Operation*>&
-      getStartupOperations() const {return _startupOperations;}
+    inline std::vector<Operation*>&
+      getStartupOperations() {return _startupOperations;}
 
     void setShaderProgram(const ShaderProgram* program);
 
-    void addNodePass(const NodePass* pass);
+    void addNodePass(NodePass* pass);
 
   private:
     uint64 _id;
     const ShaderProgram* _program;
 
-    std::vector<const Operation*> _startupOperations;
-    std::vector<const NodePass*> _nodePasses;
+    std::vector<Operation*> _startupOperations;
+    std::vector<NodePass*> _nodePasses;
   };
 }
 #endif  // KORE_SHADERPROGRAMPASS_H_

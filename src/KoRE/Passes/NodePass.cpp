@@ -29,6 +29,11 @@ kore::NodePass::~NodePass(void) {
   }
 }
 
-void kore::NodePass::addOperation(const Operation* op) {
+void kore::NodePass::addOperation(Operation* op) {
+  if (std::find(_operations.begin(), _operations.end(), op)
+      != _operations.end()) {
+        return;
+  }
+
   _operations.push_back(op);
 }

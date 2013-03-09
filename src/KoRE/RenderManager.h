@@ -72,7 +72,7 @@ namespace kore {
     void setOptimizer(const Optimizer* optimizer);
     void renderFrame(void);
     
-    void addFramebufferStage(const FrameBufferStage* stage);
+    void addFramebufferStage(FrameBufferStage* stage);
     void onRemoveComponent(const SceneNodeComponent* comp);
 
     // The OpenGL-State wrapper functions go here:
@@ -80,13 +80,17 @@ namespace kore {
     void bindVBO(const GLuint vbo);
     void bindIBO(const GLuint ibo);
     void useShaderProgram(const GLuint shaderProgram);
+
     void bindTexture(const GLuint textureUnit,
                      const GLuint textureTarget,
                      const GLuint textureHandle);
+
     void bindTexture(const GLuint textureTarget,
                      const GLuint textureHandle);
+
     void bindSampler(const GLuint textureUnit,
                      const GLuint samplerHandle);
+
     void bindFrameBuffer(const GLuint fboTarget,
                          const GLuint fboHandle);
 
@@ -94,6 +98,11 @@ namespace kore {
     void drawBuffers(const GLuint fboHandle,
                      const uint num,
                      const GLuint* buffers);
+
+    void removeOperation(const Operation* operation);
+    void removeShaderProgramPass(const ShaderProgramPass* progPass);
+    void removeNodePass(const NodePass* nodePass);
+    void removeFrameBufferStage(const FrameBufferStage* fboStage);
 
     /**
       Sets the active texture unit(glActiveTexture).
@@ -114,7 +123,7 @@ namespace kore {
 
     typedef std::list<const Operation*> OperationList;
     OperationList _operations;
-    std::vector<const FrameBufferStage*> _frameBufferStages;
+    std::vector<FrameBufferStage*> _frameBufferStages;
 
     // OpenGL-States:
     GLuint _activeTextureUnitIndex;

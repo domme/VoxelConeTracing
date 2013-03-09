@@ -31,24 +31,24 @@ namespace kore {
     FrameBufferStage(void);
     ~FrameBufferStage(void);
 
-    inline const std::vector<const ShaderProgramPass*>&
-      getShaderProgramPasses() const {return _programPasses;}
+    inline std::vector<ShaderProgramPass*>&
+      getShaderProgramPasses() {return _programPasses;}
 
-    inline const std::vector<const Operation*>&
-      getStartupOperations() const {return _startupOperations;}
+    inline std::vector<Operation*>&
+      getStartupOperations() {return _startupOperations;}
 
     void setFrameBuffer(const kore::FrameBuffer* frameBuffer,
                         const GLenum frameBufferTarget,
                         const GLenum* drawBuffers,
                         const uint numDrawBuffers);
 
-    void addProgramPass(const ShaderProgramPass* progPass);
+    void addProgramPass(ShaderProgramPass* progPass);
 
   private:
     const FrameBuffer* _frameBuffer;
+    std::vector<Operation*> _startupOperations;
+    std::vector<ShaderProgramPass*> _programPasses;
     uint64 _id;
-    std::vector<const Operation*> _startupOperations;
-    std::vector<const ShaderProgramPass*> _programPasses;
   };
 }
 #endif  // KORE_FRAMEBUFFERSTAGE_H_
