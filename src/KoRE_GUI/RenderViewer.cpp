@@ -27,20 +27,19 @@
 #include <QKeyEvent>
 #include <QList>
 #include <QMenu>
-#include "KoRE_GUI/ShaderItem.h"
-// #include "KoRE/RenderManager.h"
+#include "KoRE_GUI/ShaderProgramItem.h"
 #include "KoRE/ResourceManager.h"
 
 koregui::RenderViewer::RenderViewer(QWidget *parent) : QGraphicsView(parent) {
   _mode = DEFAULT;
   setWindowTitle("RenderView");
-  // setDragMode(RubberBandDrag);
   _scene.setBackgroundBrush(QBrush(QColor(23,23,23)));
   setScene(&_scene);
   setMinimumSize(800,600);
   const kore::ShaderProgram* shader = kore::ResourceManager::getInstance()->getShaderProgram("MegaShader");
-  koregui::ShaderItem* sitem = new koregui::ShaderItem(shader);
+  koregui::ShaderProgramItem* sitem = new koregui::ShaderProgramItem(shader);
   _scene.addItem(sitem);
+  _typemap[reinterpret_cast<uint>(sitem)] = SHADER_PROGRAM_ITEM;
   sitem->setPos(0,0);
 }
 
@@ -78,7 +77,7 @@ void koregui::RenderViewer::wheelEvent(QWheelEvent *event) {
 }
 
 void koregui::RenderViewer::contextMenuEvent(QContextMenuEvent *event) {
-  ShaderItem* test = static_cast<ShaderItem*>(this->itemAt(event->pos()));
+  ShaderProgramItem* test = static_cast<ShaderProgramItem*>(this->itemAt(event->pos()));
   if (test) {
     test->contextMenu(event->globalPos());
     return;
@@ -94,6 +93,21 @@ void koregui::RenderViewer::contextMenuEvent(QContextMenuEvent *event) {
 }
 
 void koregui::RenderViewer::mousePressEvent(QMouseEvent * event) {
+  QGraphicsItem* item = itemAt(event->pos());
+  if (item) {
+    if(_typemap.count(reinterpret_cast<uint>(item)) != 0) {
+      switch(_typemap[reinterpret_cast<uint>(item)]) {
+      case NODE_ITEM:
+        break;
+      case SHADER_DATA_ITEM:
+        kore::Log::getInstance()->write("HUHUUUUU!\n");
+        break;
+      default:
+        // do nothing
+        break;
+      }
+    }
+  }
   QGraphicsView::mousePressEvent(event);
 }
 
@@ -116,5 +130,6 @@ void koregui::RenderViewer
   ::createNode(kore::SceneNode* sourcenode, int x, int y) {
   NodeItem* nodeItem = new NodeItem(sourcenode);
   _scene.addItem(nodeItem);
+  _typemap[reinterpret_cast<uint>(nodeItem)] = NODE_ITEM;
   nodeItem->setPos(x, y);
 }

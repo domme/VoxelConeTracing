@@ -21,7 +21,7 @@
 /* \author Dominik Ospelt                                               */
 /************************************************************************/
 
-#include "KoRE_GUI/ShaderItem.h"
+#include "KoRE_GUI/ShaderProgramItem.h"
 
 #include <QMenu>
 #include <QPainter>
@@ -32,7 +32,7 @@
 #include "KoRE/ShaderInput.h"
 #include "KoRE/ShaderData.h"
 
-koregui::ShaderItem::ShaderItem(const kore::ShaderProgram* shader,
+koregui::ShaderProgramItem::ShaderProgramItem(const kore::ShaderProgram* shader,
                                 QGraphicsItem* parent) 
                               : _shader(const_cast<kore::ShaderProgram*>(shader)),
                                 QGraphicsItem(parent) {
@@ -42,10 +42,10 @@ koregui::ShaderItem::ShaderItem(const kore::ShaderProgram* shader,
   refresh();
 }
 
-koregui::ShaderItem::~ShaderItem(void) {
+koregui::ShaderProgramItem::~ShaderProgramItem(void) {
 }
 
-void koregui::ShaderItem::init(void) {
+void koregui::ShaderProgramItem::init(void) {
   // destroy old shader inputs
   if(_attributes.size() > 0) {
     for (uint i = 0; i < _attributes.size(); i++) {
@@ -84,7 +84,7 @@ void koregui::ShaderItem::init(void) {
   }
 }
 
-void koregui::ShaderItem::refresh(void) {
+void koregui::ShaderProgramItem::refresh(void) {
   prepareGeometryChange();
   _shaderheight = 40; // place for shader name
   _shaderheight += 30 * _attributes.size();
@@ -94,11 +94,11 @@ void koregui::ShaderItem::refresh(void) {
   _shaderwidth = 200;
 }
 
-QRectF koregui::ShaderItem::boundingRect() const {
+QRectF koregui::ShaderProgramItem::boundingRect() const {
   return QRectF(0, 0, _shaderwidth, _shaderheight);
 }
 
-void koregui::ShaderItem::paint(QPainter* painter,
+void koregui::ShaderProgramItem::paint(QPainter* painter,
                                 const QStyleOptionGraphicsItem* option,
                                 QWidget* widget) {
   QBrush b;
@@ -141,11 +141,11 @@ void koregui::ShaderItem::paint(QPainter* painter,
   }
 }
 
-void koregui::ShaderItem::mousePressEvent(QGraphicsSceneMouseEvent * event){
+void koregui::ShaderProgramItem::mousePressEvent(QGraphicsSceneMouseEvent * event){
   QGraphicsItem::mousePressEvent(event);
 }
 
-void koregui::ShaderItem::contextMenu(QPoint pos) {
+void koregui::ShaderProgramItem::contextMenu(QPoint pos) {
   QMenu menu("TEST2");
   menu.addAction("megamega", 0, 0);
   menu.addAction("soso", 0, 0);

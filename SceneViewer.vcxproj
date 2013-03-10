@@ -14,7 +14,7 @@
     <ClInclude Include="src\KoRE_GUI\BindPathItem.h" />
     <ClInclude Include="src\KoRE_GUI\ComponentItem.h" />
     <ClInclude Include="src\KoRE_GUI\ShaderInputItem.h" />
-    <ClInclude Include="src\KoRE_GUI\ShaderItem.h" />
+    <ClInclude Include="src\KoRE_GUI\ShaderProgramItem.h" />
     <CustomBuild Include="src\KoRE_GUI\RenderViewer.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing RenderViewer.h...</Message>
@@ -74,7 +74,7 @@
     <ClCompile Include="src\KoRE_GUI\SceneViewer.cpp" />
     <ClCompile Include="src\KoRE_GUI\ShaderDataItem.cpp" />
     <ClCompile Include="src\KoRE_GUI\ShaderInputItem.cpp" />
-    <ClCompile Include="src\KoRE_GUI\ShaderItem.cpp" />
+    <ClCompile Include="src\KoRE_GUI\ShaderProgramItem.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B12702AD-ABFB-343A-A199-8E24837244A3}</ProjectGuid>

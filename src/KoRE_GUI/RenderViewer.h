@@ -35,6 +35,13 @@ namespace koregui {
     LINK_DRAG
   };
 
+  enum EItemType {
+    NODE_ITEM,
+    SHADER_DATA_ITEM,
+    SHADER_INPUT_ITEM,
+    SHADER_PROGRAM_ITEM
+  };
+
   public:
     RenderViewer(QWidget *parent = 0);
     ~RenderViewer();
@@ -61,6 +68,7 @@ namespace koregui {
       QGraphicsScene _scene;
       std::vector<NodeItem*> _nodes;
       EMouseMode _mode;
+      std::map<uint, EItemType> _typemap;
   };
 }
 #endif // SRC_KOREGUI_RENDERVIEWER_H_

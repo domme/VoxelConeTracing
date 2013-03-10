@@ -21,19 +21,19 @@
 /* \author Dominik Ospelt                                               */
 /************************************************************************/
 
-#ifndef SHADERITEM_H_
-#define SHADERITEM_H_
+#ifndef SHADERPROGRAMITEM_H_
+#define SHADERPROGRAMITEM_H_
 
 #include <QGraphicsItem>
 #include "KoRE/ShaderProgram.h"
 #include "KoRE_GUI/ShaderInputItem.h"
 
 namespace koregui {
-  class ShaderItem : public QGraphicsItem {
+  class ShaderProgramItem : public QGraphicsItem {
   public:
-    ShaderItem(const kore::ShaderProgram* shader,
+    ShaderProgramItem(const kore::ShaderProgram* shader,
                   QGraphicsItem* parent = 0);
-    ~ShaderItem(void);
+    ~ShaderProgramItem(void);
 
     void init(void);
     void refresh(void);
@@ -58,4 +58,4 @@ namespace koregui {
     uint _shaderheight;
   };
 }
-#endif  // SHADERITEM_H_
+#endif  // SHADERPROGRAMITEM_H_
