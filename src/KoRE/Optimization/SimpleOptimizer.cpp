@@ -26,7 +26,7 @@ kore::SimpleOptimizer::~SimpleOptimizer() {
 }
 
 void kore::SimpleOptimizer::
-  optimize(const std::vector<const FrameBufferStage*>& stages,
+  optimize(const std::vector<FrameBufferStage*>& stages,
            std::list<const Operation*>& operationList) const {
   // This really clever optimizer copies all operations into the
   // operation list and calls this "optimization" - let's see how long it
@@ -34,29 +34,29 @@ void kore::SimpleOptimizer::
   operationList.clear();
 
   for (uint iFBO = 0; iFBO < stages.size(); ++iFBO) {
-    const std::vector<const Operation*>& fboStartupOps =
+    const std::vector<Operation*>& fboStartupOps =
       stages[iFBO]->getStartupOperations();
 
     for (uint iStartupOp = 0; iStartupOp < fboStartupOps.size(); ++iStartupOp) {
         operationList.push_back(fboStartupOps[iStartupOp]);
     }
-    const std::vector<const ShaderProgramPass*>& programPasses =
+    const std::vector<ShaderProgramPass*>& programPasses =
        stages[iFBO]->getShaderProgramPasses();
 
     for (uint iProgram = 0; iProgram < programPasses.size(); ++iProgram) {
 
-      const std::vector<const Operation*>& programStartupOps =
+      const std::vector<Operation*>& programStartupOps =
          programPasses[iProgram]->getStartupOperations();
 
       for (uint iStartupOp = 0; iStartupOp < programStartupOps.size(); ++iStartupOp) {
         operationList.push_back(programStartupOps[iStartupOp]);
       }
 
-      const std::vector<const NodePass*>& nodePasses =
+      const std::vector<NodePass*>& nodePasses =
         programPasses[iProgram]->getNodePasses();
 
       for (uint iNode = 0; iNode < nodePasses.size(); ++iNode) {
-        const std::vector<const Operation*>& operations =
+        const std::vector<Operation*>& operations =
           nodePasses[iNode]->getOperations();
 
         for (uint iOperation = 0; iOperation < operations.size();
@@ -67,4 +67,3 @@ void kore::SimpleOptimizer::
     }  // Program Passes
   }  // FrameBuffer passes
 }
-

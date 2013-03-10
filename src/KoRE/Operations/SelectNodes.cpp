@@ -69,7 +69,7 @@ void kore::SelectNodes::append(const SceneNode* root, const std::string& name) {
 }
 
 void kore::SelectNodes::destroy() {
-  _renderManager->removeOperation(this);
+ //  _renderManager->removeOperation(this);
 }
 
 bool kore::SelectNodes::dependsOn(const void* thing) const {

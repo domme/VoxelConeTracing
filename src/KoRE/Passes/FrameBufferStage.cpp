@@ -28,10 +28,19 @@ kore::FrameBufferStage::~FrameBufferStage(void) {
   for (uint i = 0; i < _startupOperations.size(); ++i) {
     KORE_SAFE_DELETE(_startupOperations[i]);
   }
+
+  for (uint i = 0; i < _programPasses.size(); ++i) {
+    KORE_SAFE_DELETE(_programPasses[i]);
+  }
 }
 
 void kore::FrameBufferStage::
-  addProgramPass(const ShaderProgramPass* progPass) {
+  addProgramPass(ShaderProgramPass* progPass) {
+    if (std::find(_programPasses.begin(), _programPasses.end(), progPass)
+        != _programPasses.end()) {
+          return;
+    }
+
     _programPasses.push_back(progPass);
 }
 

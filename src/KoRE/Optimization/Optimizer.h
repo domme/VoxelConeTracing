@@ -39,7 +39,7 @@ namespace kore {
       * \param stages The high-level rendering stages.
       * \param operationList The resulting optimized, low-level operation-list.
       */
-      virtual void optimize(const std::vector<const FrameBufferStage*>& stages,
+      virtual void optimize(const std::vector<FrameBufferStage*>& stages,
                             std::list<const Operation*>& operationList) const = 0;
   };
 }

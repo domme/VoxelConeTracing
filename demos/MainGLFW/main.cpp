@@ -47,7 +47,9 @@
 #include "KoRE/Timer.h"
 #include "KoRE/Texture.h"
 #include "KoRE/FrameBuffer.h"
-
+#include "Kore/Passes/FrameBufferStage.h"
+#include "Kore/Passes/ShaderProgramPass.h"
+#include "KoRE/Passes/NodePass.h"
 
 kore::SceneNode* rotationNode;
 kore::SceneNode* lightNode;
@@ -158,8 +160,21 @@ int main(void) {
   kore::SceneManager::getInstance()->
                   getSceneNodesByComponent(kore::COMPONENT_MESH, vRenderNodes);
 
+
+  GLenum drawBuffers[] = {GL_COLOR_ATTACHMENT0};
+  kore::FrameBufferStage* backBufferStage = new kore::FrameBufferStage;
+  backBufferStage->setFrameBuffer(&kore::FrameBuffer::BACKBUFFER,
+                                  GL_FRAMEBUFFER,
+                                  drawBuffers,
+                                  1);
+
+  kore::ShaderProgramPass* shaderProgPass = new kore::ShaderProgramPass;
+  shaderProgPass->setShaderProgram(simpleShader);
+
   // init operations
   for (uint i = 0; i < vRenderNodes.size(); ++i) {
+    
+    kore::NodePass* nodePass = new kore::NodePass;
     
     kore::MeshComponent* pMeshComponent =
       static_cast<kore::MeshComponent*>
@@ -206,28 +221,25 @@ int main(void) {
       new kore::BindUniform(pLight->getShaderData("position"),
                             simpleShader->getUniform("pointlightPos"));
 
-    kore::UseShaderProgram* useShader =
-      new kore::UseShaderProgram(simpleShader);
-
-   kore::UseFBO* useFBO = new kore::UseFBO;
-   GLenum drawBuffers[] = {GL_COLOR_ATTACHMENT0};
-   useFBO->connect(&kore::FrameBuffer::BACKBUFFER, GL_FRAMEBUFFER, drawBuffers, 1);
-
     kore::RenderMesh* pRenderOp = new kore::RenderMesh();
     pRenderOp->connect(pMeshComponent, simpleShader);
 
-    kore::RenderManager::getInstance()->addOperation(posAttBind);
-    kore::RenderManager::getInstance()->addOperation(normAttBind);
-    kore::RenderManager::getInstance()->addOperation(uvAttBind);
-    kore::RenderManager::getInstance()->addOperation(modelBind);
-    kore::RenderManager::getInstance()->addOperation(viewBind);
-    kore::RenderManager::getInstance()->addOperation(projBind);
-    kore::RenderManager::getInstance()->addOperation(lightPosBind);
-    kore::RenderManager::getInstance()->addOperation(texBind);
-    kore::RenderManager::getInstance()->addOperation(useFBO);
-    kore::RenderManager::getInstance()->addOperation(useShader);
-    kore::RenderManager::getInstance()->addOperation(pRenderOp);
+    nodePass->addOperation(posAttBind);
+    nodePass->addOperation(normAttBind);
+    nodePass->addOperation(uvAttBind);
+    nodePass->addOperation(modelBind);
+    nodePass->addOperation(viewBind);
+    nodePass->addOperation(projBind);
+    nodePass->addOperation(lightPosBind);
+    nodePass->addOperation(texBind);
+    nodePass->addOperation(pRenderOp);
+
+    shaderProgPass->addNodePass(nodePass);
   }
+
+  backBufferStage->addProgramPass(shaderProgPass);
+
+  kore::RenderManager::getInstance()->addFramebufferStage(backBufferStage);
 
   std::vector<kore::SceneNode*> vBigCubeNodes;
   kore::SceneManager::getInstance()

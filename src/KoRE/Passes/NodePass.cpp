@@ -18,3 +18,22 @@
 */
 
 #include "KoRE/Passes/NodePass.h"
+
+kore::NodePass::NodePass(void)
+  : _node(NULL) {
+}
+
+kore::NodePass::~NodePass(void) {
+  for (uint i = 0; i < _operations.size(); ++i) {
+    KORE_SAFE_DELETE(_operations[i]);
+  }
+}
+
+void kore::NodePass::addOperation(Operation* op) {
+  if (std::find(_operations.begin(), _operations.end(), op)
+      != _operations.end()) {
+        return;
+  }
+
+  _operations.push_back(op);
+}

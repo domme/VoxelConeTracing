@@ -29,8 +29,10 @@ kore::ShaderProgramPass::~ShaderProgramPass(void) {
   for (uint i = 0; i < _startupOperations.size(); ++i) {
     KORE_SAFE_DELETE(_startupOperations[i]);
   }
-  
-  KORE_SAFE_DELETE(_program);
+
+  for (uint i = 0; i < _nodePasses.size(); ++i) {
+    KORE_SAFE_DELETE(_nodePasses[i]);
+  }
 }
 
 void kore::ShaderProgramPass::setShaderProgram(const ShaderProgram* program) {
@@ -52,5 +54,11 @@ void kore::ShaderProgramPass::setShaderProgram(const ShaderProgram* program) {
   _startupOperations.push_back(pUseProgram);
 }
 
+void kore::ShaderProgramPass::addNodePass(NodePass* node) {
+  if (std::find(_nodePasses.begin(), _nodePasses.end(), node)
+      != _nodePasses.end()) {
+    return;
+  }
 
-
+  _nodePasses.push_back(node);
+}

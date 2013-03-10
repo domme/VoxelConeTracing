@@ -66,20 +66,11 @@ kore::RenderManager::RenderManager(void)
 }
 
 kore::RenderManager::~RenderManager(void) {
-  // NOTE(dlazarek): Somehow we have can't delete a dereferenced list-iterator
-  //                 but have to copy all operations in a delete-list before.
-  std::vector<const Operation*> deleteOps;
-  deleteOps.reserve(_operations.size());
-
-  for (auto it = _operations.begin(); it != _operations.end(); it++) {
-    deleteOps.push_back((*it));
-  }
-
-  for (uint i = 0; i < deleteOps.size(); ++i) {
-    KORE_SAFE_DELETE(deleteOps[i]);
-  }
-
   KORE_SAFE_DELETE(_optimizer);
+
+  for (uint i = 0; i < _frameBufferStages.size(); ++i) {
+    KORE_SAFE_DELETE(_frameBufferStages[i]);
+  }
 }
 
 const glm::ivec2& kore::RenderManager::getRenderResolution() const {
@@ -119,51 +110,6 @@ void kore::RenderManager::setOptimizer(const Optimizer* optimizer) {
 
   _optimizer = optimizer;
 }
-
-
-void kore::RenderManager::addOperation(const Operation* op) {
-    if (!hasOperation(op)) {
-       _operations.push_back(op);
-    }
-}
-
-void kore::RenderManager::addOperation(const Operation* op,
-                                       const Operation* targetOp,
-                                       const EOpInsertPos insertPos) {
-     if (!hasOperation(targetOp) || hasOperation(op)) {
-            return;
-     }
-
-     OperationList::iterator it =
-         std::find(_operations.begin(), _operations.end(), targetOp);
-
-     switch (insertPos) {
-     case INSERT_AFTER:
-         _operations.insert(it, op);
-         break;
-     case INSERT_BEFORE:
-         _operations.insert(--it, op);
-         break;
-     }
-}
-
-bool kore::RenderManager::hasOperation(const Operation* op) {
-  return std::find(_operations.begin(),
-                   _operations.end(), op)
-                   != _operations.end();
-}
-
-void kore::RenderManager::removeOperation(const Operation* op) {
-  auto operationIt = _operations.begin();
-  for (; operationIt != _operations.end(); ++operationIt)  {
-    if ((*operationIt) == op) {
-      _operations.erase(operationIt);
-      break;
-    }
-  }
-  
-}
-
 
 
 void kore::RenderManager::onRemoveComponent(const SceneNodeComponent* comp) {
@@ -281,4 +227,73 @@ void kore::RenderManager::drawBuffers(const GLuint fboHandle,
   if (different) {
     glDrawBuffers(num, buffers);
   }
+}
+
+void kore::RenderManager::addFramebufferStage(FrameBufferStage* stage) {
+  _frameBufferStages.push_back(stage);
+}
+
+void kore::RenderManager::removeOperation(const Operation* operation) {
+  for (uint ifbo = 0; ifbo < _frameBufferStages.size(); ++ifbo) {
+    std::vector<ShaderProgramPass*>& progPasses =
+      _frameBufferStages[ifbo]->getShaderProgramPasses();
+    for (uint iProg = 0; iProg < progPasses.size(); ++iProg) {
+      std::vector<NodePass*>& nodePasses =
+        progPasses[iProg]->getNodePasses();
+      for (uint iNode = 0; iNode < nodePasses.size(); ++iNode) {
+        std::vector<Operation*>& operations =
+          nodePasses[iNode]->getOperations();
+        auto it = std::find(operations.begin(), operations.end(), operation);
+        if (it != operations.end()) {
+          Operation* pOp = (*it);
+          KORE_SAFE_DELETE(pOp);
+          operations.erase(it);
+        }
+      }  // Node Passes
+    }  // program passes
+  }  // fbo Passes
+}
+
+void kore::RenderManager::
+  removeShaderProgramPass(const ShaderProgramPass* progPass) {
+    for (uint ifbo = 0; ifbo < _frameBufferStages.size(); ++ifbo) {
+      std::vector<ShaderProgramPass*>& progPasses =
+        _frameBufferStages[ifbo]->getShaderProgramPasses();
+
+      auto it = std::find(progPasses.begin(), progPasses.end(), progPass);
+      if (it != progPasses.end()) {
+        ShaderProgramPass* pProgPass = (*it);
+        KORE_SAFE_DELETE(pProgPass);
+        progPasses.erase(it);
+      }
+    }
+}
+
+void kore::RenderManager::removeNodePass(const NodePass* nodePass) {
+  for (uint ifbo = 0; ifbo < _frameBufferStages.size(); ++ifbo) {
+    std::vector<ShaderProgramPass*>& progPasses =
+      _frameBufferStages[ifbo]->getShaderProgramPasses();
+    for (uint iProg = 0; iProg < progPasses.size(); ++iProg) {
+      std::vector<NodePass*>& nodePasses =
+        progPasses[iProg]->getNodePasses();
+
+      auto it = std::find(nodePasses.begin(), nodePasses.end(), nodePass);
+      if (it != nodePasses.end()) {
+        NodePass* pNodePass = (*it);
+        KORE_SAFE_DELETE(pNodePass);
+        nodePasses.erase(it);
+      }
+    }
+  }
+}
+
+void kore::RenderManager::
+  removeFrameBufferStage(const FrameBufferStage* fboStage) {
+   auto it =
+    std::find(_frameBufferStages.begin(), _frameBufferStages.end(), fboStage);
+      if (it != _frameBufferStages.end()) {
+        FrameBufferStage* pFboStage = (*it);
+        KORE_SAFE_DELETE(pFboStage);
+        _frameBufferStages.erase(it);
+      }
 }
