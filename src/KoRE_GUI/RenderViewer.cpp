@@ -30,8 +30,11 @@
 #include "KoRE_GUI/ShaderProgramItem.h"
 #include "KoRE/ResourceManager.h"
 
-koregui::RenderViewer::RenderViewer(QWidget *parent) : QGraphicsView(parent) {
-  _mode = DEFAULT;
+koregui::RenderViewer::RenderViewer(QWidget *parent)
+  : _mode(DEFAULT),
+    _currentpath(NULL),
+    _bindTarget(NULL),
+    QGraphicsView(parent) {
   setWindowTitle("RenderView");
   _scene.setBackgroundBrush(QBrush(QColor(23,23,23)));
   setScene(&_scene);
@@ -39,7 +42,6 @@ koregui::RenderViewer::RenderViewer(QWidget *parent) : QGraphicsView(parent) {
   const kore::ShaderProgram* shader = kore::ResourceManager::getInstance()->getShaderProgram("MegaShader");
   koregui::ShaderProgramItem* sitem = new koregui::ShaderProgramItem(shader);
   _scene.addItem(sitem);
-  _typemap[reinterpret_cast<uint>(sitem)] = SHADER_PROGRAM_ITEM;
   sitem->setPos(0,0);
 }
 
@@ -83,39 +85,55 @@ void koregui::RenderViewer::contextMenuEvent(QContextMenuEvent *event) {
     return;
   }
   QMenu menu("RenderContext", this);
-  menu.addAction(QIcon("./assets/icons/testStar.png"),
-                 "Create", this, SLOT(zoomIn()),
-                 (Qt::CTRL + Qt::Key_N));
-  QMenu* lvl2  = menu.addMenu(QIcon("./assets/icons/testStar.png"), "Create");
-  lvl2->addAction("EmptyNode", this, SLOT(zoomOut()));
-  lvl2->addAction("Group", 0, 0);
+  QMenu* create  = menu.addMenu(QIcon("./assets/icons/testStar.png"), "Create");
+  create->addAction("EmptyNode", this, SLOT(zoomOut()));
+  create->addAction("Group", this, SLOT(zoomIn()));
   menu.exec(event->globalPos());
 }
 
 void koregui::RenderViewer::mousePressEvent(QMouseEvent * event) {
   QGraphicsItem* item = itemAt(event->pos());
-  if (item) {
-    if(_typemap.count(reinterpret_cast<uint>(item)) != 0) {
-      switch(_typemap[reinterpret_cast<uint>(item)]) {
-      case NODE_ITEM:
-        break;
-      case SHADER_DATA_ITEM:
-        kore::Log::getInstance()->write("HUHUUUUU!\n");
-        break;
-      default:
-        // do nothing
-        break;
-      }
-    }
+  if (item && item->data(0).toString() == "ShaderData") {
+      _currentpath = new BindPathItem(static_cast<ShaderDataItem*>(item),0);
+      _currentpath->setDest(mapToScene(event->pos()));
+      _scene.addItem(_currentpath);
   }
   QGraphicsView::mousePressEvent(event);
 }
 
 void koregui::RenderViewer::mouseReleaseEvent(QMouseEvent * event) {
+  if(_currentpath) {
+    if (_bindTarget) {
+      static_cast<ShaderInputItem*>(_bindTarget)->reset();
+      _currentpath = NULL;
+      _bindTarget = NULL;
+    } else {
+      _scene.removeItem(_currentpath);
+      _currentpath = NULL;
+    }
+  }
   QGraphicsView::mouseReleaseEvent(event);
 }
 
 void koregui::RenderViewer::mouseMoveEvent(QMouseEvent *event) {
+  if(_currentpath) {
+    QGraphicsItem* item = itemAt(event->pos());
+    if (item && item->data(0).toString() == "ShaderInput"
+        && static_cast<ShaderInputItem*>(item)->checkInput(_currentpath)) {
+      _currentpath->setEnd(static_cast<ShaderInputItem*>(item));
+      _bindTarget = item;
+      item->update();
+    } else {
+      if(_bindTarget) {
+        _currentpath->setEnd(NULL);
+        static_cast<ShaderInputItem*>(_bindTarget)->reset();
+        _bindTarget->update();
+        _bindTarget = NULL;
+      }
+     _currentpath->setDest(mapToScene(event->pos()));
+     _currentpath->update();
+    }
+  }
   QGraphicsView::mouseMoveEvent(event);
 }
 
@@ -130,6 +148,5 @@ void koregui::RenderViewer
   ::createNode(kore::SceneNode* sourcenode, int x, int y) {
   NodeItem* nodeItem = new NodeItem(sourcenode);
   _scene.addItem(nodeItem);
-  _typemap[reinterpret_cast<uint>(nodeItem)] = NODE_ITEM;
   nodeItem->setPos(x, y);
 }

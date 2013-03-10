@@ -39,6 +39,7 @@ namespace koregui {
   protected:
     void hoverEnterEvent(QGraphicsSceneHoverEvent * event);
     void hoverLeaveEvent(QGraphicsSceneHoverEvent * event);
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
 
     QRectF boundingRect() const;
     void paint(QPainter* painter,
@@ -47,7 +48,6 @@ namespace koregui {
 
   private:
     const kore::ShaderData* _data;
-    kore::BindOperation* _op;
     bool _mouseover;
   };
 }

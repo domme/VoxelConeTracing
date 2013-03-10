@@ -26,6 +26,7 @@
 
 #include <QGraphicsView>
 #include "KoRE_GUI/NodeItem.h"
+#include "KoRE_GUI/BindPathItem.h"
 
 namespace koregui {
   class RenderViewer : public QGraphicsView {
@@ -33,13 +34,6 @@ namespace koregui {
   enum EMouseMode {
     DEFAULT,
     LINK_DRAG
-  };
-
-  enum EItemType {
-    NODE_ITEM,
-    SHADER_DATA_ITEM,
-    SHADER_INPUT_ITEM,
-    SHADER_PROGRAM_ITEM
   };
 
   public:
@@ -68,7 +62,8 @@ namespace koregui {
       QGraphicsScene _scene;
       std::vector<NodeItem*> _nodes;
       EMouseMode _mode;
-      std::map<uint, EItemType> _typemap;
+      BindPathItem* _currentpath;
+      QGraphicsItem* _bindTarget;
   };
 }
 #endif // SRC_KOREGUI_RENDERVIEWER_H_

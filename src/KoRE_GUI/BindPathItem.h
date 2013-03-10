@@ -31,19 +31,22 @@
 
 namespace koregui {
   class NodeItem;
-  class NodePathItem : public QGraphicsPathItem {
+  class BindPathItem : public QGraphicsPathItem {
   public:
-    NodePathItem(NodeItem* start, NodeItem* end, QGraphicsItem* parent = 0);
-    ~NodePathItem(void);
+    BindPathItem(ShaderDataItem* start, ShaderInputItem* end, QGraphicsItem* parent = 0);
+    ~BindPathItem(void);
 
     QRectF boundingRect() const;
     void paint(QPainter* painter,
                const QStyleOptionGraphicsItem* option,
                QWidget* widget);
+    void setDest(QPointF dest) {_dragend = dest;}
+    void setEnd(ShaderInputItem* end) {_end = end;}
 
   private:
     ShaderDataItem* _start;
     ShaderInputItem* _end;
+    QPointF _dragend;
   };
 }
 #endif  // BINDPATHITEM_H_

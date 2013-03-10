@@ -36,6 +36,7 @@ koregui::ShaderProgramItem::ShaderProgramItem(const kore::ShaderProgram* shader,
                                 QGraphicsItem* parent) 
                               : _shader(const_cast<kore::ShaderProgram*>(shader)),
                                 QGraphicsItem(parent) {
+  setFlag(QGraphicsItem::ItemIsSelectable, true);
   setFlag(QGraphicsItem::ItemIsMovable, true);
   setCursor(QCursor(Qt::CursorShape::ArrowCursor));
   init();
@@ -107,7 +108,7 @@ void koregui::ShaderProgramItem::paint(QPainter* painter,
   QStaticText text;
 
   p.setStyle(Qt::PenStyle::NoPen);
-  b.setColor(QColor(44,44,44));
+  b.setColor((isSelected())?QColor(86,86,86):QColor(44,44,44));
   b.setStyle(Qt::BrushStyle::SolidPattern);
   painter->setPen(p);
   painter->setBrush(b);
@@ -141,15 +142,16 @@ void koregui::ShaderProgramItem::paint(QPainter* painter,
   }
 }
 
-void koregui::ShaderProgramItem::mousePressEvent(QGraphicsSceneMouseEvent * event){
+void koregui::ShaderProgramItem
+  ::mousePressEvent(QGraphicsSceneMouseEvent * event){
   QGraphicsItem::mousePressEvent(event);
 }
 
 void koregui::ShaderProgramItem::contextMenu(QPoint pos) {
-  QMenu menu("TEST2");
+  /*QMenu menu("TEST2");
   menu.addAction("megamega", 0, 0);
   menu.addAction("soso", 0, 0);
   //menu.addAction(...);
   //menu.addAction(...);
-  menu.exec(pos);
+  menu.exec(pos);*/
 }

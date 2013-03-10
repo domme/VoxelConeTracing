@@ -38,9 +38,6 @@
     <ClInclude Include="src\KoRE_GUI\NodeItem.h">
       <Filter>Header Dateien</Filter>
     </ClInclude>
-    <ClInclude Include="src\KoRE_GUI\ShaderDataItem.h">
-      <Filter>Header Dateien</Filter>
-    </ClInclude>
     <ClInclude Include="src\KoRE_GUI\NodePathItem.h">
       <Filter>Header Dateien</Filter>
     </ClInclude>
@@ -56,6 +53,9 @@
     <ClInclude Include="src\KoRE_GUI\ShaderProgramItem.h">
       <Filter>Header Dateien</Filter>
     </ClInclude>
+    <ClInclude Include="src\KoRE_GUI\GUIManager.h">
+      <Filter>Header Dateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="src\KoRE_GUI\SceneViewer.h">
@@ -65,6 +65,9 @@
       <Filter>Header Dateien</Filter>
     </CustomBuild>
     <CustomBuild Include="src\KoRE_GUI\RenderViewer.h">
+      <Filter>Header Dateien</Filter>
+    </CustomBuild>
+    <CustomBuild Include="src\KoRE_GUI\ShaderDataItem.h">
       <Filter>Header Dateien</Filter>
     </CustomBuild>
   </ItemGroup>
@@ -112,6 +115,9 @@
       <Filter>Source Dateien</Filter>
     </ClCompile>
     <ClCompile Include="src\KoRE_GUI\ShaderProgramItem.cpp">
+      <Filter>Source Dateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KoRE_GUI\BindPathItem.cpp">
       <Filter>Source Dateien</Filter>
     </ClCompile>
   </ItemGroup>

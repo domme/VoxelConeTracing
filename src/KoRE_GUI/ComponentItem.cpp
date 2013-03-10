@@ -39,7 +39,7 @@ koregui::ComponentItem::ComponentItem(kore::SceneNodeComponent* component,
     const kore::ShaderData* tmp = _component->getShaderData(sdata[i].name);
     ShaderDataItem* dataitem =  new ShaderDataItem(tmp, this);
     _shaderDataItems.push_back(dataitem);
-    dataitem->setVisible(true);
+    dataitem->setVisible(false);
     dataitem->setPos(192, 30 + 30 * i);
   }
   _expanded = false;
