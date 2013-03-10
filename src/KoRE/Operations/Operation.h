@@ -29,8 +29,11 @@ namespace kore {
     OP_BINDATTRIBUTE,
     OP_BINDUNIFORM,
     OP_BINDTEXTURE,
+    OP_BINDIMAGETEXTURE,
     OP_RENDERMESH,
-    OP_SELECTNODES
+    OP_SELECTNODES,
+    OP_USEFBO,
+    OP_USESHADERPROGRAM,
   };
 
   class SceneNodeComponent;

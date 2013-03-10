@@ -36,7 +36,6 @@ kore::SelectNodes::SelectNodes(const std::string& name,
   append(root, name);
   // TODO(someone): sorting
 }
-
 kore::SelectNodes::~SelectNodes() {}
 
 void kore::SelectNodes::execute() const {}
@@ -69,7 +68,6 @@ void kore::SelectNodes::append(const SceneNode* root, const std::string& name) {
 }
 
 void kore::SelectNodes::destroy() {
- //  _renderManager->removeOperation(this);
 }
 
 bool kore::SelectNodes::dependsOn(const void* thing) const {

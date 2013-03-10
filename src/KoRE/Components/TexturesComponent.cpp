@@ -22,6 +22,7 @@ void kore::
   STextureInfo* texInfo = new STextureInfo;
   texInfo->texLocation = tex->getHandle();
   texInfo->texTarget = tex->getProperties().targetType;
+  texInfo->internalFormat = tex->getProperties().internalFormat;
   _vTextureInfos.push_back(texInfo);
 
   ShaderData shaderdata;

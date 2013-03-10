@@ -50,6 +50,7 @@ void kore::ShaderProgram::destroyProgram() {
   _name = "";
   _uniforms.clear();
   _attributes.clear();
+  _imgAccessParams.clear();
 }
 
 void kore::ShaderProgram::destroyShaders() {
@@ -301,6 +302,7 @@ void kore::ShaderProgram::constructShaderInputInfo(const GLenum activeType,
     if (activeType == GL_ACTIVE_UNIFORMS) {
         ResourceManager* resourceManager = ResourceManager::getInstance();
         GLuint texUnit = 0;
+        GLuint imgUnit = 0;
         for (uint i = 0; i < rInputVector.size(); ++i) {
             if (isSamplerType(rInputVector[i].type)) {
                 rInputVector[i].texUnit = texUnit;
@@ -315,10 +317,18 @@ void kore::ShaderProgram::constructShaderInputInfo(const GLenum activeType,
 
                 ++texUnit;
             }
+
+            // For Image-types: add the imgUnit-field,
+            // but don't create a sampler.
+            else if (isImageType(rInputVector[i].type)) {
+              rInputVector[i].imgUnit = imgUnit;
+              ++imgUnit;
+
+              _imgAccessParams.push_back(GL_READ_WRITE);
+            }
         }
     }
 }
-
 
 void kore::ShaderProgram::constructShaderOutputInfo(std::vector<ShaderOutput>& 
                                              rOutputVector) {
@@ -459,6 +469,46 @@ bool kore::ShaderProgram::isSamplerType(const GLuint uniformType) {
   }
 }
 
+
+bool kore::ShaderProgram::isImageType(const GLuint uniformType) {
+  switch (uniformType) {
+    case GL_IMAGE_1D: 
+    case GL_IMAGE_2D: 
+    case GL_IMAGE_3D: 
+    case GL_IMAGE_2D_RECT: 
+    case GL_IMAGE_CUBE: 
+    case GL_IMAGE_BUFFER: 
+    case GL_IMAGE_1D_ARRAY: 
+    case GL_IMAGE_2D_ARRAY: 
+    case GL_IMAGE_2D_MULTISAMPLE: 
+    case GL_IMAGE_2D_MULTISAMPLE_ARRAY: 
+    case GL_INT_IMAGE_1D: 
+    case GL_INT_IMAGE_2D: 
+    case GL_INT_IMAGE_3D: 
+    case GL_INT_IMAGE_2D_RECT: 
+    case GL_INT_IMAGE_CUBE: 
+    case GL_INT_IMAGE_BUFFER: 
+    case GL_INT_IMAGE_1D_ARRAY: 
+    case GL_INT_IMAGE_2D_ARRAY: 
+    case GL_INT_IMAGE_2D_MULTISAMPLE: 
+    case GL_INT_IMAGE_2D_MULTISAMPLE_ARRAY: 
+    case GL_UNSIGNED_INT_IMAGE_1D: 
+    case GL_UNSIGNED_INT_IMAGE_2D: 
+    case GL_UNSIGNED_INT_IMAGE_3D: 
+    case GL_UNSIGNED_INT_IMAGE_2D_RECT: 
+    case GL_UNSIGNED_INT_IMAGE_CUBE: 
+    case GL_UNSIGNED_INT_IMAGE_BUFFER: 
+    case GL_UNSIGNED_INT_IMAGE_1D_ARRAY: 
+    case GL_UNSIGNED_INT_IMAGE_2D_ARRAY: 
+    case GL_UNSIGNED_INT_IMAGE_2D_MULTISAMPLE: 
+    case GL_UNSIGNED_INT_IMAGE_2D_MULTISAMPLE_ARRAY:
+      return true;
+  default:
+      return false;
+  }
+}
+
+
 const kore::ShaderInput*
 kore::ShaderProgram::getAttribute(const std::string& name) const {
   for (uint i = 0; i < _attributes.size(); ++i) {
@@ -494,4 +544,20 @@ void kore::ShaderProgram::setSamplerProperties(const uint idx,
 
   _vSamplers[idx] = ResourceManager::getInstance()->
                                     getTextureSampler(properties);
+}
+
+const GLuint kore::ShaderProgram::
+  getImageAccessParam(const uint imgUnit) const {
+    if (imgUnit < _imgAccessParams.size()) {
+      return _imgAccessParams[imgUnit];
+    }
+
+    return KORE_GLUINT_HANDLE_INVALID;
+}
+
+void kore::ShaderProgram::setImageAccessParam(const uint imgUnit,
+                                              const GLuint access) {
+   if (imgUnit < _imgAccessParams.size()) {
+     _imgAccessParams[imgUnit] = access;
+   }
 }

@@ -47,6 +47,22 @@ namespace kore {
     const std::vector<ShaderInput>& getUniforms() const;
     const std::vector<ShaderOutput>& getOutputs() const;
 
+    /*! \brief Get the currently selected imageAccess-parameter for the image
+    *          uniform at the provided imageUnit.
+    *   \param imgUnit The imageUnit which the image will be bound to.
+    *   \return The access-parameter
+    *           (GL_READ_ONLY, GL_WRITE_ONLY or GL_READ_WRITE)
+    */
+    const GLuint getImageAccessParam(const uint imgUnit) const;
+
+    /*! \brief Set the access-parameter for the image at the provided imageUnit
+    *   \param imgUnit The image-unit. This is also the index of the image in
+    *                  this shaderProgram.
+    *   \param access The access parameter to set for the image.
+    *           (GL_READ_ONLY, GL_WRITE_ONLY or GL_READ_WRITE)
+    */
+    void setImageAccessParam(const uint imgUnit, const GLuint access);
+
     /*! \brief Retrieve the number of texture-samplers this shader uses.
                Note that this is the same number as sampler-type uniforms.
         \return The number of texture samplers. */
@@ -77,6 +93,8 @@ namespace kore {
 
     static bool isSamplerType(const GLuint uniformType);
 
+    static bool isImageType(const GLuint uniformType);
+
     void destroyProgram();
     void destroyShaders();
 
@@ -91,6 +109,7 @@ namespace kore {
     std::vector<ShaderInput> _attributes;
     std::vector<ShaderInput> _uniforms;
     std::vector<ShaderOutput> _outputs;
+    std::vector<GLuint> _imgAccessParams;
 
     std::vector<const TextureSampler*> _vSamplers;
 

@@ -23,6 +23,7 @@
 kore::UseFBO::UseFBO()
 : _frameBuffer(NULL),
   Operation() {
+    _type = OP_USEFBO;
 }
 
 kore::UseFBO::UseFBO(const kore::FrameBuffer* frameBuffer,
@@ -30,6 +31,7 @@ kore::UseFBO::UseFBO(const kore::FrameBuffer* frameBuffer,
                      const GLenum* drawBuffers,
                      const uint numDrawBuffers)
                      : Operation() {
+  _type = OP_USEFBO;
   connect(frameBuffer, frameBufferTarget, drawBuffers, numDrawBuffers);
 }
 

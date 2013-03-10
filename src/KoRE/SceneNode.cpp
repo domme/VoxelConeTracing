@@ -204,8 +204,6 @@ void kore::SceneNode::
   _dirty = true;
 }
 
-
-
 void kore::SceneNode::rotate(const GLfloat& angle, const glm::vec3& axis,
                           const ETransfpomSpace relativeTo /*=SPACE_LOCAL*/) {
    if (relativeTo == SPACE_WORLD) {
