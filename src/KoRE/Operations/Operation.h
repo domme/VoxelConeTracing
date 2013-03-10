@@ -34,6 +34,7 @@ namespace kore {
     OP_SELECTNODES,
     OP_USEFBO,
     OP_USESHADERPROGRAM,
+    OP_MEMORYBARRIER
   };
 
   class SceneNodeComponent;
