@@ -83,6 +83,7 @@ void kore::FrameBuffer::addTextureAttachment(const Texture* tex,
   STextureInfo* texInfo = new STextureInfo;
   texInfo->texLocation = tex->getHandle();
   texInfo->texTarget = tex->getProperties().targetType;
+  texInfo->internalFormat = tex->getProperties().internalFormat;
   _textureInfos.push_back(texInfo);
 
   ShaderData textureData;

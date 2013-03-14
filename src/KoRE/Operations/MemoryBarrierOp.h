@@ -17,32 +17,37 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CORE_INCLUDE_CORE_BINDTEXTUREOP_H_
-#define CORE_INCLUDE_CORE_BINDTEXTUREOP_H_
+#ifndef KORE_OPERATION_MEMORYBARRIER_OP_H_
+#define KORE_OPERATION_MEMORYBARRIER_OP_H_
 
-#include "KoRE/Operations/BindOperations/BindOperation.h"
-#include "KoRE/Texture.h"
-#include "KoRE/TextureSampler.h"
-#include "KoRE/RenderManager.h"
+#include "KoRE/Common.h"
+#include "KoRE/Operations/Operation.h"
 
 namespace kore {
-  class BindTexture: public BindOperation {
+  /*! Operation that performs glMemoryBarrier(BITFIELD). */
+  class MemoryBarrierOp : public Operation {
   public:
-    BindTexture(void);
-    BindTexture(const ShaderData* texData,
-                const ShaderInput* shaderInput);
+    explicit MemoryBarrierOp();
 
-    virtual ~BindTexture(void);
+    /*! \brief This constructor calls connect(..) after construction.*/
+    explicit MemoryBarrierOp(const GLuint barrierBits);
+    virtual ~MemoryBarrierOp();
+
     virtual void execute(void) const;
     virtual void update(void);
     virtual void reset(void);
     virtual bool isValid(void) const;
-    void connect(const ShaderData* texData,
-                 const ShaderInput* shaderInput);
-  private:
-    GLuint _shaderProgramLoc;
+    virtual bool dependsOn(const void* thing) const;
 
-    void init();
+    /*! \brief Set the bitfield-argument of glMemoryBarrier(bitfield).
+    *          After calling this method (or using the non-default constructor)
+    *          this operation can be executed.
+    */
+    void connect(const GLuint barrierBits);
+
+  private:
+    GLuint _barrierBits;
   };
-};
-#endif  // CORE_INCLUDE_CORE_BINDTEXTUREOP_H_
+}
+
+#endif  // KORE_OPERATION_MEMORYBARRIER_OP_H_

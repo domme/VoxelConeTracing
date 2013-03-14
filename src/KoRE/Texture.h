@@ -7,6 +7,7 @@ namespace kore {
   struct STextureInfo {
     GLuint texTarget;
     GLuint texLocation;
+    GLuint internalFormat;
   };
 
   struct STextureProperties {

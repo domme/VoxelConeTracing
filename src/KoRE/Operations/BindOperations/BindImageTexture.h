@@ -17,8 +17,8 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CORE_INCLUDE_CORE_BINDTEXTUREOP_H_
-#define CORE_INCLUDE_CORE_BINDTEXTUREOP_H_
+#ifndef KORE_SRC_OPERATIONS_BINDOPERATIONS_BINDIMAGETEXTURE_H_
+#define KORE_SRC_OPERATIONS_BINDOPERATIONS_BINDIMAGETEXTURE_H_
 
 #include "KoRE/Operations/BindOperations/BindOperation.h"
 #include "KoRE/Texture.h"
@@ -26,23 +26,26 @@
 #include "KoRE/RenderManager.h"
 
 namespace kore {
-  class BindTexture: public BindOperation {
-  public:
-    BindTexture(void);
-    BindTexture(const ShaderData* texData,
-                const ShaderInput* shaderInput);
+  class BindImageTexture : public BindOperation {
+    public:
+      BindImageTexture();
+      BindImageTexture(const ShaderData* texData,
+                      const ShaderInput* shaderInput);
+      virtual ~BindImageTexture();
 
-    virtual ~BindTexture(void);
-    virtual void execute(void) const;
-    virtual void update(void);
-    virtual void reset(void);
-    virtual bool isValid(void) const;
-    void connect(const ShaderData* texData,
-                 const ShaderInput* shaderInput);
+
+      virtual void execute(void) const;
+      virtual void update(void);
+      virtual void reset(void);
+      virtual bool isValid(void) const;
+      void connect(const ShaderData* texData,
+        const ShaderInput* shaderInput);
   private:
     GLuint _shaderProgramLoc;
 
     void init();
   };
-};
-#endif  // CORE_INCLUDE_CORE_BINDTEXTUREOP_H_
+}
+
+
+#endif  // KORE_SRC_OPERATIONS_BINDOPERATIONS_BINDIMAGETEXTURE_H_

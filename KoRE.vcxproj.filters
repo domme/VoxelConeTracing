@@ -130,6 +130,12 @@
     <ClCompile Include="src\KoRE\Optimization\SimpleOptimizer.cpp">
       <Filter>src\Optimization</Filter>
     </ClCompile>
+    <ClCompile Include="src\KoRE\Operations\BindOperations\BindImageTexture.cpp">
+      <Filter>src\Operations\BindOperations</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KoRE\Operations\MemoryBarrierOp.cpp">
+      <Filter>src\Operations</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\KoRE\Operations\SelectNodes.h">
@@ -269,6 +275,12 @@
     </ClInclude>
     <ClInclude Include="src\KoRE\Optimization\Optimizer.h">
       <Filter>src\Optimization</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\Operations\BindOperations\BindImageTexture.h">
+      <Filter>src\Operations\BindOperations</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\Operations\MemoryBarrierOp.h">
+      <Filter>src\Operations</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
