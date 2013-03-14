@@ -47,7 +47,7 @@ kore::RenderManager::RenderManager(void)
 
   if (_vTexTargetMap.size() != NUM_TEXTURE_TARGETS) {
     Log::getInstance()->write("[ERROR] Not all texture targets where"
-                              "added into the textureTargetMap");
+                              " added into the textureTargetMap");
   }
 
   memset(_boundTextures, 0, sizeof(GLuint) *

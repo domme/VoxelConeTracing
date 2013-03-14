@@ -20,6 +20,8 @@
 #ifndef SRC_KORE_FRAMEBUFFER_H_
 #define SRC_KORE_FRAMEBUFFER_H_
 
+#include <string>
+
 #include "KoRE/Log.h"
 #include "KoRE/Common.h"
 #include "KoRE/ShaderData.h"
@@ -29,13 +31,16 @@
 namespace kore {
   class FrameBuffer {
   public:
-    FrameBuffer(void);
+    FrameBuffer(const std::string& name);
     virtual ~FrameBuffer(void);
 
     static const FrameBuffer BACKBUFFER;
 
     inline const GLuint getHandle() const {return _handle;}
     const Texture* getTexture(const std::string& name) const;
+
+    inline void setName(const std::string& name) {_name = name;}
+    inline const std::string getName() const {return _name;}
 
     /*! \brief Add a texture as an attatchment to the framebuffer.
     *   \param ptr The pointer to the texture to add as attatchment.
@@ -69,6 +74,7 @@ namespace kore {
     /// Internal constructor - used for creating a FrameBuffer with a
     /// specific handle (e.g. 0 for Backbuffer)
     FrameBuffer(GLuint handle);
+    std::string _name;
     std::vector<ShaderData> _textureOutputs;
     std::vector<const Texture*> _textures;
     std::vector<STextureInfo*> _textureInfos;

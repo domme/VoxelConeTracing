@@ -25,14 +25,16 @@
 // Create the backbuffer as a static const sharedptr.
 const kore::FrameBuffer kore::FrameBuffer::BACKBUFFER(0);
 
-kore::FrameBuffer::FrameBuffer(void)
-: _handle(KORE_GLUINT_HANDLE_INVALID) {
+kore::FrameBuffer::FrameBuffer(const std::string& name)
+: _name(name),
+  _handle(KORE_GLUINT_HANDLE_INVALID) {
 
   glGenFramebuffers(1, &_handle);
 }
 
 // Private constructor - only for internal use!
 kore::FrameBuffer::FrameBuffer(GLuint handle) {
+  _name = "BACKBUFFER";
   _handle = handle;
 }
 

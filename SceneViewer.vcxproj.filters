@@ -53,7 +53,7 @@
     <ClInclude Include="src\KoRE_GUI\ShaderProgramItem.h">
       <Filter>Header Dateien</Filter>
     </ClInclude>
-    <ClInclude Include="src\KoRE_GUI\GUIManager.h">
+    <ClInclude Include="src\KoRE_GUI\FrameBufferItem.h">
       <Filter>Header Dateien</Filter>
     </ClInclude>
   </ItemGroup>
@@ -118,6 +118,9 @@
       <Filter>Source Dateien</Filter>
     </ClCompile>
     <ClCompile Include="src\KoRE_GUI\BindPathItem.cpp">
+      <Filter>Source Dateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KoRE_GUI\FrameBufferItem.cpp">
       <Filter>Source Dateien</Filter>
     </ClCompile>
   </ItemGroup>

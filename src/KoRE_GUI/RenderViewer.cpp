@@ -87,6 +87,7 @@ void koregui::RenderViewer::contextMenuEvent(QContextMenuEvent *event) {
   QMenu menu("RenderContext", this);
   QMenu* create  = menu.addMenu(QIcon("./assets/icons/testStar.png"), "Create");
   create->addAction("EmptyNode", this, SLOT(zoomOut()));
+  create->addAction("EmptyNode", this, SLOT(zoomOut()));
   create->addAction("Group", this, SLOT(zoomIn()));
   menu.exec(event->globalPos());
 }
@@ -149,4 +150,9 @@ void koregui::RenderViewer
   NodeItem* nodeItem = new NodeItem(sourcenode);
   _scene.addItem(nodeItem);
   nodeItem->setPos(x, y);
+}
+
+void koregui::RenderViewer::createEmptyFBO(void) {
+  kore::Log::getInstance()->write("[GUI] Creating FBO stage");
+  // TODO create new FBOStage
 }

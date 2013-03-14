@@ -47,6 +47,7 @@ namespace koregui {
   public slots:
     void zoomIn(void) {scale(1.2,1.2);}
     void zoomOut(void) {scale(1/1.2,1/1.2);}
+    void createEmptyFBO(void);
 
   protected:
     void keyPressEvent(QKeyEvent* event);
