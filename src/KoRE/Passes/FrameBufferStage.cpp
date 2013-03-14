@@ -49,15 +49,12 @@ void kore::FrameBufferStage::
                  const GLenum frameBufferTarget,
                  const GLenum* drawBuffers,
                  const uint numDrawBuffers) {
-  if (_frameBuffer != NULL) {
-    KORE_SAFE_DELETE(_frameBuffer);
 
-    for (uint i = 0; i < _startupOperations.size(); ++i) {
-      KORE_SAFE_DELETE(_startupOperations[i]);
-    }
+  for (uint i = 0; i < _startupOperations.size(); ++i) {
+    KORE_SAFE_DELETE(_startupOperations[i]);
+  }
 
-    _startupOperations.clear();
-  } 
+  _startupOperations.clear();
 
   _frameBuffer = frameBuffer;
 

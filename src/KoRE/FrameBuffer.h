@@ -34,7 +34,7 @@ namespace kore {
     FrameBuffer(const std::string& name);
     virtual ~FrameBuffer(void);
 
-    static const FrameBuffer BACKBUFFER;
+    static const FrameBuffer* BACKBUFFER;
 
     inline const GLuint getHandle() const {return _handle;}
     const Texture* getTexture(const std::string& name) const;

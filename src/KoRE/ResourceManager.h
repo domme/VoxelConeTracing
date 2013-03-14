@@ -32,6 +32,7 @@
 #include "KoRE/SceneNode.h"
 #include "KoRE/SceneManager.h"
 #include "KoRE/TextureSampler.h"
+#include "KoRE/FrameBuffer.h"
 
 // TODO(dlazarek/dospelt) Are Cameras and Lights really needed in the resourceManager??
 
@@ -68,11 +69,18 @@ namespace kore {
     void addLight(const std::string& path, LightComponent* light);
     void addShaderProgram(const std::string& name,
                           const ShaderProgram* program);
+    void addFramebuffer(const std::string& name, FrameBuffer* fbo);
+
+
+    void removeFramebuffer(FrameBuffer* fbo);
+
+
     kore::Mesh* getMesh(const std::string& path, const std::string& id);
     kore::Camera* getCamera(const std::string& path, const std::string& id);
     kore::LightComponent* getLight(const std::string& path,
                                      const std::string& id);
     kore::Texture* getTexture(const std::string& path);
+    FrameBuffer* getFramebuffer(const std::string& name);
 
     const kore::ShaderProgram* kore::ResourceManager
       ::getShaderProgram(const std::string& name) const;
@@ -124,6 +132,7 @@ namespace kore {
     std::map<std::string, GLuint> _shaderHandles;
     std::map<std::string, const ShaderProgram*> _shaderProgramMap; // filepath, program
     std::vector<kore::TextureSampler*> _textureSamplers;
+    std::map<std::string, kore::FrameBuffer*> _frameBuffers; // name, framebuffer
   };
 };
 #endif  // CORE_INCLUDE_CORE_RESOURCEMANAGER_H_

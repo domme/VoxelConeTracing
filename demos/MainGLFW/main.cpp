@@ -70,6 +70,8 @@ int main(void) {
     exit(EXIT_FAILURE);
   }
 
+  
+
   glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 4);
   glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 2);
   glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -165,7 +167,7 @@ int main(void) {
 
   GLenum drawBuffers[] = {GL_COLOR_ATTACHMENT0};
   kore::FrameBufferStage* backBufferStage = new kore::FrameBufferStage;
-  backBufferStage->setFrameBuffer(&kore::FrameBuffer::BACKBUFFER,
+  backBufferStage->setFrameBuffer(kore::FrameBuffer::BACKBUFFER,
                                   GL_FRAMEBUFFER,
                                   drawBuffers,
                                   1);

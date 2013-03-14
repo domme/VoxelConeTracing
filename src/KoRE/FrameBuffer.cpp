@@ -21,9 +21,10 @@
 #include "KoRE/RenderManager.h"
 #include "KoRE/Log.h"
 #include "KoRE/GLerror.h"
+#include "KoRE/ResourceManager.h"
 
 // Create the backbuffer as a static const sharedptr.
-const kore::FrameBuffer kore::FrameBuffer::BACKBUFFER(0);
+const kore::FrameBuffer* kore::FrameBuffer::BACKBUFFER = new kore::FrameBuffer(0);
 
 kore::FrameBuffer::FrameBuffer(const std::string& name)
 : _name(name),
@@ -36,6 +37,7 @@ kore::FrameBuffer::FrameBuffer(const std::string& name)
 kore::FrameBuffer::FrameBuffer(GLuint handle) {
   _name = "BACKBUFFER";
   _handle = handle;
+  ResourceManager::getInstance()->addFramebuffer(_name, this);
 }
 
 kore::FrameBuffer::~FrameBuffer(void) {
@@ -43,6 +45,11 @@ kore::FrameBuffer::~FrameBuffer(void) {
 }
 
 void kore::FrameBuffer::destroy() {
+  if (_handle == KORE_GLUINT_HANDLE_INVALID
+      || _handle == 0) {
+        return;
+  }
+
   glDeleteFramebuffers(1, &_handle);
   _handle = 0;
 

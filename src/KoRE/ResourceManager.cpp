@@ -101,6 +101,14 @@ kore::ResourceManager::~ResourceManager(void) {
 
   _lights.clear();
 
+
+  // Delete Framebuffers.
+  for (auto it = _frameBuffers.begin(); it != _frameBuffers.end(); ++it) {
+    KORE_SAFE_DELETE(it->second);
+  }
+
+  _frameBuffers.clear();
+
   _textureSamplers.clear();
 }
 
@@ -249,4 +257,31 @@ const kore::TextureSampler*
 
     _textureSamplers.push_back(sampler);
     return sampler;
+}
+
+void kore::ResourceManager::
+  addFramebuffer(const std::string& name, FrameBuffer* fbo) {
+    if (_frameBuffers.count(name) != 0) {
+      _frameBuffers[name] = fbo;
+    }
+}
+
+kore::FrameBuffer*
+  kore::ResourceManager::getFramebuffer(const std::string& name) {
+    auto it = _frameBuffers.find(name);
+
+    if (it != _frameBuffers.end()) {
+      return it->second;
+    }
+
+    return NULL;
+}
+
+void kore::ResourceManager::
+  removeFramebuffer(FrameBuffer* fbo) {
+    for (auto it = _frameBuffers.begin(); it != _frameBuffers.end(); ++it) {
+      if (it->second == fbo) {
+        _frameBuffers.erase(it);
+      }
+    }
 }
