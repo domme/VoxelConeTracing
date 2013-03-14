@@ -52,9 +52,9 @@ void kore::BindTexture::connect(const kore::ShaderData* texData,
 
 void kore::BindTexture::execute(void) const {
   GLerror::gl_ErrorCheckStart();
+  _renderManager->useShaderProgram(_shaderProgramLoc);
   _renderManager->activeTexture(_shaderUniform->texUnit);
-  glProgramUniform1i(_shaderProgramLoc, _shaderUniform->location,
-                      static_cast<GLint>(_shaderUniform->texUnit));
+  glUniform1i(_shaderUniform->location, static_cast<GLint>(_shaderUniform->texUnit));
   STextureInfo* pTexInfo = static_cast<STextureInfo*>(_componentUniform->data);
   const TextureSampler* pSampler =
     _shader->getSampler(_shaderUniform->texUnit);

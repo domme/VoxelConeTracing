@@ -49,7 +49,8 @@ void kore::BindImageTexture::
 
 void kore::BindImageTexture::execute(void) const {
   GLerror::gl_ErrorCheckStart();
-  glProgramUniform1i(_shaderProgramLoc, _shaderUniform->location,
+  _renderManager->useShaderProgram(_shaderProgramLoc);
+  glUniform1i(_shaderUniform->location,
                      static_cast<GLint>(_shaderUniform->imgUnit));
   STextureInfo* pTexInfo = static_cast<STextureInfo*>(_componentUniform->data);
 
