@@ -66,17 +66,18 @@ int main(void) {
 
   // Initialize GLFW
   if (!glfwInit()) {
-    exit(EXIT_FAILURE);
     kore::Log::getInstance()->write("[ERROR] could not load window manager\n");
+    exit(EXIT_FAILURE);
   }
 
-  glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 4);
+  /*glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 4);
   glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 2);
   glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-  glfwOpenWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+  glfwOpenWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);*/
 
   // Open an OpenGL window
   if (!glfwOpenWindow(800, 600, 0, 0, 0, 0, 0, 0, GLFW_WINDOW)) {
+    kore::Log::getInstance()->write("[ERROR] could not open render window\n");
     glfwTerminate();
     exit(EXIT_FAILURE);
   }
@@ -87,6 +88,7 @@ int main(void) {
   // initialize GLEW
   glewExperimental = GL_TRUE;
   if (glewInit()) {
+    kore::Log::getInstance()->write("[ERROR] could not open initialize extension manager\n");
     glfwTerminate();
     exit(EXIT_FAILURE);
   }

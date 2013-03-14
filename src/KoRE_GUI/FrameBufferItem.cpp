@@ -38,6 +38,7 @@ void koregui::FrameBufferItem::refresh(void){
 }
 
 QRectF koregui::FrameBufferItem::boundingRect() const{
+  return QRectF(0, 0, 200, 200);
 }
 
 void koregui::FrameBufferItem::paint(QPainter* painter,
