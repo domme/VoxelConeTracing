@@ -233,6 +233,7 @@ void kore::RenderManager::addFramebufferStage(FrameBufferStage* stage) {
   _frameBufferStages.push_back(stage);
 }
 
+/*
 void kore::RenderManager::removeOperation(const Operation* operation) {
   for (uint ifbo = 0; ifbo < _frameBufferStages.size(); ++ifbo) {
     std::vector<ShaderProgramPass*>& progPasses =
@@ -246,7 +247,7 @@ void kore::RenderManager::removeOperation(const Operation* operation) {
         auto it = std::find(operations.begin(), operations.end(), operation);
         if (it != operations.end()) {
           Operation* pOp = (*it);
-          KORE_SAFE_DELETE(pOp);
+          //KORE_SAFE_DELETE(pOp);
           operations.erase(it);
         }
       }  // Node Passes
@@ -263,7 +264,7 @@ void kore::RenderManager::
       auto it = std::find(progPasses.begin(), progPasses.end(), progPass);
       if (it != progPasses.end()) {
         ShaderProgramPass* pProgPass = (*it);
-        KORE_SAFE_DELETE(pProgPass);
+        //KORE_SAFE_DELETE(pProgPass);
         progPasses.erase(it);
       }
     }
@@ -280,12 +281,13 @@ void kore::RenderManager::removeNodePass(const NodePass* nodePass) {
       auto it = std::find(nodePasses.begin(), nodePasses.end(), nodePass);
       if (it != nodePasses.end()) {
         NodePass* pNodePass = (*it);
-        KORE_SAFE_DELETE(pNodePass);
+        //KORE_SAFE_DELETE(pNodePass);
         nodePasses.erase(it);
       }
     }
   }
 }
+*/
 
 void kore::RenderManager::
   removeFrameBufferStage(const FrameBufferStage* fboStage) {
@@ -293,7 +295,7 @@ void kore::RenderManager::
     std::find(_frameBufferStages.begin(), _frameBufferStages.end(), fboStage);
       if (it != _frameBufferStages.end()) {
         FrameBufferStage* pFboStage = (*it);
-        KORE_SAFE_DELETE(pFboStage);
+        //KORE_SAFE_DELETE(pFboStage);
         _frameBufferStages.erase(it);
       }
 }

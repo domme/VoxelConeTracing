@@ -25,5 +25,5 @@ kore::Operation::Operation(void) : _type(OP_UNDEFINED) {
 }
 
 kore::Operation::~Operation(void) {
-  _renderManager->removeOperation(this);
+//  _renderManager->removeOperation(this);
 }

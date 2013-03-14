@@ -24,6 +24,7 @@
 #include "KoRE/Log.h"
 #include "KoRE/GLerror.h"
 #include "KoRE/Components/SceneNodeComponent.h"
+#include "KoRE/RenderManager.h"
 
 kore::BindUniform::BindUniform(void)
                            :_shaderHandle(KORE_GLUINT_HANDLE_INVALID),
@@ -80,143 +81,145 @@ void kore::BindUniform::execute(void) const {
   }
 
   GLerror::gl_ErrorCheckStart();
+  _renderManager->useShaderProgram(_shaderHandle);
+
   switch (_componentUniform->type) {
     case GL_FLOAT_VEC2:
-      glProgramUniform2fv(_shaderHandle, _shaderUniform->location, 1,
+      glUniform2fv(_shaderUniform->location, 1,
                           static_cast<GLfloat*>(_componentUniform->data));
       break;
     case GL_FLOAT_VEC3:
-      glProgramUniform3fv(_shaderHandle, _shaderUniform->location, 1,
+      glUniform3fv(_shaderUniform->location, 1,
                     static_cast<GLfloat*>(_componentUniform->data));
       break;
     case GL_FLOAT_VEC4:
-        glProgramUniform4fv(_shaderHandle, _shaderUniform->location, 1,
+        glUniform4fv(_shaderUniform->location, 1,
                      static_cast<GLfloat*>(_componentUniform->data));
       break;
     case GL_DOUBLE: 
-      glProgramUniform1d(_shaderHandle, _shaderUniform->location,
+      glUniform1d(_shaderUniform->location,
                   *static_cast<GLdouble*>(_componentUniform->data));
     break;
     case GL_DOUBLE_VEC2: 
-      glProgramUniform2dv(_shaderHandle, _shaderUniform->location, 1,
+      glUniform2dv(_shaderUniform->location, 1,
                   static_cast<GLdouble*>(_componentUniform->data));
     break;
     case GL_DOUBLE_VEC3: 
-      glProgramUniform3dv(_shaderHandle, _shaderUniform->location, 1,
+      glUniform3dv(_shaderUniform->location, 1,
                   static_cast<GLdouble*>(_componentUniform->data));
     break;
     case GL_DOUBLE_VEC4: 
-      glProgramUniform4dv(_shaderHandle, _shaderUniform->location, 1,
+      glUniform4dv(_shaderUniform->location, 1,
                    static_cast<GLdouble*>(_componentUniform->data));
     break;
     case GL_BOOL: 
     case GL_INT: 
-      glProgramUniform1i(_shaderHandle, _shaderUniform->location,
+      glUniform1i(_shaderUniform->location,
                   *static_cast<GLint*>(_componentUniform->data));
     break;
     case GL_BOOL_VEC2:
     case GL_INT_VEC2: 
-      glProgramUniform2iv(_shaderHandle, _shaderUniform->location, 1,
+      glUniform2iv(_shaderUniform->location, 1,
                    static_cast<GLint*>(_componentUniform->data));
     break;
     case GL_BOOL_VEC3:
     case GL_INT_VEC3: 
-      glProgramUniform3iv(_shaderHandle, _shaderUniform->location, 1,
+      glUniform3iv(_shaderUniform->location, 1,
                     static_cast<GLint*>(_componentUniform->data));
     break;
     case GL_BOOL_VEC4:
     case GL_INT_VEC4:
-      glProgramUniform4iv(_shaderHandle, _shaderUniform->location, 1,
+      glUniform4iv(_shaderUniform->location, 1,
                    static_cast<GLint*>(_componentUniform->data));
     break;
   case GL_UNSIGNED_INT:
-      glProgramUniform1ui(_shaderHandle, _shaderUniform->location,
+      glUniform1ui(_shaderUniform->location,
                   *static_cast<GLuint*>(_componentUniform->data));
   break;
   case GL_UNSIGNED_INT_VEC2:
-      glProgramUniform2uiv(_shaderHandle, _shaderUniform->location, 1,
+      glUniform2uiv(_shaderUniform->location, 1,
                    static_cast<GLuint*>(_componentUniform->data));
   break;
   case GL_UNSIGNED_INT_VEC3:
-    glProgramUniform3uiv(_shaderHandle, _shaderUniform->location, 1,
+    glUniform3uiv(_shaderUniform->location, 1,
                   static_cast<GLuint*>(_componentUniform->data));
   break;
   case GL_UNSIGNED_INT_VEC4:
-    glProgramUniform4uiv(_shaderHandle, _shaderUniform->location, 1,
+    glUniform4uiv(_shaderUniform->location, 1,
                   static_cast<GLuint*>(_componentUniform->data));
   break;
   case GL_FLOAT_MAT2:
-    glProgramUniformMatrix2fv(_shaderHandle, _shaderUniform->location, 1,
+    glUniformMatrix2fv(_shaderUniform->location, 1,
       GL_FALSE, static_cast<GLfloat*>(_componentUniform->data));
   break;
   case GL_FLOAT_MAT3: 
-    glProgramUniformMatrix3fv(_shaderHandle, _shaderUniform->location, 1,
+    glUniformMatrix3fv(_shaderUniform->location, 1,
       GL_FALSE, static_cast<GLfloat*>(_componentUniform->data));
   break;
   case GL_FLOAT_MAT4:
-    glProgramUniformMatrix4fv(_shaderHandle, _shaderUniform->location, 1,
+    glUniformMatrix4fv(_shaderUniform->location, 1,
       GL_FALSE, static_cast<GLfloat*>(_componentUniform->data));
   break;
   case GL_FLOAT_MAT2x3: 
-    glProgramUniformMatrix2x3fv(_shaderHandle, _shaderUniform->location, 1,
+    glUniformMatrix2x3fv(_shaderUniform->location, 1,
      GL_FALSE, static_cast<GLfloat*>(_componentUniform->data));
   break;
   case GL_FLOAT_MAT2x4: 
-     glProgramUniformMatrix2x4fv(_shaderHandle, _shaderUniform->location, 1,
+     glUniformMatrix2x4fv(_shaderUniform->location, 1,
                           GL_FALSE,
                           static_cast<GLfloat*>(_componentUniform->data));
   break;
   case GL_FLOAT_MAT3x2: 
-    glProgramUniformMatrix3x2fv(_shaderHandle, _shaderUniform->location, 1,
+    glUniformMatrix3x2fv(_shaderUniform->location, 1,
                           GL_FALSE,
                           static_cast<GLfloat*>(_componentUniform->data));
   break;
   case GL_FLOAT_MAT3x4: 
-    glProgramUniformMatrix3x4fv(_shaderHandle, _shaderUniform->location, 1,
+    glUniformMatrix3x4fv(_shaderUniform->location, 1,
                      GL_FALSE, static_cast<GLfloat*>(_componentUniform->data));
   break;
   case GL_FLOAT_MAT4x2: 
-    glProgramUniformMatrix4x2fv(_shaderHandle, _shaderUniform->location, 1,
+    glUniformMatrix4x2fv(_shaderUniform->location, 1,
                     GL_FALSE, static_cast<GLfloat*>(_componentUniform->data));
   break;
   case GL_FLOAT_MAT4x3: 
-      glProgramUniformMatrix3x4fv(_shaderHandle, _shaderUniform->location, 1,
+      glUniformMatrix3x4fv(_shaderUniform->location, 1,
         GL_FALSE, static_cast<GLfloat*>(_componentUniform->data));
   break;
   case GL_DOUBLE_MAT2: 
-    glProgramUniformMatrix2dv(_shaderHandle, _shaderUniform->location, 1,
+    glUniformMatrix2dv(_shaderUniform->location, 1,
       GL_FALSE, static_cast<GLdouble*>(_componentUniform->data));
   break;
   case GL_DOUBLE_MAT3: 
-    glProgramUniformMatrix3dv(_shaderHandle, _shaderUniform->location, 1,
+    glUniformMatrix3dv(_shaderUniform->location, 1,
       GL_FALSE, static_cast<GLdouble*>(_componentUniform->data));
   break;
   case GL_DOUBLE_MAT4: 
-    glProgramUniformMatrix4dv(_shaderHandle, _shaderUniform->location, 1,
+    glUniformMatrix4dv(_shaderUniform->location, 1,
       GL_FALSE, static_cast<GLdouble*>(_componentUniform->data));
   break;
   case GL_DOUBLE_MAT2x3: 
-    glProgramUniformMatrix2x3dv(_shaderHandle, _shaderUniform->location, 1,
+    glUniformMatrix2x3dv(_shaderUniform->location, 1,
       GL_FALSE, static_cast<GLdouble*>(_componentUniform->data));
   break;
   case GL_DOUBLE_MAT2x4:
-    glProgramUniformMatrix2x4dv(_shaderHandle, _shaderUniform->location, 1,
+    glUniformMatrix2x4dv(_shaderUniform->location, 1,
       GL_FALSE, static_cast<GLdouble*>(_componentUniform->data));
   break;
   case GL_DOUBLE_MAT3x2:
-    glProgramUniformMatrix3x2dv(_shaderHandle, _shaderUniform->location, 1,
+    glUniformMatrix3x2dv(_shaderUniform->location, 1,
       GL_FALSE, static_cast<GLdouble*>(_componentUniform->data));
   break;
   case GL_DOUBLE_MAT3x4:
-    glProgramUniformMatrix3x4dv(_shaderHandle, _shaderUniform->location, 1,
+    glUniformMatrix3x4dv(_shaderUniform->location, 1,
       GL_FALSE, static_cast<GLdouble*>(_componentUniform->data));
   break;
   case GL_DOUBLE_MAT4x2:
-    glProgramUniformMatrix4x2dv(_shaderHandle, _shaderUniform->location, 1,
+    glUniformMatrix4x2dv(_shaderUniform->location, 1,
       GL_FALSE, static_cast<GLdouble*>(_componentUniform->data));
   break;
   case GL_DOUBLE_MAT4x3:
-    glProgramUniformMatrix4x3dv(_shaderHandle, _shaderUniform->location, 1,
+    glUniformMatrix4x3dv(_shaderUniform->location, 1,
       GL_FALSE, static_cast<GLdouble*>(_componentUniform->data));
   break;
   // Note(dlazarek): Currently, we handle texture-bindings outside of 

@@ -99,9 +99,10 @@ namespace kore {
                      const uint num,
                      const GLuint* buffers);
 
-    void removeOperation(const Operation* operation);
+   /* void removeOperation(const Operation* operation);
     void removeShaderProgramPass(const ShaderProgramPass* progPass);
     void removeNodePass(const NodePass* nodePass);
+    */
     void removeFrameBufferStage(const FrameBufferStage* fboStage);
 
     /**
