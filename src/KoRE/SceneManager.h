@@ -25,6 +25,8 @@
 #include <vector>
 #include "KoRE/SceneNode.h"
 #include "KoRE/Common.h"
+#include "KoRE/Components/Camera.h"
+#include "KoRE/Components/LightComponent.h"
 
 namespace kore {
   class SceneManager {
@@ -46,8 +48,23 @@ namespace kore {
                                     std::vector<SceneNode*>& vSceneNodes);
     /// Returns the first sceneNode found with the given component
     SceneNode* getSceneNodeByComponent(const EComponentType componentType);
+
+    // These functions need to be moved from the resource-manager to e.g. the
+    // scene-manager.
+    void addCamera(const std::string& path, Camera* camera);
+    void addLight(const std::string& path, LightComponent* light);
+    kore::Camera* getCamera(const std::string& path, const std::string& id);
+    kore::LightComponent* getLight(const std::string& path, const std::string& id);
   private:
-  private:
+    typedef std::map<std::string, kore::SceneNodeComponent*>
+      InnerResourceMapT;
+
+    typedef std::map<std::string, InnerResourceMapT>
+      OuterResourceMapT;
+
+    OuterResourceMapT _cameras; // filepath, id, camera
+    OuterResourceMapT _lights; // filepath, id, light
+
     SceneManager(void);
     virtual ~SceneManager(void);
     SceneNode _root;

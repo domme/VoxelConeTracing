@@ -84,7 +84,7 @@ void kore::SceneLoader::loadRessources(const std::string& szScenePath) {
                                   pAiCamera->mClipPlaneNear,
                                   pAiCamera->mClipPlaneFar);
 
-      ResourceManager::getInstance()->addCamera(szScenePath, pCamera);
+      SceneManager::getInstance()->addCamera(szScenePath, pCamera);
       _cameracount++;
     }
   }
@@ -104,7 +104,7 @@ void kore::SceneLoader::loadRessources(const std::string& szScenePath) {
       pLight->_falloffStart = 0.0f;
       pLight->_falloffEnd = 10.0f;  // TODO(dlazarek): find this info in the ai-light
       
-      ResourceManager::getInstance()->addLight(szScenePath, pLight);
+      SceneManager::getInstance()->addLight(szScenePath, pLight);
       _lightcount++;
     }
   }
@@ -138,7 +138,7 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
     if (lightIndex != KORE_UINT_INVALID) {
       const aiLight* pAiLight = aiscene->mLights[lightIndex];
       std::string lightName = getLightName(pAiLight, lightIndex);
-      LightComponent* pLight = ResourceManager::getInstance()
+      LightComponent* pLight = SceneManager::getInstance()
                       ->getLight(szScenePath, lightName);
       if (pLight != NULL) {
         node->addComponent(pLight);
@@ -159,7 +159,7 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
     if (camIndex != KORE_UINT_INVALID) {
       const aiCamera* pAiCam = aiscene->mCameras[camIndex];
       std::string camName = getCameraName(pAiCam, camIndex);
-      Camera* pCamera = ResourceManager::getInstance()
+      Camera* pCamera = SceneManager::getInstance()
                                             ->getCamera(szScenePath, camName);
       if (pCamera != NULL) {
         node->addComponent(pCamera);

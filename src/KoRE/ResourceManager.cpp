@@ -76,38 +76,17 @@ kore::ResourceManager::~ResourceManager(void) {
 
   _meshes.clear();
 
-  // Delete all camera resources and entries.
-  for (auto itPath = _cameras.begin(); itPath != _cameras.end(); ++itPath) {
-    InnerResourceMapT& innerMap = itPath->second;
-    for (auto itId = innerMap.begin(); itId != innerMap.end(); ++itId) {
-      KORE_SAFE_DELETE(itId->second);
-      innerMap.erase(itId);
-    }
-    _cameras.erase(itPath);
-  }
-
-  _cameras.clear();
-
-
-  // Delete all light resources and entries.
-  for (auto itPath = _lights.begin(); itPath != _lights.end(); ++itPath) {
-    InnerResourceMapT& innerMap = itPath->second;
-    for (auto itId = innerMap.begin(); itId != innerMap.end(); ++itId) {
-      KORE_SAFE_DELETE(itId->second);
-      innerMap.erase(itId);
-    }
-    _lights.erase(itPath);
-  }
-
-  _lights.clear();
-
-
   // Delete Framebuffers.
   for (auto it = _frameBuffers.begin(); it != _frameBuffers.end(); ++it) {
     KORE_SAFE_DELETE(it->second);
   }
 
   _frameBuffers.clear();
+  
+  // Delete Texture samplers
+  for (uint i = 0; i < _textureSamplers.size(); ++i) {
+    KORE_SAFE_DELETE(_textureSamplers[i]);
+  }
 
   _textureSamplers.clear();
 }
@@ -144,25 +123,7 @@ void kore::ResourceManager::addMesh(const std::string& path,
   _meshes[path][mesh->getName()] = mesh;
 }
 
-void kore::ResourceManager::addCamera(const std::string& path,
-                                      kore::Camera* camera ) {
-  if (!(_cameras.count(path) > 0)) {
-    InnerResourceMapT internalMap;
-    _cameras[path] = internalMap;
-  }
 
-  _cameras[path][camera->getName()] = camera;
-}
-
-void kore::ResourceManager::addLight(const std::string& path,
-                                     kore::LightComponent* light) {
-  if (!(_lights.count(path) > 0)) {
-    InnerResourceMapT internalMap;
-    _lights[path] = internalMap;
-  }
-
-  _lights[path][light->getName()] = light;
-}
 
 void kore::ResourceManager::addTexture(const std::string& path,
                                        kore::Texture* texture) {
@@ -186,25 +147,6 @@ kore::Mesh* kore::ResourceManager::getMesh(const std::string& path,
   }
 
   return  static_cast<kore::Mesh*>(_meshes[path][id]);
-}
-
-kore::Camera* kore::ResourceManager::getCamera(const std::string& path,
-                                                 const std::string& id) {
-  if (!(_cameras.count(path) > 0)) {
-    return NULL;
-  }
-
-  return static_cast<kore::Camera*>(_cameras[path][id]);
-}
-
-kore::LightComponent* 
-  kore::ResourceManager::
-  getLight(const std::string& path, const std::string& id) {
-    if (!(_lights.count(path) > 0)) {
-      return NULL;
-    }
-
-    return static_cast<kore::LightComponent*>(_lights[path][id]);
 }
 
 kore::Texture* kore::ResourceManager::getTexture(const std::string& path) {
