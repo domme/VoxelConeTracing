@@ -25,8 +25,6 @@
 #include <map>
 #include "KoRE/Common.h"
 #include "KoRE/Mesh.h"
-#include "KoRE/Components/Camera.h"
-#include "KoRE/Components/LightComponent.h"
 #include "KoRE/ShaderProgram.h"
 #include "KoRE/Texture.h"
 #include "KoRE/SceneNode.h"
@@ -40,6 +38,8 @@ namespace kore {
   class ResourceManager {
   friend class ProjectLoader;
   public:
+    static const std::string RESOURCE_PATH_INTERNAL;
+
     static ResourceManager *getInstance(void);
 
     /*! \brief saves KoRE's status
@@ -164,6 +164,7 @@ namespace kore {
     void removeFramebuffer(FrameBuffer* fbo);
 
 
+
     /*! \brief Adds a shader handle to the cache. Subsequent shader-loadings 
     *          can use getShaderHandle(..) to retrieve this cached handle and
     *          do not have to load and compile the sources from file. */
@@ -178,6 +179,7 @@ namespace kore {
     GLuint getShaderHandle(const std::string& path);
 
 
+
     /*! \brief Returns the OpenGL texture sampler object with the provided 
     *          properties. 
     * If a sampler with the provided properties already exists, the pointer to
@@ -188,15 +190,7 @@ namespace kore {
     */
     const TextureSampler*
       requestTextureSampler(const TexSamplerProperties& properties);
-    
 
-    // These functions need to be moved from the resource-manager to e.g. the
-    // scene-manager.
-    void addCamera(const std::string& path, Camera* camera);
-    void addLight(const std::string& path, LightComponent* light);
-    kore::Camera* getCamera(const std::string& path, const std::string& id);
-    kore::LightComponent* getLight(const std::string& path, const std::string& id);
-    //////////////////////////////////////////////////////////////////////////
 
   private:
     typedef std::map<std::string, kore::SceneNodeComponent*>
@@ -215,8 +209,7 @@ namespace kore {
     virtual ~ResourceManager(void);
 
     OuterMeshMapT _meshes; // filepath, id, mesh
-    OuterResourceMapT _cameras; // filepath, id, camera
-    OuterResourceMapT _lights; // filepath, id, light
+
     std::map<std::string, kore::Texture*> _textures; // filepath, texture
     std::map<std::string, GLuint> _shaderHandles;
     std::map<std::string, const ShaderProgram*> _shaderProgramMap; // filepath, program

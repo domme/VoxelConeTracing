@@ -8,6 +8,13 @@ kore::TextureSampler::~TextureSampler() {
   destroy();
 }
 
+void kore::TextureSampler::destroy() {
+  if (_handle != KORE_GLUINT_HANDLE_INVALID) {
+    glDeleteSamplers(1, &_handle);
+    _handle = KORE_GLUINT_HANDLE_INVALID;
+  }
+}
+
 bool kore::TextureSampler::create(const TexSamplerProperties& properties) {
   destroy();
 
@@ -20,13 +27,6 @@ bool kore::TextureSampler::create(const TexSamplerProperties& properties) {
   glSamplerParameteri(_handle, GL_TEXTURE_MIN_FILTER, properties.minfilter);
   //glSamplerParameterf(_handle, GL_TEXTURE_MAX_ANISOTROPY_EXT, 16.0f);
   return GLerror::gl_ErrorCheckFinish("GenSampler");
-}
-
-void kore::TextureSampler::destroy() {
-  if (_handle != KORE_GLUINT_HANDLE_INVALID) {
-    glDeleteSamplers(1, &_handle);
-    _handle = KORE_GLUINT_HANDLE_INVALID;
-  }
 }
 
 GLuint kore::TextureSampler::getSamplerTypeFromTexType(const GLuint texType) {

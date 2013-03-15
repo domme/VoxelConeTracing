@@ -95,3 +95,42 @@ kore::SceneNode* kore::SceneManager::
 kore::SceneNode* kore::SceneManager::getRootNode() {
   return &_root;
 }
+
+void kore::SceneManager::addCamera(const std::string& path,
+                                   kore::Camera* camera ) {
+    if (!(_cameras.count(path) > 0)) {
+      InnerResourceMapT internalMap;
+      _cameras[path] = internalMap;
+    }
+  
+    _cameras[path][camera->getName()] = camera;
+}
+
+void kore::SceneManager::addLight(const std::string& path,
+                                     kore::LightComponent* light) {
+    if (!(_lights.count(path) > 0)) {
+      InnerResourceMapT internalMap;
+      _lights[path] = internalMap;
+    }
+
+    _lights[path][light->getName()] = light;
+}
+
+kore::Camera* kore::SceneManager::getCamera(const std::string& path,
+                                                 const std::string& id) {
+  if (!(_cameras.count(path) > 0)) {
+    return NULL;
+  }
+
+  return static_cast<kore::Camera*>(_cameras[path][id]);
+}
+
+kore::LightComponent* 
+  kore::SceneManager::
+  getLight(const std::string& path, const std::string& id) {
+    if (!(_lights.count(path) > 0)) {
+      return NULL;
+    }
+
+    return static_cast<kore::LightComponent*>(_lights[path][id]);
+}
