@@ -12,6 +12,18 @@ kore::Texture::~Texture() {
   destroy();
 }
 
+
+void kore::Texture::destroy() {
+  if (_handle == KORE_GLUINT_HANDLE_INVALID) {
+    return;
+  }
+
+  glDeleteTextures(1, &_handle);
+  _handle = KORE_GLUINT_HANDLE_INVALID;
+  _resourcepath = "";
+  _properties = STextureProperties();
+}
+
 bool kore::Texture::create(const STextureProperties& properties,
                            const std::string& name,
                            const GLvoid* pixelData /*= NULL*/) {
@@ -95,15 +107,4 @@ void kore::Texture::genMipmapHierarchy() {
     glBindTexture(_properties.targetType, _handle);
     glGenerateMipmap(_properties.targetType);
   }
-}
-
-void kore::Texture::destroy() {
-  if (_handle == KORE_GLUINT_HANDLE_INVALID) {
-    return;
-  }
-
-  glDeleteTextures(1, &_handle);
-  _handle = KORE_GLUINT_HANDLE_INVALID;
-  _resourcepath = "";
-  _properties = STextureProperties();
 }

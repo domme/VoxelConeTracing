@@ -54,9 +54,8 @@ void kore::FrameBuffer::destroy() {
   _handle = 0;
 
   for (uint i = 0; i < _textures.size(); ++i) {
-    KORE_SAFE_DELETE(_textures[i]);
+    ResourceManager::getInstance()->removeTexture(_textures[i]);
   }
-
   _textures.clear();
 
   for (uint i = 0; i < _textureInfos.size(); ++i) {
@@ -111,8 +110,10 @@ void kore::FrameBuffer::
 
   Texture* pTex = new Texture;
   bool bSuccess = pTex->create(properties, name);
-  if (bSuccess) {
+if (bSuccess) {
+    ResourceManager::getInstance()->addTexture(ResourceManager::RESOURCE_PATH_INTERNAL, name, pTex);
     addTextureAttachment(pTex, attatchment);
+    
   } else {
     Log::getInstance()->write("[ERROR] Requested Texture could not be"
                               "created for the FBO");

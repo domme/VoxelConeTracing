@@ -29,6 +29,8 @@
 #include "KoRE/Log.h"
 #include "KoRE/Components/MeshComponent.h"
 
+const std::string kore::ResourceManager::RESOURCE_PATH_INTERNAL("INTERNAL");
+
 kore::ResourceManager* kore::ResourceManager::getInstance(void) {
   static kore::ResourceManager theInstance;
   return &theInstance;

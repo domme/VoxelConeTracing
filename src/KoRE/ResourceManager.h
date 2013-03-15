@@ -38,6 +38,8 @@ namespace kore {
   class ResourceManager {
   friend class ProjectLoader;
   public:
+    static const std::string RESOURCE_PATH_INTERNAL;
+
     static ResourceManager *getInstance(void);
 
     /* \brief saves KoRE's status
