@@ -16,6 +16,7 @@ KoRE_Log.txt
 *.sdf
 *.opensdf
 *.obj
+*.kore
 Debug/*
 Kore.dir/*
 Win32/*

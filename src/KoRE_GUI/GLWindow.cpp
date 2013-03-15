@@ -36,7 +36,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "KoRE/ShaderProgram.h"
-#include "KoRE/Mesh.h"
+#include "KoRE/SceneManager.h"
 #include "KoRE/ResourceManager.h"
 #include "KoRE/RenderManager.h"
 
@@ -59,12 +59,9 @@ GLWindow::GLWindow(QScreen *screen) : QWindow(screen) {
     connect(this,SIGNAL(widthChanged(int)), this, SLOT(resizeGL()));
     connect(this,SIGNAL(heightChanged(int)), this, SLOT(resizeGL()));
 
-    initializeGL();
-    resizeGL();
-
-    /*QTimer* timer = new QTimer(this);
-    connect( timer, SIGNAL(timeout()), this, SLOT(update()));
-    timer->start();*/
+    QTimer* timer = new QTimer(this);
+    connect( timer, SIGNAL(timeout()), this, SLOT(paintGL()));
+    timer->start(1);
 }
 
 GLWindow::~GLWindow() {
@@ -95,8 +92,14 @@ void GLWindow::initializeGL() {
         reinterpret_cast<const char*>
         (glGetString(GL_SHADING_LANGUAGE_VERSION)));
 
-    glViewport(0, 0, width(), height());
-    glClearColor(0.5,0.5,0.5,1);
+    // load kore resources and scene
+    kore::ShaderProgram* simpleShader = new kore::ShaderProgram();
+    simpleShader->loadShader("./assets/shader/normalColor.vp",
+      GL_VERTEX_SHADER);
+    simpleShader->loadShader("./assets/shader/normalColor.fp",
+      GL_FRAGMENT_SHADER);
+    simpleShader->initShader("MegaShader");
+    kore::ResourceManager::getInstance()->loadScene("./assets/meshes/TestEnv.dae");
 }
 
 void GLWindow::resizeGL() {
@@ -108,15 +111,12 @@ void GLWindow::resizeGL() {
 
 void GLWindow::paintGL() {
   _context->makeCurrent(this);
+  glClearColor(1,0,0,1);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   //kore::RenderManager::getInstance()->renderFrame();
   _context->swapBuffers(this);
 }
 
-void GLWindow::update() {
-    paintGL();
-}
-
 void GLWindow::keyPressEvent(QKeyEvent * evnt) {
-    //if (evnt->key() == Qt::Key_Escape) QGuiApplication::quit();
+    if (evnt->key() == Qt::Key_Escape) QGuiApplication::quit();
 }

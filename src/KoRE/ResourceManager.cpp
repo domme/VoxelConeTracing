@@ -384,3 +384,14 @@ void kore::ResourceManager::notifyMeshRemove(const Mesh* mesh)
 {
 
 }
+
+const std::vector<kore::Mesh*> kore::ResourceManager::getMeshes(void) {
+  std::vector<kore::Mesh*> meshlist;
+  for (auto itOuter = _meshes.begin(); itOuter != _meshes.end(); ++itOuter) {
+    InnerMeshMapT& innerMap = itOuter->second;
+    for (auto itInner = innerMap.begin(); itInner != innerMap.end(); ++itInner) {
+      meshlist.push_back(itInner->second);
+    }
+  }
+  return meshlist;
+}

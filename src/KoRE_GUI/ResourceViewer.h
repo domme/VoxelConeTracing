@@ -18,34 +18,24 @@
 */
 
 /************************************************************************/
-/* \author Andreas Weinmann                                             */
+/* \author Dominik Ospelt                                               */
 /************************************************************************/
 
-#ifndef GLWINDOW_H
-#define GLWINDOW_H
+#ifndef SRC_KOREGUI_RESOURCEVIEWER_H_
+#define SRC_KOREGUI_RESOURCEVIEWER_H_
 
-#include <GL/glew.h>
-#include <QWindow>
+#include <QTabWidget>
+#include <QListView>
 
-class GLWindow : public QWindow
-{
-    Q_OBJECT
+namespace koregui {
+  class ResourceViewer : public QTabWidget {
+      Q_OBJECT
 
-public:
-    GLWindow(QScreen *screen = 0);
-    ~GLWindow();
-
-protected:
-    void keyPressEvent(QKeyEvent* evnt);
-
-private:
-    void initializeGL();
-
-protected slots:
-    void resizeGL();
-    void paintGL();
-
-private:
-    QOpenGLContext* _context;
-};
-#endif  // GLWINDOW_H
+  public:
+    ResourceViewer(QWidget *parent = 0);
+    ~ResourceViewer();
+  private:
+    QListView _meshes;
+  };
+}
+#endif // SRC_KOREGUI_RESOURCEVIEWER_H_

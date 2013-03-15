@@ -14,6 +14,26 @@
     <ClInclude Include="src\KoRE_GUI\BindPathItem.h" />
     <ClInclude Include="src\KoRE_GUI\ComponentItem.h" />
     <ClInclude Include="src\KoRE_GUI\FrameBufferItem.h" />
+    <CustomBuild Include="src\KoRE_GUI\ResourceViewer.h">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing ResourceViewer.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\src\KoRE_GUI\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\src\KoRE_GUI\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_DLL -DQT_CORE_LIB -DQT_GUI_LIB -DQT_OPENGL_LIB -DQT_WIDGETS_LIB "-I$(SolutionDir)ext\include" "-I$(SolutionDir)src" "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtOpenGL" "-I$(QTDIR)\include\QtWidgets" "-I.\src\KoRE_GUI\GeneratedFiles\$(ConfigurationName)\." "-I.\src\KoRE_GUI\GeneratedFiles"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing ResourceViewer.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\src\KoRE_GUI\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\src\KoRE_GUI\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_OPENGL_LIB -DQT_WIDGETS_LIB "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtOpenGL" "-I$(QTDIR)\include\QtWidgets" "-I.\src\KoRE_GUI\GeneratedFiles\$(ConfigurationName)\." "-I.\src\KoRE_GUI\GeneratedFiles"</Command>
+    </CustomBuild>
+    <CustomBuild Include="src\KoRE_GUI\KoRE_GUIStyle.h">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing KoRE_GUIStyle.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\src\KoRE_GUI\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\src\KoRE_GUI\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_DLL -DQT_CORE_LIB -DQT_GUI_LIB -DQT_OPENGL_LIB -DQT_WIDGETS_LIB "-I$(SolutionDir)ext\include" "-I$(SolutionDir)src" "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtOpenGL" "-I$(QTDIR)\include\QtWidgets" "-I.\src\KoRE_GUI\GeneratedFiles\$(ConfigurationName)\." "-I.\src\KoRE_GUI\GeneratedFiles"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing KoRE_GUIStyle.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\src\KoRE_GUI\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\src\KoRE_GUI\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_OPENGL_LIB -DQT_WIDGETS_LIB "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtOpenGL" "-I$(QTDIR)\include\QtWidgets" "-I.\src\KoRE_GUI\GeneratedFiles\$(ConfigurationName)\." "-I.\src\KoRE_GUI\GeneratedFiles"</Command>
+    </CustomBuild>
     <ClInclude Include="src\KoRE_GUI\ShaderInputItem.h" />
     <ClInclude Include="src\KoRE_GUI\ShaderProgramItem.h" />
     <CustomBuild Include="src\KoRE_GUI\RenderViewer.h">
@@ -70,7 +90,13 @@
     <ClCompile Include="src\KoRE_GUI\GeneratedFiles\Debug\moc_GLWindow.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="src\KoRE_GUI\GeneratedFiles\Debug\moc_KoRE_GUIStyle.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="src\KoRE_GUI\GeneratedFiles\Debug\moc_RenderViewer.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="src\KoRE_GUI\GeneratedFiles\Debug\moc_ResourceViewer.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="src\KoRE_GUI\GeneratedFiles\Debug\moc_SceneViewer.cpp">
@@ -79,14 +105,22 @@
     <ClCompile Include="src\KoRE_GUI\GeneratedFiles\Release\moc_GLWindow.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="src\KoRE_GUI\GeneratedFiles\Release\moc_KoRE_GUIStyle.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="src\KoRE_GUI\GeneratedFiles\Release\moc_RenderViewer.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="src\KoRE_GUI\GeneratedFiles\Release\moc_ResourceViewer.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="src\KoRE_GUI\GLWindow.cpp" />
+    <ClCompile Include="src\KoRE_GUI\KoRE_GUIStyle.cpp" />
     <ClCompile Include="src\KoRE_GUI\main.cpp" />
     <ClCompile Include="src\KoRE_GUI\NodeItem.cpp" />
     <ClCompile Include="src\KoRE_GUI\NodePathItem.cpp" />
     <ClCompile Include="src\KoRE_GUI\RenderViewer.cpp" />
+    <ClCompile Include="src\KoRE_GUI\ResourceViewer.cpp" />
     <ClCompile Include="src\KoRE_GUI\SceneViewer.cpp" />
     <ClCompile Include="src\KoRE_GUI\ShaderDataItem.cpp" />
     <ClCompile Include="src\KoRE_GUI\ShaderInputItem.cpp" />
