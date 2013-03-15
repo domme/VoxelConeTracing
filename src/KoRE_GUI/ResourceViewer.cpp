@@ -18,34 +18,26 @@
 */
 
 /************************************************************************/
-/* \author Andreas Weinmann                                             */
+/* \author Dominik Ospelt                                               */
 /************************************************************************/
 
-#ifndef GLWINDOW_H
-#define GLWINDOW_H
+#include "KoRE_GUI/ResourceViewer.h"
+#include "KoRE/ResourceManager.h"
 
-#include <GL/glew.h>
-#include <QWindow>
+koregui::ResourceViewer::ResourceViewer(QWidget *parent)
+                                      : QTabWidget(parent) {
+  kore::ResourceManager::getInstance()->getMeshes();
+  for (uint i = 0; i < 0; i++) {
 
-class GLWindow : public QWindow
-{
-    Q_OBJECT
+  }
+  //_meshes
+  addTab(&_meshes,"Meshes");
 
-public:
-    GLWindow(QScreen *screen = 0);
-    ~GLWindow();
+  // TODO
+  this->addTab(new QWidget,"Textures");
+  this->addTab(new QWidget,"ShaderPrograms");
+  this->addTab(new QWidget,"FBO's");
+}
 
-protected:
-    void keyPressEvent(QKeyEvent* evnt);
-
-private:
-    void initializeGL();
-
-protected slots:
-    void resizeGL();
-    void paintGL();
-
-private:
-    QOpenGLContext* _context;
-};
-#endif  // GLWINDOW_H
+koregui::ResourceViewer::~ResourceViewer() {
+}

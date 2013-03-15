@@ -70,6 +70,12 @@
     <CustomBuild Include="src\KoRE_GUI\ShaderDataItem.h">
       <Filter>Header Dateien</Filter>
     </CustomBuild>
+    <CustomBuild Include="src\KoRE_GUI\ResourceViewer.h">
+      <Filter>Header Dateien</Filter>
+    </CustomBuild>
+    <CustomBuild Include="src\KoRE_GUI\KoRE_GUIStyle.h">
+      <Filter>Header Dateien</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\KoRE_GUI\main.cpp">
@@ -121,6 +127,24 @@
       <Filter>Source Dateien</Filter>
     </ClCompile>
     <ClCompile Include="src\KoRE_GUI\FrameBufferItem.cpp">
+      <Filter>Source Dateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KoRE_GUI\GeneratedFiles\Debug\moc_ResourceViewer.cpp">
+      <Filter>Generierte Dateien\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KoRE_GUI\GeneratedFiles\Release\moc_ResourceViewer.cpp">
+      <Filter>Generierte Dateien\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KoRE_GUI\GeneratedFiles\Debug\moc_KoRE_GUIStyle.cpp">
+      <Filter>Generierte Dateien\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KoRE_GUI\GeneratedFiles\Release\moc_KoRE_GUIStyle.cpp">
+      <Filter>Generierte Dateien\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KoRE_GUI\KoRE_GUIStyle.cpp">
+      <Filter>Source Dateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KoRE_GUI\ResourceViewer.cpp">
       <Filter>Source Dateien</Filter>
     </ClCompile>
   </ItemGroup>

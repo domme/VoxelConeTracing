@@ -72,6 +72,9 @@ namespace kore {
 
     /*! \brief Retrieve a registered Mesh */
     kore::Mesh* getMesh(const std::string& path, const std::string& id);
+
+    /*! \brief Retrieve a list of all registered Meshes */
+    const std::vector<kore::Mesh*> getMeshes(void);
     
     /*! \brief Removes a mesh from the ResourceManager and from the whole
     *          program all mesh-listeners are notified and the GPU- and HEAP-

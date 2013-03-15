@@ -23,13 +23,16 @@
 
 #include <GL/glew.h>
 #include <QApplication>
+#include <QCommonStyle>
 
 #include "KoRE/SceneManager.h"
 #include "KoRE/ResourceManager.h"
 #include "KoRE/RenderManager.h"
 
+#include "KoRE_GUI/KoRE_GUIStyle.h"
 #include "KoRE_GUI/SceneViewer.h"
 #include "KoRE_GUI/RenderViewer.h"
+#include "KoRE_GUI/ResourceViewer.h"
 #include "KoRE_GUI/GLWindow.h"
 
 int main(int argc, char *argv[])
@@ -37,27 +40,21 @@ int main(int argc, char *argv[])
 
     // initialize Qt
     QApplication app(argc, argv);
+    //app.setStyle(new koregui::KoRE_GUIStyle);
 
     // need of GL-Context
     GLWindow win;
-
-    // load kore resources and scene
-    kore::ShaderProgram* simpleShader = new kore::ShaderProgram();
-    simpleShader->loadShader("./assets/shader/normalColor.vp",
-      GL_VERTEX_SHADER);
-    simpleShader->loadShader("./assets/shader/normalColor.fp",
-      GL_FRAGMENT_SHADER);
-    simpleShader->initShader("MegaShader");
-
-    kore::ResourceManager::getInstance()->loadScene("./assets/meshes/TestEnv.dae");
+    win.show();
 
     // now widgets
-    koregui::RenderViewer rview;
+    koregui::ResourceViewer resview;
+    resview.show();
+    /*koregui::RenderViewer rview;
     koregui::SceneViewer sview(&rview);
     sview.showScene(kore::SceneManager::getInstance()->getRootNode());
 
     sview.show();
-    rview.show();
+    rview.show();*/
 
     return app.exec();
 }
