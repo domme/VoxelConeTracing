@@ -35,23 +35,97 @@
 * The Listener-Adapter object should be stored to ensure unregistration can be done.
 ************************************************************************/
 
-/*
-class Object
+/**********************************************************************//**
+* The Base-Listener is used as a common base-type for all kinds of 
+* object-types with the same parameter in their callback-functions
+************************************************************************/
+template <typename Param1T>
+class BaseListener1
+{
+  public:
+    virtual void notify(const Param1T param) = 0;
+};
 
+
+/**********************************************************************//**
+* The Listener1 is the template for the actual Listener-Adapter
+************************************************************************/
 template<typename ObjectT, typename Param1T>
-class Event1 {
-  private:
-    typedef void (ObjectT::*CallbackFuncT) (const Param1T&);
+class Listener1 : public BaseListener1<Param1T> {
+  typedef void (ObjectT::*CallbackFuncT) (const Param1T);
 
-    void notify(const Param1T& param) {
-      for (int i = 0; i < _objects.size(); ++i) {
-        (_objects[i]->*_callbackFunctions[i])(param);
+  public:
+    Listener1()
+      : _callbackFunc(0),
+        _listenerObject(NULL),
+        BaseListener1<Param1T>() {
+    }
+
+    Listener1(ObjectT* pObject, CallbackFuncT pCallbackFunc)
+      : _callbackFunc(0),
+        _listenerObject(NULL),
+        BaseListener1<Param1T>() {
+      init(pObject, pCallbackFunc);
+    }
+
+    void init(ObjectT* pObject, CallbackFuncT pCallbackFunc) {
+      _callbackFunc = pCallbackFunc;
+      _listenerObject = pObject;
+    }
+
+    virtual void notify(const Param1T param) {
+      (_listenerObject->*_callbackFunc)(param);
+    }
+
+// private:
+    CallbackFuncT _callbackFunc;
+    ObjectT* _listenerObject;
+};
+
+/************************************************************************
+* The Delegate is the Event-Manager and allows registering/unregistering
+* Listeners.
+************************************************************************/
+template<typename Param1T>
+class Delegate1Param {
+  public:
+    ~Delegate1Param() {
+      for (uint i = 0; i < _listeners.size(); ++i) {
+        KORE_SAFE_DELETE(_listeners[i]);
       }
     }
 
-    std::vector<ObjectT*> _objects;
-    std::vector<CallbackFuncT> _callbackFunctions;
-};
-*/
+    template<typename ObjectT, typename MethodT>
+    void add(ObjectT* object, MethodT callback) {
+      Listener1<ObjectT, Param1T>* listener =
+        new Listener1<ObjectT, Param1T>(object, callback);
+      _listeners.push_back(listener);
+    }
 
-#endif  // KORE_SRC_KORE_EVENTS_H_
+    template<typename ObjectT, typename MethodT>
+    void remove(ObjectT* object, MethodT callback) {
+      for (uint i = 0; i < _listeners.size(); ++i) {
+        Listener1<ObjectT, Param1T>* listener =
+          dynamic_cast<Listener1<ObjectT, Param1T>*>(_listeners[i]);
+        if (listener != NULL) {
+          if (listener->_listenerObject == object
+              && listener->_callbackFunc == callback) {
+                KORE_SAFE_DELETE(_listeners[i]);
+                _listeners.erase(_listeners.begin() + i);
+                break;
+          }
+        }
+      }
+    }
+
+    void raiseEvent(const Param1T& param) {
+      for(uint i = 0; i < _listeners.size(); ++i) {
+        _listeners[i]->notify(param);
+      }
+    }
+
+  private:
+    std::vector<BaseListener1<Param1T>*> _listeners;
+};
+
+#endif

@@ -31,6 +31,7 @@
 #include "KoRE/SceneManager.h"
 #include "KoRE/TextureSampler.h"
 #include "KoRE/FrameBuffer.h"
+#include "KoRE/Events.h"
 
 // TODO(dlazarek/dospelt) Are Cameras and Lights really needed in the resourceManager??
 
@@ -190,7 +191,6 @@ namespace kore {
     const TextureSampler*
       requestTextureSampler(const TexSamplerProperties& properties);
 
-
   private:
     typedef std::map<std::string, kore::SceneNodeComponent*>
             InnerResourceMapT;
@@ -215,10 +215,19 @@ namespace kore {
     std::vector<kore::TextureSampler*> _textureSamplers;
     std::map<std::string, kore::FrameBuffer*> _frameBuffers; // name, framebuffer
 
+    Delegate1Param<const FrameBuffer*> _fboDeleteEvent;
+    Delegate1Param<const Texture*> _textureDeleteEvent;
+    Delegate1Param<const ShaderProgram*> _shaderProgramDeleteEvent;
+    Delegate1Param<const Mesh*> _meshDeleteEvent;
+
     void notifyFramebufferRemove(const FrameBuffer* fbo);
     void notifyTextureRemove(const Texture* tex);
     void notifyShaderProgramRemove(const ShaderProgram* program);
     void notifyMeshRemove(const Mesh* mesh);
+
+    
+
+    
   };
 };
 #endif  // CORE_INCLUDE_CORE_RESOURCEMANAGER_H_
