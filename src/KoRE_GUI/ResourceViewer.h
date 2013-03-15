@@ -25,7 +25,7 @@
 #define SRC_KOREGUI_RESOURCEVIEWER_H_
 
 #include <QTabWidget>
-#include <QListView>
+#include <QListWidget>
 
 namespace koregui {
   class ResourceViewer : public QTabWidget {
@@ -34,8 +34,17 @@ namespace koregui {
   public:
     ResourceViewer(QWidget *parent = 0);
     ~ResourceViewer();
+
+    void update(void);
+
+  protected:
+    void keyPressEvent(QKeyEvent* event);
+
   private:
-    QListView _meshes;
+    QListWidget _meshes;
+    QListWidget _textures;
+    QListWidget _programs;
+    QListWidget _framebuffers;
   };
 }
 #endif // SRC_KOREGUI_RESOURCEVIEWER_H_

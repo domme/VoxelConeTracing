@@ -33,7 +33,7 @@
 #include "KoRE_GUI/SceneViewer.h"
 #include "KoRE_GUI/RenderViewer.h"
 #include "KoRE_GUI/ResourceViewer.h"
-#include "KoRE_GUI/GLWindow.h"
+#include "KoRE_GUI/GLWidget.h"
 
 int main(int argc, char *argv[])
 {
@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
     //app.setStyle(new koregui::KoRE_GUIStyle);
 
     // need of GL-Context
-    GLWindow win;
+    GLWidget win;
     win.show();
 
     // now widgets

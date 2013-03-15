@@ -26,18 +26,31 @@
 
 koregui::ResourceViewer::ResourceViewer(QWidget *parent)
                                       : QTabWidget(parent) {
-  kore::ResourceManager::getInstance()->getMeshes();
-  for (uint i = 0; i < 0; i++) {
-
+  setWindowTitle("Resource Manager");
+  std::vector<kore::Mesh*> meshlist = kore::ResourceManager::getInstance()->getMeshes();
+  for (uint i = 0; i < meshlist.size(); i++) {
+    _meshes.addItem(meshlist[i]->getName().c_str());
   }
+
   //_meshes
   addTab(&_meshes,"Meshes");
 
   // TODO
+  //kore::ResourceManager::getInstance()->getShaderPrograms();
   this->addTab(new QWidget,"Textures");
   this->addTab(new QWidget,"ShaderPrograms");
-  this->addTab(new QWidget,"FBO's");
+  this->addTab(new QWidget,"FameBuffer");
 }
 
 koregui::ResourceViewer::~ResourceViewer() {
+}
+
+void koregui::ResourceViewer::update( void )
+{
+
+}
+
+void koregui::ResourceViewer::keyPressEvent(QKeyEvent* event)
+{
+
 }

@@ -22,11 +22,10 @@
 /* \author Dominik Ospelt                                               */
 /************************************************************************/
 
-#include "KoRE_GUI/GLWindow.h"
+#include "KoRE_GUI/GLWidget.h"
 
 #include <QGuiApplication>
 #include <QKeyEvent>
-#include <QOpenGLContext>
 #include <QTimer>
 #include <string>
 
@@ -40,36 +39,25 @@
 #include "KoRE/ResourceManager.h"
 #include "KoRE/RenderManager.h"
 
-GLWindow::GLWindow(QScreen *screen) : QWindow(screen) {
+GLWidget::GLWidget(QWidget *parent) : QGLWidget(parent) {
 
-    QSurfaceFormat cformat;
+    QGLFormat cformat;
     cformat.setDepthBufferSize(24);
-    cformat.setMajorVersion(4);
-    cformat.setMinorVersion(2);
-    cformat.setProfile(QSurfaceFormat::CoreProfile);
-    
+    cformat.setVersion(4,2);
+    cformat.setProfile(QGLFormat::CoreProfile);
+
+    this->setFormat(cformat);
     resize(800,600);
-    setSurfaceType(OpenGLSurface);
-    create();
-
-    _context = new QOpenGLContext;
-    _context->setFormat(cformat);
-    _context->create();
-
-    connect(this,SIGNAL(widthChanged(int)), this, SLOT(resizeGL()));
-    connect(this,SIGNAL(heightChanged(int)), this, SLOT(resizeGL()));
 
     QTimer* timer = new QTimer(this);
-    connect( timer, SIGNAL(timeout()), this, SLOT(paintGL()));
+    connect(timer, SIGNAL(timeout()), this, SLOT(paintGL()));
     timer->start(1);
 }
 
-GLWindow::~GLWindow() {
+GLWidget::~GLWidget() {
 }
 
-void GLWindow::initializeGL() {
-    _context->makeCurrent(this);
-
+void GLWidget::initializeGL() {
     // initialize glew
     glewExperimental = GL_TRUE;
     if (glewInit()) {
@@ -99,24 +87,23 @@ void GLWindow::initializeGL() {
     simpleShader->loadShader("./assets/shader/normalColor.fp",
       GL_FRAGMENT_SHADER);
     simpleShader->initShader("MegaShader");
+
     kore::ResourceManager::getInstance()->loadScene("./assets/meshes/TestEnv.dae");
 }
 
-void GLWindow::resizeGL() {
-    _context->makeCurrent(this);
+void GLWidget::resizeGL(int x, int y) {
     kore::RenderManager::getInstance()->setRenderResolution(glm::ivec2(width(), height()));
     glViewport(0, 0, width(), height());
     paintGL();
 }
 
-void GLWindow::paintGL() {
-  _context->makeCurrent(this);
-  glClearColor(1,0,0,1);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  //kore::RenderManager::getInstance()->renderFrame();
-  _context->swapBuffers(this);
+void GLWidget::paintGL() {
+  //glClearColor(1,0,0,1);
+  //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  kore::RenderManager::getInstance()->renderFrame();
+  swapBuffers();
 }
 
-void GLWindow::keyPressEvent(QKeyEvent * evnt) {
+void GLWidget::keyPressEvent(QKeyEvent * evnt) {
     if (evnt->key() == Qt::Key_Escape) QGuiApplication::quit();
 }

@@ -42,11 +42,11 @@ namespace kore {
   public:
     static ResourceManager *getInstance(void);
 
-    /* \brief saves KoRE's status
+    /*! \brief saves KoRE's status
     */
     void saveProject(const std::string& filename);
 
-    /* \brief load KoRE's status
+    /*! \brief load KoRE's status
     */
     void loadProject(const std::string& filename);
 
@@ -122,8 +122,9 @@ namespace kore {
                           const ShaderProgram* program);
 
     /*! \brief Retrieve a registered ShaderProgram from the ResourceManager. */
-    const kore::ShaderProgram* kore::ResourceManager
-      ::getShaderProgram(const std::string& name) const;
+    const kore::ShaderProgram* getShaderProgram(const std::string& name) const;
+
+    /*! \brief 
 
     /*! \brief Removes a shaderProgram from the ResourceManager and from the
     *          whole program. Registered SaderProgram-listener are informed.

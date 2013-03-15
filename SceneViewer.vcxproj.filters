@@ -61,9 +61,6 @@
     <CustomBuild Include="src\KoRE_GUI\SceneViewer.h">
       <Filter>Header Dateien</Filter>
     </CustomBuild>
-    <CustomBuild Include="src\KoRE_GUI\GLWindow.h">
-      <Filter>Header Dateien</Filter>
-    </CustomBuild>
     <CustomBuild Include="src\KoRE_GUI\RenderViewer.h">
       <Filter>Header Dateien</Filter>
     </CustomBuild>
@@ -74,6 +71,9 @@
       <Filter>Header Dateien</Filter>
     </CustomBuild>
     <CustomBuild Include="src\KoRE_GUI\KoRE_GUIStyle.h">
+      <Filter>Header Dateien</Filter>
+    </CustomBuild>
+    <CustomBuild Include="src\KoRE_GUI\GLWidget.h">
       <Filter>Header Dateien</Filter>
     </CustomBuild>
   </ItemGroup>
@@ -89,15 +89,6 @@
     </ClCompile>
     <ClCompile Include="src\KoRE_GUI\GeneratedFiles\Debug\moc_SceneViewer.cpp">
       <Filter>Generierte Dateien\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="src\KoRE_GUI\GeneratedFiles\Debug\moc_GLWindow.cpp">
-      <Filter>Generierte Dateien\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="src\KoRE_GUI\GeneratedFiles\Release\moc_GLWindow.cpp">
-      <Filter>Generierte Dateien\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="src\KoRE_GUI\GLWindow.cpp">
-      <Filter>Source Dateien</Filter>
     </ClCompile>
     <ClCompile Include="src\KoRE_GUI\ShaderDataItem.cpp">
       <Filter>Source Dateien</Filter>
@@ -145,6 +136,15 @@
       <Filter>Source Dateien</Filter>
     </ClCompile>
     <ClCompile Include="src\KoRE_GUI\ResourceViewer.cpp">
+      <Filter>Source Dateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KoRE_GUI\GeneratedFiles\Debug\moc_GLWidget.cpp">
+      <Filter>Generierte Dateien\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KoRE_GUI\GeneratedFiles\Release\moc_GLWidget.cpp">
+      <Filter>Generierte Dateien\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KoRE_GUI\GLWidget.cpp">
       <Filter>Source Dateien</Filter>
     </ClCompile>
   </ItemGroup>

@@ -25,25 +25,24 @@
 #define GLWINDOW_H
 
 #include <GL/glew.h>
-#include <QWindow>
+#include <QGLWidget>
 
-class GLWindow : public QWindow
+class GLWidget : public QGLWidget
 {
     Q_OBJECT
 
 public:
-    GLWindow(QScreen *screen = 0);
-    ~GLWindow();
+    GLWidget(QWidget *parent = 0);
+    ~GLWidget();
 
 protected:
     void keyPressEvent(QKeyEvent* evnt);
 
-private:
-    void initializeGL();
+protected:
+    virtual void initializeGL();
+    virtual void resizeGL(int x, int y);
+    virtual void paintGL();
 
-protected slots:
-    void resizeGL();
-    void paintGL();
 
 private:
     QOpenGLContext* _context;
