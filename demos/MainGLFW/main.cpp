@@ -50,6 +50,7 @@
 #include "Kore/Passes/FrameBufferStage.h"
 #include "Kore/Passes/ShaderProgramPass.h"
 #include "KoRE/Passes/NodePass.h"
+#include "KoRE/Events.h"
 
 kore::SceneNode* rotationNode;
 kore::SceneNode* lightNode;

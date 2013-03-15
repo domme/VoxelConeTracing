@@ -276,6 +276,9 @@
     <ClInclude Include="src\KoRE\Operations\MemoryBarrierOp.h">
       <Filter>src\Operations</Filter>
     </ClInclude>
+    <ClInclude Include="src\KoRE\Events.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
