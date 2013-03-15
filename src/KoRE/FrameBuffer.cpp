@@ -111,9 +111,8 @@ void kore::FrameBuffer::
   Texture* pTex = new Texture;
   bool bSuccess = pTex->create(properties, name);
 if (bSuccess) {
-    ResourceManager::getInstance()->addTexture(ResourceManager::RESOURCE_PATH_INTERNAL, name, pTex);
+    ResourceManager::getInstance()->addTexture(name, pTex);
     addTextureAttachment(pTex, attatchment);
-    
   } else {
     Log::getInstance()->write("[ERROR] Requested Texture could not be"
                               "created for the FBO");
