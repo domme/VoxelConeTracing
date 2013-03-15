@@ -238,7 +238,7 @@ void kore::ResourceManager::addShaderHandle(const std::string& path,
 
 const kore::TextureSampler*
   kore::ResourceManager::
-  getTextureSampler(const TexSamplerProperties& properties) {
+  requestTextureSampler(const TexSamplerProperties& properties) {
     // First look for a sampler that satisfies the provided properties
     for (uint i = 0; i < _textureSamplers.size(); ++i) {
       if (_textureSamplers[i]->getProperties() == properties) {
@@ -284,4 +284,103 @@ void kore::ResourceManager::
         _frameBuffers.erase(it);
       }
     }
+}
+
+void kore::ResourceManager::removeFramebuffer(const std::string& name) {
+  auto it = _frameBuffers.find(name);
+
+  if (it != _frameBuffers.end()) {
+    KORE_SAFE_DELETE(it->second);
+    _frameBuffers.erase(it);
+  }
+}
+
+void kore::ResourceManager::removeMesh(const std::string& path,
+                                       const std::string& id) {
+  auto itOuterMap = _meshes.find(path);
+  
+  if (itOuterMap != _meshes.end()) {
+    auto itInnerMap = itOuterMap->second.find(id);
+
+    if (itInnerMap != itOuterMap->second.end()) {
+      notifyMeshRemove(itInnerMap->second);
+      KORE_SAFE_DELETE(itInnerMap->second);
+      itOuterMap->second.erase(itInnerMap);
+    }
+  }
+}
+
+void kore::ResourceManager::removeMesh(const Mesh* mesh) {
+  for (auto itOuter = _meshes.begin(); itOuter != _meshes.end(); ++itOuter) {
+    InnerMeshMapT& innerMap = itOuter->second;
+    for (auto itInner = innerMap.begin(); itInner != innerMap.end(); ++itInner) {
+      if (itInner->second == mesh) {
+        notifyMeshRemove(mesh);
+        KORE_SAFE_DELETE(itInner->second);
+        innerMap.erase(itInner);
+      }
+    }
+  }
+}
+
+void kore::ResourceManager::removeTexture(const std::string& path) {
+  auto it = _textures.find(path);
+
+  if (it != _textures.end()) {
+    notifyTextureRemove(it->second);
+    KORE_SAFE_DELETE(it->second);
+    _textures.erase(it);
+  }
+}
+
+void kore::ResourceManager::removeTexture(const Texture* texture) {
+  for (auto it = _textures.begin(); it != _textures.end(); ++it) {
+    if (it->second == texture) {
+      notifyTextureRemove(it->second);
+      KORE_SAFE_DELETE(it->second);
+      _textures.erase(it);
+    }
+  }
+}
+
+void kore::ResourceManager::removeShaderProgram(const std::string& name) {
+  auto it = _shaderProgramMap.find(name);
+
+  if (it != _shaderProgramMap.end()) {
+    notifyShaderProgramRemove(it->second);
+    KORE_SAFE_DELETE(it->second);
+    _shaderProgramMap.erase(it);
+  }
+}
+
+void kore::ResourceManager::
+  removeShaderProgram(const ShaderProgram* program) {
+    for (auto it = _shaderProgramMap.begin();
+              it != _shaderProgramMap.end(); ++it) {
+                if (it->second == program) {
+                  notifyShaderProgramRemove(it->second);
+                  KORE_SAFE_DELETE(it->second);
+                  _shaderProgramMap.erase(it);
+                }
+    }
+}
+
+void kore::ResourceManager::
+  notifyFramebufferRemove(const FrameBuffer* fbo) {
+
+}
+
+void kore::ResourceManager::notifyTextureRemove(const Texture* tex)
+{
+
+}
+
+void kore::ResourceManager::notifyShaderProgramRemove(const ShaderProgram* program)
+{
+
+}
+
+void kore::ResourceManager::notifyMeshRemove(const Mesh* mesh)
+{
+
 }

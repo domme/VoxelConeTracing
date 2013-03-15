@@ -220,7 +220,6 @@
     <ClCompile Include="src\KoRE\Operations\BindOperations\BindUniform.cpp" />
     <ClCompile Include="src\KoRE\Operations\BindOperations\BindOperation.cpp" />
     <ClCompile Include="src\KoRE\Operations\MemoryBarrierOp.cpp" />
-    <ClCompile Include="src\KoRE\Operations\Sequence.cpp" />
     <ClCompile Include="src\KoRE\Operations\UseFBO.cpp" />
     <ClCompile Include="src\KoRE\Operations\UseShaderProgram.cpp" />
     <ClCompile Include="src\KoRE\Optimization\Optimizer.cpp" />
@@ -262,7 +261,6 @@
     <ClInclude Include="src\KoRE\Operations\Operation.h" />
     <ClInclude Include="src\KoRE\Operations\RenderMesh.h" />
     <ClInclude Include="src\KoRE\Operations\SelectNodes.h" />
-    <ClInclude Include="src\KoRE\Operations\Sequence.h" />
     <ClInclude Include="src\KoRE\Operations\UseFBO.h" />
     <ClInclude Include="src\KoRE\Operations\UseShaderProgram.h" />
     <ClInclude Include="src\KoRE\Optimization\Optimizer.h" />

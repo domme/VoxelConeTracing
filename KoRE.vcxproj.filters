@@ -106,9 +106,6 @@
     <ClCompile Include="src\KoRE\Operations\BindOperations\BindOperation.cpp">
       <Filter>src\Operations\BindOperations</Filter>
     </ClCompile>
-    <ClCompile Include="src\KoRE\Operations\Sequence.cpp">
-      <Filter>src\Operations</Filter>
-    </ClCompile>
     <ClCompile Include="src\KoRE\Operations\UseFBO.cpp">
       <Filter>src\Operations</Filter>
     </ClCompile>
@@ -251,9 +248,6 @@
     </ClInclude>
     <ClInclude Include="src\KoRE\Operations\BindOperations\BindOperation.h">
       <Filter>src\Operations\BindOperations</Filter>
-    </ClInclude>
-    <ClInclude Include="src\KoRE\Operations\Sequence.h">
-      <Filter>src\Operations</Filter>
     </ClInclude>
     <ClInclude Include="src\KoRE\Operations\UseFBO.h">
       <Filter>src\Operations</Filter>

@@ -1,4 +1,4 @@
-/*
+/*  
   Copyright @ 2012 The KoRE Project
 
   This file is part of KoRE.
@@ -57,33 +57,114 @@ namespace kore {
                                  kore::SceneManager::getInstance()
                                  ->getRootNode());
 
-    // adds all resources from a specific file
+    /// adds all resources from a specific file
     void loadResources(const std::string& filename);
 
-    // load a single texture
+    /// load a single texture
     Texture* loadTexture(const std::string& filename);
 
+
+
+    /*! \brief Add a mesh to the resource-manager. This mesh will now be
+               controlled and deleted solely by the ResourceManager
+    *   \param path The (file)-Path or name, under which the mesh will be
+                    registered.
+    *   \param mesh The mesh to register */
     void addMesh(const std::string& path, Mesh* mesh);
-    void addCamera(const std::string& path, Camera* camera);
+
+    /*! \brief Retrieve a registered Mesh */
+    kore::Mesh* getMesh(const std::string& path, const std::string& id);
+    
+    /*! \brief Removes a mesh from the ResourceManager and from the whole
+    *          program all mesh-listeners are notified and the GPU- and HEAP-
+    *          resources are freed.
+    *   \param path The filePath of the Mesh to remove.
+    *   \param id The ID (name) of the Mesh to remove. */
+    void removeMesh(const std::string& path, const std::string& id);
+
+    /*! \brief Removes a mesh from the ResourceManager and from the whole
+    *          program all mesh-listeners are notified and the GPU- and HEAP-
+    *          resources are freed.
+    *   \param mesh The Mesh to remove. */
+    void removeMesh(const Mesh* mesh);
+
+
+
+    /*! \brief Adds a texture to the ResourceManager. This texture will now be
+    *          controlled and deleted by the ResourceManager alone.
+    *   \param path The filePath (or name) of the Texture.
+    *   \param texture The Texture to register. */
     void addTexture(const std::string& path, Texture* texture);
-    void addLight(const std::string& path, LightComponent* light);
+
+    /*! \brief Retrieve a registered texture from the ResourceManager */
+    kore::Texture* getTexture(const std::string& path);
+
+    /*! \brief Removes a texture from the ResourceManager and from the whole
+    *          program. All Texture-listeners are notified.
+    *   \param path The path/name of the texture to remove. */
+    void removeTexture(const std::string& path);
+
+    /*! \brief Removes a texture from the ResourceManager and from the whole
+    *          program. All Texture-listeners are notified.
+    *   \param texture The texture to remove. */
+    void removeTexture(const Texture* texture);
+
+
+
+    /*! \brief Adds a shaderProgram to the ResourceManager. This shaderProgram
+    *          will now be controlled and deleted by the resourceManager alone.
+    *   \param name The name of the ShaderProgram.
+    *   \param program The ShaderProgram to register. */
     void addShaderProgram(const std::string& name,
                           const ShaderProgram* program);
+
+    /*! \brief Retrieve a registered ShaderProgram from the ResourceManager. */
+    const kore::ShaderProgram* kore::ResourceManager
+      ::getShaderProgram(const std::string& name) const;
+
+    /*! \brief Removes a shaderProgram from the ResourceManager and from the
+    *          whole program. Registered SaderProgram-listener are informed.
+    *   \param name The name of the shaderProgram. */
+    void removeShaderProgram(const std::string& name);
+
+    /*! \brief Removes a shaderProgram from the ResourceManager and from the
+    *          whole program. Registered SaderProgram-listener are informed.
+    *   \param program The program to remove. */
+    void removeShaderProgram(const ShaderProgram* program);
+
+
+
+    /*! \brief Adds a framebuffer to the ResourceManager. This framebuffer will
+    *          now be controlled and deleted by the resourceManager alone.
+    *   \param name The name to register the framebuffer in.
+    *   \param fbo  The framebuffer to register.
+    */
     void addFramebuffer(const std::string& name, FrameBuffer* fbo);
 
-
+    /*! \brief Retrieve a registered FrameBuffer with the provided name.
+    *   \param name The name of the FrameBuffer with which it was added.
+    *   \return The requested FrameBuffer or NULL, if there was no FrameBuffer
+                added with the provided name or it has been removed already. */
+    FrameBuffer* getFramebuffer(const std::string& name);
+    
+    /*! \brief Remove a registered FrameBuffer from the ResourceManager and
+    *          from the whole program. FrameBuffer-listeners are informed.
+    *   \param name The name of the Framebuffer.
+    */
+    void removeFramebuffer(const std::string& name);
+    
+    /*! \brief Remove a registered FrameBuffer from the ResourceManager and
+    *          from the whole program. FrameBuffer-listeners are informed.
+    *   \param fbo The FrameBuffer to remove.
+    */
     void removeFramebuffer(FrameBuffer* fbo);
 
 
-    kore::Mesh* getMesh(const std::string& path, const std::string& id);
-    kore::Camera* getCamera(const std::string& path, const std::string& id);
-    kore::LightComponent* getLight(const std::string& path,
-                                     const std::string& id);
-    kore::Texture* getTexture(const std::string& path);
-    FrameBuffer* getFramebuffer(const std::string& name);
-
-    const kore::ShaderProgram* kore::ResourceManager
-      ::getShaderProgram(const std::string& name) const;
+    /*! \brief Adds a shader handle to the cache. Subsequent shader-loadings 
+    *          can use getShaderHandle(..) to retrieve this cached handle and
+    *          do not have to load and compile the sources from file. */
+    void addShaderHandle(const std::string& path,
+                         const GLuint handle);
 
     /*! \brief Returns a cached OpenGL shader object.
     *   \param path The filepath to the shader-file.
@@ -92,22 +173,26 @@ namespace kore {
     */
     GLuint getShaderHandle(const std::string& path);
 
-    /*! \brief Adds a shader handle to the cache. Subsequent shader-loadings 
-    *          can use getShaderHandle(..) to retrieve this cached handle and
-    *          do not have to load and compile the sources from file. */
-    void addShaderHandle(const std::string& path,
-                         const GLuint handle);
 
     /*! \brief Returns the OpenGL texture sampler object with the provided 
     *          properties. 
-    * If a sampler with the provided properties already exists, the pointer to 
+    * If a sampler with the provided properties already exists, the pointer to
     * that sampler is simply returned. Otherwise, a new sampler object is
     * created and returned.
     * \param properties The properties of the requested sampler.
     * \return The pointer to the sampler-object.
     */
     const TextureSampler*
-      getTextureSampler(const TexSamplerProperties& properties);
+      requestTextureSampler(const TexSamplerProperties& properties);
+    
+
+    // These functions need to be moved from the resource-manager to e.g. the
+    // scene-manager.
+    void addCamera(const std::string& path, Camera* camera);
+    void addLight(const std::string& path, LightComponent* light);
+    kore::Camera* getCamera(const std::string& path, const std::string& id);
+    kore::LightComponent* getLight(const std::string& path, const std::string& id);
+    //////////////////////////////////////////////////////////////////////////
 
   private:
     typedef std::map<std::string, kore::SceneNodeComponent*>
@@ -133,6 +218,11 @@ namespace kore {
     std::map<std::string, const ShaderProgram*> _shaderProgramMap; // filepath, program
     std::vector<kore::TextureSampler*> _textureSamplers;
     std::map<std::string, kore::FrameBuffer*> _frameBuffers; // name, framebuffer
+
+    void notifyFramebufferRemove(const FrameBuffer* fbo);
+    void notifyTextureRemove(const Texture* tex);
+    void notifyShaderProgramRemove(const ShaderProgram* program);
+    void notifyMeshRemove(const Mesh* mesh);
   };
 };
 #endif  // CORE_INCLUDE_CORE_RESOURCEMANAGER_H_

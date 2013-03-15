@@ -311,7 +311,7 @@ void kore::ShaderProgram::constructShaderInputInfo(const GLenum activeType,
                 samplerProperties.type = rInputVector[i].type;
                 
                 const TextureSampler* sampler =
-                  resourceManager->getTextureSampler(samplerProperties);
+                  resourceManager->requestTextureSampler(samplerProperties);
 
                 _vSamplers.push_back(sampler);
 
@@ -543,7 +543,7 @@ void kore::ShaderProgram::setSamplerProperties(const uint idx,
   }
 
   _vSamplers[idx] = ResourceManager::getInstance()->
-                                    getTextureSampler(properties);
+                                    requestTextureSampler(properties);
 }
 
 const GLuint kore::ShaderProgram::
