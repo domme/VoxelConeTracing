@@ -18,7 +18,6 @@
 */
 
 /************************************************************************/
-/* \author Andreas Weinmann                                             */
 /* \author Dominik Ospelt                                               */
 /************************************************************************/
 
@@ -80,15 +79,14 @@ void GLWidget::initializeGL() {
         reinterpret_cast<const char*>
         (glGetString(GL_SHADING_LANGUAGE_VERSION)));
 
-    // load kore resources and scene
+    // load kore resources and scene TODO remove later
     kore::ShaderProgram* simpleShader = new kore::ShaderProgram();
-    simpleShader->loadShader("./assets/shader/normalColor.vp",
-      GL_VERTEX_SHADER);
-    simpleShader->loadShader("./assets/shader/normalColor.fp",
-      GL_FRAGMENT_SHADER);
+    simpleShader->loadShader("./assets/shader/normalColor.vp", GL_VERTEX_SHADER);
+    simpleShader->loadShader("./assets/shader/normalColor.fp", GL_FRAGMENT_SHADER);
     simpleShader->initShader("MegaShader");
-
     kore::ResourceManager::getInstance()->loadScene("./assets/meshes/TestEnv.dae");
+    kore::ResourceManager::getInstance()->loadTexture("./assets/textures/checkerboard.png");
+    kore::ResourceManager::getInstance()->loadTexture("./assets/textures/Crate.png");
 }
 
 void GLWidget::resizeGL(int x, int y) {
@@ -106,4 +104,5 @@ void GLWidget::paintGL() {
 
 void GLWidget::keyPressEvent(QKeyEvent * evnt) {
     if (evnt->key() == Qt::Key_Escape) QGuiApplication::quit();
+    QGLWidget::keyPressEvent(evnt);
 }

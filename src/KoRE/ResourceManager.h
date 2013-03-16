@@ -102,6 +102,9 @@ namespace kore {
     /*! \brief Retrieve a registered texture from the ResourceManager */
     kore::Texture* getTexture(const std::string& path);
 
+    /*! \brief Retrieve all registered textures from the ResourceManager */
+    std::vector<kore::Texture*> getTextures(void);
+
     /*! \brief Removes a texture from the ResourceManager and from the whole
     *          program. All Texture-listeners are notified.
     *   \param path The path/name of the texture to remove. */
@@ -118,11 +121,13 @@ namespace kore {
     *          will now be controlled and deleted by the resourceManager alone.
     *   \param name The name of the ShaderProgram.
     *   \param program The ShaderProgram to register. */
-    void addShaderProgram(const std::string& name,
-                          const ShaderProgram* program);
+    void addShaderProgram(const std::string& name, ShaderProgram* program);
 
     /*! \brief Retrieve a registered ShaderProgram from the ResourceManager. */
     const kore::ShaderProgram* getShaderProgram(const std::string& name) const;
+
+    /*! \brief Retrieve all registered ShaderPrograms. */
+    std::vector<ShaderProgram*> getShaderPrograms(void);
 
     /*! \brief 
 
@@ -150,6 +155,9 @@ namespace kore {
     *   \return The requested FrameBuffer or NULL, if there was no FrameBuffer
                 added with the provided name or it has been removed already. */
     FrameBuffer* getFramebuffer(const std::string& name);
+
+    /*! \brief Retrieve all registered FrameBuffers.*/
+    std::vector<FrameBuffer*> getFramebuffers(void);
     
     /*! \brief Remove a registered FrameBuffer from the ResourceManager and
     *          from the whole program. FrameBuffer-listeners are informed.
@@ -212,7 +220,7 @@ namespace kore {
 
     std::map<std::string, kore::Texture*> _textures; // filepath, texture
     std::map<std::string, GLuint> _shaderHandles;
-    std::map<std::string, const ShaderProgram*> _shaderProgramMap; // filepath, program
+    std::map<std::string, ShaderProgram*> _shaderProgramMap; // filepath, program
     std::vector<kore::TextureSampler*> _textureSamplers;
     std::map<std::string, kore::FrameBuffer*> _frameBuffers; // name, framebuffer
 

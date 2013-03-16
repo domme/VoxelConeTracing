@@ -27,30 +27,42 @@
 koregui::ResourceViewer::ResourceViewer(QWidget *parent)
                                       : QTabWidget(parent) {
   setWindowTitle("Resource Manager");
+
+  // deprecated soon^^
+  const kore::FrameBuffer* frabuf = kore::FrameBuffer::BACKBUFFER;
+
   std::vector<kore::Mesh*> meshlist = kore::ResourceManager::getInstance()->getMeshes();
   for (uint i = 0; i < meshlist.size(); i++) {
     _meshes.addItem(meshlist[i]->getName().c_str());
   }
+  addTab(&_meshes, "Meshes");
 
-  //_meshes
-  addTab(&_meshes,"Meshes");
+  std::vector<kore::Texture*> texlist = kore::ResourceManager::getInstance()->getTextures();
+  for (uint i = 0; i < texlist.size(); i++) {
+    _textures.addItem(texlist[i]->getName().c_str());
+  }
+  addTab(&_textures, "Textures");
 
-  // TODO
-  //kore::ResourceManager::getInstance()->getShaderPrograms();
-  this->addTab(new QWidget,"Textures");
-  this->addTab(new QWidget,"ShaderPrograms");
-  this->addTab(new QWidget,"FameBuffer");
+  std::vector<kore::ShaderProgram*> programlist = kore::ResourceManager::getInstance()->getShaderPrograms();
+  for (uint i = 0; i < programlist.size(); i++) {
+    _programs.addItem(programlist[i]->getName().c_str());
+  }
+  addTab(&_programs,"ShaderPrograms");
+
+  std::vector<kore::FrameBuffer*> bufferlist = kore::ResourceManager::getInstance()->getFramebuffers();
+  for (uint i = 0; i < bufferlist.size(); i++) {
+    _framebuffers.addItem(bufferlist[i]->getName().c_str());
+  }
+  addTab(&_framebuffers,"FameBuffer");
+
+  resize(640, 480);
 }
 
 koregui::ResourceViewer::~ResourceViewer() {
 }
 
-void koregui::ResourceViewer::update( void )
-{
-
+void koregui::ResourceViewer::update(void) {
 }
 
-void koregui::ResourceViewer::keyPressEvent(QKeyEvent* event)
-{
-
+void koregui::ResourceViewer::keyPressEvent(QKeyEvent* event) {
 }

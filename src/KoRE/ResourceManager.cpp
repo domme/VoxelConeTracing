@@ -133,7 +133,7 @@ void kore::ResourceManager::addTexture(const std::string& path,
 }
 
 void kore::ResourceManager::addShaderProgram(const std::string& name,
-                                           const ShaderProgram* program) {
+                                             ShaderProgram* program) {
   if(_shaderProgramMap.count(name)> 0) {
     kore::Log::getInstance()
       ->write("[ERROR] Shader '%s' already in RenderManager\n", name.c_str());
@@ -205,7 +205,8 @@ const kore::TextureSampler*
 
 void kore::ResourceManager::
   addFramebuffer(const std::string& name, FrameBuffer* fbo) {
-    if (_frameBuffers.count(name) != 0) {
+    kore::Log::getInstance()->write("[DEBUG] added Framebuffer '%s'\n", name.c_str());
+    if (_frameBuffers.count(name) == 0) {
       _frameBuffers[name] = fbo;
     }
 }
@@ -213,11 +214,9 @@ void kore::ResourceManager::
 kore::FrameBuffer*
   kore::ResourceManager::getFramebuffer(const std::string& name) {
     auto it = _frameBuffers.find(name);
-
     if (it != _frameBuffers.end()) {
       return it->second;
     }
-
     return NULL;
 }
 
@@ -262,6 +261,7 @@ void kore::ResourceManager::removeMesh(const Mesh* mesh) {
         notifyMeshRemove(mesh);
         KORE_SAFE_DELETE(itInner->second);
         innerMap.erase(itInner);
+        return;
       }
     }
   }
@@ -274,6 +274,7 @@ void kore::ResourceManager::removeTexture(const std::string& path) {
     notifyTextureRemove(it->second);
     KORE_SAFE_DELETE(it->second);
     _textures.erase(it);
+    return;
   }
 }
 
@@ -283,6 +284,7 @@ void kore::ResourceManager::removeTexture(const Texture* texture) {
       notifyTextureRemove(it->second);
       KORE_SAFE_DELETE(it->second);
       _textures.erase(it);
+      return;
     }
   }
 }
@@ -294,6 +296,7 @@ void kore::ResourceManager::removeShaderProgram(const std::string& name) {
     notifyShaderProgramRemove(it->second);
     KORE_SAFE_DELETE(it->second);
     _shaderProgramMap.erase(it);
+    return;
   }
 }
 
@@ -305,6 +308,7 @@ void kore::ResourceManager::
                   notifyShaderProgramRemove(it->second);
                   KORE_SAFE_DELETE(it->second);
                   _shaderProgramMap.erase(it);
+                  return;
                 }
     }
 }
@@ -338,4 +342,30 @@ const std::vector<kore::Mesh*> kore::ResourceManager::getMeshes(void) {
     }
   }
   return meshlist;
+}
+
+std::vector<kore::Texture*> kore::ResourceManager::getTextures(void){
+  std::vector<kore::Texture*> texlist;
+  for(auto it = _textures.begin(); it != _textures.end(); it++) {
+    texlist.push_back(it->second);
+  } 
+  return texlist;
+}
+
+std::vector<kore::FrameBuffer*>
+  kore::ResourceManager::getFramebuffers(void) {
+    std::vector<kore::FrameBuffer*> bufferlist;
+  for(auto it = _frameBuffers.begin(); it != _frameBuffers.end(); it++) {
+    bufferlist.push_back(it->second);
+  } 
+  return bufferlist;
+}
+
+std::vector<kore::ShaderProgram*>
+  kore::ResourceManager::getShaderPrograms(void) {
+  std::vector<kore::ShaderProgram*> programlist;
+  for(auto it = _shaderProgramMap.begin(); it != _shaderProgramMap.end(); it++) {
+    programlist.push_back(it->second);
+  } 
+  return programlist;
 }
