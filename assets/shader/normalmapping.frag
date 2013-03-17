@@ -16,15 +16,15 @@ vec4 phong(vec2 uv, vec3 normal, vec3 lVec, vec3 vVec)
 
     vec4 texColor = texture(tex, UV.xy);
     vec4 vAmbient = 0.2 * vec4(1,1,1,1) * texColor;
-    vVec=normalize(vVec);
-    normal=normalize(normal);
+    vVec = normalize(vVec);
+    normal = normalize(normal);
     float intensity = 1;
     vec3 lVecNorm = normalize(lVec);
     float lambert = max(dot(normal,lVecNorm), 0.0);
     if(lambert > 0){
        vec4 lightcolor = vec4(1,1,1,1);
        vDiffuse = lightcolor * lambert * texColor * intensity ;
-       vec3 R = reflect(-lVecNorm, normal);
+       vec3 R = normalize(reflect(-lVecNorm, normal));
        if(shininess>0){
             float specular = pow(clamp(dot(R, vVec), 0.0, 1.0), shininess);
             vSpecular = lightcolor * specular * intensity;

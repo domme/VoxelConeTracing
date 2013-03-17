@@ -183,6 +183,10 @@ void setUpNMRendering(kore::SceneNode* renderNode,
             new kore::BindUniform(pCamera->getShaderData("view Matrix"),
             nmShader->getUniform("view"));
 
+        kore::BindUniform* invViewBind =
+          new kore::BindUniform(pCamera->getShaderData("inverse view Matrix"),
+          nmShader->getUniform("viewI"));
+
         kore::BindUniform* projBind =
             new kore::BindUniform(pCamera->getShaderData("projection Matrix"),
             nmShader->getUniform("projection"));
@@ -212,6 +216,7 @@ void setUpNMRendering(kore::SceneNode* renderNode,
         nodePass->addOperation(modelBind);
         nodePass->addOperation(normalMatBind);
         nodePass->addOperation(viewBind);
+        nodePass->addOperation(invViewBind);
         nodePass->addOperation(projBind);
         nodePass->addOperation(lightPosBind);
         nodePass->addOperation(texBind);

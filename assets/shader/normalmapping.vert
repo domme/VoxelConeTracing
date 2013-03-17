@@ -9,6 +9,7 @@ uniform mat4 projection;
 uniform mat4 view;
 uniform mat4 model;
 uniform mat3 normal;
+uniform mat4 viewI;
 uniform vec3 pointlightPos;
 
 smooth out vec3 lightVecTS;
@@ -22,24 +23,23 @@ void main()
   vec3 vVertex = vec3(view * vec4(pos, 1.0f));
   gl_Position = projection * vec4(vVertex, 1.0f);
 
-  vec3 viewVecVS = -vVertex;
-  
   //Calculate TBN
   vec3 n = normalize(normal * v_normal);		
-  vec3 t = normalize(normal * v_tangent.xyz);	
+  vec3 t = normalize(normal * v_tangent.xyz);
   vec3 b = normalize(cross(n, t));
   mat3 tbn = mat3(t,b,n);
   
   //Transform LightVector in TBN
-  vec3 lightVecVS = pointlightPos - vVertex;
+  vec3 lightVecVS = pointlightPos - pos;
   lightVecTS.x = dot(lightVecVS, t);
   lightVecTS.y = dot(lightVecVS, b);
   lightVecTS.z = dot(lightVecVS, n);
 
   //Transform ViewVector in TBN
-  viewVecTS.x = dot(viewVecVS, t);
-  viewVecTS.y = dot(viewVecVS, b);
-  viewVecTS.z = dot(viewVecVS, n);
+  vec3 camPosWS = viewI[3].xyz;
+  viewVecTS.x = dot(camPosWS - pos, t);
+  viewVecTS.y = dot(camPosWS - pos, b);
+  viewVecTS.z = dot(camPosWS - pos, n);
   
   UV = v_uv0;
 }
