@@ -175,6 +175,10 @@ void setUpNMRendering(kore::SceneNode* renderNode,
             new kore::BindUniform(renderNode->getTransform()->
             getShaderData("model Matrix"), nmShader->getUniform("model"));
 
+        kore::BindUniform* normalMatBind = 
+            new kore::BindUniform(renderNode->getTransform()->
+            getShaderData("normal Matrix"), nmShader->getUniform("normal"));
+
         kore::BindUniform* viewBind =
             new kore::BindUniform(pCamera->getShaderData("view Matrix"),
             nmShader->getUniform("view"));
@@ -182,6 +186,7 @@ void setUpNMRendering(kore::SceneNode* renderNode,
         kore::BindUniform* projBind =
             new kore::BindUniform(pCamera->getShaderData("projection Matrix"),
             nmShader->getUniform("projection"));
+
 
         kore::BindTexture* texBind =
             new kore::BindTexture(pTexComponent->
@@ -205,6 +210,7 @@ void setUpNMRendering(kore::SceneNode* renderNode,
         nodePass->addOperation(tangentAttBind);
         nodePass->addOperation(uvAttBind);
         nodePass->addOperation(modelBind);
+        nodePass->addOperation(normalMatBind);
         nodePass->addOperation(viewBind);
         nodePass->addOperation(projBind);
         nodePass->addOperation(lightPosBind);
@@ -284,6 +290,7 @@ int main(void) {
   glEnable(GL_CULL_FACE);
   glCullFace(GL_BACK);
 
+
   // load shader
   kore::ShaderProgram* simpleShader = new kore::ShaderProgram;
   simpleShader->loadShader("./assets/shader/normalColor.vp",
@@ -292,12 +299,12 @@ int main(void) {
                           GL_FRAGMENT_SHADER);
   simpleShader->init("cooler Shader");
 
- /* kore::ShaderProgram* nmShader = new kore::ShaderProgram;
+  kore::ShaderProgram* nmShader = new kore::ShaderProgram;
   nmShader->loadShader("./assets/shader/normalmapping.vert", 
                         GL_VERTEX_SHADER);
   nmShader->loadShader("./assets/shader/normalmapping.frag",
                         GL_FRAGMENT_SHADER);
-  nmShader->init("normal mapping Shader");*/
+  nmShader->init("normal mapping Shader");
 
   // load resources
   kore::ResourceManager::getInstance()
@@ -342,12 +349,15 @@ int main(void) {
                                   1);
 
   kore::ShaderProgramPass* shaderProgPass = new kore::ShaderProgramPass;
-  shaderProgPass->setShaderProgram(simpleShader);
+  //shaderProgPass->setShaderProgram(simpleShader);
+  shaderProgPass->setShaderProgram(nmShader);
 
   // init operations
   for (uint i = 0; i < vRenderNodes.size(); ++i) {
    
-    setUpSimpleRendering(vRenderNodes[i],shaderProgPass,testTexture,pLight);
+      //setUpSimpleRendering(vRenderNodes[i],shaderProgPass,testTexture,pLight);
+      setUpNMRendering(vRenderNodes[i],shaderProgPass,stoneTexture,stoneNormalmap,pLight);
+
   }
 
   backBufferStage->addProgramPass(shaderProgPass);

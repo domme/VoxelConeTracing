@@ -19,7 +19,7 @@ kore::Transform::Transform(void) : _global(glm::mat4(1.0f)),
 
   input = ShaderData();
   input.type = GL_FLOAT_MAT3;
-  input.name = "normal Matrix ws";
+  input.name = "normal Matrix";
   input.data = glm::value_ptr(_normalWS);
   input.component = this;
   _shaderData.push_back(input);

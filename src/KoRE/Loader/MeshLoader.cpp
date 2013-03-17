@@ -38,7 +38,9 @@ kore::MeshLoader::~MeshLoader() {
 
 const aiScene* kore::MeshLoader::readScene(const std::string& szScenePath) {
   const aiScene* pAiScene = _aiImporter.ReadFile(szScenePath,
-      aiProcess_JoinIdenticalVertices | aiProcess_Triangulate);
+      aiProcess_JoinIdenticalVertices 
+      | aiProcess_Triangulate 
+      | aiProcess_CalcTangentSpace);
 
   if (!pAiScene) {
     Log::getInstance()->write("[ERROR] Scene-file could not be loaded: %s",

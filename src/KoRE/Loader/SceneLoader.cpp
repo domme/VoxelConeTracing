@@ -29,8 +29,9 @@ void kore::SceneLoader::loadScene(const std::string& szScenePath,
   loadRessources(szScenePath);
   const aiScene* pAiScene =
     _aiImporter.ReadFile(szScenePath,
-                         aiProcess_JoinIdenticalVertices |
-                         aiProcess_Triangulate);
+                         aiProcess_JoinIdenticalVertices 
+                         | aiProcess_Triangulate
+                         | aiProcess_CalcTangentSpace);
 
   if (!pAiScene) {
     Log::getInstance()
@@ -53,8 +54,9 @@ void kore::SceneLoader::loadScene(const std::string& szScenePath,
 void kore::SceneLoader::loadRessources(const std::string& szScenePath) {
   const aiScene* pAiScene =
     _aiImporter.ReadFile(szScenePath,
-    aiProcess_JoinIdenticalVertices |
-    aiProcess_Triangulate);
+    aiProcess_JoinIdenticalVertices 
+    | aiProcess_Triangulate
+    | aiProcess_CalcTangentSpace);
 
   if (!pAiScene) {
     Log::getInstance()
