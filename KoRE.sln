@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "shader", "shader", "{77AED7
 	ProjectSection(SolutionItems) = preProject
 		assets\shader\normalColor.fp = assets\shader\normalColor.fp
 		assets\shader\normalColor.vp = assets\shader\normalColor.vp
+		assets\shader\normalmapping.frag = assets\shader\normalmapping.frag
+		assets\shader\normalmapping.vert = assets\shader\normalmapping.vert
 		assets\shader\simple.fp = assets\shader\simple.fp
 		assets\shader\simple.vp = assets\shader\simple.vp
 	EndProjectSection

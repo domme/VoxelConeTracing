@@ -17,6 +17,13 @@ kore::Transform::Transform(void) : _global(glm::mat4(1.0f)),
   input.component = this;
   _shaderData.push_back(input);
 
+  input = ShaderData();
+  input.type = GL_FLOAT_MAT3;
+  input.name = "normal Matrix ws";
+  input.data = glm::value_ptr(_normalWS);
+  input.component = this;
+  _shaderData.push_back(input);
+
   _type = COMPONENT_TRANSFORM;
 }
 
@@ -25,6 +32,7 @@ kore::Transform::~Transform() {
 
 void kore::Transform::setGlobal(const glm::mat4& global) {
   _global = global;
+  _normalWS = glm::mat3(glm::inverseTranspose(global));
 }
 
 void kore::Transform::setLocal(const glm::mat4& local) {

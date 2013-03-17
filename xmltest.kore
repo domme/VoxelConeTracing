@@ -1,7 +1,9 @@
 <?xml version="1.0" standalone="yes" ?>
-<!--Fri Mar 15 18:14:55 2013
+<!--Sun Mar 17 14:19:52 2013
 -->
 <Resources>
     <Texture name="./assets/textures/Crate.png" width="512" height="512" />
+    <Texture name="./assets/textures/stonewall.png" width="2000" height="2200" />
+    <Texture name="./assets/textures/stonewall_NM_height.png" width="2000" height="2200" />
 </Resources>
 <Scene />

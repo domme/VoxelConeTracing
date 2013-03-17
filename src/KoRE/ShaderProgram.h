@@ -36,7 +36,7 @@ namespace kore {
     /// load a single shader from file
     bool loadShader(const std::string& file, GLenum shadertype);
     /// compile and link shader program
-    bool initShader(const std::string& name);
+    bool init(const std::string& name);
     GLuint getAttributeLocation(const std::string &name);
     GLuint getUniformLocation(const std::string &name);
     GLuint getProgramLocation() const;
