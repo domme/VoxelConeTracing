@@ -19,6 +19,7 @@
 
 #include "KoRE/Passes/ShaderProgrampass.h"
 #include "KoRE/Operations/UseShaderProgram.h"
+#include "KoRE/Log.h"
 
 
 kore::ShaderProgramPass::ShaderProgramPass(void)

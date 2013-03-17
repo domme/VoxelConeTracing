@@ -19,6 +19,8 @@
 
 #include "KoRE/Passes/FrameBufferStage.h"
 #include "KoRE/Operations/UseFBO.h"
+#include "KoRE/ResourceManager.h"
+#include "KoRE/Log.h"
 
 kore::FrameBufferStage::FrameBufferStage(void)
   : _frameBuffer(NULL) {

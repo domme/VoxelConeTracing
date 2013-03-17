@@ -23,6 +23,7 @@
 #include <vector>
 #include "KoRE/ShaderProgram.h"
 #include "KoRE/Passes/NodePass.h"
+#include "Kore/FrameBuffer.h"
 
 namespace kore {
   class ShaderProgramPass {

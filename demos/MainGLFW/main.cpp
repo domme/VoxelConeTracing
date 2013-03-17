@@ -262,6 +262,19 @@ int main(void) {
   int oldMouseY = 0;
   glfwGetMousePos(&oldMouseX,&oldMouseY);
 
+  /*
+  //Event-tests
+  kore::ResourceManager* resourceManager = kore::ResourceManager::getInstance();
+
+  resourceManager->_fboDeleteEvent.add(backBufferStage, &kore::FrameBufferStage::onFrameBufferDelete);
+  resourceManager->_fboDeleteEvent.add(shaderProgPass, &kore::ShaderProgramPass::onFrameBufferDelete);
+  resourceManager->_fboDeleteEvent.raiseEvent(NULL);
+  resourceManager->_fboDeleteEvent.remove(shaderProgPass, &kore::ShaderProgramPass::onFrameBufferDelete);
+  resourceManager->_fboDeleteEvent.raiseEvent(NULL);
+
+  //////////////////////////////////////////////////////////////////////////
+  */
+    
   // Main loop
   while (running) {
     time = the_timer.timeSinceLastCall();

@@ -315,22 +315,20 @@ void kore::ResourceManager::
 
 void kore::ResourceManager::
   notifyFramebufferRemove(const FrameBuffer* fbo) {
-
+    _fboDeleteEvent.raiseEvent(fbo);
 }
 
-void kore::ResourceManager::notifyTextureRemove(const Texture* tex)
-{
-
+void kore::ResourceManager::notifyTextureRemove(const Texture* tex) {
+  _textureDeleteEvent.raiseEvent(tex);
 }
 
-void kore::ResourceManager::notifyShaderProgramRemove(const ShaderProgram* program)
-{
-
+void kore::ResourceManager::
+  notifyShaderProgramRemove(const ShaderProgram* program) {
+  _shaderProgramDeleteEvent.raiseEvent(program);
 }
 
-void kore::ResourceManager::notifyMeshRemove(const Mesh* mesh)
-{
-
+void kore::ResourceManager::notifyMeshRemove(const Mesh* mesh) {
+  _meshDeleteEvent.raiseEvent(mesh);
 }
 
 const std::vector<kore::Mesh*> kore::ResourceManager::getMeshes(void) {
