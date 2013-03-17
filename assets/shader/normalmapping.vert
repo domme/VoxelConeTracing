@@ -11,7 +11,6 @@ uniform mat4 model;
 uniform mat3 normal;
 uniform vec3 pointlightPos;
 
-smooth out vec3 pos;
 smooth out vec3 lightVecTS;
 smooth out vec3 viewVecTS;
 smooth out vec3 UV;
@@ -19,7 +18,7 @@ smooth out vec3 UV;
 
 void main()
 {
-  pos = (model * vec4(v_position, 1.0f)).xyz;
+  vec3 pos = (model * vec4(v_position, 1.0f)).xyz;
   vec3 vVertex = vec3(view * vec4(pos, 1.0f));
   gl_Position = projection * vec4(vVertex, 1.0f);
 

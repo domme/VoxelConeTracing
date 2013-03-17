@@ -1,7 +1,7 @@
 #version 330
 out vec4 out_color;
 
-in vec3 UV;
+smooth in vec3 UV;
 smooth in vec3 lightVecTS;
 smooth in vec3 viewVecTS;
 
