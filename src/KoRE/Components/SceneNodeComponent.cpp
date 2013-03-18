@@ -53,5 +53,8 @@ const kore::ShaderData* kore::SceneNodeComponent::
         return &_shaderData[i];
       }
     }
+    Log::getInstance()->write("[ERROR] ShaderData %s not found in Component \n", 
+        name.c_str());
+
     return NULL;
 }

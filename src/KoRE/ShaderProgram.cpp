@@ -118,7 +118,7 @@ bool kore::ShaderProgram::loadShader(const std::string& file,
   return true;
 }
 
-bool kore::ShaderProgram::initShader(const std::string& name) {
+bool kore::ShaderProgram::init(const std::string& name) {
   if (_programHandle != KORE_GLUINT_HANDLE_INVALID) {
     destroyProgram();
   }

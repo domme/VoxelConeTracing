@@ -64,7 +64,7 @@ void kore::Log::write(const char* format, ...) {
 
 #if defined WIN32 || defined WIN64
   // Also print to VisualStudio-console
-  char szBuf[ 1000 ];
+  char szBuf[ 10000 ];
   va_start(args, format);
   vsprintf(szBuf, format, args);
   va_end(args);

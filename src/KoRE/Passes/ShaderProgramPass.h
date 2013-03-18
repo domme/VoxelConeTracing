@@ -37,6 +37,8 @@ namespace kore {
     inline std::vector<Operation*>&
       getStartupOperations() {return _startupOperations;}
 
+    inline const ShaderProgram* getShaderProgram() const {return _program;}
+    
     void setShaderProgram(const ShaderProgram* program);
 
     void addNodePass(NodePass* pass);

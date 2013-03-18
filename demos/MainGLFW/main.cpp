@@ -62,6 +62,170 @@ kore::Camera* pCamera;
   kore::Log::getInstance()->write("[GL-ERROR]\n");
 } */
 
+//awaits simple shader
+void setUpSimpleRendering(kore::SceneNode* renderNode, kore::ShaderProgramPass*
+                          programPass, kore::Texture* texture, 
+                          kore::LightComponent* light){
+
+        kore::NodePass* nodePass = new kore::NodePass;
+        const kore::ShaderProgram* simpleShader = 
+            programPass->getShaderProgram();
+        kore::MeshComponent* pMeshComponent =
+            static_cast<kore::MeshComponent*>
+            (renderNode->getComponent(kore::COMPONENT_MESH));
+
+        // Add Texture
+        kore::GLerror::gl_ErrorCheckStart();
+        kore::TexturesComponent* pTexComponent = new kore::TexturesComponent;
+        pTexComponent->addTexture(texture);
+        renderNode->addComponent(pTexComponent);
+        kore::GLerror::gl_ErrorCheckFinish("Initialization");
+
+        // Bind Attribute-Ops
+        kore::BindAttribute* posAttBind =
+            new kore::BindAttribute(pMeshComponent->getShaderData("v_position"),
+            simpleShader->getAttribute("v_position"));
+
+        kore::BindAttribute* normAttBind =
+            new kore::BindAttribute(pMeshComponent->getShaderData("v_normal"),
+            simpleShader->getAttribute("v_normal"));
+
+        kore::BindAttribute* uvAttBind =
+            new kore::BindAttribute(pMeshComponent->getShaderData("v_uv0"),
+            simpleShader->getAttribute("v_uv0"));
+
+        // Bind Uniform-Ops
+        kore::BindUniform* modelBind = 
+            new kore::BindUniform(renderNode->getTransform()->
+            getShaderData("model Matrix"), simpleShader->getUniform("model"));
+
+        kore::BindUniform* viewBind =
+            new kore::BindUniform(pCamera->getShaderData("view Matrix"),
+            simpleShader->getUniform("view"));
+
+        kore::BindUniform* projBind =
+            new kore::BindUniform(pCamera->getShaderData("projection Matrix"),
+            simpleShader->getUniform("projection"));
+
+        kore::BindTexture* texBind =
+            new kore::BindTexture(pTexComponent->
+            getShaderData(texture->getName()),
+            simpleShader->getUniform("tex"));
+
+        kore::BindUniform* lightPosBind =
+            new kore::BindUniform(light->getShaderData("position"),
+            simpleShader->getUniform("pointlightPos"));
+
+        kore::RenderMesh* pRenderOp = new kore::RenderMesh();
+        pRenderOp->connect(pMeshComponent, simpleShader);
+
+        nodePass->addOperation(posAttBind);
+        nodePass->addOperation(normAttBind);
+        nodePass->addOperation(uvAttBind);
+        nodePass->addOperation(modelBind);
+        nodePass->addOperation(viewBind);
+        nodePass->addOperation(projBind);
+        nodePass->addOperation(lightPosBind);
+        nodePass->addOperation(texBind);
+        nodePass->addOperation(pRenderOp);
+
+        programPass->addNodePass(nodePass);
+}
+
+void setUpNMRendering(kore::SceneNode* renderNode, 
+                      kore::ShaderProgramPass* programPass, 
+                      kore::Texture* texture, 
+                      kore::Texture* normalmap,
+                      kore::LightComponent* light){
+
+        kore::NodePass* nodePass = new kore::NodePass;
+        const kore::ShaderProgram* nmShader = 
+            programPass->getShaderProgram();
+        kore::MeshComponent* pMeshComponent =
+            static_cast<kore::MeshComponent*>
+            (renderNode->getComponent(kore::COMPONENT_MESH));
+
+        // Add Texture
+        kore::GLerror::gl_ErrorCheckStart();
+        kore::TexturesComponent* pTexComponent = new kore::TexturesComponent;
+        pTexComponent->addTexture(texture);
+        pTexComponent->addTexture(normalmap);
+        renderNode->addComponent(pTexComponent);
+        kore::GLerror::gl_ErrorCheckFinish("Initialization");
+
+        // Bind Attribute-Ops
+        kore::BindAttribute* posAttBind =
+            new kore::BindAttribute(pMeshComponent->getShaderData("v_position"),
+            nmShader->getAttribute("v_position"));
+
+        kore::BindAttribute* normAttBind =
+            new kore::BindAttribute(pMeshComponent->getShaderData("v_normal"),
+            nmShader->getAttribute("v_normal"));
+
+        kore::BindAttribute* tangentAttBind =
+            new kore::BindAttribute(pMeshComponent->getShaderData("v_tangent"),
+            nmShader->getAttribute("v_tangent"));
+
+        kore::BindAttribute* uvAttBind =
+            new kore::BindAttribute(pMeshComponent->getShaderData("v_uv0"),
+            nmShader->getAttribute("v_uv0"));
+
+        // Bind Uniform-Ops
+        kore::BindUniform* modelBind = 
+            new kore::BindUniform(renderNode->getTransform()->
+            getShaderData("model Matrix"), nmShader->getUniform("model"));
+
+        kore::BindUniform* normalMatBind = 
+            new kore::BindUniform(renderNode->getTransform()->
+            getShaderData("normal Matrix"), nmShader->getUniform("normal"));
+
+        kore::BindUniform* viewBind =
+            new kore::BindUniform(pCamera->getShaderData("view Matrix"),
+            nmShader->getUniform("view"));
+
+        kore::BindUniform* invViewBind =
+          new kore::BindUniform(pCamera->getShaderData("inverse view Matrix"),
+          nmShader->getUniform("viewI"));
+
+        kore::BindUniform* projBind =
+            new kore::BindUniform(pCamera->getShaderData("projection Matrix"),
+            nmShader->getUniform("projection"));
+
+
+        kore::BindTexture* texBind =
+            new kore::BindTexture(pTexComponent->
+            getShaderData(texture->getName()),
+            nmShader->getUniform("tex"));
+
+        kore::BindTexture* normalmapBind =
+            new kore::BindTexture(pTexComponent->
+            getShaderData(normalmap->getName()),
+            nmShader->getUniform("normalmap"));
+
+        kore::BindUniform* lightPosBind =
+            new kore::BindUniform(light->getShaderData("position"),
+            nmShader->getUniform("pointlightPos"));
+
+        kore::RenderMesh* pRenderOp = new kore::RenderMesh();
+        pRenderOp->connect(pMeshComponent, nmShader);
+
+        nodePass->addOperation(posAttBind);
+        nodePass->addOperation(normAttBind);
+        nodePass->addOperation(tangentAttBind);
+        nodePass->addOperation(uvAttBind);
+        nodePass->addOperation(modelBind);
+        nodePass->addOperation(normalMatBind);
+        nodePass->addOperation(viewBind);
+        nodePass->addOperation(invViewBind);
+        nodePass->addOperation(projBind);
+        nodePass->addOperation(lightPosBind);
+        nodePass->addOperation(texBind);
+        nodePass->addOperation(normalmapBind);
+        nodePass->addOperation(pRenderOp);
+
+        programPass->addNodePass(nodePass);
+}
+
 int main(void) {
   int running = GL_TRUE;
 
@@ -79,7 +243,7 @@ int main(void) {
   glfwOpenWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 
   // Open an OpenGL window
-  if (!glfwOpenWindow(800, 600, 0, 0, 0, 0, 0, 0, GLFW_WINDOW)) {
+  if (!glfwOpenWindow(800, 600, 8, 8, 8, 8, 24, 8, GLFW_WINDOW)) {
     kore::Log::getInstance()->write("[ERROR] could not open render window\n");
     glfwTerminate();
     exit(EXIT_FAILURE);
@@ -131,13 +295,21 @@ int main(void) {
   glEnable(GL_CULL_FACE);
   glCullFace(GL_BACK);
 
+
   // load shader
   kore::ShaderProgram* simpleShader = new kore::ShaderProgram;
   simpleShader->loadShader("./assets/shader/normalColor.vp",
                           GL_VERTEX_SHADER);
   simpleShader->loadShader("./assets/shader/normalColor.fp",
                           GL_FRAGMENT_SHADER);
-  simpleShader->initShader("cooler Shader");
+  simpleShader->init("cooler Shader");
+
+  kore::ShaderProgram* nmShader = new kore::ShaderProgram;
+  nmShader->loadShader("./assets/shader/normalmapping.vert", 
+                        GL_VERTEX_SHADER);
+  nmShader->loadShader("./assets/shader/normalmapping.frag",
+                        GL_FRAGMENT_SHADER);
+  nmShader->init("normal mapping Shader");
 
   // load resources
   kore::ResourceManager::getInstance()
@@ -147,6 +319,14 @@ int main(void) {
   kore::Texture* testTexture =
     kore::ResourceManager::getInstance()->
     loadTexture("./assets/textures/Crate.png");
+
+  kore::Texture* stoneTexture =
+    kore::ResourceManager::getInstance()->
+    loadTexture("./assets/textures/stonewall.png");
+
+  kore::Texture* stoneNormalmap =
+    kore::ResourceManager::getInstance()->
+    loadTexture("./assets/textures/stonewall_NM_height.png");
 
   // find camera
   kore::SceneNode* pCameraNode = kore::SceneManager::getInstance()
@@ -174,72 +354,15 @@ int main(void) {
                                   1);
 
   kore::ShaderProgramPass* shaderProgPass = new kore::ShaderProgramPass;
-  shaderProgPass->setShaderProgram(simpleShader);
+  //shaderProgPass->setShaderProgram(simpleShader);
+  shaderProgPass->setShaderProgram(nmShader);
 
   // init operations
   for (uint i = 0; i < vRenderNodes.size(); ++i) {
-    
-    kore::NodePass* nodePass = new kore::NodePass;
-    
-    kore::MeshComponent* pMeshComponent =
-      static_cast<kore::MeshComponent*>
-      (vRenderNodes[i]->getComponent(kore::COMPONENT_MESH));
-    
-    // Add Texture
-    kore::GLerror::gl_ErrorCheckStart();
-    kore::TexturesComponent* pTexComponent = new kore::TexturesComponent;
-    pTexComponent->addTexture(testTexture);
-    vRenderNodes[i]->addComponent(pTexComponent);
-    kore::GLerror::gl_ErrorCheckFinish("Initialization");
+   
+      //setUpSimpleRendering(vRenderNodes[i],shaderProgPass,testTexture,pLight);
+      setUpNMRendering(vRenderNodes[i],shaderProgPass,stoneTexture,stoneNormalmap,pLight);
 
-    // Bind Attribute-Ops
-    kore::BindAttribute* posAttBind =
-      new kore::BindAttribute(pMeshComponent->getShaderData("v_position"),
-                              simpleShader->getAttribute("v_position"));
-
-    kore::BindAttribute* normAttBind =
-      new kore::BindAttribute(pMeshComponent->getShaderData("v_normal"),
-                             simpleShader->getAttribute("v_normal"));
-                       
-    kore::BindAttribute* uvAttBind =
-      new kore::BindAttribute(pMeshComponent->getShaderData("v_uv0"),
-                              simpleShader->getAttribute("v_uv0"));
-
-    // Bind Uniform-Ops
-    kore::BindUniform* modelBind = 
-      new kore::BindUniform(vRenderNodes[i]->getTransform()->getShaderData("model Matrix"),
-                            simpleShader->getUniform("model"));
-
-    kore::BindUniform* viewBind =
-      new kore::BindUniform(pCamera->getShaderData("view Matrix"),
-                            simpleShader->getUniform("view"));
-
-    kore::BindUniform* projBind =
-      new kore::BindUniform(pCamera->getShaderData("projection Matrix"),
-                           simpleShader->getUniform("projection"));
-
-    kore::BindTexture* texBind =
-      new kore::BindTexture(pTexComponent->getShaderData(testTexture->getName()),
-                            simpleShader->getUniform("tex"));
-
-    kore::BindUniform* lightPosBind =
-      new kore::BindUniform(pLight->getShaderData("position"),
-                            simpleShader->getUniform("pointlightPos"));
-
-    kore::RenderMesh* pRenderOp = new kore::RenderMesh();
-    pRenderOp->connect(pMeshComponent, simpleShader);
-
-    nodePass->addOperation(posAttBind);
-    nodePass->addOperation(normAttBind);
-    nodePass->addOperation(uvAttBind);
-    nodePass->addOperation(modelBind);
-    nodePass->addOperation(viewBind);
-    nodePass->addOperation(projBind);
-    nodePass->addOperation(lightPosBind);
-    nodePass->addOperation(texBind);
-    nodePass->addOperation(pRenderOp);
-
-    shaderProgPass->addNodePass(nodePass);
   }
 
   backBufferStage->addProgramPass(shaderProgPass);

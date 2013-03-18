@@ -34,11 +34,13 @@ namespace kore {
     void setLocal(const glm::mat4& local);
 
     inline const glm::mat4& getGlobal() const {return _global;}
-    inline const glm::mat4& getLocal(void) const {return _local;}
+    inline const glm::mat4& getLocal() const {return _local;}
+    inline const glm::mat3& getNormalWS() const {return _normalWS;}
 
   private:
     glm::mat4 _global;
     glm::mat4 _local;
+    glm::mat3 _normalWS;
   };
 }
 #endif  // CORE_INCLUDE_CORE_TRANSFORM_H_
