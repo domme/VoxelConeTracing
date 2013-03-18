@@ -16,14 +16,6 @@ smooth out vec3 lightVecTS;
 smooth out vec3 viewVecTS;
 smooth out vec3 UV;
 
-//Dominiks Normal mapping ;)
-smooth out vec3 posVS;
-smooth out vec3 lightVS;
-smooth out vec3 tangentVS;
-smooth out vec3 normalVS;
-smooth out vec3 bitangentVS;
-//////////////////////////////
-
 
 void main()
 {
@@ -33,7 +25,7 @@ void main()
 
   //Calculate TBN
   vec3 n = normalize(normal * v_normal);		
-  vec3 t = normalize(normal * v_tangent.xyz);
+  vec3 t = normalize((model * vec4(v_tangent)).xyz);
   vec3 b = normalize(cross(n, t));
   mat3 tbn = mat3(t,b,n);
   
@@ -50,13 +42,4 @@ void main()
   viewVecTS.z = dot(camPosWS - pos, n);
   
   UV = v_uv0;
-
-  //Values for Dominik's Normal mapping
-  ////////////////////////////////////
-  posVS = vVertex;
-  lightVS = (view * vec4(pointlightPos, 1.0f)).xyz;
-  tangentVS = normalize((view * vec4(t, 0.0f)).xyz);
-  normalVS = normalize((view * vec4(n, 0.0f)).xyz);
-  bitangentVS = normalize((view * vec4(b, 0.0f)).xyz);
-  ////////////////////////////////////
 }

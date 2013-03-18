@@ -71,7 +71,7 @@ void kore::LightComponent::init() {
   input = ShaderData();
   input.type = GL_FLOAT_VEC3;
   input.name = "direction";
-  input.data = glm::value_ptr(_positionWS);
+  input.data = glm::value_ptr(_directionWS);
   input.component = this;
   _shaderData.push_back(input);
 

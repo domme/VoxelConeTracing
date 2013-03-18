@@ -66,7 +66,7 @@ kore::Texture*
 
     //Pass the actual Texture Data
     if(color.colortype == LCT_RGB) {
-      texProperties.internalFormat = GL_SRGB8;
+      texProperties.internalFormat = GL_RGB8;
       texProperties.format = GL_RGB;
       texProperties.pixelType = GL_UNSIGNED_BYTE; 
     } else if(color.colortype == LCT_RGBA) {
