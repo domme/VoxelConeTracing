@@ -83,7 +83,7 @@ void GLWidget::initializeGL() {
     kore::ShaderProgram* simpleShader = new kore::ShaderProgram();
     simpleShader->loadShader("./assets/shader/normalColor.vp", GL_VERTEX_SHADER);
     simpleShader->loadShader("./assets/shader/normalColor.fp", GL_FRAGMENT_SHADER);
-    simpleShader->initShader("MegaShader");
+    simpleShader->init("MegaShader");
     kore::ResourceManager::getInstance()->loadScene("./assets/meshes/TestEnv.dae");
     kore::ResourceManager::getInstance()->loadTexture("./assets/textures/checkerboard.png");
     kore::ResourceManager::getInstance()->loadTexture("./assets/textures/Crate.png");

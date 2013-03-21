@@ -38,23 +38,23 @@
 int main(int argc, char *argv[])
 {
 
-    // initialize Qt
-    QApplication app(argc, argv);
-    //app.setStyle(new koregui::KoRE_GUIStyle);
+  // initialize Qt
+  QApplication app(argc, argv);
+  //app.setStyle(new koregui::KoRE_GUIStyle);
 
-    // need of GL-Context
-    GLWidget win;
-    win.show();
+  // need of GL-Context
+  GLWidget win;
+  win.show();
 
-    // now widgets
-    //koregui::ResourceViewer resview;
-    //resview.show();
-    /*koregui::RenderViewer rview;
-    koregui::SceneViewer sview(&rview);
-    sview.showScene(kore::SceneManager::getInstance()->getRootNode());
+  // now  other widgets
+  koregui::ResourceViewer resview;
+  koregui::RenderViewer rview;
+  koregui::SceneViewer sview(&rview);
+  sview.showScene(kore::SceneManager::getInstance()->getRootNode());
 
-    sview.show();
-    rview.show();*/
+  sview.show();
+  rview.show();
+  resview.show();
 
-    return app.exec();
+  return app.exec();
 }

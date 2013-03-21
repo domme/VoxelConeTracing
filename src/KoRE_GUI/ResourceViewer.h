@@ -24,11 +24,14 @@
 #ifndef SRC_KOREGUI_RESOURCEVIEWER_H_
 #define SRC_KOREGUI_RESOURCEVIEWER_H_
 
+#include <QWidget>
 #include <QTabWidget>
+#include <QPushButton>
 #include <QListWidget>
+#include <QVBoxLayout>
 
 namespace koregui {
-  class ResourceViewer : public QTabWidget {
+  class ResourceViewer : public QWidget {
       Q_OBJECT
 
   public:
@@ -37,10 +40,16 @@ namespace koregui {
 
     void update(void);
 
+  public slots:
+    void openBrowser(void);
+
   protected:
     void keyPressEvent(QKeyEvent* event);
 
   private:
+    QVBoxLayout _layout;
+    QTabWidget  _tabs;
+    QPushButton _addButton;
     QListWidget _meshes;
     QListWidget _textures;
     QListWidget _programs;
