@@ -39,7 +39,7 @@ void kore::UseShaderProgram::connect(const ShaderProgram* program) {
   _program = program;
 }
 
-void kore::UseShaderProgram::execute(void) const {
+void kore::UseShaderProgram::doExecute(void) const {
   _renderManager->useShaderProgram(_program->getProgramLocation());
 }
 

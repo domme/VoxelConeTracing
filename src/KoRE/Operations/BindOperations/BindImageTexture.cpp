@@ -40,21 +40,27 @@ kore::BindImageTexture::~BindImageTexture() {
 
 void kore::BindImageTexture::
   connect(const ShaderData* texData, const ShaderInput* shaderInput) {
+    if (!texData || !shaderInput) {
+      // Make invalid:
+      _shaderUniform = NULL;
+      _componentUniform = NULL;
+      return;
+    }
 
-    _shader = shaderInput->shader;
-    _shaderProgramLoc = _shader->getProgramLocation();
     _componentUniform = texData;
     _shaderUniform = shaderInput;
 }
 
-void kore::BindImageTexture::execute(void) const {
+void kore::BindImageTexture::doExecute(void) const {
   GLerror::gl_ErrorCheckStart();
-  _renderManager->useShaderProgram(_shaderProgramLoc);
+  _renderManager->
+    useShaderProgram(_shaderUniform->shader->getProgramLocation());
   glUniform1i(_shaderUniform->location,
                      static_cast<GLint>(_shaderUniform->imgUnit));
   STextureInfo* pTexInfo = static_cast<STextureInfo*>(_componentUniform->data);
 
-  GLuint access = _shader->getImageAccessParam(_shaderUniform->imgUnit);
+  GLuint access =
+    _shaderUniform->shader->getImageAccessParam(_shaderUniform->imgUnit);
 
   glBindImageTexture(_shaderUniform->imgUnit,
                      pTexInfo->texLocation,
@@ -72,8 +78,4 @@ void kore::BindImageTexture::update(void) {
 
 void kore::BindImageTexture::reset(void) {
 
-}
-
-bool kore::BindImageTexture::isValid(void) const {
-  return true;
 }

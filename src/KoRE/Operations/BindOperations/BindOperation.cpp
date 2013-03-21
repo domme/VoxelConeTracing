@@ -23,9 +23,7 @@
 #include "KoRE/RenderManager.h"
 
 kore::BindOperation::BindOperation()
-  : _component(NULL),
-    _componentUniform(NULL),
-    _shader(NULL),
+  : _componentUniform(NULL),
     _shaderUniform(NULL),
     kore::Operation() {
 }
@@ -34,8 +32,14 @@ kore::BindOperation::~BindOperation() {
 }
 
 bool kore::BindOperation::dependsOn(const void* thing) const {
-  return (    thing == _component
-          ||  thing == _componentUniform 
-          ||  thing == _shader
+  return (    thing == _componentUniform
+          ||  thing == _componentUniform->component
+          ||  thing == _componentUniform->data
+          ||  thing == _shaderUniform->shader
           ||  thing == _shaderUniform);
+}
+
+bool kore::BindOperation::isValid(void) const {
+  return _componentUniform &&
+         _shaderUniform;
 }

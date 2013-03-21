@@ -34,12 +34,11 @@ namespace kore {
     virtual ~BindOperation();
 
     virtual bool dependsOn(const void* thing) const;
+    virtual bool isValid(void) const;
 
   protected:
     const ShaderData* _componentUniform;
     const ShaderInput* _shaderUniform;
-    SceneNodeComponent* _component;
-    ShaderProgram* _shader;
   };
 }
 

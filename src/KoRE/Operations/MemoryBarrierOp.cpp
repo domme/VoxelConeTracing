@@ -36,7 +36,7 @@ kore::MemoryBarrierOp::MemoryBarrierOp(const GLuint barrierBits) {
 kore::MemoryBarrierOp::~MemoryBarrierOp() {
 }
 
-void kore::MemoryBarrierOp::execute(void) const {
+void kore::MemoryBarrierOp::doExecute(void) const {
   GLerror::gl_ErrorCheckStart();
   glMemoryBarrier(_barrierBits);
   GLerror::gl_ErrorCheckFinish("MemoryBarrierOp::execute");

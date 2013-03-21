@@ -33,7 +33,6 @@ namespace kore {
     explicit MemoryBarrierOp(const GLuint barrierBits);
     virtual ~MemoryBarrierOp();
 
-    virtual void execute(void) const;
     virtual void update(void);
     virtual void reset(void);
     virtual bool isValid(void) const;
@@ -47,6 +46,8 @@ namespace kore {
 
   private:
     GLuint _barrierBits;
+
+    virtual void doExecute(void) const;
   };
 }
 

@@ -38,14 +38,14 @@ kore::SelectNodes::SelectNodes(const std::string& name,
 }
 kore::SelectNodes::~SelectNodes() {}
 
-void kore::SelectNodes::execute() const {}
+void kore::SelectNodes::doExecute() const {}
 
 void kore::SelectNodes::update() {}
 
 void kore::SelectNodes::reset() {}
 
 bool kore::SelectNodes::isValid(void) const {
-  return false;
+  return _nodes.size() > 0;
 }
 
 void kore::SelectNodes::append(const SceneNode* root, const uint tag) {

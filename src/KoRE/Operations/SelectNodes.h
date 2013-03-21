@@ -40,7 +40,6 @@ namespace kore {
                 ESortingType type = SORT_NODES_SIMPLE,
                 bool partial_match = true);
     virtual ~SelectNodes(void);
-    virtual void execute(void) const;
     virtual void update(void);
     virtual void reset(void);
     virtual bool isValid(void) const;
@@ -50,6 +49,9 @@ namespace kore {
   private:
     void append(const SceneNode* root, const uint tag);
     void append(const SceneNode* root, const std::string &name);
+
+    virtual void doExecute(void) const;
+
     std::vector<SceneNode*> _nodes;
   };
 };
