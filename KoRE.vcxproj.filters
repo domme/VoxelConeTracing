@@ -133,6 +133,9 @@
     <ClCompile Include="src\KoRE\Operations\MemoryBarrierOp.cpp">
       <Filter>src\Operations</Filter>
     </ClCompile>
+    <ClCompile Include="src\KoRE\Components\Material.cpp">
+      <Filter>src\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\KoRE\Operations\SelectNodes.h">
@@ -278,6 +281,9 @@
     </ClInclude>
     <ClInclude Include="src\KoRE\Events.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\Components\Material.h">
+      <Filter>src\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

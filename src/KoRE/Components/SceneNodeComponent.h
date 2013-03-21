@@ -31,7 +31,8 @@ namespace kore {
     COMPONENT_MESH        = 1 << 1,
     COMPONENT_CAMERA      = 1 << 2,
     COMPONENT_VALUES      = 1 << 3,
-    COMPONENT_LIGHT       = 1 << 4
+    COMPONENT_LIGHT       = 1 << 4,
+    COMPONENT_MATERIAL    = 1 << 5
   };
 
   class SceneNode;

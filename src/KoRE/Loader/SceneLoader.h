@@ -30,6 +30,8 @@
 #include "KoRE/SceneNode.h"
 #include "KoRE/Components/MeshComponent.h"
 #include "KoRE/Components/LightComponent.h"
+#include "KoRE/Components/Material.h"
+#include "KoRE/Components/TexturesComponent.h"
 
 
 namespace kore {
@@ -54,6 +56,10 @@ namespace kore {
                               const uint uCameraSceneIndex);
     std::string getLightName(const aiLight* pAiLight,
                               const uint uLightSceneIndex);
+
+    void loadMaterialProperties(Material* koreMat, const aiMaterial* aiMat);
+    void loadMaterialTextures(TexturesComponent* texComponent,
+                              const aiMaterial* aiMat);
 
     Assimp::Importer _aiImporter;
     uint _nodecount, _cameracount, _meshcount, _lightcount;

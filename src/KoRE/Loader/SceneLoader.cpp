@@ -8,6 +8,7 @@
 #include "KoRE/Components/Transform.h"
 #include "KoRE/Components/Camera.h"
 #include "KoRE/Components/LightComponent.h"
+#include "KoRE/Components/Material.h"
 
 kore::SceneLoader* kore::SceneLoader::getInstance() {
   static SceneLoader instance;
@@ -168,6 +169,7 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
       }
     }
 
+    
     // Load the first mesh as a component of this node.
     // Further meshes have to be loaded into duplicate nodes
     if (ainode->mNumMeshes > 0) {
@@ -179,6 +181,12 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
       MeshComponent* meshComponent = new MeshComponent;
       meshComponent->setMesh(mesh);
       node->addComponent(meshComponent);
+
+      // Load the material for this mesh. Note that for every mesh, there is
+      // a material in Assimp.
+     // Material* materialComponent = new Material;
+
+      
 
     // Make additional copies for any more meshes
     for (uint iMesh = 1; iMesh < ainode->mNumMeshes; ++iMesh) {
@@ -242,4 +250,39 @@ std::string kore::SceneLoader::getLightName(const aiLight* pAiLight,
                               "information for this light.");
   }
   return lightName;
+}
+
+void kore::SceneLoader::
+  loadMaterialProperties(Material* koreMat, const aiMaterial* aiMat) {
+    for (uint i = 0; i < aiMat->mNumProperties; ++i) {
+      const aiMaterialProperty* aiMatProp = aiMat->mProperties[i];
+      if (aiMatProp->mSemantic != aiTextureType_NONE) {
+        continue;  // skip texture properties
+      }
+
+      std::string name(aiMatProp->mKey.C_Str());
+      GLuint glDataType;
+      
+      switch (aiMatProp->mType) {
+      case aiPropertyTypeInfo::aiPTI_Float:
+        {
+          
+        } break;
+      default:
+        break;
+      }
+        
+      //koreMat->addValue(name,                        )
+
+    }
+}
+
+void kore::SceneLoader::loadMaterialTextures(TexturesComponent* texComponent,
+                                             const aiMaterial* aiMat ) {
+    for (uint i = 0; i < aiMat->mNumProperties; ++i) {
+      const aiMaterialProperty* aiMatProp = aiMat->mProperties[i];
+      if (aiMatProp->mSemantic == aiTextureType_NONE) {
+        continue;  // skip non-texture properties
+      } 
+    }
 }
