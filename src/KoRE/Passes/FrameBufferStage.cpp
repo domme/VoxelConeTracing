@@ -21,6 +21,7 @@
 #include "KoRE/Operations/UseFBO.h"
 #include "KoRE/ResourceManager.h"
 #include "KoRE/Log.h"
+#include <algorithm>
 
 kore::FrameBufferStage::FrameBufferStage(void)
   : _frameBuffer(NULL) {
