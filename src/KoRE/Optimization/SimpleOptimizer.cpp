@@ -61,7 +61,9 @@ void kore::SimpleOptimizer::
 
         for (uint iOperation = 0; iOperation < operations.size();
             ++iOperation) {
-                      operationList.push_back(operations[iOperation]);
+                      if (operations[iOperation]->isValid()) {
+                        operationList.push_back(operations[iOperation]);
+                      }
         }  // Operations
       }  // Node Passes
     }  // Program Passes

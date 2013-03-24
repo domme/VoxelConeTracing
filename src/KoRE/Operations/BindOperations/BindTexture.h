@@ -33,16 +33,13 @@ namespace kore {
                 const ShaderInput* shaderInput);
 
     virtual ~BindTexture(void);
-    virtual void execute(void) const;
     virtual void update(void);
     virtual void reset(void);
-    virtual bool isValid(void) const;
     void connect(const ShaderData* texData,
                  const ShaderInput* shaderInput);
   private:
-    GLuint _shaderProgramLoc;
-
     void init();
+    virtual void doExecute(void) const;
   };
 };
 #endif  // CORE_INCLUDE_CORE_BINDTEXTUREOP_H_

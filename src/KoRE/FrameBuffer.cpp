@@ -22,6 +22,7 @@
 #include "KoRE/Log.h"
 #include "KoRE/GLerror.h"
 #include "KoRE/ResourceManager.h"
+#include <algorithm>
 
 // Create the backbuffer as a static const sharedptr.
 const kore::FrameBuffer* kore::FrameBuffer::BACKBUFFER = new kore::FrameBuffer(0);

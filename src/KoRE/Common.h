@@ -30,6 +30,7 @@
 #include <string>
 #include <ctime>
 #include <memory>
+#include <algorithm>
 
 
 #include <GL/glew.h>

@@ -394,7 +394,7 @@ int main(void) {
   resourceManager->_fboDeleteEvent.raiseEvent(NULL);
 
   //////////////////////////////////////////////////////////////////////////
-  */
+  //*/
     
   // Main loop
   while (running) {

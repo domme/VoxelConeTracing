@@ -1,4 +1,4 @@
-﻿/*
+/*
   Copyright (c) 2012 The KoRE Project
 
   This file is part of KoRE.
@@ -34,7 +34,7 @@ namespace kore {
                     const uint numDrawBuffers);
 
     virtual ~UseFBO(void);
-    virtual void execute(void) const;
+    
     virtual void update(void);
     virtual void reset(void);
     virtual bool isValid(void) const;
@@ -48,7 +48,9 @@ namespace kore {
   private:
     GLenum _frameBufferTarget;
     const kore::FrameBuffer* _frameBuffer;
-    std::vector<const GLenum> _drawBuffers;
+    std::vector<GLenum> _drawBuffers;
+
+    virtual void doExecute(void) const;
   };
 }
 

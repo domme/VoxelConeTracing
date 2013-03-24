@@ -31,7 +31,6 @@ namespace kore {
     explicit UseShaderProgram(const ShaderProgram* program);
     virtual ~UseShaderProgram();
 
-    virtual void execute(void) const;
     virtual void update(void);
     virtual void reset(void);
     virtual bool isValid(void) const;
@@ -41,6 +40,8 @@ namespace kore {
 
   private:
     const ShaderProgram* _program;
+
+    virtual void doExecute(void) const;
   };
 }
 

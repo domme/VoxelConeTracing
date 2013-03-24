@@ -30,8 +30,7 @@ kore::RenderMesh::RenderMesh(void)
 }
 
 kore::RenderMesh::RenderMesh(const kore::MeshComponent* mesh,
-                             const kore::ShaderProgram* shader)
-                                 : _meshComponent(NULL),
+                             const kore::ShaderProgram* shader) :
                                  kore::Operation() {
   _type = OP_RENDERMESH;
   connect(mesh, shader);
@@ -43,11 +42,18 @@ kore::RenderMesh::~RenderMesh(void) {
 
 void kore::RenderMesh::connect(const kore::MeshComponent* mesh,
                                const kore::ShaderProgram* shader) {
+  if (!mesh || !shader) {
+    _meshComponent = NULL;
+    _shaderProgram = NULL;
+    return;
+  }
+
   _meshComponent = mesh;
   _shaderProgram = shader;
 }
 
-void kore::RenderMesh::execute(void) const {
+void kore::RenderMesh::doExecute(void) const {
+
     GLerror::gl_ErrorCheckStart();
     const Mesh* mesh = _meshComponent->getMesh();
 
@@ -96,7 +102,7 @@ void kore::RenderMesh::reset(void) {
 }
 
 bool kore::RenderMesh::isValid(void) const {
-  return false;
+  return _meshComponent && _shaderProgram;
 }
 
 const kore::MeshComponent* kore::RenderMesh::getMesh() const {

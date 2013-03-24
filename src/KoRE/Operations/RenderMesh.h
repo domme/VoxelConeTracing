@@ -33,7 +33,6 @@ namespace kore {
                         const kore::ShaderProgram* shaderProgram);
 
     virtual ~RenderMesh(void);
-    virtual void execute(void) const;
     virtual void update(void);
     virtual void reset(void);
     virtual bool isValid(void) const;
@@ -51,6 +50,8 @@ namespace kore {
   private:
     const kore::MeshComponent* _meshComponent;
     const kore::ShaderProgram* _shaderProgram;
+
+    virtual void doExecute(void) const;
   };
 };
 #endif  // CORE_INCLUDE_CORE_RENDERMESHOP_H_

@@ -42,22 +42,27 @@ kore::BindTexture::~BindTexture(void) {
 
 void kore::BindTexture::connect(const kore::ShaderData* texData,
                                 const kore::ShaderInput* shaderInput) {
+  if (!texData || !shaderInput) {
+    // Make invalid:
+    _shaderUniform = NULL;
+    _componentUniform = NULL;
+    return;
+  }
+
   _componentUniform = texData;
   _shaderUniform = shaderInput;
-  _shaderProgramLoc = shaderInput->programHandle;
-
-  _shader = shaderInput->shader;
-  _component = texData->component;
 }
 
-void kore::BindTexture::execute(void) const {
+void kore::BindTexture::doExecute(void) const {
   GLerror::gl_ErrorCheckStart();
-  _renderManager->useShaderProgram(_shaderProgramLoc);
+  _renderManager->
+    useShaderProgram(_shaderUniform->shader->getProgramLocation());
   _renderManager->activeTexture(_shaderUniform->texUnit);
-  glUniform1i(_shaderUniform->location, static_cast<GLint>(_shaderUniform->texUnit));
+  glUniform1i(_shaderUniform->location,
+              static_cast<GLint>(_shaderUniform->texUnit));
   STextureInfo* pTexInfo = static_cast<STextureInfo*>(_componentUniform->data);
   const TextureSampler* pSampler =
-    _shader->getSampler(_shaderUniform->texUnit);
+    _shaderUniform->shader->getSampler(_shaderUniform->texUnit);
 
   if (!pSampler) {
     Log::getInstance()->write("[ERROR] BindTexture: No textureSampler"
@@ -77,8 +82,4 @@ void kore::BindTexture::update(void) {
 }
 
 void kore::BindTexture::reset(void) {
-}
-
-bool kore::BindTexture::isValid(void) const {
-  return false;
 }

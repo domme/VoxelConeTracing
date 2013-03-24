@@ -27,8 +27,7 @@
 #include "KoRE/RenderManager.h"
 
 kore::BindUniform::BindUniform(void)
-                           :_shaderHandle(KORE_GLUINT_HANDLE_INVALID),
-                            kore::BindOperation() {
+                           : kore::BindOperation() {
   _type = OP_BINDUNIFORM;
 }
 
@@ -51,15 +50,11 @@ void kore::BindUniform::connect(const kore::ShaderData* componentUni,
       || componentUni->size != shaderUni->size) {
         _componentUniform = NULL;
         _shaderUniform = NULL;
-        _shaderHandle = KORE_GLUINT_HANDLE_INVALID;
+        return;
     } else {
 
       _componentUniform = componentUni;
       _shaderUniform = shaderUni;
-      _shaderHandle = shaderUni->programHandle;
-
-      _component = componentUni->component;
-      _shader = shaderUni->shader;
     }
 }
 
@@ -69,19 +64,15 @@ void kore::BindUniform::update(void) {
 void kore::BindUniform::reset(void) {
 }
 
-bool kore::BindUniform::isValid(void) const {
-  return false;
-}
-
-
-void kore::BindUniform::execute(void) const {
+void kore::BindUniform::doExecute(void) const {
   if(!_componentUniform) {
     Log::getInstance()->write("[ERROR] Uniform binding undefined");
     return;
   }
 
   GLerror::gl_ErrorCheckStart();
-  _renderManager->useShaderProgram(_shaderHandle);
+  _renderManager->
+    useShaderProgram(_shaderUniform->shader->getProgramLocation());
 
   switch (_componentUniform->type) {
     case GL_FLOAT_VEC2:

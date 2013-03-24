@@ -27,3 +27,16 @@ kore::Operation::Operation(void) : _type(OP_UNDEFINED) {
 kore::Operation::~Operation(void) {
 //  _renderManager->removeOperation(this);
 }
+
+bool kore::Operation::isValid( void ) const {
+  return _type != OP_UNDEFINED;
+}
+
+void kore::Operation::execute() const {
+  if (!isValid()) {
+    return;
+  }
+
+  // Call the dynamic implementation only if the Op is valid!
+  doExecute();
+}

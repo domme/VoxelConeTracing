@@ -51,7 +51,7 @@ void kore::UseFBO::connect(const kore::FrameBuffer* frameBuffer,
   }
 }
 
-void kore::UseFBO::execute(void) const {
+void kore::UseFBO::doExecute(void) const {
   _renderManager->
     bindFrameBuffer(_frameBufferTarget, _frameBuffer->getHandle());
 

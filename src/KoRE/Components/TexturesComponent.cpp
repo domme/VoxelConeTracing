@@ -1,5 +1,6 @@
 #include "KoRE/Components/TexturesComponent.h"
 #include "KoRE/ResourceManager.h"
+#include <algorithm>
 
 kore::TexturesComponent::TexturesComponent(void) {
 }

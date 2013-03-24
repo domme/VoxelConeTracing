@@ -43,13 +43,19 @@ namespace kore {
   public:
     Operation(void);
     virtual ~Operation(void);
-    virtual void execute(void) const = 0;
+    
+    void execute() const;
+
     virtual void update(void) = 0;
     virtual void reset(void) = 0;
-    virtual bool isValid(void) const = 0;
     virtual bool dependsOn(const void* thing) const = 0;
+    virtual bool isValid(void) const;
 
     inline const EOperationType getType() const {return _type;}
+    
+  private:
+    virtual void doExecute(void) const = 0;
+
 
   protected:
     EOperationType _type;

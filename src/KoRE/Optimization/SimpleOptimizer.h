@@ -41,5 +41,4 @@ namespace kore {
   };
 }
 
-
 #endif  // KORE_SIMPLEOPTIMIZER_H_

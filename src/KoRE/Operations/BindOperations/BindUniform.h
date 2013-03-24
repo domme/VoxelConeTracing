@@ -32,14 +32,12 @@ namespace kore {
     BindUniform(const ShaderData* componentUni,
                 const ShaderInput* shaderUni);
     virtual ~BindUniform(void);
-    virtual void execute(void) const;
     virtual void update(void);
     virtual void reset(void);
-    virtual bool isValid(void) const;
     void connect(const ShaderData* componentUni,
                  const ShaderInput* shaderUni);
   private:
-    GLuint _shaderHandle;
+    virtual void doExecute(void) const;
   };
 };
 #endif  // CORE_INCLUDE_CORE_BINDUNIFORM_H_

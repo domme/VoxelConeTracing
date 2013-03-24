@@ -27,6 +27,7 @@ kore::BindAttribute::BindAttribute(void) : kore::BindOperation() {
 kore::BindAttribute::BindAttribute(const ShaderData* meshData,
                                    const ShaderInput* shaderInput)
                                    : kore::BindOperation() {
+  _type = OP_BINDATTRIBUTE;
   connect(meshData, shaderInput);
 }
 
@@ -36,14 +37,20 @@ kore::BindAttribute::~BindAttribute(void) {
 
 void kore::BindAttribute::connect(const ShaderData* meshData,
                                   const ShaderInput* shaderInput) {
-  _shaderUniform = shaderInput;
-  _meshInfo = static_cast<const SMeshInformation*>(meshData->data);
+  if (!meshData || !shaderInput) {
+    //make invalid:
+    _shaderUniform = NULL;
+    _componentUniform = NULL;
+    _meshInfo = NULL;
+    return;
+  }
 
-  _component = meshData->component;
-  _shader = shaderInput->shader;
+  _shaderUniform = shaderInput;
+  _componentUniform = meshData;
+  _meshInfo = static_cast<const SMeshInformation*>(meshData->data);
 }
 
-void kore::BindAttribute::execute(void) const {
+void kore::BindAttribute::doExecute(void) const {
   const Mesh* mesh = _meshInfo->mesh;
   const MeshAttributeArray* meshAtt = _meshInfo->meshAtt;
 
@@ -64,8 +71,4 @@ void kore::BindAttribute::update(void) {
 }
 
 void kore::BindAttribute::reset(void) {
-}
-
-bool kore::BindAttribute::isValid(void) const {
-  return false;
 }
