@@ -72,6 +72,20 @@ void kore::SceneLoader::loadRessources(const std::string& szScenePath) {
         ->addMesh(szScenePath,
                   MeshLoader::getInstance()->loadMesh(pAiScene,i));
       _meshcount++;
+
+      // Load and store MaterialComponent for that mesh if necessary
+      aiMesh* aiMesh = pAiScene->mMeshes[i];
+      SceneManager* sceneMgr = SceneManager::getInstance();
+      if (sceneMgr->getMaterial(szScenePath, aiMesh->mMaterialIndex) == NULL) {
+        Material* koreMat = new Material;
+
+        loadMaterialProperties(koreMat,
+                               pAiScene->mMaterials[aiMesh->mMaterialIndex]);
+
+        sceneMgr->addMaterial(szScenePath, aiMesh->mMaterialIndex, koreMat);
+      }
+
+      // TODO(dlazarek): Load textures defined in the aiMaterial!
     }
   }
 
@@ -119,6 +133,9 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
                                        SceneNode* parentNode,
                                        const aiScene* aiscene,
                                        const std::string& szScenePath) {
+    ResourceManager* resMgr = ResourceManager::getInstance();
+    SceneManager* sceneMgr = SceneManager::getInstance();
+
     SceneNode* node = new SceneNode;
     node->getTransform()->setLocal(glmMatFromAiMat(ainode->mTransformation));
     node->_parent = parentNode;
@@ -141,8 +158,7 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
     if (lightIndex != KORE_UINT_INVALID) {
       const aiLight* pAiLight = aiscene->mLights[lightIndex];
       std::string lightName = getLightName(pAiLight, lightIndex);
-      LightComponent* pLight = SceneManager::getInstance()
-                      ->getLight(szScenePath, lightName);
+      LightComponent* pLight = sceneMgr->getLight(szScenePath, lightName);
       if (pLight != NULL) {
         node->addComponent(pLight);
       }
@@ -162,8 +178,7 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
     if (camIndex != KORE_UINT_INVALID) {
       const aiCamera* pAiCam = aiscene->mCameras[camIndex];
       std::string camName = getCameraName(pAiCam, camIndex);
-      Camera* pCamera = SceneManager::getInstance()
-                                            ->getCamera(szScenePath, camName);
+      Camera* pCamera = sceneMgr->getCamera(szScenePath, camName);
       if (pCamera != NULL) {
         node->addComponent(pCamera);
       }
@@ -174,19 +189,18 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
     // Further meshes have to be loaded into duplicate nodes
     if (ainode->mNumMeshes > 0) {
       const aiMesh* aimesh = aiscene->mMeshes[ainode->mMeshes[0]];
+
       std::string meshName = MeshLoader::getInstance()
         ->getMeshName(aimesh, ainode->mMeshes[0]);
-      Mesh* mesh = ResourceManager::getInstance()
-        ->getMesh(szScenePath, meshName);
+
+      Mesh* mesh = resMgr->getMesh(szScenePath, meshName);
       MeshComponent* meshComponent = new MeshComponent;
       meshComponent->setMesh(mesh);
       node->addComponent(meshComponent);
 
-      // Load the material for this mesh. Note that for every mesh, there is
-      // a material in Assimp.
-      Material* materialComponent = new Material;
-      loadMaterialProperties(materialComponent,
-                             aiscene->mMaterials[aimesh->mMaterialIndex]);
+      Material* materialComponent =
+        sceneMgr->getMaterial(szScenePath, aimesh->mMaterialIndex);
+
       node->addComponent(materialComponent);
 
     // Make additional copies for any more meshes
@@ -208,11 +222,8 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
       meshComponent->setMesh(mesh);
       copyNode->addComponent(meshComponent);
 
-      // Load the material for this mesh. Note that for every mesh, there is
-      // a material in Assimp.
-      Material* materialComponent = new Material;
-      loadMaterialProperties(materialComponent,
-        aiscene->mMaterials[aimesh->mMaterialIndex]);
+      Material* materialComponent =
+        sceneMgr->getMaterial(szScenePath, aimesh->mMaterialIndex);
       node->addComponent(materialComponent);
     }
   }
