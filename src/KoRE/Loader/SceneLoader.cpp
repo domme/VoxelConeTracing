@@ -1,3 +1,22 @@
+/*
+  Copyright (c) 2012 The KoRE Project
+
+  This file is part of KoRE.
+
+  KoRE is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  KoRE is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include "KoRE/Loader/SceneLoader.h"
 
 #include <assimp/scene.h>
@@ -5,6 +24,7 @@
 
 #include "KoRE/ResourceManager.h"
 #include "KoRE/Loader/MeshLoader.h"
+#include "Kore/Loader/TextureLoader.h"
 #include "KoRE/Components/Transform.h"
 #include "KoRE/Components/Camera.h"
 #include "KoRE/Components/LightComponent.h"
@@ -65,17 +85,18 @@ void kore::SceneLoader::loadRessources(const std::string& szScenePath) {
               szScenePath.c_str());
     return;
   }
+
+  ResourceManager* resMgr = ResourceManager::getInstance();
+  SceneManager* sceneMgr = SceneManager::getInstance();
   
   if (pAiScene->HasMeshes()) {
     for (uint i = 0; i < pAiScene->mNumMeshes; ++i) {
-      ResourceManager::getInstance()
-        ->addMesh(szScenePath,
-                  MeshLoader::getInstance()->loadMesh(pAiScene,i));
+      resMgr->addMesh(szScenePath,
+                      MeshLoader::getInstance()->loadMesh(pAiScene,i));
       _meshcount++;
 
       // Load and store MaterialComponent for that mesh if necessary
       aiMesh* aiMesh = pAiScene->mMeshes[i];
-      SceneManager* sceneMgr = SceneManager::getInstance();
       if (sceneMgr->getMaterial(szScenePath, aiMesh->mMaterialIndex) == NULL) {
         Material* koreMat = new Material;
 
@@ -83,9 +104,10 @@ void kore::SceneLoader::loadRessources(const std::string& szScenePath) {
                                pAiScene->mMaterials[aiMesh->mMaterialIndex]);
 
         sceneMgr->addMaterial(szScenePath, aiMesh->mMaterialIndex, koreMat);
+        
+        // Load all textures into the resourceManager.
+        loadMatTextures(resMgr, pAiScene->mMaterials[aiMesh->mMaterialIndex]);
       }
-
-      // TODO(dlazarek): Load textures defined in the aiMaterial!
     }
   }
 
@@ -200,8 +222,17 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
 
       Material* materialComponent =
         sceneMgr->getMaterial(szScenePath, aimesh->mMaterialIndex);
-
       node->addComponent(materialComponent);
+
+      // Generate a TexturesComponent from all loaded textures defined in the
+      // material.
+      TexturesComponent* texComponent =
+        genTexComponentFromTextures(aiscene->mMaterials[aimesh->mMaterialIndex]);
+
+      // If there are textures, the texComponent is valid (non-NULL).
+      if (texComponent != NULL) {
+        node->addComponent(texComponent);
+      }
 
     // Make additional copies for any more meshes
     for (uint iMesh = 1; iMesh < ainode->mNumMeshes; ++iMesh) {
@@ -225,6 +256,16 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
       Material* materialComponent =
         sceneMgr->getMaterial(szScenePath, aimesh->mMaterialIndex);
       node->addComponent(materialComponent);
+
+      // Generate a TexturesComponent from all loaded textures defined in the
+      // material.
+      TexturesComponent* texComponent =
+        genTexComponentFromTextures(aiscene->mMaterials[aimesh->mMaterialIndex]);
+
+      // If there are textures, the texComponent is valid (non-NULL).
+      if (texComponent != NULL) {
+        node->addComponent(texComponent);
+      }
     }
   }
 
@@ -364,12 +405,94 @@ void kore::SceneLoader::
     }
 }
 
-void kore::SceneLoader::loadMaterialTextures(TexturesComponent* texComponent,
-                                             const aiMaterial* aiMat) {
-    for (uint i = 0; i < aiMat->mNumProperties; ++i) {
-      const aiMaterialProperty* aiMatProp = aiMat->mProperties[i];
-      if (aiMatProp->mSemantic == aiTextureType_NONE) {
-        continue;  // skip non-texture properties
+void kore::SceneLoader::loadMatTextures(kore::ResourceManager* resourceMgr,
+                                        const aiMaterial* aiMat) {
+    // Load all texture-types that are defined in ASSIMP. Note that this list
+    // of calls should be extended when the ASSIMP-api changes.
+    loadTexType(resourceMgr, aiTextureType_DIFFUSE, aiMat);
+    loadTexType(resourceMgr, aiTextureType_SPECULAR, aiMat);
+    loadTexType(resourceMgr, aiTextureType_AMBIENT, aiMat);
+    loadTexType(resourceMgr, aiTextureType_EMISSIVE, aiMat);
+    loadTexType(resourceMgr, aiTextureType_HEIGHT, aiMat);
+    loadTexType(resourceMgr, aiTextureType_NORMALS, aiMat);
+    loadTexType(resourceMgr, aiTextureType_SHININESS, aiMat);
+    loadTexType(resourceMgr, aiTextureType_OPACITY, aiMat);
+    loadTexType(resourceMgr, aiTextureType_DISPLACEMENT, aiMat);
+    loadTexType(resourceMgr, aiTextureType_LIGHTMAP, aiMat);
+    loadTexType(resourceMgr, aiTextureType_REFLECTION, aiMat);
+    loadTexType(resourceMgr, aiTextureType_UNKNOWN, aiMat);
+}
+
+
+void kore::SceneLoader::loadTexType(kore::ResourceManager* resourceMgr,
+                                    aiTextureType aiTexType,
+                                    const aiMaterial* aiMat) {
+  TextureLoader* texLoader = TextureLoader::getInstance();
+  aiString aiTexPath("");
+
+  for (uint i = 0; i < aiMat->GetTextureCount(aiTexType); ++i) {
+    if (aiMat->GetTexture(aiTexType, i, &aiTexPath) == AI_SUCCESS) {
+
+      std::string texPath(aiTexPath.C_Str());
+
+      if (resourceMgr->getTexture(texPath) == NULL) {
+        Texture* tex = texLoader->loadTexture(std::string(aiTexPath.C_Str()));
+
+        if (tex != NULL) {
+          resourceMgr->addTexture(texPath, tex);
+        }
       }
     }
+  }
+}
+
+kore::TexturesComponent* kore::SceneLoader::
+  genTexComponentFromTextures(const aiMaterial* aiMat) {
+   std::vector<Texture*> vTextures;
+
+   // Gather all textures loaded in the resourceManager per textureType.
+   // Note that this list of calls has to be extended if ASSIMP introduced more
+   // texture types.
+   addTexTypeToTexList(aiTextureType_DIFFUSE, aiMat, vTextures);
+   addTexTypeToTexList(aiTextureType_SPECULAR, aiMat, vTextures);
+   addTexTypeToTexList(aiTextureType_AMBIENT, aiMat, vTextures);
+   addTexTypeToTexList(aiTextureType_EMISSIVE, aiMat, vTextures);
+   addTexTypeToTexList(aiTextureType_HEIGHT, aiMat, vTextures);
+   addTexTypeToTexList(aiTextureType_NORMALS, aiMat, vTextures);
+   addTexTypeToTexList(aiTextureType_SHININESS, aiMat, vTextures);
+   addTexTypeToTexList(aiTextureType_OPACITY, aiMat, vTextures);
+   addTexTypeToTexList(aiTextureType_DISPLACEMENT, aiMat, vTextures);
+   addTexTypeToTexList(aiTextureType_LIGHTMAP, aiMat, vTextures);
+   addTexTypeToTexList(aiTextureType_REFLECTION, aiMat, vTextures);
+   addTexTypeToTexList(aiTextureType_UNKNOWN, aiMat, vTextures);
+
+   if (vTextures.size() == 0) {
+     return NULL;
+   }
+
+   TexturesComponent* texComp = new TexturesComponent;
+   for (uint i = 0; i < vTextures.size(); ++i) {
+     texComp->addTexture(vTextures[i]);
+   }
+
+   return texComp;
+}
+
+void kore::SceneLoader::addTexTypeToTexList(aiTextureType aiTexType,
+                                            const aiMaterial* aiMat,
+                                            std::vector<Texture*>& textures) {
+  ResourceManager* resourceMgr = ResourceManager::getInstance();
+  aiString aiTexPath("");
+
+  for (uint i = 0; i < aiMat->GetTextureCount(aiTexType); ++i) {
+    if (aiMat->GetTexture(aiTexType, i, &aiTexPath) == AI_SUCCESS) {
+
+      std::string texPath(aiTexPath.C_Str());
+      Texture* tex = resourceMgr->getTexture(texPath);
+
+      if (tex != NULL) {
+        textures.push_back(tex);
+      }
+    }
+  } 
 }
