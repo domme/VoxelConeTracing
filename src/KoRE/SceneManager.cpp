@@ -98,7 +98,7 @@ kore::SceneNode* kore::SceneManager::getRootNode() {
 
 void kore::SceneManager::addCamera(const std::string& path,
                                    kore::Camera* camera ) {
-    if (!(_cameras.count(path) > 0)) {
+    if (_cameras.count(path) == 0) {
       InnerResourceMapT internalMap;
       _cameras[path] = internalMap;
     }
@@ -108,7 +108,7 @@ void kore::SceneManager::addCamera(const std::string& path,
 
 void kore::SceneManager::addLight(const std::string& path,
                                      kore::LightComponent* light) {
-    if (!(_lights.count(path) > 0)) {
+    if (_lights.count(path) == 0) {
       InnerResourceMapT internalMap;
       _lights[path] = internalMap;
     }
@@ -116,21 +116,64 @@ void kore::SceneManager::addLight(const std::string& path,
     _lights[path][light->getName()] = light;
 }
 
+void kore::SceneManager::addMaterial(const std::string& path,
+                                     const uint index,
+                                     Material* material) {
+  if (_materials.count(path) == 0) {
+    InnerMaterialMapT internalMap;
+    _materials[path] = internalMap;
+  }
+
+  _materials[path][index] = material;
+}
+
+
 kore::Camera* kore::SceneManager::getCamera(const std::string& path,
                                                  const std::string& id) {
-  if (!(_cameras.count(path) > 0)) {
+  if (_cameras.count(path) == 0) {
     return NULL;
   }
 
-  return static_cast<kore::Camera*>(_cameras[path][id]);
+  InnerResourceMapT& innerMap = _cameras[path];
+  auto it = innerMap.find(id);
+
+  if (it != innerMap.end()) {
+    return static_cast<Camera*>(it->second);
+  }
+
+  return NULL;
 }
 
 kore::LightComponent* 
   kore::SceneManager::
   getLight(const std::string& path, const std::string& id) {
-    if (!(_lights.count(path) > 0)) {
+    if (_lights.count(path) == 0) {
       return NULL;
     }
 
-    return static_cast<kore::LightComponent*>(_lights[path][id]);
+    InnerResourceMapT& innerMap = _lights[path];
+    auto it = innerMap.find(id);
+
+    if (it != innerMap.end()) {
+      return static_cast<LightComponent*>(it->second);
+    }
+
+    return NULL;
 }
+
+kore::Material* kore::SceneManager::getMaterial(const std::string& path,
+                                                const uint index) {
+  if (_materials.count(path) == 0) {
+    return NULL;
+  }
+
+  InnerMaterialMapT& innerMap = _materials[path];
+  auto it = innerMap.find(index);
+
+  if (it != innerMap.end()) {
+    return static_cast<Material*>(it->second);
+  }
+
+  return NULL;
+}
+

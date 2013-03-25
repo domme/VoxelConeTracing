@@ -32,6 +32,7 @@
 #include "KoRE/Components/LightComponent.h"
 #include "KoRE/Components/Material.h"
 #include "KoRE/Components/TexturesComponent.h"
+#include "Kore/ResourceManager.h"
 
 
 namespace kore {
@@ -58,8 +59,27 @@ namespace kore {
                               const uint uLightSceneIndex);
 
     void loadMaterialProperties(Material* koreMat, const aiMaterial* aiMat);
-    void loadMaterialTextures(TexturesComponent* texComponent,
-                              const aiMaterial* aiMat);
+
+    /// Loads the textures defined in the aiMaterial and stores them in the
+    /// ResourceManager.
+    void loadMatTextures(ResourceManager* resourceMgr,
+                         const aiMaterial* aiMat);
+
+    void loadTexType(ResourceManager* resourceMgr,
+                     aiTextureType aiTexType,
+                     const aiMaterial* aiMat);
+
+    /*! \brief Retrieves the loaded textures defined in the aiMaterial from the
+    *          ResourceManager and adds them to a new texturesComponent.
+               Returns NULL if no textures are defined in the aiMaterial or if
+               The textures are not present in the resourceManager.
+    */
+    TexturesComponent* genTexComponentFromTextures(const aiMaterial* aiMat);
+
+    void addTexTypeToTexList(aiTextureType aiTexType, const aiMaterial* aiMat,
+                             std::vector<Texture*>& textures);
+
+    
 
     Assimp::Importer _aiImporter;
     uint _nodecount, _cameracount, _meshcount, _lightcount;

@@ -27,6 +27,7 @@
 #include "KoRE/Common.h"
 #include "KoRE/Components/Camera.h"
 #include "KoRE/Components/LightComponent.h"
+#include "KoRE/Components/Material.h"
 
 namespace kore {
   class SceneManager {
@@ -49,12 +50,21 @@ namespace kore {
     /// Returns the first sceneNode found with the given component
     SceneNode* getSceneNodeByComponent(const EComponentType componentType);
 
-    // These functions need to be moved from the resource-manager to e.g. the
-    // scene-manager.
     void addCamera(const std::string& path, Camera* camera);
     void addLight(const std::string& path, LightComponent* light);
+
+    void addMaterial(const std::string& path,
+                     const uint index,
+                     Material* material);
+
     kore::Camera* getCamera(const std::string& path, const std::string& id);
-    kore::LightComponent* getLight(const std::string& path, const std::string& id);
+
+    kore::LightComponent* 
+      getLight(const std::string& path, const std::string& id);
+
+    kore::Material*
+      getMaterial(const std::string& path, const uint index);
+
   private:
     typedef std::map<std::string, kore::SceneNodeComponent*>
       InnerResourceMapT;
@@ -62,8 +72,15 @@ namespace kore {
     typedef std::map<std::string, InnerResourceMapT>
       OuterResourceMapT;
 
+    typedef std::map<uint, kore::SceneNodeComponent*>
+      InnerMaterialMapT;
+
+    typedef std::map<std::string, InnerMaterialMapT>
+      OuterMaterialMapT;
+
     OuterResourceMapT _cameras; // filepath, id, camera
     OuterResourceMapT _lights; // filepath, id, light
+    OuterMaterialMapT _materials; // filepath, index, material
 
     SceneManager(void);
     virtual ~SceneManager(void);
