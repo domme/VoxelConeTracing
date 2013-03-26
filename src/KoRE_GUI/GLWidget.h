@@ -18,7 +18,7 @@
 */
 
 /************************************************************************/
-/* \author Andreas Weinmann                                             */
+/* \author Dominik Ospelt                                               */
 /************************************************************************/
 
 #ifndef GLWINDOW_H
@@ -36,11 +36,17 @@ public:
     ~GLWidget();
 
 protected:
+    /// Qt key event Handling
     void keyPressEvent(QKeyEvent* evnt);
 
 protected:
+    /// Initialize OpenGL context.
     virtual void initializeGL();
+
+    /// Set new Window size and updates OpenGL context.
     virtual void resizeGL(int x, int y);
+
+    /// Render one Frame with current setting
     virtual void paintGL();
 
 

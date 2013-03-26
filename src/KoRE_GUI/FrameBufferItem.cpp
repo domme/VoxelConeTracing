@@ -27,6 +27,7 @@
 
 koregui::FrameBufferItem::FrameBufferItem(kore::FrameBuffer* frameBuffer,
                                           QGraphicsItem* parent) {
+  setData(0, "Framebuffer");
 }
 
 koregui::FrameBufferItem::~FrameBufferItem(void){

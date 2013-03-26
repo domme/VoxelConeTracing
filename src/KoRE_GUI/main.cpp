@@ -47,14 +47,14 @@ int main(int argc, char *argv[])
   win.show();
 
   // now  other widgets
-  koregui::ResourceViewer resview;
+  //koregui::ResourceViewer resview;
   koregui::RenderViewer rview;
-  koregui::SceneViewer sview(&rview);
-  sview.showScene(kore::SceneManager::getInstance()->getRootNode());
+  //koregui::SceneViewer sview(&rview);
+  //sview.showScene(kore::SceneManager::getInstance()->getRootNode());
 
-  sview.show();
+  //sview.show();
   rview.show();
-  resview.show();
+  //resview.show();
 
   return app.exec();
 }

@@ -36,7 +36,7 @@ koregui::ResourceViewer::ResourceViewer(QWidget *parent)
   _layout.addWidget(&_tabs);
   _layout.addWidget(&_addButton);
   _addButton.setText("ADD");
-  connect(&_addButton, SIGNAL(clicked()), this, SLOT(openBrowser()));
+  connect(&_addButton, SIGNAL(clicked()), this, SLOT(useBrowser()));
 
   std::vector<kore::Mesh*> meshlist
     = kore::ResourceManager::getInstance()->getMeshes();
@@ -82,7 +82,7 @@ void koregui::ResourceViewer::update(void) {
 void koregui::ResourceViewer::keyPressEvent(QKeyEvent* event) {
 }
 
-void koregui::ResourceViewer::openBrowser(void) {
+void koregui::ResourceViewer::useBrowser(void) {
   if (_tabs.currentWidget()->objectName() == "Meshes") {
     QStringList fileNames
       = QFileDialog::getOpenFileNames(this,

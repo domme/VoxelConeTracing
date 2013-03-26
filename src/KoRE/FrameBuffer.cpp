@@ -138,5 +138,5 @@ bool kore::FrameBuffer::checkFBOcompleteness() {
   }
 
   RenderManager::getInstance()->bindFrameBuffer(GL_FRAMEBUFFER, _handle);
-  return GLerror::gl_ValidateFBO("");
+  return GLerror::gl_ValidateFBO(_name);
 }

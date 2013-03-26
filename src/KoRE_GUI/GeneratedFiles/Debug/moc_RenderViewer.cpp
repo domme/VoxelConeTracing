@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_koregui__RenderViewer_t {
-    QByteArrayData data[5];
-    char stringdata[54];
+    QByteArrayData data[8];
+    char stringdata[110];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -33,10 +33,14 @@ QT_MOC_LITERAL(0, 0, 21),
 QT_MOC_LITERAL(1, 22, 6),
 QT_MOC_LITERAL(2, 29, 0),
 QT_MOC_LITERAL(3, 30, 7),
-QT_MOC_LITERAL(4, 38, 14)
+QT_MOC_LITERAL(4, 38, 14),
+QT_MOC_LITERAL(5, 53, 15),
+QT_MOC_LITERAL(6, 69, 16),
+QT_MOC_LITERAL(7, 86, 22)
     },
     "koregui::RenderViewer\0zoomIn\0\0zoomOut\0"
-    "createEmptyFBO\0"
+    "createEmptyFBO\0createEmptyNode\0"
+    "createEmptyGroup\0addExistingFramebuffer\0"
 };
 #undef QT_MOC_LITERAL
 
@@ -46,7 +50,7 @@ static const uint qt_meta_data_koregui__RenderViewer[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-       3,   14, // methods
+       6,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -54,11 +58,17 @@ static const uint qt_meta_data_koregui__RenderViewer[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    0,   29,    2, 0x0a,
-       3,    0,   30,    2, 0x0a,
-       4,    0,   31,    2, 0x0a,
+       1,    0,   44,    2, 0x0a,
+       3,    0,   45,    2, 0x0a,
+       4,    0,   46,    2, 0x0a,
+       5,    0,   47,    2, 0x0a,
+       6,    0,   48,    2, 0x0a,
+       7,    0,   49,    2, 0x0a,
 
  // slots: parameters
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -74,6 +84,9 @@ void koregui::RenderViewer::qt_static_metacall(QObject *_o, QMetaObject::Call _c
         case 0: _t->zoomIn(); break;
         case 1: _t->zoomOut(); break;
         case 2: _t->createEmptyFBO(); break;
+        case 3: _t->createEmptyNode(); break;
+        case 4: _t->createEmptyGroup(); break;
+        case 5: _t->addExistingFramebuffer(); break;
         default: ;
         }
     }
@@ -105,13 +118,13 @@ int koregui::RenderViewer::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 3)
+        if (_id < 6)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 3;
+        _id -= 6;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 3)
+        if (_id < 6)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 3;
+        _id -= 6;
     }
     return _id;
 }

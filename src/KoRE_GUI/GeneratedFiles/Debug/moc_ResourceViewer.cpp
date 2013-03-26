@@ -20,7 +20,7 @@
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_koregui__ResourceViewer_t {
     QByteArrayData data[3];
-    char stringdata[38];
+    char stringdata[37];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -30,11 +30,10 @@ struct qt_meta_stringdata_koregui__ResourceViewer_t {
 static const qt_meta_stringdata_koregui__ResourceViewer_t qt_meta_stringdata_koregui__ResourceViewer = {
     {
 QT_MOC_LITERAL(0, 0, 23),
-QT_MOC_LITERAL(1, 24, 11),
-QT_MOC_LITERAL(2, 36, 0)
+QT_MOC_LITERAL(1, 24, 10),
+QT_MOC_LITERAL(2, 35, 0)
     },
-    "koregui::ResourceViewer\0openBrowser\0"
-    "\0"
+    "koregui::ResourceViewer\0useBrowser\0\0"
 };
 #undef QT_MOC_LITERAL
 
@@ -65,7 +64,7 @@ void koregui::ResourceViewer::qt_static_metacall(QObject *_o, QMetaObject::Call 
     if (_c == QMetaObject::InvokeMetaMethod) {
         ResourceViewer *_t = static_cast<ResourceViewer *>(_o);
         switch (_id) {
-        case 0: _t->openBrowser(); break;
+        case 0: _t->useBrowser(); break;
         default: ;
         }
     }

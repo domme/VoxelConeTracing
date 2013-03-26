@@ -29,20 +29,16 @@
 #include <QMenu>
 #include "KoRE_GUI/ShaderProgramItem.h"
 #include "KoRE/ResourceManager.h"
+#include "KoRE_GUI/ResourceViewer.h"
 
 koregui::RenderViewer::RenderViewer(QWidget *parent)
-  : _mode(DEFAULT),
-    _currentpath(NULL),
+  : _currentpath(NULL),
     _bindTarget(NULL),
     QGraphicsView(parent) {
   setWindowTitle("RenderView");
   _scene.setBackgroundBrush(QBrush(QColor(23,23,23)));
   setScene(&_scene);
   setMinimumSize(800,600);
-  const kore::ShaderProgram* shader = kore::ResourceManager::getInstance()->getShaderProgram("MegaShader");
-  koregui::ShaderProgramItem* sitem = new koregui::ShaderProgramItem(shader);
-  _scene.addItem(sitem);
-  sitem->setPos(0,0);
 }
 
 koregui::RenderViewer::~RenderViewer() {
@@ -79,16 +75,20 @@ void koregui::RenderViewer::wheelEvent(QWheelEvent *event) {
 }
 
 void koregui::RenderViewer::contextMenuEvent(QContextMenuEvent *event) {
-  ShaderProgramItem* test = static_cast<ShaderProgramItem*>(this->itemAt(event->pos()));
-  if (test) {
-    test->contextMenu(event->globalPos());
-    return;
-  }
   QMenu menu("RenderContext", this);
-  QMenu* create  = menu.addMenu(QIcon("./assets/icons/testStar.png"), "Create");
-  create->addAction("EmptyNode", this, SLOT(zoomOut()));
-  create->addAction("EmptyNode", this, SLOT(zoomOut()));
-  create->addAction("Group", this, SLOT(zoomIn()));
+  QGraphicsItem* item = itemAt(event->pos());
+  if (item) {
+    if(item->data(0).toString() == "Framebuffer") {
+
+    }
+  } else {
+    QMenu* create  = menu.addMenu(QIcon("./assets/icons/testStar.png"), "Create");
+    create->addAction("EmptyNode", this, SLOT(createEmptyNode()));
+    create->addAction("Group", this, SLOT(createEmptyGroup()));
+    create->addAction("FBO", this, SLOT(createEmptyFBO()));
+    QMenu* add  = menu.addMenu(QIcon("./assets/icons/testStar.png"), "Add");
+    add->addAction("FBO", this, SLOT(addExistingFramebuffer()));
+  }
   menu.exec(event->globalPos());
 }
 
@@ -153,6 +153,17 @@ void koregui::RenderViewer
 }
 
 void koregui::RenderViewer::createEmptyFBO(void) {
-  kore::Log::getInstance()->write("[GUI] Creating FBO stage");
-  // TODO create new FBOStage
+  //kore::ResourceManager::getInstance()->addFramebuffer();
+}
+
+void koregui::RenderViewer::createEmptyNode(void) {
+
+}
+
+void koregui::RenderViewer::createEmptyGroup(void) {
+
+}
+
+void koregui::RenderViewer::addExistingFramebuffer(void) {
+  //koregui::ResourceViewer rselect;
 }

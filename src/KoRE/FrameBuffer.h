@@ -45,7 +45,7 @@ namespace kore {
     /*! \brief Add a texture as an attatchment to the framebuffer.
     *   \param ptr The pointer to the texture to add as attatchment.
     *   \param attatchment The OpenGL attatchment-point to attatch.
-                            the texture to (e.g. GL_COLOR_ATTATCHMENT0).
+    *                       the texture to (e.g. GL_COLOR_ATTATCHMENT0).
     */
     void addTextureAttachment(const Texture* ptr, GLuint attatchment);
 
@@ -54,7 +54,7 @@ namespace kore {
     *   \param properties The texture-properties to create the texture from.
     *   \param name       The name of the texture-attatchment and the texture.
     *   \param attatchment The OpenGL attatchment-point to attatch
-                           the texture to (e.g. GL_COLOR_ATTATCHMENT0).
+    *                      the texture to (e.g. GL_COLOR_ATTATCHMENT0).
     */
     void addTextureAttachment(const STextureProperties& properties,
                               const std::string& name,

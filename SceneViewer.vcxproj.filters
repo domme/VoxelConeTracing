@@ -56,6 +56,9 @@
     <ClInclude Include="src\KoRE_GUI\FrameBufferItem.h">
       <Filter>Header Dateien</Filter>
     </ClInclude>
+    <ClInclude Include="SelectionWidget.h">
+      <Filter>Header Dateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="src\KoRE_GUI\SceneViewer.h">
