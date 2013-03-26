@@ -36,34 +36,6 @@ kore::MeshLoader::MeshLoader() {
 kore::MeshLoader::~MeshLoader() {
 }
 
-const aiScene* kore::MeshLoader::readScene(const std::string& szScenePath) {
-  const aiScene* pAiScene = _aiImporter.ReadFile(szScenePath,
-      aiProcess_JoinIdenticalVertices 
-      | aiProcess_Triangulate 
-      | aiProcess_CalcTangentSpace);
-
-  if (!pAiScene) {
-    Log::getInstance()->write("[ERROR] Scene-file could not be loaded: %s",
-                              szScenePath.c_str());
-
-    return NULL;
-  }
-
-  if (!pAiScene->HasMeshes()) {
-    Log::getInstance()->write("[ERROR] Scene-file does not"
-                              "contain any meshes: %s",
-                              szScenePath.c_str());
-    return NULL;
-  }
-  return pAiScene;
-}
-
-void kore::MeshLoader::loadChildNode(const aiScene* paiScene,
-                                     const aiNode* paiNode,
-                                     SceneNode* parentNode,
-                                     const bool bUseBuffers) {
-    
-}
 
 kore::Mesh*
     kore::MeshLoader::loadMesh(const aiScene* pAiScene,
@@ -76,7 +48,7 @@ kore::Mesh*
     // TODO(dlazarek): Make more flexible here:
     pMesh->_primitiveType = GL_TRIANGLES;
 
-    pMesh->_name = getMeshName(pAiMesh, uMeshIdx);
+    pMesh->_name = getMeshName(uMeshIdx, pAiScene);
 
     if (pAiMesh->HasPositions()) {
         loadVertexPositions(pAiMesh, pMesh);
@@ -112,15 +84,44 @@ kore::Mesh*
     return pMesh;
 }
 
-std::string kore::MeshLoader::getMeshName(const aiMesh* paiMesh,
-                                          const uint uMeshIdx) {
-  std::string returnName;
+aiNode* findNodeWithMesh(uint meshSceneIdx, aiNode* node, const aiScene* scene) {
+  for (uint i = 0; i < node->mNumMeshes; ++i) {
+    if (node->mMeshes[i] == meshSceneIdx) {
+      return node;
+    }
+  }
+
+  for (uint i = 0; i < node->mNumChildren; ++i) {
+    aiNode* childNode = findNodeWithMesh(meshSceneIdx, node->mChildren[i], scene);
+    if (childNode != NULL) {
+      return childNode;
+    }
+  }
+
+  return NULL;
+}
+
+std::string kore::MeshLoader::getMeshName(uint meshSceneIdx,
+                                          const aiScene* paiScene) {
+   aiMesh* paiMesh = paiScene->mMeshes[meshSceneIdx];
+   std::string returnName;
    if (paiMesh->mName.length > 0) {
     returnName = std::string(paiMesh->mName.C_Str());
   } else {
-    char szNameBuf[100];
-    sprintf(szNameBuf, "%i", uMeshIdx);
-    returnName = std::string(&szNameBuf[0]);
+    aiNode* node = findNodeWithMesh(meshSceneIdx, paiScene->mRootNode, paiScene);
+
+    if (node != NULL) {
+      uint internalMeshIdx = 0;
+      for (uint i = 0; i < node->mNumMeshes; ++i) {
+        if (node->mMeshes[i] == meshSceneIdx) {
+          internalMeshIdx = i;
+        }
+      }
+
+      char buf[100];
+      sprintf(buf, "%s_mesh_%i", node->mName.C_Str(), internalMeshIdx);
+      returnName = std::string(buf);
+    }
   }
   return returnName;
 }
@@ -147,7 +148,7 @@ void kore::MeshLoader::
 
 void kore::MeshLoader::
     loadVertexNormals(const aiMesh* pAiMesh,
-                       kore::Mesh* pMesh ) {
+                       kore::Mesh* pMesh) {
     unsigned int allocSize = pAiMesh->mNumVertices * 3 * 4;
     void* pVertexData = malloc(allocSize);
     memcpy(pVertexData, pAiMesh->mNormals,

@@ -46,20 +46,14 @@ namespace kore {
     kore::Mesh* loadMesh(const aiScene* paiScene,
                            const uint uMeshIdx);
 
-    std::string getMeshName(const aiMesh* paiMesh,
-                            const uint uMeshIdx);
+    std::string getMeshName(uint meshSceneIdx,
+                            const aiScene* paiScene);
 
     std::string getCameraName(const aiCamera* paiCamera,
                               const uint uSceneCameraIdx);
 
   private:
     MeshLoader();
-    const aiScene* readScene(const std::string& szScenePath);
-
-    void loadChildNode(const aiScene* paiScene,
-                       const aiNode* paiNode,
-                       SceneNode* parentNode,
-                       const bool bUseBuffers);
 
     void loadVertexPositions(const aiMesh* pAiMesh,
                              kore::Mesh* pMesh);

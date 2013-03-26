@@ -87,6 +87,8 @@ void kore::FrameBuffer::addTextureAttachment(const Texture* tex,
                          tex->getHandle(), 0);
   _textures.push_back(tex);
 
+
+
   STextureInfo* texInfo = new STextureInfo;
   texInfo->texLocation = tex->getHandle();
   texInfo->texTarget = tex->getProperties().targetType;
@@ -139,4 +141,8 @@ bool kore::FrameBuffer::checkFBOcompleteness() {
 
   RenderManager::getInstance()->bindFrameBuffer(GL_FRAMEBUFFER, _handle);
   return GLerror::gl_ValidateFBO("");
+}
+
+void kore::FrameBuffer::setName(const std::string& name) {
+
 }

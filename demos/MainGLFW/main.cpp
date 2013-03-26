@@ -134,9 +134,9 @@ void setUpSimpleRendering(kore::SceneNode* renderNode, kore::ShaderProgramPass*
 
 void setUpNMRendering(kore::SceneNode* renderNode, 
                       kore::ShaderProgramPass* programPass, 
-                      kore::Texture* texture, 
+                      kore::Texture* texture,
                       kore::Texture* normalmap,
-                      kore::LightComponent* light){
+                      kore::LightComponent* light) {
 
         kore::NodePass* nodePass = new kore::NodePass;
         const kore::ShaderProgram* nmShader = 

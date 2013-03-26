@@ -39,7 +39,7 @@ namespace kore {
     inline const GLuint getHandle() const {return _handle;}
     const Texture* getTexture(const std::string& name) const;
 
-    inline void setName(const std::string& name) {_name = name;}
+    inline void setName(const std::string& name);
     inline const std::string getName() const {return _name;}
 
     /*! \brief Add a texture as an attatchment to the framebuffer.

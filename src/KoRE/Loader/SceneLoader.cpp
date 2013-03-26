@@ -52,7 +52,10 @@ void kore::SceneLoader::loadScene(const std::string& szScenePath,
     _aiImporter.ReadFile(szScenePath,
                          aiProcess_JoinIdenticalVertices 
                          | aiProcess_Triangulate
-                         | aiProcess_CalcTangentSpace);
+                         | aiProcess_CalcTangentSpace
+                         | aiProcess_ValidateDataStructure
+                         | aiProcess_OptimizeMeshes
+                         | aiProcess_SortByPType);
 
   if (!pAiScene) {
     Log::getInstance()
@@ -77,7 +80,10 @@ void kore::SceneLoader::loadRessources(const std::string& szScenePath) {
     _aiImporter.ReadFile(szScenePath,
     aiProcess_JoinIdenticalVertices 
     | aiProcess_Triangulate
-    | aiProcess_CalcTangentSpace);
+    | aiProcess_CalcTangentSpace
+    | aiProcess_ValidateDataStructure
+    | aiProcess_OptimizeMeshes
+    | aiProcess_SortByPType);
 
   if (!pAiScene) {
     Log::getInstance()
@@ -213,7 +219,7 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
       const aiMesh* aimesh = aiscene->mMeshes[ainode->mMeshes[0]];
 
       std::string meshName = MeshLoader::getInstance()
-        ->getMeshName(aimesh, ainode->mMeshes[0]);
+        ->getMeshName(ainode->mMeshes[0], aiscene);
 
       Mesh* mesh = resMgr->getMesh(szScenePath, meshName);
       MeshComponent* meshComponent = new MeshComponent;
@@ -244,7 +250,7 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
       
       const aiMesh* aimesh = aiscene->mMeshes[ainode->mMeshes[iMesh]];
       std::string meshName = MeshLoader::getInstance()
-        ->getMeshName(aimesh, ainode->mMeshes[iMesh]);
+        ->getMeshName(ainode->mMeshes[iMesh], aiscene);
 
       Mesh* mesh = ResourceManager::getInstance()
         ->getMesh(szScenePath, meshName);
