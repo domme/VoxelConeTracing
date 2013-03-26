@@ -72,7 +72,7 @@ namespace kore {
             " GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT: %s\n", message.c_str());
         break;
         case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
-          pLog->write("FRAMEBUFFER-ERROR]"
+          pLog->write("[FRAMEBUFFER-ERROR]"
       " GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT: %s\n", message.c_str());
         break;
         case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:

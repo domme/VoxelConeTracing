@@ -21,45 +21,18 @@
 /* \author Dominik Ospelt                                               */
 /************************************************************************/
 
-#ifndef SRC_KOREGUI_RESOURCEVIEWER_H_
-#define SRC_KOREGUI_RESOURCEVIEWER_H_
+#ifndef SRC_KOREGUI_SELECTIONWIDGET_H_
+#define SRC_KOREGUI_SELECTIONWIDGET_H_
 
 #include <QWidget>
-#include <QTabWidget>
-#include <QPushButton>
-#include <QListWidget>
-#include <QVBoxLayout>
 
 namespace koregui {
-  class ResourceViewer : public QWidget {
-      Q_OBJECT
-
-  enum Mode {
-    MODE_SELECT,
-    MODE_LOAD
-    };
+  class SelectionWidget : public QWidget {
   public:
-    ResourceViewer(QWidget *parent = 0);
-    ~ResourceViewer();
+    enum ESELECTIONTYPE{
 
-    void update(void);
-    void refresh(void);
-
-  public slots:
-    void useBrowser(void);
-
-  protected:
-    void keyPressEvent(QKeyEvent* event);
-
-  private:
-    Mode _currentmode;
-    QVBoxLayout _layout;
-    QTabWidget  _tabs;
-    QPushButton _addButton;
-    QListWidget _meshes;
-    QListWidget _textures;
-    QListWidget _programs;
-    QListWidget _framebuffers;
+    };
+    SelectionWidget();
   };
 }
-#endif // SRC_KOREGUI_RESOURCEVIEWER_H_
+#endif  // SRC_KOREGUI_SELECTIONWIDGET_H_

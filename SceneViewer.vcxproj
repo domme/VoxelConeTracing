@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="SelectionWidget.h" />
     <ClInclude Include="src\KoRE_GUI\BindPathItem.h" />
     <ClInclude Include="src\KoRE_GUI\ComponentItem.h" />
     <ClInclude Include="src\KoRE_GUI\FrameBufferItem.h" />

@@ -22,38 +22,53 @@
 /************************************************************************/
 
 #include "KoRE_GUI/ResourceViewer.h"
+#include <QFileDialog>
 #include "KoRE/ResourceManager.h"
 
 koregui::ResourceViewer::ResourceViewer(QWidget *parent)
-                                      : QTabWidget(parent) {
+                                      : _layout(this),
+                                        QWidget(parent) {
   setWindowTitle("Resource Manager");
 
   // deprecated soon^^
   const kore::FrameBuffer* frabuf = kore::FrameBuffer::BACKBUFFER;
+  setLayout(&_layout);
+  _layout.addWidget(&_tabs);
+  _layout.addWidget(&_addButton);
+  _addButton.setText("ADD");
+  connect(&_addButton, SIGNAL(clicked()), this, SLOT(useBrowser()));
 
-  std::vector<kore::Mesh*> meshlist = kore::ResourceManager::getInstance()->getMeshes();
+  std::vector<kore::Mesh*> meshlist
+    = kore::ResourceManager::getInstance()->getMeshes();
   for (uint i = 0; i < meshlist.size(); i++) {
     _meshes.addItem(meshlist[i]->getName().c_str());
   }
-  addTab(&_meshes, "Meshes");
+  _tabs.addTab(&_meshes, "Meshes");
+  _meshes.setObjectName("Meshes");
 
-  std::vector<kore::Texture*> texlist = kore::ResourceManager::getInstance()->getTextures();
+  std::vector<kore::Texture*> texlist
+    = kore::ResourceManager::getInstance()->getTextures();
   for (uint i = 0; i < texlist.size(); i++) {
     _textures.addItem(texlist[i]->getName().c_str());
   }
-  addTab(&_textures, "Textures");
+  _tabs.addTab(&_textures, "Textures");
+  _textures.setObjectName("Textures");
 
-  std::vector<kore::ShaderProgram*> programlist = kore::ResourceManager::getInstance()->getShaderPrograms();
+  std::vector<kore::ShaderProgram*> programlist
+    = kore::ResourceManager::getInstance()->getShaderPrograms();
   for (uint i = 0; i < programlist.size(); i++) {
     _programs.addItem(programlist[i]->getName().c_str());
   }
-  addTab(&_programs,"ShaderPrograms");
+  _tabs.addTab(&_programs, "ShaderPrograms");
+  _programs.setObjectName("ShaderPrograms");
 
-  std::vector<kore::FrameBuffer*> bufferlist = kore::ResourceManager::getInstance()->getFramebuffers();
+  std::vector<kore::FrameBuffer*> bufferlist
+    = kore::ResourceManager::getInstance()->getFramebuffers();
   for (uint i = 0; i < bufferlist.size(); i++) {
     _framebuffers.addItem(bufferlist[i]->getName().c_str());
   }
-  addTab(&_framebuffers,"FameBuffer");
+  _tabs.addTab(&_framebuffers, "FameBuffer");
+  _framebuffers.setObjectName("FrameBuffer");
 
   resize(640, 480);
 }
@@ -65,4 +80,30 @@ void koregui::ResourceViewer::update(void) {
 }
 
 void koregui::ResourceViewer::keyPressEvent(QKeyEvent* event) {
+}
+
+void koregui::ResourceViewer::useBrowser(void) {
+  if (_tabs.currentWidget()->objectName() == "Meshes") {
+    QStringList fileNames
+      = QFileDialog::getOpenFileNames(this,
+                                      tr("Load Mesh"),
+                                      "./assets/",
+                                      tr("Mesh Data (*.dae)"));
+    for(uint i = 0; i < fileNames.size(); i++) {
+      // TODO (dospelt) check if Mesh is already loaded
+      kore::ResourceManager::getInstance()
+        ->loadResources(fileNames[i].toStdString());
+    }
+  }
+  if (_tabs.currentWidget()->objectName() == "Textures") {
+    QStringList fileNames
+      = QFileDialog::getOpenFileNames(this,
+                                      tr("Load Texture"),
+                                      "./assets/",
+                                      tr("Image (*.png)"));
+    for(uint i = 0; i < fileNames.size(); i++) {
+      kore::ResourceManager::getInstance()->loadTexture(fileNames[i].toStdString());
+    }
+  }
+  //"Images (*.png *.xpm *.jpg);;Text files (*.txt);;XML files (*.xml)"
 }

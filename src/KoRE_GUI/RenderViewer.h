@@ -31,23 +31,30 @@
 namespace koregui {
   class RenderViewer : public QGraphicsView {
       Q_OBJECT
-  enum EMouseMode {
-    DEFAULT,
-    LINK_DRAG
-  };
 
   public:
     RenderViewer(QWidget *parent = 0);
     ~RenderViewer();
 
-   void addSelection(const std::vector<NodeItem*>& nodes);
-   void createNode(kore::SceneNode* sourcenode, int x, int y);
+    void addSelection(const std::vector<NodeItem*>& nodes);
+    void createNode(kore::SceneNode* sourcenode, int x, int y);
 
 
   public slots:
     void zoomIn(void) {scale(1.2,1.2);}
     void zoomOut(void) {scale(1/1.2,1/1.2);}
+
+    /// Create a new Framebuffer and add a new Framebuffer Stage.
     void createEmptyFBO(void);
+
+    /// Create an empty Node. It is a child of the root Node.
+    void createEmptyNode(void);
+
+    /// Create an empty NodeGroup
+    void createEmptyGroup(void);
+
+    /// Add an existing Framebuffer and create a new Framebuffer Stage.
+    void addExistingFramebuffer(void);
 
   protected:
     void keyPressEvent(QKeyEvent* event);
@@ -62,7 +69,6 @@ namespace koregui {
       void clearScene();
       QGraphicsScene _scene;
       std::vector<NodeItem*> _nodes;
-      EMouseMode _mode;
       BindPathItem* _currentpath;
       QGraphicsItem* _bindTarget;
   };

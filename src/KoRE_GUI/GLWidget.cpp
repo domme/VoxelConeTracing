@@ -78,15 +78,6 @@ void GLWidget::initializeGL() {
         "GLSL version: %s\n",
         reinterpret_cast<const char*>
         (glGetString(GL_SHADING_LANGUAGE_VERSION)));
-
-    // load kore resources and scene TODO remove later
-    kore::ShaderProgram* simpleShader = new kore::ShaderProgram();
-    simpleShader->loadShader("./assets/shader/normalColor.vp", GL_VERTEX_SHADER);
-    simpleShader->loadShader("./assets/shader/normalColor.fp", GL_FRAGMENT_SHADER);
-    simpleShader->initShader("MegaShader");
-    kore::ResourceManager::getInstance()->loadScene("./assets/meshes/TestEnv.dae");
-    kore::ResourceManager::getInstance()->loadTexture("./assets/textures/checkerboard.png");
-    kore::ResourceManager::getInstance()->loadTexture("./assets/textures/Crate.png");
 }
 
 void GLWidget::resizeGL(int x, int y) {
@@ -96,8 +87,9 @@ void GLWidget::resizeGL(int x, int y) {
 }
 
 void GLWidget::paintGL() {
-  //glClearColor(1,0,0,1);
-  //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  // TODO all GL handling is provided by KoRE itself
+  glClearColor(0.1,0.1,0.1,1);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   kore::RenderManager::getInstance()->renderFrame();
   swapBuffers();
 }
