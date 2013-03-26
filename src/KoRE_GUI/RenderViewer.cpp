@@ -22,14 +22,19 @@
 /************************************************************************/
 
 #include "KoRE_GUI/RenderViewer.h"
+
 #include <QGuiApplication>
 #include <QGraphicsItem>
 #include <QKeyEvent>
 #include <QList>
 #include <QMenu>
+
 #include "KoRE_GUI/ShaderProgramItem.h"
-#include "KoRE/ResourceManager.h"
 #include "KoRE_GUI/ResourceViewer.h"
+#include "KoRE_GUI/FrameBufferItem.h"
+
+#include "KoRE/ResourceManager.h"
+#include "KoRE/FrameBuffer.h"
 
 koregui::RenderViewer::RenderViewer(QWidget *parent)
   : _currentpath(NULL),
@@ -153,7 +158,10 @@ void koregui::RenderViewer
 }
 
 void koregui::RenderViewer::createEmptyFBO(void) {
-  //kore::ResourceManager::getInstance()->addFramebuffer();
+  /*kore::FrameBuffer* frabuf = new kore::FrameBuffer("New Framebuffer");
+  kore::ResourceManager::getInstance()->addFramebuffer(frabuf->getName(), frabuf);
+  koregui::FrameBufferItem* fbitem = new koregui::FrameBufferItem(frabuf);
+  _scene.addItem(fbitem);*/
 }
 
 void koregui::RenderViewer::createEmptyNode(void) {

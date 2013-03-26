@@ -62,7 +62,7 @@ void koregui::FrameBufferItem::paint(QPainter* painter,
   font.setPointSize(12);
   painter->setFont(font);
  
-  //text.setText(_frameBuffer->getName().c_str());
+  text.setText(_frameBuffer->getName().c_str());
   p.setColor(QColor(255,255,255));
   p.setStyle(Qt::PenStyle::SolidLine);
   painter->setPen(p);
