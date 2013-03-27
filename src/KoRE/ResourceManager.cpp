@@ -92,6 +92,11 @@ kore::ResourceManager::~ResourceManager(void) {
   }
 
   _textureSamplers.clear();
+
+  // Delete Materials
+  for (uint i = 0; i < _materials.size(); ++i) {
+    KORE_SAFE_DELETE(_materials[i]);
+  }
 }
 
 void kore::ResourceManager::loadScene(const std::string& filename,
