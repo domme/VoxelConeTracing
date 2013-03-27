@@ -26,6 +26,7 @@
 
 #include <vector>
 #include <QGraphicsItem>
+#include <QContextMenuEvent>
 #include "KoRE/Passes/FrameBufferStage.h"
 #include "KoRE/FrameBuffer.h"
 #include "KoRE_GUI/ShaderProgramItem.h"

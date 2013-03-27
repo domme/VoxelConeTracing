@@ -53,7 +53,10 @@ namespace koregui {
     /// Create an empty NodeGroup
     void createEmptyGroup(void);
 
-    /// Add an existing Framebuffer and create a new Framebuffer Stage.
+    /// Selection Context for Framebuffer
+    void selectExistingFramebuffer(void);
+
+    /// Create a new Framebuffer Stage.
     void addExistingFramebuffer(void);
 
   protected:
