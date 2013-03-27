@@ -56,11 +56,22 @@ namespace kore {
 
     const Material* getMaterial() const {return _material;}
 
+    /*! \brief Sets a material for this MaterialComponent. */
+    void setMaterial(Material* material);
+
 
   private:
     Material* _material;
 
     ShaderData* getValue(const std::string& name);
+
+    /*! \brief This callback-method is called whenever another
+               MaterialComponent adds a value to the same material. */
+    void onMaterialDataAdded(ShaderData* data);
+
+    /*! \brief This callback-method is called whenever another
+               MaterialComponent removes a value from the same material. */
+    void onMaterialDataDeleted(ShaderData* data);
   };
 }
 

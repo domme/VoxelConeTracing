@@ -28,3 +28,40 @@ kore::Material::~Material() {
                                          // created with new.
   }
 }
+
+void kore::Material::addValue(ShaderData* shaderData) {
+  if (!containsDataPointer(shaderData->data)) {
+    _values.push_back(shaderData->data);
+    _eventDataAdded.raiseEvent(shaderData);
+  }
+}
+
+void kore::Material::removeValue(ShaderData* shaderData) {
+  if (containsDataPointer(shaderData->data)) {
+    auto it = std::find(_values.begin(), _values.end(), shaderData->data);
+    if (it != _values.end()) {
+      delete (*it);
+      _values.erase(it);
+
+      _eventDataRemoved.raiseEvent(shaderData);
+    }
+  }
+}
+
+
+
+bool kore::Material::containsDataPointer(void* data) {
+  for (int i = 0; i < _values.size(); ++i) {
+    if (_values[i] == data) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+
+
+
+
+

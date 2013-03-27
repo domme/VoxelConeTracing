@@ -19,15 +19,36 @@
 
 #include "KoRE/Components/MaterialComponent.h"
 
-kore::MaterialComponent::MaterialComponent() {
+kore::MaterialComponent::MaterialComponent()
+  : _material(NULL), SceneNodeComponent() {
 }
 
 kore::MaterialComponent::~MaterialComponent() {
 }
 
+
+void kore::MaterialComponent::setMaterial(Material* material) {
+  if (_material) {
+    _material->getAddEvent()
+      .remove(this, &kore::MaterialComponent::onMaterialDataAdded);
+
+    _material->getRemoveEvent()
+      .remove(this, &kore::MaterialComponent::onMaterialDataDeleted);
+  }
+
+  _shaderData.clear();
+
+  material->getAddEvent()
+    .add(this, &kore::MaterialComponent::onMaterialDataAdded);
+
+  material->getRemoveEvent()
+    .add(this, &kore::MaterialComponent::onMaterialDataDeleted);
+}
+
+
 void kore::MaterialComponent::
   addValue(const std::string& name, const GLuint dataType, void* value) {
-    if (hasValue(name)) {
+    if (hasValue(name) || _material == NULL) {
       return;
     }
 
@@ -38,7 +59,9 @@ void kore::MaterialComponent::
     shaderData.type = dataType;
     shaderData.data = value;
 
-    _shaderData.push_back(shaderData);
+    // Just call the addValue()-function of the material. This will trigger the
+    // onMateralDataAdded-method in MaterialComponent.
+    _material->addValue(&shaderData);
 }
 
 template <typename ValueT>
@@ -73,4 +96,27 @@ kore::ShaderData* kore::MaterialComponent::getValue(const std::string& name) {
   }
 
   return NULL;
+}
+
+void kore::MaterialComponent::onMaterialDataAdded(ShaderData* data) {
+  _shaderData.push_back(*data); // Just append a copy of this shaderData.
+}
+
+void kore::MaterialComponent::onMaterialDataDeleted(ShaderData* data) {
+  // The data-pointer is not necessarily from the list of this
+  // MaterialComponent, so first look for the corresponding shaderData-entry
+  // in the own list.
+  int iPos = -1;
+
+  for (uint i = 0; i < _shaderData.size(); ++i) {
+    if (_shaderData[i].name == data->name) {
+      iPos = i;
+      break;
+    }
+  }
+  
+  if (iPos >= 0) {
+    // And now delete it in the own list...
+    _shaderData.erase(_shaderData.begin() + iPos);
+  }
 }

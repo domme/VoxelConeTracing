@@ -22,8 +22,12 @@
 
 #include "KoRE/Common.h"
 #include "KoRE/Components/SceneNodeComponent.h"
+#include "KoRE/ShaderData.h"
+#include "KoRE/Events.h"
 
 namespace kore {
+  /*! This class stores generic heap-pointers to material-values so that many
+      MaterialComponents can share the same values */
   class Material {
     friend class SceneLoader;
 
@@ -31,10 +35,27 @@ namespace kore {
     explicit Material();
     virtual ~Material();
 
-    void addValue(void* val) {_values.push_back(val);}
+    /*! \brief Called from the MaterialComponent, if a new ShaderData is added.
+     *         All MaterialComponents, this material is attatched to are
+     *         notified (including the caller).
+    */
+    void addValue(ShaderData* shaderData);
+
+    /*! \brief Called from the MaterialComponent, if a ShaderData is removed.
+    *           All MaterialComponents, this material is attatched to are
+    *           notified (including the caller).
+    */
+    void removeValue(ShaderData* shaderData);
+
+    Delegate1Param<ShaderData*>& getAddEvent() {return _eventDataAdded;}
+    Delegate1Param<ShaderData*>& getRemoveEvent() {return _eventDataRemoved;}
 
   private:
     std::vector<void*> _values;
+    Delegate1Param<ShaderData*> _eventDataAdded;
+    Delegate1Param<ShaderData*> _eventDataRemoved;
+
+    bool containsDataPointer(void* data);
   };
 }
 
