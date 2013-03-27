@@ -53,8 +53,9 @@ namespace kore {
     */
     void loadProject(const std::string& filename);
 
-    // reads a scene file and creates all nodes and
-    // components within a scene graph
+    /*! \brief Reads a scene file and creates all nodes and
+    *          components within a scene graph
+    */
     void loadScene(const std::string& filename,
                                  SceneNode* parent =
                                  kore::SceneManager::getInstance()
@@ -65,8 +66,6 @@ namespace kore {
 
     /// load a single texture
     Texture* loadTexture(const std::string& filename);
-
-
 
     /*! \brief Add a mesh to the resource-manager. This mesh will now be
                controlled and deleted solely by the ResourceManager
@@ -148,16 +147,20 @@ namespace kore {
 
     /*! \brief Adds a framebuffer to the ResourceManager. This framebuffer will
     *          now be controlled and deleted by the resourceManager alone.
-    *   \param name The name to register the framebuffer in.
     *   \param fbo  The framebuffer to register.
     */
-    void addFramebuffer(const std::string& name, FrameBuffer* fbo);
+    void addFramebuffer(FrameBuffer* fbo);
 
     /*! \brief Retrieve a registered FrameBuffer with the provided name.
     *   \param name The name of the FrameBuffer with which it was added.
     *   \return The requested FrameBuffer or NULL, if there was no FrameBuffer
                 added with the provided name or it has been removed already. */
     FrameBuffer* getFramebuffer(const std::string& name);
+
+    /*! \brief Rename a registered FrameBuffer.
+    */
+    void renameFramebuffer(const std::string& oldname,
+                           const std::string& newname);
 
     /*! \brief Retrieve all registered FrameBuffers.*/
     std::vector<FrameBuffer*> getFramebuffers(void);

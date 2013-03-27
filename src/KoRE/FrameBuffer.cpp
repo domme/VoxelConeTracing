@@ -38,11 +38,15 @@ kore::FrameBuffer::FrameBuffer(const std::string& name)
 kore::FrameBuffer::FrameBuffer(GLuint handle) {
   _name = "BACKBUFFER";
   _handle = handle;
-  ResourceManager::getInstance()->addFramebuffer(_name, this);
+  ResourceManager::getInstance()->addFramebuffer(this);
 }
 
 kore::FrameBuffer::~FrameBuffer(void) {
   destroy();
+}
+
+void setName(const std::string& name) {
+  //kore::ResourceManager::getInstance()
 }
 
 void kore::FrameBuffer::destroy() {
@@ -144,5 +148,7 @@ bool kore::FrameBuffer::checkFBOcompleteness() {
 }
 
 void kore::FrameBuffer::setName(const std::string& name) {
-
+  if (_name != "BACKBUFFER" && name != "BACKBUFFER") {
+    _name = name;
+  }
 }

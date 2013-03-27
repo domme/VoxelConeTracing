@@ -124,7 +124,8 @@ void kore::SceneManager::addMaterial(const std::string& path,
     _materials[path] = internalMap;
   }
 
-  _materials[path][index] = material;
+  // TODO (dominiks) fix material
+  //_materials[path][index] = material;
 }
 
 
@@ -170,9 +171,10 @@ kore::Material* kore::SceneManager::getMaterial(const std::string& path,
   InnerMaterialMapT& innerMap = _materials[path];
   auto it = innerMap.find(index);
 
-  if (it != innerMap.end()) {
+  // TODO (dominiks) fix material
+  /*if (it != innerMap.end()) {
     return static_cast<Material*>(it->second);
-  }
+  }*/
 
   return NULL;
 }

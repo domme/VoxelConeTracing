@@ -39,7 +39,13 @@ namespace kore {
     inline const GLuint getHandle() const {return _handle;}
     const Texture* getTexture(const std::string& name) const;
 
-    inline void setName(const std::string& name);
+    /*! \brief Change the name of the framebuffer. It is applied if the new 
+    *          name does not exists. ResourceManager will be notified.
+    *   \param name The new name.
+    */
+    void setName(const std::string& name);
+
+    /// The name of a Framebuffer is unique
     inline const std::string getName() const {return _name;}
 
     /*! \brief Add a texture as an attatchment to the framebuffer.

@@ -23,23 +23,30 @@
 
 #include "KoRE_GUI/FrameBufferItem.h"
 #include <QPainter>
+#include <QCursor>
 #include <QStaticText>
+#include <QMenu>
 
 koregui::FrameBufferItem::FrameBufferItem(kore::FrameBuffer* frameBuffer,
-                                          QGraphicsItem* parent) {
+                                          QGraphicsItem* parent)
+                                          : _frameBuffer(frameBuffer){
   setData(0, "Framebuffer");
+  setFlag(QGraphicsItem::ItemIsMovable, true);
+  setFlag(QGraphicsItem::ItemIsSelectable, true);
+  setCursor(QCursor(Qt::CursorShape::ArrowCursor));
+  refresh();
 }
 
 koregui::FrameBufferItem::~FrameBufferItem(void){
 }
 
 void koregui::FrameBufferItem::refresh(void){
-  _bufferheight = 200;
+  _bufferheight = 300;
   _bufferwidth = 200;
 }
 
 QRectF koregui::FrameBufferItem::boundingRect() const{
-  return QRectF(0, 0, 200, 200);
+  return QRectF(0, 0, _bufferwidth, _bufferheight);
 }
 
 void koregui::FrameBufferItem::paint(QPainter* painter,
@@ -51,8 +58,7 @@ void koregui::FrameBufferItem::paint(QPainter* painter,
   QStaticText text;
  
   p.setStyle(Qt::PenStyle::NoPen);
-  //b.setColor((isSelected())?QColor(86,86,86):QColor(44,44,44));
-  b.setColor((isSelected())?QColor(0,0,0):QColor(0,100,0));
+  b.setColor((isSelected())?QColor(86,86,86):QColor(44,44,44));
   b.setStyle(Qt::BrushStyle::SolidPattern);
   painter->setPen(p);
   painter->setBrush(b);

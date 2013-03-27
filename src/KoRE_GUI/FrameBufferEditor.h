@@ -21,41 +21,34 @@
 /* \author Dominik Ospelt                                               */
 /************************************************************************/
 
-#include <GL/glew.h>
-#include <QApplication>
-#include <QCommonStyle>
+#ifndef FRAMEBUFFEREDITOR_H_
+#define FRAMEBUFFEREDITOR_H_
 
-#include "KoRE/SceneManager.h"
-#include "KoRE/ResourceManager.h"
-#include "KoRE/RenderManager.h"
+#include <QWidget>
+#include "ui_FrameBufferEditor.h"
+#include "KoRE/FrameBuffer.h"
 
-#include "KoRE_GUI/KoRE_GUIStyle.h"
-#include "KoRE_GUI/SceneViewer.h"
-#include "KoRE_GUI/RenderViewer.h"
-#include "KoRE_GUI/ResourceViewer.h"
-#include "KoRE_GUI/GLWidget.h"
-#include "KoRE_GUI/FrameBufferEditor.h"
+namespace koregui{
+  class FrameBufferEditor : public QWidget
+  {
+      Q_OBJECT
 
-int main(int argc, char *argv[])
-{
+  public:
+      FrameBufferEditor(QWidget *parent = 0);
+      ~FrameBufferEditor();
 
-  // initialize Qt
-  QApplication app(argc, argv);
-  //app.setStyle(new koregui::KoRE_GUIStyle);
+  public slots:
+    void addNewFramebuffer(void);
+    void addNewColorTarget(void);
+    void useDepthbufferTarget(bool use);
+    void useStencilbufferTarget(bool use);
+    void refresh(void);
 
-  // need of GL-Context
-  GLWidget win;
-  win.show();
 
-  // now  other widgets
-  //koregui::ResourceViewer resview;
-  koregui::RenderViewer rview;
-  //koregui::SceneViewer sview(&rview);
-  //sview.showScene(kore::SceneManager::getInstance()->getRootNode());
-
-  //sview.show();
-  rview.show();
-  //resview.show();
-
-  return app.exec();
+  private:
+      Ui::FrameBufferEditor ui;
+      kore::FrameBuffer* _currentbuffer;
+  };
 }
+
+#endif // FRAMEBUFFEREDITOR_H_

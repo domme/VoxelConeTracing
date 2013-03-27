@@ -32,6 +32,7 @@
 #include "KoRE_GUI/ShaderProgramItem.h"
 #include "KoRE_GUI/ResourceViewer.h"
 #include "KoRE_GUI/FrameBufferItem.h"
+#include "KoRE_GUI/FrameBufferEditor.h"
 
 #include "KoRE/ResourceManager.h"
 #include "KoRE/FrameBuffer.h"
@@ -84,7 +85,8 @@ void koregui::RenderViewer::contextMenuEvent(QContextMenuEvent *event) {
   QGraphicsItem* item = itemAt(event->pos());
   if (item) {
     if(item->data(0).toString() == "Framebuffer") {
-
+      koregui::FrameBufferEditor* edit = new koregui::FrameBufferEditor;
+      edit->show();
     }
   } else {
     QMenu* create  = menu.addMenu(QIcon("./assets/icons/testStar.png"), "Create");
@@ -92,7 +94,7 @@ void koregui::RenderViewer::contextMenuEvent(QContextMenuEvent *event) {
     create->addAction("Group", this, SLOT(createEmptyGroup()));
     create->addAction("FBO", this, SLOT(createEmptyFBO()));
     QMenu* add  = menu.addMenu(QIcon("./assets/icons/testStar.png"), "Add");
-    add->addAction("FBO", this, SLOT(addExistingFramebuffer()));
+    add->addAction("FBO", this, SLOT(selectExistingFramebuffer()));
   }
   menu.exec(event->globalPos());
 }
@@ -158,10 +160,10 @@ void koregui::RenderViewer
 }
 
 void koregui::RenderViewer::createEmptyFBO(void) {
-  /*kore::FrameBuffer* frabuf = new kore::FrameBuffer("New Framebuffer");
-  kore::ResourceManager::getInstance()->addFramebuffer(frabuf->getName(), frabuf);
+  kore::FrameBuffer* frabuf = new kore::FrameBuffer("New Framebuffer");
+  kore::ResourceManager::getInstance()->addFramebuffer(frabuf);
   koregui::FrameBufferItem* fbitem = new koregui::FrameBufferItem(frabuf);
-  _scene.addItem(fbitem);*/
+  _scene.addItem(fbitem);
 }
 
 void koregui::RenderViewer::createEmptyNode(void) {
@@ -172,6 +174,26 @@ void koregui::RenderViewer::createEmptyGroup(void) {
 
 }
 
+void koregui::RenderViewer::selectExistingFramebuffer(void) {
+  QWidget* addWgt = new QWidget(NULL);
+  addWgt->setWindowTitle("Select Framebuffer");
+  QVBoxLayout* vbox = new QVBoxLayout(NULL);
+  addWgt->setLayout(vbox);
+  QListWidget* bufferlist = new QListWidget(addWgt);
+  vbox->addWidget(bufferlist);
+  std::vector<kore::FrameBuffer*> framebuffers
+    = kore::ResourceManager::getInstance()->getFramebuffers();
+  for (uint i = 0; i < framebuffers.size(); i++) {
+    bufferlist->addItem(framebuffers[i]->getName().c_str());
+  }
+  QPushButton* confirmButton = new QPushButton(addWgt);
+  confirmButton->setText("Add");
+  vbox->addWidget(confirmButton);
+  connect(confirmButton, SIGNAL(clicked()), this, SLOT(addExistingFramebuffer()));
+
+  addWgt->show();
+}
+
 void koregui::RenderViewer::addExistingFramebuffer(void) {
-  //koregui::ResourceViewer rselect;
+  
 }

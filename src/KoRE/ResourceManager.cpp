@@ -205,10 +205,12 @@ const kore::TextureSampler*
 }
 
 void kore::ResourceManager::
-  addFramebuffer(const std::string& name, FrameBuffer* fbo) {
-    kore::Log::getInstance()->write("[DEBUG] added Framebuffer '%s'\n", name.c_str());
-    if (_frameBuffers.count(name) == 0) {
-      _frameBuffers[name] = fbo;
+  addFramebuffer(FrameBuffer* fbo) {
+    if (_frameBuffers.count(fbo->getName()) == 0) {
+      _frameBuffers[fbo->getName()] = fbo;
+       kore::Log::getInstance()->write("[DEBUG] added Framebuffer '%s'\n", fbo->getName().c_str());
+    } else {
+      kore::Log::getInstance()->write("[ERROR] Framebuffer '%s' could not be added\n", fbo->getName().c_str());
     }
 }
 
@@ -221,10 +223,28 @@ kore::FrameBuffer*
     return NULL;
 }
 
+
+void kore::ResourceManager::renameFramebuffer(const std::string& oldname,
+                                              const std::string& newname) {
+  kore::FrameBuffer* buf = NULL;
+  auto it = _frameBuffers.find(oldname);
+  auto it2 = _frameBuffers.find(newname);
+  if (it != _frameBuffers.end() && it2 == _frameBuffers.end()) {
+    buf =  it->second;
+    _frameBuffers.erase(it);
+  }
+  if(buf) {
+    buf->setName(newname);
+    addFramebuffer(buf);
+  }
+}
+
+
 void kore::ResourceManager::
   removeFramebuffer(FrameBuffer* fbo) {
     for (auto it = _frameBuffers.begin(); it != _frameBuffers.end(); ++it) {
       if (it->second == fbo) {
+        KORE_SAFE_DELETE(it->second);
         _frameBuffers.erase(it);
       }
     }

@@ -226,9 +226,10 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
       meshComponent->setMesh(mesh);
       node->addComponent(meshComponent);
 
-      Material* materialComponent =
+      // TODO (dominiks) fix material
+      /*Material* materialComponent =
         sceneMgr->getMaterial(szScenePath, aimesh->mMaterialIndex);
-      node->addComponent(materialComponent);
+      node->addComponent(materialComponent);*/
 
       // Generate a TexturesComponent from all loaded textures defined in the
       // material.
@@ -259,9 +260,10 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
       meshComponent->setMesh(mesh);
       copyNode->addComponent(meshComponent);
 
-      Material* materialComponent =
+      // TODO (dominiks) fix material
+      /*Material* materialComponent =
         sceneMgr->getMaterial(szScenePath, aimesh->mMaterialIndex);
-      node->addComponent(materialComponent);
+      node->addComponent(materialComponent);*/
 
       // Generate a TexturesComponent from all loaded textures defined in the
       // material.
@@ -327,6 +329,7 @@ void kore::SceneLoader::
     // constants one by one. Keep in mind that this list hast to be extended
     // if the assimp material-API changes.
     
+    /*
     // Temp-vars to retrieve the values from assimp
     aiColor3D colValue;
     int intValue;
@@ -408,7 +411,7 @@ void kore::SceneLoader::
     if (aiMat->Get(AI_MATKEY_BUMPSCALING, floatValue) == AI_SUCCESS) {
       float* pValue = new float(floatValue);
       koreMat->addValue("Bump strength", GL_FLOAT, pValue);
-    }
+    }*/
 }
 
 void kore::SceneLoader::loadMatTextures(kore::ResourceManager* resourceMgr,

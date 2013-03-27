@@ -59,6 +59,9 @@
     <ClInclude Include="SelectionWidget.h">
       <Filter>Header Dateien</Filter>
     </ClInclude>
+    <ClInclude Include="src\KoRE_GUI\GeneratedFiles\ui_FrameBufferEditor.h">
+      <Filter>Generierte Dateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="src\KoRE_GUI\SceneViewer.h">
@@ -78,6 +81,12 @@
     </CustomBuild>
     <CustomBuild Include="src\KoRE_GUI\GLWidget.h">
       <Filter>Header Dateien</Filter>
+    </CustomBuild>
+    <CustomBuild Include="src\KoRE_GUI\FrameBufferEditor.h">
+      <Filter>Header Dateien</Filter>
+    </CustomBuild>
+    <CustomBuild Include="src\KoRE_GUI\FrameBufferEditor.ui">
+      <Filter>Form Dateien</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
@@ -149,6 +158,15 @@
     </ClCompile>
     <ClCompile Include="src\KoRE_GUI\GLWidget.cpp">
       <Filter>Source Dateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KoRE_GUI\FrameBufferEditor.cpp">
+      <Filter>Source Dateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KoRE_GUI\GeneratedFiles\Debug\moc_FrameBufferEditor.cpp">
+      <Filter>Generierte Dateien\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KoRE_GUI\GeneratedFiles\Release\moc_FrameBufferEditor.cpp">
+      <Filter>Generierte Dateien\Release</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
