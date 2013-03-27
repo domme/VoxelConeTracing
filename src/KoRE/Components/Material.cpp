@@ -37,6 +37,43 @@ void kore::Material::addValue(ShaderData* shaderData) {
   }
 }
 
+void kore::Material::
+  addValue(const std::string& name, const GLuint dataType, void* value) {
+    if (hasValue(name)) {
+      return;
+    }
+
+    ShaderData shaderData;
+    shaderData.component = NULL;  // will be set after copying this shaderdata
+                                  // to each registered MaterialComponent.
+    shaderData.name = name;
+    shaderData.size = 1;
+    shaderData.type = dataType;
+    shaderData.data = value;
+
+    addValue(&shaderData);
+}
+
+template <typename ValueT>
+void kore::Material::setValue(const std::string& name,
+                              const GLuint dataType,
+                              const ValueT& value) {
+    ShaderData* shaderData = getValue(name);
+
+    if (shaderData == NULL) {
+      return;
+    }
+
+    if (shaderData->type != dataType) {
+      Log::getInstance()->
+        write("[ERROR] Material::setvalue(): datatypes don't match"
+              "for parameter %s", name.c_str());
+      return;
+    }
+
+    (*static_cast<ValueT*>(shaderData->data)) = value;
+}
+
 void kore::Material::removeValue(ShaderData* shaderData) {
   uint idx = getShaderDataIdxForValue(shaderData->data);
 
@@ -71,10 +108,16 @@ kore::ShaderData* kore::Material::getShaderDataForValue(const void* data) {
   return NULL;
 }
 
+bool kore::Material::hasValue(const std::string& name) {
+  return getValue(name) != NULL;
+}
 
+kore::ShaderData* kore::Material::getValue(const std::string& name) {
+  for (uint i = 0; i < _values.size(); ++i) {
+    if (_values[i].name == name) {
+      return &_values[i];
+    }
+  }
 
-
-
-
-
-
+  return NULL;
+}

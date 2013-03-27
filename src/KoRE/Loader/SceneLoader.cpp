@@ -29,6 +29,7 @@
 #include "KoRE/Components/Camera.h"
 #include "KoRE/Components/LightComponent.h"
 #include "KoRE/Components/Material.h"
+#include "KoRE/Components/MaterialComponent.h"
 
 kore::SceneLoader* kore::SceneLoader::getInstance() {
   static SceneLoader instance;
@@ -101,15 +102,18 @@ void kore::SceneLoader::loadRessources(const std::string& szScenePath) {
                       MeshLoader::getInstance()->loadMesh(pAiScene,i));
       _meshcount++;
 
-      // Load and store MaterialComponent for that mesh if necessary
+      // Load and store Material for that mesh if necessary
       aiMesh* aiMesh = pAiScene->mMeshes[i];
-      if (sceneMgr->getMaterial(szScenePath, aiMesh->mMaterialIndex) == NULL) {
+      std::string uniqueMaterialName =
+        resMgr->getUniqueMaterialName(szScenePath, aiMesh->mMaterialIndex);
+      if (resMgr->getMaterial(uniqueMaterialName) == NULL) {
         Material* koreMat = new Material;
+        koreMat->_name = uniqueMaterialName;
 
         loadMaterialProperties(koreMat,
                                pAiScene->mMaterials[aiMesh->mMaterialIndex]);
 
-        sceneMgr->addMaterial(szScenePath, aiMesh->mMaterialIndex, koreMat);
+        resMgr->addMaterial(koreMat);
         
         // Load all textures into the resourceManager.
         loadMatTextures(resMgr, pAiScene->mMaterials[aiMesh->mMaterialIndex]);
@@ -226,10 +230,17 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
       meshComponent->setMesh(mesh);
       node->addComponent(meshComponent);
 
-      // TODO (dominiks) fix material
-      /*Material* materialComponent =
-        sceneMgr->getMaterial(szScenePath, aimesh->mMaterialIndex);
-      node->addComponent(materialComponent);*/
+      // Look up Material in the resourceManager and add it to a new
+      // MaterialComponent
+      MaterialComponent* materialComponent = new MaterialComponent;
+
+      std::string matName =
+        resMgr->getUniqueMaterialName(szScenePath, aimesh->mMaterialIndex);
+
+      Material* mat = resMgr->getMaterial(matName);
+      materialComponent->setMaterial(mat);
+
+      node->addComponent(materialComponent);
 
       // Generate a TexturesComponent from all loaded textures defined in the
       // material.
@@ -260,10 +271,17 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
       meshComponent->setMesh(mesh);
       copyNode->addComponent(meshComponent);
 
-      // TODO (dominiks) fix material
-      /*Material* materialComponent =
-        sceneMgr->getMaterial(szScenePath, aimesh->mMaterialIndex);
-      node->addComponent(materialComponent);*/
+      // Look up Material in the resourceManager and add it to a new
+      // MaterialComponent
+      MaterialComponent* materialComponent = new MaterialComponent;
+
+      std::string matName =
+        resMgr->getUniqueMaterialName(szScenePath, aimesh->mMaterialIndex);
+
+      Material* mat = resMgr->getMaterial(matName);
+      materialComponent->setMaterial(mat);
+
+      copyNode->addComponent(materialComponent);
 
       // Generate a TexturesComponent from all loaded textures defined in the
       // material.
@@ -329,7 +347,7 @@ void kore::SceneLoader::
     // constants one by one. Keep in mind that this list hast to be extended
     // if the assimp material-API changes.
     
-    /*
+    
     // Temp-vars to retrieve the values from assimp
     aiColor3D colValue;
     int intValue;
@@ -411,7 +429,7 @@ void kore::SceneLoader::
     if (aiMat->Get(AI_MATKEY_BUMPSCALING, floatValue) == AI_SUCCESS) {
       float* pValue = new float(floatValue);
       koreMat->addValue("Bump strength", GL_FLOAT, pValue);
-    }*/
+    }
 }
 
 void kore::SceneLoader::loadMatTextures(kore::ResourceManager* resourceMgr,

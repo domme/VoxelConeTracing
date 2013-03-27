@@ -36,19 +36,43 @@ namespace kore {
     virtual ~Material();
 
     /*! \brief Called from the MaterialComponent, if a new ShaderData is added.
-     *         All MaterialComponents, this material is attatched to are
+     *         All MaterialComponents, this material is attached to are
      *         notified (including the caller).
     */
     void addValue(ShaderData* shaderData);
 
+       /*! \brief Appends a new value to the Material. The method creates and
+               appends a new ShaderData-instance to the component's shaderData-
+               list with the provided information.
+        \param dataType The openGL-datatype of this value (e.g. GL_FLOAT3).
+        \param name The (unique) name of the material-parameter
+                    (e.g. "diffuse reflectivity").
+        \param value The value of the material-parameter. This has to be
+                     a pointer to an heap-allocated object. */
+    void addValue(const std::string& name,
+                  const GLuint dataType,
+                  void* value);
+
+       /*! \brief Sets the value of a material-parameter.
+        \param name The name of the parameter (e.g. "diffuse reflectivity").
+        \param value A pointer to the memory with the new value. */
+    template<typename ValueT>
+    void setValue(const std::string& name,
+                  const GLuint dataType,
+                  const ValueT& value);
+
     /*! \brief Called from the MaterialComponent, if a ShaderData is removed.
-    *           All MaterialComponents, this material is attatched to are
+    *           All MaterialComponents, this material is attached to are
     *           notified (including the caller).
     */
     void removeValue(ShaderData* shaderData);
 
     inline const std::vector<ShaderData>& getValues() const {return _values;}
     inline const std::string& getName() const {return _name;}
+
+    /*! \brief Returns true, if there is a material-parameter with the provided
+               name. */
+    bool hasValue(const std::string& name);
 
     Delegate1Param<ShaderData*>& getAddEvent() {return _eventDataAdded;}
     Delegate1Param<ShaderData*>& getRemoveEvent() {return _eventDataRemoved;}
@@ -61,6 +85,7 @@ namespace kore {
     uint getShaderDataIdxForValue(const void* data);
     ShaderData* getShaderDataForValue(const void* data);
     bool containsDataPointer(const void* data);
+    ShaderData* getValue(const std::string& name);
   };
 }
 

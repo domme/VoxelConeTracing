@@ -116,19 +116,6 @@ void kore::SceneManager::addLight(const std::string& path,
     _lights[path][light->getName()] = light;
 }
 
-void kore::SceneManager::addMaterial(const std::string& path,
-                                     const uint index,
-                                     Material* material) {
-  if (_materials.count(path) == 0) {
-    InnerMaterialMapT internalMap;
-    _materials[path] = internalMap;
-  }
-
-  // TODO (dominiks) fix material
-  //_materials[path][index] = material;
-}
-
-
 kore::Camera* kore::SceneManager::getCamera(const std::string& path,
                                                  const std::string& id) {
   if (_cameras.count(path) == 0) {
@@ -161,21 +148,3 @@ kore::LightComponent*
 
     return NULL;
 }
-
-kore::Material* kore::SceneManager::getMaterial(const std::string& path,
-                                                const uint index) {
-  if (_materials.count(path) == 0) {
-    return NULL;
-  }
-
-  InnerMaterialMapT& innerMap = _materials[path];
-  auto it = innerMap.find(index);
-
-  // TODO (dominiks) fix material
-  /*if (it != innerMap.end()) {
-    return static_cast<Material*>(it->second);
-  }*/
-
-  return NULL;
-}
-

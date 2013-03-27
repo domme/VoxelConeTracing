@@ -50,10 +50,6 @@ namespace kore {
                   const GLuint dataType,
                   const ValueT& value);
 
-    /*! \brief Returns true, if there is a material-parameter with the provided
-               name. */
-    bool hasValue(const std::string& name);
-
     const Material* getMaterial() const {return _material;}
 
     /*! \brief Sets a material for this MaterialComponent. */
@@ -63,7 +59,7 @@ namespace kore {
   private:
     Material* _material;
 
-    ShaderData* getValue(const std::string& name);
+    void insertShaderData(const ShaderData* data);
 
     /*! \brief This callback-method is called whenever another
                MaterialComponent adds a value to the same material. */

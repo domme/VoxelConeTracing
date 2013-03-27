@@ -21,6 +21,7 @@
 
 kore::MaterialComponent::MaterialComponent()
   : _material(NULL), SceneNodeComponent() {
+    _type = COMPONENT_MATERIAL;
 }
 
 kore::MaterialComponent::~MaterialComponent() {
@@ -50,67 +51,32 @@ void kore::MaterialComponent::setMaterial(Material* material) {
   const std::vector<ShaderData>& vMaterialData = _material->getValues();
 
   // Append copies of all shaderDatas
-  _shaderData.resize(vMaterialData.size());
   for (uint i = 0; i < vMaterialData.size(); ++i) {
-    _shaderData[i] = vMaterialData[i];
+    insertShaderData(&vMaterialData[i]);
   }
 }
 
 
 void kore::MaterialComponent::
   addValue(const std::string& name, const GLuint dataType, void* value) {
-    if (hasValue(name) || _material == NULL) {
-      return;
+    if (_material) {
+      // Just call the addValue()-function of the material.
+      // This will trigger the onMateralDataAdded-method in MaterialComponent.
+      _material->addValue(name, dataType, value);
     }
-
-    ShaderData shaderData;
-    shaderData.component = this;
-    shaderData.name = name;
-    shaderData.size = 1;
-    shaderData.type = dataType;
-    shaderData.data = value;
-
-    // Just call the addValue()-function of the material. This will trigger the
-    // onMateralDataAdded-method in MaterialComponent.
-    _material->addValue(&shaderData);
 }
 
 template <typename ValueT>
 void kore::MaterialComponent::setValue(const std::string& name,
                               const GLuint dataType,
                               const ValueT& value) {
-    ShaderData* shaderData = getValue(name);
-
-    if (shaderData == NULL) {
-      return;
-    }
-
-    if (shaderData->type != dataType) {
-      Log::getInstance()->
-        write("[ERROR] Material::setvalue(): datatypes don't match"
-              "for parameter %s", name.c_str());
-      return;
-    }
-
-    (*static_cast<ValueT*>(shaderData->data)) = value;
-}
-
-bool kore::MaterialComponent::hasValue(const std::string& name) {
-  return getValue(name) != NULL;
-}
-
-kore::ShaderData* kore::MaterialComponent::getValue(const std::string& name) {
-  for (uint i = 0; i < _shaderData.size(); ++i) {
-    if (_shaderData[i].name == name) {
-      return &_shaderData[i];
-    }
+  if (_material) {
+    _material->setValue(name, dataType, value);
   }
-
-  return NULL;
 }
 
 void kore::MaterialComponent::onMaterialDataAdded(ShaderData* data) {
-  _shaderData.push_back(*data); // Just append a copy of this shaderData.
+  insertShaderData(data);
 }
 
 void kore::MaterialComponent::onMaterialDataDeleted(ShaderData* data) {
@@ -130,4 +96,10 @@ void kore::MaterialComponent::onMaterialDataDeleted(ShaderData* data) {
     // And now delete it in the own list...
     _shaderData.erase(_shaderData.begin() + iPos);
   }
+}
+
+void kore::MaterialComponent::insertShaderData(const ShaderData* data) {
+  _shaderData.push_back(*data); // Just append a copy of this shaderData.
+  // But we have to set the component-field of the new shaderdata to "this"
+  _shaderData[_shaderData.size() - 1].component = this;
 }
