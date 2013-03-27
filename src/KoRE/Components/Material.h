@@ -24,39 +24,17 @@
 #include "KoRE/Components/SceneNodeComponent.h"
 
 namespace kore {
-  class Material : public SceneNodeComponent {
+  class Material {
     friend class SceneLoader;
 
   public:
     explicit Material();
     virtual ~Material();
 
-    /*! \brief Appends a new value to the Material. The method creates and
-               appends a new ShaderData-instance to the component's shaderData-
-               list with the provided information.
-        \param dataType The openGL-datatype of this value (e.g. GL_FLOAT3).
-        \param name The (unique) name of the material-parameter
-                    (e.g. "diffuse reflectivity").
-        \param value The value of the material-parameter. This has to be
-                     a pointer to an heap-allocated object. */
-    void addValue(const std::string& name,
-                  const GLuint dataType,
-                  void* value);
-
-    /*! \brief Sets the value of a material-parameter.
-        \param name The name of the parameter (e.g. "diffuse reflectivity").
-        \param value A pointer to the memory with the new value. */
-    template<typename ValueT>
-    void setValue(const std::string& name,
-                  const GLuint dataType,
-                  const ValueT& value);
-
-    /*! \brief Returns true, if there is a material-parameter with the provided
-               name. */
-    bool hasValue(const std::string& name);
+    void addValue(void* val) {_values.push_back(val);}
 
   private:
-    ShaderData* getValue(const std::string& name);
+    std::vector<void*> _values;
   };
 }
 

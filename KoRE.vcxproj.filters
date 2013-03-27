@@ -136,6 +136,9 @@
     <ClCompile Include="src\KoRE\Components\Material.cpp">
       <Filter>src\Components</Filter>
     </ClCompile>
+    <ClCompile Include="src\KoRE\Components\MaterialComponent.cpp">
+      <Filter>src\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\KoRE\Operations\SelectNodes.h">
@@ -283,6 +286,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\KoRE\Components\Material.h">
+      <Filter>src\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\Components\MaterialComponent.h">
       <Filter>src\Components</Filter>
     </ClInclude>
   </ItemGroup>
