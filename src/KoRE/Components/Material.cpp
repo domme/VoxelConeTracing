@@ -19,46 +19,59 @@
 
 #include "KoRE/Components/Material.h"
 
-kore::Material::Material() {
+kore::Material::Material() : _name("UNNAMED") {
 }
 
 kore::Material::~Material() {
   for (uint i = 0; i < _values.size(); ++i) {
-    KORE_SAFE_DELETE(_values[i]);  // Assume that the data-pointer was
+    KORE_SAFE_DELETE(_values[i].data);  // Assume that the data-pointer was
                                          // created with new.
   }
 }
 
 void kore::Material::addValue(ShaderData* shaderData) {
   if (!containsDataPointer(shaderData->data)) {
-    _values.push_back(shaderData->data);
-    _eventDataAdded.raiseEvent(shaderData);
+    // Store a copy of the shaderData.
+    _values.push_back(*shaderData);
+    _eventDataAdded.raiseEvent(&_values[_values.size() - 1]);
   }
 }
 
 void kore::Material::removeValue(ShaderData* shaderData) {
-  if (containsDataPointer(shaderData->data)) {
-    auto it = std::find(_values.begin(), _values.end(), shaderData->data);
-    if (it != _values.end()) {
-      delete (*it);
-      _values.erase(it);
+  uint idx = getShaderDataIdxForValue(shaderData->data);
 
-      _eventDataRemoved.raiseEvent(shaderData);
-    }
+  if (idx != KORE_UINT_INVALID) {
+    KORE_SAFE_DELETE(_values[idx].data);
+    _values.erase(_values.begin() + idx);
   }
+
+  _eventDataRemoved.raiseEvent(shaderData);
 }
 
-
-
-bool kore::Material::containsDataPointer(void* data) {
-  for (int i = 0; i < _values.size(); ++i) {
-    if (_values[i] == data) {
-      return true;
+uint kore::Material::getShaderDataIdxForValue(const void* data) {
+  for (uint i = 0; i < _values.size(); ++i) {
+    if (_values[i].data == data) {
+      return i;
     }
   }
 
-  return false;
+  return KORE_UINT_INVALID;
 }
+
+bool kore::Material::containsDataPointer(const void* data) {
+  return getShaderDataIdxForValue(data) != KORE_UINT_INVALID;
+}
+
+kore::ShaderData* kore::Material::getShaderDataForValue(const void* data) {
+  uint idx = getShaderDataIdxForValue(data);
+  if (idx != KORE_UINT_INVALID) {
+    return &_values[idx];
+  }
+
+  return NULL;
+}
+
+
 
 
 

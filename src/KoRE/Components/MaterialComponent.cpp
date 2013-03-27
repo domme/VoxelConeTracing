@@ -28,6 +28,7 @@ kore::MaterialComponent::~MaterialComponent() {
 
 
 void kore::MaterialComponent::setMaterial(Material* material) {
+  // Destroy dependencies on the old material...
   if (_material) {
     _material->getAddEvent()
       .remove(this, &kore::MaterialComponent::onMaterialDataAdded);
@@ -38,11 +39,21 @@ void kore::MaterialComponent::setMaterial(Material* material) {
 
   _shaderData.clear();
 
-  material->getAddEvent()
+  // And attatch the new material...
+  _material = material;
+  _material->getAddEvent()
     .add(this, &kore::MaterialComponent::onMaterialDataAdded);
 
-  material->getRemoveEvent()
+  _material->getRemoveEvent()
     .add(this, &kore::MaterialComponent::onMaterialDataDeleted);
+
+  const std::vector<ShaderData>& vMaterialData = _material->getValues();
+
+  // Append copies of all shaderDatas
+  _shaderData.resize(vMaterialData.size());
+  for (uint i = 0; i < vMaterialData.size(); ++i) {
+    _shaderData[i] = vMaterialData[i];
+  }
 }
 
 

@@ -47,15 +47,20 @@ namespace kore {
     */
     void removeValue(ShaderData* shaderData);
 
+    inline const std::vector<ShaderData>& getValues() const {return _values;}
+    inline const std::string& getName() const {return _name;}
+
     Delegate1Param<ShaderData*>& getAddEvent() {return _eventDataAdded;}
     Delegate1Param<ShaderData*>& getRemoveEvent() {return _eventDataRemoved;}
-
   private:
-    std::vector<void*> _values;
+    std::string _name; // Note: the sceneLoader will assign a unique name.
+    std::vector<ShaderData> _values;
     Delegate1Param<ShaderData*> _eventDataAdded;
     Delegate1Param<ShaderData*> _eventDataRemoved;
 
-    bool containsDataPointer(void* data);
+    uint getShaderDataIdxForValue(const void* data);
+    ShaderData* getShaderDataForValue(const void* data);
+    bool containsDataPointer(const void* data);
   };
 }
 

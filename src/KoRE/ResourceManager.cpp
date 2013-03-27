@@ -21,6 +21,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <string>
+#include <sstream>
 #include "KoRE/ResourceManager.h"
 #include "KoRE/Loader/MeshLoader.h"
 #include "KoRE/Loader/SceneLoader.h"
@@ -246,7 +247,7 @@ void kore::ResourceManager::removeMesh(const std::string& path,
     auto itInnerMap = itOuterMap->second.find(id);
 
     if (itInnerMap != itOuterMap->second.end()) {
-      notifyMeshRemove(itInnerMap->second);
+      _meshDeleteEvent.raiseEvent(itInnerMap->second);
       KORE_SAFE_DELETE(itInnerMap->second);
       itOuterMap->second.erase(itInnerMap);
     }
@@ -258,7 +259,7 @@ void kore::ResourceManager::removeMesh(const Mesh* mesh) {
     InnerMeshMapT& innerMap = itOuter->second;
     for (auto itInner = innerMap.begin(); itInner != innerMap.end(); ++itInner) {
       if (itInner->second == mesh) {
-        notifyMeshRemove(mesh);
+        _meshDeleteEvent.raiseEvent(mesh);
         KORE_SAFE_DELETE(itInner->second);
         innerMap.erase(itInner);
         return;
@@ -271,7 +272,7 @@ void kore::ResourceManager::removeTexture(const std::string& path) {
   auto it = _textures.find(path);
 
   if (it != _textures.end()) {
-    notifyTextureRemove(it->second);
+    _textureDeleteEvent.raiseEvent(it->second);
     KORE_SAFE_DELETE(it->second);
     _textures.erase(it);
     return;
@@ -281,7 +282,7 @@ void kore::ResourceManager::removeTexture(const std::string& path) {
 void kore::ResourceManager::removeTexture(const Texture* texture) {
   for (auto it = _textures.begin(); it != _textures.end(); ++it) {
     if (it->second == texture) {
-      notifyTextureRemove(it->second);
+      _textureDeleteEvent.raiseEvent(it->second);
       KORE_SAFE_DELETE(it->second);
       _textures.erase(it);
       return;
@@ -293,7 +294,7 @@ void kore::ResourceManager::removeShaderProgram(const std::string& name) {
   auto it = _shaderProgramMap.find(name);
 
   if (it != _shaderProgramMap.end()) {
-    notifyShaderProgramRemove(it->second);
+    _shaderProgramDeleteEvent.raiseEvent(it->second);
     KORE_SAFE_DELETE(it->second);
     _shaderProgramMap.erase(it);
     return;
@@ -305,7 +306,7 @@ void kore::ResourceManager::
     for (auto it = _shaderProgramMap.begin();
               it != _shaderProgramMap.end(); ++it) {
                 if (it->second == program) {
-                  notifyShaderProgramRemove(it->second);
+                  _shaderProgramDeleteEvent.raiseEvent(it->second);
                   KORE_SAFE_DELETE(it->second);
                   _shaderProgramMap.erase(it);
                   return;
@@ -313,23 +314,7 @@ void kore::ResourceManager::
     }
 }
 
-void kore::ResourceManager::
-  notifyFramebufferRemove(const FrameBuffer* fbo) {
-    _fboDeleteEvent.raiseEvent(fbo);
-}
 
-void kore::ResourceManager::notifyTextureRemove(const Texture* tex) {
-  _textureDeleteEvent.raiseEvent(tex);
-}
-
-void kore::ResourceManager::
-  notifyShaderProgramRemove(const ShaderProgram* program) {
-  _shaderProgramDeleteEvent.raiseEvent(program);
-}
-
-void kore::ResourceManager::notifyMeshRemove(const Mesh* mesh) {
-  _meshDeleteEvent.raiseEvent(mesh);
-}
 
 const std::vector<kore::Mesh*> kore::ResourceManager::getMeshes(void) {
   std::vector<kore::Mesh*> meshlist;
@@ -366,4 +351,56 @@ std::vector<kore::ShaderProgram*>
     programlist.push_back(it->second);
   } 
   return programlist;
+}
+
+
+
+void kore::ResourceManager::addMaterial(Material* mat) {
+  if (std::find(_materials.begin(), _materials.end(), mat) == _materials.end()) {
+    _materials.push_back(mat);
+  }
+}
+
+kore::Material* kore::ResourceManager::getMaterial(const std::string& name) {
+  for (uint i = 0; i  < _materials.size(); ++i) {
+    if (_materials[i]->getName() == name) {
+      return _materials[i];
+    }
+  }
+
+  return NULL;
+}
+
+void kore::ResourceManager::removeMaterial(const std::string& name) {
+  uint removeIdx = KORE_UINT_INVALID;
+  for (uint i = 0; i  < _materials.size(); ++i) {
+    if (_materials[i]->getName() == name) {
+      removeIdx = i;
+      break;
+    }
+  }
+  
+  if (removeIdx != KORE_UINT_INVALID) {
+    _materialDeleteEvent.raiseEvent(_materials[removeIdx]);
+    KORE_SAFE_DELETE(_materials[removeIdx]);
+    _materials.erase(_materials.begin() + removeIdx);
+  }
+}
+
+void kore::ResourceManager::removeMaterial(const Material* mat) {
+  auto it = std::find(_materials.begin(), _materials.end(), mat);
+  
+  if (it != _materials.end()) {
+    _materialDeleteEvent.raiseEvent(*it);
+    KORE_SAFE_DELETE(*it);
+    _materials.erase(it);
+  }
+}
+
+const std::string& kore::ResourceManager::
+  getUniqueMaterialName(const std::string& scenePath, const uint index) {
+    std::stringstream nameStream;
+    nameStream << scenePath << "_material_" << index;
+
+    return nameStream.str();
 }

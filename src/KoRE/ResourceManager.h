@@ -31,7 +31,9 @@
 #include "KoRE/SceneManager.h"
 #include "KoRE/TextureSampler.h"
 #include "KoRE/FrameBuffer.h"
+#include "KoRE/Components/Material.h"
 #include "KoRE/Events.h"
+
 
 // TODO(dlazarek/dospelt) Are Cameras and Lights really needed in the resourceManager??
 
@@ -189,6 +191,22 @@ namespace kore {
 
 
 
+
+    void addMaterial(Material* mat);
+
+    kore::Material* getMaterial(const std::string& name);
+
+    inline const std::vector<kore::Material*>&
+      getMaterials() const {return _materials;}
+    
+    void removeMaterial(const std::string& name);
+
+    void removeMaterial(const Material* mat);
+
+    const std::string& getUniqueMaterialName(const std::string& scenePath,
+                                             const uint index);
+
+
     /*! \brief Returns the OpenGL texture sampler object with the provided 
     *          properties. 
     * If a sampler with the provided properties already exists, the pointer to
@@ -212,7 +230,7 @@ namespace kore {
 
     typedef std::map<std::string, InnerMeshMapT>
             OuterMeshMapT;
-
+    
     ResourceManager(void);
     virtual ~ResourceManager(void);
 
@@ -223,20 +241,13 @@ namespace kore {
     std::map<std::string, ShaderProgram*> _shaderProgramMap; // filepath, program
     std::vector<kore::TextureSampler*> _textureSamplers;
     std::map<std::string, kore::FrameBuffer*> _frameBuffers; // name, framebuffer
+    std::vector<Material*> _materials;
 
     Delegate1Param<const FrameBuffer*> _fboDeleteEvent;
     Delegate1Param<const Texture*> _textureDeleteEvent;
     Delegate1Param<const ShaderProgram*> _shaderProgramDeleteEvent;
     Delegate1Param<const Mesh*> _meshDeleteEvent;
-
-    void notifyFramebufferRemove(const FrameBuffer* fbo);
-    void notifyTextureRemove(const Texture* tex);
-    void notifyShaderProgramRemove(const ShaderProgram* program);
-    void notifyMeshRemove(const Mesh* mesh);
-
-    
-
-    
+    Delegate1Param<const Material*> _materialDeleteEvent;
   };
 };
 #endif  // CORE_INCLUDE_CORE_RESOURCEMANAGER_H_
