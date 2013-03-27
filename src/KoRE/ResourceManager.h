@@ -233,10 +233,6 @@ namespace kore {
     void notifyTextureRemove(const Texture* tex);
     void notifyShaderProgramRemove(const ShaderProgram* program);
     void notifyMeshRemove(const Mesh* mesh);
-
-    
-
-    
   };
 };
 #endif  // CORE_INCLUDE_CORE_RESOURCEMANAGER_H_
