@@ -85,16 +85,14 @@ void koregui::RenderViewer::contextMenuEvent(QContextMenuEvent *event) {
   QGraphicsItem* item = itemAt(event->pos());
   if (item) {
     if(item->data(0).toString() == "Framebuffer") {
-      koregui::FrameBufferEditor* edit = new koregui::FrameBufferEditor;
-      edit->show();
+      QMenu* create  = menu.addMenu(QIcon("./assets/icons/testStar.png"), "Create");
+      create->addAction("ShaderPass", this, SLOT(createFBOStage()));
     }
   } else {
     QMenu* create  = menu.addMenu(QIcon("./assets/icons/testStar.png"), "Create");
     create->addAction("EmptyNode", this, SLOT(createEmptyNode()));
     create->addAction("Group", this, SLOT(createEmptyGroup()));
-    create->addAction("FBO", this, SLOT(createEmptyFBO()));
-    QMenu* add  = menu.addMenu(QIcon("./assets/icons/testStar.png"), "Add");
-    add->addAction("FBO", this, SLOT(selectExistingFramebuffer()));
+    create->addAction("FBO Stage", this, SLOT(createFBOStage()));
   }
   menu.exec(event->globalPos());
 }
@@ -159,10 +157,9 @@ void koregui::RenderViewer
   nodeItem->setPos(x, y);
 }
 
-void koregui::RenderViewer::createEmptyFBO(void) {
-  kore::FrameBuffer* frabuf = new kore::FrameBuffer("New Framebuffer");
-  kore::ResourceManager::getInstance()->addFramebuffer(frabuf);
-  koregui::FrameBufferItem* fbitem = new koregui::FrameBufferItem(frabuf);
+void koregui::RenderViewer::createFBOStage(void) {
+  kore::FrameBuffer* buf = const_cast<kore::FrameBuffer*>(kore::FrameBuffer::BACKBUFFER);
+  koregui::FrameBufferItem* fbitem = new koregui::FrameBufferItem(buf);
   _scene.addItem(fbitem);
 }
 

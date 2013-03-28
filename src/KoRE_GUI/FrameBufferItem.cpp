@@ -22,10 +22,16 @@
 /************************************************************************/
 
 #include "KoRE_GUI/FrameBufferItem.h"
+
 #include <QPainter>
 #include <QCursor>
 #include <QStaticText>
 #include <QMenu>
+#include <QGraphicsSceneMouseEvent>
+
+#include "KoRE_GUI/FrameBufferEditor.h"
+
+#include "KoRE/RenderManager.h"
 
 koregui::FrameBufferItem::FrameBufferItem(kore::FrameBuffer* frameBuffer,
                                           QGraphicsItem* parent)
@@ -34,6 +40,8 @@ koregui::FrameBufferItem::FrameBufferItem(kore::FrameBuffer* frameBuffer,
   setFlag(QGraphicsItem::ItemIsMovable, true);
   setFlag(QGraphicsItem::ItemIsSelectable, true);
   setCursor(QCursor(Qt::CursorShape::ArrowCursor));
+  _bufferstage = new kore::FrameBufferStage();
+  kore::RenderManager::getInstance()->addFramebufferStage(_bufferstage);
   refresh();
 }
 
@@ -73,4 +81,16 @@ void koregui::FrameBufferItem::paint(QPainter* painter,
   p.setStyle(Qt::PenStyle::SolidLine);
   painter->setPen(p);
   painter->drawStaticText(10,10, text);
+  painter->drawImage(_bufferwidth - 40, 10, QImage("./assets/icons/gear.png"));
+}
+
+void koregui::FrameBufferItem::mousePressEvent(QGraphicsSceneMouseEvent * event) {
+  if (event->button() == Qt::MouseButton::LeftButton) {
+    QPointF p = event->pos();//event->buttonDownPos(Qt::MouseButton::LeftButton);
+    if (p.y() < 42 && p.x() > _bufferwidth - 40) {
+      koregui::FrameBufferEditor* ed = new koregui::FrameBufferEditor(_bufferstage);
+      ed->show();
+    }
+  }
+  QGraphicsItem::mousePressEvent(event);
 }

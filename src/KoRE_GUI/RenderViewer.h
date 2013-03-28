@@ -44,8 +44,8 @@ namespace koregui {
     void zoomIn(void) {scale(1.2,1.2);}
     void zoomOut(void) {scale(1/1.2,1/1.2);}
 
-    /// Create a new Framebuffer and add a new Framebuffer Stage.
-    void createEmptyFBO(void);
+    /// Create a new Framebuffer Stage.
+    void createFBOStage(void);
 
     /// Create an empty Node. It is a child of the root Node.
     void createEmptyNode(void);

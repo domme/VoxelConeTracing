@@ -25,8 +25,11 @@
 #define FRAMEBUFFEREDITOR_H_
 
 #include <QWidget>
+
 #include "ui_FrameBufferEditor.h"
+
 #include "KoRE/FrameBuffer.h"
+#include "KoRE/Passes/FrameBufferStage.h"
 
 namespace koregui{
   class FrameBufferEditor : public QWidget
@@ -34,20 +37,17 @@ namespace koregui{
       Q_OBJECT
 
   public:
-      FrameBufferEditor(QWidget *parent = 0);
+      FrameBufferEditor(kore::FrameBufferStage* stage, QWidget *parent = 0);
       ~FrameBufferEditor();
 
   public slots:
     void addNewFramebuffer(void);
-    void addNewColorTarget(void);
-    void useDepthbufferTarget(bool use);
-    void useStencilbufferTarget(bool use);
     void refresh(void);
-
 
   private:
       Ui::FrameBufferEditor ui;
       kore::FrameBuffer* _currentbuffer;
+      kore::FrameBufferStage* _currentstage;
   };
 }
 

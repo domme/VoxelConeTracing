@@ -40,7 +40,7 @@ QT_MOC_LITERAL(7, 86, 25),
 QT_MOC_LITERAL(8, 112, 22)
     },
     "koregui::RenderViewer\0zoomIn\0\0zoomOut\0"
-    "createEmptyFBO\0createEmptyNode\0"
+    "createFBOStage\0createEmptyNode\0"
     "createEmptyGroup\0selectExistingFramebuffer\0"
     "addExistingFramebuffer\0"
 };
@@ -87,7 +87,7 @@ void koregui::RenderViewer::qt_static_metacall(QObject *_o, QMetaObject::Call _c
         switch (_id) {
         case 0: _t->zoomIn(); break;
         case 1: _t->zoomOut(); break;
-        case 2: _t->createEmptyFBO(); break;
+        case 2: _t->createFBOStage(); break;
         case 3: _t->createEmptyNode(); break;
         case 4: _t->createEmptyGroup(); break;
         case 5: _t->selectExistingFramebuffer(); break;

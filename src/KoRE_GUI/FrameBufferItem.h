@@ -42,10 +42,12 @@ namespace koregui {
     void paint(QPainter* painter,
                const QStyleOptionGraphicsItem* option,
                QWidget* widget);
+    void mousePressEvent(QGraphicsSceneMouseEvent * event);
 
     inline int getHeight(void) {return _bufferheight;};
     inline int getWidth(void) {return _bufferwidth;};
     inline kore::FrameBuffer* getFrameBuffer(void) {return _frameBuffer;};
+    inline kore::FrameBufferStage* getStage(void) {return _bufferstage;};
 
   private:
     kore::FrameBuffer* _frameBuffer;
