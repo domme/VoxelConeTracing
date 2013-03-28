@@ -28,8 +28,8 @@ wget --no-check-certificate --directory-prefix=$downloadDir https://sourceforge.
 wget --no-check-certificate --directory-prefix=$downloadDir http://sourceforge.net/projects/glfw/files/glfw/2.7.7/glfw-2.7.7.tar.gz/
 wget --no-check-certificate --directory-prefix=$downloadDir http://sourceforge.net/projects/ogl-math/files/glm-0.9.4.1/glm-0.9.4.1.zip/
 wget --no-check-certificate --directory-prefix=$downloadDir http://sourceforge.net/projects/assimp/files/assimp-3.0/assimp--3.0.1270-full.zip/
-
-
+wget --no-check-certificate --directory-prefix=$downloadDir http://sourceforge.net/projects/tinyxml/files/latest/
+wget --no-check-certificate --directory-prefix=$downloadDir www.opengl.org/registry/api/gl3.h
 # Unpack files
 for D in $(find $downloadDir -mindepth 1 -maxdepth 1 -type f) ; do
 	if [[ $D == *.tgz || $D == *.gz ]]; 
@@ -45,6 +45,13 @@ done
 
 # remove archives
 #rm $downloadDir/glew-1.9.0.tgz
+
+# build tinyxml
+cd $downloadDir/tinyxml_2_6_2/tinyxml
+printf "Building TinyXML \n"
+ming32-make
+ar rc libtinyxml.a tinyxml.o tinyxmlparser.o tinyxmlerror.o
+cd ../../../..
 
 # build glew
 cd $downloadDir/glew-1.9.0
