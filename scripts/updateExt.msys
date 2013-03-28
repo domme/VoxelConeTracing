@@ -1,0 +1,89 @@
+# Script
+
+# define variables
+downloadDir=ext/download/
+
+# create ext folder
+printf "Creating ext folder \n"
+mkdir ext
+
+# check if wget is installed - install if necessary
+if hash wget; 
+	then printf "wget found \n"; 
+else 
+	printf "wget not found, installing it... \n"; 
+	mingw-get install msys-wget-bin; 
+fi
+
+# check if unzip is installed - install if necessary
+if hash unzip; 
+	then printf "unzip found \n"; 
+else 
+	printf "unzip not found, installing it... \n"; 
+	mingw-get install msys-unzip; 
+fi
+
+# Download zip-files to download directory:
+wget --no-check-certificate --directory-prefix=$downloadDir https://sourceforge.net/projects/glew/files/glew/1.9.0/glew-1.9.0.tgz/
+wget --no-check-certificate --directory-prefix=$downloadDir http://sourceforge.net/projects/glfw/files/glfw/2.7.7/glfw-2.7.7.tar.gz/
+wget --no-check-certificate --directory-prefix=$downloadDir http://sourceforge.net/projects/ogl-math/files/glm-0.9.4.1/glm-0.9.4.1.zip/
+wget --no-check-certificate --directory-prefix=$downloadDir http://sourceforge.net/projects/assimp/files/assimp-3.0/assimp--3.0.1270-full.zip/
+
+
+# Unpack files
+for D in $(find $downloadDir -mindepth 1 -maxdepth 1 -type f) ; do
+	if [[ $D == *.tgz || $D == *.gz ]]; 
+    	then tar -C $downloadDir -xzvf $D ;
+    fi
+    if [[ $D == *.zip ]];    
+    	then fileName=$(basename $D .zip); 
+    		mkdir $downloadDir/$fileName;
+    		unzip $D -d $downloadDir/$(basename $D .zip);
+    fi
+done
+#tar -C $downloadDir -xzvf $downloadDir/glew-1.9.0.tgz
+
+# remove archives
+#rm $downloadDir/glew-1.9.0.tgz
+
+# build glew
+cd $downloadDir/glew-1.9.0
+printf "Building GLEW \n"
+make
+make install
+cd ../../..
+
+# build glfw
+cd $downloadDir/glfw-2.7.7
+printf "Building GLFW \n"
+mingw32-make win32-mingw
+cd ../../..
+
+# move contents
+printf "Moving content... \n"
+mkdir ext
+cp -R $downloadDir/glew-1.9.0/include/ ext/
+cp -R $downloadDir/glew-1.9.0/bin/ ./
+cp -R $downloadDir/glew-1.9.0/lib/ ./
+
+mkdir lib/mingw
+for D in $(find $downloadDir/glfw-2.7.7/lib/win32 -mindepth 1 -maxdepth 1 -type f) ; do
+	if [[ $D == *.a || $D == *.dll ]]; 
+    	then cp -R $D lib/mingw/;
+    fi
+done
+cp -R $downloadDir/glfw-2.7.7/include/GL ext/include/
+cp -R $downloadDir/glm-0.9.4.1/glm ext/include/
+
+cp -R $downloadDir/assimp--3.0.1270-full/assimp--3.0.1270-sdk/bin ./
+cp -R $downloadDir/assimp--3.0.1270-full/assimp--3.0.1270-sdk/include ext/
+cp -R $downloadDir/assimp--3.0.1270-full/assimp--3.0.1270-sdk/lib ./
+
+printf "Deleting download dir... \n"
+rmdir $downloadDir
+
+printf "script done! \n"
+# iterate over files
+#for D in $(find /path/to/dir/ -mindepth 1 -maxdepth 1 -type d) ; do
+#    echo $D ;
+#done
