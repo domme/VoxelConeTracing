@@ -1,13 +1,13 @@
 file(GLOB_RECURSE SOURCES *.cpp)
 
-add_executable(MainGLFW ${SOURCES})
+add_executable(VoxelConeTracing ${SOURCES})
 
 #linking against a custom library
-target_link_libraries(MainGLFW D:/GitHub/KoRE/lib Assimp32d.dll)
-target_link_libraries(MainGLFW D:/GitHub/KoRE/lib assimp)
-target_link_libraries(MainGLFW D:/GitHub/KoRE/lib tinyxml.a)
-target_link_libraries(MainGLFW D:/GitHub/KoRE/lib glew32.a)
-target_link_libraries(MainGLFW D:/GitHub/KoRE/lib glfw.a)
+target_link_libraries(VoxelConeTracing D:/GitHub/KoRE/lib Assimp32d.dll)
+target_link_libraries(VoxelConeTracing D:/GitHub/KoRE/lib assimp)
+target_link_libraries(VoxelConeTracing D:/GitHub/KoRE/lib tinyxml.a)
+target_link_libraries(VoxelConeTracing D:/GitHub/KoRE/lib glew32.a)
+target_link_libraries(VoxelConeTracing D:/GitHub/KoRE/lib glfw.a)
 
 
 if(WIN32)
@@ -49,5 +49,5 @@ endif(WIN32)
 
 
 
-target_link_libraries(MainGLFW ${KoRE_LIBS})
+target_link_libraries(VoxelConeTracing ${KoRE_LIBS})
 
