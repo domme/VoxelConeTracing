@@ -1,0 +1,23 @@
+﻿Build started 29.03.2013 16:47:33.
+     1>Project "C:\Users\Dominik Lazarek\Documents\Entwicklung\KoRE\demos\VoxelConeTracing\VoxelConeTracing.vcxproj" on node 2 (Build target(s)).
+     1>InitializeBuildStatus:
+         Creating "MainGLFW.dir\Debug\VoxelConeTracing.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I"C:\Users\Dominik Lazarek\Documents\Entwicklung\KoRE\ext/include" /I"C:\Users\Dominik Lazarek\Documents\Entwicklung\KoRE\src" /Zi /nologo /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D GLFW_INCLUDE_GL3 /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /GR /Fo"MainGLFW.dir\Debug\\" /Fd"C:\Users\Dominik Lazarek\Documents\Entwicklung\KoRE\\bin\Debug\\MainGLFW.pdb" /Gd /TP /analyze- /errorReport:prompt  /Zm1000 main.cpp
+         main.cpp
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Dominik Lazarek\Documents\Entwicklung\KoRE\\bin\Debug\MainGLFW.exe" /INCREMENTAL /NOLOGO ..\..\ext\lib\tinyxml.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib "C:\Users\Dominik Lazarek\Documents\Entwicklung\KoRE\lib\Debug\KoRE.lib" OpenGL32.lib "C:\Users\Dominik Lazarek\Documents\Entwicklung\KoRE\ext\lib\msvc100\GLFW.lib" ..\..\ext\lib\glew32.lib "..\..\ext\lib\assimp_release-dll_win32\assimp.lib" /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Dominik Lazarek\Documents\Entwicklung\KoRE\bin/Debug/MainGLFW.pdb" /SUBSYSTEM:CONSOLE /STACK:"10000000" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Dominik Lazarek\Documents\Entwicklung\KoRE\bin/Debug/MainGLFW.lib" /MACHINE:X86 /SAFESEH  /machine:X86 /debug /NODEFAULTLIB:msvcrt.lib MainGLFW.dir\Debug\main.obj
+     1>MSVCRTD.lib(cinitexe.obj) : warning LNK4098: defaultlib 'libcmt.lib' conflicts with use of other libs; use /NODEFAULTLIB:library
+     1>tinyxml.lib(tinystr.obj) : warning LNK4099: PDB 'vc100.pdb' was not found with 'tinyxml.lib(tinystr.obj)' or at 'C:\Users\Dominik Lazarek\Documents\Entwicklung\KoRE\bin\Debug\vc100.pdb'; linking object as if no debug info
+     1>tinyxml.lib(tinyxml.obj) : warning LNK4099: PDB 'vc100.pdb' was not found with 'tinyxml.lib(tinyxml.obj)' or at 'C:\Users\Dominik Lazarek\Documents\Entwicklung\KoRE\bin\Debug\vc100.pdb'; linking object as if no debug info
+     1>tinyxml.lib(tinyxmlerror.obj) : warning LNK4099: PDB 'vc100.pdb' was not found with 'tinyxml.lib(tinyxmlerror.obj)' or at 'C:\Users\Dominik Lazarek\Documents\Entwicklung\KoRE\bin\Debug\vc100.pdb'; linking object as if no debug info
+     1>tinyxml.lib(tinyxmlparser.obj) : warning LNK4099: PDB 'vc100.pdb' was not found with 'tinyxml.lib(tinyxmlparser.obj)' or at 'C:\Users\Dominik Lazarek\Documents\Entwicklung\KoRE\bin\Debug\vc100.pdb'; linking object as if no debug info
+         VoxelConeTracing.vcxproj -> C:\Users\Dominik Lazarek\Documents\Entwicklung\KoRE\\bin\Debug\MainGLFW.exe
+       FinalizeBuildStatus:
+         Deleting file "MainGLFW.dir\Debug\VoxelConeTracing.unsuccessfulbuild".
+         Touching "MainGLFW.dir\Debug\VoxelConeTracing.lastbuildstate".
+     1>Done Building Project "C:\Users\Dominik Lazarek\Documents\Entwicklung\KoRE\demos\VoxelConeTracing\VoxelConeTracing.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.48

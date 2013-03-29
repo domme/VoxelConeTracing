@@ -34,5 +34,5 @@ ext
 #*.vcxproj
 #*.filters
 
-# Uncomment theses lines below if you work on the voxel branch
-demos/VoxelConeTracing/*
+# Comment theses lines below if you work on the voxel branch
+# demos/VoxelConeTracing/*
