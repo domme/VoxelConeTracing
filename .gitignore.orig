@@ -1,0 +1,47 @@
+*~
+ipch
+cmake_install.cmake
+Makefile
+KoRE.cbp
+CMakeLists.txt.user
+CMakeFiles
+CMakeCache.txt
+*/KoRE_Log.txt
+KoRE_Log.txt
+*.exe
+*.pdb
+*.ilk
+*.user
+*.suo
+*.sdf
+*.opensdf
+*.obj
+*.kore
+Debug/*
+Kore.dir/*
+Win32/*
+*/obj/*
+demos/MainGLFW/MainGLFW.dir/*
+demos/VoxelConeTracing/MainGLFW.dir/*
+demos/VoxelConeTracing/VoxelConeTracing.dir/*
+KoRE.lib
+lib
+bin
+ext
+
+
+# Uncomment these lines to update master and then run
+# git rm -r --cached .  and a commit afterwards.
+###################################################
+#*.sln
+#*.vcxproj
+#*.filters
+
+<<<<<<< HEAD
+# Comment theses lines below if you work on the voxel branch
+# demos/VoxelConeTracing/*
+=======
+# Uncomment theses lines below if you work on the voxel branch
+demos/VoxelConeTracing/*
+demos/VoxelConeTracing/src/*
+>>>>>>> hax
