@@ -42,6 +42,8 @@ public:
         FrameBufferEditor->setMinimumSize(QSize(400, 300));
         FrameBufferEditor->setMaximumSize(QSize(400, 16777215));
         FrameBufferEditor->setMouseTracking(false);
+        FrameBufferEditor->setStyleSheet(QLatin1String("background-color: rgb(44, 44, 44);\n"
+"color: rgb(255, 255, 255);"));
         FrameBufferEditor->setLocale(QLocale(QLocale::English, QLocale::UnitedStates));
         framebufferselect = new QComboBox(FrameBufferEditor);
         framebufferselect->setObjectName(QStringLiteral("framebufferselect"));

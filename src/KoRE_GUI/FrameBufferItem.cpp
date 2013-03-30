@@ -33,10 +33,11 @@
 
 #include "KoRE/RenderManager.h"
 
-koregui::FrameBufferItem::FrameBufferItem(kore::FrameBuffer* frameBuffer,
-                                          QGraphicsItem* parent)
-                                          : _frameBuffer(frameBuffer){
-  setData(0, "Framebuffer");
+koregui::FrameBufferItem::FrameBufferItem(QGraphicsItem* parent)
+                                          : _frameBuffer(NULL),
+                                            _name("<empty>"),
+                                            QGraphicsItem(parent) {
+  setData(0, "FRAMEBUFFER");
   setFlag(QGraphicsItem::ItemIsMovable, true);
   setFlag(QGraphicsItem::ItemIsSelectable, true);
   setCursor(QCursor(Qt::CursorShape::ArrowCursor));
@@ -49,6 +50,10 @@ koregui::FrameBufferItem::~FrameBufferItem(void){
 }
 
 void koregui::FrameBufferItem::refresh(void){
+  prepareGeometryChange();
+  if(_frameBuffer) {
+    _name = _frameBuffer->getName();
+  }
   _bufferheight = 300;
   _bufferwidth = 200;
 }
@@ -76,21 +81,26 @@ void koregui::FrameBufferItem::paint(QPainter* painter,
   font.setPointSize(12);
   painter->setFont(font);
  
-  text.setText(_frameBuffer->getName().c_str());
+  text.setText(_name.c_str());
   p.setColor(QColor(255,255,255));
   p.setStyle(Qt::PenStyle::SolidLine);
   painter->setPen(p);
   painter->drawStaticText(10,10, text);
-  painter->drawImage(_bufferwidth - 40, 10, QImage("./assets/icons/gear.png"));
+  painter->drawImage(_bufferwidth - 26, 10, QImage("./assets/icons/gear.png"));
 }
 
 void koregui::FrameBufferItem::mousePressEvent(QGraphicsSceneMouseEvent * event) {
   if (event->button() == Qt::MouseButton::LeftButton) {
     QPointF p = event->pos();//event->buttonDownPos(Qt::MouseButton::LeftButton);
-    if (p.y() < 42 && p.x() > _bufferwidth - 40) {
-      koregui::FrameBufferEditor* ed = new koregui::FrameBufferEditor(_bufferstage);
+    if (p.y() < 26 && p.x() > _bufferwidth - 26) {
+      koregui::FrameBufferEditor* ed = new koregui::FrameBufferEditor(this);
       ed->show();
     }
   }
   QGraphicsItem::mousePressEvent(event);
+}
+
+void koregui::FrameBufferItem::setFrameBuffer(kore::FrameBuffer* framebuffer) {
+  _frameBuffer = framebuffer;
+  refresh();
 }

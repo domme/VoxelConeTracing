@@ -62,6 +62,9 @@
     <ClInclude Include="src\KoRE_GUI\GeneratedFiles\ui_FrameBufferEditor.h">
       <Filter>Generierte Dateien</Filter>
     </ClInclude>
+    <ClInclude Include="src\KoRE_GUI\GeneratedFiles\ui_ShaderEditor.h">
+      <Filter>Generierte Dateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="src\KoRE_GUI\SceneViewer.h">
@@ -86,6 +89,12 @@
       <Filter>Header Dateien</Filter>
     </CustomBuild>
     <CustomBuild Include="src\KoRE_GUI\FrameBufferEditor.ui">
+      <Filter>Form Dateien</Filter>
+    </CustomBuild>
+    <CustomBuild Include="src\KoRE_GUI\ShaderEditor.h">
+      <Filter>Header Dateien</Filter>
+    </CustomBuild>
+    <CustomBuild Include="src\KoRE_GUI\ShaderEditor.ui">
       <Filter>Form Dateien</Filter>
     </CustomBuild>
   </ItemGroup>
@@ -166,6 +175,15 @@
       <Filter>Generierte Dateien\Debug</Filter>
     </ClCompile>
     <ClCompile Include="src\KoRE_GUI\GeneratedFiles\Release\moc_FrameBufferEditor.cpp">
+      <Filter>Generierte Dateien\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KoRE_GUI\ShaderEditor.cpp">
+      <Filter>Source Dateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KoRE_GUI\GeneratedFiles\Debug\moc_ShaderEditor.cpp">
+      <Filter>Generierte Dateien\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KoRE_GUI\GeneratedFiles\Release\moc_ShaderEditor.cpp">
       <Filter>Generierte Dateien\Release</Filter>
     </ClCompile>
   </ItemGroup>

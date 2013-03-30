@@ -34,7 +34,7 @@
 namespace koregui {
   class FrameBufferItem : public QGraphicsItem {
   public:
-    FrameBufferItem(kore::FrameBuffer* frameBuffer, QGraphicsItem* parent = 0);
+    FrameBufferItem(QGraphicsItem* parent = 0);
     ~FrameBufferItem(void);
 
     void refresh(void);
@@ -49,7 +49,10 @@ namespace koregui {
     inline kore::FrameBuffer* getFrameBuffer(void) {return _frameBuffer;};
     inline kore::FrameBufferStage* getStage(void) {return _bufferstage;};
 
+    void setFrameBuffer(kore::FrameBuffer* framebuffer);
+
   private:
+    std::string _name;
     kore::FrameBuffer* _frameBuffer;
     kore::FrameBufferStage* _bufferstage;
     uint _bufferheight;

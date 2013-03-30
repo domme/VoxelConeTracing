@@ -21,38 +21,34 @@
 /* \author Dominik Ospelt                                               */
 /************************************************************************/
 
-#ifndef SHADERPROGRAMITEM_H_
-#define SHADERPROGRAMITEM_H_
+#ifndef SHADEREDITOR_H_
+#define SHADEREDITOR_H_
 
-#include <QGraphicsItem>
+#include <QWidget>
+#include "ui_ShaderEditor.h"
+
 #include "KoRE/ShaderProgram.h"
-#include "KoRE_GUI/ShaderInputItem.h"
+#include "KoRE_GUI/ShaderProgramItem.h"
 
 namespace koregui {
-  class ShaderProgramItem : public QGraphicsItem {
+  class ShaderEditor : public QWidget
+  {
+    Q_OBJECT
+
   public:
-    ShaderProgramItem(QGraphicsItem* parent = 0);
-    ~ShaderProgramItem(void);
+    ShaderEditor(ShaderProgramItem* pass, QWidget *parent = 0);
+    ~ShaderEditor();
 
-    void refresh(void);
-    inline int getHeight(void) {return _shaderheight;};
-    inline int getWidth(void) {return _shaderwidth;};
-
-  protected:
-    QRectF boundingRect() const;
-    void paint(QPainter* painter,
-      const QStyleOptionGraphicsItem* option,
-      QWidget* widget);
-    void mousePressEvent(QGraphicsSceneMouseEvent * event);
+    public slots:
+      void addNewShaderProgram(void);
+      void shaderProgramChanged(const QString & name);
+      void refresh(void);
 
   private:
-    kore::ShaderProgram* _shader;
-    std::vector<ShaderInputItem*> _attributes;
-    std::vector<ShaderInputItem*> _uniforms;
-    std::vector<ShaderInputItem*> _sampler;
-    uint _shaderwidth;
-    uint _shaderheight;
-    std::string _name;
+    Ui::ShaderEditor ui;
+    kore::ShaderProgram* _currentprogram;
+    ShaderProgramItem* _currentitem;
   };
 }
-#endif  // SHADERPROGRAMITEM_H_
+
+#endif  // SHADEREDITOR_H_
