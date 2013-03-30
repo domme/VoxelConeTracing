@@ -80,7 +80,7 @@ namespace kore {
     const GLuint getIBO() const;
     const bool usesIBO() const;
 
-  private:
+  protected:
     std::string                     _name;
     std::vector<MeshAttributeArray> _attributes;
     std::vector<unsigned int>       _indices;

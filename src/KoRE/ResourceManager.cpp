@@ -422,7 +422,7 @@ void kore::ResourceManager::removeMaterial(const Material* mat) {
   }
 }
 
-const std::string& kore::ResourceManager::
+std::string kore::ResourceManager::
   getUniqueMaterialName(const std::string& scenePath, const uint index) {
     std::stringstream nameStream;
     nameStream << scenePath << "_material_" << index;

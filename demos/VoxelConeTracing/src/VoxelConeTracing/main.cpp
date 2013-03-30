@@ -38,6 +38,7 @@
 #include "KoRE/Operations/BindOperations/BindAttribute.h"
 #include "KoRE/Operations/BindOperations/BindUniform.h"
 #include "KoRE/Operations/BindOperations/BindTexture.h"
+#include "KoRE/Operations/BindOperations/BindImageTexture.h"
 #include "KoRE/Operations/UseFBO.h"
 #include "KoRE/Operations/UseShaderProgram.h"
 #include "KoRE/ResourceManager.h"
@@ -51,6 +52,64 @@
 #include "Kore/Passes/ShaderProgramPass.h"
 #include "KoRE/Passes/NodePass.h"
 #include "KoRE/Events.h"
+
+#include "VoxelConeTracing/FullscreenQuad.h"
+
+void setup() {
+  // enable culling and depthtest
+  glDisable(GL_DEPTH_TEST);  
+
+  glClearColor(1.0f,1.0f,1.0f,1.0f);
+
+  kore::Texture* tex = kore::ResourceManager::getInstance()->
+    loadTexture("./assets/textures/Crate.png");
+
+  kore::TexturesComponent* texComponent = new kore::TexturesComponent;
+  texComponent->addTexture(tex);
+  kore::SceneManager::getInstance()->getRootNode()->addComponent(texComponent);
+
+  FullscreenQuad* fsQuadMesh = FullscreenQuad::getInstance();
+  kore::MeshComponent* fsQuadMeshComponent = new kore::MeshComponent;
+  fsQuadMeshComponent->setMesh(fsQuadMesh);
+  kore::SceneManager::getInstance()->getRootNode()->addComponent(fsQuadMeshComponent);
+
+  kore::FrameBufferStage* backBufferStage = new kore::FrameBufferStage;
+  GLenum drawBuffers[] = {GL_COLOR_ATTACHMENT0};
+  backBufferStage->setFrameBuffer(kore::FrameBuffer::BACKBUFFER,
+                                  GL_FRAMEBUFFER, drawBuffers, 1);
+
+
+  kore::ShaderProgram* imgLoadShader = new kore::ShaderProgram;
+  imgLoadShader->
+    loadShader("./assets/shader/VoxelConeTracing/fullscreenQuad_simple.vert",
+    GL_VERTEX_SHADER);
+  imgLoadShader->loadShader("./assets/shader/VoxelConeTracing/imageLoad.frag",
+    GL_VERTEX_SHADER);
+  imgLoadShader->init("imgLoadTestShader");
+
+  kore::ShaderProgramPass* programPass = new kore::ShaderProgramPass;
+  programPass->setShaderProgram(imgLoadShader);
+  
+  kore::NodePass* nodePass = new kore::NodePass;
+  kore::BindAttribute* posAttBind =
+    new kore::BindAttribute(fsQuadMeshComponent->getShaderData("v_position"),
+    imgLoadShader->getAttribute("v_position"));
+  nodePass->addOperation(posAttBind);
+
+  kore::BindImageTexture* bindImgTex =
+    new kore::BindImageTexture(texComponent->getShaderData(tex->getName()),
+                                           imgLoadShader->getUniform("image"));
+  nodePass->addOperation(bindImgTex);
+
+  kore::RenderMesh* renderOP =
+    new kore::RenderMesh(fsQuadMeshComponent, imgLoadShader);
+  nodePass->addOperation(renderOP);
+  
+  programPass->addNodePass(nodePass);
+  backBufferStage->addProgramPass(programPass);
+  kore::RenderManager::getInstance()->addFramebufferStage(backBufferStage);
+}
+
 
 int main(void) {
   int running = GL_TRUE;
@@ -83,10 +142,7 @@ int main(void) {
     glfwTerminate();
     exit(EXIT_FAILURE);
   }
-
-  // Init gl-states
-  // glEnable(GL_VERTEX_ARRAY);
-    
+  
   // log versions
   int GLFWmajor, GLFWminor, GLFWrev;
   glfwGetVersion(&GLFWmajor, &GLFWminor, &GLFWrev);
@@ -114,12 +170,7 @@ int main(void) {
             reinterpret_cast<const char*>(
             glewGetString(GLEW_VERSION)));
 
-  // enable culling and depthtest
-  glEnable(GL_DEPTH_TEST);
-  glEnable(GL_CULL_FACE);
-  glCullFace(GL_BACK);
-  
-  glClearColor(1.0f,1.0f,1.0f,1.0f);
+  setup();
 
   kore::Timer the_timer;
   the_timer.start();
