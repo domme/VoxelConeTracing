@@ -24,6 +24,7 @@
 #ifndef KORE_SRC_KORE_EVENTS_H_
 #define KORE_SRC_KORE_EVENTS_H_
 
+// Bla
 #include "KoRE/Common.h"
 
 /**********************************************************************//**
