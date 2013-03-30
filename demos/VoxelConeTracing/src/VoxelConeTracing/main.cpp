@@ -56,7 +56,6 @@
 #include "VoxelConeTracing/FullscreenQuad.h"
 
 void setup() {
-  // enable culling and depthtest
   glDisable(GL_DEPTH_TEST);  
 
   glClearColor(1.0f,1.0f,1.0f,1.0f);
@@ -84,7 +83,7 @@ void setup() {
     loadShader("./assets/shader/VoxelConeTracing/fullscreenQuad_simple.vert",
     GL_VERTEX_SHADER);
   imgLoadShader->loadShader("./assets/shader/VoxelConeTracing/imageLoad.frag",
-    GL_VERTEX_SHADER);
+    GL_FRAGMENT_SHADER);
   imgLoadShader->init("imgLoadTestShader");
 
   kore::ShaderProgramPass* programPass = new kore::ShaderProgramPass;
@@ -189,6 +188,7 @@ int main(void) {
     kore::GLerror::gl_ErrorCheckStart();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT |GL_STENCIL_BUFFER_BIT);
     kore::RenderManager::getInstance()->renderFrame();
+
     glfwSwapBuffers();
     kore::GLerror::gl_ErrorCheckFinish("Main Loop");
 

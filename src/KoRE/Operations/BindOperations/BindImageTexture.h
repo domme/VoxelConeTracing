@@ -39,6 +39,7 @@ namespace kore {
         const ShaderInput* shaderInput);
   private:
 
+    GLuint internalFormatToImageFormat(const GLuint internalFormat) const;
     void init();
     virtual void doExecute(void) const;
   };

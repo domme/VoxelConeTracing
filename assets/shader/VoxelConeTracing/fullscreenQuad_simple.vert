@@ -1,7 +1,7 @@
 #version 420
 
 layout(location = 0) in vec3 v_position;  // Quad-vertices in [-1..1]
-varying vec2 uv;
+smooth out vec2 uv;
 
 void main() {
 	gl_Position = vec4(v_position, 1.0);

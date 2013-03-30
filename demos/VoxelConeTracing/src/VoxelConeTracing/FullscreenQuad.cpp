@@ -38,11 +38,11 @@ void FullscreenQuad::init() {
   const uint UL = 3;
 
   // Load vertex positions.
-  glm::vec3** vertices = new glm::vec3*[_numVertices];
-  vertices[LL] = new glm::vec3(-1.0f, -1.0f, 0.0f);  // LL
-  vertices[LR] = new glm::vec3(1.0f, -1.0f, 0.0f);   // LR
-  vertices[UR] = new glm::vec3(1.0f, 1.0f, 0.0f);    // UR
-  vertices[UL] = new glm::vec3(-1.0f, 1.0f, 0.0f);   // UL
+  glm::vec3* vertices = new glm::vec3[_numVertices];
+  vertices[LL] = glm::vec3(-1.0f, -1.0f, 0.0f);  // LL
+  vertices[LR] = glm::vec3(1.0f, -1.0f, 0.0f);   // LR
+  vertices[UR] = glm::vec3(1.0f, 1.0f, 0.0f);    // UR
+  vertices[UL] = glm::vec3(-1.0f, 1.0f, 0.0f);   // UL
 
   kore::MeshAttributeArray att;
   att.name = "v_position";
@@ -67,5 +67,5 @@ void FullscreenQuad::init() {
   _indices[5] = LL;
   
   // Init the VBO and IBO
-  createAttributeBuffers(kore::BUFFERTYPE_INTERLEAVED);
+  createAttributeBuffers(kore::BUFFERTYPE_SEQUENTIAL);
 }
