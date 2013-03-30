@@ -33,7 +33,7 @@ koregui::ShaderInputItem::ShaderInputItem(const kore::ShaderInput* input,
                                         QGraphicsItem(parent) {
   setAcceptHoverEvents(true);
   setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-  setData(0, "ShaderInput");
+  setData(0, "SHADERINPUT");
 }
 
 koregui::ShaderInputItem::~ShaderInputItem(void) {

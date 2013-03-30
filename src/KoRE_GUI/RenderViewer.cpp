@@ -81,25 +81,29 @@ void koregui::RenderViewer::wheelEvent(QWheelEvent *event) {
 }
 
 void koregui::RenderViewer::contextMenuEvent(QContextMenuEvent *event) {
-  QMenu menu("RenderContext", this);
   QGraphicsItem* item = itemAt(event->pos());
   if (item) {
-    if(item->data(0).toString() == "Framebuffer") {
+    if(item->data(0).toString() == "FRAMEBUFFER") {
+      _currentframebuffer = static_cast<koregui::FrameBufferItem*>(item);
+      QMenu menu("RenderContext", this);
       QMenu* create  = menu.addMenu(QIcon("./assets/icons/testStar.png"), "Create");
-      create->addAction("ShaderPass", this, SLOT(createFBOStage()));
+      create->addAction("ShaderPass", this, SLOT(createShaderPass()));
+      menu.exec(event->globalPos());
     }
   } else {
+    QMenu menu("RenderContext", this);
     QMenu* create  = menu.addMenu(QIcon("./assets/icons/testStar.png"), "Create");
     create->addAction("EmptyNode", this, SLOT(createEmptyNode()));
     create->addAction("Group", this, SLOT(createEmptyGroup()));
     create->addAction("FBO Stage", this, SLOT(createFBOStage()));
+    _currentframebuffer = NULL;
+    menu.exec(event->globalPos());
   }
-  menu.exec(event->globalPos());
 }
 
 void koregui::RenderViewer::mousePressEvent(QMouseEvent * event) {
   QGraphicsItem* item = itemAt(event->pos());
-  if (item && item->data(0).toString() == "ShaderData") {
+  if (item && item->data(0).toString() == "SHADERDATA") {
       _currentpath = new BindPathItem(static_cast<ShaderDataItem*>(item),0);
       _currentpath->setDest(mapToScene(event->pos()));
       _scene.addItem(_currentpath);
@@ -110,7 +114,7 @@ void koregui::RenderViewer::mousePressEvent(QMouseEvent * event) {
 void koregui::RenderViewer::mouseReleaseEvent(QMouseEvent * event) {
   if(_currentpath) {
     if (_bindTarget) {
-      static_cast<ShaderInputItem*>(_bindTarget)->reset();
+      _bindTarget->reset();
       _currentpath = NULL;
       _bindTarget = NULL;
     } else {
@@ -124,15 +128,15 @@ void koregui::RenderViewer::mouseReleaseEvent(QMouseEvent * event) {
 void koregui::RenderViewer::mouseMoveEvent(QMouseEvent *event) {
   if(_currentpath) {
     QGraphicsItem* item = itemAt(event->pos());
-    if (item && item->data(0).toString() == "ShaderInput"
+    if (item && item->data(0).toString() == "SHADERINPUT"
         && static_cast<ShaderInputItem*>(item)->checkInput(_currentpath)) {
-      _currentpath->setEnd(static_cast<ShaderInputItem*>(item));
-      _bindTarget = item;
+      _bindTarget = static_cast<ShaderInputItem*>(item);
+      _currentpath->setEnd(_bindTarget);
       item->update();
     } else {
       if(_bindTarget) {
         _currentpath->setEnd(NULL);
-        static_cast<ShaderInputItem*>(_bindTarget)->reset();
+        _bindTarget->reset();
         _bindTarget->update();
         _bindTarget = NULL;
       }
@@ -158,9 +162,15 @@ void koregui::RenderViewer
 }
 
 void koregui::RenderViewer::createFBOStage(void) {
-  kore::FrameBuffer* buf = const_cast<kore::FrameBuffer*>(kore::FrameBuffer::BACKBUFFER);
-  koregui::FrameBufferItem* fbitem = new koregui::FrameBufferItem(buf);
+  koregui::FrameBufferItem* fbitem = new koregui::FrameBufferItem();
   _scene.addItem(fbitem);
+}
+
+void koregui::RenderViewer::createShaderPass(void) {
+  if(_currentframebuffer) {
+    koregui::ShaderProgramItem* spitem
+      = new koregui::ShaderProgramItem(_currentframebuffer);
+  }
 }
 
 void koregui::RenderViewer::createEmptyNode(void) {
@@ -169,28 +179,4 @@ void koregui::RenderViewer::createEmptyNode(void) {
 
 void koregui::RenderViewer::createEmptyGroup(void) {
 
-}
-
-void koregui::RenderViewer::selectExistingFramebuffer(void) {
-  QWidget* addWgt = new QWidget(NULL);
-  addWgt->setWindowTitle("Select Framebuffer");
-  QVBoxLayout* vbox = new QVBoxLayout(NULL);
-  addWgt->setLayout(vbox);
-  QListWidget* bufferlist = new QListWidget(addWgt);
-  vbox->addWidget(bufferlist);
-  std::vector<kore::FrameBuffer*> framebuffers
-    = kore::ResourceManager::getInstance()->getFramebuffers();
-  for (uint i = 0; i < framebuffers.size(); i++) {
-    bufferlist->addItem(framebuffers[i]->getName().c_str());
-  }
-  QPushButton* confirmButton = new QPushButton(addWgt);
-  confirmButton->setText("Add");
-  vbox->addWidget(confirmButton);
-  connect(confirmButton, SIGNAL(clicked()), this, SLOT(addExistingFramebuffer()));
-
-  addWgt->show();
-}
-
-void koregui::RenderViewer::addExistingFramebuffer(void) {
-  
 }

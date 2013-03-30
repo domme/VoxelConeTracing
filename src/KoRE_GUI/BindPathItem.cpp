@@ -32,6 +32,7 @@ koregui::BindPathItem::BindPathItem(ShaderDataItem* start,
                                   : _start(start),
                                     _end(end),
                                     QGraphicsPathItem(parent){
+  setData(0, "BINDPATH");
   setAcceptedMouseButtons(Qt::NoButton);
   setCursor(QCursor(Qt::CursorShape::WhatsThisCursor));
   setZValue(-10);

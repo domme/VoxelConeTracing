@@ -30,7 +30,7 @@ koregui::NodeItem::NodeItem(kore::SceneNode* sceneNode,
                             QGraphicsItem* parent)
                             : _sceneNode(sceneNode),
                               QGraphicsItem(parent) {
-
+  setData(0, "NODE");
   setFlag(QGraphicsItem::ItemIsMovable, true);
   setFlag(QGraphicsItem::ItemIsSelectable, true);
   setCursor(QCursor(Qt::CursorShape::ArrowCursor));

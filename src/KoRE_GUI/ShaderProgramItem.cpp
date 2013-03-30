@@ -31,22 +31,24 @@
 
 #include "KoRE/ShaderInput.h"
 #include "KoRE/ShaderData.h"
+#include "KoRE_GUI/ShaderEditor.h"
 
-koregui::ShaderProgramItem::ShaderProgramItem(const kore::ShaderProgram* shader,
-                                QGraphicsItem* parent) 
-                              : _shader(const_cast<kore::ShaderProgram*>(shader)),
+koregui::ShaderProgramItem::ShaderProgramItem(QGraphicsItem* parent) 
+                              : _shader(NULL),
+                                _name("<empty>"),
                                 QGraphicsItem(parent) {
+  setData(0, "SHADERINPUT");
   setFlag(QGraphicsItem::ItemIsSelectable, true);
   setFlag(QGraphicsItem::ItemIsMovable, true);
   setCursor(QCursor(Qt::CursorShape::ArrowCursor));
-  init();
   refresh();
 }
 
 koregui::ShaderProgramItem::~ShaderProgramItem(void) {
 }
 
-void koregui::ShaderProgramItem::init(void) {
+void koregui::ShaderProgramItem::refresh(void) {
+  prepareGeometryChange();
   // destroy old shader inputs
   if(_attributes.size() > 0) {
     for (uint i = 0; i < _attributes.size(); i++) {
@@ -68,25 +70,25 @@ void koregui::ShaderProgramItem::init(void) {
   }
   // create inputs from shaderprogram object
   int tmpheight = 40;
-  std::vector<kore::ShaderInput> sinput = _shader->getAttributes();
-  for (uint i = 0; i < sinput.size(); i++) {
-    const kore::ShaderInput* tmp = _shader->getAttribute(sinput[i].name);
-    ShaderInputItem* inpitem =  new ShaderInputItem(tmp, this);
-    _attributes.push_back(inpitem);
-    inpitem->setPos(-4, tmpheight + 30 * i);
+  if(_shader) {
+    _name = _shader->getName();
+    std::vector<kore::ShaderInput> sinput = _shader->getAttributes();
+    for (uint i = 0; i < sinput.size(); i++) {
+      const kore::ShaderInput* tmp = _shader->getAttribute(sinput[i].name);
+      ShaderInputItem* inpitem =  new ShaderInputItem(tmp, this);
+      _attributes.push_back(inpitem);
+      inpitem->setPos(-4, tmpheight + 30 * i);
+    }
+    tmpheight += 30 * sinput.size();
+    sinput = _shader->getUniforms();
+    for (uint j = 0; j < sinput.size(); j++) {
+      const kore::ShaderInput* tmp = _shader->getUniform(sinput[j].name);
+      ShaderInputItem* inpitem =  new ShaderInputItem(tmp, this);
+      _uniforms.push_back(inpitem);
+      inpitem->setPos(-4, tmpheight + 30 * j);
+    }
   }
-  tmpheight += 30 * sinput.size();
-  sinput = _shader->getUniforms();
-  for (uint j = 0; j < sinput.size(); j++) {
-    const kore::ShaderInput* tmp = _shader->getUniform(sinput[j].name);
-    ShaderInputItem* inpitem =  new ShaderInputItem(tmp, this);
-    _uniforms.push_back(inpitem);
-    inpitem->setPos(-4, tmpheight + 30 * j);
-  }
-}
 
-void koregui::ShaderProgramItem::refresh(void) {
-  prepareGeometryChange();
   _shaderheight = 40; // place for shader name
   _shaderheight += 30 * _attributes.size();
   _shaderheight += 30 * _uniforms.size();
@@ -108,7 +110,7 @@ void koregui::ShaderProgramItem::paint(QPainter* painter,
   QStaticText text;
 
   p.setStyle(Qt::PenStyle::NoPen);
-  b.setColor((isSelected())?QColor(86,86,86):QColor(44,44,44));
+  b.setColor((isSelected())?QColor(86,86,86):QColor(66,66,66));
   b.setStyle(Qt::BrushStyle::SolidPattern);
   painter->setPen(p);
   painter->setBrush(b);
@@ -117,8 +119,9 @@ void koregui::ShaderProgramItem::paint(QPainter* painter,
   font.setBold(true);
   font.setPointSize(12);
   painter->setFont(font);
+  painter->drawImage(_shaderwidth - 26, 10, QImage("./assets/icons/gear.png"));
 
-  text.setText(_shader->getName().c_str());
+  text.setText(_name.c_str());
   p.setColor(QColor(255,255,255));
   p.setStyle(Qt::PenStyle::SolidLine);
   painter->setPen(p);
@@ -143,15 +146,13 @@ void koregui::ShaderProgramItem::paint(QPainter* painter,
 }
 
 void koregui::ShaderProgramItem
-  ::mousePressEvent(QGraphicsSceneMouseEvent * event){
+  ::mousePressEvent(QGraphicsSceneMouseEvent * event) {
+  if (event->button() == Qt::MouseButton::LeftButton) {
+    QPointF p = event->pos();
+    if (p.y() < 26 && p.x() > _shaderwidth - 26) {
+      koregui::ShaderEditor* ed = new koregui::ShaderEditor(this);
+      ed->show();
+    }
+  }
   QGraphicsItem::mousePressEvent(event);
-}
-
-void koregui::ShaderProgramItem::contextMenu(QPoint pos) {
-  /*QMenu menu("TEST2");
-  menu.addAction("megamega", 0, 0);
-  menu.addAction("soso", 0, 0);
-  //menu.addAction(...);
-  //menu.addAction(...);
-  menu.exec(pos);*/
 }

@@ -34,7 +34,7 @@ koregui::ShaderDataItem::ShaderDataItem(const kore::ShaderData* data,
                                         QGraphicsItem(parent) {
   setAcceptHoverEvents(true);
   setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-  setData(0, "ShaderData");
+  setData(0, "SHADERDATA");
 }
 
 koregui::ShaderDataItem::~ShaderDataItem(void) {
