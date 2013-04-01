@@ -28,6 +28,7 @@
 namespace kore {
   class ShaderProgramPass {
   public:
+    explicit ShaderProgramPass(const ShaderProgram* prog);
     ShaderProgramPass(void);
     ~ShaderProgramPass(void);
 

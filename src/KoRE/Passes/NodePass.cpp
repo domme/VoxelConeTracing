@@ -23,6 +23,10 @@ kore::NodePass::NodePass(void)
   : _node(NULL) {
 }
 
+kore::NodePass::NodePass(const SceneNode* node) {
+  _node = node;
+}
+
 kore::NodePass::~NodePass(void) {
   for (uint i = 0; i < _operations.size(); ++i) {
     KORE_SAFE_DELETE(_operations[i]);
