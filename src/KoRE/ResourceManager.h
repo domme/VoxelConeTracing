@@ -206,7 +206,7 @@ namespace kore {
 
     void removeMaterial(const Material* mat);
 
-    const std::string& getUniqueMaterialName(const std::string& scenePath,
+    const std::string getUniqueMaterialName(const std::string& scenePath,
                                              const uint index);
 
 

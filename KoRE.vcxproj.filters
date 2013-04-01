@@ -139,6 +139,9 @@
     <ClCompile Include="src\KoRE\Components\MaterialComponent.cpp">
       <Filter>src\Components</Filter>
     </ClCompile>
+    <ClCompile Include="src\KoRE\Operations\OperationFactory.cpp">
+      <Filter>src\Operations</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\KoRE\Operations\SelectNodes.h">
@@ -290,6 +293,9 @@
     </ClInclude>
     <ClInclude Include="src\KoRE\Components\MaterialComponent.h">
       <Filter>src\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\Operations\OperationFactory.h">
+      <Filter>src\Operations</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

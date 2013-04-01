@@ -51,6 +51,7 @@
 #include "Kore/Passes/ShaderProgramPass.h"
 #include "KoRE/Passes/NodePass.h"
 #include "KoRE/Events.h"
+#include "Kore/Operations/OperationFactory.h"
 
 kore::SceneNode* rotationNode;
 kore::SceneNode* lightNode;
@@ -81,11 +82,7 @@ void setUpSimpleRendering(kore::SceneNode* renderNode, kore::ShaderProgramPass*
         renderNode->addComponent(pTexComponent);
         kore::GLerror::gl_ErrorCheckFinish("Initialization");
 
-        // Bind Attribute-Ops
-        kore::BindAttribute* posAttBind =
-            new kore::BindAttribute(pMeshComponent->getShaderData("v_position"),
-            simpleShader->getAttribute("v_position"));
-
+              
         kore::BindAttribute* normAttBind =
             new kore::BindAttribute(pMeshComponent->getShaderData("v_normal"),
             simpleShader->getAttribute("v_normal"));
@@ -119,7 +116,7 @@ void setUpSimpleRendering(kore::SceneNode* renderNode, kore::ShaderProgramPass*
         kore::RenderMesh* pRenderOp = new kore::RenderMesh();
         pRenderOp->connect(pMeshComponent, simpleShader);
 
-        nodePass->addOperation(posAttBind);
+        nodePass->addOperation(kore::OperationFactory::create(kore::OP_BINDATTRIBUTE, "v_position", pMeshComponent, "v_position", simpleShader));
         nodePass->addOperation(normAttBind);
         nodePass->addOperation(uvAttBind);
         nodePass->addOperation(modelBind);
