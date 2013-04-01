@@ -84,6 +84,15 @@ namespace kore {
     void setSamplerProperties(const uint idx,
                               const TexSamplerProperties& properties);
 
+    /*! \brief Retrieves the OpenGL-location of the atomicCounter
+    *          indexed by idx */
+    GLuint getAtomicCounterBuffer(const uint idx) const;
+
+    uint getAtomicCounterBufferIndex(const uint bindingPoint) const;
+
+    /*! \brief Resets (to 0) the atomicCounter indexed by idx */
+    void resetAtomicCounterBuffer(const uint idx) const;
+
   private:
     static bool checkShaderCompileStatus(const GLuint shaderHandle,
                                          const std::string& name);
@@ -92,8 +101,8 @@ namespace kore {
                                        const std::string& name);
 
     static bool isSamplerType(const GLuint uniformType);
-
     static bool isImageType(const GLuint uniformType);
+    static bool isAtomicCounterType(const GLuint uniformType);
 
     void destroyProgram();
     void destroyShaders();
@@ -110,6 +119,9 @@ namespace kore {
     std::vector<ShaderInput> _uniforms;
     std::vector<ShaderOutput> _outputs;
     std::vector<GLuint> _imgAccessParams;
+
+    std::vector<GLuint> _atomicCounters;
+    std::vector<GLuint> _atomicCounterBindingPoints;
 
     std::vector<const TextureSampler*> _vSamplers;
 

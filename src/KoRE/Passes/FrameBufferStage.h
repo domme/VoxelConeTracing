@@ -29,7 +29,6 @@ namespace kore {
   class FrameBufferStage {
   public:
     FrameBufferStage(void);
-    explicit FrameBufferStage(const FrameBuffer* fbo);
     ~FrameBufferStage(void);
 
     inline std::vector<ShaderProgramPass*>&

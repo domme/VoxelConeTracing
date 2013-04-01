@@ -17,29 +17,34 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CORE_INCLUDE_CORE_BINDTEXTUREOP_H_
-#define CORE_INCLUDE_CORE_BINDTEXTUREOP_H_
+#ifndef KORE_SRC_KORE_OPERATIONS_RESETATOMICCOUNTERBUFFER_H_
+#define KORE_SRC_KORE_OPERATIONS_RESETATOMICCOUNTERBUFFER_H_
 
-#include "KoRE/Operations/BindOperations/BindOperation.h"
-#include "KoRE/Texture.h"
-#include "KoRE/TextureSampler.h"
-#include "KoRE/RenderManager.h"
+#include "KoRE/Common.h"
+#include "KoRE/Operations/Operation.h"
+#include "KoRE/ShaderInput.h"
 
 namespace kore {
-  class BindTexture: public BindOperation {
+  class ResetAtomicCounterBuffer : public Operation {
   public:
-    BindTexture(void);
-    explicit BindTexture(const ShaderData* texData,
-                const ShaderInput* shaderInput);
+    ResetAtomicCounterBuffer();
+    explicit ResetAtomicCounterBuffer(const ShaderInput* shaderInput,
+                                      const uint value);
+    virtual ~ResetAtomicCounterBuffer();
 
-    virtual ~BindTexture(void);
+    void connect(const ShaderInput* ShaderInput, const uint value);
+
     virtual void update(void);
     virtual void reset(void);
-    void connect(const ShaderData* texData,
-                 const ShaderInput* shaderInput);
+    virtual bool isValid() const;
+    virtual bool dependsOn(const void* thing) const;
+
   private:
-    void init();
-    virtual void doExecute(void) const;
+    const ShaderInput* _shaderInput;
+    uint _value;
+
+    virtual void doExecute() const;
   };
-};
-#endif  // CORE_INCLUDE_CORE_BINDTEXTUREOP_H_
+}
+
+#endif  // KORE_SRC_KORE_OPERATIONS_RESETATOMICCOUNTERBUFFER_H_

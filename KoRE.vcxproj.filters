@@ -142,6 +142,12 @@
     <ClCompile Include="src\KoRE\Operations\OperationFactory.cpp">
       <Filter>src\Operations</Filter>
     </ClCompile>
+    <ClCompile Include="src\KoRE\Operations\UseAtomicCounterBuffer.cpp">
+      <Filter>src\Operations</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KoRE\Operations\ResetAtomicCounterBuffer.cpp">
+      <Filter>src\Operations</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\KoRE\Operations\SelectNodes.h">
@@ -295,6 +301,12 @@
       <Filter>src\Components</Filter>
     </ClInclude>
     <ClInclude Include="src\KoRE\Operations\OperationFactory.h">
+      <Filter>src\Operations</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\Operations\UseAtomicCounterBuffer.h">
+      <Filter>src\Operations</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\Operations\ResetAtomicCounterBuffer.h">
       <Filter>src\Operations</Filter>
     </ClInclude>
   </ItemGroup>
