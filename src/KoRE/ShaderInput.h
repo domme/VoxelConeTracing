@@ -37,6 +37,7 @@ namespace kore {
     union {
        GLuint texUnit;          // texUnit to bind a texture to.
        GLuint imgUnit;          // imgUnit to bind an image to.
+       GLuint atomicCounterBindingPoint;       // bindingpoint for atomic counters
     };
 
     GLuint programHandle;    // GLhandle of the shader program

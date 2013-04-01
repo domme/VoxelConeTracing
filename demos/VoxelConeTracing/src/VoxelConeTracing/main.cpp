@@ -42,6 +42,8 @@
 #include "KoRE/Operations/OperationFactory.h"
 #include "KoRE/Operations/UseFBO.h"
 #include "KoRE/Operations/UseShaderProgram.h"
+#include "KoRE/Operations/UseAtomicCounterBuffer.h"
+#include "KoRE/Operations/ResetAtomicCounterBuffer.h"
 #include "KoRE/ResourceManager.h"
 #include "KoRE/RenderManager.h"
 #include "KoRE/Components/Camera.h"
@@ -56,7 +58,7 @@
 
 #include "VoxelConeTracing/FullscreenQuad.h"
 
-void setup() {
+void setupImageLoadStoreTest() {
   using namespace kore;
   glDisable(GL_DEPTH_TEST);  
 
@@ -143,6 +145,56 @@ void setup() {
 }
 
 
+void setupAtomicCounterTest() {
+  using namespace kore;
+  glDisable(GL_DEPTH_TEST);  
+
+  glClearColor(1.0f,1.0f,1.0f,1.0f);
+
+  ShaderProgram* acProg = new ShaderProgram;
+  acProg
+    ->loadShader("./assets/shader/VoxelConeTracing/fullscreenQuad_simple.vert",
+                 GL_VERTEX_SHADER);
+  acProg
+    ->loadShader("./assets/shader/VoxelConeTracing/atomicCounter.frag",
+                  GL_FRAGMENT_SHADER);
+  acProg->init("atomicCounterTestShader");
+
+  FullscreenQuad* fsQuadMesh = FullscreenQuad::getInstance();
+  kore::MeshComponent* fsQuadMeshComponent = new kore::MeshComponent;
+  fsQuadMeshComponent->setMesh(fsQuadMesh);
+  kore::SceneManager::getInstance()->getRootNode()
+                                      ->addComponent(fsQuadMeshComponent);
+
+  kore::FrameBufferStage* fboStage = new kore::FrameBufferStage;
+  GLenum drawBuffers[] = {GL_COLOR_ATTACHMENT0};
+  fboStage->setFrameBuffer(kore::FrameBuffer::BACKBUFFER,
+                           GL_FRAMEBUFFER, drawBuffers, 1);
+  
+  
+  ShaderProgramPass* acProgPass = new ShaderProgramPass(acProg);
+  
+  NodePass* acNodePass =
+    new NodePass(SceneManager::getInstance()->getRootNode());
+  
+  acNodePass->addOperation(OperationFactory::create(OP_BINDATTRIBUTE,
+                           "v_position",
+                           fsQuadMeshComponent,
+                           "v_position",
+                           acProg));
+
+  acNodePass->addOperation(
+    new UseAtomicCounterBuffer(acProg->getUniform("atomicCounter")));
+
+  acNodePass->addOperation(new RenderMesh(fsQuadMeshComponent, acProg));
+  acNodePass->addOperation(new ResetAtomicCounterBuffer(acProg->getUniform("atomicCounter"), 0));
+
+  acProgPass->addNodePass(acNodePass);
+  fboStage->addProgramPass(acProgPass);
+  RenderManager::getInstance()->addFramebufferStage(fboStage);
+}
+
+
 int main(void) {
   int running = GL_TRUE;
 
@@ -202,7 +254,8 @@ int main(void) {
             reinterpret_cast<const char*>(
             glewGetString(GLEW_VERSION)));
 
-  setup();
+//  setupImageLoadStoreTest();
+  setupAtomicCounterTest();
 
   kore::Timer the_timer;
   the_timer.start();
