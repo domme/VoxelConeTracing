@@ -39,6 +39,7 @@
 #include "KoRE/Operations/BindOperations/BindUniform.h"
 #include "KoRE/Operations/BindOperations/BindTexture.h"
 #include "KoRE/Operations/BindOperations/BindImageTexture.h"
+#include "KoRE/Operations/OperationFactory.h"
 #include "KoRE/Operations/UseFBO.h"
 #include "KoRE/Operations/UseShaderProgram.h"
 #include "KoRE/ResourceManager.h"
@@ -56,6 +57,7 @@
 #include "VoxelConeTracing/FullscreenQuad.h"
 
 void setup() {
+  using namespace kore;
   glDisable(GL_DEPTH_TEST);  
 
   glClearColor(1.0f,1.0f,1.0f,1.0f);
@@ -72,41 +74,72 @@ void setup() {
   fsQuadMeshComponent->setMesh(fsQuadMesh);
   kore::SceneManager::getInstance()->getRootNode()->addComponent(fsQuadMeshComponent);
 
-  kore::FrameBufferStage* backBufferStage = new kore::FrameBufferStage;
-  GLenum drawBuffers[] = {GL_COLOR_ATTACHMENT0};
-  backBufferStage->setFrameBuffer(kore::FrameBuffer::BACKBUFFER,
-                                  GL_FRAMEBUFFER, drawBuffers, 1);
-
 
   kore::ShaderProgram* imgLoadShader = new kore::ShaderProgram;
   imgLoadShader->
     loadShader("./assets/shader/VoxelConeTracing/fullscreenQuad_simple.vert",
-    GL_VERTEX_SHADER);
+                GL_VERTEX_SHADER);
   imgLoadShader->loadShader("./assets/shader/VoxelConeTracing/imageLoad.frag",
-    GL_FRAGMENT_SHADER);
+                            GL_FRAGMENT_SHADER);
   imgLoadShader->init("imgLoadTestShader");
 
-  kore::ShaderProgramPass* programPass = new kore::ShaderProgramPass;
-  programPass->setShaderProgram(imgLoadShader);
-  
-  kore::NodePass* nodePass = new kore::NodePass;
-  kore::BindAttribute* posAttBind =
-    new kore::BindAttribute(fsQuadMeshComponent->getShaderData("v_position"),
-    imgLoadShader->getAttribute("v_position"));
-  nodePass->addOperation(posAttBind);
+  ShaderProgram* imgStoreShader = new kore::ShaderProgram;
+  imgStoreShader->
+    loadShader("./assets/shader/VoxelConeTracing/fullscreenQuad_simple.vert",
+               GL_VERTEX_SHADER);
+  imgStoreShader->
+    loadShader("./assets/shader/VoxelConeTracing/imageStore.frag",
+               GL_FRAGMENT_SHADER);
+  imgStoreShader->init("imgStoreTestShader");
 
-  kore::BindImageTexture* bindImgTex =
-    new kore::BindImageTexture(texComponent->getShaderData(tex->getName()),
-                                           imgLoadShader->getUniform("image"));
-  nodePass->addOperation(bindImgTex);
-
-  kore::RenderMesh* renderOP =
-    new kore::RenderMesh(fsQuadMeshComponent, imgLoadShader);
-  nodePass->addOperation(renderOP);
-  
-  programPass->addNodePass(nodePass);
-  backBufferStage->addProgramPass(programPass);
+  // Setup rendering stages
+  kore::FrameBufferStage* backBufferStage = new kore::FrameBufferStage;
+  GLenum drawBuffers[] = {GL_COLOR_ATTACHMENT0};
+  backBufferStage->setFrameBuffer(kore::FrameBuffer::BACKBUFFER,
+                                  GL_FRAMEBUFFER, drawBuffers, 1);
   kore::RenderManager::getInstance()->addFramebufferStage(backBufferStage);
+
+  // imageStore
+  ShaderProgramPass* storePass = new ShaderProgramPass(imgStoreShader);
+  kore::NodePass* nodePassStore = new NodePass(kore::SceneManager::getInstance()->getRootNode());
+
+  nodePassStore->addOperation(OperationFactory::create(OP_BINDATTRIBUTE,
+                                                  "v_position",
+                                                  fsQuadMeshComponent,
+                                                  "v_position",
+                                                  imgStoreShader));
+
+  nodePassStore->addOperation(OperationFactory::create(OP_BINDIMAGETEXTURE,
+                                                  tex->getName(),
+                                                  texComponent,
+                                                  "image", imgStoreShader));
+
+  nodePassStore->addOperation(new RenderMesh(fsQuadMeshComponent, imgStoreShader));
+  storePass->addNodePass(nodePassStore);
+  backBufferStage->addProgramPass(storePass);
+
+
+  // imageLoad
+  kore::ShaderProgramPass* loadPass = new kore::ShaderProgramPass(imgLoadShader);
+  
+  NodePass* nodePassLoad = new NodePass(SceneManager::getInstance()->getRootNode());
+    
+  
+  nodePassLoad->addOperation(OperationFactory::create(OP_BINDATTRIBUTE,
+                                                  "v_position",
+                                                  fsQuadMeshComponent,
+                                                  "v_position",
+                                                  imgLoadShader));
+
+  nodePassLoad->addOperation(OperationFactory::create(OP_BINDIMAGETEXTURE,
+                                                  tex->getName(),
+                                                  texComponent,
+                                                  "image", imgLoadShader));
+
+  nodePassLoad->addOperation(new RenderMesh(fsQuadMeshComponent, imgLoadShader));
+
+  loadPass->addNodePass(nodePassLoad);
+  backBufferStage->addProgramPass(loadPass);
 }
 
 

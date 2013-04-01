@@ -11,5 +11,7 @@ out vec4 color;
 
 void main() {
 	ivec2 coords = ivec2(uv * imageSize(image));
-	color = imageLoad(image, coords);
+	imageStore(image, coords, vec4(1.0f, 0.0f, 0.0f, 0.0f));
+
+	color = vec4(0.0, 0.0, 0.0, 0.0);
 }

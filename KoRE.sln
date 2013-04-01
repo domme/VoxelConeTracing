@@ -20,6 +20,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VoxelConeTracing", "VoxelCo
 	ProjectSection(SolutionItems) = preProject
 		assets\shader\VoxelConeTracing\fullscreenQuad_simple.vert = assets\shader\VoxelConeTracing\fullscreenQuad_simple.vert
 		assets\shader\VoxelConeTracing\imageLoad.frag = assets\shader\VoxelConeTracing\imageLoad.frag
+		assets\shader\VoxelConeTracing\imageStore.frag = assets\shader\VoxelConeTracing\imageStore.frag
 	EndProjectSection
 EndProject
 Global

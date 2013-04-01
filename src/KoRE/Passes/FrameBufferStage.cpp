@@ -27,6 +27,10 @@ kore::FrameBufferStage::FrameBufferStage(void)
   : _frameBuffer(NULL) {
 }
 
+kore::FrameBufferStage::FrameBufferStage(const FrameBuffer* fbo) {
+  _frameBuffer = fbo;
+}
+
 kore::FrameBufferStage::~FrameBufferStage(void) {
   for (uint i = 0; i < _startupOperations.size(); ++i) {
     KORE_SAFE_DELETE(_startupOperations[i]);
