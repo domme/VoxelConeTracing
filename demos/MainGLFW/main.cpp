@@ -300,15 +300,16 @@ int main(void) {
                           GL_VERTEX_SHADER);
   simpleShader->loadShader("./assets/shader/normalColor.fp",
                           GL_FRAGMENT_SHADER);
-  simpleShader->init("cooler Shader");
+  simpleShader->init();
+  simpleShader->setName("cooler Shader");
 
   kore::ShaderProgram* nmShader = new kore::ShaderProgram;
   nmShader->loadShader("./assets/shader/normalmapping.vert", 
                         GL_VERTEX_SHADER);
   nmShader->loadShader("./assets/shader/normalmapping.frag",
                         GL_FRAGMENT_SHADER);
-  nmShader->init("normal mapping Shader");
-
+  nmShader->init();
+  simpleShader->setName("normal mapping Shader");
   // load resources
   kore::ResourceManager::getInstance()
     ->loadScene("./assets/meshes/TestEnv.dae");

@@ -50,7 +50,7 @@ void koregui::FrameBufferEditor::refresh(void) {
   
 }
 
-void koregui::FrameBufferEditor::framebufferChanged( const QString & name ) {
+void koregui::FrameBufferEditor::framebufferChanged(const QString& name) {
   _currentbuffer = kore::ResourceManager::getInstance()
     ->getFramebuffer(ui.framebufferselect->currentText().toStdString());
   // TODO(dospelt) get actual attachment info and display it

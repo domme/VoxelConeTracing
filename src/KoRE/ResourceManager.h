@@ -121,9 +121,13 @@ namespace kore {
 
     /*! \brief Adds a shaderProgram to the ResourceManager. This shaderProgram
     *          will now be controlled and deleted by the resourceManager alone.
-    *   \param name The name of the ShaderProgram.
     *   \param program The ShaderProgram to register. */
-    void addShaderProgram(const std::string& name, ShaderProgram* program);
+    void addShaderProgram(ShaderProgram* program);
+
+    /*! \brief Rename a registered ShaderProgram.
+    */
+    void renameShaderProgram(const std::string& oldname,
+                           const std::string& newname);
 
     /*! \brief Retrieve a registered ShaderProgram from the ResourceManager. */
     const kore::ShaderProgram* getShaderProgram(const std::string& name) const;

@@ -36,7 +36,7 @@ namespace kore {
     /// load a single shader from file
     bool loadShader(const std::string& file, GLenum shadertype);
     /// compile and link shader program
-    bool init(const std::string& name);
+    bool init();
     GLuint getAttributeLocation(const std::string &name);
     GLuint getUniformLocation(const std::string &name);
     GLuint getProgramLocation() const;
@@ -83,6 +83,11 @@ namespace kore {
      */
     void setSamplerProperties(const uint idx,
                               const TexSamplerProperties& properties);
+
+    /*! \brief Set a new name for the ShaderProgram
+     * \param name The new name
+     */
+    inline void setName(const std::string& name){_name = name;}
 
   private:
     static bool checkShaderCompileStatus(const GLuint shaderHandle,
