@@ -83,7 +83,7 @@ void setupImageLoadStoreTest() {
                 GL_VERTEX_SHADER);
   imgLoadShader->loadShader("./assets/shader/VoxelConeTracing/imageLoad.frag",
                             GL_FRAGMENT_SHADER);
-  imgLoadShader->init("imgLoadTestShader");
+  imgLoadShader->init();
 
   ShaderProgram* imgStoreShader = new kore::ShaderProgram;
   imgStoreShader->
@@ -92,7 +92,7 @@ void setupImageLoadStoreTest() {
   imgStoreShader->
     loadShader("./assets/shader/VoxelConeTracing/imageStore.frag",
                GL_FRAGMENT_SHADER);
-  imgStoreShader->init("imgStoreTestShader");
+  imgStoreShader->init();
 
   // Setup rendering stages
   kore::FrameBufferStage* backBufferStage = new kore::FrameBufferStage;
@@ -158,7 +158,7 @@ void setupAtomicCounterTest() {
   acProg
     ->loadShader("./assets/shader/VoxelConeTracing/atomicCounter.frag",
                   GL_FRAGMENT_SHADER);
-  acProg->init("atomicCounterTestShader");
+  acProg->init();
 
   FullscreenQuad* fsQuadMesh = FullscreenQuad::getInstance();
   kore::MeshComponent* fsQuadMeshComponent = new kore::MeshComponent;

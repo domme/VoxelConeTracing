@@ -35,6 +35,7 @@
 #include "KoRE_GUI/ResourceViewer.h"
 #include "KoRE_GUI/GLWidget.h"
 #include "KoRE_GUI/FrameBufferEditor.h"
+#include "KoRE_GUI/ShaderEditor.h"
 
 int main(int argc, char *argv[])
 {

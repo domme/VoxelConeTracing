@@ -138,14 +138,14 @@ void kore::ResourceManager::addTexture(const std::string& path,
   _textures[path] = texture;
 }
 
-void kore::ResourceManager::addShaderProgram(const std::string& name,
-                                             ShaderProgram* program) {
-  if(_shaderProgramMap.count(name)> 0) {
+void kore::ResourceManager::addShaderProgram(ShaderProgram* program) {
+  if(_shaderProgramMap.count(program->getName())> 0) {
     kore::Log::getInstance()
-      ->write("[ERROR] Shader '%s' already in RenderManager\n", name.c_str());
+      ->write("[ERROR] Shader '%s' already in RenderManager\n",
+              program->getName().c_str());
     return;
   }
-  _shaderProgramMap[name] = program;
+  _shaderProgramMap[program->getName()] = program;
 }
 
 kore::Mesh* kore::ResourceManager::getMesh(const std::string& path,
@@ -241,6 +241,21 @@ void kore::ResourceManager::renameFramebuffer(const std::string& oldname,
   if(buf) {
     buf->setName(newname);
     addFramebuffer(buf);
+  }
+}
+
+void kore::ResourceManager::renameShaderProgram(const std::string& oldname,
+                         const std::string& newname) {
+  kore::ShaderProgram* prog = NULL;
+  auto it = _shaderProgramMap.find(oldname);
+  auto it2 = _shaderProgramMap.find(newname);
+  if (it != _shaderProgramMap.end() && it2 == _shaderProgramMap.end()) {
+    prog =  it->second;
+    _shaderProgramMap.erase(it);
+  }
+  if(prog) {
+    prog->setName(newname);
+    addShaderProgram(prog);
   }
 }
 

@@ -122,7 +122,7 @@ bool kore::ShaderProgram::loadShader(const std::string& file,
   return true;
 }
 
-bool kore::ShaderProgram::init(const std::string& name) {
+bool kore::ShaderProgram::init() {
   if (_programHandle != KORE_GLUINT_HANDLE_INVALID) {
     destroyProgram();
   }
@@ -151,7 +151,7 @@ bool kore::ShaderProgram::init(const std::string& name) {
 
   glLinkProgram(_programHandle);
     
-  bool success = checkProgramLinkStatus(_programHandle, name);
+  bool success = checkProgramLinkStatus(_programHandle, _name);
   if (!success) {
     destroyProgram();
     return false;
@@ -191,8 +191,6 @@ bool kore::ShaderProgram::init(const std::string& name) {
           _outputs[j].name.c_str());
   }
   */
-  _name = name;
-  kore::ResourceManager::getInstance()->addShaderProgram(_name, this);
   return success == GL_TRUE;
 }
 

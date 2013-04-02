@@ -37,7 +37,7 @@ koregui::ShaderProgramItem::ShaderProgramItem(QGraphicsItem* parent)
                               : _shader(NULL),
                                 _name("<empty>"),
                                 QGraphicsItem(parent) {
-  setData(0, "SHADERINPUT");
+  setData(0, "SHADERPROGRAM");
   setFlag(QGraphicsItem::ItemIsSelectable, true);
   setFlag(QGraphicsItem::ItemIsMovable, true);
   setCursor(QCursor(Qt::CursorShape::ArrowCursor));
