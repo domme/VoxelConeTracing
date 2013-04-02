@@ -17,33 +17,34 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef KORE_SRC_OPERATIONS_BINDOPERATIONS_BINDIMAGETEXTURE_H_
-#define KORE_SRC_OPERATIONS_BINDOPERATIONS_BINDIMAGETEXTURE_H_
+#ifndef KORE_SRC_KORE_OPERATIONS_USEATOMICCOUNTERBUFFER_H_
+#define KORE_SRC_KORE_OPERATIONS_USEATOMICCOUNTERBUFFER_H_
 
-#include "KoRE/Operations/BindOperations/BindOperation.h"
-#include "KoRE/Texture.h"
-#include "KoRE/TextureSampler.h"
-#include "KoRE/RenderManager.h"
+#include "KoRE/Common.h"
+#include "KoRE/Operations/Operation.h"
+#include "KoRE/ShaderInput.h"
 
 namespace kore {
-  class BindImageTexture : public BindOperation {
+  class UseAtomicCounterBuffer : public Operation {
     public:
-      BindImageTexture();
-      BindImageTexture(const ShaderData* texData,
-                      const ShaderInput* shaderInput);
-      virtual ~BindImageTexture();
+      UseAtomicCounterBuffer();
+      explicit UseAtomicCounterBuffer(const ShaderInput* shaderInput);
+      virtual ~UseAtomicCounterBuffer();
+
+      void connect(const ShaderInput* ShaderInput);
 
       virtual void update(void);
       virtual void reset(void);
-      void connect(const ShaderData* texData,
-        const ShaderInput* shaderInput);
-  private:
+      virtual bool isValid() const;
+      virtual bool dependsOn(const void* thing) const;
 
-    GLuint internalFormatToImageFormat(const GLuint internalFormat) const;
-    void init();
-    virtual void doExecute(void) const;
+    private:
+      const ShaderInput* _shaderInput;
+      
+      virtual void doExecute() const;
   };
 }
 
 
-#endif  // KORE_SRC_OPERATIONS_BINDOPERATIONS_BINDIMAGETEXTURE_H_
+
+#endif  // KORE_SRC_KORE_OPERATIONS_USEATOMICCOUNTERBUFFER_H_

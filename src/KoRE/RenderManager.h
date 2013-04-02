@@ -62,6 +62,8 @@ namespace kore {
     DRAW_FRAMEBUFFER = 0,
     READ_FRAMEBUFFER = 1
   };
+
+
   //////////////////////////////////////////////////////////////////////////
 
   class RenderManager {
@@ -93,6 +95,10 @@ namespace kore {
 
     void bindFrameBuffer(const GLuint fboTarget,
                          const GLuint fboHandle);
+
+    void bindBufferBase(const GLenum indexedBufferTarget,
+                        const uint bindingPoint,
+                        const GLuint bufferHandle);
 
     /*! \brief Wrapper for glDrawBuffers(..) */
     void drawBuffers(const GLuint fboHandle,
@@ -132,6 +138,7 @@ namespace kore {
     GLuint _vbo;
     GLuint _ibo;
     GLuint _shaderProgram;
+    GLuint _boundAtomicBuffers[GL_MAX_COMBINED_ATOMIC_COUNTER_BUFFERS];
     GLuint _boundTextures[GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS]
                          [NUM_TEXTURE_TARGETS];
     GLuint _boundSamplers[GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS];

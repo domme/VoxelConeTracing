@@ -46,6 +46,10 @@ kore::ShaderProgram::~ShaderProgram(void) {
 void kore::ShaderProgram::destroyProgram() {
   glDeleteProgram(_programHandle);
   _programHandle = KORE_GLUINT_HANDLE_INVALID;
+
+  glDeleteBuffers(_atomicCounters.size(), &_atomicCounters[0]);
+  _atomicCounters.clear();
+
   _outputs.clear();
   _name = "";
   _uniforms.clear();
@@ -301,6 +305,8 @@ void kore::ShaderProgram::constructShaderInputInfo(const GLenum activeType,
         ResourceManager* resourceManager = ResourceManager::getInstance();
         GLuint texUnit = 0;
         GLuint imgUnit = 0;
+        GLuint atomicCounterIndex = 0;  // e.g. for atomic counters.
+
         for (uint i = 0; i < rInputVector.size(); ++i) {
             if (isSamplerType(rInputVector[i].type)) {
                 rInputVector[i].texUnit = texUnit;
@@ -323,6 +329,32 @@ void kore::ShaderProgram::constructShaderInputInfo(const GLenum activeType,
               ++imgUnit;
 
               _imgAccessParams.push_back(GL_READ_WRITE);
+            }
+
+            else if(isAtomicCounterType(rInputVector[i].type)) {
+              // First, get the bindingPoint (set with layout(binding = x) 
+              // in GLSL.
+              GLint bindingPoint;
+              glGetActiveAtomicCounterBufferiv(_programHandle,
+                                               atomicCounterIndex,
+                                               GL_ATOMIC_COUNTER_BUFFER_BINDING,
+                                               &bindingPoint);
+
+              rInputVector[i].atomicCounterBindingPoint = bindingPoint;
+              ++atomicCounterIndex;
+              
+              // TODO(dlazarek): Deprecated store atomicCounter buffers somewhere else.
+              // Init an atomic counter for this uniform and store
+              // it in this shader program.
+              GLuint acBuffer;
+              glGenBuffers(1, &acBuffer);
+              glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, acBuffer);
+              glBufferData(GL_ATOMIC_COUNTER_BUFFER,
+                           sizeof(GLuint), NULL, GL_DYNAMIC_COPY);
+              glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
+
+              _atomicCounters.push_back(acBuffer);
+              _atomicCounterBindingPoints.push_back(bindingPoint);
             }
         }
     }
@@ -506,6 +538,10 @@ bool kore::ShaderProgram::isImageType(const GLuint uniformType) {
   }
 }
 
+bool kore::ShaderProgram::isAtomicCounterType(const GLuint uniformType) {
+  return uniformType == GL_UNSIGNED_INT_ATOMIC_COUNTER;
+}
+
 
 const kore::ShaderInput*
 kore::ShaderProgram::getAttribute(const std::string& name) const {
@@ -558,4 +594,45 @@ void kore::ShaderProgram::setImageAccessParam(const uint imgUnit,
    if (imgUnit < _imgAccessParams.size()) {
      _imgAccessParams[imgUnit] = access;
    }
+}
+
+// TODO(dlazarek): Deprecated function...
+// store atomicCounter buffers somewhere else.
+GLuint kore::ShaderProgram::getAtomicCounterBuffer(const uint idx) const {
+  if (idx < _atomicCounters.size()) {
+    return _atomicCounters[idx];
+  }
+
+  return 0;
+}
+
+// TODO(dlazarek): Deprecated function...
+// store atomicCounter buffers somewhere else.
+void kore::ShaderProgram::resetAtomicCounterBuffer(const uint idx) const {
+  if (idx >= _atomicCounters.size()) {
+    return;
+  }
+
+  GLuint ac = _atomicCounters[idx];
+
+  glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, ac);
+  GLuint* ptr = (GLuint*)glMapBufferRange(GL_ATOMIC_COUNTER_BUFFER, 0,
+                                          sizeof(GLuint),
+                                          GL_MAP_WRITE_BIT | 
+                                          GL_MAP_INVALIDATE_BUFFER_BIT | 
+                                          GL_MAP_UNSYNCHRONIZED_BIT);
+  ptr[0] = 0;
+  glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
+  glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
+}
+
+uint kore::ShaderProgram::
+  getAtomicCounterBufferIndex(const uint bindingPoint) const {
+    for (uint i = 0; i < _atomicCounterBindingPoints.size(); ++i) {
+      if (_atomicCounterBindingPoints[i] == bindingPoint) {
+        return i;
+      }
+    }
+
+    return 0;
 }

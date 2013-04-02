@@ -26,6 +26,11 @@ kore::ShaderProgramPass::ShaderProgramPass(void)
   : _program(NULL) {
 }
 
+kore::ShaderProgramPass::ShaderProgramPass(const ShaderProgram* prog)
+  : _program(NULL) {
+  setShaderProgram(prog);
+}
+
 kore::ShaderProgramPass::~ShaderProgramPass(void) {
   for (uint i = 0; i < _startupOperations.size(); ++i) {
     KORE_SAFE_DELETE(_startupOperations[i]);

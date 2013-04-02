@@ -62,6 +62,9 @@ kore::RenderManager::RenderManager(void)
                           KORE_MAX_FRAMEBUFFER_COUNT *
                           GL_MAX_DRAW_BUFFERS);
 
+  memset(_boundAtomicBuffers, 0, sizeof(GLuint) *
+                                 GL_MAX_COMBINED_ATOMIC_COUNTERS);
+
   activeTexture(GL_TEXTURE0);  // Activate texture unit 0 by default
 }
 
@@ -298,4 +301,27 @@ void kore::RenderManager::
         //KORE_SAFE_DELETE(pFboStage);
         _frameBufferStages.erase(it);
       }
+}
+
+void kore::RenderManager::bindBufferBase(const GLenum indexedBufferTarget,
+                                         const uint bindingPoint,
+                                         const GLuint bufferHandle) {
+  switch (indexedBufferTarget) {
+    case GL_ATOMIC_COUNTER_BUFFER: 
+      if (bindingPoint < GL_MAX_COMBINED_ATOMIC_COUNTER_BUFFERS) {
+        if (_boundAtomicBuffers[bindingPoint] != bufferHandle) {
+          _boundAtomicBuffers[bindingPoint] = bufferHandle;
+          glBindBufferBase(indexedBufferTarget, bindingPoint, bufferHandle);
+        }
+      }
+    break;
+
+    // TODO(dlazarek): Implement for GL_UNIFORM_BUFFER,
+    //                               GL_TRANSFORM_FEEDBACK_BUFFER, etc...
+
+    default:
+      Log::getInstance()->write("[ERROR] RenderManager::bindBufferBase - "
+        "The requested indexedBufferTarget is not implemented or is invalid");
+    break;
+  }
 }
