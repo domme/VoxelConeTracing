@@ -44,18 +44,17 @@ const uint64 kore::IDManager::getID(const std::string& url) const {
 }
 
 void kore::IDManager::registerURL(uint64 id, const std::string& url) {
+  if (_mapURL.find(id) != _mapURL.end()) {
+    Log::getInstance()->write("[WARNING] The ID %i already has an URL"
+                              " registered: %s", id, url.c_str());
+    return;
+  }
   _mapURL[id] = url;
 }
 
-void kore::IDManager::registerGenURL(uint64 id,
-                                     const std::string& name,
-                                     const std::string& filepath /*= ""*/ ) {
-  registerURL(id, genURL(id, name, filepath));
-}
-
-std::string kore::IDManager::genURL(const uint64 id,
-                                    const std::string& name,
-                                    const std::string& filepath /* = "" */) const {
+std::string kore::IDManager::genURL(const std::string& name,
+                                    const std::string& filepath /* = "" */,
+                                    const uint fileIndex /* = 0 */) const {
   std::stringstream ss;
 
   if (filepath.size() == 0) {
@@ -64,7 +63,7 @@ std::string kore::IDManager::genURL(const uint64 id,
     ss << filepath;
   }
 
-  ss << "_" << name << "_" << id;
+  ss << "_" << name << "_" << fileIndex;
 
   return ss.str();
 }

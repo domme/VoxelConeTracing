@@ -43,7 +43,7 @@ class Camera : public SceneNodeComponent {
      virtual void transformChanged(const Transform* newTransform);
 
      inline const std::string& getName() const {return _name;}
-     inline void setName(const std::string& name);
+     inline void setName(const std::string& name) {_name = name;}
      inline uint64 getID() const {return _id;}
 
      inline const glm::mat4&  getView() const           {return _matView;}

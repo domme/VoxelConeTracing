@@ -50,16 +50,11 @@ namespace kore {
     */
     void registerURL(uint64 id, const std::string& url);
 
-    /*! \brief Generate a new URL from the provided parameters and associates
-    *          this to the provided id */
-    void registerGenURL(uint64 id, const std::string& name,
-                                   const std::string& filepath = "");
-
     /*! /brief
     */
-    std::string genURL(const uint64 id,
-                       const std::string& name,
-                       const std::string& filepath = "") const;
+    std::string genURL(const std::string& name,
+                       const std::string& filepath = "",
+                       const uint fileIndex = 0) const;
     
     // TODO(dlazarek & co): Append new genURL-versions for new object types
 

@@ -75,6 +75,8 @@ namespace kore {
     const bool hasIndices() const;
     const GLenum getPrimitiveType() const;
     const std::string& getName() const;
+    void setName(const std::string& name) {_name = name;}
+
     const GLuint getVBO() const;
     const GLuint getVAO() const;
     const GLuint getIBO() const;

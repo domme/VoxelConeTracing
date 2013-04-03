@@ -40,8 +40,7 @@ kore::FrameBuffer::FrameBuffer(GLuint handle) {
   _name = "BACKBUFFER";
   _handle = handle;
   _id = kore::IDManager::getInstance()->genID();
-  IDManager::getInstance()
-    ->registerGenURL(_id, _name);
+
   ResourceManager::getInstance()->addFramebuffer(this);
 }
 
@@ -51,12 +50,11 @@ kore::FrameBuffer::~FrameBuffer(void) {
 
 void kore::FrameBuffer::setName(const std::string& name) {
   if (this == kore::FrameBuffer::BACKBUFFER
-    | name == kore::FrameBuffer::BACKBUFFER->getName()) {
+    || name == kore::FrameBuffer::BACKBUFFER->getName()) {
     return;
   }
 
   _name = name;
-  IDManager::getInstance()->registerGenURL(_id, _name);
 }
 
 void kore::FrameBuffer::destroy() {

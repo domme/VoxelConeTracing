@@ -389,8 +389,3 @@ bool kore::Camera::
     }
     return true;
 }
-
-void kore::Camera::setName(const std::string& name) {
-  _name = name;
-  IDManager::getInstance()->registerGenURL(_id, _name);
-}
