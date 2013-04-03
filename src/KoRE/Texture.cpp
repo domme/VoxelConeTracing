@@ -5,8 +5,8 @@
 
 kore::Texture::Texture()
                     : _handle(KORE_GLUINT_HANDLE_INVALID),
-                      _resourcepath("") {
-  _id = kore::IDManager::getInstance()->genID();
+                      _resourcepath(""),
+                      kore::BaseResource() {
 }
 
 kore::Texture::~Texture() {

@@ -30,8 +30,8 @@
 kore::SceneNode::SceneNode(void)
                        :_tag(0),
                         _parent(NULL),
-                        _dirty(true) {
-  _id = kore::IDManager::getInstance()->genID();
+                        _dirty(true),
+                        kore::BaseResource() {
   _transform = new Transform;
   _components.push_back(_transform);
 }
@@ -119,9 +119,6 @@ kore::Transform* kore::SceneNode::getTransform() {
   return _transform;
 }
 
-const uint64 kore::SceneNode::getID(void) const {
-  return _id;
-}
 
 const uint kore::SceneNode::getTag(void) const {
   return _tag;

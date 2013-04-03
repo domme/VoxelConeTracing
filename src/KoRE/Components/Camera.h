@@ -28,9 +28,10 @@
 #include "KoRE/Common.h"
 #include "KoRE/Components/SceneNodeComponent.h"
 #include "KoRE/DataTypes.h"
+#include "KoRE/BaseResource.h"
 
 namespace kore {
-class Camera : public SceneNodeComponent {
+class Camera : public SceneNodeComponent, public BaseResource {
  public:
      Camera();
      virtual ~Camera();
@@ -44,8 +45,7 @@ class Camera : public SceneNodeComponent {
 
      inline const std::string& getName() const {return _name;}
      inline void setName(const std::string& name) {_name = name;}
-     inline uint64 getID() const {return _id;}
-
+     
      inline const glm::mat4&  getView() const           {return _matView;}
      inline const glm::mat4&  getProjection() const   {return _matProjection;}
      inline const glm::mat4   getViewProjection() const {return _matViewProj;}
@@ -129,7 +129,6 @@ class Camera : public SceneNodeComponent {
      void        rotateViewQuat(const float angle, const glm::vec3 v3Axis);
 
      std::string _name;
-     uint64 _id;
 };
 }
 

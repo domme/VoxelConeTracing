@@ -24,7 +24,7 @@
 #include "KoRE/ResourceManager.h"
 #include "KoRE/DataTypes.h"
 #include "KoRE/Log.h"
-#include "KoRE/IDManager.h"
+
 
 
 kore::Mesh::Mesh(void)
@@ -32,8 +32,8 @@ kore::Mesh::Mesh(void)
     _primitiveType(GL_TRIANGLES),
     _VAOloc(KORE_GLUINT_HANDLE_INVALID),
     _VBOloc(KORE_GLUINT_HANDLE_INVALID),
-    _IBOloc(KORE_GLUINT_HANDLE_INVALID) {
-  _id = kore::IDManager::getInstance()->genID();
+    _IBOloc(KORE_GLUINT_HANDLE_INVALID),
+    kore::BaseResource() {
 }
 
 kore::Mesh::~Mesh(void) {

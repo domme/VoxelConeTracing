@@ -2,6 +2,7 @@
 #define SRC_KORE_TEXTURE_H_
 
 #include "KoRE/Common.h"
+#include "KoRE/BaseResource.h"
 
 namespace kore {
   struct STextureInfo {
@@ -46,7 +47,7 @@ namespace kore {
     GLuint internalFormat;
   };
 
-  class Texture {
+  class Texture : public BaseResource {
   public:
     explicit Texture(void);
     ~Texture(void);
@@ -69,14 +70,8 @@ namespace kore {
     /*! \brief Generates a mipmap-hierarchy for this texture.
     *          Only valid for non-empty textures */
     void genMipmapHierarchy();
-
-    /*! \brief Get unique ID
-     * \return the Texture's unique ID
-    */
-    inline const uint64 getID(){return _id;}
-
+    
   private:
-    uint64 _id;
     GLuint _handle;
     std:: string _resourcepath;
     STextureProperties _properties;

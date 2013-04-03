@@ -27,9 +27,10 @@
 #include "KoRE/ShaderData.h"
 #include "KoRE/Texture.h"
 #include "KoRE/TextureSampler.h"
+#include "KoRE/BaseResource.h"
 
 namespace kore {
-  class FrameBuffer {
+  class FrameBuffer : public BaseResource {
   public:
     FrameBuffer(const std::string& name);
     virtual ~FrameBuffer(void);
@@ -76,17 +77,11 @@ namespace kore {
     *          essentially becomes the BackBuffer. */
     void destroy();
 
-    /*! \brief Get unique ID
-     * \return the Texture's unique ID
-    */
-    inline const uint64 getID() const {return _id;}
-
   private:
     /// Internal constructor - used for creating a FrameBuffer with a
     /// specific handle (e.g. 0 for Backbuffer)
     FrameBuffer(GLuint handle);
     std::string _name;
-    uint64 _id;
     std::vector<ShaderData> _textureOutputs;
     std::vector<const Texture*> _textures;
     std::vector<STextureInfo*> _textureInfos;

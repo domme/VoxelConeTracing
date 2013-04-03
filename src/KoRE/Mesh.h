@@ -23,6 +23,7 @@
 #include <string>
 #include <vector>
 #include "KoRE/DataTypes.h"
+#include "KoRE/BaseResource.h"
 
 namespace kore {
   enum EMeshBufferType {
@@ -51,7 +52,7 @@ namespace kore {
       void* data;
   };
 
-  class Mesh {
+  class Mesh : public BaseResource {
     friend class SceneLoader;
     friend class MeshLoader;
     friend class MeshRenderComponent;
@@ -82,13 +83,8 @@ namespace kore {
     const GLuint getIBO() const;
     const bool usesIBO() const;
 
-    /*! \brief Get unique ID
-     * \return the Texture's unique ID
-    */
-    inline const uint64 getID() const {return _id;}
 
   private:
-    uint64                          _id;
     std::string                     _name;
     std::vector<MeshAttributeArray> _attributes;
     std::vector<unsigned int>       _indices;

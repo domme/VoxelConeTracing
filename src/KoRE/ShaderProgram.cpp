@@ -34,8 +34,8 @@ kore::ShaderProgram::ShaderProgram()
   _geometry_prog(KORE_GLUINT_HANDLE_INVALID),
   _fragment_prog(KORE_GLUINT_HANDLE_INVALID),
   _tess_ctrl(KORE_GLUINT_HANDLE_INVALID),
-  _tess_eval(KORE_GLUINT_HANDLE_INVALID)
-  {
+  _tess_eval(KORE_GLUINT_HANDLE_INVALID),
+  kore::BaseResource() {
 }
 
 kore::ShaderProgram::~ShaderProgram(void) {

@@ -30,8 +30,8 @@ const kore::FrameBuffer* kore::FrameBuffer::BACKBUFFER = new kore::FrameBuffer(0
 
 kore::FrameBuffer::FrameBuffer(const std::string& name)
 : _name(name),
-  _handle(KORE_GLUINT_HANDLE_INVALID) {
-   _id = kore::IDManager::getInstance()->genID();
+  _handle(KORE_GLUINT_HANDLE_INVALID), 
+  kore::BaseResource() {
   glGenFramebuffers(1, &_handle);
 }
 
@@ -39,7 +39,6 @@ kore::FrameBuffer::FrameBuffer(const std::string& name)
 kore::FrameBuffer::FrameBuffer(GLuint handle) {
   _name = "BACKBUFFER";
   _handle = handle;
-  _id = kore::IDManager::getInstance()->genID();
 
   ResourceManager::getInstance()->addFramebuffer(this);
 }
@@ -126,7 +125,7 @@ void kore::FrameBuffer::
   Texture* pTex = new Texture;
   bool bSuccess = pTex->create(properties, name);
 if (bSuccess) {
-    ResourceManager::getInstance()->addTexture(name, pTex);
+    ResourceManager::getInstance()->addTexture(pTex);
     addTextureAttachment(pTex, attatchment);
   } else {
     Log::getInstance()->write("[ERROR] Requested Texture could not be"

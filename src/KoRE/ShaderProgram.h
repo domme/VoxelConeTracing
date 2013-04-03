@@ -26,10 +26,11 @@
 #include "KoRE/ShaderOutput.h"
 #include "KoRE/Common.h"
 #include "KoRE/TextureSampler.h"
+#include "KoRE/BaseResource.h"
 
 namespace kore {
   class Operation;
-  class ShaderProgram {
+  class ShaderProgram : public BaseResource {
   public:
     ShaderProgram();
     virtual ~ShaderProgram(void);

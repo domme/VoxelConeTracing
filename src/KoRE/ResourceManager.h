@@ -69,13 +69,11 @@ namespace kore {
 
     /*! \brief Add a mesh to the resource-manager. This mesh will now be
                controlled and deleted solely by the ResourceManager
-    *   \param path The (file)-Path or name, under which the mesh will be
-                    registered.
-    *   \param mesh The mesh to register */
-    void addMesh(const std::string& path, Mesh* mesh);
+    *   \param mesh The mesh to register. */
+    void addMesh(Mesh* mesh);
 
     /*! \brief Retrieve a registered Mesh */
-    kore::Mesh* getMesh(const std::string& path, const std::string& id);
+    kore::Mesh* getMesh(const uint64 id);
 
     /*! \brief Retrieve a list of all registered Meshes */
     const std::vector<kore::Mesh*> getMeshes(void);
@@ -83,9 +81,8 @@ namespace kore {
     /*! \brief Removes a mesh from the ResourceManager and from the whole
     *          program all mesh-listeners are notified and the GPU- and HEAP-
     *          resources are freed.
-    *   \param path The filePath of the Mesh to remove.
-    *   \param id The ID (name) of the Mesh to remove. */
-    void removeMesh(const std::string& path, const std::string& id);
+    *   \param id The ID of the Mesh to remove. */
+    void removeMesh(const uint64 id);
 
     /*! \brief Removes a mesh from the ResourceManager and from the whole
     *          program all mesh-listeners are notified and the GPU- and HEAP-
@@ -93,16 +90,13 @@ namespace kore {
     *   \param mesh The Mesh to remove. */
     void removeMesh(const Mesh* mesh);
 
-
-
     /*! \brief Adds a texture to the ResourceManager. This texture will now be
     *          controlled and deleted by the ResourceManager alone.
-    *   \param path The filePath (or name) of the Texture.
-    *   \param texture The Texture to register. */
-    void addTexture(const std::string& path, Texture* texture);
+    *   \param texture The Texture to register. (needs a valid id) */
+    void addTexture(Texture* texture);
 
     /*! \brief Retrieve a registered texture from the ResourceManager */
-    kore::Texture* getTexture(const std::string& path);
+    kore::Texture* getTexture(const uint64 id);
 
     /*! \brief Retrieve all registered textures from the ResourceManager */
     std::vector<kore::Texture*> getTextures(void);
@@ -110,7 +104,7 @@ namespace kore {
     /*! \brief Removes a texture from the ResourceManager and from the whole
     *          program. All Texture-listeners are notified.
     *   \param path The path/name of the texture to remove. */
-    void removeTexture(const std::string& path);
+    void removeTexture(const uint64 id);
 
     /*! \brief Removes a texture from the ResourceManager and from the whole
     *          program. All Texture-listeners are notified.
@@ -121,26 +115,19 @@ namespace kore {
 
     /*! \brief Adds a shaderProgram to the ResourceManager. This shaderProgram
     *          will now be controlled and deleted by the resourceManager alone.
-    *   \param program The ShaderProgram to register. */
+    *   \param program The ShaderProgram to register. (needs a valid id) */
     void addShaderProgram(ShaderProgram* program);
 
-    /*! \brief Rename a registered ShaderProgram.
-    */
-    void renameShaderProgram(const std::string& oldname,
-                           const std::string& newname);
-
     /*! \brief Retrieve a registered ShaderProgram from the ResourceManager. */
-    const kore::ShaderProgram* getShaderProgram(const std::string& name) const;
+    const kore::ShaderProgram* getShaderProgram(const uint64 id) const;
 
     /*! \brief Retrieve all registered ShaderPrograms. */
     std::vector<ShaderProgram*> getShaderPrograms(void);
 
-    /*! \brief 
-
     /*! \brief Removes a shaderProgram from the ResourceManager and from the
     *          whole program. Registered SaderProgram-listener are informed.
     *   \param name The name of the shaderProgram. */
-    void removeShaderProgram(const std::string& name);
+    void removeShaderProgram(const uint64 id);
 
     /*! \brief Removes a shaderProgram from the ResourceManager and from the
     *          whole program. Registered SaderProgram-listener are informed.
@@ -151,7 +138,7 @@ namespace kore {
 
     /*! \brief Adds a framebuffer to the ResourceManager. This framebuffer will
     *          now be controlled and deleted by the resourceManager alone.
-    *   \param fbo  The framebuffer to register.
+    *   \param fbo  The framebuffer to register. (needs a valid id)
     */
     void addFramebuffer(FrameBuffer* fbo);
 
@@ -159,28 +146,23 @@ namespace kore {
     *   \param name The name of the FrameBuffer with which it was added.
     *   \return The requested FrameBuffer or NULL, if there was no FrameBuffer
                 added with the provided name or it has been removed already. */
-    FrameBuffer* getFramebuffer(const std::string& name);
-
-    /*! \brief Rename a registered FrameBuffer.
-    */
-    void renameFramebuffer(const std::string& oldname,
-                           const std::string& newname);
+    FrameBuffer* getFramebuffer(const uint64 id);
 
     /*! \brief Retrieve all registered FrameBuffers.*/
     std::vector<FrameBuffer*> getFramebuffers(void);
     
     /*! \brief Remove a registered FrameBuffer from the ResourceManager and
     *          from the whole program. FrameBuffer-listeners are informed.
-    *   \param name The name of the Framebuffer.
+    *   \param id The id of the framebuffer.
     */
-    void removeFramebuffer(const std::string& name);
+    void removeFramebuffer(const uint64 id);
     
     /*! \brief Remove a registered FrameBuffer from the ResourceManager and
     *          from the whole program. FrameBuffer-listeners are informed.
     *   \param fbo The FrameBuffer to remove.
     */
     void removeFramebuffer(FrameBuffer* fbo);
-
+    
 
 
     /*! \brief Adds a shader handle to the cache. Subsequent shader-loadings 
@@ -197,21 +179,19 @@ namespace kore {
     GLuint getShaderHandle(const std::string& path);
 
 
-
-
+    /*! \brief Adds a Material to the ResourceManager. This Material will now
+              be controlled and deleted by the ResourceManager alone.
+    *   \param mat The material to add. Needs a valid id. */
     void addMaterial(Material* mat);
 
-    kore::Material* getMaterial(const std::string& name);
+    /*! \brief Retrieve a Material from its id. */
+    kore::Material* getMaterial(const uint64 id);
 
-    inline const std::vector<kore::Material*>&
-      getMaterials() const {return _materials;}
+    std::vector<kore::Material*> getMaterials();
     
-    void removeMaterial(const std::string& name);
+    void removeMaterial(const uint64 id);
 
     void removeMaterial(const Material* mat);
-
-    const std::string getUniqueMaterialName(const std::string& scenePath,
-                                             const uint index);
 
 
     /*! \brief Returns the OpenGL texture sampler object with the provided 
@@ -226,29 +206,17 @@ namespace kore {
       requestTextureSampler(const TexSamplerProperties& properties);
 
   private:
-    typedef std::map<std::string, kore::SceneNodeComponent*>
-            InnerResourceMapT;
-
-    typedef std::map<std::string, InnerResourceMapT>
-            OuterResourceMapT;
-
-    typedef std::map<std::string, kore::Mesh*>
-            InnerMeshMapT;
-
-    typedef std::map<std::string, InnerMeshMapT>
-            OuterMeshMapT;
-    
     ResourceManager(void);
     virtual ~ResourceManager(void);
 
-    OuterMeshMapT _meshes; // filepath, id, mesh
-
-    std::map<std::string, kore::Texture*> _textures; // filepath, texture
     std::map<std::string, GLuint> _shaderHandles;
-    std::map<std::string, ShaderProgram*> _shaderProgramMap; // filepath, program
     std::vector<kore::TextureSampler*> _textureSamplers;
-    std::map<std::string, kore::FrameBuffer*> _frameBuffers; // name, framebuffer
-    std::vector<Material*> _materials;
+
+    std::map<uint64, Mesh*> _meshes;  // id || mesh
+    std::map<uint64, kore::Texture*> _textures;  // id || texture    
+    std::map<uint64, ShaderProgram*> _shaderPrograms;  // id || program
+    std::map<uint64, kore::FrameBuffer*> _frameBuffers; // name, framebuffer
+    std::map<uint64, Material*> _materials;
 
     Delegate1Param<const FrameBuffer*> _fboDeleteEvent;
     Delegate1Param<const Texture*> _textureDeleteEvent;

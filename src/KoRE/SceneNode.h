@@ -25,6 +25,7 @@
 #include "KoRE/Common.h"
 #include "KoRE/Components/SceneNodeComponent.h"
 #include "KoRE/Components/Transform.h"
+#include "KoRE/BaseResource.h"
 
 namespace kore {
   enum ETransfpomSpace {
@@ -32,7 +33,7 @@ namespace kore {
     SPACE_WORLD
   };
 
-  class SceneNode {
+  class SceneNode : public BaseResource {
     friend class SceneLoader;
   public:
     SceneNode(void);
@@ -46,7 +47,6 @@ namespace kore {
     const Transform* getTransform(void) const;
     kore::Transform* getTransform();
     SceneNodeComponent* getComponent(EComponentType type);
-    const uint64 getID(void) const;
     const uint getTag(void) const;
     const std::string getName(void) const;
     void getSceneNodesByTag(const uint tag,
@@ -81,13 +81,7 @@ namespace kore {
                         const glm::vec3& v3Forward,
                         const ETransfpomSpace relativeTo = SPACE_LOCAL);
 
-    /*! \brief Get unique ID
-     * \return the Texture's unique ID
-    */
-    inline const uint64 getID(){return _id;}
-
   private:
-    uint64 _id;
     uint _tag;
     std::string _name;
     SceneNode* _parent;
