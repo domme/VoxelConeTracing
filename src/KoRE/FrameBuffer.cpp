@@ -31,7 +31,7 @@ const kore::FrameBuffer* kore::FrameBuffer::BACKBUFFER = new kore::FrameBuffer(0
 kore::FrameBuffer::FrameBuffer(const std::string& name)
 : _name(name),
   _handle(KORE_GLUINT_HANDLE_INVALID) {
-
+   _id = kore::IDManager::getInstance()->genID();
   glGenFramebuffers(1, &_handle);
 }
 
@@ -40,6 +40,8 @@ kore::FrameBuffer::FrameBuffer(GLuint handle) {
   _name = "BACKBUFFER";
   _handle = handle;
   _id = kore::IDManager::getInstance()->genID();
+  IDManager::getInstance()
+    ->registerGenURL(_id, _name);
   ResourceManager::getInstance()->addFramebuffer(this);
 }
 
@@ -47,8 +49,14 @@ kore::FrameBuffer::~FrameBuffer(void) {
   destroy();
 }
 
-void setName(const std::string& name) {
-  //kore::ResourceManager::getInstance()
+void kore::FrameBuffer::setName(const std::string& name) {
+  if (this == kore::FrameBuffer::BACKBUFFER
+    | name == kore::FrameBuffer::BACKBUFFER->getName()) {
+    return;
+  }
+
+  _name = name;
+  IDManager::getInstance()->registerGenURL(_id, _name);
 }
 
 void kore::FrameBuffer::destroy() {
@@ -147,10 +155,4 @@ bool kore::FrameBuffer::checkFBOcompleteness() {
 
   RenderManager::getInstance()->bindFrameBuffer(GL_FRAMEBUFFER, _handle);
   return GLerror::gl_ValidateFBO(_name);
-}
-
-void kore::FrameBuffer::setName(const std::string& name) {
-  if (_name != "BACKBUFFER" && name != "BACKBUFFER") {
-    _name = name;
-  }
 }

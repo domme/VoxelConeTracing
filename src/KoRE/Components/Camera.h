@@ -43,7 +43,8 @@ class Camera : public SceneNodeComponent {
      virtual void transformChanged(const Transform* newTransform);
 
      inline const std::string& getName() const {return _name;}
-     inline void setName(const std::string& name) {_name = name;}
+     inline void setName(const std::string& name);
+     inline uint64 getID() const {return _id;}
 
      inline const glm::mat4&  getView() const           {return _matView;}
      inline const glm::mat4&  getProjection() const   {return _matProjection;}
@@ -128,6 +129,7 @@ class Camera : public SceneNodeComponent {
      void        rotateViewQuat(const float angle, const glm::vec3 v3Axis);
 
      std::string _name;
+     uint64 _id;
 };
 }
 

@@ -13,7 +13,6 @@ kore::Texture::~Texture() {
   destroy();
 }
 
-
 void kore::Texture::destroy() {
   if (_handle == KORE_GLUINT_HANDLE_INVALID) {
     return;

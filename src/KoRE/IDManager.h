@@ -36,24 +36,30 @@ namespace kore {
   public:
     static IDManager *getInstance(void);
     ~IDManager(void);
-    /*! /brief Generates a unique ID
-     *  /return a unique ID
+    /*! \brief Generates a unique ID
+     *  \return a unique ID
      */
     inline uint64 genID() {return ++_counter;}
-    /*! /brief
+    /*! \brief
     */
     const std::string& getURL(uint64 id) const;
-    /*! /brief
+    /*! \brief
     */
     const uint64 getID(const std::string& url) const;
-    /*! /brief
+    /*! \brief
     */
-    void insert(uint64 id, const std::string& url);
+    void registerURL(uint64 id, const std::string& url);
+
+    /*! \brief Generate a new URL from the provided parameters and associates
+    *          this to the provided id */
+    void registerGenURL(uint64 id, const std::string& name,
+                                   const std::string& filepath = "");
+
     /*! /brief
     */
     std::string genURL(const uint64 id,
-                       const std::string& filepath = "",
-                       const std::string& name = "") const;
+                       const std::string& name,
+                       const std::string& filepath = "") const;
     
     // TODO(dlazarek & co): Append new genURL-versions for new object types
 

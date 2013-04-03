@@ -43,28 +43,30 @@ const uint64 kore::IDManager::getID(const std::string& url) const {
   return KORE_ID_INVALID;
 }
 
-void kore::IDManager::insert(uint64 id, const std::string& url) {
-  if (getURL(id) != _invalidURL) {
-    Log::getInstance()->write("[WARNING] The id %i is already inserted into"
-                              "the IDmanager with url %s", id, url.c_str());
-    return;
-  }
-
+void kore::IDManager::registerURL(uint64 id, const std::string& url) {
   _mapURL[id] = url;
 }
 
+void kore::IDManager::registerGenURL(uint64 id,
+                                     const std::string& name,
+                                     const std::string& filepath /*= ""*/ ) {
+  registerURL(id, genURL(id, name, filepath));
+}
+
 std::string kore::IDManager::genURL(const uint64 id,
-                                    const std::string& scenePath /* = "" */,
-                                    const std::string& name /* = "" */) const {
+                                    const std::string& name,
+                                    const std::string& filepath /* = "" */) const {
   std::stringstream ss;
 
-  if (scenePath.size() == 0) {
+  if (filepath.size() == 0) {
     ss << _internalPathName;
   } else {
-    ss << scenePath;
+    ss << filepath;
   }
 
   ss << "_" << name << "_" << id;
 
   return ss.str();
 }
+
+

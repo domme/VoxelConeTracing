@@ -29,6 +29,7 @@
 #include "KoRE/RenderManager.h"
 #include "KoRE/DataTypes.h"
 #include "KoRE/SceneNode.h"
+#include "KoRE/IDManager.h"
 
 kore::Camera::Camera()
        :_fMovementSpeed(50.0f),
@@ -43,7 +44,9 @@ kore::Camera::Camera()
         _bIsOrtho(false),
         _fWidth(1.0f),
         _fHeight(1.0),
+        _name(""),
         kore::SceneNodeComponent() {
+  _id = IDManager::getInstance()->genID();
 
   // setup bindings
   ShaderData tmp;
@@ -385,4 +388,9 @@ bool kore::Camera::
         return false;
     }
     return true;
+}
+
+void kore::Camera::setName(const std::string& name) {
+  _name = name;
+  IDManager::getInstance()->registerGenURL(_id, _name);
 }
