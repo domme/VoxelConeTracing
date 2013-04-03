@@ -25,12 +25,13 @@
 #include "KoRE/SceneNode.h"
 #include "KoRE/Common.h"
 #include "KoRE/SceneManager.h"
+#include "Kore/IDManager.h"
 
 kore::SceneNode::SceneNode(void)
                        :_tag(0),
                         _parent(NULL),
                         _dirty(true) {
-  _id = kore::SceneManager::getInstance()->createID();
+  _id = kore::IDManager::getInstance()->genID();
   _transform = new Transform;
   _components.push_back(_transform);
 }

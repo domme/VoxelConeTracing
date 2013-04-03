@@ -34,7 +34,6 @@ namespace kore {
   public:
     friend class ProjectLoader;
     static SceneManager *getInstance(void);
-    uint64 createID(void);
     void update(void);
     void addTag(const std::string& name);
     const uint getTag(const std::string& name);
@@ -71,7 +70,6 @@ namespace kore {
     SceneManager(void);
     virtual ~SceneManager(void);
     SceneNode _root;
-    uint64 _idcount;
     uint _tagcount;
     std::map<std::string, uint> _tagmap;
   };

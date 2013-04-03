@@ -51,7 +51,7 @@ void kore::SceneLoader::loadScene(const std::string& szScenePath,
   loadRessources(szScenePath);
   const aiScene* pAiScene =
     _aiImporter.ReadFile(szScenePath,
-                         aiProcess_JoinIdenticalVertices 
+                         aiProcess_JoinIdenticalVertices
                          | aiProcess_Triangulate
                          | aiProcess_CalcTangentSpace
                          | aiProcess_ValidateDataStructure
@@ -157,8 +157,6 @@ void kore::SceneLoader::loadRessources(const std::string& szScenePath) {
       _lightcount++;
     }
   }
-
-
 }
 
 void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,

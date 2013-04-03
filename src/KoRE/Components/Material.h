@@ -74,9 +74,15 @@ namespace kore {
                name. */
     bool hasValue(const std::string& name);
 
+    /*! \brief Get unique ID
+     * \return the Texture's unique ID
+    */
+    inline const uint64 getID() const {return _id;}
+
     Delegate1Param<ShaderData*>& getAddEvent() {return _eventDataAdded;}
     Delegate1Param<ShaderData*>& getRemoveEvent() {return _eventDataRemoved;}
   private:
+    uint64 _id;
     std::string _name; // Note: the sceneLoader will assign a unique name.
     std::vector<ShaderData> _values;
     Delegate1Param<ShaderData*> _eventDataAdded;

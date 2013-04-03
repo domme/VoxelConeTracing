@@ -56,10 +56,12 @@ typedef double float64;
 #define KORE_MAX_FRAMEBUFFER_COUNT 64
 
 // Use this to indicate an invalid GL-handle of type GLuint
+
 #define KORE_GLUINT_HANDLE_INVALID 0xFFFFFFFF
 #define KORE_GLINT_HANDLE_INVALID -1
 #define KORE_UINT_INVALID 0xFFFFFFFF
 #define KORE_UINT64_INVALID 0xFFFFFFFFFFFFFFFF
+#define KORE_ID_INVALID     0x0000000000000000
 #define KORE_TAG_INVALID 0x00000000
 
 #define KORE_SAFE_DELETE(p) if (p) { delete p; p = NULL; }

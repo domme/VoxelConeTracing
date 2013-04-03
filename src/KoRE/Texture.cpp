@@ -1,11 +1,12 @@
 #include "KoRE/Texture.h"
 #include "KoRE/Log.h"
 #include "KoRE/GLerror.h"
+#include "KoRE/IDManager.h"
 
 kore::Texture::Texture()
                     : _handle(KORE_GLUINT_HANDLE_INVALID),
-                      _resourcepath("")
-                     {
+                      _resourcepath("") {
+  _id = kore::IDManager::getInstance()->genID();
 }
 
 kore::Texture::~Texture() {

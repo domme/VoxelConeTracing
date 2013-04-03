@@ -70,7 +70,13 @@ namespace kore {
     *          Only valid for non-empty textures */
     void genMipmapHierarchy();
 
+    /*! \brief Get unique ID
+     * \return the Texture's unique ID
+    */
+    inline const uint64 getID(){return _id;}
+
   private:
+    uint64 _id;
     GLuint _handle;
     std:: string _resourcepath;
     STextureProperties _properties;

@@ -22,6 +22,7 @@
 #include "KoRE/Log.h"
 #include "KoRE/GLerror.h"
 #include "KoRE/ResourceManager.h"
+#include "KoRE/IDManager.h"
 #include <algorithm>
 
 // Create the backbuffer as a static const sharedptr.
@@ -38,6 +39,7 @@ kore::FrameBuffer::FrameBuffer(const std::string& name)
 kore::FrameBuffer::FrameBuffer(GLuint handle) {
   _name = "BACKBUFFER";
   _handle = handle;
+  _id = kore::IDManager::getInstance()->genID();
   ResourceManager::getInstance()->addFramebuffer(this);
 }
 

@@ -27,18 +27,12 @@ kore::SceneManager* kore::SceneManager::getInstance(void) {
   return &theInstance;
 }
 
-kore::SceneManager::SceneManager(void)
-                           :_idcount(0),
-                            _tagcount(0) {
+kore::SceneManager::SceneManager(void) :_tagcount(0) {
   addTag("DEFAULT");
   _root.setName("ROOT");
 }
 
 kore::SceneManager::~SceneManager(void) {
-}
-
-uint64 kore::SceneManager::createID(void) {
-  return _idcount++;
 }
 
 void kore::SceneManager::update(void) {

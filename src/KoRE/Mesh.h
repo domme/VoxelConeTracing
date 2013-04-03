@@ -80,7 +80,13 @@ namespace kore {
     const GLuint getIBO() const;
     const bool usesIBO() const;
 
+    /*! \brief Get unique ID
+     * \return the Texture's unique ID
+    */
+    inline const uint64 getID() const {return _id;}
+
   private:
+    uint64                          _id;
     std::string                     _name;
     std::vector<MeshAttributeArray> _attributes;
     std::vector<unsigned int>       _indices;

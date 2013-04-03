@@ -80,6 +80,12 @@ namespace kore {
                         const glm::vec3& v3Up,
                         const glm::vec3& v3Forward,
                         const ETransfpomSpace relativeTo = SPACE_LOCAL);
+
+    /*! \brief Get unique ID
+     * \return the Texture's unique ID
+    */
+    inline const uint64 getID(){return _id;}
+
   private:
     uint64 _id;
     uint _tag;

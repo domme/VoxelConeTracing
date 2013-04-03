@@ -21,10 +21,11 @@
 #include "KoRE/SceneManager.h"
 #include "KoRE/SceneNode.h"
 #include "KoRE/Log.h"
+#include "KoRE/IDManager.h"
 
 
 kore::CompatibleNodeGroup::CompatibleNodeGroup() {
-  _id = kore::SceneManager::getInstance()->createID();
+  _id = kore::IDManager::getInstance()->genID();
 }
 
 kore::CompatibleNodeGroup::~CompatibleNodeGroup() {
