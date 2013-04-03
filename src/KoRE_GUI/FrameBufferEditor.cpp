@@ -12,6 +12,8 @@ koregui::FrameBufferEditor::FrameBufferEditor(koregui::FrameBufferItem* stage,
           this,
           SLOT(framebufferChanged(const QString&)));
 
+  connect(ui.addTagetButton, SIGNAL(clicked()), this, SLOT(addTarget()));
+
   _currentbuffer = _currentitem->getFrameBuffer();
   refresh();
 }
@@ -26,7 +28,15 @@ void koregui::FrameBufferEditor::addNewFramebuffer(void) {
   sprintf(buf, "Framebuffer_%i", cnt);
   kore::FrameBuffer* frabuf = new kore::FrameBuffer(std::string(buf));
   kore::ResourceManager::getInstance()->addFramebuffer(frabuf);
+  ui.tableWidget->verticalHeader()->hide();
   refresh();
+}
+
+void koregui::FrameBufferEditor::addTarget(void) {
+  ui.tableWidget->setRowCount(ui.tableWidget->rowCount() + 1);
+  QComboBox* combo = new QComboBox();
+  //combo->addItem()
+  ui.tableWidget->setCellWidget(ui.tableWidget->rowCount() -1, 0, combo);
 }
 
 void koregui::FrameBufferEditor::refresh(void) {
@@ -43,6 +53,11 @@ void koregui::FrameBufferEditor::refresh(void) {
   for (uint i = 0; i < bufferlist.size(); i++) {
     ui.framebufferselect->addItem(bufferlist[i]->getName().c_str());
   }
+
+
+  QComboBox* combo = new QComboBox();
+  ui.tableWidget->setCellWidget(0,0,combo);
+
   connect(ui.framebufferselect,
     SIGNAL(currentTextChanged(const QString&)),
     this,
