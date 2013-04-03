@@ -1,5 +1,5 @@
 /*
-  Copyright © 2012 The KoRE Project
+  Copyright (c) 2012 The KoRE Project
 
   This file is part of KoRE.
 
@@ -49,23 +49,15 @@ namespace kore {
     /// Returns the first sceneNode found with the given component
     SceneNode* getSceneNodeByComponent(const EComponentType componentType);
 
-    void addCamera(const std::string& path, Camera* camera);
-    void addLight(const std::string& path, LightComponent* light);
+    void addCamera(Camera* camera);
+    void addLight(LightComponent* light);
 
-    kore::Camera* getCamera(const std::string& path, const std::string& id);
-
-    kore::LightComponent* 
-      getLight(const std::string& path, const std::string& id);
+    kore::Camera* getCamera(const uint64 id);
+    kore::LightComponent* getLight(const uint64 id);
 
   private:
-    typedef std::map<std::string, kore::SceneNodeComponent*>
-      InnerResourceMapT;
-
-    typedef std::map<std::string, InnerResourceMapT>
-      OuterResourceMapT;
-
-    OuterResourceMapT _cameras; // filepath, id, camera
-    OuterResourceMapT _lights; // filepath, id, light
+    std::map<uint64, Camera*> _cameras;  // id || camera
+    std::map<uint64, LightComponent*> _lights;  // id || light
 
     SceneManager(void);
     virtual ~SceneManager(void);

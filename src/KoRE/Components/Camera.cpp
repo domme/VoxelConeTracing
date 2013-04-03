@@ -45,8 +45,7 @@ kore::Camera::Camera()
         _fWidth(1.0f),
         _fHeight(1.0),
         _name(""),
-        kore::SceneNodeComponent(),
-        kore::BaseResource() {
+        kore::SceneNodeComponent() {
   // setup bindings
   ShaderData tmp;
   tmp.type = GL_FLOAT_MAT4;

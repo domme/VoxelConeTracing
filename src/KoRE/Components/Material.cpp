@@ -19,7 +19,7 @@
 
 #include "KoRE/Components/Material.h"
 
-kore::Material::Material() : _name("UNNAMED") {
+kore::Material::Material() : _name("UNNAMED"), kore::BaseResource() {
 }
 
 kore::Material::~Material() {

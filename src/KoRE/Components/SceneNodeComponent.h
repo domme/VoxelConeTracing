@@ -23,6 +23,7 @@
 #include "KoRE/Common.h"
 #include "KoRE/ShaderData.h"
 #include "KoRE/Operations/Operation.h"
+#include "KoRE/BaseResource.h"
 
 namespace kore {
   enum EComponentType {
@@ -37,7 +38,7 @@ namespace kore {
 
   class SceneNode;
   class Transform;
-  class SceneNodeComponent {
+  class SceneNodeComponent : public BaseResource {
   public:
     explicit SceneNodeComponent(void);
     virtual ~SceneNodeComponent(void);
@@ -50,11 +51,9 @@ namespace kore {
 
     inline const std::vector<ShaderData>&
     getShaderData() const {return _shaderData;};
-    uint getID(void) const;
 
   protected:
     std::string name;
-    uint _id;
     SceneNode* _sceneNode;
     EComponentType _type;
     std::vector<ShaderData> _shaderData;

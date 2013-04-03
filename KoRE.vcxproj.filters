@@ -151,6 +151,9 @@
     <ClCompile Include="src\KoRE\IDManager.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\KoRE\BaseResource.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\KoRE\Operations\SelectNodes.h">
@@ -313,6 +316,9 @@
       <Filter>src\Operations</Filter>
     </ClInclude>
     <ClInclude Include="src\KoRE\IDManager.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\BaseResource.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

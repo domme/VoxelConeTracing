@@ -76,7 +76,7 @@ kore::Texture*
     }
 
     if (tex->create(texProperties, filepath, &imageData[0])) {
-      ResourceManager::getInstance()->addTexture(filepath, tex);
+      ResourceManager::getInstance()->addTexture(tex);
       kore::Log::getInstance()
         ->write("[DEBUG] Texture '%s' successfully loaded\n",
         filepath.c_str());

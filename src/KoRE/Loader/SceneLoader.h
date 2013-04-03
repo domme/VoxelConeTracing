@@ -43,7 +43,8 @@ namespace kore {
 
     void loadScene(const std::string& szScenePath,
                            SceneNode* parent);
-    void loadRessources(const std::string& szScenePath);
+    void loadResources(const std::string& szScenePath,
+                       const aiScene* pAiScene = NULL);
   private:
     SceneLoader();
     const aiScene* readScene(const std::string& szScenePath);
@@ -53,10 +54,6 @@ namespace kore {
                         const aiScene* aiscene,
                         const std::string& szScenePath);
     glm::mat4 glmMatFromAiMat(const aiMatrix4x4& aiMat) const;
-    std::string getCameraName(const aiCamera* pAiCamera,
-                              const uint uCameraSceneIndex);
-    std::string getLightName(const aiLight* pAiLight,
-                              const uint uLightSceneIndex);
 
     void loadMaterialProperties(Material* koreMat, const aiMaterial* aiMat);
 
@@ -79,8 +76,26 @@ namespace kore {
     void addTexTypeToTexList(aiTextureType aiTexType, const aiMaterial* aiMat,
                              std::vector<Texture*>& textures);
 
-    
+    inline std::string meshName(const aiMesh* mesh)
+      {return "mesh_" + std::string(mesh->mName.C_Str());}
 
+    inline std::string cameraName(const aiCamera* cam)
+    {return "camera_" + std::string(cam->mName.C_Str());}
+
+    inline std::string lightName(const aiLight* light)
+    {return "light_" + std::string(light->mName.C_Str());}
+
+    inline std::string nodeName(const aiNode* node)
+      {return "node_" + std::string(node->mName.C_Str());}
+
+    inline std::string materialName()
+    {return "material_";}
+
+    std::map<uint, uint64> _loadedMeshIDs;
+    std::map<uint, uint64> _loadedMaterialIDs;
+    std::map<uint, uint64> _loadedCameraIDs;
+    std::map<uint, uint64> _loadedLightIDs;
+    
     Assimp::Importer _aiImporter;
     uint _nodecount, _cameracount, _meshcount, _lightcount;
   };

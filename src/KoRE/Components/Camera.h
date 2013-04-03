@@ -28,10 +28,9 @@
 #include "KoRE/Common.h"
 #include "KoRE/Components/SceneNodeComponent.h"
 #include "KoRE/DataTypes.h"
-#include "KoRE/BaseResource.h"
 
 namespace kore {
-class Camera : public SceneNodeComponent, public BaseResource {
+class Camera : public SceneNodeComponent {
  public:
      Camera();
      virtual ~Camera();

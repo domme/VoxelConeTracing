@@ -40,8 +40,7 @@ void kore::ProjectLoader::saveProject(const std::string& path) const {
 
   // Textures
   TiXmlElement* texture;
-  std::map<std::string, Texture*>::iterator texIt;
-  for(texIt = ResMgr->_textures.begin();
+  for(auto texIt = ResMgr->_textures.begin();
       texIt != ResMgr->_textures.end();
       texIt++) {
     texture = new TiXmlElement("Texture");

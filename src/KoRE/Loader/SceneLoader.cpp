@@ -30,6 +30,7 @@
 #include "KoRE/Components/LightComponent.h"
 #include "KoRE/Components/Material.h"
 #include "KoRE/Components/MaterialComponent.h"
+#include "KoRE/IDManager.h"
 
 kore::SceneLoader* kore::SceneLoader::getInstance() {
   static SceneLoader instance;
@@ -45,26 +46,40 @@ kore::SceneLoader::SceneLoader()
 kore::SceneLoader::~SceneLoader() {
 }
 
-void kore::SceneLoader::loadScene(const std::string& szScenePath,
-                                  SceneNode* parent) {
-  _nodecount = _cameracount = _meshcount = 0;
-  loadRessources(szScenePath);
+
+const aiScene* kore::SceneLoader::readScene(const std::string& szScenePath) {
   const aiScene* pAiScene =
     _aiImporter.ReadFile(szScenePath,
-                         aiProcess_JoinIdenticalVertices
-                         | aiProcess_Triangulate
-                         | aiProcess_CalcTangentSpace
-                         | aiProcess_ValidateDataStructure
-                         | aiProcess_OptimizeMeshes
-                         | aiProcess_SortByPType);
+    aiProcess_JoinIdenticalVertices 
+    | aiProcess_Triangulate
+    | aiProcess_CalcTangentSpace
+    | aiProcess_ValidateDataStructure
+    | aiProcess_OptimizeMeshes
+    | aiProcess_SortByPType);
 
   if (!pAiScene) {
-    Log::getInstance()
-      ->write("[ERROR] Scene '%s' could not be loaded\n",
-              szScenePath.c_str());
-    return;
+    Log::getInstance()->write("[ERROR] Scene '%s' could not be read\n",
+                              szScenePath.c_str());
+    return NULL;
   }
+
+  return pAiScene;
+}
+
+
+void kore::SceneLoader::loadScene(const std::string& szScenePath,
+                                  SceneNode* parent) {
+  _loadedCameraIDs.clear();
+  _loadedLightIDs.clear();
+  _loadedMaterialIDs.clear();
+  _loadedMeshIDs.clear();
+
+  _nodecount = _cameracount = _meshcount = 0;
+  const aiScene* pAiScene = readScene(szScenePath);
+
+  loadResources(szScenePath, pAiScene);
   loadSceneGraph(pAiScene->mRootNode, parent, pAiScene, szScenePath);
+
   Log::getInstance()
     ->write("[DEBUG] Scene '%s' successfully loaded:\n"
             "\t %i meshes\n"
@@ -76,43 +91,39 @@ void kore::SceneLoader::loadScene(const std::string& szScenePath,
             _nodecount);
 }
 
-void kore::SceneLoader::loadRessources(const std::string& szScenePath) {
-  const aiScene* pAiScene =
-    _aiImporter.ReadFile(szScenePath,
-    aiProcess_JoinIdenticalVertices 
-    | aiProcess_Triangulate
-    | aiProcess_CalcTangentSpace
-    | aiProcess_ValidateDataStructure
-    | aiProcess_OptimizeMeshes
-    | aiProcess_SortByPType);
-
-  if (!pAiScene) {
-    Log::getInstance()
-      ->write("[ERROR] Scene '%s' could not be loaded\n",
-              szScenePath.c_str());
-    return;
+void kore::SceneLoader::loadResources(const std::string& szScenePath,
+                                       const aiScene* pAiScene /* = NULL */) {
+  if (pAiScene == NULL) {
+    pAiScene = readScene(szScenePath);
   }
 
+  IDManager* idMgr = IDManager::getInstance();
   ResourceManager* resMgr = ResourceManager::getInstance();
   SceneManager* sceneMgr = SceneManager::getInstance();
   
   if (pAiScene->HasMeshes()) {
     for (uint i = 0; i < pAiScene->mNumMeshes; ++i) {
-      resMgr->addMesh(szScenePath,
-                      MeshLoader::getInstance()->loadMesh(pAiScene,i));
+      aiMesh* aiMesh = pAiScene->mMeshes[i];
+      Mesh* mesh  = MeshLoader::getInstance()->loadMesh(pAiScene,i);
+      std::string meshURL = idMgr->genURL(meshName(aiMesh), szScenePath, i);
+      idMgr->registerURL(mesh->getID(), meshURL);
+      resMgr->addMesh(mesh);
       _meshcount++;
 
       // Load and store Material for that mesh if necessary
-      aiMesh* aiMesh = pAiScene->mMeshes[i];
-      std::string uniqueMaterialName =
-        resMgr->getUniqueMaterialName(szScenePath, aiMesh->mMaterialIndex);
-      if (resMgr->getMaterial(uniqueMaterialName) == NULL) {
+      
+      std::string materialURL = idMgr->genURL(materialName(),
+                                              szScenePath,
+                                              aiMesh->mMaterialIndex);
+      uint64 matID = idMgr->getID(materialURL);
+      
+      if (matID == KORE_ID_INVALID) {  // There is no material for that URL yet
         Material* koreMat = new Material;
-        koreMat->_name = uniqueMaterialName;
+        koreMat->_name = materialURL;
+        idMgr->registerURL(koreMat->getID(), materialURL);
 
         loadMaterialProperties(koreMat,
                                pAiScene->mMaterials[aiMesh->mMaterialIndex]);
-
         resMgr->addMaterial(koreMat);
         
         // Load all textures into the resourceManager.
@@ -125,15 +136,21 @@ void kore::SceneLoader::loadRessources(const std::string& szScenePath) {
     for (uint i = 0; i < pAiScene->mNumCameras; ++i) {
       const aiCamera* pAiCamera = pAiScene->mCameras[i];
       Camera* pCamera = new Camera;
-      pCamera->setName(getCameraName(pAiCamera, i));
+
+      std::string camURL = idMgr->genURL(cameraName(pAiCamera),
+                                         szScenePath, i);
+      idMgr->registerURL(pCamera->getID(), camURL);
+
+      pCamera->setName(cameraName(pAiCamera));
       float yFovDeg = glm::degrees(pAiCamera->mHorizontalFOV)
-                     / pAiCamera->mAspect;
+                                   / pAiCamera->mAspect;
+
       pCamera->setProjectionPersp(yFovDeg,
                                   pAiCamera->mAspect,
                                   pAiCamera->mClipPlaneNear,
                                   pAiCamera->mClipPlaneFar);
 
-      SceneManager::getInstance()->addCamera(szScenePath, pCamera);
+      SceneManager::getInstance()->addCamera(pCamera);
       _cameracount++;
     }
   }
@@ -142,8 +159,12 @@ void kore::SceneLoader::loadRessources(const std::string& szScenePath) {
     for (uint i = 0; i < pAiScene->mNumLights; ++i) {
       const aiLight* pAiLight = pAiScene->mLights[i];
       LightComponent* pLight = new LightComponent;
-      pLight->setName(getLightName(pAiLight, i));
-      
+
+      std::string lightURL = idMgr->genURL(lightName(pAiLight),
+                                           szScenePath, i);
+      idMgr->registerURL(pLight->getID(), lightURL);
+
+      pLight->setName(pAiLight->mName.C_Str());
       pLight->_color = glm::vec3(pAiLight->mColorDiffuse.r,
                                  pAiLight->mColorDiffuse.g,
                                  pAiLight->mColorDiffuse.b);
@@ -153,7 +174,7 @@ void kore::SceneLoader::loadRessources(const std::string& szScenePath) {
       pLight->_falloffStart = 0.0f;
       pLight->_falloffEnd = 10.0f;  // TODO(dlazarek): find this info in the ai-light
       
-      SceneManager::getInstance()->addLight(szScenePath, pLight);
+      SceneManager::getInstance()->addLight(pLight);
       _lightcount++;
     }
   }
@@ -165,6 +186,7 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
                                        const std::string& szScenePath) {
     ResourceManager* resMgr = ResourceManager::getInstance();
     SceneManager* sceneMgr = SceneManager::getInstance();
+    IDManager* idMgr = IDManager::getInstance();
 
     SceneNode* node = new SceneNode;
     node->getTransform()->setLocal(glmMatFromAiMat(ainode->mTransformation));
@@ -187,8 +209,11 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
 
     if (lightIndex != KORE_UINT_INVALID) {
       const aiLight* pAiLight = aiscene->mLights[lightIndex];
-      std::string lightName = getLightName(pAiLight, lightIndex);
-      LightComponent* pLight = sceneMgr->getLight(szScenePath, lightName);
+      std::string lightURL = idMgr->genURL(lightName(pAiLight),
+                                           szScenePath,
+                                           lightIndex);
+      uint64 lightID = idMgr->getID(lightURL);
+      LightComponent* pLight = sceneMgr->getLight(lightID);
       if (pLight != NULL) {
         node->addComponent(pLight);
       }
@@ -207,8 +232,12 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
 
     if (camIndex != KORE_UINT_INVALID) {
       const aiCamera* pAiCam = aiscene->mCameras[camIndex];
-      std::string camName = getCameraName(pAiCam, camIndex);
-      Camera* pCamera = sceneMgr->getCamera(szScenePath, camName);
+      std::string camURL = idMgr->genURL(cameraName(pAiCam),
+                                         szScenePath,
+                                         camIndex);
+      uint64 camID = idMgr->getID(camURL);
+
+      Camera* pCamera = sceneMgr->getCamera(camID);
       if (pCamera != NULL) {
         node->addComponent(pCamera);
       }
@@ -219,11 +248,12 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
     // Further meshes have to be loaded into duplicate nodes
     if (ainode->mNumMeshes > 0) {
       const aiMesh* aimesh = aiscene->mMeshes[ainode->mMeshes[0]];
-
-      std::string meshName = MeshLoader::getInstance()
-        ->getMeshName(ainode->mMeshes[0], aiscene);
-
-      Mesh* mesh = resMgr->getMesh(szScenePath, meshName);
+      std::string meshURL = idMgr->genURL(meshName(aimesh),
+                                          szScenePath,
+                                          ainode->mMeshes[0]);
+      uint64 meshID = idMgr->getID(meshURL);
+      
+      Mesh* mesh = resMgr->getMesh(meshID);
       MeshComponent* meshComponent = new MeshComponent;
       meshComponent->setMesh(mesh);
       node->addComponent(meshComponent);
@@ -232,10 +262,11 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
       // MaterialComponent
       MaterialComponent* materialComponent = new MaterialComponent;
 
-      std::string matName =
-        resMgr->getUniqueMaterialName(szScenePath, aimesh->mMaterialIndex);
+      std::string matURL =
+        idMgr->genURL(materialName(), szScenePath, aimesh->mMaterialIndex);
+      uint64 matID = idMgr->getID(matURL);
 
-      Material* mat = resMgr->getMaterial(matName);
+      Material* mat = resMgr->getMaterial(matID);
       materialComponent->setMaterial(mat);
 
       node->addComponent(materialComponent);
@@ -259,11 +290,12 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
       parentNode->_children.push_back(copyNode);
       
       const aiMesh* aimesh = aiscene->mMeshes[ainode->mMeshes[iMesh]];
-      std::string meshName = MeshLoader::getInstance()
-        ->getMeshName(ainode->mMeshes[iMesh], aiscene);
+      std::string meshURL = idMgr->genURL(meshName(aimesh),
+                                          szScenePath,
+                                          ainode->mMeshes[iMesh]);
+      uint64 meshID = idMgr->getID(meshURL);
 
-      Mesh* mesh = ResourceManager::getInstance()
-        ->getMesh(szScenePath, meshName);
+      Mesh* mesh = resMgr->getMesh(meshID);
 
       MeshComponent* meshComponent = new MeshComponent;
       meshComponent->setMesh(mesh);
@@ -271,12 +303,11 @@ void kore::SceneLoader::loadSceneGraph(const aiNode* ainode,
 
       // Look up Material in the resourceManager and add it to a new
       // MaterialComponent
-      MaterialComponent* materialComponent = new MaterialComponent;
+      std::string matURL =
+        idMgr->genURL(materialName(), szScenePath, aimesh->mMaterialIndex);
+      uint64 matID = idMgr->getID(matURL);
 
-      std::string matName =
-        resMgr->getUniqueMaterialName(szScenePath, aimesh->mMaterialIndex);
-
-      Material* mat = resMgr->getMaterial(matName);
+      Material* mat = resMgr->getMaterial(matID);
       materialComponent->setMaterial(mat);
 
       copyNode->addComponent(materialComponent);
@@ -306,37 +337,6 @@ glm::mat4 kore::SceneLoader::glmMatFromAiMat(const aiMatrix4x4& aiMat) const {
                    aiMat.a4, aiMat.b4, aiMat.c4, aiMat.d4);
 }
 
-std::string kore::SceneLoader::getCameraName(const aiCamera* paiCamera,
-                                            const uint uSceneCameraIdx) {
-  std::string camName = "";
-  if (paiCamera->mName.length > 0) {
-    camName = std::string(paiCamera->mName.C_Str());
-  } else {
-    char camNameBuf[100];
-    sprintf(camNameBuf, "%i", uSceneCameraIdx);
-    camName = std::string(&camNameBuf[0]);
-    Log::getInstance()->write("[WARNING] Trying to load a camera without a"
-                              "name. As a result, there will be no sceneNode"
-                              "information for this camera.");
-  }
-  return camName;
-}
-
-std::string kore::SceneLoader::getLightName(const aiLight* pAiLight,
-                                            const uint uSceneLightIndex) {
-  std::string lightName = "";
-  if (pAiLight->mName.length > 0) {
-    lightName = std::string(pAiLight->mName.C_Str());
-  } else {
-    char lightNameBuf[100];
-    sprintf(lightNameBuf, "%i", uSceneLightIndex);
-    lightName = std::string(&lightNameBuf[0]);
-    Log::getInstance()->write("[WARNING] Trying to load a light without a"
-                              "name. As a result, there will be no sceneNode"
-                              "information for this light.");
-  }
-  return lightName;
-}
 
 void kore::SceneLoader::
   loadMaterialProperties(Material* koreMat, const aiMaterial* aiMat) {
@@ -459,12 +459,14 @@ void kore::SceneLoader::loadTexType(kore::ResourceManager* resourceMgr,
     if (aiMat->GetTexture(aiTexType, i, &aiTexPath) == AI_SUCCESS) {
 
       std::string texPath(aiTexPath.C_Str());
+      std::string texURL = IDManager::getInstance()->genURL("", texPath, i);
+      uint64 texID = IDManager::getInstance()->getID(texURL);
 
-      if (resourceMgr->getTexture(texPath) == NULL) {
+      if (resourceMgr->getTexture(texID) == NULL) {
         Texture* tex = texLoader->loadTexture(std::string(aiTexPath.C_Str()));
 
         if (tex != NULL) {
-          resourceMgr->addTexture(texPath, tex);
+          resourceMgr->addTexture(tex);
         }
       }
     }
@@ -513,7 +515,10 @@ void kore::SceneLoader::addTexTypeToTexList(aiTextureType aiTexType,
     if (aiMat->GetTexture(aiTexType, i, &aiTexPath) == AI_SUCCESS) {
 
       std::string texPath(aiTexPath.C_Str());
-      Texture* tex = resourceMgr->getTexture(texPath);
+      std::string texURL = IDManager::getInstance()->genURL("", texPath, i);
+      uint64 texID = IDManager::getInstance()->getID(texURL);
+
+      Texture* tex = resourceMgr->getTexture(texID);
 
       if (tex != NULL) {
         textures.push_back(tex);

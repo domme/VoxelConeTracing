@@ -22,9 +22,9 @@
 #include "KoRE/SceneNode.h"
 
 kore::SceneNodeComponent::SceneNodeComponent()
-  : _id(KORE_UINT_INVALID),
-    _sceneNode(NULL),
-    _type(COMPONENT_UNKNOWN) {
+  : _sceneNode(NULL),
+    _type(COMPONENT_UNKNOWN),
+    kore::BaseResource() {
 }
 
 kore::SceneNodeComponent::~SceneNodeComponent() {
@@ -40,10 +40,6 @@ const kore::EComponentType kore::SceneNodeComponent::getType(void) const {
 
 void 
 kore::SceneNodeComponent::transformChanged(const Transform* newTransform) {
-}
-
-uint kore::SceneNodeComponent::getID(void) const {
-  return _id;
 }
 
 const kore::ShaderData* kore::SceneNodeComponent::

@@ -204,6 +204,7 @@
     </Midl>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\KoRE\BaseResource.cpp" />
     <ClCompile Include="src\KoRE\CompatibleNodeGroup.cpp" />
     <ClCompile Include="src\KoRE\Components\LightComponent.cpp" />
     <ClCompile Include="src\KoRE\Components\Material.cpp" />
@@ -239,6 +240,7 @@
     <ClCompile Include="src\KoRE\Texture.cpp" />
     <ClCompile Include="src\KoRE\TextureSampler.cpp" />
     <ClCompile Include="src\KoRE\Timer.cpp" />
+    <ClInclude Include="src\KoRE\BaseResource.h" />
     <ClInclude Include="src\KoRE\Common.h" />
     <ClInclude Include="src\KoRE\CompatibleNodeGroup.h" />
     <ClInclude Include="src\KoRE\Components\Camera.h" />

@@ -99,7 +99,7 @@ void kore::ResourceManager::loadScene(const std::string& filename,
 }
 
 void kore::ResourceManager::loadResources(const std::string& filename) {
-  kore::SceneLoader::getInstance()->loadRessources(filename);
+  kore::SceneLoader::getInstance()->loadResources(filename);
 }
 
 void kore::ResourceManager::saveProject(const std::string& filename) {
@@ -336,7 +336,7 @@ std::vector<kore::ShaderProgram*>
 
 
 void kore::ResourceManager::addMaterial(Material* mat) {
-  if (!_materials.count(mat->getID())) {
+  if (_materials.count(mat->getID())) {
     return;
   }
 
