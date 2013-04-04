@@ -107,6 +107,7 @@ namespace kore {
                                        const std::string& name);
 
     static bool isSamplerType(const GLuint uniformType);
+
     static bool isImageType(const GLuint uniformType);
     static bool isAtomicCounterType(const GLuint uniformType);
 
