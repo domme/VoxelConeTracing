@@ -204,7 +204,7 @@ const kore::TextureSampler*
 
 void kore::ResourceManager::
   addFramebuffer(FrameBuffer* fbo) {
-    if (_frameBuffers.count(fbo->getID())) {
+    if (!_frameBuffers.count(fbo->getID())) {
       _frameBuffers[fbo->getID()] = fbo;
        kore::Log::getInstance()->write("[DEBUG] added Framebuffer '%s'\n", fbo->getName().c_str());
     } else {
