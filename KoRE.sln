@@ -19,8 +19,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "shader", "shader", "{77AED7
 		assets\shader\simple.vp = assets\shader\simple.vp
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VoxelConeTracing", "demos\VoxelConeTracing\VoxelConeTracing.vcxproj", "{FBA56B7C-7EE9-4D53-A284-6A3202932537}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VoxelConeTracing", "VoxelConeTracing", "{D91A6176-5B14-4ABC-90D4-EA067A884BDD}"
 	ProjectSection(SolutionItems) = preProject
 		assets\shader\VoxelConeTracing\atomicCounter.frag = assets\shader\VoxelConeTracing\atomicCounter.frag
