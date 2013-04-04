@@ -212,6 +212,7 @@
     <ClCompile Include="src\KoRE\Components\TexturesComponent.cpp" />
     <ClCompile Include="src\KoRE\FrameBuffer.cpp" />
     <ClCompile Include="src\KoRE\IDManager.cpp" />
+    <ClCompile Include="src\KoRE\IndexedBuffer.cpp" />
     <ClCompile Include="src\KoRE\Loader\lodepng.cpp" />
     <ClCompile Include="src\KoRE\Loader\MeshLoader.cpp" />
     <ClCompile Include="src\KoRE\Loader\ProjectLoader.cpp" />
@@ -257,6 +258,7 @@
     <ClInclude Include="src\KoRE\FrameBuffer.h" />
     <ClInclude Include="src\KoRE\GLerror.h" />
     <ClInclude Include="src\KoRE\IDManager.h" />
+    <ClInclude Include="src\KoRE\IndexedBuffer.h" />
     <ClInclude Include="src\KoRE\Loader\lodepng.h" />
     <ClInclude Include="src\KoRE\Loader\MeshLoader.h" />
     <ClInclude Include="src\KoRE\Loader\ProjectLoader.h" />

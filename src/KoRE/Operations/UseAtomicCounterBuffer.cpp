@@ -21,6 +21,7 @@
 
 #include "KoRE/ShaderProgram.h"
 #include "KoRE/RenderManager.h"
+#include "KoRE/IndexedBuffer.h"
 
 
 kore::UseAtomicCounterBuffer::UseAtomicCounterBuffer() : _shaderInput(NULL) {
@@ -52,14 +53,15 @@ bool kore::UseAtomicCounterBuffer::dependsOn(const void* thing) const {
 
 void kore::UseAtomicCounterBuffer::doExecute() const {
   uint bindingPoint = _shaderInput->atomicCounterBindingPoint;
-  uint indexInShader =
-    _shaderInput->shader->getAtomicCounterBufferIndex(bindingPoint);
+  IndexedBuffer* acBuffer =
+    static_cast<IndexedBuffer*>(_shaderInput->additionalData);
 
-  GLuint atomicBuffer =
-    _shaderInput->shader->getAtomicCounterBuffer(indexInShader);
-
-  _renderManager
-    ->bindBufferBase(GL_ATOMIC_COUNTER_BUFFER, bindingPoint, atomicBuffer);
+  if (acBuffer) {
+    _renderManager
+      ->bindBufferBase(GL_ATOMIC_COUNTER_BUFFER,
+                       bindingPoint,
+                       acBuffer->getHandle());
+  }
 }
 
 void kore::UseAtomicCounterBuffer::connect(const ShaderInput* shaderInput) {

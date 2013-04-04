@@ -91,6 +91,11 @@ kore::ResourceManager::~ResourceManager(void) {
   for(auto it = _materials.begin(); it != _materials.end(); ++it) {
     delete it->second;
   }
+
+  // Delete IndexedBuffers
+  for (auto it = _indexedBuffers.begin(); it != _indexedBuffers.end(); ++it) {
+    delete it->second;
+  }
 }
 
 void kore::ResourceManager::loadScene(const std::string& filename,
@@ -379,4 +384,66 @@ std::vector<kore::Material*> kore::ResourceManager::getMaterials() {
   }
 
   return matList;
+}
+
+kore::IndexedBuffer* kore::ResourceManager::getIndexedBuffer(const uint64 id) {
+  auto it = _indexedBuffers.find(id);
+
+  if (it != _indexedBuffers.end()) {
+    return it->second;
+  }
+
+  return NULL;
+}
+
+std::vector<kore::IndexedBuffer*> kore::ResourceManager::getIndexedBuffers() {
+  std::vector<IndexedBuffer*> bufferList;
+  bufferList.resize(_indexedBuffers.size());
+
+  uint idx = 0;
+  for (auto it = _indexedBuffers.begin(); it != _indexedBuffers.end(); ++it) {
+    bufferList[idx++] = it->second;
+  }
+
+  return bufferList;
+}
+
+void kore::ResourceManager::removeIndexedBuffer(const uint64 id) {
+  auto it = _indexedBuffers.find(id);
+
+  if (it == _indexedBuffers.end()) {
+    return;
+  }
+
+  _indexedBufferDeleteEvent.raiseEvent(it->second);
+  delete it->second;
+  _indexedBuffers.erase(it);
+}
+
+void kore::ResourceManager::removeIndexedBuffer(const IndexedBuffer* buf) {
+  removeIndexedBuffer(buf->getID());
+}
+
+void kore::ResourceManager::addIndexedBuffer(IndexedBuffer* buf) {
+  if (!_indexedBuffers.count(buf->getID())) {
+    return;
+  }
+
+  _indexedBuffers[buf->getID()] = buf;
+}
+
+uint kore::ResourceManager::getNumIndexedBuffers() {
+  return _indexedBuffers.size();
+}
+
+kore::IndexedBuffer*
+  kore::ResourceManager::getIndexedBufferByIndex(uint index) {
+  uint idx = 0;
+  for (auto it = _indexedBuffers.begin(); it != _indexedBuffers.end(); ++it) {
+    if (idx++ == index) {
+      return it->second;
+    }
+  }
+  
+  return NULL;
 }

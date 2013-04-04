@@ -19,6 +19,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "shader", "shader", "{77AED7
 		assets\shader\simple.vp = assets\shader\simple.vp
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VoxelConeTracing", "VoxelConeTracing", "{D91A6176-5B14-4ABC-90D4-EA067A884BDD}"
+	ProjectSection(SolutionItems) = preProject
+		assets\shader\VoxelConeTracing\atomicCounter.frag = assets\shader\VoxelConeTracing\atomicCounter.frag
+		assets\shader\VoxelConeTracing\fullscreenQuad_simple.vert = assets\shader\VoxelConeTracing\fullscreenQuad_simple.vert
+		assets\shader\VoxelConeTracing\imageLoad.frag = assets\shader\VoxelConeTracing\imageLoad.frag
+		assets\shader\VoxelConeTracing\imageStore.frag = assets\shader\VoxelConeTracing\imageStore.frag
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -49,5 +57,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{77AED712-23CD-44F8-9ACC-C8B7D5A73D1F} = {AF9EA2F7-FB3B-47AA-8903-2A10BAF54CE2}
+		{D91A6176-5B14-4ABC-90D4-EA067A884BDD} = {77AED712-23CD-44F8-9ACC-C8B7D5A73D1F}
 	EndGlobalSection
 EndGlobal
