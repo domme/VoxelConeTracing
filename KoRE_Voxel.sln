@@ -1,0 +1,59 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KoRE", "KoRE.vcxproj", "{03ADC7CD-D9FA-4B74-ABA0-C4CC0E8868C1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assets", "assets", "{AF9EA2F7-FB3B-47AA-8903-2A10BAF54CE2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "shader", "shader", "{77AED712-23CD-44F8-9ACC-C8B7D5A73D1F}"
+	ProjectSection(SolutionItems) = preProject
+		assets\shader\normalColor.fp = assets\shader\normalColor.fp
+		assets\shader\normalColor.vp = assets\shader\normalColor.vp
+		assets\shader\normalmapping.frag = assets\shader\normalmapping.frag
+		assets\shader\normalmapping.vert = assets\shader\normalmapping.vert
+		assets\shader\simple.fp = assets\shader\simple.fp
+		assets\shader\simple.vp = assets\shader\simple.vp
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VoxelConeTracing", "demos\VoxelConeTracing\VoxelConeTracing.vcxproj", "{FBA56B7C-7EE9-4D53-A284-6A3202932537}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VoxelConeTracing", "VoxelConeTracing", "{D91A6176-5B14-4ABC-90D4-EA067A884BDD}"
+	ProjectSection(SolutionItems) = preProject
+		assets\shader\VoxelConeTracing\atomicCounter.frag = assets\shader\VoxelConeTracing\atomicCounter.frag
+		assets\shader\VoxelConeTracing\fullscreenQuad_simple.vert = assets\shader\VoxelConeTracing\fullscreenQuad_simple.vert
+		assets\shader\VoxelConeTracing\imageLoad.frag = assets\shader\VoxelConeTracing\imageLoad.frag
+		assets\shader\VoxelConeTracing\imageStore.frag = assets\shader\VoxelConeTracing\imageStore.frag
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		MinSizeRel|Win32 = MinSizeRel|Win32
+		Release|Win32 = Release|Win32
+		RelWithDebInfo|Win32 = RelWithDebInfo|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{03ADC7CD-D9FA-4B74-ABA0-C4CC0E8868C1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{03ADC7CD-D9FA-4B74-ABA0-C4CC0E8868C1}.Debug|Win32.Build.0 = Debug|Win32
+		{03ADC7CD-D9FA-4B74-ABA0-C4CC0E8868C1}.MinSizeRel|Win32.ActiveCfg = MinSizeRel|Win32
+		{03ADC7CD-D9FA-4B74-ABA0-C4CC0E8868C1}.MinSizeRel|Win32.Build.0 = MinSizeRel|Win32
+		{03ADC7CD-D9FA-4B74-ABA0-C4CC0E8868C1}.Release|Win32.ActiveCfg = Release|Win32
+		{03ADC7CD-D9FA-4B74-ABA0-C4CC0E8868C1}.Release|Win32.Build.0 = Release|Win32
+		{03ADC7CD-D9FA-4B74-ABA0-C4CC0E8868C1}.RelWithDebInfo|Win32.ActiveCfg = RelWithDebInfo|Win32
+		{03ADC7CD-D9FA-4B74-ABA0-C4CC0E8868C1}.RelWithDebInfo|Win32.Build.0 = RelWithDebInfo|Win32
+		{FBA56B7C-7EE9-4D53-A284-6A3202932537}.Debug|Win32.ActiveCfg = Debug|Win32
+		{FBA56B7C-7EE9-4D53-A284-6A3202932537}.Debug|Win32.Build.0 = Debug|Win32
+		{FBA56B7C-7EE9-4D53-A284-6A3202932537}.MinSizeRel|Win32.ActiveCfg = MinSizeRel|Win32
+		{FBA56B7C-7EE9-4D53-A284-6A3202932537}.MinSizeRel|Win32.Build.0 = MinSizeRel|Win32
+		{FBA56B7C-7EE9-4D53-A284-6A3202932537}.Release|Win32.ActiveCfg = Release|Win32
+		{FBA56B7C-7EE9-4D53-A284-6A3202932537}.Release|Win32.Build.0 = Release|Win32
+		{FBA56B7C-7EE9-4D53-A284-6A3202932537}.RelWithDebInfo|Win32.ActiveCfg = RelWithDebInfo|Win32
+		{FBA56B7C-7EE9-4D53-A284-6A3202932537}.RelWithDebInfo|Win32.Build.0 = RelWithDebInfo|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{77AED712-23CD-44F8-9ACC-C8B7D5A73D1F} = {AF9EA2F7-FB3B-47AA-8903-2A10BAF54CE2}
+		{D91A6176-5B14-4ABC-90D4-EA067A884BDD} = {77AED712-23CD-44F8-9ACC-C8B7D5A73D1F}
+	EndGlobalSection
+EndGlobal
