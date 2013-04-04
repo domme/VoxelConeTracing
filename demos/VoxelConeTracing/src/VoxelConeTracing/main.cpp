@@ -44,6 +44,7 @@
 #include "KoRE/Operations/UseShaderProgram.h"
 #include "KoRE/Operations/UseAtomicCounterBuffer.h"
 #include "KoRE/Operations/ResetAtomicCounterBuffer.h"
+#include "KoRE/Operations/MemoryBarrierOp.h"
 #include "KoRE/ResourceManager.h"
 #include "KoRE/RenderManager.h"
 #include "KoRE/Components/Camera.h"
@@ -188,6 +189,7 @@ void setupAtomicCounterTest() {
 
   acNodePass->addOperation(new RenderMesh(fsQuadMeshComponent, acProg));
   acNodePass->addOperation(new ResetAtomicCounterBuffer(acProg->getUniform("atomicCounter"), 0));
+  acNodePass->addOperation(new MemoryBarrierOp(GL_ATOMIC_COUNTER_BARRIER_BIT));
 
   acProgPass->addNodePass(acNodePass);
   fboStage->addProgramPass(acProgPass);

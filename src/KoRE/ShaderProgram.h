@@ -90,14 +90,6 @@ namespace kore {
      */
     inline void setName(const std::string& name){_name = name;}
 
-    /*! \brief Retrieves the OpenGL-location of the atomicCounter
-    *          indexed by idx */
-    GLuint getAtomicCounterBuffer(const uint idx) const;
-
-    uint getAtomicCounterBufferIndex(const uint bindingPoint) const;
-
-    /*! \brief Resets (to 0) the atomicCounter indexed by idx */
-    void resetAtomicCounterBuffer(const uint idx) const;
 
   private:
     static bool checkShaderCompileStatus(const GLuint shaderHandle,

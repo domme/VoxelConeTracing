@@ -33,9 +33,8 @@
 #include "KoRE/FrameBuffer.h"
 #include "KoRE/Components/Material.h"
 #include "KoRE/Events.h"
+#include "KoRE/IndexedBuffer.h"
 
-
-// TODO(dlazarek/dospelt) Are Cameras and Lights really needed in the resourceManager??
 
 namespace kore {
   class ResourceManager {
@@ -194,6 +193,15 @@ namespace kore {
     void removeMaterial(const Material* mat);
 
 
+    IndexedBuffer* getIndexedBuffer(const uint64 id);
+    std::vector<IndexedBuffer*> getIndexedBuffers();
+    void removeIndexedBuffer(const uint64 id);
+    void removeIndexedBuffer(const IndexedBuffer* buf);
+    void addIndexedBuffer(IndexedBuffer* buf);
+    uint getNumIndexedBuffers();
+    IndexedBuffer* getIndexedBufferByIndex(uint index);
+
+
     /*! \brief Returns the OpenGL texture sampler object with the provided 
     *          properties. 
     * If a sampler with the provided properties already exists, the pointer to
@@ -217,7 +225,9 @@ namespace kore {
     std::map<uint64, ShaderProgram*> _shaderPrograms;  // id || program
     std::map<uint64, kore::FrameBuffer*> _frameBuffers; // name, framebuffer
     std::map<uint64, Material*> _materials;
-
+    std::map<uint64, IndexedBuffer*> _indexedBuffers;
+    
+    Delegate1Param<const IndexedBuffer*> _indexedBufferDeleteEvent;
     Delegate1Param<const FrameBuffer*> _fboDeleteEvent;
     Delegate1Param<const Texture*> _textureDeleteEvent;
     Delegate1Param<const ShaderProgram*> _shaderProgramDeleteEvent;

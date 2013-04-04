@@ -24,6 +24,7 @@
 #include "KoRE/Operations/Operation.h"
 #include "KoRE/ResourceManager.h"
 #include "Kore/RenderManager.h"
+#include "KoRE/IndexedBuffer.h"
 
 const unsigned int BUFSIZE = 100;  // Buffer length for shader-element names
 
@@ -339,26 +340,28 @@ void kore::ShaderProgram::constructShaderInputInfo(const GLenum activeType,
                                                atomicCounterIndex,
                                                GL_ATOMIC_COUNTER_BUFFER_BINDING,
                                                &bindingPoint);
-
+                            
               rInputVector[i].atomicCounterBindingPoint = bindingPoint;
               ++atomicCounterIndex;
               
-              // TODO(dlazarek): Deprecated store atomicCounter buffers somewhere else.
-              // Init an atomic counter for this uniform and store
-              // it in this shader program.
-              GLuint acBuffer;
-              glGenBuffers(1, &acBuffer);
-              glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, acBuffer);
-              glBufferData(GL_ATOMIC_COUNTER_BUFFER,
-                           sizeof(GLuint), NULL, GL_DYNAMIC_COPY);
-              glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
+              ResourceManager* resMgr = ResourceManager::getInstance();
 
-              _atomicCounters.push_back(acBuffer);
-              _atomicCounterBindingPoints.push_back(bindingPoint);
-            }
+              if (atomicCounterIndex >= resMgr->getNumIndexedBuffers()) {
+                // We need a new indexedBuffer
+                IndexedBuffer* acBuffer = new IndexedBuffer;
+                uint value = 0;
+                acBuffer->create(GL_ATOMIC_COUNTER_BUFFER, sizeof(GLuint), GL_DYNAMIC_COPY, &value);
+                rInputVector[i].additionalData = acBuffer;
+                resMgr->addIndexedBuffer(acBuffer);
+              } else {
+                // We can reuse an existing buffer from the resourceManager
+                IndexedBuffer* acBuffer = resMgr->getIndexedBufferByIndex(atomicCounterIndex);
+                rInputVector[i].additionalData = acBuffer;
+              }
         }
     }
 }
+    }
 
 void kore::ShaderProgram::constructShaderOutputInfo(std::vector<ShaderOutput>& 
                                              rOutputVector) {
@@ -594,45 +597,4 @@ void kore::ShaderProgram::setImageAccessParam(const uint imgUnit,
    if (imgUnit < _imgAccessParams.size()) {
      _imgAccessParams[imgUnit] = access;
    }
-}
-
-// TODO(dlazarek): Deprecated function...
-// store atomicCounter buffers somewhere else.
-GLuint kore::ShaderProgram::getAtomicCounterBuffer(const uint idx) const {
-  if (idx < _atomicCounters.size()) {
-    return _atomicCounters[idx];
-  }
-
-  return 0;
-}
-
-// TODO(dlazarek): Deprecated function...
-// store atomicCounter buffers somewhere else.
-void kore::ShaderProgram::resetAtomicCounterBuffer(const uint idx) const {
-  if (idx >= _atomicCounters.size()) {
-    return;
-  }
-
-  GLuint ac = _atomicCounters[idx];
-
-  glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, ac);
-  GLuint* ptr = (GLuint*)glMapBufferRange(GL_ATOMIC_COUNTER_BUFFER, 0,
-                                          sizeof(GLuint),
-                                          GL_MAP_WRITE_BIT | 
-                                          GL_MAP_INVALIDATE_BUFFER_BIT | 
-                                          GL_MAP_UNSYNCHRONIZED_BIT);
-  ptr[0] = 0;
-  glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
-  glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
-}
-
-uint kore::ShaderProgram::
-  getAtomicCounterBufferIndex(const uint bindingPoint) const {
-    for (uint i = 0; i < _atomicCounterBindingPoints.size(); ++i) {
-      if (_atomicCounterBindingPoints[i] == bindingPoint) {
-        return i;
-      }
-    }
-
-    return 0;
 }
