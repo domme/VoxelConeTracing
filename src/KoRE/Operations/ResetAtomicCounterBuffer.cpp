@@ -21,6 +21,7 @@
 
 #include "KoRE/ShaderProgram.h"
 #include "KoRE/RenderManager.h"
+#include "KoRE/IndexedBuffer.h"
 
 
 kore::ResetAtomicCounterBuffer::ResetAtomicCounterBuffer()
@@ -53,22 +54,23 @@ bool kore::ResetAtomicCounterBuffer::dependsOn(const void* thing) const {
 
 void kore::ResetAtomicCounterBuffer::doExecute() const {
   uint bindingPoint = _shaderInput->atomicCounterBindingPoint;
-  uint indexInShader =
-    _shaderInput->shader->getAtomicCounterBufferIndex(bindingPoint);
+  
+  IndexedBuffer* acBuffer = static_cast<IndexedBuffer*>(_shaderInput->additionalData);
 
-  GLuint atomicBuffer =
-    _shaderInput->shader->getAtomicCounterBuffer(indexInShader);
+  if (acBuffer != NULL) {
+    _renderManager
+      ->bindBufferBase(GL_ATOMIC_COUNTER_BUFFER,
+                       bindingPoint,
+                       acBuffer->getHandle());
 
-  _renderManager
-    ->bindBufferBase(GL_ATOMIC_COUNTER_BUFFER, bindingPoint, atomicBuffer);
-
-  GLuint* ptr = (GLuint*)glMapBufferRange(GL_ATOMIC_COUNTER_BUFFER, 0,
-                                          sizeof(GLuint),
-                                          GL_MAP_WRITE_BIT | 
-                                          GL_MAP_INVALIDATE_BUFFER_BIT | 
-                                          GL_MAP_UNSYNCHRONIZED_BIT);
-  ptr[0] = _value;
-  glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
+    GLuint* ptr = (GLuint*)glMapBufferRange(GL_ATOMIC_COUNTER_BUFFER, 0,
+      sizeof(GLuint),
+      GL_MAP_WRITE_BIT | 
+      GL_MAP_INVALIDATE_BUFFER_BIT | 
+      GL_MAP_UNSYNCHRONIZED_BIT);
+    ptr[0] = _value;
+    glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
+  }
 }
 
 void kore::ResetAtomicCounterBuffer::connect(const ShaderInput* shaderInput,
