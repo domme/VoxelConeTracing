@@ -59,6 +59,12 @@
 
 #include "VoxelConeTracing/FullscreenQuad.h"
 
+#define VOXEL_GRID_RESOLUTION_X 100
+#define VOXEL_GRID_RESOLUTION_Y 100
+#define VOXEL_GRID_RESOLUTION_Z 100
+
+kore::SceneNode* cubeNodes[VOXEL_GRID_RESOLUTION_X][VOXEL_GRID_RESOLUTION_Y][VOXEL_GRID_RESOLUTION_Z];
+
 void setupImageLoadStoreTest() {
   using namespace kore;
   glDisable(GL_DEPTH_TEST);  
@@ -194,6 +200,24 @@ void setupAtomicCounterTest() {
   acProgPass->addNodePass(acNodePass);
   fboStage->addProgramPass(acProgPass);
   RenderManager::getInstance()->addFramebufferStage(fboStage);
+}
+
+
+void setupVoxelizeTest() {
+  using namespace kore;
+
+  SceneManager* sceneMgr = SceneManager::getInstance();
+  ResourceManager* resMgr = ResourceManager::getInstance();
+
+  for (uint z = 0; z < VOXEL_GRID_RESOLUTION_Z; ++z) {
+    for (uint y = 0; y < VOXEL_GRID_RESOLUTION_Y; ++y) {
+      for (uint x = 0; x < VOXEL_GRID_RESOLUTION_X; ++x) {
+        SceneNode* cubeNode = new SceneNode;
+        cubeNode[x][y][z] = cubeNode;
+        sceneMgr->getRootNode()->addChild(cubeNode);
+      }
+    }
+  }
 }
 
 
