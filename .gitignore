@@ -41,5 +41,5 @@ ext
 # demos/VoxelConeTracing/*
 # Kore_Voxel.sln
 
-demos/VoxelConeTracing/*.user
-demos/VoxelConeTracing/*.dir
+# demos/VoxelConeTracing/*.user
+# demos/VoxelConeTracing/*.dir

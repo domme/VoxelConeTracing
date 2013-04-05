@@ -40,9 +40,9 @@ public:
     {
         if (FrameBufferEditor->objectName().isEmpty())
             FrameBufferEditor->setObjectName(QStringLiteral("FrameBufferEditor"));
-        FrameBufferEditor->resize(400, 590);
+        FrameBufferEditor->resize(431, 583);
         FrameBufferEditor->setMinimumSize(QSize(400, 300));
-        FrameBufferEditor->setMaximumSize(QSize(400, 16777215));
+        FrameBufferEditor->setMaximumSize(QSize(16777215, 16777215));
         FrameBufferEditor->setMouseTracking(false);
         FrameBufferEditor->setStyleSheet(QLatin1String("QToolTip\n"
 "{\n"
@@ -520,7 +520,6 @@ public:
         framebufferselect->setObjectName(QStringLiteral("framebufferselect"));
         framebufferselect->setGeometry(QRect(20, 10, 131, 22));
         framebufferselect->setEditable(false);
-        framebufferselect->setInsertPolicy(QComboBox::InsertAlphabetically);
         line = new QFrame(FrameBufferEditor);
         line->setObjectName(QStringLiteral("line"));
         line->setGeometry(QRect(0, 40, 401, 20));
@@ -545,20 +544,18 @@ public:
         closeButton->setObjectName(QStringLiteral("closeButton"));
         closeButton->setGeometry(QRect(310, 550, 75, 23));
         tableWidget = new QTableWidget(FrameBufferEditor);
-        if (tableWidget->columnCount() < 3)
-            tableWidget->setColumnCount(3);
-        QBrush brush(QColor(4, 255, 0, 255));
-        brush.setStyle(Qt::SolidPattern);
+        if (tableWidget->columnCount() < 4)
+            tableWidget->setColumnCount(4);
         QTableWidgetItem *__qtablewidgetitem = new QTableWidgetItem();
-        __qtablewidgetitem->setBackground(QColor(255, 2, 48));
-        __qtablewidgetitem->setForeground(brush);
         tableWidget->setHorizontalHeaderItem(0, __qtablewidgetitem);
         QTableWidgetItem *__qtablewidgetitem1 = new QTableWidgetItem();
         tableWidget->setHorizontalHeaderItem(1, __qtablewidgetitem1);
         QTableWidgetItem *__qtablewidgetitem2 = new QTableWidgetItem();
         tableWidget->setHorizontalHeaderItem(2, __qtablewidgetitem2);
+        QTableWidgetItem *__qtablewidgetitem3 = new QTableWidgetItem();
+        tableWidget->setHorizontalHeaderItem(3, __qtablewidgetitem3);
         tableWidget->setObjectName(QStringLiteral("tableWidget"));
-        tableWidget->setGeometry(QRect(20, 100, 361, 371));
+        tableWidget->setGeometry(QRect(20, 100, 411, 371));
         tableWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
         tableWidget->setCornerButtonEnabled(false);
         lineEdit = new QLineEdit(FrameBufferEditor);
@@ -579,11 +576,13 @@ public:
         applyButton->setText(QApplication::translate("FrameBufferEditor", "Apply", 0));
         closeButton->setText(QApplication::translate("FrameBufferEditor", "Close", 0));
         QTableWidgetItem *___qtablewidgetitem = tableWidget->horizontalHeaderItem(0);
-        ___qtablewidgetitem->setText(QApplication::translate("FrameBufferEditor", "Target", 0));
+        ___qtablewidgetitem->setText(QApplication::translate("FrameBufferEditor", "PixelType", 0));
         QTableWidgetItem *___qtablewidgetitem1 = tableWidget->horizontalHeaderItem(1);
         ___qtablewidgetitem1->setText(QApplication::translate("FrameBufferEditor", "Format", 0));
         QTableWidgetItem *___qtablewidgetitem2 = tableWidget->horizontalHeaderItem(2);
-        ___qtablewidgetitem2->setText(QApplication::translate("FrameBufferEditor", "Name", 0));
+        ___qtablewidgetitem2->setText(QApplication::translate("FrameBufferEditor", "TexName", 0));
+        QTableWidgetItem *___qtablewidgetitem3 = tableWidget->horizontalHeaderItem(3);
+        ___qtablewidgetitem3->setText(QApplication::translate("FrameBufferEditor", "Attachment", 0));
         lineEdit->setText(QApplication::translate("FrameBufferEditor", "<none>", 0));
     } // retranslateUi
 
