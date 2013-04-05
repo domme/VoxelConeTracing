@@ -26,6 +26,7 @@ CubeVolume::CubeVolume(const float sideLengthPerCube,
                        const uint numCubesY,
                        const uint numCubesZ) 
   : kore::Mesh() {
+    init(sideLengthPerCube, numCubesX, numCubesY, numCubesZ);
 }
 
 CubeVolume::~CubeVolume() {
@@ -43,8 +44,8 @@ void CubeVolume::init(const float sideLengthPerCube,
   // Allocate space for all vertices
   glm::vec3* vertices = new glm::vec3[_numVertices];
   
-  float min = -sideLengthPerCube / 2.0f;
-  float max = sideLengthPerCube / 2.0f;
+  float min = 0.0f;
+  float max = sideLengthPerCube;
 
   uint v = 0;
   for (uint z = 0; z < numCubesZ; ++z) {
@@ -80,53 +81,54 @@ void CubeVolume::init(const float sideLengthPerCube,
   _indices.reserve(36 * numCubes);
 
   for (uint iCube = 0; iCube < numCubes; ++iCube) {
+
     // Front
-    _indices.push_back(iCube + 0);
-    _indices.push_back(iCube + 1);
-    _indices.push_back(iCube + 2);
-    _indices.push_back(iCube + 2);
-    _indices.push_back(iCube + 3);
-    _indices.push_back(iCube + 0);
+    _indices.push_back(iCube * 8 + 0);
+    _indices.push_back(iCube * 8 + 1);
+    _indices.push_back(iCube * 8 + 2);
+    _indices.push_back(iCube * 8 + 2);
+    _indices.push_back(iCube * 8 + 3);
+    _indices.push_back(iCube * 8 + 0);
 
     // Left
-    _indices.push_back(iCube + 4);
-    _indices.push_back(iCube + 0);
-    _indices.push_back(iCube + 3);
-    _indices.push_back(iCube + 3);
-    _indices.push_back(iCube + 7);
-    _indices.push_back(iCube + 4);
+    _indices.push_back(iCube * 8 + 4);
+    _indices.push_back(iCube * 8 + 0);
+    _indices.push_back(iCube * 8 + 3);
+    _indices.push_back(iCube * 8 + 3);
+    _indices.push_back(iCube * 8 + 7);
+    _indices.push_back(iCube * 8 + 4);
 
     // Right
-    _indices.push_back(iCube + 1);
-    _indices.push_back(iCube + 5);
-    _indices.push_back(iCube + 6);
-    _indices.push_back(iCube + 6);
-    _indices.push_back(iCube + 2);
-    _indices.push_back(iCube + 1);
+    _indices.push_back(iCube * 8 + 1);
+    _indices.push_back(iCube * 8 + 5);
+    _indices.push_back(iCube * 8 + 6);
+    _indices.push_back(iCube * 8 + 6);
+    _indices.push_back(iCube * 8 + 2);
+    _indices.push_back(iCube * 8 + 1);
 
     // Back
-    _indices.push_back(iCube + 5);
-    _indices.push_back(iCube + 4);
-    _indices.push_back(iCube + 7);
-    _indices.push_back(iCube + 7);
-    _indices.push_back(iCube + 6);
-    _indices.push_back(iCube + 5);
+    _indices.push_back(iCube * 8 + 5);
+    _indices.push_back(iCube * 8 + 4);
+    _indices.push_back(iCube * 8 + 7);
+    _indices.push_back(iCube * 8 + 7);
+    _indices.push_back(iCube * 8 + 6);
+    _indices.push_back(iCube * 8 + 5);
 
     // Top
-    _indices.push_back(iCube + 3);
-    _indices.push_back(iCube + 2);
-    _indices.push_back(iCube + 6);
-    _indices.push_back(iCube + 6);
-    _indices.push_back(iCube + 7);
-    _indices.push_back(iCube + 3);
+    _indices.push_back(iCube * 8 + 3);
+    _indices.push_back(iCube * 8 + 2);
+    _indices.push_back(iCube * 8 + 6);
+    _indices.push_back(iCube * 8 + 6);
+    _indices.push_back(iCube * 8 + 7);
+    _indices.push_back(iCube * 8 + 3);
 
     // Bottom
-    _indices.push_back(iCube + 4);
-    _indices.push_back(iCube + 5);
-    _indices.push_back(iCube + 1);
-    _indices.push_back(iCube + 1);
-    _indices.push_back(iCube + 0);
-    _indices.push_back(iCube + 4);
+    _indices.push_back(iCube * 8 + 4);
+    _indices.push_back(iCube * 8 + 5);
+    _indices.push_back(iCube * 8 + 1);
+    _indices.push_back(iCube * 8 + 1);
+    _indices.push_back(iCube * 8 + 0);
+    _indices.push_back(iCube * 8 + 4);
   }
 
   createAttributeBuffers(kore::BUFFERTYPE_SEQUENTIAL);

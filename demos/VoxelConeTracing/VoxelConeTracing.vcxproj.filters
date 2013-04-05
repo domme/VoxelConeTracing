@@ -10,6 +10,9 @@
     <ClCompile Include="src\VoxelConeTracing\Cube.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\CubeVolume.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -21,6 +24,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\VoxelConeTracing\Cube.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\CubeVolume.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

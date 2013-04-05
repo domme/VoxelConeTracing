@@ -69,7 +69,8 @@ kore::ResourceManager::~ResourceManager(void) {
 
   // Delete all mesh resources and entries.
   for (auto it = _meshes.begin(); it != _meshes.end(); ++it) {
-    delete it->second;
+    Mesh* mesh = it->second;
+    delete mesh;
   }
   _meshes.clear();
     

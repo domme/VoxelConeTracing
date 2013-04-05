@@ -56,9 +56,11 @@
 #include "Kore/Passes/ShaderProgramPass.h"
 #include "KoRE/Passes/NodePass.h"
 #include "KoRE/Events.h"
+#include "KoRE/TextureSampler.h"
 
 #include "VoxelConeTracing/FullscreenQuad.h"
 #include "VoxelConeTracing/Cube.h"
+#include "VoxelConeTracing/CubeVolume.h"
 
 #define VOXEL_GRID_RESOLUTION_X 20
 #define VOXEL_GRID_RESOLUTION_Y 20
@@ -68,6 +70,41 @@
 kore::SceneNode* cubeNodes[VOXEL_GRID_RESOLUTION_X][VOXEL_GRID_RESOLUTION_Y][VOXEL_GRID_RESOLUTION_Z];
 kore::SceneNode* cameraNode = NULL;
 kore::Camera* pCamera = NULL;
+kore::Texture* dummyTex3D = NULL;
+
+void initDummyTex3D() {
+  using namespace kore;
+  dummyTex3D = new kore::Texture;
+
+  STextureProperties texProps;
+  texProps.targetType = GL_TEXTURE_3D;
+  texProps.width = VOXEL_GRID_RESOLUTION_X;
+  texProps.height = VOXEL_GRID_RESOLUTION_Y;
+  texProps.depth = VOXEL_GRID_RESOLUTION_Z;
+  texProps.format = GL_RGB;
+  texProps.internalFormat = GL_RGB8;
+  texProps.pixelType = GL_UNSIGNED_BYTE;
+
+  // Create some data
+  glm::detail::tvec3<unsigned char> colorValues[VOXEL_GRID_RESOLUTION_X]
+                                               [VOXEL_GRID_RESOLUTION_Y]
+                                               [VOXEL_GRID_RESOLUTION_Z];
+
+  for (uint z = 0; z < VOXEL_GRID_RESOLUTION_Z; ++z) {
+    for (uint y = 0; y < VOXEL_GRID_RESOLUTION_Y; ++y) {
+      for (uint x = 0; x < VOXEL_GRID_RESOLUTION_X; ++x) {
+        char valueZ = (char)(((float) z / (float) VOXEL_GRID_RESOLUTION_Z) * 255.0f);
+        char valueY = (char)(((float) y / (float) VOXEL_GRID_RESOLUTION_Y) * 255.0f);
+        char valueX = (char)(((float) x / (float) VOXEL_GRID_RESOLUTION_X) * 255.0f);
+
+        colorValues[x][y][z] = glm::detail::tvec3<unsigned char>(valueX, valueY, valueZ);
+      }
+    }
+  }
+  
+  dummyTex3D->create(texProps, "Dummy3DTexture", colorValues);
+  ResourceManager::getInstance()->addTexture(dummyTex3D);
+}
 
 void setupVoxelizeTest() {
   using namespace kore;
@@ -95,10 +132,10 @@ void setupVoxelizeTest() {
 
   ShaderProgram* cubeSample3DTexShader = new ShaderProgram;
   cubeSample3DTexShader->
-    loadShader("./assets/shader/VoxelConeTracing/cube.vert",
+    loadShader("./assets/shader/VoxelConeTracing/cubeVolume.vert",
                GL_VERTEX_SHADER);
   cubeSample3DTexShader->
-    loadShader("./assets/shader/VoxelConeTracing/cube_sample3Dtex.frag",
+    loadShader("./assets/shader/VoxelConeTracing/cubeVolume_sample3Dtex.frag",
                GL_FRAGMENT_SHADER);
   cubeSample3DTexShader->init();
   resMgr->addShaderProgram(cubeSample3DTexShader);
@@ -112,25 +149,36 @@ void setupVoxelizeTest() {
   ShaderProgramPass* sample3DtexPass = new ShaderProgramPass;
   sample3DtexPass->setShaderProgram(cubeSample3DTexShader);
   
-  Cube* cubeMesh = new Cube(CUBE_SIDELENGTH);  // init with sidelength 1.0f
-  resMgr->addMesh(cubeMesh);
+  //Cube* cubeMesh = new Cube(CUBE_SIDELENGTH);  // init with sidelength 1.0f
+  //resMgr->addMesh(cubeMesh);
 
-  for (uint z = 0; z < VOXEL_GRID_RESOLUTION_Z; ++z) {
-    for (uint y = 0; y < VOXEL_GRID_RESOLUTION_Y; ++y) {
-      for (uint x = 0; x < VOXEL_GRID_RESOLUTION_X; ++x) {
+  CubeVolume* cubeVolumeMesh = new CubeVolume(CUBE_SIDELENGTH,
+                                              VOXEL_GRID_RESOLUTION_X,
+                                              VOXEL_GRID_RESOLUTION_Y,
+                                              VOXEL_GRID_RESOLUTION_Z);
+
+  
         SceneNode* cubeNode = new SceneNode;
-        cubeNodes[x][y][z] = cubeNode;
         sceneMgr->getRootNode()->addChild(cubeNode);
 
         MeshComponent* meshComp = new MeshComponent;
-        meshComp->setMesh(cubeMesh);
+        meshComp->setMesh(cubeVolumeMesh);
 
         cubeNode->addComponent(meshComp);
 
-        // Set position inside the grid
-        cubeNode->translate(glm::vec3(x * (CUBE_SIDELENGTH),
-                                      y * (CUBE_SIDELENGTH),
-                                      z * (CUBE_SIDELENGTH)));
+        initDummyTex3D();
+        TexturesComponent* texComp = new TexturesComponent;
+        texComp->addTexture(dummyTex3D);
+        cubeNode->addComponent(texComp);
+
+        // Setup the correct texture sampler to use
+        TexSamplerProperties props;
+        props.magfilter = GL_NEAREST;
+        props.minfilter = GL_NEAREST;
+        props.type = GL_SAMPLER_3D;
+        props.wrapping = glm::uvec3(GL_CLAMP, GL_CLAMP, GL_CLAMP);
+        cubeSample3DTexShader->setSamplerProperties(0, props);
+
 
         // Setup rendering operations
         NodePass* nodePass = new NodePass(cubeNode);
@@ -151,6 +199,10 @@ void setupVoxelizeTest() {
                                                 cubeSample3DTexShader));
 
         nodePass->
+          addOperation(OperationFactory::create(OP_BINDTEXTURE, "Dummy3DTexture",
+                                                texComp, "tex3D", cubeSample3DTexShader));
+
+        nodePass->
           addOperation(OperationFactory::create(OP_BINDUNIFORM, "projection Matrix",
                                                 pCamera, "proj",
                                                 cubeSample3DTexShader));
@@ -158,9 +210,7 @@ void setupVoxelizeTest() {
         nodePass->addOperation(new RenderMesh(meshComp, cubeSample3DTexShader));
 
         sample3DtexPass->addNodePass(nodePass);
-      }
-    }
-  }
+  
   
   backBufferStage->addProgramPass(sample3DtexPass);
   renderMgr->addFramebufferStage(backBufferStage);
