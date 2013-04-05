@@ -40,9 +40,11 @@ namespace koregui{
       FrameBufferEditor(FrameBufferItem* stage, QWidget *parent = 0);
       ~FrameBufferEditor();
 
+      void setFramebuffer(const QString& name);
+
   public slots:
     void addNewFramebuffer(void);
-    void framebufferChanged(const QString & name);
+    void framebufferChanged(int index);
     //void applySettings(void);
     void addTarget(void);
     void refresh(void);

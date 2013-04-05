@@ -20,7 +20,7 @@
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_koregui__FrameBufferEditor_t {
     QByteArrayData data[7];
-    char stringdata[89];
+    char stringdata[90];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -33,12 +33,12 @@ QT_MOC_LITERAL(0, 0, 26),
 QT_MOC_LITERAL(1, 27, 17),
 QT_MOC_LITERAL(2, 45, 0),
 QT_MOC_LITERAL(3, 46, 18),
-QT_MOC_LITERAL(4, 65, 4),
-QT_MOC_LITERAL(5, 70, 9),
-QT_MOC_LITERAL(6, 80, 7)
+QT_MOC_LITERAL(4, 65, 5),
+QT_MOC_LITERAL(5, 71, 9),
+QT_MOC_LITERAL(6, 81, 7)
     },
     "koregui::FrameBufferEditor\0addNewFramebuffer\0"
-    "\0framebufferChanged\0name\0addTarget\0"
+    "\0framebufferChanged\0index\0addTarget\0"
     "refresh\0"
 };
 #undef QT_MOC_LITERAL
@@ -64,7 +64,7 @@ static const uint qt_meta_data_koregui__FrameBufferEditor[] = {
 
  // slots: parameters
     QMetaType::Void,
-    QMetaType::Void, QMetaType::QString,    4,
+    QMetaType::Void, QMetaType::Int,    4,
     QMetaType::Void,
     QMetaType::Void,
 
@@ -77,7 +77,7 @@ void koregui::FrameBufferEditor::qt_static_metacall(QObject *_o, QMetaObject::Ca
         FrameBufferEditor *_t = static_cast<FrameBufferEditor *>(_o);
         switch (_id) {
         case 0: _t->addNewFramebuffer(); break;
-        case 1: _t->framebufferChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 1: _t->framebufferChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 2: _t->addTarget(); break;
         case 3: _t->refresh(); break;
         default: ;

@@ -94,7 +94,7 @@ void koregui::FrameBufferItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
     QPointF p = event->pos();//event->buttonDownPos(Qt::MouseButton::LeftButton);
     if (p.y() < 26 && p.x() > _bufferwidth - 26) {
       koregui::FrameBufferEditor* ed = new koregui::FrameBufferEditor(this);
-      ed->framebufferChanged(QString(_name.c_str()));
+      ed->setFramebuffer(QString(_name.c_str()));
       ed->show();
     }
   }
