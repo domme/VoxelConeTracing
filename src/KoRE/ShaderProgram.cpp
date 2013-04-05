@@ -314,6 +314,7 @@ void kore::ShaderProgram::constructShaderInputInfo(const GLenum activeType,
 
                 TexSamplerProperties samplerProperties;
                 samplerProperties.type = rInputVector[i].type;
+                             
                 
                 const TextureSampler* sampler =
                   resourceManager->requestTextureSampler(samplerProperties);
