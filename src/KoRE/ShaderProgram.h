@@ -119,9 +119,6 @@ namespace kore {
     std::vector<ShaderOutput> _outputs;
     std::vector<GLuint> _imgAccessParams;
 
-    std::vector<GLuint> _atomicCounters;
-    std::vector<GLuint> _atomicCounterBindingPoints;
-
     std::vector<const TextureSampler*> _vSamplers;
 
     GLuint _vertex_prog;

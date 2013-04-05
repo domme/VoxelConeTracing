@@ -133,6 +133,7 @@ void kore::SceneNode::setParent(SceneNode* parent) {
 }
 
 void kore::SceneNode::addChild(SceneNode* child) {
+  child->setParent(this);
   _children.push_back(child);
 }
 

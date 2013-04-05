@@ -48,8 +48,6 @@ void kore::ShaderProgram::destroyProgram() {
   glDeleteProgram(_programHandle);
   _programHandle = KORE_GLUINT_HANDLE_INVALID;
 
-  glDeleteBuffers(_atomicCounters.size(), &_atomicCounters[0]);
-  _atomicCounters.clear();
 
   _outputs.clear();
   _name = "";

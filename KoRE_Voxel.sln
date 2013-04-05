@@ -19,6 +19,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VoxelConeTracing", "VoxelConeTracing", "{D91A6176-5B14-4ABC-90D4-EA067A884BDD}"
 	ProjectSection(SolutionItems) = preProject
 		assets\shader\VoxelConeTracing\atomicCounter.frag = assets\shader\VoxelConeTracing\atomicCounter.frag
+		assets\shader\VoxelConeTracing\cube.vert = assets\shader\VoxelConeTracing\cube.vert
+		assets\shader\VoxelConeTracing\cube_sample3Dtex.frag = assets\shader\VoxelConeTracing\cube_sample3Dtex.frag
 		assets\shader\VoxelConeTracing\fullscreenQuad_simple.vert = assets\shader\VoxelConeTracing\fullscreenQuad_simple.vert
 		assets\shader\VoxelConeTracing\imageLoad.frag = assets\shader\VoxelConeTracing\imageLoad.frag
 		assets\shader\VoxelConeTracing\imageStore.frag = assets\shader\VoxelConeTracing\imageStore.frag

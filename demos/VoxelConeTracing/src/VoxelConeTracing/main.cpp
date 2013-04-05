@@ -58,12 +58,120 @@
 #include "KoRE/Events.h"
 
 #include "VoxelConeTracing/FullscreenQuad.h"
+#include "VoxelConeTracing/Cube.h"
 
-#define VOXEL_GRID_RESOLUTION_X 100
-#define VOXEL_GRID_RESOLUTION_Y 100
-#define VOXEL_GRID_RESOLUTION_Z 100
+#define VOXEL_GRID_RESOLUTION_X 5
+#define VOXEL_GRID_RESOLUTION_Y 5
+#define VOXEL_GRID_RESOLUTION_Z 5
+#define CUBE_SIDELENGTH 1.0f
 
 kore::SceneNode* cubeNodes[VOXEL_GRID_RESOLUTION_X][VOXEL_GRID_RESOLUTION_Y][VOXEL_GRID_RESOLUTION_Z];
+kore::SceneNode* cameraNode;
+
+void setupVoxelizeTest() {
+  using namespace kore;
+
+  glEnable(GL_DEPTH_TEST);  
+  glClearColor(1.0f,1.0f,1.0f,1.0f);
+
+  SceneManager* sceneMgr = SceneManager::getInstance();
+  ResourceManager* resMgr = ResourceManager::getInstance();
+  RenderManager* renderMgr = RenderManager::getInstance();
+
+  // Init Camera
+  cameraNode = new kore::SceneNode;
+  sceneMgr->getRootNode()->addChild(cameraNode);
+
+  Camera* camComp = new Camera;
+  float camOffset = 4.0f;
+
+ glm::vec3 eye(VOXEL_GRID_RESOLUTION_X * CUBE_SIDELENGTH + camOffset,
+                VOXEL_GRID_RESOLUTION_Y * CUBE_SIDELENGTH + camOffset,
+                VOXEL_GRID_RESOLUTION_Z * CUBE_SIDELENGTH + camOffset);
+  glm::vec3 to(0,0,0);
+  glm::vec3 forward = glm::normalize(to - eye);
+  glm::vec3 up(0,1,0);
+
+  glm::vec3 side = glm::normalize(glm::cross(forward, up));
+  up = glm::normalize(glm::cross(side, forward));
+
+  cameraNode->translate(glm::vec3(0.0f, 0.0f, 40.0f), SPACE_WORLD);
+  camComp->setProjectionPersp(60.0f, 800.0f / 600.0f, 1.0f, 500.0f);
+  cameraNode->addComponent(camComp);
+
+  ShaderProgram* cubeSample3DTexShader = new ShaderProgram;
+  cubeSample3DTexShader->
+    loadShader("./assets/shader/VoxelConeTracing/cube.vert",
+               GL_VERTEX_SHADER);
+  cubeSample3DTexShader->
+    loadShader("./assets/shader/VoxelConeTracing/cube_sample3Dtex.frag",
+               GL_FRAGMENT_SHADER);
+  cubeSample3DTexShader->init();
+  resMgr->addShaderProgram(cubeSample3DTexShader);
+
+
+  FrameBufferStage* backBufferStage = new FrameBufferStage;
+  GLenum drawBuffers[] = {GL_COLOR_ATTACHMENT0};
+  backBufferStage->setFrameBuffer(kore::FrameBuffer::BACKBUFFER,
+                                  GL_FRAMEBUFFER, drawBuffers, 1);
+
+  ShaderProgramPass* sample3DtexPass = new ShaderProgramPass;
+  sample3DtexPass->setShaderProgram(cubeSample3DTexShader);
+  
+  Cube* cubeMesh = new Cube(CUBE_SIDELENGTH);  // init with sidelength 1.0f
+  resMgr->addMesh(cubeMesh);
+
+  for (uint z = 0; z < VOXEL_GRID_RESOLUTION_Z; ++z) {
+    for (uint y = 0; y < VOXEL_GRID_RESOLUTION_Y; ++y) {
+      for (uint x = 0; x < VOXEL_GRID_RESOLUTION_X; ++x) {
+        SceneNode* cubeNode = new SceneNode;
+        cubeNodes[x][y][z] = cubeNode;
+        sceneMgr->getRootNode()->addChild(cubeNode);
+
+        MeshComponent* meshComp = new MeshComponent;
+        meshComp->setMesh(cubeMesh);
+
+        cubeNode->addComponent(meshComp);
+
+        // Set position inside the grid
+        cubeNode->translate(glm::vec3(x * CUBE_SIDELENGTH,
+                                      y * CUBE_SIDELENGTH,
+                                      z * CUBE_SIDELENGTH));
+
+        // Setup rendering operations
+        NodePass* nodePass = new NodePass(cubeNode);
+        nodePass->
+          addOperation(OperationFactory::create(OP_BINDATTRIBUTE, "v_position",
+                                                meshComp, "v_position",
+                                                cubeSample3DTexShader));
+
+        nodePass->
+          addOperation(OperationFactory::create(OP_BINDUNIFORM, "model Matrix",
+                                                cubeNode->getTransform(),
+                                                "modelWorld",
+                                                cubeSample3DTexShader));
+
+        nodePass->
+          addOperation(OperationFactory::create(OP_BINDUNIFORM, "view Matrix",
+                                                camComp, "view",
+                                                cubeSample3DTexShader));
+
+        nodePass->
+          addOperation(OperationFactory::create(OP_BINDUNIFORM, "projection Matrix",
+                                                camComp, "proj",
+                                                cubeSample3DTexShader));
+
+        nodePass->addOperation(new RenderMesh(meshComp, cubeSample3DTexShader));
+
+        sample3DtexPass->addNodePass(nodePass);
+      }
+    }
+  }
+  
+  backBufferStage->addProgramPass(sample3DtexPass);
+  renderMgr->addFramebufferStage(backBufferStage);
+
+}
 
 void setupImageLoadStoreTest() {
   using namespace kore;
@@ -202,25 +310,6 @@ void setupAtomicCounterTest() {
   RenderManager::getInstance()->addFramebufferStage(fboStage);
 }
 
-
-void setupVoxelizeTest() {
-  using namespace kore;
-
-  SceneManager* sceneMgr = SceneManager::getInstance();
-  ResourceManager* resMgr = ResourceManager::getInstance();
-
-  for (uint z = 0; z < VOXEL_GRID_RESOLUTION_Z; ++z) {
-    for (uint y = 0; y < VOXEL_GRID_RESOLUTION_Y; ++y) {
-      for (uint x = 0; x < VOXEL_GRID_RESOLUTION_X; ++x) {
-        SceneNode* cubeNode = new SceneNode;
-        cubeNode[x][y][z] = cubeNode;
-        sceneMgr->getRootNode()->addChild(cubeNode);
-      }
-    }
-  }
-}
-
-
 int main(void) {
   int running = GL_TRUE;
 
@@ -281,7 +370,8 @@ int main(void) {
             glewGetString(GLEW_VERSION)));
 
 //  setupImageLoadStoreTest();
-  setupAtomicCounterTest();
+  //setupAtomicCounterTest();
+  setupVoxelizeTest();
 
   kore::Timer the_timer;
   the_timer.start();

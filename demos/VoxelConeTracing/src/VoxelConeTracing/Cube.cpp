@@ -47,7 +47,7 @@ void Cube::init(const float sideLength) {
   const uint URF = 6;
   const uint ULF = 7;
 
-  float v = sideLength;
+  float v = sideLength / 2.0f;
   glm::vec3* vertices = new glm::vec3[_numVertices];
   vertices[LLN] = glm::vec3(-v, -v, -v);
   vertices[LRN] = glm::vec3(v, -v, -v);
@@ -61,6 +61,7 @@ void Cube::init(const float sideLength) {
   kore::MeshAttributeArray att;
   att.name = "v_position";
   att.numValues = _numVertices * 3;
+  att.numComponents = 3;
   att.type = GL_FLOAT_VEC3;
   att.componentType = GL_FLOAT;
   att.byteSize = kore::DatatypeUtil::getSizeFromGLdatatype(att.type);
@@ -70,11 +71,55 @@ void Cube::init(const float sideLength) {
 
   // Indices
   _indices.clear();
-  _indices.resize(36);
+  _indices.reserve(36);
+
+  // Front
+  _indices.push_back(0);
+  _indices.push_back(1);
+  _indices.push_back(2);
+  _indices.push_back(2);
+  _indices.push_back(3);
+  _indices.push_back(0);
+
+  // Left
+  _indices.push_back(4);
+  _indices.push_back(0);
+  _indices.push_back(3);
+  _indices.push_back(3);
+  _indices.push_back(7);
+  _indices.push_back(4);
+
+  // Right
+  _indices.push_back(1);
+  _indices.push_back(5);
+  _indices.push_back(6);
+  _indices.push_back(6);
+  _indices.push_back(2);
+  _indices.push_back(1);
+
+  // Back
+  _indices.push_back(5);
+  _indices.push_back(4);
+  _indices.push_back(7);
+  _indices.push_back(7);
+  _indices.push_back(6);
+  _indices.push_back(5);
+
+  // Top
+  _indices.push_back(3);
+  _indices.push_back(2);
+  _indices.push_back(6);
+  _indices.push_back(6);
+  _indices.push_back(7);
+  _indices.push_back(3);
+
+  // Bottom
+  _indices.push_back(4);
+  _indices.push_back(5);
+  _indices.push_back(1);
+  _indices.push_back(1);
+  _indices.push_back(6);
+  _indices.push_back(4);
   
   createAttributeBuffers(kore::BUFFERTYPE_SEQUENTIAL);
-
-
-
-
 }
