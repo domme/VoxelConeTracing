@@ -60,13 +60,14 @@
 #include "VoxelConeTracing/FullscreenQuad.h"
 #include "VoxelConeTracing/Cube.h"
 
-#define VOXEL_GRID_RESOLUTION_X 5
-#define VOXEL_GRID_RESOLUTION_Y 5
-#define VOXEL_GRID_RESOLUTION_Z 5
+#define VOXEL_GRID_RESOLUTION_X 20
+#define VOXEL_GRID_RESOLUTION_Y 20
+#define VOXEL_GRID_RESOLUTION_Z 20
 #define CUBE_SIDELENGTH 1.0f
 
 kore::SceneNode* cubeNodes[VOXEL_GRID_RESOLUTION_X][VOXEL_GRID_RESOLUTION_Y][VOXEL_GRID_RESOLUTION_Z];
-kore::SceneNode* cameraNode;
+kore::SceneNode* cameraNode = NULL;
+kore::Camera* pCamera = NULL;
 
 void setupVoxelizeTest() {
   using namespace kore;
@@ -82,22 +83,15 @@ void setupVoxelizeTest() {
   cameraNode = new kore::SceneNode;
   sceneMgr->getRootNode()->addChild(cameraNode);
 
-  Camera* camComp = new Camera;
+  pCamera = new Camera;
   float camOffset = 4.0f;
 
- glm::vec3 eye(VOXEL_GRID_RESOLUTION_X * CUBE_SIDELENGTH + camOffset,
-                VOXEL_GRID_RESOLUTION_Y * CUBE_SIDELENGTH + camOffset,
-                VOXEL_GRID_RESOLUTION_Z * CUBE_SIDELENGTH + camOffset);
-  glm::vec3 to(0,0,0);
-  glm::vec3 forward = glm::normalize(to - eye);
-  glm::vec3 up(0,1,0);
+  cameraNode->translate(glm::vec3(0.5f * (VOXEL_GRID_RESOLUTION_X * CUBE_SIDELENGTH),
+                                  0.5f * (VOXEL_GRID_RESOLUTION_Y * CUBE_SIDELENGTH),
+                                  VOXEL_GRID_RESOLUTION_Z * CUBE_SIDELENGTH + camOffset), SPACE_WORLD);
 
-  glm::vec3 side = glm::normalize(glm::cross(forward, up));
-  up = glm::normalize(glm::cross(side, forward));
-
-  cameraNode->translate(glm::vec3(0.0f, 0.0f, 40.0f), SPACE_WORLD);
-  camComp->setProjectionPersp(60.0f, 800.0f / 600.0f, 1.0f, 500.0f);
-  cameraNode->addComponent(camComp);
+  pCamera->setProjectionPersp(60.0f, 800.0f / 600.0f, 1.0f, 500.0f);
+  cameraNode->addComponent(pCamera);
 
   ShaderProgram* cubeSample3DTexShader = new ShaderProgram;
   cubeSample3DTexShader->
@@ -134,9 +128,9 @@ void setupVoxelizeTest() {
         cubeNode->addComponent(meshComp);
 
         // Set position inside the grid
-        cubeNode->translate(glm::vec3(x * CUBE_SIDELENGTH,
-                                      y * CUBE_SIDELENGTH,
-                                      z * CUBE_SIDELENGTH));
+        cubeNode->translate(glm::vec3(x * (CUBE_SIDELENGTH),
+                                      y * (CUBE_SIDELENGTH),
+                                      z * (CUBE_SIDELENGTH)));
 
         // Setup rendering operations
         NodePass* nodePass = new NodePass(cubeNode);
@@ -153,12 +147,12 @@ void setupVoxelizeTest() {
 
         nodePass->
           addOperation(OperationFactory::create(OP_BINDUNIFORM, "view Matrix",
-                                                camComp, "view",
+                                                pCamera, "view",
                                                 cubeSample3DTexShader));
 
         nodePass->
           addOperation(OperationFactory::create(OP_BINDUNIFORM, "projection Matrix",
-                                                camComp, "proj",
+                                                pCamera, "proj",
                                                 cubeSample3DTexShader));
 
         nodePass->addOperation(new RenderMesh(meshComp, cubeSample3DTexShader));
@@ -386,6 +380,42 @@ int main(void) {
   while (running) {
     time = the_timer.timeSinceLastCall();
     kore::SceneManager::getInstance()->update();
+
+    if (pCamera) {
+      if (glfwGetKey(GLFW_KEY_UP) || glfwGetKey('W')) {
+      
+        pCamera->moveForward(cameraMoveSpeed * static_cast<float>(time));
+      }
+
+      if (glfwGetKey(GLFW_KEY_DOWN) || glfwGetKey('S')) {
+        pCamera->moveForward(-cameraMoveSpeed * static_cast<float>(time));
+      }
+
+      if (glfwGetKey(GLFW_KEY_LEFT) || glfwGetKey('A')) {
+        pCamera->moveSideways(-cameraMoveSpeed * static_cast<float>(time));
+      }
+
+      if (glfwGetKey(GLFW_KEY_RIGHT) || glfwGetKey('D')) {
+        pCamera->moveSideways(cameraMoveSpeed * static_cast<float>(time));
+      }
+
+      int mouseX = 0;
+      int mouseY = 0;
+      glfwGetMousePos(&mouseX,&mouseY);
+
+      int mouseMoveX = mouseX - oldMouseX;
+      int mouseMoveY = mouseY - oldMouseY;
+
+      if (glfwGetMouseButton(GLFW_MOUSE_BUTTON_1) == GLFW_PRESS ) {
+        if (glm::abs(mouseMoveX) > 0 || glm::abs(mouseMoveY) > 0) {
+          pCamera->rotateFromMouseMove((float)-mouseMoveX / 5.0f,
+            (float)-mouseMoveY / 5.0f);
+        }
+      }
+
+      oldMouseX = mouseX;
+      oldMouseY = mouseY;
+    }
 
     kore::GLerror::gl_ErrorCheckStart();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT |GL_STENCIL_BUFFER_BIT);

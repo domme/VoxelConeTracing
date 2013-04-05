@@ -31,7 +31,12 @@ void kore::SimpleOptimizer::
   // This really clever optimizer copies all operations into the
   // operation list and calls this "optimization" - let's see how long it
   // will be able to do it's lazy job undetected ;)
-  operationList.clear();
+  //operationList.clear();
+
+  if (!operationList.empty())
+  {
+     return;
+  }
 
   for (uint iFBO = 0; iFBO < stages.size(); ++iFBO) {
     const std::vector<Operation*>& fboStartupOps =

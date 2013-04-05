@@ -118,7 +118,7 @@ void Cube::init(const float sideLength) {
   _indices.push_back(5);
   _indices.push_back(1);
   _indices.push_back(1);
-  _indices.push_back(6);
+  _indices.push_back(0);
   _indices.push_back(4);
   
   createAttributeBuffers(kore::BUFFERTYPE_SEQUENTIAL);
