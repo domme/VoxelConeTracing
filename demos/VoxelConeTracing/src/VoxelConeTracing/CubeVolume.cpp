@@ -18,6 +18,7 @@
 */
 
 #include "VoxelConeTracing/CubeVolume.h"
+#include "Kore/Log.h"
 
 
 
@@ -43,7 +44,8 @@ void CubeVolume::init(const float sideLengthPerCube,
 
   // Allocate space for all vertices
   glm::vec3* vertices = new glm::vec3[_numVertices];
-  
+  kore::Log::getInstance()->write("Allocating CubeVolume mesh with %i vertices ", _numVertices);
+
   float min = 0.0f;
   float max = sideLengthPerCube;
 

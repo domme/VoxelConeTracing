@@ -111,7 +111,7 @@ void initDummyTex3D() {
 void setupVoxelizeTest() {
   using namespace kore;
 
-  glEnable(GL_DEPTH_TEST);  
+  glEnable(GL_DEPTH_TEST);
   glClearColor(1.0f,1.0f,1.0f,1.0f);
 
   SceneManager* sceneMgr = SceneManager::getInstance();
@@ -127,7 +127,8 @@ void setupVoxelizeTest() {
 
   cameraNode->translate(glm::vec3(0.5f * (VOXEL_GRID_RESOLUTION_X * CUBE_SIDELENGTH),
                                   0.5f * (VOXEL_GRID_RESOLUTION_Y * CUBE_SIDELENGTH),
-                                  VOXEL_GRID_RESOLUTION_Z * CUBE_SIDELENGTH + camOffset), SPACE_WORLD);
+                                  VOXEL_GRID_RESOLUTION_Z * CUBE_SIDELENGTH + camOffset),
+                                  SPACE_WORLD);
 
   pCamera->setProjectionPersp(60.0f,
                               (float)screen_width / (float) screen_height,
@@ -143,6 +144,9 @@ void setupVoxelizeTest() {
   cubeSample3DTexShader->
     loadShader("./assets/shader/VoxelConeTracing/cubeVolume_sample3Dtex.frag",
                GL_FRAGMENT_SHADER);
+  cubeSample3DTexShader->
+    loadShader("./assets/shader/VoxelConeTracing/voxelize.geom",
+               GL_GEOMETRY_SHADER);
   cubeSample3DTexShader->init();
   resMgr->addShaderProgram(cubeSample3DTexShader);
 
@@ -420,7 +424,7 @@ int main(void) {
             glewGetString(GLEW_VERSION)));
 
 //  setupImageLoadStoreTest();
-  //setupAtomicCounterTest();
+  // setupAtomicCounterTest();
   setupVoxelizeTest();
 
   kore::Timer the_timer;

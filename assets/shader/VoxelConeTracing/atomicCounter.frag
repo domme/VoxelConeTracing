@@ -11,6 +11,6 @@ out vec4 color;
 
 void main() {
 	uint counter = atomicCounterIncrement(atomicCounter);
-	float r = float(counter) / (800.0 * 600.0);
+	float r = float(counter) / (1280.0 * 720.0);
 	color = vec4(r, 0, 0, 1);
 }
