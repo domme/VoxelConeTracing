@@ -39,6 +39,8 @@ namespace koregui {
     ShaderEditor(ShaderProgramItem* pass, QWidget *parent = 0);
     ~ShaderEditor();
 
+    void setShaderProgram(const QString& name);
+
     public slots:
       void addNewShaderProgram(void);
       void shaderProgramChanged(const QString & name);

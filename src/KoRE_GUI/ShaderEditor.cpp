@@ -29,3 +29,7 @@ void koregui::ShaderEditor::refresh(void) {
   //ui.shaderTable
   //_currentprogram->
 }
+
+void koregui::ShaderEditor::setShaderProgram(const QString& name) {
+
+}

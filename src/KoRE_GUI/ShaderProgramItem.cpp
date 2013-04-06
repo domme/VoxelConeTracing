@@ -151,6 +151,7 @@ void koregui::ShaderProgramItem
     QPointF p = event->pos();
     if (p.y() < 26 && p.x() > _shaderwidth - 26) {
       koregui::ShaderEditor* ed = new koregui::ShaderEditor(this);
+      ed->setShaderProgram(QString(_name.c_str()));
       ed->show();
     }
   }

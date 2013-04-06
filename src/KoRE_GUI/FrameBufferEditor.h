@@ -45,8 +45,9 @@ namespace koregui{
   public slots:
     void addNewFramebuffer(void);
     void framebufferChanged(int index);
-    //void applySettings(void);
-    void addTarget(void);
+    void nameChanged(const QString& name);
+    void applySettings(void);
+    void addNewAttachment(void);
     void refresh(void);
 
   private:
