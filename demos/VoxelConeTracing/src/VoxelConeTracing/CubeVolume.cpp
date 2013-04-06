@@ -48,6 +48,7 @@ void CubeVolume::init(const float sideLengthPerCube,
   float max = sideLengthPerCube;
 
   uint v = 0;
+  uint voxel = 0;
   for (uint z = 0; z < numCubesZ; ++z) {
     for (uint y = 0; y < numCubesY; ++y) {
       for (uint x = 0; x < numCubesX; ++x) {
@@ -57,7 +58,6 @@ void CubeVolume::init(const float sideLengthPerCube,
         vertices[v++] = glm::vec3(max, min, min) + offset;
         vertices[v++] = glm::vec3(max, max, min) + offset;
         vertices[v++] = glm::vec3(min, max, min) + offset;
-
         vertices[v++] = glm::vec3(min, min, max) + offset;
         vertices[v++] = glm::vec3(max, min, max) + offset;
         vertices[v++] = glm::vec3(max, max, max) + offset;
@@ -131,7 +131,7 @@ void CubeVolume::init(const float sideLengthPerCube,
     _indices.push_back(iCube * 8 + 4);
   }
 
-  createAttributeBuffers(kore::BUFFERTYPE_SEQUENTIAL);
+  createAttributeBuffers(kore::BUFFERTYPE_INTERLEAVED);
 }
 
 

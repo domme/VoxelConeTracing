@@ -148,12 +148,6 @@ glm::vec3 kore::Camera::getPosition() const {
     return glm::vec3(_matViewInverse[ 3 ]);
 }
 
-void kore::Camera::setView(const glm::mat4& rNewMatView) {
-    _matView = rNewMatView;
-    _matViewInverse = glm::inverse(_matView);
-    paramsChanged();
-}
-
 void kore::Camera::setProjectionOrtho(float fLeft, float fRight, float fBottom,
                                 float fTop, float fNear, float fFar) {
     _matProjection = glm::ortho(fLeft, fRight, fBottom, fTop, fNear, fFar);

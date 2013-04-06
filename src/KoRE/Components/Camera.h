@@ -80,8 +80,7 @@ class Camera : public SceneNodeComponent {
 
      void      moveForward(float fSpeed);
      void      moveSideways(float fSpeed);
-     void      setView(const glm::mat4& rNewMatView);
-
+   
      bool      isVisible(const glm::vec3& rSphereCenterWS,
                          const float fRadius) const;
 

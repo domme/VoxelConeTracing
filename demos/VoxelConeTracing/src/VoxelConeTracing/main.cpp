@@ -62,11 +62,13 @@
 #include "VoxelConeTracing/Cube.h"
 #include "VoxelConeTracing/CubeVolume.h"
 
-#define VOXEL_GRID_RESOLUTION_X 20
-#define VOXEL_GRID_RESOLUTION_Y 20
-#define VOXEL_GRID_RESOLUTION_Z 20
+#define VOXEL_GRID_RESOLUTION_X 12
+#define VOXEL_GRID_RESOLUTION_Y 12
+#define VOXEL_GRID_RESOLUTION_Z 12
 #define CUBE_SIDELENGTH 1.0f
 
+uint screen_width = 1280;
+uint screen_height = 720;
 kore::SceneNode* cubeNodes[VOXEL_GRID_RESOLUTION_X][VOXEL_GRID_RESOLUTION_Y][VOXEL_GRID_RESOLUTION_Z];
 kore::SceneNode* cameraNode = NULL;
 kore::Camera* pCamera = NULL;
@@ -91,11 +93,11 @@ void initDummyTex3D() {
                                                [VOXEL_GRID_RESOLUTION_Z];
 
   for (uint z = 0; z < VOXEL_GRID_RESOLUTION_Z; ++z) {
+    char valueZ = ((float) z / (float) VOXEL_GRID_RESOLUTION_Z) * 255;
     for (uint y = 0; y < VOXEL_GRID_RESOLUTION_Y; ++y) {
+      char valueY = ((float) y / (float) VOXEL_GRID_RESOLUTION_Y) * 255;
       for (uint x = 0; x < VOXEL_GRID_RESOLUTION_X; ++x) {
-        char valueZ = (char)(((float) z / (float) VOXEL_GRID_RESOLUTION_Z) * 255.0f);
-        char valueY = (char)(((float) y / (float) VOXEL_GRID_RESOLUTION_Y) * 255.0f);
-        char valueX = (char)(((float) x / (float) VOXEL_GRID_RESOLUTION_X) * 255.0f);
+        char valueX = ((float) x / (float) VOXEL_GRID_RESOLUTION_X) * 255;
 
         colorValues[x][y][z] = glm::detail::tvec3<unsigned char>(valueX, valueY, valueZ);
       }
@@ -127,7 +129,11 @@ void setupVoxelizeTest() {
                                   0.5f * (VOXEL_GRID_RESOLUTION_Y * CUBE_SIDELENGTH),
                                   VOXEL_GRID_RESOLUTION_Z * CUBE_SIDELENGTH + camOffset), SPACE_WORLD);
 
-  pCamera->setProjectionPersp(60.0f, 800.0f / 600.0f, 1.0f, 500.0f);
+  pCamera->setProjectionPersp(60.0f,
+                              (float)screen_width / (float) screen_height,
+                              1.0f,
+                              500.0f);
+
   cameraNode->addComponent(pCamera);
 
   ShaderProgram* cubeSample3DTexShader = new ShaderProgram;
@@ -158,58 +164,58 @@ void setupVoxelizeTest() {
                                               VOXEL_GRID_RESOLUTION_Z);
 
   
-        SceneNode* cubeNode = new SceneNode;
-        sceneMgr->getRootNode()->addChild(cubeNode);
+  SceneNode* cubeNode = new SceneNode;
+  sceneMgr->getRootNode()->addChild(cubeNode);
 
-        MeshComponent* meshComp = new MeshComponent;
-        meshComp->setMesh(cubeVolumeMesh);
+  MeshComponent* meshComp = new MeshComponent;
+  meshComp->setMesh(cubeVolumeMesh);
 
-        cubeNode->addComponent(meshComp);
+  cubeNode->addComponent(meshComp);
 
-        initDummyTex3D();
-        TexturesComponent* texComp = new TexturesComponent;
-        texComp->addTexture(dummyTex3D);
-        cubeNode->addComponent(texComp);
+  initDummyTex3D();
+  TexturesComponent* texComp = new TexturesComponent;
+  texComp->addTexture(dummyTex3D);
+  cubeNode->addComponent(texComp);
 
-        // Setup the correct texture sampler to use
-        TexSamplerProperties props;
-        props.magfilter = GL_NEAREST;
-        props.minfilter = GL_NEAREST;
-        props.type = GL_SAMPLER_3D;
-        props.wrapping = glm::uvec3(GL_CLAMP, GL_CLAMP, GL_CLAMP);
-        cubeSample3DTexShader->setSamplerProperties(0, props);
+  // Setup the correct texture sampler to use
+  TexSamplerProperties props;
+  props.magfilter = GL_NEAREST;
+  props.minfilter = GL_NEAREST;
+  props.type = GL_SAMPLER_3D;
+  props.wrapping = glm::uvec3(GL_CLAMP, GL_CLAMP, GL_CLAMP);
+  cubeSample3DTexShader->setSamplerProperties(0, props);
 
 
-        // Setup rendering operations
-        NodePass* nodePass = new NodePass(cubeNode);
-        nodePass->
-          addOperation(OperationFactory::create(OP_BINDATTRIBUTE, "v_position",
-                                                meshComp, "v_position",
-                                                cubeSample3DTexShader));
+  // Setup rendering operations
+  NodePass* nodePass = new NodePass(cubeNode);
+  nodePass->
+    addOperation(OperationFactory::create(OP_BINDATTRIBUTE, "v_position",
+                                          meshComp, "v_position",
+                                          cubeSample3DTexShader));
 
-        nodePass->
-          addOperation(OperationFactory::create(OP_BINDUNIFORM, "model Matrix",
-                                                cubeNode->getTransform(),
-                                                "modelWorld",
-                                                cubeSample3DTexShader));
+  nodePass->
+    addOperation(OperationFactory::create(OP_BINDUNIFORM, "model Matrix",
+                                          cubeNode->getTransform(),
+                                          "modelWorld",
+                                          cubeSample3DTexShader));
 
-        nodePass->
-          addOperation(OperationFactory::create(OP_BINDUNIFORM, "view Matrix",
-                                                pCamera, "view",
-                                                cubeSample3DTexShader));
+  nodePass->
+    addOperation(OperationFactory::create(OP_BINDUNIFORM, "view Matrix",
+                                          pCamera, "view",
+                                          cubeSample3DTexShader));
 
-        nodePass->
-          addOperation(OperationFactory::create(OP_BINDTEXTURE, "Dummy3DTexture",
-                                                texComp, "tex3D", cubeSample3DTexShader));
+  nodePass->
+    addOperation(OperationFactory::create(OP_BINDTEXTURE, "Dummy3DTexture",
+                                          texComp, "tex3D", cubeSample3DTexShader));
 
-        nodePass->
-          addOperation(OperationFactory::create(OP_BINDUNIFORM, "projection Matrix",
-                                                pCamera, "proj",
-                                                cubeSample3DTexShader));
+  nodePass->
+    addOperation(OperationFactory::create(OP_BINDUNIFORM, "projection Matrix",
+                                          pCamera, "proj",
+                                          cubeSample3DTexShader));
 
-        nodePass->addOperation(new RenderMesh(meshComp, cubeSample3DTexShader));
+  nodePass->addOperation(new RenderMesh(meshComp, cubeSample3DTexShader));
 
-        sample3DtexPass->addNodePass(nodePass);
+  sample3DtexPass->addNodePass(nodePass);
   
   
   backBufferStage->addProgramPass(sample3DtexPass);
@@ -369,7 +375,7 @@ int main(void) {
   glfwOpenWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 
   // Open an OpenGL window
-  if (!glfwOpenWindow(800, 600, 8, 8, 8, 8, 24, 8, GLFW_WINDOW)) {
+  if (!glfwOpenWindow(screen_width, screen_height, 8, 8, 8, 8, 24, 8, GLFW_WINDOW)) {
     kore::Log::getInstance()->write("[ERROR] could not open render window\n");
     glfwTerminate();
     exit(EXIT_FAILURE);
