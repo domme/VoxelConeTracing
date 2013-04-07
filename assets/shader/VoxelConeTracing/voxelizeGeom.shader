@@ -27,7 +27,7 @@
 
 layout(triangles) in;
 layout (triangle_strip, max_vertices=3) out;
- 
+
 in VertexData {
     vec3 pos;
     vec3 normal;
