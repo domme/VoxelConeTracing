@@ -16,5 +16,5 @@ void main() {
 	ivec3 texSize = textureSize(tex3D, 0);
 	vec3 samplePos = In.posWS / vec3(texSize.x, texSize.y, texSize.z);
 
-	color = texture3D(tex3D, samplePos);
+	color = texture(tex3D, samplePos);
 }

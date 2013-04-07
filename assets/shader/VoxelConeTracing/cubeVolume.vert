@@ -6,7 +6,7 @@ uniform mat4 modelWorld;
 uniform mat4 view;
 uniform mat4 proj;
 
-smooth out VertexData {
+out VertexData {
 	vec3 posWS;
 } Out;
 

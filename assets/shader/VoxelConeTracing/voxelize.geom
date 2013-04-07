@@ -28,13 +28,13 @@
 layout(triangles) in;
 layout (triangle_strip, max_vertices=3) out;
  
-smooth in VertexData {
+in VertexData {
     vec3 pos;
     vec3 normal;
     vec2 uv;
 } In[3];
 
-smooth out VertexData {
+out VertexData {
     vec3 pos;
     vec3 normal;
     vec2 uv;
@@ -56,7 +56,7 @@ uint calcProjAxis() {
   for (uint i = 0; i < 3; ++i) {
     // Assume we work with per-triangle normals, so that each vertex-normal of
     // one triangle is equal.
-    float area = abs(dot(In[0].normal, worldAxes[i]);
+    float area = abs(dot(In[0].normal, worldAxes[i]));
     if (area > maxArea) {
       maxArea = area;
       projAxis = i;
