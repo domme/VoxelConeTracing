@@ -62,9 +62,9 @@
 #include "VoxelConeTracing/Cube.h"
 #include "VoxelConeTracing/CubeVolume.h"
 
-#define VOXEL_GRID_RESOLUTION_X 12
-#define VOXEL_GRID_RESOLUTION_Y 12
-#define VOXEL_GRID_RESOLUTION_Z 12
+#define VOXEL_GRID_RESOLUTION_X 50
+#define VOXEL_GRID_RESOLUTION_Y 50
+#define VOXEL_GRID_RESOLUTION_Z 50
 #define CUBE_SIDELENGTH 1.0f
 
 uint screen_width = 1280;
@@ -118,6 +118,28 @@ void setupVoxelizeTest() {
   ResourceManager* resMgr = ResourceManager::getInstance();
   RenderManager* renderMgr = RenderManager::getInstance();
 
+  // Init Voxelize procedure
+  //////////////////////////////////////////////////////////////////////////
+  ShaderProgram* voxelizeShader = new ShaderProgram;
+  voxelizeShader->
+    loadShader("./assets/shader/VoxelConeTracing/voxelizeVert.shader",
+    GL_VERTEX_SHADER);
+
+  voxelizeShader->
+    loadShader("./assets/shader/VoxelConeTracing/voxelizeGeom.shader",
+    GL_GEOMETRY_SHADER);
+
+  voxelizeShader->
+    loadShader("./assets/shader/VoxelConeTracing/voxelizeFrag.shader",
+    GL_FRAGMENT_SHADER);
+  voxelizeShader->init();
+  resMgr->addShaderProgram(voxelizeShader);
+
+  ShaderProgramPass* voxelizePass = new ShaderProgramPass;
+  voxelizePass->setShaderProgram(voxelizeShader);
+
+  // Init 3D texture sampling procedure 
+  //////////////////////////////////////////////////////////////////////////
   // Init Camera
   cameraNode = new kore::SceneNode;
   sceneMgr->getRootNode()->addChild(cameraNode);
@@ -139,17 +161,14 @@ void setupVoxelizeTest() {
 
   ShaderProgram* cubeSample3DTexShader = new ShaderProgram;
   cubeSample3DTexShader->
-    loadShader("./assets/shader/VoxelConeTracing/cubeVolume.vert",
+    loadShader("./assets/shader/VoxelConeTracing/cubeVolumeVert.shader",
                GL_VERTEX_SHADER);
   cubeSample3DTexShader->
-    loadShader("./assets/shader/VoxelConeTracing/cubeVolume_sample3Dtex.frag",
+    loadShader("./assets/shader/VoxelConeTracing/cubeVolume_sample3DtexFrag.shader",
                GL_FRAGMENT_SHADER);
-  cubeSample3DTexShader->
-    loadShader("./assets/shader/VoxelConeTracing/voxelize.geom",
-               GL_GEOMETRY_SHADER);
+
   cubeSample3DTexShader->init();
   resMgr->addShaderProgram(cubeSample3DTexShader);
-
 
   FrameBufferStage* backBufferStage = new FrameBufferStage;
   GLenum drawBuffers[] = {GL_COLOR_ATTACHMENT0};
@@ -158,7 +177,7 @@ void setupVoxelizeTest() {
 
   ShaderProgramPass* sample3DtexPass = new ShaderProgramPass;
   sample3DtexPass->setShaderProgram(cubeSample3DTexShader);
-  
+    
   //Cube* cubeMesh = new Cube(CUBE_SIDELENGTH);  // init with sidelength 1.0f
   //resMgr->addMesh(cubeMesh);
 
@@ -222,6 +241,7 @@ void setupVoxelizeTest() {
   sample3DtexPass->addNodePass(nodePass);
   
   
+  backBufferStage->addProgramPass(voxelizePass);
   backBufferStage->addProgramPass(sample3DtexPass);
   renderMgr->addFramebufferStage(backBufferStage);
 

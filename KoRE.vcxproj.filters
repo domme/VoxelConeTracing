@@ -157,6 +157,9 @@
     <ClCompile Include="src\KoRE\IndexedBuffer.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\KoRE\Operations\EnableDisableOp.cpp">
+      <Filter>src\Operations</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\KoRE\Operations\SelectNodes.h">
@@ -326,6 +329,9 @@
     </ClInclude>
     <ClInclude Include="src\KoRE\IndexedBuffer.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\Operations\EnableDisableOp.h">
+      <Filter>src\Operations</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

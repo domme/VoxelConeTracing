@@ -35,7 +35,7 @@ in VertexData {
 } In[3];
 
 out VertexData {
-    vec3 pos;
+    vec3 posVoxelGrid;
     vec3 normal;
     vec2 uv;
 } Out;
@@ -68,20 +68,26 @@ uint calcProjAxis() {
 
 void main()
 {
+  // (TODO) replace with an uniform
+  const vec3 voxelGridOrigin = vec3(0.0, 0.0, 0.0);
+
+  // (TODO) replace with an uniform
+  const float maxVoxelGridSize = 50;
+
   uint projAxisIdx = calcProjAxis();
   
   for(int i = 0; i < gl_in.length(); i++) {
     const vec3 projPositions[3] =
         vec3[3]( vec3(0.0, In[i].pos.yz),  // YZ-plane
                  vec3(In[i].pos.x, 0.0, In[i].pos.z),  // XZ-plane
-                 vec3(In[i].pos.xy, 0.0) );
+                 vec3(In[i].pos.xy, 0.0) ); // XY-plane
     
-    
+    // (TODO) +Z or -Z?
+    vec3 clipSpacePos = ((In[i].pos - voxelGridOrigin) / maxVoxelGridSize) * 2.0 - 1.0;
+    gl_Position = vec4(clipSpacePos, 1.0);
 
-
-    // Maybe only pass along the 2D-projection of the normal?
+    Out.posVoxelGrid = (In[i].pos - voxelGridOrigin) + (maxVoxelGridSize/2.0); // 0..maxVoxelGridSize
     Out.normal = In[i].normal;
-
     Out.uv = In[i].uv;
 
     // done with the vertex

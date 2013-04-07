@@ -224,6 +224,7 @@
     <ClCompile Include="src\KoRE\Operations\BindOperations\BindTexture.cpp" />
     <ClCompile Include="src\KoRE\Operations\BindOperations\BindUniform.cpp" />
     <ClCompile Include="src\KoRE\Operations\BindOperations\BindOperation.cpp" />
+    <ClCompile Include="src\KoRE\Operations\EnableDisableOp.cpp" />
     <ClCompile Include="src\KoRE\Operations\MemoryBarrierOp.cpp" />
     <ClCompile Include="src\KoRE\Operations\OperationFactory.cpp" />
     <ClCompile Include="src\KoRE\Operations\ResetAtomicCounterBuffer.cpp" />
@@ -271,6 +272,7 @@
     <ClInclude Include="src\KoRE\Operations\BindOperations\BindTexture.h" />
     <ClInclude Include="src\KoRE\Operations\BindOperations\BindUniform.h" />
     <ClInclude Include="src\KoRE\Operations\BindOperations\BindOperation.h" />
+    <ClInclude Include="src\KoRE\Operations\EnableDisableOp.h" />
     <ClInclude Include="src\KoRE\Operations\MemoryBarrierOp.h" />
     <ClInclude Include="src\KoRE\Operations\Operation.h" />
     <ClInclude Include="src\KoRE\Operations\OperationFactory.h" />

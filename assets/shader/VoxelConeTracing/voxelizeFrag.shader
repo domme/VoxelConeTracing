@@ -25,17 +25,17 @@
 
 #version 420
 
+uniform coherent image3D voxelTex;
+
 in VertexData {
-	vec3 posWS;
+    vec3 posVoxelGrid;
+    vec3 normal;
+    vec2 uv;
 } In;
 
-out vec4 color;
-
-uniform sampler3D tex3D;
-
 void main() {
-	ivec3 texSize = textureSize(tex3D, 0);
-	vec3 samplePos = In.posWS / vec3(texSize.x, texSize.y, texSize.z);
-
-	color = texture3D(tex3D, samplePos);
+  
+  //(TODO) Determine depth range
+  ivec3 voxelPos = ivec3(In.posVoxelGrid);
+  imageStore(voxelTex, voxelPos, vec4(1.0, 0.0, 0.0, 1.0));
 }

@@ -57,7 +57,7 @@ void Cube::init(const float sideLength) {
   vertices[LRF] = glm::vec3(v, -v, v);
   vertices[URF] = glm::vec3(v, v, v);
   vertices[ULF] = glm::vec3(-v, v, v);
-
+  
   kore::MeshAttributeArray att;
   att.name = "v_position";
   att.numValues = _numVertices * 3;

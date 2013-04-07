@@ -26,23 +26,23 @@
 #version 420
 
 layout(location = 0) in vec3 v_position;
-layout(location = 0) in vec3 v_normal;
-layout(location = 0) int vec2 v_uv;
+layout(location = 1) in vec3 v_normal;
+layout(location = 2) in vec2 v_uv;
 
-smooth out VertexData {
-	vec3 pos;
-	vec3 normal;
-	vec2 uv;
+out VertexData {
+  vec3 pos;
+  vec3 normal;
+  vec2 uv;
 } Out;
 
 uniform mat4 modelWorld;
 uniform mat3 modelWorldNormal;
 
 void main() {
-	// We don't need to write gl_Position here because we'll generate positions
-	// in the geometry shader.
+  // We don't need to write gl_Position here because we'll generate positions
+  // in the geometry shader.
 
-	Out.pos = (modelWorld * vec4(v_position, 1.0)).xyz;
-	Out.normal = modelWorldNormal * v_normal;
-	Out.uv = v_uv;
+  Out.pos = (modelWorld * vec4(v_position, 1.0)).xyz;
+  Out.normal = modelWorldNormal * v_normal;
+  Out.uv = v_uv;
 }
