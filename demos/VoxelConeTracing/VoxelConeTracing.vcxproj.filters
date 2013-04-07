@@ -18,6 +18,12 @@
     <Filter Include="src">
       <UniqueIdentifier>{0f0c3c26-026b-4d09-a040-a3505fae1021}</UniqueIdentifier>
     </Filter>
+    <Filter Include="shader">
+      <UniqueIdentifier>{2847d3f9-7232-4f24-bcef-6958fe21db80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shader\VoxelConeTracing">
+      <UniqueIdentifier>{f676883f-5df7-4076-a346-3c8c48e3f366}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\VoxelConeTracing\FullscreenQuad.h">
@@ -29,5 +35,58 @@
     <ClInclude Include="src\VoxelConeTracing\CubeVolume.h">
       <Filter>src</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\assets\shader\normalColor.fp">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\..\assets\shader\normalColor.vp">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\..\assets\shader\normalmapping.frag">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\..\assets\shader\normalmapping.vert">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\..\assets\shader\simple.fp">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\..\assets\shader\simple.vp">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\..\assets\shader\VoxelConeTracing\cubeVolume_sample3Dtex.frag">
+      <Filter>shader\VoxelConeTracing</Filter>
+    </None>
+    <None Include="..\..\assets\shader\VoxelConeTracing\fullscreenQuad_simple.vert">
+      <Filter>shader\VoxelConeTracing</Filter>
+    </None>
+    <None Include="..\..\assets\shader\VoxelConeTracing\imageLoad.frag">
+      <Filter>shader\VoxelConeTracing</Filter>
+    </None>
+    <None Include="..\..\assets\shader\VoxelConeTracing\imageStore.frag">
+      <Filter>shader\VoxelConeTracing</Filter>
+    </None>
+    <None Include="..\..\assets\shader\VoxelConeTracing\voxelize.frag">
+      <Filter>shader\VoxelConeTracing</Filter>
+    </None>
+    <None Include="..\..\assets\shader\VoxelConeTracing\voxelize.geom">
+      <Filter>shader\VoxelConeTracing</Filter>
+    </None>
+    <None Include="..\..\assets\shader\VoxelConeTracing\voxelize.vert">
+      <Filter>shader\VoxelConeTracing</Filter>
+    </None>
+    <None Include="..\..\assets\shader\VoxelConeTracing\atomicCounter.frag">
+      <Filter>shader\VoxelConeTracing</Filter>
+    </None>
+    <None Include="..\..\assets\shader\VoxelConeTracing\cube.vert">
+      <Filter>shader\VoxelConeTracing</Filter>
+    </None>
+    <None Include="..\..\assets\shader\VoxelConeTracing\cube_sample3Dtex.frag">
+      <Filter>shader\VoxelConeTracing</Filter>
+    </None>
+    <None Include="..\..\assets\shader\VoxelConeTracing\cubeVolume.vert">
+      <Filter>shader\VoxelConeTracing</Filter>
+    </None>
   </ItemGroup>
 </Project>

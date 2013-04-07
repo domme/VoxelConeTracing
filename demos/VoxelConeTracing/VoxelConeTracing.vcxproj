@@ -288,6 +288,25 @@
     <ClInclude Include="src\VoxelConeTracing\CubeVolume.h" />
     <ClInclude Include="src\VoxelConeTracing\FullscreenQuad.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\assets\shader\normalColor.fp" />
+    <None Include="..\..\assets\shader\normalColor.vp" />
+    <None Include="..\..\assets\shader\normalmapping.frag" />
+    <None Include="..\..\assets\shader\normalmapping.vert" />
+    <None Include="..\..\assets\shader\simple.fp" />
+    <None Include="..\..\assets\shader\simple.vp" />
+    <None Include="..\..\assets\shader\VoxelConeTracing\atomicCounter.frag" />
+    <None Include="..\..\assets\shader\VoxelConeTracing\cube.vert" />
+    <None Include="..\..\assets\shader\VoxelConeTracing\cubeVolume.vert" />
+    <None Include="..\..\assets\shader\VoxelConeTracing\cubeVolume_sample3Dtex.frag" />
+    <None Include="..\..\assets\shader\VoxelConeTracing\cube_sample3Dtex.frag" />
+    <None Include="..\..\assets\shader\VoxelConeTracing\fullscreenQuad_simple.vert" />
+    <None Include="..\..\assets\shader\VoxelConeTracing\imageLoad.frag" />
+    <None Include="..\..\assets\shader\VoxelConeTracing\imageStore.frag" />
+    <None Include="..\..\assets\shader\VoxelConeTracing\voxelize.frag" />
+    <None Include="..\..\assets\shader\VoxelConeTracing\voxelize.geom" />
+    <None Include="..\..\assets\shader\VoxelConeTracing\voxelize.vert" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
