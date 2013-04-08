@@ -38,6 +38,7 @@ kore::RenderManager::RenderManager(void)
     _vao(0),
     _renderResolution(0,0),
     _activeTextureUnitIndex(0) {
+
   _vTexTargetMap[GL_TEXTURE_1D] =                   TEXTURE_1D;
   _vTexTargetMap[GL_TEXTURE_2D] =                   TEXTURE_2D;
   _vTexTargetMap[GL_TEXTURE_3D] =                   TEXTURE_3D;
