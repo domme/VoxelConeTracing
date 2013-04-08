@@ -124,7 +124,7 @@ void kore::FrameBuffer::
 
   Texture* pTex = new Texture;
   bool bSuccess = pTex->create(properties, name);
-if (bSuccess) {
+  if (bSuccess) {
     ResourceManager::getInstance()->addTexture(pTex);
     addTextureAttachment(pTex, attatchment);
   } else {

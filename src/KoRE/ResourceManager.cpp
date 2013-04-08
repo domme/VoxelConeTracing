@@ -42,10 +42,10 @@ kore::ResourceManager::ResourceManager(void) {
 
 kore::ResourceManager::~ResourceManager(void) {
   // Delete all shaders. 
-  for (auto it = _shaderHandles.begin(); it != _shaderHandles.end(); ++it) {
-    glDeleteShader(it->second);
+  for (auto it = _shaders.begin(); it != _shaders.end(); ++it) {
+    delete it->second;
   }
-  _shaderHandles.clear();
+  _shaders.clear();
 
   // Delete textures.
   for (auto itPath = _textures.begin(); itPath != _textures.end(); ++itPath) {
@@ -141,14 +141,14 @@ void kore::ResourceManager::addTexture(kore::Texture* texture) {
 void kore::ResourceManager::addShaderProgram(ShaderProgram* program) {
   if(_shaderPrograms.count(program->getID())) {
     kore::Log::getInstance()
-      ->write("[ERROR] Shader '%s' already in RenderManager\n",
+      ->write("[ERROR] ShaderProgram '%s' already in RenderManager\n",
               program->getName().c_str());
     return;
   }
   _shaderPrograms[program->getID()] = program;
 }
 
-const kore::ShaderProgram* kore::ResourceManager
+kore::ShaderProgram* kore::ResourceManager
   ::getShaderProgram(const uint64 id) const {
     if (_shaderPrograms.count(id)) {
       return _shaderPrograms.find(id)->second;
@@ -171,18 +171,21 @@ kore::Texture* kore::ResourceManager::getTexture(const uint64 id) {
   return _textures[id];
 }
 
-GLuint kore::ResourceManager::getShaderHandle(const std::string& path) {
-  if (_shaderHandles.count(path) == 0) {
-    return KORE_GLUINT_HANDLE_INVALID;
+kore::Shader* kore::ResourceManager::getShader(const uint64 id) {
+  if (_shaders.count(id) == 0) {
+    return NULL;
   }
-  return _shaderHandles[path];
+  return _shaders[id];
 }
 
-void kore::ResourceManager::addShaderHandle(const std::string& path,
-                                            const GLuint handle) {
-  if (_shaderHandles.count(path) == 0) {
-    _shaderHandles[path] = handle;
+void kore::ResourceManager::addShader(kore::Shader* shader) {
+  if(_shaders.count(shader->getID())) {
+    kore::Log::getInstance()
+      ->write("[ERROR] Shader '%s' already in RenderManager\n",
+      shader->getName().c_str());
+    return;
   }
+  _shaders[shader->getID()] = shader;
 }
 
 const kore::TextureSampler*

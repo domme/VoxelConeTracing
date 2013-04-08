@@ -25,17 +25,18 @@
 #include "KoRE/ResourceManager.h"
 #include "Kore/RenderManager.h"
 #include "KoRE/IndexedBuffer.h"
+#include "KoRE/IDManager.h"
 
 const unsigned int BUFSIZE = 100;  // Buffer length for shader-element names
 
 kore::ShaderProgram::ShaderProgram()
   : _name(""),
   _programHandle(KORE_GLUINT_HANDLE_INVALID),
-  _vertex_prog(KORE_GLUINT_HANDLE_INVALID),
-  _geometry_prog(KORE_GLUINT_HANDLE_INVALID),
-  _fragment_prog(KORE_GLUINT_HANDLE_INVALID),
-  _tess_ctrl(KORE_GLUINT_HANDLE_INVALID),
-  _tess_eval(KORE_GLUINT_HANDLE_INVALID),
+  _vertex_prog(NULL),
+  _geometry_prog(NULL),
+  _fragment_prog(NULL),
+  _tess_ctrl(NULL),
+  _tess_eval(NULL),
   kore::BaseResource() {
 }
 
@@ -45,8 +46,10 @@ kore::ShaderProgram::~ShaderProgram(void) {
 }
 
 void kore::ShaderProgram::destroyProgram() {
-  glDeleteProgram(_programHandle);
-  _programHandle = KORE_GLUINT_HANDLE_INVALID;
+  if(_programHandle != KORE_GLUINT_HANDLE_INVALID) {
+    glDeleteProgram(_programHandle);
+    _programHandle = KORE_GLUINT_HANDLE_INVALID;
+  }
 
 
   _outputs.clear();
@@ -56,69 +59,66 @@ void kore::ShaderProgram::destroyProgram() {
   _imgAccessParams.clear();
 }
 
-void kore::ShaderProgram::destroyShaders() {
-  _vertex_prog = KORE_GLUINT_HANDLE_INVALID;
-  _geometry_prog = KORE_GLUINT_HANDLE_INVALID;
-  _fragment_prog = KORE_GLUINT_HANDLE_INVALID;
-  _tess_ctrl = KORE_GLUINT_HANDLE_INVALID;
-  _tess_eval = KORE_GLUINT_HANDLE_INVALID;
+void kore::ShaderProgram::removeShaders() {
+  _vertex_prog = NULL;
+  _geometry_prog = NULL;
+  _fragment_prog = NULL;
+  _tess_ctrl = NULL;
+  _tess_eval = NULL;
 }
 
 
-bool kore::ShaderProgram::loadShader(const std::string& file,
+void kore::ShaderProgram::loadShader(const std::string& file,
                                      GLenum shadertype) {
-  GLuint shaderHandle = ResourceManager::getInstance()->getShaderHandle(file);
-  
-  if (shaderHandle == KORE_GLUINT_HANDLE_INVALID) {  // Shader not found in cache.
-    std::string progSrc;
-    shaderHandle = glCreateShader(shadertype);
-
-    FILE *code_file = fopen(file.c_str(), "r");
-
-    if (code_file == NULL) {
-      kore::Log::getInstance()->write(
-        "[ERROR] Could not open shader program '%s'\n", file.c_str());
-      return false;
-    }
-
-    char f_char;
-    while (fread(&f_char, sizeof(f_char), 1, code_file) != 0) {
-      if (f_char != '\r') progSrc += f_char;
-    }
-    fclose(code_file);
-
-    const GLchar* src = progSrc.c_str();
-    glShaderSource(shaderHandle, 1, &src, 0);
-    glCompileShader(shaderHandle);
-
-    bool bSuccess = checkShaderCompileStatus(shaderHandle, file);
-    if (!bSuccess) {
-      glDeleteShader(shaderHandle);
-      return false;
-    }
-
-    ResourceManager::getInstance()->addShaderHandle(file, shaderHandle);
+  kore::Shader* shader = NULL;
+  uint64 sid = kore::IDManager::getInstance()->getID(file);
+  if(sid == 0) {  // Shader not found in cache.
+    shader = new kore::Shader();
+    shader->loadShaderCode(file, shadertype);
+    kore::IDManager::getInstance()->registerURL(shader->getID(), file);
+  } else {
+    shader = kore::ResourceManager::getInstance()->getShader(sid);
   }
 
   switch (shadertype) {
   case GL_VERTEX_SHADER:
-    _vertex_prog = shaderHandle;
+    _vertex_prog = shader;
     break;
   case GL_FRAGMENT_SHADER:
-    _fragment_prog = shaderHandle;
+    _fragment_prog = shader;
     break;
   case GL_GEOMETRY_SHADER:
-    _geometry_prog = shaderHandle;
+    _geometry_prog = shader;
     break;
   case GL_TESS_CONTROL_SHADER:
-    _tess_ctrl = shaderHandle;
+    _tess_ctrl = shader;
     break;
   case GL_TESS_EVALUATION_SHADER:
-    _tess_eval = shaderHandle;
+    _tess_eval = shader;
     break;
   }
+}
 
-  return true;
+kore::Shader* kore::ShaderProgram::getShader(GLenum shadertype) {
+  switch (shadertype) {
+  case GL_VERTEX_SHADER:
+    return _vertex_prog;
+    break;
+  case GL_FRAGMENT_SHADER:
+    return _fragment_prog;
+    break;
+  case GL_GEOMETRY_SHADER:
+    return _geometry_prog;
+    break;
+  case GL_TESS_CONTROL_SHADER:
+    return _tess_ctrl;
+    break;
+  case GL_TESS_EVALUATION_SHADER:
+    return _tess_eval;
+    break;
+  default:
+    return NULL;
+  }
 }
 
 bool kore::ShaderProgram::init() {
@@ -128,24 +128,24 @@ bool kore::ShaderProgram::init() {
 
   _programHandle = glCreateProgram();
   
-  if (_vertex_prog != KORE_GLUINT_HANDLE_INVALID) {
-    glAttachShader(_programHandle, _vertex_prog);
+  if (_vertex_prog) {
+    glAttachShader(_programHandle, _vertex_prog->getHandle());
   }
 
-  if (_fragment_prog != KORE_GLUINT_HANDLE_INVALID) {
-    glAttachShader(_programHandle, _fragment_prog);
+  if (_fragment_prog) {
+    glAttachShader(_programHandle, _fragment_prog->getHandle());
   }
 
-  if (_geometry_prog != KORE_GLUINT_HANDLE_INVALID) {
-    glAttachShader(_programHandle, _geometry_prog);
+  if (_geometry_prog) {
+    glAttachShader(_programHandle, _geometry_prog->getHandle());
   }
 
-  if (_tess_ctrl != KORE_GLUINT_HANDLE_INVALID) {
-    glAttachShader(_programHandle, _tess_ctrl);
+  if (_tess_ctrl) {
+    glAttachShader(_programHandle, _tess_ctrl->getHandle());
   }
 
-  if (_tess_eval != KORE_GLUINT_HANDLE_INVALID) {
-    glAttachShader(_programHandle, _tess_eval);
+  if (_tess_eval) {
+    glAttachShader(_programHandle, _tess_eval->getHandle());
   }
 
   glLinkProgram(_programHandle);
@@ -172,18 +172,6 @@ bool kore::ShaderProgram::init() {
   /*
   /* OpenGL 4.3 or arb_program_interface_query needed
   /*
-  constructShaderInputInfo(GL_PROGRAM_INPUT, _attributes);
-  for (uint i = 0; i < _attributes.size(); i++) {
-    kore::Log::getInstance()->write("\tAttribute '%s' at location %i\n",
-                                    _attributes[i].name.c_str(),
-                                    _attributes[i].location);
-  }
-  constructShaderInputInfo(GL_UNIFORM, _uniforms);
-  for (uint j = 0; j < _uniforms.size(); j++) {
-    kore::Log::getInstance()->write("\tUniform '%s' at location %i\n",
-                                    _uniforms[j].name.c_str(),
-                                    _uniforms[j].location);
-  }
   constructShaderOutputInfo(_outputs);
   for (uint j = 0; j < _outputs.size(); j++) {
       kore::Log::getInstance()->write("\tOutput '%s'\n",
@@ -400,34 +388,6 @@ void kore::ShaderProgram::constructShaderOutputInfo(std::vector<ShaderOutput>&
         rOutputVector.push_back(element);
     }
  }
-
-bool kore::ShaderProgram::checkShaderCompileStatus(const GLuint shaderHandle,
-                                                   const std::string& name) {
-  GLint success;
-  GLint infologLen;
-  glGetShaderiv(shaderHandle, GL_COMPILE_STATUS, &success);
-  glGetShaderiv(shaderHandle, GL_INFO_LOG_LENGTH, &infologLen);
-  
-  if (infologLen > 1) {
-    GLchar * infoLog = new GLchar[infologLen];
-    if (infoLog == NULL) {
-      kore::Log::getInstance()->write(
-        "[ERROR] Could not allocate ShaderInfoLog buffer from '%s'\n",
-        name.c_str());
-    }
-    int charsWritten = 0;
-    glGetShaderInfoLog(shaderHandle, infologLen, &charsWritten, infoLog);
-    std::string shaderlog = infoLog;
-    kore::Log::getInstance()->write(
-      "[DEBUG] '%s' shader Log %s\n", name.c_str(), shaderlog.c_str());
-    KORE_SAFE_DELETE_ARR(infoLog);
-  } else {
-    kore::Log::getInstance()->write(
-      "[DEBUG] Shader '%s' compiled\n", name.c_str());
-  }
-
-  return success == GL_TRUE;
-}
 
 bool kore::ShaderProgram::checkProgramLinkStatus(const GLuint programHandle,
                                                  const std::string& name) {

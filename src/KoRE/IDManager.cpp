@@ -39,7 +39,6 @@ const uint64 kore::IDManager::getID(const std::string& url) const {
       return it->first;
     }
   }
-
   return KORE_ID_INVALID;
 }
 

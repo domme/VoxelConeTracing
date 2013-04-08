@@ -25,6 +25,7 @@
 #include <map>
 #include "KoRE/Common.h"
 #include "KoRE/Mesh.h"
+#include "KoRE/Shader.h"
 #include "KoRE/ShaderProgram.h"
 #include "KoRE/Texture.h"
 #include "KoRE/SceneNode.h"
@@ -118,7 +119,7 @@ namespace kore {
     void addShaderProgram(ShaderProgram* program);
 
     /*! \brief Retrieve a registered ShaderProgram from the ResourceManager. */
-    const kore::ShaderProgram* getShaderProgram(const uint64 id) const;
+    kore::ShaderProgram* getShaderProgram(const uint64 id) const;
 
     /*! \brief Retrieve all registered ShaderPrograms. */
     std::vector<ShaderProgram*> getShaderPrograms(void);
@@ -145,7 +146,7 @@ namespace kore {
     *   \param name The name of the FrameBuffer with which it was added.
     *   \return The requested FrameBuffer or NULL, if there was no FrameBuffer
                 added with the provided name or it has been removed already. */
-    FrameBuffer* getFramebuffer(const uint64 id);
+    kore::FrameBuffer* getFramebuffer(const uint64 id);
 
     /*! \brief Retrieve all registered FrameBuffers.*/
     std::vector<FrameBuffer*> getFramebuffers(void);
@@ -164,18 +165,17 @@ namespace kore {
     
 
 
-    /*! \brief Adds a shader handle to the cache. Subsequent shader-loadings 
-    *          can use getShaderHandle(..) to retrieve this cached handle and
+    /*! \brief Adds a shader to the cache. Subsequent shader-loadings 
+    *          can use getShader(..) to retrieve a cached Shader and
     *          do not have to load and compile the sources from file. */
-    void addShaderHandle(const std::string& path,
-                         const GLuint handle);
+    void addShader(Shader*);
 
     /*! \brief Returns a cached OpenGL shader object.
-    *   \param path The filepath to the shader-file.
-    *   \return Returns the handle to the shader object or
-                GLUINT_HANDLE_INVALID if there is no entry for this path yet.
+    *   \param id The id of the shader.
+    *   \return Returns the shader object or
+                NULL if there is no entry for this id.
     */
-    GLuint getShaderHandle(const std::string& path);
+    Shader* getShader(const uint64 id);
 
 
     /*! \brief Adds a Material to the ResourceManager. This Material will now
@@ -191,7 +191,6 @@ namespace kore {
     void removeMaterial(const uint64 id);
 
     void removeMaterial(const Material* mat);
-
 
     IndexedBuffer* getIndexedBuffer(const uint64 id);
     std::vector<IndexedBuffer*> getIndexedBuffers();
@@ -217,16 +216,17 @@ namespace kore {
     ResourceManager(void);
     virtual ~ResourceManager(void);
 
-    std::map<std::string, GLuint> _shaderHandles;
     std::vector<kore::TextureSampler*> _textureSamplers;
 
+    std::map<uint64, Shader*> _shaders;
     std::map<uint64, Mesh*> _meshes;  // id || mesh
     std::map<uint64, kore::Texture*> _textures;  // id || texture    
     std::map<uint64, ShaderProgram*> _shaderPrograms;  // id || program
     std::map<uint64, kore::FrameBuffer*> _frameBuffers; // name, framebuffer
     std::map<uint64, Material*> _materials;
     std::map<uint64, IndexedBuffer*> _indexedBuffers;
-    
+
+    Delegate1Param<const Shader*> _shaderDeleteEvent;
     Delegate1Param<const IndexedBuffer*> _indexedBufferDeleteEvent;
     Delegate1Param<const FrameBuffer*> _fboDeleteEvent;
     Delegate1Param<const Texture*> _textureDeleteEvent;

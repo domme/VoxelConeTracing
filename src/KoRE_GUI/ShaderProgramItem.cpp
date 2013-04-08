@@ -47,6 +47,11 @@ koregui::ShaderProgramItem::ShaderProgramItem(QGraphicsItem* parent)
 koregui::ShaderProgramItem::~ShaderProgramItem(void) {
 }
 
+void koregui::ShaderProgramItem::setShaderProgram(kore::ShaderProgram* prog) {
+  _shader = prog;
+  refresh();
+}
+
 void koregui::ShaderProgramItem::refresh(void) {
   prepareGeometryChange();
   // destroy old shader inputs
@@ -151,6 +156,7 @@ void koregui::ShaderProgramItem
     QPointF p = event->pos();
     if (p.y() < 26 && p.x() > _shaderwidth - 26) {
       koregui::ShaderEditor* ed = new koregui::ShaderEditor(this);
+      ed->setShaderProgram(QString(_name.c_str()));
       ed->show();
     }
   }

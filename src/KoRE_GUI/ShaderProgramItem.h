@@ -37,6 +37,7 @@ namespace koregui {
     void refresh(void);
     inline int getHeight(void) {return _shaderheight;};
     inline int getWidth(void) {return _shaderwidth;};
+    void setShaderProgram(kore::ShaderProgram* prog);
 
   protected:
     QRectF boundingRect() const;

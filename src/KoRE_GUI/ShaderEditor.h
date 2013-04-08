@@ -25,6 +25,7 @@
 #define SHADEREDITOR_H_
 
 #include <QWidget>
+#include <QSignalMapper>
 #include "ui_ShaderEditor.h"
 
 #include "KoRE/ShaderProgram.h"
@@ -40,12 +41,21 @@ namespace koregui {
     ~ShaderEditor();
 
     public slots:
+      void setShaderProgram(const QString& name);
       void addNewShaderProgram(void);
-      void shaderProgramChanged(const QString & name);
+      void addShader(void);
+      void nameChanged(const QString& name);
       void refresh(void);
+      void applyChanges(void);
+      void pathButtonPressed(int row);
+      void removeShader(int row);
 
   private:
+    void addShaderInfo(kore::Shader* shader);
+
     Ui::ShaderEditor ui;
+    QSignalMapper _loadmapper;
+    QSignalMapper _delmapper;
     kore::ShaderProgram* _currentprogram;
     ShaderProgramItem* _currentitem;
   };

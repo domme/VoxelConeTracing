@@ -1,5 +1,5 @@
 /*
-  Copyright © 2012 The KoRE Project
+  Copyright (c) 2012 The KoRE Project
 
   This file is part of KoRE.
 
@@ -17,8 +17,8 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CORE_INCLUDE_CORE_SHADER_H_
-#define CORE_INCLUDE_CORE_SHADER_H_
+#ifndef SRC_KORE_SHADERPROGRAM_H_
+#define SRC_KORE_SHADERPROGRAM_H_
 
 #include <string>
 #include <vector>
@@ -27,6 +27,7 @@
 #include "KoRE/Common.h"
 #include "KoRE/TextureSampler.h"
 #include "KoRE/BaseResource.h"
+#include "KoRE/Shader.h"
 
 namespace kore {
   class Operation;
@@ -35,7 +36,9 @@ namespace kore {
     ShaderProgram();
     virtual ~ShaderProgram(void);
     /// load a single shader from file
-    bool loadShader(const std::string& file, GLenum shadertype);
+    void loadShader(const std::string& file, GLenum shadertype);
+    /// Returns the attached shader of given type, else NULL
+    Shader* getShader(GLenum shadertype);
     /// compile and link shader program
     bool init();
     GLuint getAttributeLocation(const std::string &name);
@@ -90,11 +93,10 @@ namespace kore {
      */
     inline void setName(const std::string& name){_name = name;}
 
+    void removeShaders();
+
 
   private:
-    static bool checkShaderCompileStatus(const GLuint shaderHandle,
-                                         const std::string& name);
-
     static bool checkProgramLinkStatus(const GLuint programHandle,
                                        const std::string& name);
 
@@ -104,7 +106,6 @@ namespace kore {
     static bool isAtomicCounterType(const GLuint uniformType);
 
     void destroyProgram();
-    void destroyShaders();
 
     void getAttributeInfo();
     void getUniformInfo();
@@ -121,13 +122,13 @@ namespace kore {
 
     std::vector<const TextureSampler*> _vSamplers;
 
-    GLuint _vertex_prog;
-    GLuint _geometry_prog;
-    GLuint _fragment_prog;
-    GLuint _tess_ctrl;
-    GLuint _tess_eval;
+    Shader* _vertex_prog;
+    Shader* _geometry_prog;
+    Shader* _fragment_prog;
+    Shader* _tess_ctrl;
+    Shader* _tess_eval;
 
     GLuint _programHandle;
   };
 };
-#endif  // CORE_INCLUDE_CORE_SHADER_H_
+#endif  // SRC_KORE_SHADERPROGRAM_H_
