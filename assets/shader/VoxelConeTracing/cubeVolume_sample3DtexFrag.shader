@@ -10,16 +10,13 @@ in VertexData {
 
 out vec4 color;
 
-uniform sampler3D tex3D;
+layout(rgba8) uniform coherent image3D voxelTex;
 
 void main() {
-  ivec3 texSize = textureSize(tex3D, 0);
-  vec3 samplePos = In.posWS / vec3(texSize.x, texSize.y, texSize.z);
-
-  color = texture(tex3D, samplePos);
+  ivec3 samplePos = ivec3(In.posWS.x, In.posWS.y, In.posWS.z);
+  color = imageLoad(voxelTex, samplePos);
 
   if (color.r < 0.01) {
     discard;
   }
-  
 }

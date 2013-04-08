@@ -90,12 +90,12 @@ void initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
   texProps.width = VOXEL_GRID_RESOLUTION_X;
   texProps.height = VOXEL_GRID_RESOLUTION_Y;
   texProps.depth = VOXEL_GRID_RESOLUTION_Z;
-  texProps.format = GL_RGB;
-  texProps.internalFormat = GL_RGB8;
+  texProps.format = GL_RGBA;
+  texProps.internalFormat = GL_RGBA8;
   texProps.pixelType = GL_UNSIGNED_BYTE;
 
   // Create data
-  glm::detail::tvec3<unsigned char> colorValues[VOXEL_GRID_RESOLUTION_X]
+  glm::detail::tvec4<unsigned char> colorValues[VOXEL_GRID_RESOLUTION_X]
                                                [VOXEL_GRID_RESOLUTION_Y]
                                                [VOXEL_GRID_RESOLUTION_Z];
 
@@ -107,7 +107,7 @@ void initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
         for (uint x = 0; x < VOXEL_GRID_RESOLUTION_X; ++x) {
           char valueX = ((float) x / (float) VOXEL_GRID_RESOLUTION_X) * 255;
 
-          colorValues[x][y][z] = glm::detail::tvec3<unsigned char>(valueX, valueY, valueZ);
+          colorValues[x][y][z] = glm::detail::tvec4<unsigned char>(valueX, valueY, valueZ, 0);
         }
       }
     }
@@ -115,7 +115,7 @@ void initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
     for (uint z = 0; z < VOXEL_GRID_RESOLUTION_Z; ++z) {
       for (uint y = 0; y < VOXEL_GRID_RESOLUTION_Y; ++y) {
         for (uint x = 0; x < VOXEL_GRID_RESOLUTION_X; ++x) {
-          colorValues[x][y][z] = glm::detail::tvec3<unsigned char>(0, 0, 0);
+          colorValues[x][y][z] = glm::detail::tvec4<unsigned char>(0, 0, 0, 0);
         }
       }
     }
@@ -129,8 +129,8 @@ void initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
 void setupVoxelizeTest() {
   using namespace kore;
 
-  glEnable(GL_DEPTH_TEST);
   glClearColor(1.0f,1.0f,1.0f,1.0f);
+  glDisable(GL_CULL_FACE);
 
   SceneManager* sceneMgr = SceneManager::getInstance();
   ResourceManager* resMgr = ResourceManager::getInstance();
@@ -141,6 +141,7 @@ void setupVoxelizeTest() {
   backBufferStage->setFrameBuffer(kore::FrameBuffer::BACKBUFFER,
     GL_FRAMEBUFFER, drawBuffers, 1);
 
+  
   // Init Voxelize procedure
   //////////////////////////////////////////////////////////////////////////
   ShaderProgram* voxelizeShader = new ShaderProgram;
@@ -160,10 +161,9 @@ void setupVoxelizeTest() {
   resMgr->addShaderProgram(voxelizeShader);
 
   voxelTexture = new Texture;
-  initTex3D(voxelTexture, BLACK);
+  initTex3D(voxelTexture, COLOR_PALETTE);
 
-  
-
+  /*
   //Load the scene and get all mesh nodes
   resMgr->loadScene("./assets/meshes/triangle.dae");
   std::vector<SceneNode*> meshNodes;
@@ -233,10 +233,7 @@ void setupVoxelizeTest() {
   
    backBufferStage->addProgramPass(voxelizePass);
 
-   
-
- 
-  
+  */
 
 
 
@@ -298,12 +295,12 @@ void setupVoxelizeTest() {
   cubeNode->addComponent(texComp);
 
   // Setup the correct texture sampler to use
-  TexSamplerProperties props;
+ /* TexSamplerProperties props;
   props.magfilter = GL_NEAREST;
   props.minfilter = GL_NEAREST;
   props.type = GL_SAMPLER_3D;
   props.wrapping = glm::uvec3(GL_CLAMP, GL_CLAMP, GL_CLAMP);
-  cubeSample3DTexShader->setSamplerProperties(0, props);
+  cubeSample3DTexShader->setSamplerProperties(0, props); */
 
 
   // Setup rendering operations
@@ -339,21 +336,21 @@ void setupVoxelizeTest() {
                                           cubeSample3DTexShader));
 
   nodePass->
-    addOperation(OperationFactory::create(OP_BINDTEXTURE, voxelTexture->getName(),
-                                          texComp, "tex3D", cubeSample3DTexShader));
+    addOperation(OperationFactory::create(OP_BINDIMAGETEXTURE, voxelTexture->getName(),
+                                          texComp, "voxelTex", cubeSample3DTexShader));
 
   nodePass->
     addOperation(OperationFactory::create(OP_BINDUNIFORM, "projection Matrix",
                                           pCamera, "proj",
                                           cubeSample3DTexShader));
 
+  nodePass->addOperation(new MemoryBarrierOp(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT));
   nodePass->addOperation(new RenderMesh(meshComp, cubeSample3DTexShader));
 
   sample3DtexPass->addNodePass(nodePass);
   
   backBufferStage->addProgramPass(sample3DtexPass);
   renderMgr->addFramebufferStage(backBufferStage);
-
 }
 
 void setupImageLoadStoreTest() {

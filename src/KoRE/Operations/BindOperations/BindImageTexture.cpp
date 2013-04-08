@@ -62,7 +62,7 @@ void kore::BindImageTexture::doExecute(void) const {
   GLuint access =
     _shaderUniform->shader->getImageAccessParam(_shaderUniform->imgUnit);
 
-  GLerror::gl_ErrorCheckStart();
+  //GLerror::gl_ErrorCheckStart();
   glBindImageTexture(_shaderUniform->imgUnit,
                      pTexInfo->texLocation,
                      0,
@@ -71,7 +71,7 @@ void kore::BindImageTexture::doExecute(void) const {
                      access,
                      internalFormatToImageFormat(pTexInfo->internalFormat));
 
-  GLerror::gl_ErrorCheckFinish("BindImageTexture::execute");
+ // GLerror::gl_ErrorCheckFinish("BindImageTexture::execute");
 }
 
 void kore::BindImageTexture::update(void) {

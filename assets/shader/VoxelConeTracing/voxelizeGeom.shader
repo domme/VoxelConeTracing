@@ -72,7 +72,7 @@ void main()
   const vec3 voxelGridOrigin = vec3(0.0, 0.0, 0.0);
 
   // (TODO) replace with an uniform
-  const float maxVoxelGridSize = 50;
+  const float maxVoxelGridSize = 12;
 
   uint projAxisIdx = calcProjAxis();
   

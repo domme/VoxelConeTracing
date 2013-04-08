@@ -69,7 +69,7 @@ namespace kore {
   class RenderManager {
   public:
     static RenderManager *getInstance(void);
-    const glm::ivec2& getRenderResolution() const;
+    glm::ivec2 getRenderResolution() const;
     const glm::ivec4& getViewport() const;
     void setViewport(const glm::ivec4& newViewport);
     void setOptimizer(const Optimizer* optimizer);

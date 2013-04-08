@@ -39,6 +39,9 @@ kore::RenderManager::RenderManager(void)
     _viewport(0,0,0,0),
     _activeTextureUnitIndex(0) {
 
+  //sync internal states with opengl-states:
+  
+
   _vTexTargetMap[GL_TEXTURE_1D] =                   TEXTURE_1D;
   _vTexTargetMap[GL_TEXTURE_2D] =                   TEXTURE_2D;
   _vTexTargetMap[GL_TEXTURE_3D] =                   TEXTURE_3D;
@@ -72,7 +75,7 @@ kore::RenderManager::RenderManager(void)
   memset(_boundAtomicBuffers, 0, sizeof(GLuint) *
                                  GL_MAX_COMBINED_ATOMIC_COUNTERS);
 
-  activeTexture(GL_TEXTURE0);  // Activate texture unit 0 by default
+  activeTexture(0);  // Activate texture unit 0 by default
 }
 
 kore::RenderManager::~RenderManager(void) {
@@ -83,7 +86,7 @@ kore::RenderManager::~RenderManager(void) {
   }
 }
 
-const glm::ivec2& kore::RenderManager::getRenderResolution() const {
+glm::ivec2 kore::RenderManager::getRenderResolution() const {
     return glm::ivec2(_viewport.z,_viewport.w);
 }
 

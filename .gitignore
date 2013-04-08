@@ -24,6 +24,7 @@ Win32/*
 demos/MainGLFW/MainGLFW.dir/*
 demos/VoxelConeTracing/MainGLFW.dir/*
 demos/VoxelConeTracing/VoxelConeTracing.dir/*
+demos/VoxelConeTracing/obj/*
 KoRE.lib
 lib
 bin
