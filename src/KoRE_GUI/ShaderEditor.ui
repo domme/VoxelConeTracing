@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>401</width>
+    <width>429</width>
     <height>533</height>
    </rect>
   </property>
@@ -499,7 +499,7 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
     <rect>
      <x>0</x>
      <y>50</y>
-     <width>401</width>
+     <width>431</width>
      <height>16</height>
     </rect>
    </property>
@@ -518,10 +518,28 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
     <rect>
      <x>20</x>
      <y>120</y>
-     <width>311</width>
+     <width>401</width>
      <height>192</height>
     </rect>
    </property>
+   <property name="editTriggers">
+    <set>QAbstractItemView::NoEditTriggers</set>
+   </property>
+   <property name="gridStyle">
+    <enum>Qt::NoPen</enum>
+   </property>
+   <property name="cornerButtonEnabled">
+    <bool>false</bool>
+   </property>
+   <attribute name="horizontalHeaderDefaultSectionSize">
+    <number>120</number>
+   </attribute>
+   <attribute name="horizontalHeaderMinimumSectionSize">
+    <number>30</number>
+   </attribute>
+   <attribute name="verticalHeaderVisible">
+    <bool>false</bool>
+   </attribute>
    <column>
     <property name="text">
      <string>Shader Type</string>
@@ -529,7 +547,17 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
    </column>
    <column>
     <property name="text">
-     <string>Resource path</string>
+     <string>Path</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string/>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string/>
     </property>
    </column>
   </widget>
@@ -549,7 +577,7 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
   <widget class="QPushButton" name="closeButton">
    <property name="geometry">
     <rect>
-     <x>310</x>
+     <x>340</x>
      <y>490</y>
      <width>75</width>
      <height>23</height>
@@ -562,7 +590,7 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
   <widget class="QPushButton" name="newButton">
    <property name="geometry">
     <rect>
-     <x>310</x>
+     <x>340</x>
      <y>20</y>
      <width>75</width>
      <height>23</height>
@@ -575,7 +603,7 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
   <widget class="QPushButton" name="applyButton">
    <property name="geometry">
     <rect>
-     <x>250</x>
+     <x>340</x>
      <y>330</y>
      <width>75</width>
      <height>23</height>

@@ -157,6 +157,9 @@
     <ClCompile Include="src\KoRE\IndexedBuffer.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\KoRE\Shader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\KoRE\Operations\SelectNodes.h">
@@ -325,6 +328,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\KoRE\IndexedBuffer.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\Shader.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
