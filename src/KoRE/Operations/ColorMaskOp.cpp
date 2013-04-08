@@ -18,45 +18,44 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "KoRE/Operations/EnableDisableOp.h"
+#include "KoRE/Operations/ColorMaskOp.h"
 #include "KoRE/GLerror.h"
 #include "KoRE/Log.h"
 #include "KoRE/RenderManager.h"
 
-kore::EnableDisableOp::EnableDisableOp()
-  : _enable(false),
-    _glType(ENABLE),
+kore::ColorMaskOp::ColorMaskOp()
+  : _colorMask(true, true, true, true),
     kore::Operation() {
-  _type = OP_ENABLEDISABLE;
+  _type = OP_COLORMASK;
 }
 
-kore::EnableDisableOp::EnableDisableOp(const GLuint glType,
-                                       const EEnableDisable enableDisable)
+kore::ColorMaskOp::ColorMaskOp(const glm::bvec4& colorMask)
  : kore::Operation() {
-  _type = OP_ENABLEDISABLE;
-  connect(glType, enableDisable);
+  _type = OP_COLORMASK;
+  connect(colorMask);
 }
 
-void kore::EnableDisableOp::connect(const GLuint glType,
-                                    const EEnableDisable enableDisable) {
-  _glType = glType;
-  _enable = enableDisable == ENABLE;
+void kore::ColorMaskOp::connect(const glm::bvec4& colorMask) {
+  _colorMask = colorMask;
 }
 
-void kore::EnableDisableOp::doExecute(void) const {
-  _renderManager->setGLcapability(_glType, _enable);
+void kore::ColorMaskOp::doExecute(void) const {
+  _renderManager->setColorMask(_colorMask.r,
+                               _colorMask.g,
+                               _colorMask.b,
+                               _colorMask.a);
 }
 
-void kore::EnableDisableOp::update(void) {
+void kore::ColorMaskOp::update(void) {
 }
 
-void kore::EnableDisableOp::reset(void) {
+void kore::ColorMaskOp::reset(void) {
 }
 
-bool kore::EnableDisableOp::dependsOn(const void* thing) const {
+bool kore::ColorMaskOp::dependsOn(const void* thing) const {
   return false;
 }
 
-bool kore::EnableDisableOp::isValid(void) const {
+bool kore::ColorMaskOp::isValid(void) const {
   return true;
 }

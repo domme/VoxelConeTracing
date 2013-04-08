@@ -42,7 +42,6 @@ kore::ShaderProgram::ShaderProgram()
 
 kore::ShaderProgram::~ShaderProgram(void) {
   destroyProgram();
-  destroyShaders();
 }
 
 void kore::ShaderProgram::destroyProgram() {

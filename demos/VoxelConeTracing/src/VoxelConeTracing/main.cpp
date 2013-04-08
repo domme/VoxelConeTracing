@@ -72,12 +72,16 @@ uint screen_height = 720;
 kore::SceneNode* cubeNodes[VOXEL_GRID_RESOLUTION_X][VOXEL_GRID_RESOLUTION_Y][VOXEL_GRID_RESOLUTION_Z];
 kore::SceneNode* cameraNode = NULL;
 kore::Camera* pCamera = NULL;
-kore::Texture* dummyTex3D = NULL;
+kore::Texture* voxelTexture = NULL;
 
-void initDummyTex3D() {
+enum ETex3DContent {
+  COLOR_PALETTE,
+  BLACK
+};
+
+void initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
   using namespace kore;
-  dummyTex3D = new kore::Texture;
-
+ 
   STextureProperties texProps;
   texProps.targetType = GL_TEXTURE_3D;
   texProps.width = VOXEL_GRID_RESOLUTION_X;
@@ -87,26 +91,37 @@ void initDummyTex3D() {
   texProps.internalFormat = GL_RGB8;
   texProps.pixelType = GL_UNSIGNED_BYTE;
 
-  // Create some data
+  // Create data
   glm::detail::tvec3<unsigned char> colorValues[VOXEL_GRID_RESOLUTION_X]
                                                [VOXEL_GRID_RESOLUTION_Y]
                                                [VOXEL_GRID_RESOLUTION_Z];
 
-  for (uint z = 0; z < VOXEL_GRID_RESOLUTION_Z; ++z) {
-    char valueZ = ((float) z / (float) VOXEL_GRID_RESOLUTION_Z) * 255;
-    for (uint y = 0; y < VOXEL_GRID_RESOLUTION_Y; ++y) {
-      char valueY = ((float) y / (float) VOXEL_GRID_RESOLUTION_Y) * 255;
-      for (uint x = 0; x < VOXEL_GRID_RESOLUTION_X; ++x) {
-        char valueX = ((float) x / (float) VOXEL_GRID_RESOLUTION_X) * 255;
+  if (texContent == COLOR_PALETTE) {
+    for (uint z = 0; z < VOXEL_GRID_RESOLUTION_Z; ++z) {
+      char valueZ = ((float) z / (float) VOXEL_GRID_RESOLUTION_Z) * 255;
+      for (uint y = 0; y < VOXEL_GRID_RESOLUTION_Y; ++y) {
+        char valueY = ((float) y / (float) VOXEL_GRID_RESOLUTION_Y) * 255;
+        for (uint x = 0; x < VOXEL_GRID_RESOLUTION_X; ++x) {
+          char valueX = ((float) x / (float) VOXEL_GRID_RESOLUTION_X) * 255;
 
-        colorValues[x][y][z] = glm::detail::tvec3<unsigned char>(valueX, valueY, valueZ);
+          colorValues[x][y][z] = glm::detail::tvec3<unsigned char>(valueX, valueY, valueZ);
+        }
+      }
+    }
+  } else if (texContent == BLACK) {
+    for (uint z = 0; z < VOXEL_GRID_RESOLUTION_Z; ++z) {
+      for (uint y = 0; y < VOXEL_GRID_RESOLUTION_Y; ++y) {
+        for (uint x = 0; x < VOXEL_GRID_RESOLUTION_X; ++x) {
+          colorValues[x][y][z] = glm::detail::tvec3<unsigned char>(0, 0, 0);
+        }
       }
     }
   }
-  
-  dummyTex3D->create(texProps, "Dummy3DTexture", colorValues);
-  ResourceManager::getInstance()->addTexture(dummyTex3D);
+
+  tex->create(texProps, "voxelTexture", colorValues);
+  ResourceManager::getInstance()->addTexture(tex);
 }
+
 
 void setupVoxelizeTest() {
   using namespace kore;
@@ -135,8 +150,57 @@ void setupVoxelizeTest() {
   voxelizeShader->init();
   resMgr->addShaderProgram(voxelizeShader);
 
+  voxelTexture = new Texture;
+  initTex3D(voxelTexture, BLACK);
+
+  //Load the scene and get all mesh nodes
+  resMgr->loadScene("./assets/meshes/triangle.dae");
+  std::vector<SceneNode*> meshNodes;
+  sceneMgr->getSceneNodesByComponent(COMPONENT_MESH, meshNodes);
+
   ShaderProgramPass* voxelizePass = new ShaderProgramPass;
   voxelizePass->setShaderProgram(voxelizeShader);
+
+  for (uint i = 0; i < meshNodes.size(); ++i) {
+    NodePass* nodePass = new NodePass(meshNodes[i]);
+    MeshComponent* meshComp =
+      static_cast<MeshComponent*>(meshNodes[i]->getComponent(COMPONENT_MESH));
+    
+    nodePass
+      ->addOperation(OperationFactory::create(OP_BINDATTRIBUTE, "v_position",
+                                              meshComp, "v_position",
+                                              voxelizeShader));
+
+    nodePass
+      ->addOperation(OperationFactory::create(OP_BINDATTRIBUTE, "v_normal",
+                                              meshComp, "v_normal",
+                                              voxelizeShader));
+
+    nodePass
+      ->addOperation(OperationFactory::create(OP_BINDATTRIBUTE, "v_uv0",
+                                              meshComp, "v_uvw", voxelizeShader));
+
+    nodePass
+      ->addOperation(OperationFactory::create(OP_BINDUNIFORM, "model Matrix",
+                                              meshComp, "modelWorld",
+                                              voxelizeShader));
+
+    
+    nodePass
+      ->addOperation(OperationFactory::create(OP_BINDUNIFORM, "normal Matrix",
+                                              meshComp, "modelWorldNormal",
+                                              voxelizeShader));
+
+    TexturesComponent* texComp = new TexturesComponent;
+    texComp->addTexture(voxelTexture);
+
+
+  }
+
+
+  
+
+
 
   // Init 3D texture sampling procedure 
   //////////////////////////////////////////////////////////////////////////
@@ -195,9 +259,8 @@ void setupVoxelizeTest() {
 
   cubeNode->addComponent(meshComp);
 
-  initDummyTex3D();
   TexturesComponent* texComp = new TexturesComponent;
-  texComp->addTexture(dummyTex3D);
+  texComp->addTexture(voxelTexture);
   cubeNode->addComponent(texComp);
 
   // Setup the correct texture sampler to use

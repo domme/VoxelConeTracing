@@ -83,6 +83,9 @@ namespace kore {
     void bindIBO(const GLuint ibo);
     void useShaderProgram(const GLuint shaderProgram);
 
+    void setGLcapability(GLuint cap, bool enable);
+    void setColorMask(bool red, bool green, bool blue, bool alpha);
+
     void bindTexture(const GLuint textureUnit,
                      const GLuint textureTarget,
                      const GLuint textureHandle);
@@ -145,6 +148,7 @@ namespace kore {
     GLuint _boundFrameBuffers[2];
     bool   _drawBuffers[KORE_MAX_FRAMEBUFFER_COUNT]
                        [GL_MAX_DRAW_BUFFERS];
+    glm::bvec4 _colorMask;
     std::map<GLuint, uint> _vTexTargetMap;
     //////////////////////////////////////////////////////////////////////////
   };

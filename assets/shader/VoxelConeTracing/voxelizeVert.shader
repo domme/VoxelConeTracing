@@ -27,7 +27,7 @@
 
 layout(location = 0) in vec3 v_position;
 layout(location = 1) in vec3 v_normal;
-layout(location = 2) in vec2 v_uv;
+layout(location = 2) in vec3 v_uvw;
 
 out VertexData {
   vec3 pos;
@@ -44,5 +44,5 @@ void main() {
 
   Out.pos = (modelWorld * vec4(v_position, 1.0)).xyz;
   Out.normal = modelWorldNormal * v_normal;
-  Out.uv = v_uv;
+  Out.uv = v_uvw.xy;
 }

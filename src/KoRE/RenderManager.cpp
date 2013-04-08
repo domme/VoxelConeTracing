@@ -31,7 +31,13 @@ kore::RenderManager* kore::RenderManager::getInstance(void) {
 }
 
 kore::RenderManager::RenderManager(void)
-  : _optimizer(NULL) {
+  : _optimizer(NULL),
+    _colorMask(true, true, true, true),
+    _ibo(0),
+    _vbo(0),
+    _vao(0),
+    _renderResolution(0,0),
+    _activeTextureUnitIndex(0) {
   _vTexTargetMap[GL_TEXTURE_1D] =                   TEXTURE_1D;
   _vTexTargetMap[GL_TEXTURE_2D] =                   TEXTURE_2D;
   _vTexTargetMap[GL_TEXTURE_3D] =                   TEXTURE_3D;
@@ -324,4 +330,32 @@ void kore::RenderManager::bindBufferBase(const GLenum indexedBufferTarget,
         "The requested indexedBufferTarget is not implemented or is invalid");
     break;
   }
+}
+
+void kore::RenderManager::setColorMask(bool red,
+                                       bool green,
+                                       bool blue,
+                                       bool alpha) {
+  if (_colorMask.r == red
+      && _colorMask.g == green
+      && _colorMask.b == blue
+      && _colorMask.a == alpha) {
+    return;
+  }
+
+  _colorMask = glm::bvec4(red, green, blue, alpha);
+  glColorMask(red, green, blue, alpha);
+}
+
+void kore::RenderManager::setGLcapability(GLuint cap, bool enable) {
+  if (glIsEnabled(cap) == enable) {
+    return;
+  }
+
+  if (enable) {
+    glEnable(cap);
+  } else {
+    glDisable(cap);
+  }
+
 }
