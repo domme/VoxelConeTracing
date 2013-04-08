@@ -37,6 +37,9 @@ kore::EnableDisableOp::EnableDisableOp(const GLuint glType,
   connect(glType, enableDisable);
 }
 
+kore::EnableDisableOp::~EnableDisableOp() {
+}
+
 void kore::EnableDisableOp::connect(const GLuint glType,
                                     const EEnableDisable enableDisable) {
   _glType = glType;

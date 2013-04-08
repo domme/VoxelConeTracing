@@ -33,9 +33,12 @@ in VertexData {
     vec2 uv;
 } In;
 
+out vec4 color;
+
 void main() {
   
   //(TODO) Determine depth range
   ivec3 voxelPos = ivec3(In.posVoxelGrid);
-  imageStore(voxelTex, voxelPos, vec4(1.0, 0.0, 0.0, 1.0));
+  //imageStore(voxelTex, voxelPos, vec4(1.0, 0.0, 0.0, 1.0));
+  imageStore(voxelTex, ivec3(5, 5, 5), vec4(1.0, 0.0, 0.0, 1.0));
 }

@@ -18,48 +18,45 @@
   along with KoRE.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "KoRE/Operations/ColorMaskOp.h"
+#include "KoRE/Operations/ViewportOp.h"
 #include "KoRE/GLerror.h"
 #include "KoRE/Log.h"
 #include "KoRE/RenderManager.h"
 
-kore::ColorMaskOp::ColorMaskOp()
-  : _colorMask(true, true, true, true),
+kore::ViewportOp::ViewportOp()
+  : _viewport(0, 0, 0, 0),
     kore::Operation() {
-  _type = OP_COLORMASK;
+  _type = OP_VIEWPORT;
 }
 
-kore::ColorMaskOp::ColorMaskOp(const glm::bvec4& colorMask)
+kore::ViewportOp::ViewportOp(const glm::ivec4& viewport)
  : kore::Operation() {
-  _type = OP_COLORMASK;
-  connect(colorMask);
+  _type = OP_VIEWPORT;
+  connect(viewport);
 }
 
-kore::ColorMaskOp::~ColorMaskOp() {
+kore::ViewportOp::~ViewportOp() {
 }
 
 
-void kore::ColorMaskOp::connect(const glm::bvec4& colorMask) {
-  _colorMask = colorMask;
+void kore::ViewportOp::connect(const glm::ivec4& viewport) {
+  _viewport = viewport;
 }
 
-void kore::ColorMaskOp::doExecute(void) const {
-  _renderManager->setColorMask(_colorMask.r,
-                               _colorMask.g,
-                               _colorMask.b,
-                               _colorMask.a);
+void kore::ViewportOp::doExecute(void) const {
+  _renderManager->setViewport(_viewport);
 }
 
-void kore::ColorMaskOp::update(void) {
+void kore::ViewportOp::update(void) {
 }
 
-void kore::ColorMaskOp::reset(void) {
+void kore::ViewportOp::reset(void) {
 }
 
-bool kore::ColorMaskOp::dependsOn(const void* thing) const {
+bool kore::ViewportOp::dependsOn(const void* thing) const {
   return false;
 }
 
-bool kore::ColorMaskOp::isValid(void) const {
+bool kore::ViewportOp::isValid(void) const {
   return true;
 }

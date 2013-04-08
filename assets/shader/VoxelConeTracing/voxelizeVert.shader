@@ -25,9 +25,9 @@
 
 #version 420
 
-layout(location = 0) in vec3 v_position;
-layout(location = 1) in vec3 v_normal;
-layout(location = 2) in vec3 v_uvw;
+in vec3 v_position;
+in vec3 v_normal;
+in vec3 v_uvw;
 
 out VertexData {
   vec3 pos;
@@ -41,7 +41,7 @@ uniform mat3 modelWorldNormal;
 void main() {
   // We don't need to write gl_Position here because we'll generate positions
   // in the geometry shader.
-
+  
   Out.pos = (modelWorld * vec4(v_position, 1.0)).xyz;
   Out.normal = modelWorldNormal * v_normal;
   Out.uv = v_uvw.xy;

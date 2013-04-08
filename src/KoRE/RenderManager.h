@@ -70,7 +70,8 @@ namespace kore {
   public:
     static RenderManager *getInstance(void);
     const glm::ivec2& getRenderResolution() const;
-    void setRenderResolution(const glm::ivec2& newResolution);
+    const glm::ivec4& getViewport() const;
+    void setViewport(const glm::ivec4& newViewport);
     void setOptimizer(const Optimizer* optimizer);
     void renderFrame(void);
     
@@ -128,7 +129,7 @@ namespace kore {
     void resolutionChanged();
 
 
-    glm::ivec2 _renderResolution;
+    glm::ivec4 _viewport;
     const Optimizer* _optimizer;
 
     typedef std::list<const Operation*> OperationList;

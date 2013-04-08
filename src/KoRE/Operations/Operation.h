@@ -38,7 +38,8 @@ namespace kore {
     OP_USEATOMICCOUNTER,
     OP_RESETATOMICCOUNTER,
     OP_ENABLEDISABLE,
-    OP_COLORMASK
+    OP_COLORMASK,
+    OP_VIEWPORT
   };
 
   class SceneNodeComponent;

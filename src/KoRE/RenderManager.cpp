@@ -36,7 +36,7 @@ kore::RenderManager::RenderManager(void)
     _ibo(0),
     _vbo(0),
     _vao(0),
-    _renderResolution(0,0),
+    _viewport(0,0,0,0),
     _activeTextureUnitIndex(0) {
 
   _vTexTargetMap[GL_TEXTURE_1D] =                   TEXTURE_1D;
@@ -84,13 +84,21 @@ kore::RenderManager::~RenderManager(void) {
 }
 
 const glm::ivec2& kore::RenderManager::getRenderResolution() const {
-    return _renderResolution;
+    return glm::ivec2(_viewport.z,_viewport.w);
 }
 
-void kore::RenderManager::
-    setRenderResolution(const glm::ivec2& newResolution) {
-    _renderResolution = newResolution;
-    resolutionChanged();
+const glm::ivec4& kore::RenderManager::getViewport() const {
+    return _viewport;
+}
+
+void kore::RenderManager::setViewport(const glm::ivec4& newViewport) {
+   if(newViewport == _viewport) {
+     return; 
+   } else{
+     _viewport = newViewport;
+     glViewport(_viewport.x,_viewport.y,_viewport.z,_viewport.w);
+     resolutionChanged();
+   }
 }
 
 void kore::RenderManager::renderFrame(void) {
@@ -360,3 +368,5 @@ void kore::RenderManager::setGLcapability(GLuint cap, bool enable) {
   }
 
 }
+
+

@@ -166,6 +166,9 @@
     <ClCompile Include="src\KoRE\Operations\ColorMaskOp.cpp">
       <Filter>src\Operations</Filter>
     </ClCompile>
+    <ClCompile Include="src\KoRE\Operations\ViewportOp.cpp">
+      <Filter>src\Operations</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\KoRE\Operations\SelectNodes.h">
@@ -343,6 +346,9 @@
       <Filter>src\Operations</Filter>
     </ClInclude>
     <ClInclude Include="src\KoRE\Operations\ColorMaskOp.h">
+      <Filter>src\Operations</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KoRE\Operations\ViewportOp.h">
       <Filter>src\Operations</Filter>
     </ClInclude>
   </ItemGroup>

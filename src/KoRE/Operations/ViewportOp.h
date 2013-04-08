@@ -20,33 +20,28 @@
 #include "KoRE/Common.h"
 #include "KoRE/Operations/Operation.h"
 
-#ifndef KORE_SRC_KORE_OPERATIONS_ENABLEDISABLEOP_H_
-#define KORE_SRC_KORE_OPERATIONS_ENABLEDISABLEOP_H_
+#ifndef KORE_SRC_KORE_OPERATIONS_VIEWPORTOP_H_
+#define KORE_SRC_KORE_OPERATIONS_VIEWPORTOP_H_
 
 namespace kore {
-  class EnableDisableOp : public Operation {
-    public:
-      enum EEnableDisable {
-        ENABLE = 1,
-        DISABLE = 0
-      };
 
-      EnableDisableOp();
-      EnableDisableOp(const GLuint glType, const EEnableDisable enableDisable);
-      virtual ~EnableDisableOp();
+  class ViewportOp : public Operation {
+    public:
+      ViewportOp();
+      ViewportOp(const glm::ivec4& viewport);
+      virtual ~ViewportOp();
 
       virtual void update(void);
       virtual void reset(void);
       virtual bool dependsOn(const void* thing) const;
       virtual bool isValid(void) const;
 
-      void connect(const GLuint glType, const EEnableDisable enableDisable);
+      void connect(const glm::ivec4& viewport);
 
   private:
       virtual void doExecute(void) const;
 
-      bool _enable;
-      GLuint _glType;
+      glm::ivec4 _viewport;
   };
 }
 

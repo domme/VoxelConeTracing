@@ -232,6 +232,7 @@
     <ClCompile Include="src\KoRE\Operations\UseAtomicCounterBuffer.cpp" />
     <ClCompile Include="src\KoRE\Operations\UseFBO.cpp" />
     <ClCompile Include="src\KoRE\Operations\UseShaderProgram.cpp" />
+    <ClCompile Include="src\KoRE\Operations\ViewportOp.cpp" />
     <ClCompile Include="src\KoRE\Optimization\Optimizer.cpp" />
     <ClCompile Include="src\KoRE\Optimization\SimpleOptimizer.cpp" />
     <ClCompile Include="src\KoRE\Passes\FrameBufferStage.cpp" />
@@ -285,6 +286,7 @@
     <ClInclude Include="src\KoRE\Operations\UseAtomicCounterBuffer.h" />
     <ClInclude Include="src\KoRE\Operations\UseFBO.h" />
     <ClInclude Include="src\KoRE\Operations\UseShaderProgram.h" />
+    <ClInclude Include="src\KoRE\Operations\ViewportOp.h" />
     <ClInclude Include="src\KoRE\Optimization\Optimizer.h" />
     <ClInclude Include="src\KoRE\Optimization\SimpleOptimizer.h" />
     <ClInclude Include="src\KoRE\Passes\FrameBufferStage.h" />
