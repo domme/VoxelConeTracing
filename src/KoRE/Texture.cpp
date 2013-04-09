@@ -90,8 +90,11 @@ bool kore::Texture::create(const STextureProperties& properties,
                  pixelData);
   }
 
+  glBindTexture(texTarget, 0);
+
   bool bSuccess = GLerror::gl_ErrorCheckFinish("Texture::create()");
   if (!bSuccess) {
+    Log::getInstance()->write("[ERROR]: Texture could not be created!");
     destroy();
     return false;
   }

@@ -30,6 +30,7 @@
 #include <ctime>
 #include <vector>
 
+
 #include "KoRE/GLerror.h"
 #include "KoRE/ShaderProgram.h"
 #include "KoRE/Components/MeshComponent.h"
@@ -94,6 +95,7 @@ void initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
   texProps.internalFormat = GL_RGBA8;
   texProps.pixelType = GL_UNSIGNED_BYTE;
 
+
   // Create data
   glm::detail::tvec4<unsigned char> colorValues[VOXEL_GRID_RESOLUTION_X]
                                                [VOXEL_GRID_RESOLUTION_Y]
@@ -107,7 +109,7 @@ void initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
         for (uint x = 0; x < VOXEL_GRID_RESOLUTION_X; ++x) {
           char valueX = ((float) x / (float) VOXEL_GRID_RESOLUTION_X) * 255;
 
-          colorValues[x][y][z] = glm::detail::tvec4<unsigned char>(valueX, valueY, valueZ, 0);
+          colorValues[x][y][z] = glm::detail::tvec4<unsigned char>(valueX, valueY, valueZ, 255);
         }
       }
     }
@@ -115,13 +117,26 @@ void initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
     for (uint z = 0; z < VOXEL_GRID_RESOLUTION_Z; ++z) {
       for (uint y = 0; y < VOXEL_GRID_RESOLUTION_Y; ++y) {
         for (uint x = 0; x < VOXEL_GRID_RESOLUTION_X; ++x) {
-          colorValues[x][y][z] = glm::detail::tvec4<unsigned char>(0, 0, 0, 0);
+          colorValues[x][y][z] = glm::detail::tvec4<unsigned char>(0, 0, 0, 255);
         }
       }
     }
   }
 
   tex->create(texProps, "voxelTexture", colorValues);
+
+  RenderManager::getInstance()->activeTexture(0);
+  RenderManager::getInstance()->bindTexture(GL_TEXTURE_3D, tex->getHandle());
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, 0);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, 0);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_R, GL_RED);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_G, GL_GREEN);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_B, GL_BLUE);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_A, GL_ALPHA);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  RenderManager::getInstance()->bindTexture(GL_TEXTURE_3D, 0);
+
   ResourceManager::getInstance()->addTexture(tex);
 }
 
@@ -306,8 +321,8 @@ void setupVoxelizeTest() {
   // Setup rendering operations
   NodePass* nodePass = new NodePass(cubeNode);
 
-  nodePass->addOperation(new MemoryBarrierOp(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT));
-
+  nodePass->addOperation(new MemoryBarrierOp(GL_ALL_BARRIER_BITS));
+  
   nodePass->addOperation(new ViewportOp(glm::ivec4(0, 0,
                                         screen_width,
                                         screen_height)));
@@ -344,8 +359,8 @@ void setupVoxelizeTest() {
                                           pCamera, "proj",
                                           cubeSample3DTexShader));
 
-  nodePass->addOperation(new MemoryBarrierOp(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT));
   nodePass->addOperation(new RenderMesh(meshComp, cubeSample3DTexShader));
+  nodePass->addOperation(new MemoryBarrierOp(GL_ALL_BARRIER_BITS));
 
   sample3DtexPass->addNodePass(nodePass);
   

@@ -13,10 +13,12 @@ out vec4 color;
 layout(rgba8) uniform coherent image3D voxelTex;
 
 void main() {
-  ivec3 samplePos = ivec3(In.posWS.x, In.posWS.y, In.posWS.z);
+  // Apply a very small offset here so we fall into the correct voxel coordinates.
+  ivec3 samplePos = ivec3(floor(In.posWS) - vec3(0.0001, 0.0001, 0.0001) );
+  
   color = imageLoad(voxelTex, samplePos);
 
-  if (color.r < 0.01) {
+  /*if (color.r < 0.01) {
     discard;
-  }
+  } */
 }

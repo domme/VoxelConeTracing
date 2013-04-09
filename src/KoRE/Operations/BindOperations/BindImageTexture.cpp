@@ -53,25 +53,33 @@ void kore::BindImageTexture::
 }
 
 void kore::BindImageTexture::doExecute(void) const {
+  GLerror::gl_ErrorCheckStart();
+
   _renderManager->
     useShaderProgram(_shaderUniform->shader->getProgramLocation());
-  glUniform1i(_shaderUniform->location,
-                     static_cast<GLint>(_shaderUniform->imgUnit));
-  STextureInfo* pTexInfo = static_cast<STextureInfo*>(_componentUniform->data);
+  glUniform1i(_shaderUniform->location, 0);
+  STextureInfo* pTexInfo = static_cast<STextureInfo*>(_componentUniform->data); 
 
   GLuint access =
     _shaderUniform->shader->getImageAccessParam(_shaderUniform->imgUnit);
 
-  //GLerror::gl_ErrorCheckStart();
   glBindImageTexture(_shaderUniform->imgUnit,
                      pTexInfo->texLocation,
                      0,
                      GL_FALSE,
                      0,
                      access,
-                     internalFormatToImageFormat(pTexInfo->internalFormat));
+                     pTexInfo->internalFormat);
 
- // GLerror::gl_ErrorCheckFinish("BindImageTexture::execute");
+
+  /*glBindImageTexture(0,
+                     pTexInfo->texLocation,
+                     0,
+                     GL_FALSE,
+                     0,
+                     access,
+                     internalFormatToImageFormat(pTexInfo->internalFormat)); */
+  GLerror::gl_ErrorCheckFinish("BindImageTexture::execute");
 }
 
 void kore::BindImageTexture::update(void) {
