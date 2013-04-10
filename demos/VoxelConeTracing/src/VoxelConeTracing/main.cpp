@@ -96,6 +96,7 @@ void initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
   texProps.pixelType = GL_UNSIGNED_BYTE;
 
 
+
   // Create data
   glm::detail::tvec4<unsigned char> colorValues[VOXEL_GRID_RESOLUTION_X]
                                                [VOXEL_GRID_RESOLUTION_Y]
@@ -183,7 +184,7 @@ void setupVoxelizeTest() {
   sceneMgr->getSceneNodesByComponent(COMPONENT_MESH, meshNodes);
 
 
-  /*
+  ///*
   ShaderProgramPass* voxelizePass = new ShaderProgramPass;
   voxelizePass->setShaderProgram(voxelizeShader);
 
@@ -245,7 +246,7 @@ void setupVoxelizeTest() {
   }
   
    backBufferStage->addProgramPass(voxelizePass);
-   */
+   //*/
 
 
   // Init 3D texture sampling procedure 
