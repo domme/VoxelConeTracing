@@ -175,7 +175,7 @@ void setupVoxelizeTest() {
   resMgr->addShaderProgram(voxelizeShader);
 
   voxelTexture = new Texture;
-  initTex3D(voxelTexture, BLACK);
+  initTex3D(voxelTexture, COLOR_PALETTE);
 
   //Load the scene and get all mesh nodes
   resMgr->loadScene("./assets/meshes/triangle.dae");
@@ -183,7 +183,7 @@ void setupVoxelizeTest() {
   sceneMgr->getSceneNodesByComponent(COMPONENT_MESH, meshNodes);
 
 
-  ///*
+  /*
   ShaderProgramPass* voxelizePass = new ShaderProgramPass;
   voxelizePass->setShaderProgram(voxelizeShader);
 
@@ -245,7 +245,7 @@ void setupVoxelizeTest() {
   }
   
    backBufferStage->addProgramPass(voxelizePass);
-   //*/
+   */
 
 
   // Init 3D texture sampling procedure 
@@ -358,18 +358,18 @@ void setupImageLoadStoreTest() {
 
   kore::ShaderProgram* imgLoadShader = new kore::ShaderProgram;
   imgLoadShader->
-    loadShader("./assets/shader/VoxelConeTracing/fullscreenQuad_simple.vert",
+    loadShader("./assets/shader/VoxelConeTracing/fullscreenQuad_simpleVert.shader",
                 GL_VERTEX_SHADER);
-  imgLoadShader->loadShader("./assets/shader/VoxelConeTracing/imageLoad.frag",
+  imgLoadShader->loadShader("./assets/shader/VoxelConeTracing/imageLoadFrag.shader",
                             GL_FRAGMENT_SHADER);
   imgLoadShader->init();
 
   ShaderProgram* imgStoreShader = new kore::ShaderProgram;
   imgStoreShader->
-    loadShader("./assets/shader/VoxelConeTracing/fullscreenQuad_simple.vert",
+    loadShader("./assets/shader/VoxelConeTracing/fullscreenQuad_simpleVert.shader",
                GL_VERTEX_SHADER);
   imgStoreShader->
-    loadShader("./assets/shader/VoxelConeTracing/imageStore.frag",
+    loadShader("./assets/shader/VoxelConeTracing/imageStoreFrag.shader",
                GL_FRAGMENT_SHADER);
   imgStoreShader->init();
 
@@ -533,7 +533,7 @@ int main(void) {
             reinterpret_cast<const char*>(
             glewGetString(GLEW_VERSION)));
 
-//  setupImageLoadStoreTest();
+  //setupImageLoadStoreTest();
   // setupAtomicCounterTest();
   setupVoxelizeTest();
 

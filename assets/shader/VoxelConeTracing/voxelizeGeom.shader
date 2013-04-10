@@ -40,16 +40,37 @@ out VertexData {
     vec2 uv;
 } Out;
 
-layout(rgba8) uniform coherent image3D voxelTex;
-
 // Constants for the projection planes to key into the worldAxes array
 const uint YZ = 0;
 const uint XZ = 1;
 const uint XY = 2;
 
+// (TODO) replace with an uniform
+// This is the lower left corner of the voxel grid
+const vec3 voxelGridOrigin = vec3(0.0, 0.0, 0.0);
+
+// (TODO) replace with an uniform
+const float voxelGridLength = 12;
+
 const vec3 worldAxes[3] = vec3[3]( vec3(1.0, 0.0, 0.0),
                                    vec3(0.0, 1.0, 0.0),
                                    vec3(0.0, 0.0, 1.0) );
+
+
+
+const mat4 camProjMatrix = mat4(2.0 / voxelGridLength, 0, 0, 0,
+                                0, 2.0 / voxelGridLength, 0, 0,
+                                0, 0, - 2.0 / voxelGridLength, 0,
+                                0, 0, 0, 1);
+
+const vec3 camPositions[3] = vec3[3] ( voxelGridOrigin + vec3(voxelGridLength, voxelGridLength / 2.0, voxelGridLength / 2.0),
+                                       voxelGridOrigin + vec3(voxelGridLength / 2.0, voxelGridLength, voxelGridLength / 2.0),
+                                       voxelGridOrigin + vec3(voxelGridLength / 2.0, voxelGridLength / 2.0, voxelGridLength) );
+                                      
+
+const mat4 camViewMatrices[3] = mat4[3](
+  mat4(
+
 
 uint calcProjAxis() {
   // Determine world-axis along wich the projected triangle-area is maximized
@@ -70,20 +91,7 @@ uint calcProjAxis() {
 
 void main()
 {
-  for (int z = 0; z < 12; ++z) {
-    for(int y = 0; y < 12; ++y) {
-      for( int x = 0; x < 12; ++x) {
-        imageStore(voxelTex, ivec3(x, y, z), vec4(1.0, 0.0, 0.0, 1.0));
-        memoryBarrier();
-      }
-    }
-  }
 
-  // (TODO) replace with an uniform
-  const vec3 voxelGridOrigin = vec3(0.0, 0.0, 0.0);
-
-  // (TODO) replace with an uniform
-  const float maxVoxelGridSize = 12;
 
   uint projAxisIdx = calcProjAxis();
   

@@ -69,6 +69,7 @@ void kore::BindImageTexture::doExecute(void) const {
                      GL_FALSE,
                      0,
                      access,
+                     //internalFormatToImageFormat(pTexInfo->internalFormat));
                      pTexInfo->internalFormat);
 
 
