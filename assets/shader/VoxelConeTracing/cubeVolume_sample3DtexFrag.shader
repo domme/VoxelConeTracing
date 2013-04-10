@@ -18,7 +18,7 @@ void main() {
   
   color = imageLoad(voxelTex, samplePos);
 
- /* if (color.r < 0.01) {
+  if (color.r < 0.01) {
     discard;
-  } */
+  }
 }

@@ -40,6 +40,8 @@ out VertexData {
     vec2 uv;
 } Out;
 
+layout(rgba8) uniform coherent image3D voxelTex;
+
 // Constants for the projection planes to key into the worldAxes array
 const uint YZ = 0;
 const uint XZ = 1;
@@ -68,6 +70,15 @@ uint calcProjAxis() {
 
 void main()
 {
+  for (int z = 0; z < 12; ++z) {
+    for(int y = 0; y < 12; ++y) {
+      for( int x = 0; x < 12; ++x) {
+        imageStore(voxelTex, ivec3(x, y, z), vec4(1.0, 0.0, 0.0, 1.0));
+        memoryBarrier();
+      }
+    }
+  }
+
   // (TODO) replace with an uniform
   const vec3 voxelGridOrigin = vec3(0.0, 0.0, 0.0);
 

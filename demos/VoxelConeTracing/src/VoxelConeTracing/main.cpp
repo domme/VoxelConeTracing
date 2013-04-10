@@ -240,10 +240,8 @@ void setupVoxelizeTest() {
                                          voxelTexture->getName(),
                                          voxelTexComp, "voxelTex",
                                          voxelizeShader));
-
    nodePass
      ->addOperation(new RenderMesh(meshComp, voxelizeShader));
-
   }
   
    backBufferStage->addProgramPass(voxelizePass);
