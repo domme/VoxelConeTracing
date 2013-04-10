@@ -53,9 +53,9 @@
 #include "KoRE/Events.h"
 #include "Kore/Operations/OperationFactory.h"
 
-kore::SceneNode* rotationNode;
-kore::SceneNode* lightNode;
-kore::Camera* pCamera;
+kore::SceneNode* rotationNode = NULL;
+kore::SceneNode* lightNode = NULL;
+kore::Camera* pCamera = NULL;
 
 /*void CALLBACK DebugLog(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, GLvoid* userParams) {
   //Log::getInstance()->write("[ERROR] Type: %s, Source: %s, Severity: %s\n", 
@@ -309,7 +309,8 @@ int main(void) {
   simpleShader->setName("normal mapping Shader");
   // load resources
   kore::ResourceManager::getInstance()
-    ->loadScene("./assets/meshes/TestEnv.dae");
+    //->loadScene("./assets/meshes/TestEnv.dae");
+    ->loadScene("./assets/meshes/triangle.dae");
 
   // texture loading
   kore::Texture* testTexture =
@@ -365,10 +366,10 @@ int main(void) {
 
   kore::RenderManager::getInstance()->addFramebufferStage(backBufferStage);
 
-  std::vector<kore::SceneNode*> vBigCubeNodes;
+ /* std::vector<kore::SceneNode*> vBigCubeNodes;
   kore::SceneManager::getInstance()
     ->getSceneNodesByName("Cube", vBigCubeNodes);
-  rotationNode = vBigCubeNodes[0];
+  rotationNode = vBigCubeNodes[0]; */
 
   glClearColor(1.0f,1.0f,1.0f,1.0f);
 
@@ -432,7 +433,9 @@ int main(void) {
     oldMouseX = mouseX;
     oldMouseY = mouseY;
 
-    rotationNode->rotate(90.0f * static_cast<float>(time), glm::vec3(0.0f, 0.0f, 1.0f));
+    if (rotationNode) {
+      rotationNode->rotate(90.0f * static_cast<float>(time), glm::vec3(0.0f, 0.0f, 1.0f));
+    }
     //lightNode->rotate(-40.0f * static_cast<float>(time), glm::vec3(0.0f, 0.0f, 1.0f), kore::SPACE_WORLD);
 
     kore::GLerror::gl_ErrorCheckStart();

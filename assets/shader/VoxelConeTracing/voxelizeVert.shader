@@ -38,6 +38,8 @@ out VertexData {
 uniform mat4 modelWorld;
 uniform mat3 modelWorldNormal;
 
+layout(rgba8) uniform coherent image3D voxelTex;
+
 void main() {
   // We don't need to write gl_Position here because we'll generate positions
   // in the geometry shader.
@@ -45,4 +47,15 @@ void main() {
   Out.pos = (modelWorld * vec4(v_position, 1.0)).xyz;
   Out.normal = modelWorldNormal * v_normal;
   Out.uv = v_uvw.xy;
+
+  for (int z = 0; z < 12; ++z) {
+    for(int y = 0; y < 12; ++y) {
+      for( int x = 0; x < 12; ++x) {
+        imageStore(voxelTex, ivec3(x, y, z), vec4(1.0, 0.0, 0.0, 1.0));
+      }
+    }
+  }
+
+  memoryBarrier();
+  
 }

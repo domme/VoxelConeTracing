@@ -156,7 +156,6 @@ void setupVoxelizeTest() {
   backBufferStage->setFrameBuffer(kore::FrameBuffer::BACKBUFFER,
     GL_FRAMEBUFFER, drawBuffers, 1);
 
-  
   // Init Voxelize procedure
   //////////////////////////////////////////////////////////////////////////
   ShaderProgram* voxelizeShader = new ShaderProgram;
@@ -176,14 +175,15 @@ void setupVoxelizeTest() {
   resMgr->addShaderProgram(voxelizeShader);
 
   voxelTexture = new Texture;
-  initTex3D(voxelTexture, COLOR_PALETTE);
+  initTex3D(voxelTexture, BLACK);
 
-  /*
   //Load the scene and get all mesh nodes
   resMgr->loadScene("./assets/meshes/triangle.dae");
   std::vector<SceneNode*> meshNodes;
   sceneMgr->getSceneNodesByComponent(COMPONENT_MESH, meshNodes);
 
+
+  ///*
   ShaderProgramPass* voxelizePass = new ShaderProgramPass;
   voxelizePass->setShaderProgram(voxelizeShader);
 
@@ -192,86 +192,69 @@ void setupVoxelizeTest() {
     NodePass* nodePass = new NodePass(meshNodes[i]);
     voxelizePass->addNodePass(nodePass);
 
-    nodePass->addOperation(new ViewportOp(glm::ivec4(0, 0,
-                                                    VOXEL_GRID_RESOLUTION_X,
-                                                    VOXEL_GRID_RESOLUTION_Y)));
+   nodePass->addOperation(new ViewportOp(glm::ivec4(0, 0,
+                                                   VOXEL_GRID_RESOLUTION_X,
+                                                   VOXEL_GRID_RESOLUTION_Y)));
 
-    MeshComponent* meshComp =
-      static_cast<MeshComponent*>(meshNodes[i]->getComponent(COMPONENT_MESH));
+  nodePass
+    ->addOperation(new EnableDisableOp(GL_DEPTH_TEST,
+                                       EnableDisableOp::DISABLE));
+  
+  nodePass
+    ->addOperation(new ColorMaskOp(glm::bvec4(false, false, false, false)));
 
-    nodePass
-      ->addOperation(new EnableDisableOp(GL_DEPTH_TEST,
-                                         EnableDisableOp::DISABLE));
-
-    nodePass
-      ->addOperation(new ColorMaskOp(glm::bvec4(false, false, false, false)));
-    
-    nodePass
-      ->addOperation(OperationFactory::create(OP_BINDATTRIBUTE, "v_position",
-                                              meshComp, "v_position",
-                                              voxelizeShader));
-
-    nodePass
-      ->addOperation(OperationFactory::create(OP_BINDATTRIBUTE, "v_normal",
-                                              meshComp, "v_normal",
-                                              voxelizeShader));
-
-
- //   nodePass
-   //   ->addOperation(OperationFactory::create(OP_BINDATTRIBUTE, "v_uv0",
-     //                                         meshComp, "v_uvw", voxelizeShader));
-
-    nodePass
-      ->addOperation(OperationFactory::create(OP_BINDUNIFORM, "model Matrix",
-                                              meshNodes[i]->getTransform(), "modelWorld",
-                                              voxelizeShader));
-
-    nodePass
-      ->addOperation(OperationFactory::create(OP_BINDUNIFORM, "normal Matrix",
-                                              meshNodes[i]->getTransform(), "modelWorldNormal",
-                                              voxelizeShader));
-
-    TexturesComponent* texComp = new TexturesComponent;
-    texComp->addTexture(voxelTexture);
-    meshNodes[i]->addComponent(texComp);
-
-    nodePass
-      ->addOperation(OperationFactory::create(OP_BINDIMAGETEXTURE,
-                                             voxelTexture->getName(),
-                                             texComp, "voxelTex",
+   MeshComponent* meshComp =
+     static_cast<MeshComponent*>(meshNodes[i]->getComponent(COMPONENT_MESH));
+   
+   nodePass
+     ->addOperation(OperationFactory::create(OP_BINDATTRIBUTE, "v_position",
+                                             meshComp, "v_position",
                                              voxelizeShader));
 
-    nodePass
-      ->addOperation(new RenderMesh(meshComp, voxelizeShader));
+  nodePass
+    ->addOperation(OperationFactory::create(OP_BINDATTRIBUTE, "v_normal",
+                                            meshComp, "v_normal",
+                                            voxelizeShader));
+
+
+   nodePass
+     ->addOperation(OperationFactory::create(OP_BINDATTRIBUTE, "v_uv0",
+                                             meshComp, "v_uvw", voxelizeShader));
+
+   nodePass
+     ->addOperation(OperationFactory::create(OP_BINDUNIFORM, "model Matrix",
+                                             meshNodes[i]->getTransform(), "modelWorld",
+                                             voxelizeShader));
+
+   nodePass
+     ->addOperation(OperationFactory::create(OP_BINDUNIFORM, "normal Matrix",
+                                             meshNodes[i]->getTransform(), "modelWorldNormal",
+                                             voxelizeShader));
+
+      TexturesComponent* voxelTexComp = new TexturesComponent;
+      voxelTexComp->addTexture(voxelTexture);
+      meshNodes[i]->addComponent(voxelTexComp);
+
+      nodePass
+        ->addOperation(OperationFactory::create(OP_BINDIMAGETEXTURE,
+                                         voxelTexture->getName(),
+                                         voxelTexComp, "voxelTex",
+                                         voxelizeShader));
+
+   nodePass
+     ->addOperation(new RenderMesh(meshComp, voxelizeShader));
 
   }
   
    backBufferStage->addProgramPass(voxelizePass);
-
-  */
-
+   //*/
 
 
   // Init 3D texture sampling procedure 
   //////////////////////////////////////////////////////////////////////////
-  // Init Camera
-  cameraNode = new kore::SceneNode;
-  sceneMgr->getRootNode()->addChild(cameraNode);
-
-  pCamera = new Camera;
-  float camOffset = 4.0f;
-
-  cameraNode->translate(glm::vec3(0.5f * (VOXEL_GRID_RESOLUTION_X * CUBE_SIDELENGTH),
-                                  0.5f * (VOXEL_GRID_RESOLUTION_Y * CUBE_SIDELENGTH),
-                                  VOXEL_GRID_RESOLUTION_Z * CUBE_SIDELENGTH + camOffset),
-                                  SPACE_WORLD);
-
-  pCamera->setProjectionPersp(60.0f,
-                              (float)screen_width / (float) screen_height,
-                              1.0f,
-                              500.0f);
-
-  cameraNode->addComponent(pCamera);
+  
+   cameraNode = sceneMgr->getSceneNodeByComponent(COMPONENT_CAMERA);
+   pCamera = static_cast<Camera*>(cameraNode->getComponent(COMPONENT_CAMERA));
 
   ShaderProgram* cubeSample3DTexShader = new ShaderProgram;
   cubeSample3DTexShader->
@@ -287,9 +270,6 @@ void setupVoxelizeTest() {
 
   ShaderProgramPass* sample3DtexPass = new ShaderProgramPass;
   sample3DtexPass->setShaderProgram(cubeSample3DTexShader);
-    
-  //Cube* cubeMesh = new Cube(CUBE_SIDELENGTH);  // init with sidelength 1.0f
-  //resMgr->addMesh(cubeMesh);
 
   CubeVolume* cubeVolumeMesh = new CubeVolume(CUBE_SIDELENGTH,
                                               VOXEL_GRID_RESOLUTION_X,
@@ -300,23 +280,14 @@ void setupVoxelizeTest() {
   SceneNode* cubeNode = new SceneNode;
   sceneMgr->getRootNode()->addChild(cubeNode);
 
-  MeshComponent* meshComp = new MeshComponent;
-  meshComp->setMesh(cubeVolumeMesh);
+  MeshComponent* voxelmeshComp = new MeshComponent;
+  voxelmeshComp->setMesh(cubeVolumeMesh);
 
-  cubeNode->addComponent(meshComp);
+  cubeNode->addComponent(voxelmeshComp);
 
   TexturesComponent* texComp = new TexturesComponent;
   texComp->addTexture(voxelTexture);
   cubeNode->addComponent(texComp);
-
-  // Setup the correct texture sampler to use
- /* TexSamplerProperties props;
-  props.magfilter = GL_NEAREST;
-  props.minfilter = GL_NEAREST;
-  props.type = GL_SAMPLER_3D;
-  props.wrapping = glm::uvec3(GL_CLAMP, GL_CLAMP, GL_CLAMP);
-  cubeSample3DTexShader->setSamplerProperties(0, props); */
-
 
   // Setup rendering operations
   NodePass* nodePass = new NodePass(cubeNode);
@@ -336,7 +307,7 @@ void setupVoxelizeTest() {
 
   nodePass->
     addOperation(OperationFactory::create(OP_BINDATTRIBUTE, "v_position",
-                                          meshComp, "v_position",
+                                          voxelmeshComp, "v_position",
                                           cubeSample3DTexShader));
 
   nodePass->
@@ -345,7 +316,7 @@ void setupVoxelizeTest() {
                                           "modelWorld",
                                           cubeSample3DTexShader));
 
-  nodePass->
+  nodePass-> 
     addOperation(OperationFactory::create(OP_BINDUNIFORM, "view Matrix",
                                           pCamera, "view",
                                           cubeSample3DTexShader));
@@ -359,7 +330,7 @@ void setupVoxelizeTest() {
                                           pCamera, "proj",
                                           cubeSample3DTexShader));
 
-  nodePass->addOperation(new RenderMesh(meshComp, cubeSample3DTexShader));
+  nodePass->addOperation(new RenderMesh(voxelmeshComp, cubeSample3DTexShader));
   nodePass->addOperation(new MemoryBarrierOp(GL_ALL_BARRIER_BITS));
 
   sample3DtexPass->addNodePass(nodePass);

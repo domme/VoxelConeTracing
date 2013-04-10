@@ -66,6 +66,7 @@ void kore::RenderMesh::doExecute(void) const {
     // shader is bound, but it shouldn't be neccesary.
     // _renderManager->useShaderProgram(_shader->getProgramLocation());
 
+    _renderManager->bindVAO(mesh->getVAO());
     _renderManager->bindVBO(mesh->getVBO());
 
     if (mesh->usesIBO()) {

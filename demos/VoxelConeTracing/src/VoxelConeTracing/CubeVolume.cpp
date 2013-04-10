@@ -133,7 +133,7 @@ void CubeVolume::init(const float sideLengthPerCube,
     _indices.push_back(iCube * 8 + 4);
   }
 
-  createAttributeBuffers(kore::BUFFERTYPE_INTERLEAVED);
+  createAttributeBuffers(kore::BUFFERTYPE_SEQUENTIAL);
 }
 
 

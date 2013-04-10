@@ -55,9 +55,9 @@ void kore::BindAttribute::doExecute(void) const {
   const MeshAttributeArray* meshAtt = _meshInfo->meshAtt;
 
   GLerror::gl_ErrorCheckStart();
-  glEnableVertexAttribArray(_shaderUniform->location);
   _renderManager->bindVAO(mesh->getVAO());
   _renderManager->bindVBO(mesh->getVBO());
+  glEnableVertexAttribArray(_shaderUniform->location);
   glVertexAttribPointer(_shaderUniform->location,
                         meshAtt->numComponents,
                         meshAtt->componentType,
