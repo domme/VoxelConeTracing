@@ -66,7 +66,7 @@ void kore::BindImageTexture::doExecute(void) const {
   glBindImageTexture(_shaderUniform->imgUnit,
                      pTexInfo->texLocation,
                      0,
-                     GL_FALSE,
+                     GL_TRUE,
                      0,
                      access,
                      //internalFormatToImageFormat(pTexInfo->internalFormat));

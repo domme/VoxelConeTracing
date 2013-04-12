@@ -92,25 +92,25 @@ void initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
   texProps.height = VOXEL_GRID_RESOLUTION_Y;
   texProps.depth = VOXEL_GRID_RESOLUTION_Z;
   texProps.format = GL_RGBA;
-  texProps.internalFormat = GL_RGBA8;
-  texProps.pixelType = GL_UNSIGNED_BYTE;
+  texProps.internalFormat = GL_RGBA32F;
+  texProps.pixelType = GL_FLOAT;
 
 
 
   // Create data
-  glm::detail::tvec4<unsigned char> colorValues[VOXEL_GRID_RESOLUTION_X]
-                                               [VOXEL_GRID_RESOLUTION_Y]
-                                               [VOXEL_GRID_RESOLUTION_Z];
+  glm::vec4 colorValues[VOXEL_GRID_RESOLUTION_X]
+                       [VOXEL_GRID_RESOLUTION_Y]
+                       [VOXEL_GRID_RESOLUTION_Z];
 
   if (texContent == COLOR_PALETTE) {
     for (uint z = 0; z < VOXEL_GRID_RESOLUTION_Z; ++z) {
-      char valueZ = ((float) z / (float) VOXEL_GRID_RESOLUTION_Z) * 255;
+      float valueZ = ((float) z / (float) VOXEL_GRID_RESOLUTION_Z);
       for (uint y = 0; y < VOXEL_GRID_RESOLUTION_Y; ++y) {
-        char valueY = ((float) y / (float) VOXEL_GRID_RESOLUTION_Y) * 255;
+        float valueY = ((float) y / (float) VOXEL_GRID_RESOLUTION_Y);
         for (uint x = 0; x < VOXEL_GRID_RESOLUTION_X; ++x) {
-          char valueX = ((float) x / (float) VOXEL_GRID_RESOLUTION_X) * 255;
+          float valueX = ((float) x / (float) VOXEL_GRID_RESOLUTION_X);
 
-          colorValues[x][y][z] = glm::detail::tvec4<unsigned char>(valueX, valueY, valueZ, 255);
+          colorValues[x][y][z] = glm::vec4(valueX, valueY, valueZ, 1.0f);
         }
       }
     }
@@ -118,7 +118,7 @@ void initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
     for (uint z = 0; z < VOXEL_GRID_RESOLUTION_Z; ++z) {
       for (uint y = 0; y < VOXEL_GRID_RESOLUTION_Y; ++y) {
         for (uint x = 0; x < VOXEL_GRID_RESOLUTION_X; ++x) {
-          colorValues[x][y][z] = glm::detail::tvec4<unsigned char>(0, 0, 0, 255);
+          colorValues[x][y][z] = glm::vec4(0, 0, 0, 1.0f);
         }
       }
     }
@@ -134,8 +134,11 @@ void initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_G, GL_GREEN);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_B, GL_BLUE);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_A, GL_ALPHA);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP);
   RenderManager::getInstance()->bindTexture(GL_TEXTURE_3D, 0);
 
   ResourceManager::getInstance()->addTexture(tex);
@@ -153,7 +156,7 @@ void setupVoxelizeTest() {
   RenderManager* renderMgr = RenderManager::getInstance();
 
   FrameBufferStage* backBufferStage = new FrameBufferStage;
-  GLenum drawBuffers[] = {GL_COLOR_ATTACHMENT0};
+  GLenum drawBuffers[] = {GL_NONE};
   backBufferStage->setFrameBuffer(kore::FrameBuffer::BACKBUFFER,
     GL_FRAMEBUFFER, drawBuffers, 1);
 
@@ -184,7 +187,7 @@ void setupVoxelizeTest() {
   sceneMgr->getSceneNodesByComponent(COMPONENT_MESH, meshNodes);
 
 
-  ///*
+  /*
   ShaderProgramPass* voxelizePass = new ShaderProgramPass;
   voxelizePass->setShaderProgram(voxelizeShader);
 
@@ -246,7 +249,7 @@ void setupVoxelizeTest() {
   }
   
    backBufferStage->addProgramPass(voxelizePass);
-   //*/
+   */
 
 
   // Init 3D texture sampling procedure 

@@ -10,13 +10,16 @@ in VertexData {
 
 out vec4 color;
 
-layout(rgba8) uniform coherent image3D voxelTex;
+layout(rgba32f) uniform image3D voxelTex;
 
 void main() {
-  // Apply a very small offset here so we fall into the correct voxel coordinates.
-  ivec3 samplePos = ivec3(floor(In.posWS) - vec3(0.0001, 0.0001, 0.0001) );
   
+  // Apply a very small offset here so we fall into the correct voxel coordinates.
+  ivec3 samplePos = ivec3(floor(In.posWS) - vec3(0.0001, 0.0001, 0.0001));
+  memoryBarrier();
   color = imageLoad(voxelTex, samplePos);
+  
+  //color = imageLoad(voxelTex, ivec3(5, 5, 5));
 
  /* if (color.r < 0.01) {
     discard;
