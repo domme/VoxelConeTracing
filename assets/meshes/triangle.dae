@@ -3,15 +3,15 @@
   <asset>
     <contributor>
       <author>Blender User</author>
-      <authoring_tool>Blender 2.65.0 r53189</authoring_tool>
+      <authoring_tool>Blender 2.66.1 r55078</authoring_tool>
     </contributor>
-    <created>2013-04-07T16:02:42</created>
-    <modified>2013-04-07T16:02:42</modified>
+    <created>2013-04-13T13:57:31</created>
+    <modified>2013-04-13T13:57:31</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
   <library_cameras>
-    <camera id="Camera-camera" name="Camera">
+    <camera id="Camera-camera" name="Camera.001">
       <optics>
         <technique_common>
           <perspective>
@@ -25,7 +25,7 @@
     </camera>
   </library_cameras>
   <library_lights>
-    <light id="Lamp-light" name="Lamp">
+    <light id="Lamp-light" name="Lamp.001">
       <technique_common>
         <point>
           <color sid="color">1 1 1</color>
@@ -36,7 +36,7 @@
       </technique_common>
       <extra>
         <technique profile="blender">
-          <adapt_thresh>0.000999987</adapt_thresh>
+          <adapt_thresh>9.99987e-4</adapt_thresh>
           <area_shape>1</area_shape>
           <area_size>0.1</area_size>
           <area_sizey>0.1</area_sizey>
@@ -142,30 +142,19 @@
       <extra><technique profile="MAYA"><double_sided>1</double_sided></technique></extra>
     </geometry>
   </library_geometries>
+  <library_controllers/>
   <library_visual_scenes>
     <visual_scene id="Scene" name="Scene">
       <node id="Camera" name="Camera" type="NODE">
-        <translate sid="location">7.481132 -6.50764 5.343665</translate>
-        <rotate sid="rotationZ">0 0 1 46.69194</rotate>
-        <rotate sid="rotationY">0 1 0 0.619768</rotate>
-        <rotate sid="rotationX">1 0 0 63.5593</rotate>
-        <scale sid="scale">1 1 1</scale>
+        <matrix sid="transform">0.6858806 -0.362278 0.631128 20.77853 0.7276337 0.3543054 -0.5873813 -7.522227 -0.01081678 0.8621036 0.5066168 18.46604 0 0 0 1</matrix>
         <instance_camera url="#Camera-camera"/>
       </node>
       <node id="Lamp" name="Lamp" type="NODE">
-        <translate sid="location">4.076245 1.005454 5.903862</translate>
-        <rotate sid="rotationZ">0 0 1 106.9363</rotate>
-        <rotate sid="rotationY">0 1 0 3.163707</rotate>
-        <rotate sid="rotationX">1 0 0 37.26105</rotate>
-        <scale sid="scale">1 1 1</scale>
+        <matrix sid="transform">-0.2908644 -0.7711007 0.5663933 4.076245 0.9551712 -0.1998831 0.2183911 1.005454 -0.0551891 0.6045247 0.7946722 5.903862 0 0 0 1</matrix>
         <instance_light url="#Lamp-light"/>
       </node>
       <node id="Plane" name="Plane" type="NODE">
-        <translate sid="location">0.07701468 0.3392411 0.4132721</translate>
-        <rotate sid="rotationZ">0 0 1 -38.07144</rotate>
-        <rotate sid="rotationY">0 1 0 39.22731</rotate>
-        <rotate sid="rotationX">1 0 0 -51.08411</rotate>
-        <scale sid="scale">1 1 1</scale>
+        <matrix sid="transform">1.657896 3.173654 2.308941 5.558605 -2.561216 2.774086 -1.973961 8.752535 -2.973794 -0.6198972 2.987336 5.782287 0 0 0 1</matrix>
         <instance_geometry url="#Plane-mesh"/>
       </node>
     </visual_scene>
