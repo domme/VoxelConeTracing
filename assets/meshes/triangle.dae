@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.66.1 r55078</authoring_tool>
     </contributor>
-    <created>2013-04-13T13:57:31</created>
-    <modified>2013-04-13T13:57:31</modified>
+    <created>2013-04-13T14:35:17</created>
+    <modified>2013-04-13T14:35:17</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -146,7 +146,7 @@
   <library_visual_scenes>
     <visual_scene id="Scene" name="Scene">
       <node id="Camera" name="Camera" type="NODE">
-        <matrix sid="transform">0.6858806 -0.362278 0.631128 20.77853 0.7276337 0.3543054 -0.5873813 -7.522227 -0.01081678 0.8621036 0.5066168 18.46604 0 0 0 1</matrix>
+        <matrix sid="transform">0.0687659 -0.5640383 0.8228803 32.73368 0.9975742 0.04781956 -0.05058698 -7.773176 -0.01081678 0.824363 0.5659583 23.06652 0 0 0 1</matrix>
         <instance_camera url="#Camera-camera"/>
       </node>
       <node id="Lamp" name="Lamp" type="NODE">
@@ -154,7 +154,7 @@
         <instance_light url="#Lamp-light"/>
       </node>
       <node id="Plane" name="Plane" type="NODE">
-        <matrix sid="transform">1.657896 3.173654 2.308941 5.558605 -2.561216 2.774086 -1.973961 8.752535 -2.973794 -0.6198972 2.987336 5.782287 0 0 0 1</matrix>
+        <matrix sid="transform">1.657896 3.173654 2.308941 5.558605 -2.561216 2.774086 -1.973961 -3.321245 -2.973794 -0.6198972 2.987336 5.782287 0 0 0 1</matrix>
         <instance_geometry url="#Plane-mesh"/>
       </node>
     </visual_scene>
