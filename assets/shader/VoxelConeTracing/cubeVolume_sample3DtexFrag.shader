@@ -21,7 +21,7 @@ void main() {
   
   //color = imageLoad(voxelTex, ivec3(5, 5, 5));
 
- /* if (color.r < 0.01) {
+ if (color.r < 0.01) {
     discard;
-  } */
+  }
 }

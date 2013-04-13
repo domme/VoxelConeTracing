@@ -25,7 +25,7 @@
 
 #version 420
 
-layout(rgba8) uniform coherent image3D voxelTex;
+layout(rgba32f) uniform coherent image3D voxelTex;
 
 in VertexData {
     vec3 posVoxelGrid;

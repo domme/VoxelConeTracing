@@ -158,7 +158,7 @@ void setupVoxelizeTest() {
   FrameBufferStage* backBufferStage = new FrameBufferStage;
   GLenum drawBuffers[] = {GL_NONE};
   backBufferStage->setFrameBuffer(kore::FrameBuffer::BACKBUFFER,
-    GL_FRAMEBUFFER, drawBuffers, 1);
+                                  GL_FRAMEBUFFER, drawBuffers, 1);
 
   // Init Voxelize procedure
   //////////////////////////////////////////////////////////////////////////
@@ -179,7 +179,7 @@ void setupVoxelizeTest() {
   resMgr->addShaderProgram(voxelizeShader);
 
   voxelTexture = new Texture;
-  initTex3D(voxelTexture, COLOR_PALETTE);
+  initTex3D(voxelTexture, BLACK);
 
   //Load the scene and get all mesh nodes
   resMgr->loadScene("./assets/meshes/triangle.dae");
@@ -187,7 +187,7 @@ void setupVoxelizeTest() {
   sceneMgr->getSceneNodesByComponent(COMPONENT_MESH, meshNodes);
 
 
-  /*
+  // /*
   ShaderProgramPass* voxelizePass = new ShaderProgramPass;
   voxelizePass->setShaderProgram(voxelizeShader);
 
@@ -249,7 +249,7 @@ void setupVoxelizeTest() {
   }
   
    backBufferStage->addProgramPass(voxelizePass);
-   */
+   //*/
 
 
   // Init 3D texture sampling procedure 
@@ -339,143 +339,6 @@ void setupVoxelizeTest() {
   
   backBufferStage->addProgramPass(sample3DtexPass);
   renderMgr->addFramebufferStage(backBufferStage);
-}
-
-void setupImageLoadStoreTest() {
-  using namespace kore;
-  glDisable(GL_DEPTH_TEST);  
-
-  glClearColor(1.0f,1.0f,1.0f,1.0f);
-
-  kore::Texture* tex = kore::ResourceManager::getInstance()->
-    loadTexture("./assets/textures/Crate.png");
-
-  kore::TexturesComponent* texComponent = new kore::TexturesComponent;
-  texComponent->addTexture(tex);
-  kore::SceneManager::getInstance()->getRootNode()->addComponent(texComponent);
-
-  FullscreenQuad* fsQuadMesh = FullscreenQuad::getInstance();
-  kore::MeshComponent* fsQuadMeshComponent = new kore::MeshComponent;
-  fsQuadMeshComponent->setMesh(fsQuadMesh);
-  kore::SceneManager::getInstance()->getRootNode()->addComponent(fsQuadMeshComponent);
-
-
-  kore::ShaderProgram* imgLoadShader = new kore::ShaderProgram;
-  imgLoadShader->
-    loadShader("./assets/shader/VoxelConeTracing/fullscreenQuad_simpleVert.shader",
-                GL_VERTEX_SHADER);
-  imgLoadShader->loadShader("./assets/shader/VoxelConeTracing/imageLoadFrag.shader",
-                            GL_FRAGMENT_SHADER);
-  imgLoadShader->init();
-
-  ShaderProgram* imgStoreShader = new kore::ShaderProgram;
-  imgStoreShader->
-    loadShader("./assets/shader/VoxelConeTracing/fullscreenQuad_simpleVert.shader",
-               GL_VERTEX_SHADER);
-  imgStoreShader->
-    loadShader("./assets/shader/VoxelConeTracing/imageStoreFrag.shader",
-               GL_FRAGMENT_SHADER);
-  imgStoreShader->init();
-
-  // Setup rendering stages
-  kore::FrameBufferStage* backBufferStage = new kore::FrameBufferStage;
-  GLenum drawBuffers[] = {GL_COLOR_ATTACHMENT0};
-  backBufferStage->setFrameBuffer(kore::FrameBuffer::BACKBUFFER,
-                                  GL_FRAMEBUFFER, drawBuffers, 1);
-  kore::RenderManager::getInstance()->addFramebufferStage(backBufferStage);
-
-  // imageStore
-  ShaderProgramPass* storePass = new ShaderProgramPass(imgStoreShader);
-  kore::NodePass* nodePassStore = new NodePass(kore::SceneManager::getInstance()->getRootNode());
-
-  nodePassStore->addOperation(OperationFactory::create(OP_BINDATTRIBUTE,
-                                                  "v_position",
-                                                  fsQuadMeshComponent,
-                                                  "v_position",
-                                                  imgStoreShader));
-
-  nodePassStore->addOperation(OperationFactory::create(OP_BINDIMAGETEXTURE,
-                                                  tex->getName(),
-                                                  texComponent,
-                                                  "image", imgStoreShader));
-
-  nodePassStore->addOperation(new RenderMesh(fsQuadMeshComponent, imgStoreShader));
-  storePass->addNodePass(nodePassStore);
-  backBufferStage->addProgramPass(storePass);
-
-
-  // imageLoad
-  kore::ShaderProgramPass* loadPass = new kore::ShaderProgramPass(imgLoadShader);
-  
-  NodePass* nodePassLoad = new NodePass(SceneManager::getInstance()->getRootNode());
-    
-  
-  nodePassLoad->addOperation(OperationFactory::create(OP_BINDATTRIBUTE,
-                                                  "v_position",
-                                                  fsQuadMeshComponent,
-                                                  "v_position",
-                                                  imgLoadShader));
-
-  nodePassLoad->addOperation(OperationFactory::create(OP_BINDIMAGETEXTURE,
-                                                  tex->getName(),
-                                                  texComponent,
-                                                  "image", imgLoadShader));
-
-  nodePassLoad->addOperation(new RenderMesh(fsQuadMeshComponent, imgLoadShader));
-
-  loadPass->addNodePass(nodePassLoad);
-  backBufferStage->addProgramPass(loadPass);
-}
-
-
-void setupAtomicCounterTest() {
-  using namespace kore;
-  glDisable(GL_DEPTH_TEST);  
-
-  glClearColor(1.0f,1.0f,1.0f,1.0f);
-
-  ShaderProgram* acProg = new ShaderProgram;
-  acProg
-    ->loadShader("./assets/shader/VoxelConeTracing/fullscreenQuad_simple.vert",
-                 GL_VERTEX_SHADER);
-  acProg
-    ->loadShader("./assets/shader/VoxelConeTracing/atomicCounter.frag",
-                  GL_FRAGMENT_SHADER);
-  acProg->init();
-
-  FullscreenQuad* fsQuadMesh = FullscreenQuad::getInstance();
-  kore::MeshComponent* fsQuadMeshComponent = new kore::MeshComponent;
-  fsQuadMeshComponent->setMesh(fsQuadMesh);
-  kore::SceneManager::getInstance()->getRootNode()
-                                      ->addComponent(fsQuadMeshComponent);
-
-  kore::FrameBufferStage* fboStage = new kore::FrameBufferStage;
-  GLenum drawBuffers[] = {GL_COLOR_ATTACHMENT0};
-  fboStage->setFrameBuffer(kore::FrameBuffer::BACKBUFFER,
-                           GL_FRAMEBUFFER, drawBuffers, 1);
-  
-  
-  ShaderProgramPass* acProgPass = new ShaderProgramPass(acProg);
-  
-  NodePass* acNodePass =
-    new NodePass(SceneManager::getInstance()->getRootNode());
-  
-  acNodePass->addOperation(OperationFactory::create(OP_BINDATTRIBUTE,
-                           "v_position",
-                           fsQuadMeshComponent,
-                           "v_position",
-                           acProg));
-
-  acNodePass->addOperation(
-    new UseAtomicCounterBuffer(acProg->getUniform("atomicCounter")));
-
-  acNodePass->addOperation(new RenderMesh(fsQuadMeshComponent, acProg));
-  acNodePass->addOperation(new ResetAtomicCounterBuffer(acProg->getUniform("atomicCounter"), 0));
-  acNodePass->addOperation(new MemoryBarrierOp(GL_ATOMIC_COUNTER_BARRIER_BIT));
-
-  acProgPass->addNodePass(acNodePass);
-  fboStage->addProgramPass(acProgPass);
-  RenderManager::getInstance()->addFramebufferStage(fboStage);
 }
 
 int main(void) {

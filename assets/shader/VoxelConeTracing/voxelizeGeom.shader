@@ -67,9 +67,9 @@ mat4 viewProjs[3];
 
 void init() {
   mat4 camProjMatrix = mat4(2.0 / voxelGridLength, 0, 0, 0,
-                                  0, 2.0 / voxelGridLength, 0, 0,
-                                  0, 0, - 2.0 / voxelGridLength, 0,
-                                  0, 0, 0, 1);
+                            0, 2.0 / voxelGridLength, 0, 0,
+                            0, 0, - 2.0 / voxelGridLength, 0,
+                            0, 0, 0, 1);
 
   vec3 camPositions[3] =
    vec3[3] ( voxelGridOrigin
@@ -89,6 +89,7 @@ void init() {
                            mat4(1.0) );  // Far
 
   // View Matrix for right camera
+  //                    X     y    z
   viewMats[0][0] = vec4(0.0, 0.0, 1.0, 0.0);
   viewMats[0][1] = vec4(0.0, 1.0, 0.0, 0.0);
   viewMats[0][2] = vec4(1.0, 0.0, 0.0, 0.0);
@@ -148,7 +149,7 @@ mat4 lookAt(const in vec3 eye, const in vec3 at, const in vec3 up) {
 
 uint calcProjAxis() {
   // Determine world-axis along wich the projected triangle-area is maximized
-  uint projAxis;
+  uint projAxis = 0;
   float maxArea = 0.0;
   for (uint i = 0; i < 3; ++i) {
     // Assume we work with per-triangle normals, so that each vertex-normal of
@@ -170,16 +171,9 @@ void main()
   uint projAxisIdx = calcProjAxis();
   
   for(int i = 0; i < gl_in.length(); i++) {
-    const vec3 projPositions[3] =
-        vec3[3]( vec3(0.0, In[i].pos.yz),  // YZ-plane
-                 vec3(In[i].pos.x, 0.0, In[i].pos.z),  // XZ-plane
-                 vec3(In[i].pos.xy, 0.0) ); // XY-plane
-    
-    // (TODO) +Z or -Z?
-    vec3 clipSpacePos = ((In[i].pos - voxelGridOrigin) / voxelGridLength) * 2.0 - 1.0;
-    gl_Position = vec4(clipSpacePos, 1.0);
+   gl_Position = viewProjs[projAxisIdx] * vec4(In[i].pos, 1.0);
 
-    Out.posVoxelGrid = (In[i].pos - voxelGridOrigin) + (voxelGridLength/2.0); // 0..voxelGridLength
+    Out.posVoxelGrid = In[i].pos;
     Out.normal = In[i].normal;
     Out.uv = In[i].uv;
 
@@ -188,3 +182,16 @@ void main()
   }
   EndPrimitive();
 }
+
+
+/*
+ const vec3 projPositions[3] =
+        vec3[3]( vec3(0.0, In[i].pos.yz),  // YZ-plane
+                 vec3(In[i].pos.x, 0.0, In[i].pos.z),  // XZ-plane
+                 vec3(In[i].pos.xy, 0.0) ); // XY-plane
+    
+    // (TODO) +Z or -Z?
+    vec3 clipSpacePos =
+      ((In[i].pos - voxelGridOrigin) / voxelGridLength) * 2.0 - 1.0;
+    gl_Position = vec4(clipSpacePos, 1.0);
+*/
