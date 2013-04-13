@@ -44,6 +44,7 @@ kore::Camera::Camera()
         _bIsOrtho(false),
         _fWidth(1.0f),
         _fHeight(1.0),
+        _fRatio(1.0),
         _name(""),
         kore::SceneNodeComponent() {
   // setup bindings
@@ -105,6 +106,12 @@ kore::Camera::Camera()
   tmp.type = GL_FLOAT;
   tmp.name = "height";
   tmp.data = &_fHeight;
+  _shaderData.push_back(tmp);
+
+  tmp = ShaderData();
+  tmp.type = GL_FLOAT;
+  tmp.name = "ratio";
+  tmp.data = &_fRatio;
   _shaderData.push_back(tmp);
 
   _type = COMPONENT_CAMERA;
@@ -169,6 +176,7 @@ void kore::Camera::setProjectionPersp(float yFov_deg, float fWidth,
     _bIsOrtho = false;
     _fWidth = fWidth;
     _fHeight = fHeight;
+    _fRatio = fWidth/fHeight;
 
     // Calculate focal length
     float fFovHor2 = glm::atan(
@@ -190,6 +198,7 @@ void kore::Camera::setProjectionPersp(float yFov_deg, float fAspect,
   _bIsOrtho = false;
   _fWidth = fWidth;
   _fHeight = fHeight;
+  _fRatio = fWidth/fHeight;
 
   // Calculate focal length
   float fFovHor2 = glm::atan(

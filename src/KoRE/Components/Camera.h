@@ -121,6 +121,7 @@ class Camera : public SceneNodeComponent {
      bool        _bIsOrtho;
      float       _fWidth;
      float       _fHeight;
+     float       _fRatio;
 
      void        updateFrustumPlanes();
      void        paramsChanged();

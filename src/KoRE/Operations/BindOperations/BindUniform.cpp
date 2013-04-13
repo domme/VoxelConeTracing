@@ -75,6 +75,11 @@ void kore::BindUniform::doExecute(void) const {
     useShaderProgram(_shaderUniform->shader->getProgramLocation());
 
   switch (_componentUniform->type) {
+    case GL_FLOAT:
+      glUniform1fv(_shaderUniform->location, 1,
+                  static_cast<GLfloat*>(_componentUniform->data));
+    break;
+
     case GL_FLOAT_VEC2:
       glUniform2fv(_shaderUniform->location, 1,
                           static_cast<GLfloat*>(_componentUniform->data));

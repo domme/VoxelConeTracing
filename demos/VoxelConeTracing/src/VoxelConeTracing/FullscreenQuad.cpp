@@ -43,7 +43,7 @@ void FullscreenQuad::init() {
   vertices[LR] = glm::vec3(1.0f, -1.0f, 0.0f);   // LR
   vertices[UR] = glm::vec3(1.0f, 1.0f, 0.0f);    // UR
   vertices[UL] = glm::vec3(-1.0f, 1.0f, 0.0f);   // UL
-
+  
   kore::MeshAttributeArray att;
   att.name = "v_position";
   att.numValues = _numVertices * 3;

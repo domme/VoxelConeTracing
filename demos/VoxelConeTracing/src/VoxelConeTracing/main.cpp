@@ -179,15 +179,18 @@ void setupVoxelizeTest() {
   resMgr->addShaderProgram(voxelizeShader);
 
   voxelTexture = new Texture;
-  initTex3D(voxelTexture, BLACK);
+  initTex3D(voxelTexture, COLOR_PALETTE);
 
   //Load the scene and get all mesh nodes
   resMgr->loadScene("./assets/meshes/triangle.dae");
   std::vector<SceneNode*> meshNodes;
   sceneMgr->getSceneNodesByComponent(COMPONENT_MESH, meshNodes);
 
+  cameraNode = sceneMgr->getSceneNodeByComponent(COMPONENT_CAMERA);
+  pCamera = static_cast<Camera*>(cameraNode->getComponent(COMPONENT_CAMERA));
 
-   ///*
+
+  /*
   ShaderProgramPass* voxelizePass = new ShaderProgramPass;
   voxelizePass->setShaderProgram(voxelizeShader);
 
@@ -249,96 +252,89 @@ void setupVoxelizeTest() {
   }
   
    backBufferStage->addProgramPass(voxelizePass);
-   //*/
+   */
 
 
-  // Init 3D texture sampling procedure 
+  // Init ray casting
   //////////////////////////////////////////////////////////////////////////
   
-   cameraNode = sceneMgr->getSceneNodeByComponent(COMPONENT_CAMERA);
-   pCamera = static_cast<Camera*>(cameraNode->getComponent(COMPONENT_CAMERA));
+   ShaderProgram* raycastShader = new ShaderProgram;
+   raycastShader->
+     loadShader("./assets/shader/VoxelConeTracing/raycastVert.shader",
+     GL_VERTEX_SHADER);
 
-  ShaderProgram* cubeSample3DTexShader = new ShaderProgram;
-  cubeSample3DTexShader->
-    loadShader("./assets/shader/VoxelConeTracing/cubeVolumeVert.shader",
-               GL_VERTEX_SHADER);
-  cubeSample3DTexShader->
-    loadShader("./assets/shader/VoxelConeTracing/cubeVolume_sample3DtexFrag.shader",
-               GL_FRAGMENT_SHADER);
+   raycastShader->
+     loadShader("./assets/shader/VoxelConeTracing/raycastFrag.shader",
+     GL_FRAGMENT_SHADER);
 
-  cubeSample3DTexShader->init();
-  resMgr->addShaderProgram(cubeSample3DTexShader);
+   raycastShader->init();
+   raycastShader->setName("raycastShader");
+   resMgr->addShaderProgram(raycastShader);
+   
+   SceneNode* fsquadnode = new SceneNode();
+   sceneMgr->getRootNode()->addChild(fsquadnode);
+
+   MeshComponent* fsqMeshComponent = new MeshComponent();
+   fsqMeshComponent->setMesh(FullscreenQuad::getInstance());
+   fsquadnode->addComponent(fsqMeshComponent);
    
 
-  ShaderProgramPass* sample3DtexPass = new ShaderProgramPass;
-  sample3DtexPass->setShaderProgram(cubeSample3DTexShader);
+   ShaderProgramPass* raycastPass = new ShaderProgramPass();
+   raycastPass->setShaderProgram(raycastShader);
 
-  CubeVolume* cubeVolumeMesh = new CubeVolume(CUBE_SIDELENGTH,
-                                              VOXEL_GRID_RESOLUTION_X,
-                                              VOXEL_GRID_RESOLUTION_Y,
-                                              VOXEL_GRID_RESOLUTION_Z);
+   NodePass* raycastNodePass = new NodePass(fsquadnode);
+   raycastPass->addNodePass(raycastNodePass);
 
+   TexturesComponent* voxelTexComp = new TexturesComponent;
+   voxelTexComp->addTexture(voxelTexture);
+   fsquadnode->addComponent(voxelTexComp);
+
+   raycastNodePass
+     ->addOperation(new EnableDisableOp(GL_DEPTH_TEST,
+                                        EnableDisableOp::DISABLE));
+
+   raycastNodePass
+     ->addOperation(new ColorMaskOp(glm::bvec4(true, true, true, true)));
+
+   raycastNodePass->addOperation(OperationFactory::create(OP_BINDATTRIBUTE, 
+                                  "v_position",
+                                  fsqMeshComponent, 
+                                  "v_position",
+                                  raycastShader));
+
+   raycastNodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM, 
+                                 "ratio",
+                                 pCamera, 
+                                 "fRatio",
+                                 raycastShader));
+
+   raycastNodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM, 
+                                 "FOV degree",
+                                 pCamera, 
+                                 "fYfovDeg",
+                                 raycastShader));
+
+   raycastNodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM, 
+                                 "far Plane",
+                                 pCamera, 
+                                 "fFar",
+                                 raycastShader));
+
+   raycastNodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
+                                 "inverse view Matrix",
+                                 pCamera,
+                                 "viewI",
+                                 raycastShader));
+
+   raycastNodePass->addOperation(OperationFactory::create(OP_BINDIMAGETEXTURE,
+                                 voxelTexture->getName(),
+                                 voxelTexComp, "voxelTex",
+                                 raycastShader));
   
-  SceneNode* cubeNode = new SceneNode;
-  sceneMgr->getRootNode()->addChild(cubeNode);
+   raycastNodePass->addOperation(new RenderMesh(fsqMeshComponent, raycastShader));
+   backBufferStage->addProgramPass(raycastPass);
 
-  MeshComponent* voxelmeshComp = new MeshComponent;
-  voxelmeshComp->setMesh(cubeVolumeMesh);
-
-  cubeNode->addComponent(voxelmeshComp);
-
-  TexturesComponent* texComp = new TexturesComponent;
-  texComp->addTexture(voxelTexture);
-  cubeNode->addComponent(texComp);
-
-  // Setup rendering operations
-  NodePass* nodePass = new NodePass(cubeNode);
-
-  nodePass->addOperation(new MemoryBarrierOp(GL_ALL_BARRIER_BITS));
-  
-  nodePass->addOperation(new ViewportOp(glm::ivec4(0, 0,
-                                        screen_width,
-                                        screen_height)));
-
-  nodePass
-    ->addOperation(new EnableDisableOp(GL_DEPTH_TEST,
-                                       EnableDisableOp::ENABLE));
-
-  nodePass
-    ->addOperation(new ColorMaskOp(glm::bvec4(true, true, true, true)));
-
-  nodePass->
-    addOperation(OperationFactory::create(OP_BINDATTRIBUTE, "v_position",
-                                          voxelmeshComp, "v_position",
-                                          cubeSample3DTexShader));
-
-  nodePass->
-    addOperation(OperationFactory::create(OP_BINDUNIFORM, "model Matrix",
-                                          cubeNode->getTransform(),
-                                          "modelWorld",
-                                          cubeSample3DTexShader));
-
-  nodePass-> 
-    addOperation(OperationFactory::create(OP_BINDUNIFORM, "view Matrix",
-                                          pCamera, "view",
-                                          cubeSample3DTexShader));
-
-  nodePass->
-    addOperation(OperationFactory::create(OP_BINDIMAGETEXTURE, voxelTexture->getName(),
-                                          texComp, "voxelTex", cubeSample3DTexShader));
-
-  nodePass->
-    addOperation(OperationFactory::create(OP_BINDUNIFORM, "projection Matrix",
-                                          pCamera, "proj",
-                                          cubeSample3DTexShader));
-
-  nodePass->addOperation(new RenderMesh(voxelmeshComp, cubeSample3DTexShader));
-  nodePass->addOperation(new MemoryBarrierOp(GL_ALL_BARRIER_BITS));
-
-  sample3DtexPass->addNodePass(nodePass);
-  
-  backBufferStage->addProgramPass(sample3DtexPass);
-  renderMgr->addFramebufferStage(backBufferStage);
+   renderMgr->addFramebufferStage(backBufferStage);
 }
 
 int main(void) {
