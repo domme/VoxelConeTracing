@@ -171,7 +171,7 @@ void main()
   uint projAxisIdx = calcProjAxis();
   
   for(int i = 0; i < gl_in.length(); i++) {
-   gl_Position = viewProjs[projAxisIdx] * vec4(In[i].pos, 1.0);
+    gl_Position = viewProjs[projAxisIdx] * vec4(In[i].pos, 1.0);
 
     Out.posVoxelGrid = In[i].pos;
     Out.normal = In[i].normal;

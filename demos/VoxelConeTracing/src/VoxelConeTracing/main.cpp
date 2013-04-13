@@ -187,7 +187,7 @@ void setupVoxelizeTest() {
   sceneMgr->getSceneNodesByComponent(COMPONENT_MESH, meshNodes);
 
 
-  // /*
+   ///*
   ShaderProgramPass* voxelizePass = new ShaderProgramPass;
   voxelizePass->setShaderProgram(voxelizeShader);
 

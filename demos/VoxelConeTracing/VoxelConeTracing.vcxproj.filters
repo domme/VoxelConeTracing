@@ -64,28 +64,10 @@
     <None Include="..\..\assets\shader\VoxelConeTracing\voxelizeVert.shader">
       <Filter>shader\VoxelConeTracing</Filter>
     </None>
-    <None Include="..\..\assets\shader\VoxelConeTracing\imageStoreFrag.shader">
+    <None Include="..\..\assets\shader\VoxelConeTracing\raycastFrag.shader">
       <Filter>shader\VoxelConeTracing</Filter>
     </None>
-    <None Include="..\..\assets\shader\VoxelConeTracing\imageLoadFrag.shader">
-      <Filter>shader\VoxelConeTracing</Filter>
-    </None>
-    <None Include="..\..\assets\shader\VoxelConeTracing\fullscreenQuad_simpleVert.shader">
-      <Filter>shader\VoxelConeTracing</Filter>
-    </None>
-    <None Include="..\..\assets\shader\VoxelConeTracing\cubeVolume_sample3DtexFrag.shader">
-      <Filter>shader\VoxelConeTracing</Filter>
-    </None>
-    <None Include="..\..\assets\shader\VoxelConeTracing\cubeVolumeVert.shader">
-      <Filter>shader\VoxelConeTracing</Filter>
-    </None>
-    <None Include="..\..\assets\shader\VoxelConeTracing\cube_sample3DtexFrag.shader">
-      <Filter>shader\VoxelConeTracing</Filter>
-    </None>
-    <None Include="..\..\assets\shader\VoxelConeTracing\cubeVert.shader">
-      <Filter>shader\VoxelConeTracing</Filter>
-    </None>
-    <None Include="..\..\assets\shader\VoxelConeTracing\atomicCounterFrag.shader">
+    <None Include="..\..\assets\shader\VoxelConeTracing\raycastVert.shader">
       <Filter>shader\VoxelConeTracing</Filter>
     </None>
   </ItemGroup>

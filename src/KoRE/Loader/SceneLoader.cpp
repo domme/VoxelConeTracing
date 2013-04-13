@@ -50,12 +50,13 @@ kore::SceneLoader::~SceneLoader() {
 const aiScene* kore::SceneLoader::readScene(const std::string& szScenePath) {
   const aiScene* pAiScene =
     _aiImporter.ReadFile(szScenePath,
-    aiProcess_JoinIdenticalVertices 
+    aiProcess_JoinIdenticalVertices
     | aiProcess_Triangulate
     | aiProcess_CalcTangentSpace
     | aiProcess_ValidateDataStructure
     | aiProcess_OptimizeMeshes
-    | aiProcess_SortByPType);
+    | aiProcess_SortByPType
+    );
 
   if (!pAiScene) {
     Log::getInstance()->write("[ERROR] Scene '%s' could not be read\n",

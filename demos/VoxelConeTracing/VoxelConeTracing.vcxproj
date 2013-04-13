@@ -295,14 +295,8 @@
     <None Include="..\..\assets\shader\normalmapping.vert" />
     <None Include="..\..\assets\shader\simple.fp" />
     <None Include="..\..\assets\shader\simple.vp" />
-    <None Include="..\..\assets\shader\VoxelConeTracing\atomicCounterFrag.shader" />
-    <None Include="..\..\assets\shader\VoxelConeTracing\cubeVert.shader" />
-    <None Include="..\..\assets\shader\VoxelConeTracing\cubeVolumeVert.shader" />
-    <None Include="..\..\assets\shader\VoxelConeTracing\cubeVolume_sample3DtexFrag.shader" />
-    <None Include="..\..\assets\shader\VoxelConeTracing\cube_sample3DtexFrag.shader" />
-    <None Include="..\..\assets\shader\VoxelConeTracing\fullscreenQuad_simpleVert.shader" />
-    <None Include="..\..\assets\shader\VoxelConeTracing\imageLoadFrag.shader" />
-    <None Include="..\..\assets\shader\VoxelConeTracing\imageStoreFrag.shader" />
+    <None Include="..\..\assets\shader\VoxelConeTracing\raycastFrag.shader" />
+    <None Include="..\..\assets\shader\VoxelConeTracing\raycastVert.shader" />
     <None Include="..\..\assets\shader\VoxelConeTracing\voxelizeFrag.shader" />
     <None Include="..\..\assets\shader\VoxelConeTracing\voxelizeGeom.shader" />
     <None Include="..\..\assets\shader\VoxelConeTracing\voxelizeVert.shader" />
