@@ -39,8 +39,11 @@ out VoxelData {
     vec3 normal;
     vec2 uv;
     vec3 projAxisTS;
-    uint projAxisIdx;
 } Out;
+
+out VoxelUtilData {
+  flat uint projAxisIdx;
+} UtilOut;
 
 uniform mat4 voxelGridTransform;
 uniform mat4 voxelGridTransformI;
@@ -169,7 +172,8 @@ void main()
     Out.normal = In[i].normal;
     Out.uv = In[i].uv;
     Out.projAxisTS = normalize((voxelGridTransformI * vec4(worldAxes[projAxisIdx], 0.0)).xyz * 0.5 + 0.5);
-    Out.projAxisIdx = projAxisIdx;
+
+    UtilOut.projAxisIdx = projAxisIdx;
 
     // done with the vertex
     EmitVertex();

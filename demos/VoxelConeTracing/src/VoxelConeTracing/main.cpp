@@ -206,7 +206,6 @@ void setupVoxelizeTest() {
   ShaderProgramPass* voxelizePass = new ShaderProgramPass;
   voxelizePass->setShaderProgram(voxelizeShader);
 
-
   for (uint i = 0; i < meshNodes.size(); ++i) {
     NodePass* nodePass = new NodePass(meshNodes[i]);
     voxelizePass->addNodePass(nodePass);

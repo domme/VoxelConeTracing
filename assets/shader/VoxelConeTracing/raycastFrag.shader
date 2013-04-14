@@ -1,4 +1,5 @@
 #version 420
+#extension GL_ARB_shader_image_size : enable
 
 in VertexData {
   vec3 viewDirVS;
@@ -26,7 +27,7 @@ void main(void) {
     vec3 pos = camPosWS + viewDirWS * f;
 
     // Get the position in the voxelGrid-coordinate frame and convert to tex-space
-    vec3 posTexSpace = (voxelGridTransformI * vec4(pos, 1.0)) * 0.5 + 0.5;
+    vec3 posTexSpace = (voxelGridTransformI * vec4(pos, 1.0)).xyz * 0.5 + 0.5;
 
     if (posTexSpace.x < 0.0 ||
         posTexSpace.x > 1.0 ||

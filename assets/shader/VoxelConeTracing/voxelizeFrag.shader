@@ -24,16 +24,21 @@
 */
 
 #version 420
+#extension GL_ARB_shader_image_size : enable
 
 layout(rgba32f) uniform coherent image3D voxelTex;
+
 
 in VoxelData {
     vec3 posTexSpace;
     vec3 normal;
     vec2 uv;
     vec3 projAxisTexSpace;
-    uint projAxisIdx;
 } In;
+
+in VoxelUtilData {
+  flat uint projAxisIdx;
+} UtilIn;
 
 out vec4 color;
 
@@ -59,7 +64,7 @@ void main() {
   for (int iDepth = 0; iDepth < numVoxelsDepth; ++iDepth) {
 
     // Assumption: voxelGrid is parrallel to world-axes
-    ivec3 samplePos = baseVoxel + ivec3(worldAxes[In.projAxisIdx] * iDepth);
+    ivec3 samplePos = baseVoxel + ivec3(worldAxes[UtilIn.projAxisIdx] * iDepth);
     imageStore(voxelTex, samplePos, vec4(1.0, 0.0, 0.0, 1.0));
     memoryBarrier();
   }

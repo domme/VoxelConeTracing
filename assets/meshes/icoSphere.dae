@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.66.1 r55078</authoring_tool>
     </contributor>
-    <created>2013-04-14T16:45:56</created>
-    <modified>2013-04-14T16:45:56</modified>
+    <created>2013-04-14T20:43:57</created>
+    <modified>2013-04-14T20:43:57</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -97,6 +97,40 @@
   </library_lights>
   <library_images/>
   <library_geometries>
+    <geometry id="Cube_001-mesh" name="Cube.001">
+      <mesh>
+        <source id="Cube_001-mesh-positions">
+          <float_array id="Cube_001-mesh-positions-array" count="24">-1 -1 -1 -1 1 -1 1 1 -1 1 -1 -1 -1 -1 1 -1 1 1 1 1 1 1 -1 1</float_array>
+          <technique_common>
+            <accessor source="#Cube_001-mesh-positions-array" count="8" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Cube_001-mesh-normals">
+          <float_array id="Cube_001-mesh-normals-array" count="18">-1 0 0 0 1 0 1 0 0 0 -1 0 0 0 -1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Cube_001-mesh-normals-array" count="6" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="Cube_001-mesh-vertices">
+          <input semantic="POSITION" source="#Cube_001-mesh-positions"/>
+        </vertices>
+        <polylist count="6">
+          <input semantic="VERTEX" source="#Cube_001-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#Cube_001-mesh-normals" offset="1"/>
+          <vcount>4 4 4 4 4 4 </vcount>
+          <p>1 0 0 0 4 0 5 0 5 1 6 1 2 1 1 1 6 2 7 2 3 2 2 2 0 3 3 3 7 3 4 3 0 4 1 4 2 4 3 4 7 5 6 5 5 5 4 5</p>
+        </polylist>
+      </mesh>
+      <extra><technique profile="MAYA"><double_sided>1</double_sided></technique></extra>
+    </geometry>
     <geometry id="Icosphere-mesh" name="Icosphere">
       <mesh>
         <source id="Icosphere-mesh-positions">
@@ -143,8 +177,12 @@
         <matrix sid="transform">-0.2908644 -0.7711007 0.5663933 4.076245 0.9551712 -0.1998831 0.2183911 1.005454 -0.0551891 0.6045247 0.7946722 5.903862 0 0 0 1</matrix>
         <instance_light url="#Lamp-light"/>
       </node>
+      <node id="Cube" name="Cube" type="NODE">
+        <matrix sid="transform">25 0 0 0 0 25 0 0 0 0 25 0 0 0 0 1</matrix>
+        <instance_geometry url="#Cube_001-mesh"/>
+      </node>
       <node id="Icosphere" name="Icosphere" type="NODE">
-        <matrix sid="transform">16.39913 0 0 0.9578314 0 16.39913 0 0.2974396 0 0 16.39913 1.90115 0 0 0 1</matrix>
+        <matrix sid="transform">20.39121 0 0 0 0 20.39121 0 0 0 0 20.39121 0 0 0 0 1</matrix>
         <instance_geometry url="#Icosphere-mesh"/>
       </node>
     </visual_scene>
