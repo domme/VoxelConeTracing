@@ -188,7 +188,7 @@ void setupVoxelizeTest() {
   sceneMgr->getRootNode()->addChild(voxelGridNode);
 
   voxelTexture = new Texture;
-  initTex3D(voxelTexture, COLOR_PALETTE);
+  initTex3D(voxelTexture, BLACK);
   TexturesComponent* voxelTexComp = new TexturesComponent;
   voxelTexComp->addTexture(voxelTexture);
 
@@ -250,11 +250,20 @@ void setupVoxelizeTest() {
                                              meshNodes[i]->getTransform(), "modelWorldNormal",
                                              voxelizeShader));
 
-      nodePass
-        ->addOperation(OperationFactory::create(OP_BINDIMAGETEXTURE,
-                                         voxelTexture->getName(),
-                                         voxelTexComp, "voxelTex",
-                                         voxelizeShader));
+   nodePass
+     ->addOperation(OperationFactory::create(OP_BINDIMAGETEXTURE,
+                                      voxelTexture->getName(),
+                                      voxelTexComp, "voxelTex",
+                                      voxelizeShader));
+
+   nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
+                          "model Matrix", voxelGridNode->getTransform(),
+                          "voxelGridTransform", voxelizeShader));
+
+   nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
+                          "inverse model Matrix", voxelGridNode->getTransform(),
+                          "voxelGridTransformI", voxelizeShader));
+
    nodePass
      ->addOperation(new RenderMesh(meshComp, voxelizeShader));
   }

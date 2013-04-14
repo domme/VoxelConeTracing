@@ -35,19 +35,13 @@ in VertexData {
 } In[3];
 
 out VertexData {
-    vec3 posVoxelGrid;
+    vec3 posTexSpace;
     vec3 normal;
     vec2 uv;
 } Out;
 
-// (TODO) replace with an uniform
-// This is the lower left corner of the voxel grid
-const vec3 voxelGridOrigin = vec3(0.0, 0.0, 0.0);
-
-// (TODO) replace with an uniform
-// This is the length of the voxel grid, but not neccessarily the number of
-// voxels (only if they have a side-lenght of 1)
-const float voxelGridLength = 12;
+uniform mat4 voxelGridTransform;
+uniform mat4 voxelGridTransformI;
 
 // Constants for the projection planes to key into the worldAxes array
 const uint YZ = 0;
@@ -66,27 +60,23 @@ const vec3 worldAxes[3] = vec3[3]( vec3(1.0, 0.0, 0.0),
 mat4 viewProjs[3];
 
 void init() {
-  mat4 camProjMatrix = mat4(2.0 / voxelGridLength, 0, 0, 0,
-                            0, 2.0 / voxelGridLength, 0, 0,
-                            0, 0, - 2.0 / voxelGridLength, 0,
+  vec3 voxelGridSize = vec3(length(voxelGridTransform[0].xyz) * 2.0,
+                            length(voxelGridTransform[1].xyz) * 2.0,
+                            length(voxelGridTransform[2].xyz) * 2.0);
+
+  mat4 camProjMatrix = mat4(2.0 / voxelGridSize.x, 0, 0, 0,
+                            0, 2.0 / voxelGridSize.y, 0, 0,
+                            0, 0, - 2.0 / voxelGridSize.z, 0,
                             0, 0, 0, 1);
 
-  vec3 camPositions[3] =
-   vec3[3] ( voxelGridOrigin
-               + vec3(voxelGridLength,                               // Right
-                      voxelGridLength / 2.0, voxelGridLength / 2.0),
-
-             voxelGridOrigin
-                + vec3(voxelGridLength / 2.0, voxelGridLength,      // TOP
-                       voxelGridLength / 2.0),
-
-             voxelGridOrigin
-                + vec3(voxelGridLength / 2.0, voxelGridLength / 2.0,  // Far
-                       voxelGridLength) );
+  vec3 camPositions[3] = vec3[3] ( vec3(1.0), vec3(1.0), vec3(1.0) );
+  camPositions[0] = (voxelGridTransform * vec4(1.0, 0.5, 0.5, 1.0)).xyz;  // Right
+  camPositions[1] = (voxelGridTransform * vec4(0.5, 1.0, 0.5, 1.0)).xyz;   // Top
+  camPositions[2] = (voxelGridTransform * vec4(0.5, 0.5, 1.0, 1.0)).xyz;  // Far
 
   mat4 viewMats[3] = mat4[3]( mat4(1.0),    // Right
-                           mat4(1.0),    // Top
-                           mat4(1.0) );  // Far
+                              mat4(1.0),    // Top
+                              mat4(1.0) );  // Far
 
   // View Matrix for right camera
   //                    X     y    z
@@ -173,7 +163,7 @@ void main()
   for(int i = 0; i < gl_in.length(); i++) {
     gl_Position = viewProjs[projAxisIdx] * vec4(In[i].pos, 1.0);
 
-    Out.posVoxelGrid = In[i].pos;
+    Out.posTexSpace = (voxelGridTransformI * vec4(In[i].pos, 1.0)).xyz * 0.5 + 0.5;
     Out.normal = In[i].normal;
     Out.uv = In[i].uv;
 
