@@ -26,3 +26,13 @@ kore::ShaderData::ShaderData(void)
   data(NULL),
   component(NULL) {
 }
+
+kore::ShaderData::ShaderData(const GLenum _type, const GLuint _size,
+                             const std::string& _name, void* _data,
+                             SceneNodeComponent* _comp) :
+  type(_type),
+  size(_size),
+  name(_name),
+  data(_data),
+  component(_comp) {
+}

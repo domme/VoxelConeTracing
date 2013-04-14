@@ -37,20 +37,6 @@ out vec4 color;
 
 void main() {
 
-  //imageStore(voxelTex, ivec3(5, 5, 5), vec4(1.0, 0.0, 0.0, 1.0));
-  //memoryBarrier();
-  
-  /*for (int z = 0; z < 12; ++z) {
-    for(int y = 0; y < 12; ++y) {
-      for( int x = 0; x < 12; ++x) {
-        imageStore(voxelTex, ivec3(x, y, z), vec4(1.0, 0.0, 0.0, 1.0));
-        memoryBarrier();
-      }
-    }
-  } */
-
-
-
   //(TODO) Determine depth range
   ivec3 voxelPos = ivec3(In.posVoxelGrid);
   imageStore(voxelTex, voxelPos, vec4(1.0, 0.0, 0.0, 1.0));

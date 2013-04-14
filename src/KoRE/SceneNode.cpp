@@ -220,7 +220,8 @@ void kore::SceneNode::rotate(const GLfloat& angle, const glm::vec3& axis,
 
 // TODO(dlazarek): Implement space-changes
 void kore::SceneNode::scale(const glm::vec3& dim,
-                          const ETransfpomSpace relativeTo /*=SPACE_LOCAL*/) {
+                            const ETransfpomSpace relativeTo /*=SPACE_LOCAL*/) {
+  _transform->setLocal(glm::scale(_transform->getLocal(), dim));
   _dirty = true;
 }
 

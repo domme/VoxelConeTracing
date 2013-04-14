@@ -66,17 +66,19 @@
 #include "VoxelConeTracing/Cube.h"
 #include "VoxelConeTracing/CubeVolume.h"
 
-#define VOXEL_GRID_RESOLUTION_X 12
-#define VOXEL_GRID_RESOLUTION_Y 12
-#define VOXEL_GRID_RESOLUTION_Z 12
-#define CUBE_SIDELENGTH 1.0f
+#define VOXEL_GRID_RESOLUTION_X 50
+#define VOXEL_GRID_RESOLUTION_Y 50
+#define VOXEL_GRID_RESOLUTION_Z 50
 
-uint screen_width = 1280;
-uint screen_height = 720;
-kore::SceneNode* cubeNodes[VOXEL_GRID_RESOLUTION_X][VOXEL_GRID_RESOLUTION_Y][VOXEL_GRID_RESOLUTION_Z];
+const uint screen_width = 1280;
+const uint screen_height = 720;
+const glm::vec3 voxelGridSideLengths(50.0, 50.0, 50.0);
+
 kore::SceneNode* cameraNode = NULL;
+kore::SceneNode* voxelGridNode = NULL;
 kore::Camera* pCamera = NULL;
 kore::Texture* voxelTexture = NULL;
+
 
 enum ETex3DContent {
   COLOR_PALETTE,
@@ -125,6 +127,8 @@ void initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
   }
 
   tex->create(texProps, "voxelTexture", colorValues);
+
+  
 
   RenderManager::getInstance()->activeTexture(0);
   RenderManager::getInstance()->bindTexture(GL_TEXTURE_3D, tex->getHandle());
@@ -178,8 +182,17 @@ void setupVoxelizeTest() {
   voxelizeShader->setName("voxelizeShader");
   resMgr->addShaderProgram(voxelizeShader);
 
+  // Init voxelGird
+  voxelGridNode = new SceneNode;
+  voxelGridNode->scale(voxelGridSideLengths / 2.0f, SPACE_LOCAL);
+  sceneMgr->getRootNode()->addChild(voxelGridNode);
+
   voxelTexture = new Texture;
   initTex3D(voxelTexture, COLOR_PALETTE);
+  TexturesComponent* voxelTexComp = new TexturesComponent;
+  voxelTexComp->addTexture(voxelTexture);
+
+  voxelGridNode->addComponent(voxelTexComp);
 
   //Load the scene and get all mesh nodes
   resMgr->loadScene("./assets/meshes/triangle.dae");
@@ -189,8 +202,7 @@ void setupVoxelizeTest() {
   cameraNode = sceneMgr->getSceneNodeByComponent(COMPONENT_CAMERA);
   pCamera = static_cast<Camera*>(cameraNode->getComponent(COMPONENT_CAMERA));
 
-
-  /*
+  // /*
   ShaderProgramPass* voxelizePass = new ShaderProgramPass;
   voxelizePass->setShaderProgram(voxelizeShader);
 
@@ -238,10 +250,6 @@ void setupVoxelizeTest() {
                                              meshNodes[i]->getTransform(), "modelWorldNormal",
                                              voxelizeShader));
 
-      TexturesComponent* voxelTexComp = new TexturesComponent;
-      voxelTexComp->addTexture(voxelTexture);
-      meshNodes[i]->addComponent(voxelTexComp);
-
       nodePass
         ->addOperation(OperationFactory::create(OP_BINDIMAGETEXTURE,
                                          voxelTexture->getName(),
@@ -252,7 +260,7 @@ void setupVoxelizeTest() {
   }
   
    backBufferStage->addProgramPass(voxelizePass);
-   */
+   //*/
 
 
   // Init ray casting
@@ -285,9 +293,9 @@ void setupVoxelizeTest() {
    NodePass* raycastNodePass = new NodePass(fsquadnode);
    raycastPass->addNodePass(raycastNodePass);
 
-   TexturesComponent* voxelTexComp = new TexturesComponent;
-   voxelTexComp->addTexture(voxelTexture);
-   fsquadnode->addComponent(voxelTexComp);
+   raycastNodePass->addOperation(new ViewportOp(glm::ivec4(0, 0,
+                                                screen_width,
+                                                screen_height)));
 
    raycastNodePass
      ->addOperation(new EnableDisableOp(GL_DEPTH_TEST,
@@ -330,7 +338,16 @@ void setupVoxelizeTest() {
                                  voxelTexture->getName(),
                                  voxelTexComp, "voxelTex",
                                  raycastShader));
-  
+
+    raycastNodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
+                                  "model Matrix", voxelGridNode->getTransform(),
+                                  "voxelGridTransform", raycastShader));
+
+    raycastNodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
+                                  "inverse model Matrix", voxelGridNode->getTransform(),
+                                  "voxelGridTransformI", raycastShader));
+
+
    raycastNodePass->addOperation(new RenderMesh(fsqMeshComponent, raycastShader));
    backBufferStage->addProgramPass(raycastPass);
 

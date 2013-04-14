@@ -26,6 +26,9 @@ namespace kore {
   class SceneNodeComponent;
   class ShaderData {
   public:
+    ShaderData(const GLenum _type, const GLuint _size,
+               const std::string& _name, void* _data,
+               SceneNodeComponent* _comp);
     ShaderData(void);
     virtual ~ShaderData(void) {};
 
