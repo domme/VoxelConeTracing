@@ -69,15 +69,16 @@ void init() {
                             length(voxelGridTransform[1].xyz) * 2.0,
                             length(voxelGridTransform[2].xyz) * 2.0);
 
+  // TODO: We need 3 different projection matrices if the voxelGrid is not cubical
   mat4 camProjMatrix = mat4(2.0 / voxelGridSize.x, 0, 0, 0,
                             0, 2.0 / voxelGridSize.y, 0, 0,
                             0, 0, - 2.0 / voxelGridSize.z, 0,
                             0, 0, 0, 1);
 
   vec3 camPositions[3] = vec3[3] ( vec3(1.0), vec3(1.0), vec3(1.0) );
-  camPositions[0] = (voxelGridTransform * vec4(1.0, 0.5, 0.5, 1.0)).xyz;  // Right
-  camPositions[1] = (voxelGridTransform * vec4(0.5, 1.0, 0.5, 1.0)).xyz;   // Top
-  camPositions[2] = (voxelGridTransform * vec4(0.5, 0.5, 1.0, 1.0)).xyz;  // Far
+  camPositions[0] = (voxelGridTransform * vec4(1.0, 0.0, 0.0, 1.0)).xyz;  // Right
+  camPositions[1] = (voxelGridTransform * vec4(0.0, 1.0, 0.0, 1.0)).xyz;   // Top
+  camPositions[2] = (voxelGridTransform * vec4(0.0, 0.0, 1.0, 1.0)).xyz;  // Far
 
   mat4 viewMats[3] = mat4[3]( mat4(1.0),    // Right
                               mat4(1.0),    // Top

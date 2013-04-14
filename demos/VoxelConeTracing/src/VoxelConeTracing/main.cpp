@@ -154,6 +154,8 @@ void setupVoxelizeTest() {
 
   glClearColor(1.0f,1.0f,1.0f,1.0f);
   glDisable(GL_CULL_FACE);
+  glDisable(GL_DEPTH_TEST);
+  glDepthMask(GL_FALSE);
 
   SceneManager* sceneMgr = SceneManager::getInstance();
   ResourceManager* resMgr = ResourceManager::getInstance();
