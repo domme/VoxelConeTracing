@@ -34,10 +34,12 @@ in VertexData {
     vec2 uv;
 } In[3];
 
-out VertexData {
+out VoxelData {
     vec3 posTexSpace;
     vec3 normal;
     vec2 uv;
+    vec3 projAxisTS;
+    uint projAxisIdx;
 } Out;
 
 uniform mat4 voxelGridTransform;
@@ -166,6 +168,8 @@ void main()
     Out.posTexSpace = (voxelGridTransformI * vec4(In[i].pos, 1.0)).xyz * 0.5 + 0.5;
     Out.normal = In[i].normal;
     Out.uv = In[i].uv;
+    Out.projAxisTS = normalize((voxelGridTransformI * vec4(worldAxes[projAxisIdx], 0.0)).xyz * 0.5 + 0.5);
+    Out.projAxisIdx = projAxisIdx;
 
     // done with the vertex
     EmitVertex();

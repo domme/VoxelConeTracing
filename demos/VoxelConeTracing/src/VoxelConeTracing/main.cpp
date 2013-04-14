@@ -195,7 +195,7 @@ void setupVoxelizeTest() {
   voxelGridNode->addComponent(voxelTexComp);
 
   //Load the scene and get all mesh nodes
-  resMgr->loadScene("./assets/meshes/triangle.dae");
+  resMgr->loadScene("./assets/meshes/icoSphere.dae");
   std::vector<SceneNode*> meshNodes;
   sceneMgr->getSceneNodesByComponent(COMPONENT_MESH, meshNodes);
 

@@ -17,7 +17,7 @@ void main(void) {
   const float voxelSize = length(voxelGridTransform[0] * 2.0) / voxelTexSize.x;
 
   float maxLength = length(In.viewDirVS);
-  float stepSize = voxelSize / 8.0;
+  float stepSize = voxelSize / 4.0;
 
   vec3 viewDirWS = normalize((viewI * vec4(In.viewDirVS, 0.0)).xyz);
   vec3 camPosWS = viewI[3].xyz;

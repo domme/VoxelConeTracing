@@ -27,19 +27,40 @@
 
 layout(rgba32f) uniform coherent image3D voxelTex;
 
-in VertexData {
+in VoxelData {
     vec3 posTexSpace;
     vec3 normal;
     vec2 uv;
+    vec3 projAxisTexSpace;
+    uint projAxisIdx;
 } In;
 
 out vec4 color;
 
+// In.projAxisIdx keys into this array..
+const vec3 worldAxes[3] = vec3[3]( vec3(1.0, 0.0, 0.0),
+                                   vec3(0.0, 1.0, 0.0),
+                                   vec3(0.0, 0.0, 1.0) );
+
 void main() {
+  const ivec3 voxelTexSize = imageSize(voxelTex);
+  const float voxelSizeTS = 1.0 / voxelTexSize.x;
 
   //(TODO) Determine depth range
-  ivec3 voxel = ivec3(floor(In.posTexSpace * imageSize(voxelTex)));
-  imageStore(voxelTex, voxel, vec4(1.0, 0.0, 0.0, 1.0));
-  memoryBarrier();
-  //imageStore(voxelTex, ivec3(5, 5, 5), vec4(1.0, 0.0, 0.0, 1.0));
+  vec3 dPosX = dFdx(In.posTexSpace);
+  vec3 dPosY = dFdy(In.posTexSpace);
+  
+  const float depthRangeTS = max(dot(In.projAxisTexSpace, dPosX),
+                               dot(In.projAxisTexSpace, dPosY));
+
+  const int numVoxelsDepth = int(ceil(abs(depthRangeTS / voxelSizeTS)));
+
+  ivec3 baseVoxel = ivec3(floor(In.posTexSpace * voxelTexSize));
+  for (int iDepth = 0; iDepth < numVoxelsDepth; ++iDepth) {
+
+    // Assumption: voxelGrid is parrallel to world-axes
+    ivec3 samplePos = baseVoxel + ivec3(worldAxes[In.projAxisIdx] * iDepth);
+    imageStore(voxelTex, samplePos, vec4(1.0, 0.0, 0.0, 1.0));
+    memoryBarrier();
+  }
 }
