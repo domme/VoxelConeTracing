@@ -169,10 +169,16 @@ void main()
   for(int i = 0; i < gl_in.length(); i++) {
     gl_Position = viewProjs[projAxisIdx] * vec4(In[i].pos, 1.0);
 
-    Out.posTexSpace = (voxelGridTransformI * vec4(In[i].pos, 1.0)).xyz * 0.5 + 0.5;
+    Out.posTexSpace =
+      (voxelGridTransformI * vec4(In[i].pos, 1.0)).xyz
+      * 0.5 + 0.5;
+
     Out.normal = In[i].normal;
     Out.uv = In[i].uv;
-    Out.projAxisTS = normalize((voxelGridTransformI * vec4(worldAxes[projAxisIdx], 0.0)).xyz * 0.5 + 0.5);
+
+    Out.projAxisTS =
+       normalize((voxelGridTransformI * vec4(worldAxes[projAxisIdx], 0.0)).xyz
+          * 0.5 + 0.5);
 
     UtilOut.projAxisIdx = projAxisIdx;
 

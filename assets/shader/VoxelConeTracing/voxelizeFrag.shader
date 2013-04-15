@@ -61,11 +61,13 @@ void main() {
   const int numVoxelsDepth = int(ceil(abs(depthRangeTS / voxelSizeTS)));
 
   ivec3 baseVoxel = ivec3(floor(In.posTexSpace * voxelTexSize));
-  for (int iDepth = 0; iDepth < numVoxelsDepth; ++iDepth) {
-
+  
+  imageStore(voxelTex, baseVoxel, vec4(1.0, 0.0, 0.0, 1.0));
+  for (int iDepth = 1; iDepth < numVoxelsDepth; ++iDepth) {
     // Assumption: voxelGrid is parrallel to world-axes
     ivec3 samplePos = baseVoxel + ivec3(worldAxes[UtilIn.projAxisIdx] * iDepth);
     imageStore(voxelTex, samplePos, vec4(1.0, 0.0, 0.0, 1.0));
-    memoryBarrier();
   }
+
+   memoryBarrier();
 }
