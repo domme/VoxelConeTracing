@@ -72,12 +72,24 @@
 
 const uint screen_width = 1280;
 const uint screen_height = 720;
-const glm::vec3 voxelGridSideLengths(50.0, 50.0, 50.0);
+const glm::vec3 _voxelGridSideLengths(50.0, 50.0, 50.0);
 
-kore::SceneNode* cameraNode = NULL;
-kore::SceneNode* voxelGridNode = NULL;
-kore::Camera* pCamera = NULL;
-kore::Texture* voxelTexture = NULL;
+kore::SceneNode* _cameraNode = NULL;
+kore::Camera* _pCamera = NULL;
+
+kore::SceneNode* _voxelGridNode = NULL;
+kore::Texture* _voxelTexture = NULL;
+kore::TexturesComponent* _voxelTexComp;
+
+kore::FrameBufferStage* _backBufferStage = NULL;
+kore::FrameBufferStage* _raycastTexStageFront = NULL;
+kore::FrameBufferStage* _raycastTexStageBack = NULL;
+
+kore::SceneManager* _sceneMgr = NULL;
+kore::ResourceManager* _resMgr = NULL;
+kore::RenderManager* _renderMgr = NULL;
+std::vector<kore::SceneNode*> _renderNodes;
+
 
 
 enum ETex3DContent {
@@ -148,23 +160,8 @@ void initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
   ResourceManager::getInstance()->addTexture(tex);
 }
 
-
-void setupVoxelizeTest() {
+void setupVoxelization() {
   using namespace kore;
-
-  glClearColor(1.0f,1.0f,1.0f,1.0f);
-  glDisable(GL_CULL_FACE);
-  glDisable(GL_DEPTH_TEST);
-  glDepthMask(GL_FALSE);
-
-  SceneManager* sceneMgr = SceneManager::getInstance();
-  ResourceManager* resMgr = ResourceManager::getInstance();
-  RenderManager* renderMgr = RenderManager::getInstance();
-
-  FrameBufferStage* backBufferStage = new FrameBufferStage;
-  GLenum drawBuffers[] = {GL_NONE};
-  backBufferStage->setFrameBuffer(kore::FrameBuffer::BACKBUFFER,
-                                  GL_FRAMEBUFFER, drawBuffers, 1);
 
   // Init Voxelize procedure
   //////////////////////////////////////////////////////////////////////////
@@ -182,34 +179,15 @@ void setupVoxelizeTest() {
     GL_FRAGMENT_SHADER);
   voxelizeShader->init();
   voxelizeShader->setName("voxelizeShader");
-  resMgr->addShaderProgram(voxelizeShader);
+  _resMgr->addShaderProgram(voxelizeShader);
 
-  // Init voxelGird
-  voxelGridNode = new SceneNode;
-  voxelGridNode->scale(voxelGridSideLengths / 2.0f, SPACE_LOCAL);
-  sceneMgr->getRootNode()->addChild(voxelGridNode);
-
-  voxelTexture = new Texture;
-  initTex3D(voxelTexture, BLACK);
-  TexturesComponent* voxelTexComp = new TexturesComponent;
-  voxelTexComp->addTexture(voxelTexture);
-
-  voxelGridNode->addComponent(voxelTexComp);
-
-  //Load the scene and get all mesh nodes
-  resMgr->loadScene("./assets/meshes/icoSphere.dae");
-  std::vector<SceneNode*> meshNodes;
-  sceneMgr->getSceneNodesByComponent(COMPONENT_MESH, meshNodes);
-
-  cameraNode = sceneMgr->getSceneNodeByComponent(COMPONENT_CAMERA);
-  pCamera = static_cast<Camera*>(cameraNode->getComponent(COMPONENT_CAMERA));
 
   // /*
   ShaderProgramPass* voxelizePass = new ShaderProgramPass;
   voxelizePass->setShaderProgram(voxelizeShader);
 
-  for (uint i = 0; i < meshNodes.size(); ++i) {
-    NodePass* nodePass = new NodePass(meshNodes[i]);
+  for (uint i = 0; i < _renderNodes.size(); ++i) {
+    NodePass* nodePass = new NodePass(_renderNodes[i]);
     voxelizePass->addNodePass(nodePass);
 
    nodePass->addOperation(new ViewportOp(glm::ivec4(0, 0,
@@ -224,7 +202,7 @@ void setupVoxelizeTest() {
     ->addOperation(new ColorMaskOp(glm::bvec4(false, false, false, false)));
 
    MeshComponent* meshComp =
-     static_cast<MeshComponent*>(meshNodes[i]->getComponent(COMPONENT_MESH));
+     static_cast<MeshComponent*>(_renderNodes[i]->getComponent(COMPONENT_MESH));
    
    nodePass
      ->addOperation(OperationFactory::create(OP_BINDATTRIBUTE, "v_position",
@@ -243,125 +221,281 @@ void setupVoxelizeTest() {
 
    nodePass
      ->addOperation(OperationFactory::create(OP_BINDUNIFORM, "model Matrix",
-                                             meshNodes[i]->getTransform(), "modelWorld",
+                                             _renderNodes[i]->getTransform(), "modelWorld",
                                              voxelizeShader));
 
    nodePass
      ->addOperation(OperationFactory::create(OP_BINDUNIFORM, "normal Matrix",
-                                             meshNodes[i]->getTransform(), "modelWorldNormal",
+                                             _renderNodes[i]->getTransform(), "modelWorldNormal",
                                              voxelizeShader));
 
    nodePass
      ->addOperation(OperationFactory::create(OP_BINDIMAGETEXTURE,
-                                      voxelTexture->getName(),
-                                      voxelTexComp, "voxelTex",
+                                      _voxelTexture->getName(),
+                                      _voxelTexComp, "voxelTex",
                                       voxelizeShader));
 
    nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
-                          "model Matrix", voxelGridNode->getTransform(),
+                          "model Matrix", _voxelGridNode->getTransform(),
                           "voxelGridTransform", voxelizeShader));
 
    nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
-                          "inverse model Matrix", voxelGridNode->getTransform(),
+                          "inverse model Matrix", _voxelGridNode->getTransform(),
                           "voxelGridTransformI", voxelizeShader));
 
    nodePass
      ->addOperation(new RenderMesh(meshComp, voxelizeShader));
   }
   
-   backBufferStage->addProgramPass(voxelizePass);
-   //*/
+   _backBufferStage->addProgramPass(voxelizePass);
+}
 
+void setupRaycasting() {
+  using namespace kore;
+  /*
+  // Init raycast prepare 
+  //////////////////////////////////////////////////////////////////////////
+  ShaderProgram* raycastTexShader = new ShaderProgram;
+  raycastTexShader->
+    loadShader("./assets/shader/VoxelConeTracing/raycastTexVert.shader",
+    GL_VERTEX_SHADER);
+
+
+  raycastTexShader->
+    loadShader("./assets/shader/VoxelConeTracing/raycastTexFrag.shader",
+    GL_FRAGMENT_SHADER);
+
+  raycastTexShader->init();
+  raycastTexShader->setName("raycastShader");
+  _resMgr->addShaderProgram(raycastTexShader);
+
+
+
+  FrameBuffer* raycastTexFrontFBO = new FrameBuffer("raycastTexFBO");
+  _resMgr->addFramebuffer(raycastTexFrontFBO);
+
+  FrameBuffer* raycastTexBackFBO = new FrameBuffer("raycastTexFBO");
+  _resMgr->addFramebuffer(raycastTexBackFBO);
+
+  STextureProperties texProps;
+  texProps.width = screen_width;
+  texProps.height = screen_height;
+  texProps.depth = 0;
+  texProps.format = GL_RGBA;
+  texProps.internalFormat = GL_RGBA32F;
+  texProps.pixelType = GL_FLOAT;
+  texProps.targetType = GL_TEXTURE_2D;
+
+  STextureProperties texPropsDepth;
+  texProps.width = screen_width;
+  texProps.height = screen_height;
+  texProps.depth = 0;
+  texProps.format = GL_DEPTH_STENCIL;
+  texProps.internalFormat = GL_UNSIGNED_INT_24_8;
+  texProps.pixelType = GL_UNSIGNED_INT;
+  texProps.targetType = GL_TEXTURE_2D;
+
+  Texture* texCubeFront = new Texture;
+  Texture* texCubeBack = new Texture;
+  Texture* texCubeDepthS = new Texture;
+  _resMgr->addTexture(texCubeFront);
+  _resMgr->addTexture(texCubeBack);
+  _resMgr->addTexture(texCubeDepthS);
+  
+  texCubeFront->create(texProps, "textureCubeFront");
+  texCubeBack->create(texProps, "textureCubeBack");
+  texCubeDepthS->create(texPropsDepth, "textureCubeBackDepthS");
+
+  raycastTexFrontFBO->addTextureAttachment(texCubeFront, GL_COLOR_ATTACHMENT0);
+  raycastTexFrontFBO->addTextureAttachment(texCubeDepthS, GL_DEPTH_STENCIL_ATTACHMENT);
+
+  raycastTexBackFBO->addTextureAttachment(texCubeBack, GL_COLOR_ATTACHMENT0);
+  raycastTexBackFBO->addTextureAttachment(texCubeDepthS, GL_DEPTH_STENCIL_ATTACHMENT);
+  
+  GLenum drawBuffersFront[] = {GL_COLOR_ATTACHMENT0};
+  _raycastTexStageFront = new FrameBufferStage;
+  _raycastTexStageFront->setFrameBuffer(raycastTexFrontFBO, GL_FRAMEBUFFER, drawBuffersFront, 1);
+
+  GLenum drawBuffersBack[] = {GL_COLOR_ATTACHMENT0};
+  _raycastTexStageBack = new FrameBufferStage;
+  _raycastTexStageBack->setFrameBuffer(raycastTexBackFBO, GL_FRAMEBUFFER, drawBuffersBack, 1);
+
+  ShaderProgramPass* raycastPreparePassFront = new ShaderProgramPass;
+  raycastPreparePassFront->setShaderProgram(raycastTexShader);
+  _raycastTexStageFront->addProgramPass(raycastPreparePassFront);
+
+  NodePass* nodePass = new NodePass;
+  raycastPreparePassFront->addNodePass(nodePass);
+
+  MeshComponent* cubeMeshComp =
+    static_cast<MeshComponent*> (_voxelGridNode->getComponent(COMPONENT_MESH));
+
+  // TODO: Add a cullface-op
+  nodePass
+    ->addOperation(new En)
+
+  nodePass
+    ->addOperation(OperationFactory::create(OP_BINDATTRIBUTE, "v_position",
+                                               cubeMeshComp, "v_position",
+                                               raycastTexShader));
+
+  nodePass
+    ->addOperation(OperationFactory::create(OP_BINDUNIFORM, "model Matrix",
+    _voxelGridNode->getTransform(), "voxelGridTransform", raycastTexShader));
+
+  nodePass
+    ->addOperation(OperationFactory::create(OP_BINDUNIFORM,
+    "view projection Matrix", _pCamera, "viewProj", raycastTexShader));
+
+  
+  */
+
+
+
+  
 
   // Init ray casting
   //////////////////////////////////////////////////////////////////////////
+
+  ShaderProgram* raycastShader = new ShaderProgram;
+  raycastShader->
+    loadShader("./assets/shader/VoxelConeTracing/raycastVert.shader",
+    GL_VERTEX_SHADER);
   
-   ShaderProgram* raycastShader = new ShaderProgram;
-   raycastShader->
-     loadShader("./assets/shader/VoxelConeTracing/raycastVert.shader",
-     GL_VERTEX_SHADER);
 
-   raycastShader->
-     loadShader("./assets/shader/VoxelConeTracing/raycastFrag.shader",
-     GL_FRAGMENT_SHADER);
+  raycastShader->
+    loadShader("./assets/shader/VoxelConeTracing/raycastFrag.shader",
+    GL_FRAGMENT_SHADER);
 
-   raycastShader->init();
-   raycastShader->setName("raycastShader");
-   resMgr->addShaderProgram(raycastShader);
-   
-   SceneNode* fsquadnode = new SceneNode();
-   sceneMgr->getRootNode()->addChild(fsquadnode);
+  raycastShader->init();
+  raycastShader->setName("raycastShader");
+  _resMgr->addShaderProgram(raycastShader);
 
-   MeshComponent* fsqMeshComponent = new MeshComponent();
-   fsqMeshComponent->setMesh(FullscreenQuad::getInstance());
-   fsquadnode->addComponent(fsqMeshComponent);
-   
+  SceneNode* fsquadnode = new SceneNode();
+  _sceneMgr->getRootNode()->addChild(fsquadnode);
 
-   ShaderProgramPass* raycastPass = new ShaderProgramPass();
-   raycastPass->setShaderProgram(raycastShader);
-
-   NodePass* raycastNodePass = new NodePass(fsquadnode);
-   raycastPass->addNodePass(raycastNodePass);
-
-   raycastNodePass->addOperation(new ViewportOp(glm::ivec4(0, 0,
-                                                screen_width,
-                                                screen_height)));
-
-   raycastNodePass
-     ->addOperation(new EnableDisableOp(GL_DEPTH_TEST,
-                                        EnableDisableOp::DISABLE));
-
-   raycastNodePass
-     ->addOperation(new ColorMaskOp(glm::bvec4(true, true, true, true)));
-
-   raycastNodePass->addOperation(OperationFactory::create(OP_BINDATTRIBUTE, 
-                                  "v_position",
-                                  fsqMeshComponent, 
-                                  "v_position",
-                                  raycastShader));
-
-   raycastNodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM, 
-                                 "ratio",
-                                 pCamera, 
-                                 "fRatio",
-                                 raycastShader));
-
-   raycastNodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM, 
-                                 "FOV degree",
-                                 pCamera, 
-                                 "fYfovDeg",
-                                 raycastShader));
-
-   raycastNodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM, 
-                                 "far Plane",
-                                 pCamera, 
-                                 "fFar",
-                                 raycastShader));
-
-   raycastNodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
-                                 "inverse view Matrix",
-                                 pCamera,
-                                 "viewI",
-                                 raycastShader));
-
-   raycastNodePass->addOperation(OperationFactory::create(OP_BINDIMAGETEXTURE,
-                                 voxelTexture->getName(),
-                                 voxelTexComp, "voxelTex",
-                                 raycastShader));
-
-    raycastNodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
-                                  "model Matrix", voxelGridNode->getTransform(),
-                                  "voxelGridTransform", raycastShader));
-
-    raycastNodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
-                                  "inverse model Matrix", voxelGridNode->getTransform(),
-                                  "voxelGridTransformI", raycastShader));
+  MeshComponent* fsqMeshComponent = new MeshComponent();
+  fsqMeshComponent->setMesh(FullscreenQuad::getInstance());
+  fsquadnode->addComponent(fsqMeshComponent);
 
 
-   raycastNodePass->addOperation(new RenderMesh(fsqMeshComponent, raycastShader));
-   backBufferStage->addProgramPass(raycastPass);
+  ShaderProgramPass* raycastPass = new ShaderProgramPass();
+  raycastPass->setShaderProgram(raycastShader);
 
-   renderMgr->addFramebufferStage(backBufferStage);
+  NodePass* raycastNodePass = new NodePass(fsquadnode);
+  raycastPass->addNodePass(raycastNodePass);
+
+  raycastNodePass->addOperation(new ViewportOp(glm::ivec4(0, 0,
+    screen_width,
+    screen_height)));
+
+  raycastNodePass
+    ->addOperation(new EnableDisableOp(GL_DEPTH_TEST,
+    EnableDisableOp::DISABLE));
+
+  raycastNodePass
+    ->addOperation(new ColorMaskOp(glm::bvec4(true, true, true, true)));
+
+  raycastNodePass->addOperation(OperationFactory::create(OP_BINDATTRIBUTE, 
+    "v_position",
+    fsqMeshComponent, 
+    "v_position",
+    raycastShader));
+
+  raycastNodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM, 
+    "ratio",
+    _pCamera, 
+    "fRatio",
+    raycastShader));
+
+  raycastNodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM, 
+    "FOV degree",
+    _pCamera, 
+    "fYfovDeg",
+    raycastShader));
+
+  raycastNodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM, 
+    "far Plane",
+    _pCamera, 
+    "fFar",
+    raycastShader));
+
+  raycastNodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
+    "inverse view Matrix",
+    _pCamera,
+    "viewI",
+    raycastShader));
+
+  raycastNodePass->addOperation(OperationFactory::create(OP_BINDIMAGETEXTURE,
+    _voxelTexture->getName(),
+    _voxelTexComp, "voxelTex",
+    raycastShader));
+
+  raycastNodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
+    "model Matrix", _voxelGridNode->getTransform(),
+    "voxelGridTransform", raycastShader));
+
+  raycastNodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
+    "inverse model Matrix", _voxelGridNode->getTransform(),
+    "voxelGridTransformI", raycastShader));
+
+
+  raycastNodePass->addOperation(new RenderMesh(fsqMeshComponent, raycastShader));
+  _backBufferStage->addProgramPass(raycastPass);
+
+  _renderMgr->addFramebufferStage(_backBufferStage);
+}
+
+
+
+
+void setup() {
+  using namespace kore;
+
+  glClearColor(1.0f,1.0f,1.0f,1.0f);
+  glDisable(GL_CULL_FACE);
+  glDisable(GL_DEPTH_TEST);
+  glDepthMask(GL_FALSE);
+
+  _sceneMgr = SceneManager::getInstance();
+  _resMgr = ResourceManager::getInstance();
+  _renderMgr = RenderManager::getInstance();
+
+  //Load the scene and get all mesh nodes
+  _resMgr->loadScene("./assets/meshes/icoSphere.dae");
+  _renderNodes.clear();
+  _sceneMgr->getSceneNodesByComponent(COMPONENT_MESH, _renderNodes);
+
+  _cameraNode = _sceneMgr->getSceneNodeByComponent(COMPONENT_CAMERA);
+  _pCamera = static_cast<Camera*>(_cameraNode->getComponent(COMPONENT_CAMERA));
+
+  _backBufferStage = new FrameBufferStage;
+  GLenum drawBuffers[] = {GL_NONE};
+  _backBufferStage->setFrameBuffer(kore::FrameBuffer::BACKBUFFER,
+                                  GL_FRAMEBUFFER, drawBuffers, 1);
+
+  // Init voxelGird
+  _voxelGridNode = new SceneNode;
+  _voxelGridNode->scale(_voxelGridSideLengths / 2.0f, SPACE_LOCAL);
+  _sceneMgr->getRootNode()->addChild(_voxelGridNode);
+
+  _voxelTexture = new Texture;
+  initTex3D(_voxelTexture, BLACK);
+  _voxelTexComp = new TexturesComponent;
+  _voxelTexComp->addTexture(_voxelTexture);
+  _voxelGridNode->addComponent(_voxelTexComp);
+
+  Cube* voxelGridCube = new Cube(2.0f);
+  MeshComponent* meshComp = new MeshComponent;
+  meshComp->setMesh(voxelGridCube);
+  _voxelGridNode->addComponent(meshComp);
+  ////////////////////////////////////////////////////////////////////////////
+  
+  setupVoxelization();
+  setupRaycasting();
+
+
+  
 }
 
 int main(void) {
@@ -425,7 +559,7 @@ int main(void) {
 
   //setupImageLoadStoreTest();
   // setupAtomicCounterTest();
-  setupVoxelizeTest();
+  setup();
 
   kore::Timer the_timer;
   the_timer.start();
@@ -441,22 +575,22 @@ int main(void) {
     time = the_timer.timeSinceLastCall();
     kore::SceneManager::getInstance()->update();
 
-    if (pCamera) {
+    if (_pCamera) {
       if (glfwGetKey(GLFW_KEY_UP) || glfwGetKey('W')) {
       
-        pCamera->moveForward(cameraMoveSpeed * static_cast<float>(time));
+        _pCamera->moveForward(cameraMoveSpeed * static_cast<float>(time));
       }
 
       if (glfwGetKey(GLFW_KEY_DOWN) || glfwGetKey('S')) {
-        pCamera->moveForward(-cameraMoveSpeed * static_cast<float>(time));
+        _pCamera->moveForward(-cameraMoveSpeed * static_cast<float>(time));
       }
 
       if (glfwGetKey(GLFW_KEY_LEFT) || glfwGetKey('A')) {
-        pCamera->moveSideways(-cameraMoveSpeed * static_cast<float>(time));
+        _pCamera->moveSideways(-cameraMoveSpeed * static_cast<float>(time));
       }
 
       if (glfwGetKey(GLFW_KEY_RIGHT) || glfwGetKey('D')) {
-        pCamera->moveSideways(cameraMoveSpeed * static_cast<float>(time));
+        _pCamera->moveSideways(cameraMoveSpeed * static_cast<float>(time));
       }
 
       int mouseX = 0;
@@ -468,7 +602,7 @@ int main(void) {
 
       if (glfwGetMouseButton(GLFW_MOUSE_BUTTON_1) == GLFW_PRESS ) {
         if (glm::abs(mouseMoveX) > 0 || glm::abs(mouseMoveY) > 0) {
-          pCamera->rotateFromMouseMove((float)-mouseMoveX / 5.0f,
+          _pCamera->rotateFromMouseMove((float)-mouseMoveX / 5.0f,
             (float)-mouseMoveY / 5.0f);
         }
       }

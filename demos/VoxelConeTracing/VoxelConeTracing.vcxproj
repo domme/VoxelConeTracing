@@ -296,6 +296,8 @@
     <None Include="..\..\assets\shader\simple.fp" />
     <None Include="..\..\assets\shader\simple.vp" />
     <None Include="..\..\assets\shader\VoxelConeTracing\raycastFrag.shader" />
+    <None Include="..\..\assets\shader\VoxelConeTracing\raycastTexFrag.shader" />
+    <None Include="..\..\assets\shader\VoxelConeTracing\raycastTexVert.shader" />
     <None Include="..\..\assets\shader\VoxelConeTracing\raycastVert.shader" />
     <None Include="..\..\assets\shader\VoxelConeTracing\voxelizeFrag.shader" />
     <None Include="..\..\assets\shader\VoxelConeTracing\voxelizeGeom.shader" />

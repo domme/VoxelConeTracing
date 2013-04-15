@@ -26,11 +26,11 @@
 class Cube : public kore::Mesh {
   public:
     Cube();
-    Cube(const float vertexOffset);
+    Cube(const float sideLength);
     virtual ~Cube();
     
   private:
-    void init(const float vertexOffset);
+    void init(const float sideLength);
 };
 
 

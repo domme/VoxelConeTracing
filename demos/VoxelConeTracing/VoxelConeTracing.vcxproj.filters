@@ -70,5 +70,11 @@
     <None Include="..\..\assets\shader\VoxelConeTracing\raycastVert.shader">
       <Filter>shader\VoxelConeTracing</Filter>
     </None>
+    <None Include="..\..\assets\shader\VoxelConeTracing\raycastTexFrag.shader">
+      <Filter>shader\VoxelConeTracing</Filter>
+    </None>
+    <None Include="..\..\assets\shader\VoxelConeTracing\raycastTexVert.shader">
+      <Filter>shader\VoxelConeTracing</Filter>
+    </None>
   </ItemGroup>
 </Project>
