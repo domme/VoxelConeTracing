@@ -564,7 +564,7 @@ int main(void) {
   kore::Timer the_timer;
   the_timer.start();
   double time = 0;
-  float cameraMoveSpeed = 4.0f;
+  float cameraMoveSpeed = 10.0f;
   
   int oldMouseX = 0;
   int oldMouseY = 0;

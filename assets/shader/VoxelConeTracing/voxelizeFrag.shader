@@ -62,7 +62,7 @@ void main() {
 
   ivec3 baseVoxel = ivec3(floor(In.posTexSpace * voxelTexSize));
   
-  imageStore(voxelTex, baseVoxel, vec4(1.0, 0.0, 0.0, 1.0));
+  imageStore(voxelTex, baseVoxel, vec4(1.0, 1.0, 1.0, 1.0));
   for (int iDepth = 1; iDepth < numVoxelsDepth; ++iDepth) {
     // Assumption: voxelGrid is parrallel to world-axes
     ivec3 samplePos = baseVoxel + ivec3(worldAxes[UtilIn.projAxisIdx] * iDepth);

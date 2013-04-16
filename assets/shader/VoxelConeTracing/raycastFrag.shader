@@ -18,7 +18,7 @@ void main(void) {
   const float voxelSize = length(voxelGridTransform[0] * 2.0) / voxelTexSize.x;
 
   float maxLength = length(In.viewDirVS);
-  float stepSize = voxelSize / 4.0;
+  float stepSize = voxelSize / 6.0;
 
   vec3 viewDirWS = normalize((viewI * vec4(In.viewDirVS, 0.0)).xyz);
   vec3 camPosWS = viewI[3].xyz;
@@ -38,12 +38,15 @@ void main(void) {
           continue;  // Outside of voxelGrid
         }
 
-    ivec3 samplePos = ivec3(floor(posTexSpace * voxelTexSize));
+    posTexSpace *= voxelTexSize;
+    vec3 shading = fract(posTexSpace);
+    ivec3 samplePos = ivec3(floor(posTexSpace));
+    
     vec4 col = imageLoad(voxelTex, samplePos);
     memoryBarrier();
     
     if (length(col.xyz) > 0.001) {
-      color = col;
+      color = col * (1.0 - length(shading) / 2.0);//vec4(vec3(1.0) - shading, 1.0);
       break;
     }
   }
