@@ -89,26 +89,22 @@ void init() {
   viewMats[0][0] = vec4(0.0, 0.0, 1.0, 0.0);
   viewMats[0][1] = vec4(0.0, 1.0, 0.0, 0.0);
   viewMats[0][2] = vec4(1.0, 0.0, 0.0, 0.0);
-  viewMats[0][3] = vec4(dot(viewMats[0][0].xyz, -camPositions[0]),
-                        dot(viewMats[0][1].xyz, -camPositions[0]),
-                        dot(viewMats[0][2].xyz, -camPositions[0]), 1.0);
+  viewMats[0][3] = vec4(0.0, 0.0, -1.0, 1.0);
+                        
+                        
 
   // View Matrix for top camera
   viewMats[1][0] = vec4(1.0, 0.0, 0.0, 0.0);
   viewMats[1][1] = vec4(0.0, 0.0, 1.0, 0.0);
   viewMats[1][2] = vec4(0.0, 1.0, 0.0, 0.0);
-  viewMats[1][3] = vec4(dot(viewMats[1][0].xyz, -camPositions[1]),
-                        dot(viewMats[1][1].xyz, -camPositions[1]),
-                        dot(viewMats[1][2].xyz, -camPositions[1]), 1.0);
+  viewMats[1][3] = vec4(0.0, 0.0, -1.0, 1.0);
 
 
   // View Matrix for far camera
   viewMats[2][0] = vec4(-1.0, 0.0, 0.0, 0.0);
   viewMats[2][1] = vec4(0.0, 1.0, 0.0, 0.0);
   viewMats[2][2] = vec4(0.0, 0.0, 1.0, 0.0);
-  viewMats[2][3] = vec4(dot(viewMats[2][0].xyz, -camPositions[2]),
-                        dot(viewMats[2][1].xyz, -camPositions[2]),
-                        dot(viewMats[2][2].xyz, -camPositions[2]), 1.0);
+  viewMats[2][3] = vec4(0.0, 0.0, -1.0, 1.0);
 
   viewProjs = mat4[3]( mat4(1.0), mat4(1.0), mat4(1.0) );
   viewProjs[0] = camProjMatrix * viewMats[0];
