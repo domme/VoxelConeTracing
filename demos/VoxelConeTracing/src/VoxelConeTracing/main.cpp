@@ -66,9 +66,9 @@
 #include "VoxelConeTracing/Cube.h"
 #include "VoxelConeTracing/CubeVolume.h"
 
-#define VOXEL_GRID_RESOLUTION_X 64
-#define VOXEL_GRID_RESOLUTION_Y 64
-#define VOXEL_GRID_RESOLUTION_Z 64
+#define VOXEL_GRID_RESOLUTION_X 256
+#define VOXEL_GRID_RESOLUTION_Y 256
+#define VOXEL_GRID_RESOLUTION_Z 256
 
 const uint screen_width = 1280;
 const uint screen_height = 720;
