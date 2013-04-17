@@ -52,7 +52,7 @@ void main(void) {
     
     col = imageLoad(voxelTex, samplePos);
 
-    if (length(col.xyz) > 0.8) {
+    if (length(col.xyz) > 0.001) {
       col *= (1.0 - length(shading) / 2.0);
       break;
     }

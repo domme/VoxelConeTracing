@@ -465,6 +465,7 @@ void kore::SceneLoader::loadTexType(kore::ResourceManager* resourceMgr,
 
         if (tex != NULL) {
           resourceMgr->addTexture(tex);
+          IDManager::getInstance()->registerURL(tex->getID(), texURL);
         }
       }
     }

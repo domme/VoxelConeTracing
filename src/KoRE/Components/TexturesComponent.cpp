@@ -3,6 +3,7 @@
 #include <algorithm>
 
 kore::TexturesComponent::TexturesComponent(void) {
+  _type = COMPONENT_TEXTURES;
 }
 
 kore::TexturesComponent::~TexturesComponent(void) {
@@ -32,5 +33,7 @@ void kore::
   shaderdata.data = texInfo;
   shaderdata.component = this;
   _shaderData.push_back(shaderdata);
+
+  _vTextures.push_back(tex);
   // Tex unit is defined by shader
 }

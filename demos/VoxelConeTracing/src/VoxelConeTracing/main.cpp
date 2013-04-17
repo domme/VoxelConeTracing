@@ -139,7 +139,8 @@ void initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
           colorValues[x][y] = glm::detail::tvec4<unsigned char>(valueX * 255, valueY * 255, valueZ * 255, 255);
         }
       }
-      glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, z, VOXEL_GRID_RESOLUTION_X, VOXEL_GRID_RESOLUTION_Y, 1, GL_RGBA, GL_UNSIGNED_BYTE, colorValues);
+      glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, z, VOXEL_GRID_RESOLUTION_X,
+          VOXEL_GRID_RESOLUTION_Y, 1, GL_RGBA, GL_UNSIGNED_BYTE, colorValues);
     }
   } else if (texContent == BLACK) {
     for (uint z = 0; z < VOXEL_GRID_RESOLUTION_Z; ++z) {
@@ -147,7 +148,10 @@ void initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
                                                   [VOXEL_GRID_RESOLUTION_Y];
 
      memset(colorValues, 0, VOXEL_GRID_RESOLUTION_X * VOXEL_GRID_RESOLUTION_Y * sizeof(unsigned char));
-     glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, z, VOXEL_GRID_RESOLUTION_X, VOXEL_GRID_RESOLUTION_Y, 1, GL_RGBA, GL_UNSIGNED_BYTE, colorValues);
+     glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, z,
+                     VOXEL_GRID_RESOLUTION_X,
+                     VOXEL_GRID_RESOLUTION_Y, 1,
+                     GL_RGBA, GL_UNSIGNED_BYTE, colorValues);
     }
   }
   GLerror::gl_ErrorCheckFinish("Upload 3D texture values");
@@ -246,6 +250,14 @@ void setupVoxelization() {
                                       _voxelTexture->getName(),
                                       _voxelTexComp, "voxelTex",
                                       voxelizeShader));
+
+   const TexturesComponent* texComp =
+     static_cast<TexturesComponent*>(_renderNodes[i]->getComponent(COMPONENT_TEXTURES));
+   const Texture* tex = texComp->getTexture(0);
+   
+   nodePass
+     ->addOperation(OperationFactory::create(OP_BINDTEXTURE, tex->getName(),
+                                      texComp, "diffuseTex", voxelizeShader));
 
    nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
                           "model Matrix", _voxelGridNode->getTransform(),
