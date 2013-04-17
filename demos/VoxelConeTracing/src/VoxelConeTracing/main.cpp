@@ -66,9 +66,9 @@
 #include "VoxelConeTracing/Cube.h"
 #include "VoxelConeTracing/CubeVolume.h"
 
-#define VOXEL_GRID_RESOLUTION_X 50
-#define VOXEL_GRID_RESOLUTION_Y 50
-#define VOXEL_GRID_RESOLUTION_Z 50
+#define VOXEL_GRID_RESOLUTION_X 64
+#define VOXEL_GRID_RESOLUTION_Y 64
+#define VOXEL_GRID_RESOLUTION_Z 64
 
 const uint screen_width = 1280;
 const uint screen_height = 720;
@@ -90,6 +90,11 @@ kore::ResourceManager* _resMgr = NULL;
 kore::RenderManager* _renderMgr = NULL;
 std::vector<kore::SceneNode*> _renderNodes;
 
+glm::vec3 _voxelGridResolution (VOXEL_GRID_RESOLUTION_X,
+                                VOXEL_GRID_RESOLUTION_Y,
+                                VOXEL_GRID_RESOLUTION_Z);
+kore::ShaderData _shdVoxelGridResolution;
+
 
 
 enum ETex3DContent {
@@ -100,50 +105,53 @@ enum ETex3DContent {
 void initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
   using namespace kore;
  
+  _shdVoxelGridResolution.data = &_voxelGridResolution;
+  _shdVoxelGridResolution.name = "VoxelGridResolution";
+  _shdVoxelGridResolution.size = 1;
+  _shdVoxelGridResolution.type = GL_FLOAT_VEC3;
+  
   STextureProperties texProps;
   texProps.targetType = GL_TEXTURE_3D;
   texProps.width = VOXEL_GRID_RESOLUTION_X;
   texProps.height = VOXEL_GRID_RESOLUTION_Y;
   texProps.depth = VOXEL_GRID_RESOLUTION_Z;
   texProps.format = GL_RGBA;
-  texProps.internalFormat = GL_RGBA32F;
-  texProps.pixelType = GL_FLOAT;
+  texProps.internalFormat = GL_RGBA8;
+  texProps.pixelType = GL_UNSIGNED_BYTE;
 
+  tex->create(texProps, "voxelTexture");
 
 
   // Create data
-  glm::vec4 colorValues[VOXEL_GRID_RESOLUTION_X]
-                       [VOXEL_GRID_RESOLUTION_Y]
-                       [VOXEL_GRID_RESOLUTION_Z];
-
+  RenderManager::getInstance()->activeTexture(0);
+  RenderManager::getInstance()->bindTexture(GL_TEXTURE_3D, tex->getHandle());
+                       
+  GLerror::gl_ErrorCheckStart();
   if (texContent == COLOR_PALETTE) {
     for (uint z = 0; z < VOXEL_GRID_RESOLUTION_Z; ++z) {
+      glm::detail::tvec4<unsigned char> colorValues[VOXEL_GRID_RESOLUTION_X]
+                           [VOXEL_GRID_RESOLUTION_Y];
       float valueZ = ((float) z / (float) VOXEL_GRID_RESOLUTION_Z);
       for (uint y = 0; y < VOXEL_GRID_RESOLUTION_Y; ++y) {
         float valueY = ((float) y / (float) VOXEL_GRID_RESOLUTION_Y);
         for (uint x = 0; x < VOXEL_GRID_RESOLUTION_X; ++x) {
           float valueX = ((float) x / (float) VOXEL_GRID_RESOLUTION_X);
-
-          colorValues[x][y][z] = glm::vec4(valueX, valueY, valueZ, 1.0f);
+          colorValues[x][y] = glm::detail::tvec4<unsigned char>(valueX * 255, valueY * 255, valueZ * 255, 255);
         }
       }
+      glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, z, VOXEL_GRID_RESOLUTION_X, VOXEL_GRID_RESOLUTION_Y, 1, GL_RGBA, GL_UNSIGNED_BYTE, colorValues);
     }
   } else if (texContent == BLACK) {
     for (uint z = 0; z < VOXEL_GRID_RESOLUTION_Z; ++z) {
-      for (uint y = 0; y < VOXEL_GRID_RESOLUTION_Y; ++y) {
-        for (uint x = 0; x < VOXEL_GRID_RESOLUTION_X; ++x) {
-          colorValues[x][y][z] = glm::vec4(0, 0, 0, 1.0f);
-        }
-      }
+     glm::detail::tvec4<unsigned char> colorValues[VOXEL_GRID_RESOLUTION_X]
+                                                  [VOXEL_GRID_RESOLUTION_Y];
+
+     memset(colorValues, 0, VOXEL_GRID_RESOLUTION_X * VOXEL_GRID_RESOLUTION_Y * sizeof(unsigned char));
+     glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, z, VOXEL_GRID_RESOLUTION_X, VOXEL_GRID_RESOLUTION_Y, 1, GL_RGBA, GL_UNSIGNED_BYTE, colorValues);
     }
   }
-
-  tex->create(texProps, "voxelTexture", colorValues);
-
+  GLerror::gl_ErrorCheckFinish("Upload 3D texture values");
   
-
-  RenderManager::getInstance()->activeTexture(0);
-  RenderManager::getInstance()->bindTexture(GL_TEXTURE_3D, tex->getHandle());
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, 0);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, 0);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_R, GL_RED);
@@ -208,6 +216,10 @@ void setupVoxelization() {
      ->addOperation(OperationFactory::create(OP_BINDATTRIBUTE, "v_position",
                                              meshComp, "v_position",
                                              voxelizeShader));
+
+   nodePass
+     ->addOperation(new BindUniform(&_shdVoxelGridResolution,
+                                  voxelizeShader->getUniform("voxelTexSize")));
 
   nodePass
     ->addOperation(OperationFactory::create(OP_BINDATTRIBUTE, "v_normal",
@@ -462,7 +474,7 @@ void setup() {
   _renderMgr = RenderManager::getInstance();
 
   //Load the scene and get all mesh nodes
-  _resMgr->loadScene("./assets/meshes/icoSphere.dae");
+  _resMgr->loadScene("./assets/meshes/monkey.dae");
   _renderNodes.clear();
   _sceneMgr->getSceneNodesByComponent(COMPONENT_MESH, _renderNodes);
 
@@ -564,7 +576,7 @@ int main(void) {
   kore::Timer the_timer;
   the_timer.start();
   double time = 0;
-  float cameraMoveSpeed = 10.0f;
+  float cameraMoveSpeed = 20.0f;
   
   int oldMouseX = 0;
   int oldMouseY = 0;

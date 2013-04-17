@@ -24,6 +24,7 @@
 */
 
 #version 420
+#extension GL_ARB_shader_image_size : enable
 
 layout(triangles) in;
 layout (triangle_strip, max_vertices=3) out;
@@ -45,18 +46,18 @@ out VoxelUtilData {
   flat uint projAxisIdx;
 } UtilOut;
 
+
+uniform vec3 voxelTexSize;
 uniform mat4 voxelGridTransform;
 uniform mat4 voxelGridTransformI;
 
-// Constants for the projection planes to key into the worldAxes array
-const uint YZ = 0;
-const uint XZ = 1;
-const uint XY = 2;
 
 // Constants to key into worldaxes
 const uint X = 0;
 const uint Y = 1;
 const uint Z = 2;
+
+vec3 voxelGridSize;
 
 const vec3 worldAxes[3] = vec3[3]( vec3(1.0, 0.0, 0.0),
                                    vec3(0.0, 1.0, 0.0),
@@ -65,20 +66,15 @@ const vec3 worldAxes[3] = vec3[3]( vec3(1.0, 0.0, 0.0),
 mat4 viewProjs[3];
 
 void init() {
-  vec3 voxelGridSize = vec3(length(voxelGridTransform[0].xyz) * 2.0,
-                            length(voxelGridTransform[1].xyz) * 2.0,
-                            length(voxelGridTransform[2].xyz) * 2.0);
+  voxelGridSize = vec3(length(voxelGridTransform[0].xyz) * 2.0,
+                       length(voxelGridTransform[1].xyz) * 2.0,
+                       length(voxelGridTransform[2].xyz) * 2.0);
 
   // TODO: We need 3 different projection matrices if the voxelGrid is not cubical
   mat4 camProjMatrix = mat4(2.0 / voxelGridSize.x, 0, 0, 0,
                             0, 2.0 / voxelGridSize.y, 0, 0,
                             0, 0, - 2.0 / voxelGridSize.z, 0,
                             0, 0, 0, 1);
-
-  vec3 camPositions[3] = vec3[3] ( vec3(1.0), vec3(1.0), vec3(1.0) );
-  camPositions[0] = (voxelGridTransform * vec4(1.0, 0.0, 0.0, 1.0)).xyz;  // Right
-  camPositions[1] = (voxelGridTransform * vec4(0.0, 1.0, 0.0, 1.0)).xyz;   // Top
-  camPositions[2] = (voxelGridTransform * vec4(0.0, 0.0, 1.0, 1.0)).xyz;  // Far
 
   mat4 viewMats[3] = mat4[3]( mat4(1.0),    // Right
                               mat4(1.0),    // Top
@@ -90,9 +86,7 @@ void init() {
   viewMats[0][1] = vec4(0.0, 1.0, 0.0, 0.0);
   viewMats[0][2] = vec4(1.0, 0.0, 0.0, 0.0);
   viewMats[0][3] = vec4(0.0, 0.0, -1.0, 1.0);
-                        
-                        
-
+  
   // View Matrix for top camera
   viewMats[1][0] = vec4(1.0, 0.0, 0.0, 0.0);
   viewMats[1][1] = vec4(0.0, 0.0, 1.0, 0.0);
@@ -111,33 +105,6 @@ void init() {
   viewProjs[1] = camProjMatrix * viewMats[1];
   viewProjs[2] = camProjMatrix * viewMats[2];
 }
-
-mat4 lookAt(const in vec3 eye, const in vec3 at, const in vec3 up) {
-  /*
-  detail::tvec3<T> f = normalize(center - eye);
-    detail::tvec3<T> u = normalize(up);
-    detail::tvec3<T> s = normalize(cross(f, u));
-    u = cross(s, f);
-
-    detail::tmat4x4<T> Result(1);
-    Result[0][0] = s.x;
-    Result[1][0] = s.y;
-    Result[2][0] = s.z;
-    Result[0][1] = u.x;
-    Result[1][1] = u.y;
-    Result[2][1] = u.z;
-    Result[0][2] =-f.x;
-    Result[1][2] =-f.y;
-    Result[2][2] =-f.z;
-    Result[3][0] =-dot(s, eye);
-    Result[3][1] =-dot(u, eye);
-    Result[3][2] = dot(f, eye);
-    return Result;
-  */
-
-  return mat4(1.0);
-}
-
 
 uint calcProjAxis() {
   // Determine world-axis along wich the projected triangle-area is maximized
@@ -160,10 +127,16 @@ void main()
 {
   init();
 
+  vec3 voxelSize = voxelGridSize / voxelTexSize;
+
   uint projAxisIdx = calcProjAxis();
-  
+  vec3 middle = (viewProjs[projAxisIdx] * vec4((In[0].pos + In[1].pos + In[2].pos) / 3.0, 1.0)).xyz;
   for(int i = 0; i < gl_in.length(); i++) {
-    gl_Position = viewProjs[projAxisIdx] * vec4(In[i].pos, 1.0);
+    
+    vec3 projPos = (viewProjs[projAxisIdx] * vec4(In[i].pos, 1.0)).xyz;
+    projPos += normalize(projPos - middle) * (voxelSize.x / 2.0);
+    
+    gl_Position = vec4(projPos, 1.0);
 
     Out.posTexSpace =
       (voxelGridTransformI * vec4(In[i].pos, 1.0)).xyz
