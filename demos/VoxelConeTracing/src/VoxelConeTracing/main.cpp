@@ -77,6 +77,7 @@ const glm::vec3 _voxelGridSideLengths(50.0, 50.0, 50.0);
 kore::SceneNode* _cameraNode = NULL;
 kore::Camera* _pCamera = NULL;
 
+kore::SceneNode* _rotationNode = NULL;
 kore::SceneNode* _voxelGridNode = NULL;
 kore::Texture* _voxelTexture = NULL;
 kore::TexturesComponent* _voxelTexComp;
@@ -95,16 +96,40 @@ glm::vec3 _voxelGridResolution (VOXEL_GRID_RESOLUTION_X,
                                 VOXEL_GRID_RESOLUTION_Z);
 kore::ShaderData _shdVoxelGridResolution;
 
-
+GLuint _tex3DclearPBO = KORE_GLUINT_HANDLE_INVALID;
 
 enum ETex3DContent {
   COLOR_PALETTE,
   BLACK
 };
 
+void clearTex3D(kore::Texture* tex) {
+  glBindBuffer(GL_PIXEL_UNPACK_BUFFER,_tex3DclearPBO);
+  for (uint z = 0; z < VOXEL_GRID_RESOLUTION_Z; ++z) {
+    glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, z,
+      VOXEL_GRID_RESOLUTION_X,
+      VOXEL_GRID_RESOLUTION_Y, 1,
+      GL_RED_INTEGER, GL_UNSIGNED_INT, 0);
+  }
+  glBindBuffer(GL_PIXEL_UNPACK_BUFFER,0);
+}
+
 void initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
   using namespace kore;
  
+
+  glm::detail::tvec4<unsigned int> colorValues[VOXEL_GRID_RESOLUTION_X]
+  [VOXEL_GRID_RESOLUTION_Y];
+  memset(colorValues, 0, VOXEL_GRID_RESOLUTION_X * VOXEL_GRID_RESOLUTION_Y * sizeof(unsigned int));
+
+  glGenBuffers(1, &_tex3DclearPBO);
+  glBindBuffer(GL_PIXEL_UNPACK_BUFFER, _tex3DclearPBO);
+  glBufferData(GL_PIXEL_UNPACK_BUFFER, 
+    VOXEL_GRID_RESOLUTION_X * VOXEL_GRID_RESOLUTION_Y * sizeof(unsigned int), 
+    colorValues,GL_STATIC_DRAW);
+  glBindBuffer(GL_PIXEL_UNPACK_BUFFER,0);
+
+
   _shdVoxelGridResolution.data = &_voxelGridResolution;
   _shdVoxelGridResolution.name = "VoxelGridResolution";
   _shdVoxelGridResolution.size = 1;
@@ -143,16 +168,7 @@ void initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
           VOXEL_GRID_RESOLUTION_Y, 1, GL_RGBA, GL_UNSIGNED_BYTE, colorValues);
     }
   } else if (texContent == BLACK) {
-    for (uint z = 0; z < VOXEL_GRID_RESOLUTION_Z; ++z) {
-     glm::detail::tvec4<unsigned int> colorValues[VOXEL_GRID_RESOLUTION_X]
-                                                  [VOXEL_GRID_RESOLUTION_Y];
-
-     memset(colorValues, 0, VOXEL_GRID_RESOLUTION_X * VOXEL_GRID_RESOLUTION_Y * sizeof(unsigned int));
-     glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, z,
-                     VOXEL_GRID_RESOLUTION_X,
-                     VOXEL_GRID_RESOLUTION_Y, 1,
-                     GL_RED_INTEGER, GL_UNSIGNED_INT, colorValues);
-    }
+      clearTex3D(tex);
   }
   GLerror::gl_ErrorCheckFinish("Upload 3D texture values");
   
@@ -167,9 +183,12 @@ void initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-  RenderManager::getInstance()->bindTexture(GL_TEXTURE_3D, 0);
+  //RenderManager::getInstance()->bindTexture(GL_TEXTURE_3D, 0);
 
   ResourceManager::getInstance()->addTexture(tex);
+
+
+
 }
 
 void setupVoxelization() {
@@ -489,6 +508,7 @@ void setup() {
   _resMgr->loadScene("./assets/meshes/monkey.dae");
   _renderNodes.clear();
   _sceneMgr->getSceneNodesByComponent(COMPONENT_MESH, _renderNodes);
+  _rotationNode = _renderNodes[0];
 
   _cameraNode = _sceneMgr->getSceneNodeByComponent(COMPONENT_CAMERA);
   _pCamera = static_cast<Camera*>(_cameraNode->getComponent(COMPONENT_CAMERA));
@@ -520,6 +540,10 @@ void setup() {
 
 
   
+}
+
+void shutdown(){
+  glDeleteBuffers(1,&_tex3DclearPBO);
 }
 
 int main(void) {
@@ -624,6 +648,10 @@ int main(void) {
       int mouseMoveX = mouseX - oldMouseX;
       int mouseMoveY = mouseY - oldMouseY;
 
+      if (_rotationNode && glfwGetKey('R')) {
+        _rotationNode->rotate(5.0f * static_cast<float>(time), glm::vec3(0.0f, 1.0f, 0.0f));
+      }
+
       if (glfwGetMouseButton(GLFW_MOUSE_BUTTON_1) == GLFW_PRESS ) {
         if (glm::abs(mouseMoveX) > 0 || glm::abs(mouseMoveY) > 0) {
           _pCamera->rotateFromMouseMove((float)-mouseMoveX / 5.0f,
@@ -636,6 +664,7 @@ int main(void) {
     }
 
     kore::GLerror::gl_ErrorCheckStart();
+    clearTex3D(_voxelTexture);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT |GL_STENCIL_BUFFER_BIT);
     kore::RenderManager::getInstance()->renderFrame();
 
@@ -648,7 +677,9 @@ int main(void) {
 
   // Close window and terminate GLFW
   glfwTerminate();
-
+  shutdown();
   // Exit program
   exit(EXIT_SUCCESS);
-};
+}
+
+

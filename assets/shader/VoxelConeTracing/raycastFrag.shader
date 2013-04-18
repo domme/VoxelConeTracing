@@ -5,7 +5,7 @@ in VertexData {
   vec3 viewDirVS;
 } In;
 
-layout(r32ui) uniform uimage3D voxelTex;
+layout(r32ui) uniform coherent volatile uimage3D voxelTex;
 uniform mat4 viewI;
 
 uniform mat4 voxelGridTransform;
