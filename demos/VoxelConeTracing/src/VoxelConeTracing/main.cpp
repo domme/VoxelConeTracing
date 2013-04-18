@@ -66,9 +66,9 @@
 #include "VoxelConeTracing/Cube.h"
 #include "VoxelConeTracing/CubeVolume.h"
 
-#define VOXEL_GRID_RESOLUTION_X 256
-#define VOXEL_GRID_RESOLUTION_Y 256
-#define VOXEL_GRID_RESOLUTION_Z 256
+#define VOXEL_GRID_RESOLUTION_X 128
+#define VOXEL_GRID_RESOLUTION_Y 128
+#define VOXEL_GRID_RESOLUTION_Z 128
 
 const uint screen_width = 1280;
 const uint screen_height = 720;
@@ -115,9 +115,9 @@ void initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
   texProps.width = VOXEL_GRID_RESOLUTION_X;
   texProps.height = VOXEL_GRID_RESOLUTION_Y;
   texProps.depth = VOXEL_GRID_RESOLUTION_Z;
-  texProps.format = GL_RGBA;
-  texProps.internalFormat = GL_RGBA8;
-  texProps.pixelType = GL_UNSIGNED_BYTE;
+  texProps.internalFormat = GL_R32UI;
+  texProps.format = GL_RED_INTEGER;
+  texProps.pixelType = GL_UNSIGNED_INT;
 
   tex->create(texProps, "voxelTexture");
 
@@ -144,14 +144,14 @@ void initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
     }
   } else if (texContent == BLACK) {
     for (uint z = 0; z < VOXEL_GRID_RESOLUTION_Z; ++z) {
-     glm::detail::tvec4<unsigned char> colorValues[VOXEL_GRID_RESOLUTION_X]
+     glm::detail::tvec4<unsigned int> colorValues[VOXEL_GRID_RESOLUTION_X]
                                                   [VOXEL_GRID_RESOLUTION_Y];
 
-     memset(colorValues, 0, VOXEL_GRID_RESOLUTION_X * VOXEL_GRID_RESOLUTION_Y * sizeof(unsigned char));
+     memset(colorValues, 0, VOXEL_GRID_RESOLUTION_X * VOXEL_GRID_RESOLUTION_Y * sizeof(unsigned int));
      glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, z,
                      VOXEL_GRID_RESOLUTION_X,
                      VOXEL_GRID_RESOLUTION_Y, 1,
-                     GL_RGBA, GL_UNSIGNED_BYTE, colorValues);
+                     GL_RED_INTEGER, GL_UNSIGNED_INT, colorValues);
     }
   }
   GLerror::gl_ErrorCheckFinish("Upload 3D texture values");

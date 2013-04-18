@@ -1,4 +1,4 @@
-/*
+﻿/*
  Copyright (c) 2012 The VCT Project
 
   This file is part of VoxelConeTracing and is an implementation of
@@ -26,7 +26,7 @@
 #version 420
 #extension GL_ARB_shader_image_size : enable
 
-layout(rgba8) uniform coherent image3D voxelTex;
+layout(r32ui) uniform coherent uimage3D voxelTex;
 uniform sampler2D diffuseTex;
 
 in VoxelData {
@@ -41,6 +41,14 @@ in VoxelUtilData {
 } UtilIn;
 
 out vec4 color;
+
+vec4 convRGBA8ToVec4(uint val){
+return vec4( float((val & 0x000000FF)), float((val & 0x0000FF00)>>8U), float ((val & 0x00FF0000) >>16U), float((val & 0xFF000000) >>24U) );
+}
+
+uint convVec4ToRGBA8(vec4 val){
+return (uint(val.w) & 0x000000FF) <<24U | (uint(val.z) & 0x000000FF) <<16U | (uint(val.y) & 0x000000FF)<<8U | (uint(val.x) & 0x000000FF);
+}
 
 // In.projAxisIdx keys into this array..
 const vec3 worldAxes[3] = vec3[3]( vec3(1.0, 0.0, 0.0),
@@ -62,8 +70,9 @@ void main() {
 
   ivec3 baseVoxel = ivec3(floor(In.posTexSpace * voxelTexSize));
   
-  vec4 diffColor = texture(diffuseTex, In.uv);
-  imageStore(voxelTex, baseVoxel, diffColor);
+  vec4 diffColor = texture(diffuseTex, In.uv) * vec4(255);
+  uint diffColorU = convVec4ToRGBA8(diffColor);
+  imageStore(voxelTex, baseVoxel, uvec4(diffColorU));
  /* for (int iDepth = 1; iDepth < numVoxelsDepth; ++iDepth) {
     // Assumption: voxelGrid is parrallel to world-axes
     ivec3 samplePos = baseVoxel + ivec3(worldAxes[UtilIn.projAxisIdx] * iDepth);
