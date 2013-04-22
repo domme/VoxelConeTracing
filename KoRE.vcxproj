@@ -243,6 +243,7 @@
     <ClCompile Include="src\KoRE\ShaderInput.cpp" />
     <ClCompile Include="src\KoRE\ShaderOutput.cpp" />
     <ClCompile Include="src\KoRE\Texture.cpp" />
+    <ClCompile Include="src\KoRE\TextureBuffer.cpp" />
     <ClCompile Include="src\KoRE\TextureSampler.cpp" />
     <ClCompile Include="src\KoRE\Timer.cpp" />
     <ClInclude Include="src\KoRE\BaseResource.h" />
@@ -318,6 +319,7 @@
     <ClCompile Include="src\KoRE\ShaderProgram.cpp" />
     <ClCompile Include="src\KoRE\StdAfx.cpp" />
     <ClInclude Include="src\KoRE\Texture.h" />
+    <ClInclude Include="src\KoRE\TextureBuffer.h" />
     <ClInclude Include="src\KoRE\TextureSampler.h" />
     <ClInclude Include="src\KoRE\Timer.h" />
   </ItemGroup>

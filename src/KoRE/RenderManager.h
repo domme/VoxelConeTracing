@@ -42,21 +42,43 @@ namespace kore {
   // Use preprocessor #ifdefs to conditionally include targets on machines
   // with more advanced OpenGL-versions in the future to maintain backwards-
   // compatibility.
-  enum ETextureTargets {
-    TEXTURE_1D = 0,
-    TEXTURE_2D,
-    TEXTURE_3D,
-    TEXTURE_1D_ARRAY,
-    TEXTURE_2D_ARRAY,
-    TEXTURE_RECTANGLE,
-    TEXTURE_CUBE_MAP,
-    TEXTURE_CUBE_MAP_ARRAY,
-    TEXTURE_BUFFER,
-    TEXTURE_2D_MULTISAMPLE,
-    TEXTURE_2D_MULTISAMPLE_ARRAY,
+  namespace TextureTargets {
+    enum ETextureTargets {
+      TEXTURE_1D = 0,
+      TEXTURE_2D,
+      TEXTURE_3D,
+      TEXTURE_1D_ARRAY,
+      TEXTURE_2D_ARRAY,
+      TEXTURE_RECTANGLE,
+      TEXTURE_CUBE_MAP,
+      TEXTURE_CUBE_MAP_ARRAY,
+      TEXTURE_BUFFER,
+      TEXTURE_2D_MULTISAMPLE,
+      TEXTURE_2D_MULTISAMPLE_ARRAY,
 
-    NUM_TEXTURE_TARGETS
-  };
+      NUM_TEXTURE_TARGETS
+    };
+  }
+
+  namespace BufferTargets {
+    enum EBufferTargets {
+       ARRAY_BUFFER = 0,
+       ATOMIC_COUNTER_BUFFER,
+       COPY_READ_BUFFER,
+       COPY_WRITE_BUFFER,
+       DRAW_INDIRECT_BUFFER,
+       DISPATCH_INDIRECT_BUFFER,
+       ELEMENT_ARRAY_BUFFER,
+       PIXEL_PACK_BUFFER,
+       PIXEL_UNPACK_BUFFER,
+       SHADER_STORAGE_BUFFER,
+       TEXTURE_BUFFER,
+       TRANSFORM_FEEDBACK_BUFFER,
+       UNIFORM_BUFFER,
+
+       NUM_BUFFER_TARGETS
+    };
+  }
 
   enum EFrameBufferTargets {
     DRAW_FRAMEBUFFER = 0,
@@ -99,6 +121,9 @@ namespace kore {
 
     void bindFrameBuffer(const GLuint fboTarget,
                          const GLuint fboHandle);
+
+    void bindBuffer(const GLenum bufferTarget,
+                    const GLuint bufferHandle);
 
     void bindBufferBase(const GLenum indexedBufferTarget,
                         const uint bindingPoint,
@@ -144,13 +169,17 @@ namespace kore {
     GLuint _shaderProgram;
     GLuint _boundAtomicBuffers[GL_MAX_COMBINED_ATOMIC_COUNTER_BUFFERS];
     GLuint _boundTextures[GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS]
-                         [NUM_TEXTURE_TARGETS];
+                         [TextureTargets::NUM_TEXTURE_TARGETS];
     GLuint _boundSamplers[GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS];
+    GLuint _boundBuffers[BufferTargets::NUM_BUFFER_TARGETS];
     GLuint _boundFrameBuffers[2];
     bool   _drawBuffers[KORE_MAX_FRAMEBUFFER_COUNT]
                        [GL_MAX_DRAW_BUFFERS];
+
+                       
     glm::bvec4 _colorMask;
     std::map<GLuint, uint> _vTexTargetMap;
+    std::map<GLuint, uint> _vBufferTargetMap;
     //////////////////////////////////////////////////////////////////////////
   };
 };

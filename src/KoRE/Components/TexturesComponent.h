@@ -1,5 +1,5 @@
 ﻿/*
-  Copyright � 2012 The KoRE Project
+  Copyright (c) 2012 The KoRE Project
 
   This file is part of KoRE.
 
@@ -22,6 +22,7 @@
 #include <vector>
 #include "KoRE/Components/SceneNodeComponent.h"
 #include "KoRE/Texture.h"
+#include "KoRE/TextureBuffer.h"
 #include "KoRE/TextureSampler.h"
 #include "KoRE/DataTypes.h"
 
@@ -40,8 +41,11 @@ namespace kore {
                     const bool useMipMaps = true,
                     const TextureSampler* sampler = NULL);
 
+    void addTextureBuffer(TextureBuffer* texBuffer);
+
   private:
     std::vector<Texture*> _vTextures;
+    std::vector<TextureBuffer*> _vTextureBuffers;
     std::vector<STextureInfo*> _vTextureInfos;
   };
 }

@@ -1,4 +1,4 @@
-/*
+/*  
   Copyright (c) 2012 The KoRE Project
 
   This file is part of KoRE.
@@ -41,28 +41,49 @@ kore::RenderManager::RenderManager(void)
 
   //sync internal states with opengl-states:
   
+  _vBufferTargetMap[GL_ARRAY_BUFFER]              = BufferTargets::ARRAY_BUFFER,
+  _vBufferTargetMap[GL_ATOMIC_COUNTER_BUFFER]     = BufferTargets::ATOMIC_COUNTER_BUFFER;
+  _vBufferTargetMap[GL_COPY_READ_BUFFER]          = BufferTargets::COPY_READ_BUFFER;
+  _vBufferTargetMap[GL_COPY_WRITE_BUFFER]         = BufferTargets::COPY_WRITE_BUFFER;
+  _vBufferTargetMap[GL_DRAW_INDIRECT_BUFFER]      = BufferTargets::DRAW_INDIRECT_BUFFER;
+  _vBufferTargetMap[GL_DISPATCH_INDIRECT_BUFFER]  = BufferTargets::DISPATCH_INDIRECT_BUFFER;
+  _vBufferTargetMap[GL_ELEMENT_ARRAY_BUFFER]      = BufferTargets::ELEMENT_ARRAY_BUFFER;
+  _vBufferTargetMap[GL_PIXEL_PACK_BUFFER]         = BufferTargets::PIXEL_PACK_BUFFER;
+  _vBufferTargetMap[GL_PIXEL_UNPACK_BUFFER]       = BufferTargets::PIXEL_UNPACK_BUFFER;
+  _vBufferTargetMap[GL_SHADER_STORAGE_BUFFER]     = BufferTargets::SHADER_STORAGE_BUFFER;
+  _vBufferTargetMap[GL_TEXTURE_BUFFER]            = BufferTargets::TEXTURE_BUFFER;
+  _vBufferTargetMap[GL_TRANSFORM_FEEDBACK_BUFFER] = BufferTargets::TRANSFORM_FEEDBACK_BUFFER;
+  _vBufferTargetMap[GL_UNIFORM_BUFFER]            = BufferTargets::UNIFORM_BUFFER;
 
-  _vTexTargetMap[GL_TEXTURE_1D] =                   TEXTURE_1D;
-  _vTexTargetMap[GL_TEXTURE_2D] =                   TEXTURE_2D;
-  _vTexTargetMap[GL_TEXTURE_3D] =                   TEXTURE_3D;
-  _vTexTargetMap[GL_TEXTURE_1D_ARRAY] =             TEXTURE_1D_ARRAY;
-  _vTexTargetMap[GL_TEXTURE_2D_ARRAY] =             TEXTURE_2D_ARRAY;
-  _vTexTargetMap[GL_TEXTURE_RECTANGLE] =            TEXTURE_RECTANGLE;
-  _vTexTargetMap[GL_TEXTURE_CUBE_MAP] =             TEXTURE_CUBE_MAP;
-  _vTexTargetMap[GL_TEXTURE_CUBE_MAP_ARRAY] =       TEXTURE_CUBE_MAP_ARRAY;
-  _vTexTargetMap[GL_TEXTURE_BUFFER] =               TEXTURE_BUFFER;
-  _vTexTargetMap[GL_TEXTURE_2D_MULTISAMPLE] =       TEXTURE_2D_MULTISAMPLE;
+  _vTexTargetMap[GL_TEXTURE_1D] =                   TextureTargets::TEXTURE_1D;
+  _vTexTargetMap[GL_TEXTURE_2D] =                   TextureTargets::TEXTURE_2D;
+  _vTexTargetMap[GL_TEXTURE_3D] =                   TextureTargets::TEXTURE_3D;
+  _vTexTargetMap[GL_TEXTURE_1D_ARRAY] =             TextureTargets::TEXTURE_1D_ARRAY;
+  _vTexTargetMap[GL_TEXTURE_2D_ARRAY] =             TextureTargets::TEXTURE_2D_ARRAY;
+  _vTexTargetMap[GL_TEXTURE_RECTANGLE] =            TextureTargets::TEXTURE_RECTANGLE;
+  _vTexTargetMap[GL_TEXTURE_CUBE_MAP] =             TextureTargets::TEXTURE_CUBE_MAP;
+  _vTexTargetMap[GL_TEXTURE_CUBE_MAP_ARRAY] =       TextureTargets::TEXTURE_CUBE_MAP_ARRAY;
+  _vTexTargetMap[GL_TEXTURE_BUFFER] =               TextureTargets::TEXTURE_BUFFER;
+  _vTexTargetMap[GL_TEXTURE_2D_MULTISAMPLE] =       TextureTargets::TEXTURE_2D_MULTISAMPLE;
   _vTexTargetMap[GL_TEXTURE_2D_MULTISAMPLE_ARRAY] =
-                                                TEXTURE_2D_MULTISAMPLE_ARRAY;
+                                                TextureTargets::TEXTURE_2D_MULTISAMPLE_ARRAY;
 
-  if (_vTexTargetMap.size() != NUM_TEXTURE_TARGETS) {
+  if (_vTexTargetMap.size() != TextureTargets::NUM_TEXTURE_TARGETS) {
     Log::getInstance()->write("[ERROR] Not all texture targets where"
                               " added into the textureTargetMap");
   }
 
+  if (_vBufferTargetMap.size() != BufferTargets::NUM_BUFFER_TARGETS) {
+    Log::getInstance()->write("[ERROR] Not all buffer targets where"
+                              " added into the bufferTargetMap");
+  }
+
   memset(_boundTextures, 0, sizeof(GLuint) *
                             GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS *
-                            NUM_TEXTURE_TARGETS);
+                            TextureTargets::NUM_TEXTURE_TARGETS);
+
+  memset(_boundBuffers, 0, sizeof(GLuint) * BufferTargets::NUM_BUFFER_TARGETS);
+
   memset(_boundSamplers, 0, sizeof(GLuint) * 
                             GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS);
 
@@ -321,6 +342,22 @@ void kore::RenderManager::
       }
 }
 
+void kore::RenderManager::bindBuffer(const GLenum bufferTarget,
+                                     const GLuint bufferHandle) {
+  auto buf = _vBufferTargetMap.find(bufferTarget);
+  
+  if (buf == _vBufferTargetMap.end()) {
+    Log::getInstance()->write("[ERROR] RenderManager::bindbuffer(): "
+                              "Buffer-target is invalid");
+    return;
+  }
+
+  if (_boundBuffers[buf->second] != bufferHandle) {
+    _boundBuffers[buf->second] = bufferHandle;
+    glBindBuffer(bufferTarget, bufferHandle);
+  }
+}
+
 void kore::RenderManager::bindBufferBase(const GLenum indexedBufferTarget,
                                          const uint bindingPoint,
                                          const GLuint bufferHandle) {
@@ -371,5 +408,3 @@ void kore::RenderManager::setGLcapability(GLuint cap, bool enable) {
   }
 
 }
-
-

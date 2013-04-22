@@ -111,8 +111,6 @@ namespace kore {
     *   \param texture The texture to remove. */
     void removeTexture(const Texture* texture);
 
-
-
     /*! \brief Adds a shaderProgram to the ResourceManager. This shaderProgram
     *          will now be controlled and deleted by the resourceManager alone.
     *   \param program The ShaderProgram to register. (needs a valid id) */
