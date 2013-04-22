@@ -1,4 +1,4 @@
-﻿/*
+/*
  Copyright (c) 2012 The VCT Project
 
   This file is part of VoxelConeTracing and is an implementation of
@@ -26,7 +26,7 @@
 #version 420
 #extension GL_ARB_shader_image_size : enable
 
-layout(r32ui) uniform coherent volatile uimage3D voxelTex;
+layout(r32ui) uniform volatile uimage3D voxelTex;
 uniform sampler2D diffuseTex;
 
 in VoxelData {
@@ -53,7 +53,7 @@ uint convVec4ToRGBA8(vec4 val) {
             | (uint(val.y) & 0x000000FF)<<8U | (uint(val.x) & 0x000000FF);
 }
 
-void imageAtomicRGBA8Avg(layout (r32ui) coherent volatile uimage3D imgUI,
+void imageAtomicRGBA8Avg(layout(r32ui) volatile uimage3D imgUI,
                          ivec3 coords,
                          vec4 val) {
     val.rgb *=255.0f; // Optimise following calculations
@@ -103,3 +103,4 @@ void main() {
     imageStore(voxelTex, samplePos, vec4(1.0, 0.0, 0.0, 1.0));
   } */
 }
+
