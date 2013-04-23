@@ -23,21 +23,43 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#ifndef VCT_INCLUDE_QUAD_H_
-#define VCT_INCLUDE_QUAD_H_
+#ifndef VCT_SRC_VCT_VCTSCENE_H_
+#define VCT_SRC_VCT_VCTSCENE_H_
 
 #include "KoRE/Common.h"
-#include "KoRE/Mesh.h"
 
-class Cube : public kore::Mesh {
-  public:
-    Cube();
-    Cube(const float sideLength);
-    virtual ~Cube();
-    
-  private:
-    void init(const float sideLength);
+#include "KoRE/TextureBuffer.h"
+#include "KoRE/Texture.h"
+#include "KoRE/SceneNode.h"
+#include "KoRE/Components/Camera.h"
+#include "KoRE/Components/MeshComponent.h"
+
+struct SVCTparameters {
+  uint voxel_grid_resolution;
+  glm::vec3 voxel_grid_sidelengths;
 };
 
+class VCTscene {
+public:
+  VCTscene();
+  ~VCTscene();
 
-#endif  // VCT_INCLUDE_QUAD_H_
+  void init(const SVCTparameters& params);
+  
+private:
+  kore::Camera* _camera;
+  std::vector<kore::SceneNode*> _meshNodes;
+  std::vector<kore::MeshComponent*> _meshComponents;
+  kore::TextureBuffer* _voxelFragListBuf;
+
+
+
+  // Deprecated:
+  kore::Texture* _voxelTex;
+  
+
+  //////////////////////////////////////////////////////////////////////////
+
+};
+
+#endif  // VCT_SRC_VCT_VCTSCENE_H_

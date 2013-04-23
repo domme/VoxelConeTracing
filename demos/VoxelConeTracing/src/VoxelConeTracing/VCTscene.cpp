@@ -22,22 +22,3 @@
 * \author Dominik Lazarek (dominik.lazarek@gmail.com)
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
-
-#ifndef VCT_INCLUDE_QUAD_H_
-#define VCT_INCLUDE_QUAD_H_
-
-#include "KoRE/Common.h"
-#include "KoRE/Mesh.h"
-
-class Cube : public kore::Mesh {
-  public:
-    Cube();
-    Cube(const float sideLength);
-    virtual ~Cube();
-    
-  private:
-    void init(const float sideLength);
-};
-
-
-#endif  // VCT_INCLUDE_QUAD_H_
