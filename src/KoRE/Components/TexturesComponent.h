@@ -41,11 +41,8 @@ namespace kore {
                     const bool useMipMaps = true,
                     const TextureSampler* sampler = NULL);
 
-    void addTextureBuffer(TextureBuffer* texBuffer);
-
   private:
     std::vector<Texture*> _vTextures;
-    std::vector<TextureBuffer*> _vTextureBuffers;
     std::vector<STextureInfo*> _vTextureInfos;
   };
 }

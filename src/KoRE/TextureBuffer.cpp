@@ -48,6 +48,8 @@ bool kore::TextureBuffer::create(const STextureBufferProperties& properties,
 
   glBufferData(GL_TEXTURE_BUFFER, properties.size, data, properties.usageHint);
 
+  glTexBuffer(GL_TEXTURE_BUFFER, properties.internalFormat, properties.usageHint);
+
   renderMgr->bindTexture(GL_TEXTURE_BUFFER, 0);
   renderMgr->bindBuffer(GL_TEXTURE_BUFFER, 0);
   bool success = GLerror::gl_ErrorCheckFinish("TextureBuffer::create");

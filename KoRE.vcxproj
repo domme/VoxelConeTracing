@@ -85,7 +85,7 @@
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <Optimization>Disabled</Optimization>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <WarningLevel>Level3</WarningLevel>
@@ -94,6 +94,7 @@
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <ProgramDataBaseFileName>$(SolutionDir)lib/Debug/KoRE.pdb</ProgramDataBaseFileName>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;GLFW_INCLUDE_GL3;CMAKE_INTDIR=\"Debug\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -222,6 +223,7 @@
     <ClCompile Include="src\KoRE\Operations\BindOperations\BindAttribute.cpp" />
     <ClCompile Include="src\KoRE\Operations\BindOperations\BindImageTexture.cpp" />
     <ClCompile Include="src\KoRE\Operations\BindOperations\BindTexture.cpp" />
+    <ClCompile Include="src\KoRE\Operations\BindOperations\BindTextureBuffer.cpp" />
     <ClCompile Include="src\KoRE\Operations\BindOperations\BindUniform.cpp" />
     <ClCompile Include="src\KoRE\Operations\BindOperations\BindOperation.cpp" />
     <ClCompile Include="src\KoRE\Operations\ColorMaskOp.cpp" />
@@ -274,6 +276,7 @@
     <ClInclude Include="src\KoRE\Operations\BindOperations\BindAttribute.h" />
     <ClInclude Include="src\KoRE\Operations\BindOperations\BindImageTexture.h" />
     <ClInclude Include="src\KoRE\Operations\BindOperations\BindTexture.h" />
+    <ClInclude Include="src\KoRE\Operations\BindOperations\BindTextureBuffer.h" />
     <ClInclude Include="src\KoRE\Operations\BindOperations\BindUniform.h" />
     <ClInclude Include="src\KoRE\Operations\BindOperations\BindOperation.h" />
     <ClInclude Include="src\KoRE\Operations\ColorMaskOp.h" />
@@ -317,7 +320,10 @@
     <ClCompile Include="src\KoRE\SceneManager.cpp" />
     <ClCompile Include="src\KoRE\SceneNode.cpp" />
     <ClCompile Include="src\KoRE\ShaderProgram.cpp" />
-    <ClCompile Include="src\KoRE\StdAfx.cpp" />
+    <ClCompile Include="src\KoRE\StdAfx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdafx.h</ForcedIncludeFiles>
+    </ClCompile>
     <ClInclude Include="src\KoRE\Texture.h" />
     <ClInclude Include="src\KoRE\TextureBuffer.h" />
     <ClInclude Include="src\KoRE\TextureSampler.h" />
