@@ -287,7 +287,7 @@ void setupVoxelization() {
                           "voxelGridTransformI", voxelizeShader));
 
    nodePass
-     ->addOperation(new RenderMesh(meshComp, voxelizeShader));
+     ->addOperation(new RenderMesh(meshComp));
   }
   
    _backBufferStage->addProgramPass(voxelizePass);
@@ -481,9 +481,8 @@ void setupRaycasting() {
   raycastNodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
     "inverse model Matrix", _voxelGridNode->getTransform(),
     "voxelGridTransformI", raycastShader));
-
-
-  raycastNodePass->addOperation(new RenderMesh(fsqMeshComponent, raycastShader));
+  
+  raycastNodePass->addOperation(new RenderMesh(fsqMeshComponent));
   _backBufferStage->addProgramPass(raycastPass);
 
   _renderMgr->addFramebufferStage(_backBufferStage);
