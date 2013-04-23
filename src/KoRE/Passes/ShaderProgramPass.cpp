@@ -42,14 +42,12 @@ kore::ShaderProgramPass::~ShaderProgramPass(void) {
 }
 
 void kore::ShaderProgramPass::setShaderProgram(const ShaderProgram* program) {
+  if (_program == program) return;
   if (_program != NULL) {
     for (uint i = 0; i < _startupOperations.size(); ++i) {
       KORE_SAFE_DELETE(_startupOperations[i]);
     }
-
     _startupOperations.clear();
-
-    KORE_SAFE_DELETE(_program);
   }
 
   _program = program;

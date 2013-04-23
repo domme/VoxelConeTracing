@@ -151,6 +151,7 @@ void koregui::ShaderEditor::applyChanges(void) {
   }
   _currentprogram->init();
   _currentitem->refresh();
+  _currentitem->setShaderProgram(_currentprogram);
   _currentitem->update();
   refresh();
 }

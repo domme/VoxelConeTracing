@@ -29,8 +29,7 @@ namespace kore {
   class RenderMesh: public Operation {
   public:
     explicit RenderMesh(void);
-    explicit RenderMesh(const kore::MeshComponent* mesh,
-                        const kore::ShaderProgram* shaderProgram);
+    explicit RenderMesh(const kore::MeshComponent* mesh);
 
     virtual ~RenderMesh(void);
     virtual void update(void);
@@ -38,14 +37,10 @@ namespace kore {
     virtual bool isValid(void) const;
     virtual bool dependsOn(const void* thing) const;
 
-    void connect(const kore::MeshComponent* mesh,
-                 const kore::ShaderProgram* shaderProgram);
+    void connect(const kore::MeshComponent* mesh);
 
     const kore::MeshComponent* getMesh() const;
     void setMesh(const kore::MeshComponent* mesh);
-
-    const kore::ShaderProgram* getShader() const;
-    void setShader(const kore::ShaderProgram* shaderProgram);
 
   private:
     const kore::MeshComponent* _meshComponent;

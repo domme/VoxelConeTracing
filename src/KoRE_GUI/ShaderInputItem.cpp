@@ -39,15 +39,6 @@ koregui::ShaderInputItem::ShaderInputItem(const kore::ShaderInput* input,
 koregui::ShaderInputItem::~ShaderInputItem(void) {
 }
 
-bool koregui::ShaderInputItem::checkInput(BindPathItem* binding) {
-  _mouseover = true;
-  // only one binding allowed
-  if(_binding && _binding != binding) return false;
-  // TODO(dospelt) check if binding could be correct
-  _binding = binding;
-  return true;
-}
-
 void koregui::ShaderInputItem::reset(void) {
   _binding = NULL;
   _mouseover = false;
@@ -88,7 +79,12 @@ void koregui::ShaderInputItem
   QGraphicsItem::hoverLeaveEvent(event);
 }
 
+<<<<<<< HEAD
 void koregui::ShaderInputItem
   ::mousePressEvent(QGraphicsSceneMouseEvent *event) {
   // TODO(dospelt) change color?
+=======
+void koregui::ShaderInputItem::setBinding(koregui::BindPathItem* binding) {
+  _binding = binding;
+>>>>>>> 3d276fe... Bugfixes and finishing binding in GUI
 }

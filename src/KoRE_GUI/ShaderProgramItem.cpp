@@ -44,7 +44,16 @@ koregui::ShaderProgramItem::ShaderProgramItem(QGraphicsItem* parent)
   refresh();
 }
 
+<<<<<<< HEAD:src/KoRE_GUI/ShaderProgramItem.cpp
 koregui::ShaderProgramItem::~ShaderProgramItem(void) {
+=======
+koregui::ShaderPassItem::~ShaderPassItem(void) {
+   koregui::FrameBufferStageItem * fbs
+     = static_cast<koregui::FrameBufferStageItem*>(parentItem());
+   if (fbs) {
+     fbs->removeShaderPass(this);
+   }
+>>>>>>> 3d276fe... Bugfixes and finishing binding in GUI:src/KoRE_GUI/ShaderPassItem.cpp
 }
 
 void koregui::ShaderProgramItem::setShaderProgram(kore::ShaderProgram* prog) {
@@ -73,6 +82,7 @@ void koregui::ShaderProgramItem::refresh(void) {
     }
     _sampler.clear();
   }
+  _programpass->setShaderProgram(_shader);
   // create inputs from shaderprogram object
   int tmpheight = 40;
   if(_shader) {

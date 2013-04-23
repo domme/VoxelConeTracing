@@ -114,13 +114,15 @@ void koregui::RenderViewer::mousePressEvent(QMouseEvent * event) {
 void koregui::RenderViewer::mouseReleaseEvent(QMouseEvent * event) {
   if(_currentpath) {
     if (_bindTarget) {
-      _bindTarget->reset();
-      _currentpath = NULL;
+      _currentpath->setEnd(_bindTarget);
+      if (_currentpath->initBinding()) {
+        kore::Log::getInstance()->write("added new Binding :-P");
+      }
       _bindTarget = NULL;
     } else {
       _scene.removeItem(_currentpath);
-      _currentpath = NULL;
     }
+     _currentpath = NULL;
   }
   QGraphicsView::mouseReleaseEvent(event);
 }
@@ -128,16 +130,18 @@ void koregui::RenderViewer::mouseReleaseEvent(QMouseEvent * event) {
 void koregui::RenderViewer::mouseMoveEvent(QMouseEvent *event) {
   if(_currentpath) {
     QGraphicsItem* item = itemAt(event->pos());
-    if (item && item->data(0).toString() == "SHADERINPUT"
-        && static_cast<ShaderInputItem*>(item)->checkInput(_currentpath)) {
+    if (item && item->data(0).toString() == "SHADERINPUT") {
       _bindTarget = static_cast<ShaderInputItem*>(item);
+      _bindTarget->setBinding(_currentpath);
       _currentpath->setEnd(_bindTarget);
+<<<<<<< HEAD
       item->update();
+=======
+>>>>>>> 3d276fe... Bugfixes and finishing binding in GUI
     } else {
       if(_bindTarget) {
         _currentpath->setEnd(NULL);
         _bindTarget->reset();
-        _bindTarget->update();
         _bindTarget = NULL;
       }
      _currentpath->setDest(mapToScene(event->pos()));

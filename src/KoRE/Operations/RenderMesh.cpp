@@ -24,32 +24,26 @@
 
 kore::RenderMesh::RenderMesh(void)
   : _meshComponent(NULL),
-    _shaderProgram(NULL),
     kore::Operation() {
       _type = OP_RENDERMESH;
 }
 
-kore::RenderMesh::RenderMesh(const kore::MeshComponent* mesh,
-                             const kore::ShaderProgram* shader) :
+kore::RenderMesh::RenderMesh(const kore::MeshComponent* mesh) :
                                  kore::Operation() {
   _type = OP_RENDERMESH;
-  connect(mesh, shader);
+  connect(mesh);
 }
 
 kore::RenderMesh::~RenderMesh(void) {
 }
 
 
-void kore::RenderMesh::connect(const kore::MeshComponent* mesh,
-                               const kore::ShaderProgram* shader) {
-  if (!mesh || !shader) {
+void kore::RenderMesh::connect(const kore::MeshComponent* mesh) {
+  if (!mesh) {
     _meshComponent = NULL;
-    _shaderProgram = NULL;
     return;
   }
-
   _meshComponent = mesh;
-  _shaderProgram = shader;
 }
 
 void kore::RenderMesh::doExecute(void) const {
@@ -114,15 +108,6 @@ void kore::RenderMesh::setMesh(const kore::MeshComponent* mesh) {
     _meshComponent = mesh;
 }
 
-const kore::ShaderProgram* kore::RenderMesh::getShader() const {
-    return _shaderProgram;
-}
-
-void kore::RenderMesh::setShader(const kore::ShaderProgram* shader) {
-    _shaderProgram = shader;
-}
-
 bool kore::RenderMesh::dependsOn(const void* thing) const {
-  return thing == _meshComponent 
-       || thing == _shaderProgram;
+  return thing == _meshComponent;
 }

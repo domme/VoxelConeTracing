@@ -52,11 +52,16 @@ koregui::ComponentItem::~ComponentItem(void) {
 
 void koregui::ComponentItem::refresh(void) {
   _componentheight = 30;
-  if(_expanded) {
+  if (_expanded) {
     _componentheight += _shaderDataItems.size() * 30;
   }
   for (uint i= 0; i < _shaderDataItems.size(); i++) {
     _shaderDataItems[i]->setVisible(_expanded);
+    if (_expanded) {
+      _shaderDataItems[i]->setPos(192, 30 + 30 * i);
+    } else {
+      _shaderDataItems[i]->setPos(192, 4);
+    }
   }
   _componentwidth = 200;
   prepareGeometryChange();
