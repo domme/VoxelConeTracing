@@ -16,6 +16,9 @@
     <ClCompile Include="src\VoxelConeTracing\VCTscene.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\VoxelizePass.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -39,6 +42,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\VoxelConeTracing\VCTscene.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\VoxelizePass.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

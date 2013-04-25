@@ -30,7 +30,7 @@ return (  uint(val.w) & 0x000000FF) << 24U
 
 void main(void) {
   const ivec3 voxelTexSize = imageSize(voxelTex);
-  const float voxelSize = length(voxelGridTransform[0] * 2.0) / voxelTexSize.x;
+  const float voxelSize = length(voxelGridTransform[0] * 2.0) / voxelTexSize;
 
   float maxLength = length(In.viewDirVS);
   float stepSize = voxelSize / 4.0;
@@ -61,7 +61,7 @@ void main(void) {
         currentStepSize = stepSize;
     }
 
-    posTexSpace *= voxelTexSize;
+    posTexSpace *= vec3(voxelTexSize);
     vec3 shading = fract(posTexSpace);
     ivec3 samplePos = ivec3(floor(posTexSpace));
     

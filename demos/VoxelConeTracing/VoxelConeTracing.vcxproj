@@ -283,12 +283,14 @@
     <ClCompile Include="src\VoxelConeTracing\FullscreenQuad.cpp" />
     <ClCompile Include="src\VoxelConeTracing\main.cpp" />
     <ClCompile Include="src\VoxelConeTracing\VCTscene.cpp" />
+    <ClCompile Include="src\VoxelConeTracing\VoxelizePass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\VoxelConeTracing\Cube.h" />
     <ClInclude Include="src\VoxelConeTracing\CubeVolume.h" />
     <ClInclude Include="src\VoxelConeTracing\FullscreenQuad.h" />
     <ClInclude Include="src\VoxelConeTracing\VCTscene.h" />
+    <ClInclude Include="src\VoxelConeTracing\VoxelizePass.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\assets\shader\normalColor.fp" />

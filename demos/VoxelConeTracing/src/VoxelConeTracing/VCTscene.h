@@ -39,12 +39,19 @@ struct SVCTparameters {
   glm::vec3 voxel_grid_sidelengths;
 };
 
+enum ETex3DContent {
+  COLOR_PALETTE,
+  BLACK
+};
+
 class VCTscene {
 public:
   VCTscene();
   ~VCTscene();
 
-  void init(const SVCTparameters& params);
+  void init(const SVCTparameters& params,
+            const std::vector<kore::SceneNode*>& meshNodes,
+            kore::Camera* camera);
   
 private:
   kore::Camera* _camera;
@@ -52,11 +59,20 @@ private:
   std::vector<kore::MeshComponent*> _meshComponents;
   kore::TextureBuffer* _voxelFragListBuf;
 
+  uint _voxelGridResolution;
+  glm::vec3 _voxelGridSideLengths;
 
+
+  kore::ShaderData _shdVoxelGridResolution;
 
   // Deprecated:
   kore::Texture* _voxelTex;
-  
+  GLuint _tex3DclearPBO;
+
+  void clearTex3D(kore::Texture* tex);
+  void initTex3D(kore::Texture* tex, const ETex3DContent texContent);
+  void initVoxelFragList();
+
 
   //////////////////////////////////////////////////////////////////////////
 

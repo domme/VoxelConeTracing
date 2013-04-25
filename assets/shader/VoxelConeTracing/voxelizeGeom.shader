@@ -47,7 +47,7 @@ out VoxelUtilData {
 } UtilOut;
 
 
-uniform vec3 voxelTexSize;
+uniform uint voxelTexSize;
 uniform mat4 voxelGridTransform;
 uniform mat4 voxelGridTransformI;
 
@@ -127,7 +127,7 @@ void main()
 {
   init();
 
-  vec3 voxelSize = voxelGridSize / voxelTexSize;
+  vec3 voxelSize = voxelGridSize / vec3(voxelTexSize);
 
   uint projAxisIdx = calcProjAxis();
   vec3 middle = (viewProjs[projAxisIdx] * vec4((In[0].pos + In[1].pos + In[2].pos) / 3.0, 1.0)).xyz;

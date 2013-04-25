@@ -26,10 +26,12 @@
 #version 420
 #extension GL_ARB_shader_image_size : enable
 
-layout(r32ui) uniform volatile uimage3D voxelTex;
-uniform sampler2D diffuseTex;
-
+//layout(r32ui) uniform volatile uimage3D voxelTex;
+layout(r32ui) uniform volatile uimageBuffer voxelFragmentListPosition;
+layout(r32ui) uniform volatile uimageBuffer voxelFragmentListColor;
 layout(binding = 0) uniform atomic_uint voxel_index;
+
+uniform sampler2D diffuseTex;
 
 
 in VoxelData {
@@ -51,8 +53,6 @@ vec4 convRGBA8ToVec4(uint val) {
                  float((val & 0x00FF0000) >> 16U), 
                  float((val & 0xFF000000) >> 24U));
 }
-
-
 
 uint convVec4ToRGBA8(vec4 val) {
     return (uint(val.w) & 0x000000FF)   << 24U
@@ -103,7 +103,11 @@ void main() {
   vec4 diffColor = texture(diffuseTex, In.uv);
   //imageAtomicRGBA8Avg(baseVoxel, vec4(diffColor.xyz,1.0));
   uint diffColorU = convVec4ToRGBA8(diffColor * vec4(255));
-  imageStore(voxelTex, baseVoxel, uvec4(diffColorU));
+  //imageStore(voxelTex, baseVoxel, uvec4(diffColorU));
+  
+  uint voxelIndex = atomicCounterIncrement(voxel_index);
+  imageStore(voxelFragmentListPosition,voxelIndex,baseVoxel);
+  imageStore(voxelFragmentListColor,voxelIndex,diffColorU);
 
  /* for (int iDepth = 1; iDepth < numVoxelsDepth; ++iDepth) {
     // Assumption: voxelGrid is parrallel to world-axes

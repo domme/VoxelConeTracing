@@ -72,13 +72,8 @@
 #include "VoxelConeTracing/Cube.h"
 #include "VoxelConeTracing/CubeVolume.h"
 
-#define VOXEL_GRID_RESOLUTION_X 128
-#define VOXEL_GRID_RESOLUTION_Y 128
-#define VOXEL_GRID_RESOLUTION_Z 128
-
 const uint screen_width = 1280;
 const uint screen_height = 720;
-const glm::vec3 _voxelGridSideLengths(50.0, 50.0, 50.0);
 
 kore::SceneNode* _cameraNode = NULL;
 kore::Camera* _pCamera = NULL;
@@ -97,105 +92,8 @@ kore::ResourceManager* _resMgr = NULL;
 kore::RenderManager* _renderMgr = NULL;
 std::vector<kore::SceneNode*> _renderNodes;
 
-glm::vec3 _voxelGridResolution (VOXEL_GRID_RESOLUTION_X,
-                                VOXEL_GRID_RESOLUTION_Y,
-                                VOXEL_GRID_RESOLUTION_Z);
-kore::ShaderData _shdVoxelGridResolution;
-
-GLuint _tex3DclearPBO = KORE_GLUINT_HANDLE_INVALID;
-
-enum ETex3DContent {
-  COLOR_PALETTE,
-  BLACK
-};
-
-void clearTex3D(kore::Texture* tex) {
-  glBindBuffer(GL_PIXEL_UNPACK_BUFFER,_tex3DclearPBO);
-  for (uint z = 0; z < VOXEL_GRID_RESOLUTION_Z; ++z) {
-    glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, z,
-      VOXEL_GRID_RESOLUTION_X,
-      VOXEL_GRID_RESOLUTION_Y, 1,
-      GL_RED_INTEGER, GL_UNSIGNED_INT, 0);
-  }
-  glBindBuffer(GL_PIXEL_UNPACK_BUFFER,0);
-}
-
-void initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
-  using namespace kore;
- 
-
-  glm::detail::tvec4<unsigned int> colorValues[VOXEL_GRID_RESOLUTION_X]
-  [VOXEL_GRID_RESOLUTION_Y];
-  memset(colorValues, 0, VOXEL_GRID_RESOLUTION_X * VOXEL_GRID_RESOLUTION_Y * sizeof(unsigned int));
-
-  glGenBuffers(1, &_tex3DclearPBO);
-  glBindBuffer(GL_PIXEL_UNPACK_BUFFER, _tex3DclearPBO);
-  glBufferData(GL_PIXEL_UNPACK_BUFFER, 
-    VOXEL_GRID_RESOLUTION_X * VOXEL_GRID_RESOLUTION_Y * sizeof(unsigned int), 
-    colorValues,GL_STATIC_DRAW);
-  glBindBuffer(GL_PIXEL_UNPACK_BUFFER,0);
 
 
-  _shdVoxelGridResolution.data = &_voxelGridResolution;
-  _shdVoxelGridResolution.name = "VoxelGridResolution";
-  _shdVoxelGridResolution.size = 1;
-  _shdVoxelGridResolution.type = GL_FLOAT_VEC3;
-  
-  STextureProperties texProps;
-  texProps.targetType = GL_TEXTURE_3D;
-  texProps.width = VOXEL_GRID_RESOLUTION_X;
-  texProps.height = VOXEL_GRID_RESOLUTION_Y;
-  texProps.depth = VOXEL_GRID_RESOLUTION_Z;
-  texProps.internalFormat = GL_R32UI;
-  texProps.format = GL_RED_INTEGER;
-  texProps.pixelType = GL_UNSIGNED_INT;
-
-  tex->create(texProps, "voxelTexture");
-
-
-  // Create data
-  RenderManager::getInstance()->activeTexture(0);
-  RenderManager::getInstance()->bindTexture(GL_TEXTURE_3D, tex->getHandle());
-                       
-  GLerror::gl_ErrorCheckStart();
-  if (texContent == COLOR_PALETTE) {
-    for (uint z = 0; z < VOXEL_GRID_RESOLUTION_Z; ++z) {
-      glm::detail::tvec4<unsigned char> colorValues[VOXEL_GRID_RESOLUTION_X]
-                           [VOXEL_GRID_RESOLUTION_Y];
-      float valueZ = ((float) z / (float) VOXEL_GRID_RESOLUTION_Z);
-      for (uint y = 0; y < VOXEL_GRID_RESOLUTION_Y; ++y) {
-        float valueY = ((float) y / (float) VOXEL_GRID_RESOLUTION_Y);
-        for (uint x = 0; x < VOXEL_GRID_RESOLUTION_X; ++x) {
-          float valueX = ((float) x / (float) VOXEL_GRID_RESOLUTION_X);
-          colorValues[x][y] = glm::detail::tvec4<unsigned char>(valueX * 255, valueY * 255, valueZ * 255, 255);
-        }
-      }
-      glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, z, VOXEL_GRID_RESOLUTION_X,
-          VOXEL_GRID_RESOLUTION_Y, 1, GL_RGBA, GL_UNSIGNED_BYTE, colorValues);
-    }
-  } else if (texContent == BLACK) {
-      clearTex3D(tex);
-  }
-  GLerror::gl_ErrorCheckFinish("Upload 3D texture values");
-  
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, 0);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, 0);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_R, GL_RED);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_G, GL_GREEN);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_B, GL_BLUE);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_A, GL_ALPHA);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-  //RenderManager::getInstance()->bindTexture(GL_TEXTURE_3D, 0);
-
-  ResourceManager::getInstance()->addTexture(tex);
-
-
-
-}
 
 void setupVoxelization() {
   using namespace kore;
