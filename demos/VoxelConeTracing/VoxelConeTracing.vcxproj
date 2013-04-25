@@ -282,6 +282,7 @@
     <ClCompile Include="src\VoxelConeTracing\CubeVolume.cpp" />
     <ClCompile Include="src\VoxelConeTracing\FullscreenQuad.cpp" />
     <ClCompile Include="src\VoxelConeTracing\main.cpp" />
+    <ClCompile Include="src\VoxelConeTracing\RayCastingPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\VCTscene.cpp" />
     <ClCompile Include="src\VoxelConeTracing\VoxelizePass.cpp" />
   </ItemGroup>
@@ -289,6 +290,7 @@
     <ClInclude Include="src\VoxelConeTracing\Cube.h" />
     <ClInclude Include="src\VoxelConeTracing\CubeVolume.h" />
     <ClInclude Include="src\VoxelConeTracing\FullscreenQuad.h" />
+    <ClInclude Include="src\VoxelConeTracing\RayCastingPass.h" />
     <ClInclude Include="src\VoxelConeTracing\VCTscene.h" />
     <ClInclude Include="src\VoxelConeTracing\VoxelizePass.h" />
   </ItemGroup>

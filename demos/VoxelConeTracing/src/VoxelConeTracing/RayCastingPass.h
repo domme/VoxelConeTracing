@@ -23,21 +23,18 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#ifndef VCT_SRC_VCT_VOXELIZEPASS_H_
-#define VCT_SRC_VCT_VOXELIZEPASS_H_
+#ifndef VCT_SRC_VCT_RAYCASTINGPASS_H_
+#define VCT_SRC_VCT_RAYCASTINGPASS_H_
 
 #include "KoRE/Passes/ShaderProgramPass.h"
 #include "VCTscene.h"
 
-class VoxelizePass : public kore::ShaderProgramPass {
+class RayCastingPass : public kore::ShaderProgramPass
+{
 public:
-  VoxelizePass(void);
-  virtual ~VoxelizePass(void);
+  RayCastingPass(void);
+  virtual ~RayCastingPass(void);
 
   void init(VCTscene* vctScene);
-
-private:
-  uint VoxelGridResolution;
-
 };
-#endif  // VCT_SRC_VCT_VOXELIZEPASS_H_
+#endif //VCT_SRC_VCT_RAYCASTINGPASS_H_

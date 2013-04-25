@@ -27,11 +27,11 @@
 #include "KoRE/RenderManager.h"
 #include "KoRE/ResourceManager.h"
 #include "KoRE/GLerror.h"
+#include "KoRE/Components/TexturesComponent.h"
+#include "Cube.h"
 
 VCTscene::VCTscene() :
-  _voxelTex(NULL),
   _camera(NULL),
-  _voxelFragListBuf(NULL),
   _tex3DclearPBO(KORE_GLUINT_HANDLE_INVALID),
   _voxelGridResolution(0),
   _voxelGridSideLengths(50, 50, 50) {
@@ -58,15 +58,61 @@ void VCTscene::init(const SVCTparameters& params,
       (_meshNodes[i]->getComponent(kore::COMPONENT_MESH));
   }
   
-  initTex3D(_voxelTex, BLACK);
+  initTex3D(&_voxelTex, BLACK);
   initVoxelFragList();
 
+
+  _voxelGridNode = new kore::SceneNode;
+  _voxelGridNode->scale(_voxelGridSideLengths / 2.0f, kore::SPACE_LOCAL);
+  kore::SceneManager::getInstance()->
+      getRootNode()->addChild(_voxelGridNode);
+
+  kore::TexturesComponent* texComp = new kore::TexturesComponent;
+  texComp->addTexture(&_voxelTex);
+  _voxelGridNode->addComponent(texComp);
+
+  Cube* voxelGridCube = new Cube(2.0f);
+  kore::MeshComponent* meshComp = new kore::MeshComponent;
+  meshComp->setMesh(voxelGridCube);
+  _voxelGridNode->addComponent(meshComp);
 }
 
 void VCTscene::initVoxelFragList() {
-  _voxelFragListBuf
-}
+  // Positions
+  kore::STextureBufferProperties props;
+  props.internalFormat = GL_R32UI;
+  props.size = sizeof(unsigned int)
+               * _voxelGridResolution
+               * _voxelGridResolution
+               * _voxelGridResolution * 2;
+  props.usageHint = GL_DYNAMIC_COPY;
 
+  _voxelFragLists[VOXELATT_POSITION]
+                              .create(props, "VoxelFragmentList_Position");
+  _voxelFragLists[VOXELATT_COLOR].create(props, "VoxelFragmentList_Color");
+
+  
+  _vflTexInfos[VOXELATT_POSITION].internalFormat = props.internalFormat;
+  _vflTexInfos[VOXELATT_POSITION].texTarget = GL_TEXTURE_BUFFER;
+  _vflTexInfos[VOXELATT_POSITION].texLocation
+                        = _voxelFragLists[VOXELATT_POSITION].getTexHandle();
+
+  _vflTexInfos[VOXELATT_COLOR].internalFormat = props.internalFormat;
+  _vflTexInfos[VOXELATT_COLOR].texTarget = GL_TEXTURE_BUFFER;
+  _vflTexInfos[VOXELATT_COLOR].texLocation
+                       = _voxelFragLists[VOXELATT_COLOR].getTexHandle();
+  
+
+  _shdVoxelFragLists[VOXELATT_POSITION].component = NULL;
+  _shdVoxelFragLists[VOXELATT_POSITION].data = &_vflTexInfos[VOXELATT_POSITION];
+  _shdVoxelFragLists[VOXELATT_POSITION].name = "VoxelFragmentList_Position";
+  _shdVoxelFragLists[VOXELATT_POSITION].type = GL_TEXTURE_BUFFER;
+
+  _shdVoxelFragLists[VOXELATT_COLOR].component = NULL;
+  _shdVoxelFragLists[VOXELATT_COLOR].data = &_vflTexInfos[VOXELATT_COLOR];
+  _shdVoxelFragLists[VOXELATT_COLOR].name = "VoxelFragmentList_Color";
+  _shdVoxelFragLists[VOXELATT_COLOR].type = GL_TEXTURE_BUFFER;
+}
 
 void VCTscene::clearTex3D(kore::Texture* tex) {
   glBindBuffer(GL_PIXEL_UNPACK_BUFFER,_tex3DclearPBO);
@@ -133,9 +179,6 @@ void VCTscene::initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP);
   RenderManager::getInstance()->bindTexture(GL_TEXTURE_3D, 0);
-
-  ResourceManager::getInstance()->addTexture(tex);
-
   delete[] colorValues;
 }
 

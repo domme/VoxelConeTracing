@@ -93,110 +93,6 @@ kore::RenderManager* _renderMgr = NULL;
 std::vector<kore::SceneNode*> _renderNodes;
 
 
-
-
-void setupVoxelization() {
-  using namespace kore;
-
-  // Init Voxelize procedure
-  //////////////////////////////////////////////////////////////////////////
-  ShaderProgram* voxelizeShader = new ShaderProgram;
-  voxelizeShader->
-    loadShader("./assets/shader/VoxelConeTracing/voxelizeVert.shader",
-    GL_VERTEX_SHADER);
-
-  voxelizeShader->
-    loadShader("./assets/shader/VoxelConeTracing/voxelizeGeom.shader",
-    GL_GEOMETRY_SHADER);
-
-  voxelizeShader->
-    loadShader("./assets/shader/VoxelConeTracing/voxelizeFrag.shader",
-    GL_FRAGMENT_SHADER);
-  voxelizeShader->init();
-  voxelizeShader->setName("voxelizeShader");
-  _resMgr->addShaderProgram(voxelizeShader);
-
-
-  // /*
-  ShaderProgramPass* voxelizePass = new ShaderProgramPass;
-  voxelizePass->setShaderProgram(voxelizeShader);
-
-  for (uint i = 0; i < _renderNodes.size(); ++i) {
-    NodePass* nodePass = new NodePass(_renderNodes[i]);
-    voxelizePass->addNodePass(nodePass);
-
-   nodePass->addOperation(new ViewportOp(glm::ivec4(0, 0,
-                                                   VOXEL_GRID_RESOLUTION_X,
-                                                   VOXEL_GRID_RESOLUTION_Y)));
-
-  nodePass
-    ->addOperation(new EnableDisableOp(GL_DEPTH_TEST,
-                                       EnableDisableOp::DISABLE));
-  
-  nodePass
-    ->addOperation(new ColorMaskOp(glm::bvec4(false, false, false, false)));
-
-   MeshComponent* meshComp =
-     static_cast<MeshComponent*>(_renderNodes[i]->getComponent(COMPONENT_MESH));
-   
-   nodePass
-     ->addOperation(OperationFactory::create(OP_BINDATTRIBUTE, "v_position",
-                                             meshComp, "v_position",
-                                             voxelizeShader));
-
-   nodePass
-     ->addOperation(new BindUniform(&_shdVoxelGridResolution,
-                                  voxelizeShader->getUniform("voxelTexSize")));
-
-  nodePass
-    ->addOperation(OperationFactory::create(OP_BINDATTRIBUTE, "v_normal",
-                                            meshComp, "v_normal",
-                                            voxelizeShader));
-
-
-   nodePass
-     ->addOperation(OperationFactory::create(OP_BINDATTRIBUTE, "v_uv0",
-                                             meshComp, "v_uvw", voxelizeShader));
-
-   nodePass
-     ->addOperation(OperationFactory::create(OP_BINDUNIFORM, "model Matrix",
-                                             _renderNodes[i]->getTransform(), "modelWorld",
-                                             voxelizeShader));
-
-   nodePass
-     ->addOperation(OperationFactory::create(OP_BINDUNIFORM, "normal Matrix",
-                                             _renderNodes[i]->getTransform(), "modelWorldNormal",
-                                             voxelizeShader));
-
-   nodePass
-     ->addOperation(OperationFactory::create(OP_BINDIMAGETEXTURE,
-                                      _voxelTexture->getName(),
-                                      _voxelTexComp, "voxelTex",
-                                      voxelizeShader));
-
-   const TexturesComponent* texComp =
-     static_cast<TexturesComponent*>(_renderNodes[i]->getComponent(COMPONENT_TEXTURES));
-   const Texture* tex = texComp->getTexture(0);
-   
-   nodePass
-     ->addOperation(OperationFactory::create(OP_BINDTEXTURE, tex->getName(),
-                                      texComp, "diffuseTex", voxelizeShader));
-
-   nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
-                          "model Matrix", _voxelGridNode->getTransform(),
-                          "voxelGridTransform", voxelizeShader));
-
-   nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
-                          "inverse model Matrix", _voxelGridNode->getTransform(),
-                          "voxelGridTransformI", voxelizeShader));
-
-   nodePass
-     ->addOperation(new RenderMesh(meshComp));
-  }
-  
-   _backBufferStage->addProgramPass(voxelizePass);
-}
-
 void setupRaycasting() {
   using namespace kore;
   /*
@@ -420,33 +316,11 @@ void setup() {
   GLenum drawBuffers[] = {GL_NONE};
   _backBufferStage->setFrameBuffer(kore::FrameBuffer::BACKBUFFER,
                                   GL_FRAMEBUFFER, drawBuffers, 1);
-
-  // Init voxelGird
-  _voxelGridNode = new SceneNode;
-  _voxelGridNode->scale(_voxelGridSideLengths / 2.0f, SPACE_LOCAL);
-  _sceneMgr->getRootNode()->addChild(_voxelGridNode);
-
-  _voxelTexture = new Texture;
-  initTex3D(_voxelTexture, BLACK);
-  _voxelTexComp = new TexturesComponent;
-  _voxelTexComp->addTexture(_voxelTexture);
-  _voxelGridNode->addComponent(_voxelTexComp);
-
-  Cube* voxelGridCube = new Cube(2.0f);
-  MeshComponent* meshComp = new MeshComponent;
-  meshComp->setMesh(voxelGridCube);
-  _voxelGridNode->addComponent(meshComp);
-  ////////////////////////////////////////////////////////////////////////////
-  
-  setupVoxelization();
-  setupRaycasting();
-
-
   
 }
 
 void shutdown(){
-  glDeleteBuffers(1,&_tex3DclearPBO);
+  
 }
 
 int main(void) {

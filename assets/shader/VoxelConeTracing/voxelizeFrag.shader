@@ -26,7 +26,7 @@
 #version 420
 #extension GL_ARB_shader_image_size : enable
 
-//layout(r32ui) uniform volatile uimage3D voxelTex;
+layout(r32ui) uniform volatile uimage3D voxelTex;
 layout(r32ui) uniform volatile uimageBuffer voxelFragmentListPosition;
 layout(r32ui) uniform volatile uimageBuffer voxelFragmentListColor;
 layout(binding = 0) uniform atomic_uint voxel_index;
@@ -59,6 +59,12 @@ uint convVec4ToRGBA8(vec4 val) {
             |(uint(val.z) & 0x000000FF) << 16U
             |(uint(val.y) & 0x000000FF) << 8U 
             |(uint(val.x) & 0x000000FF);
+}
+
+uint convVec3ToXYZ10(vec3 val) {
+    return (uint(val.z) & 0x000003FF)   << 20U
+            |(uint(val.y) & 0x000003FF) << 10U 
+            |(uint(val.x) & 0x000003FF);
 }
 
 // ERROR: 0:59: error(#132) Syntax error: "layout" parse error
@@ -106,7 +112,7 @@ void main() {
   //imageStore(voxelTex, baseVoxel, uvec4(diffColorU));
   
   uint voxelIndex = atomicCounterIncrement(voxel_index);
-  imageStore(voxelFragmentListPosition,voxelIndex,baseVoxel);
+  imageStore(voxelFragmentListPosition,voxelIndex,convVec3ToXYZ10(baseVoxel));
   imageStore(voxelFragmentListColor,voxelIndex,diffColorU);
 
  /* for (int iDepth = 1; iDepth < numVoxelsDepth; ++iDepth) {
