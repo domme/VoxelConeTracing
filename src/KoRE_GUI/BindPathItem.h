@@ -26,6 +26,7 @@
 
 #include <QGraphicsPathItem>
 #include <QPainterPath>
+#include <QTimer>
 #include "KoRE_GUI/ShaderDataItem.h"
 #include "KoRE_GUI/ShaderInputItem.h"
 #include "KoRE/Operations/BindOperations/BindOperation.h"
@@ -43,8 +44,6 @@ namespace koregui {
                QWidget* widget);
     void setDest(QPointF dest) {_dragend = dest;}
     void setEnd(ShaderInputItem* end) {_end = end;}
-<<<<<<< HEAD
-=======
     inline QTimer* getTimer() {return &_timer;}
     bool checkBinding(ShaderInputItem* target);
     bool initBinding(void);
@@ -52,13 +51,13 @@ namespace koregui {
     void startAnimation(void);
     void stopAnimation(void);
     void animate();
->>>>>>> 3d276fe... Bugfixes and finishing binding in GUI
 
   private:
     ShaderDataItem* _start;
     ShaderInputItem* _end;
     kore::BindOperation* _bindOP;
     QPointF _dragend;
+    QTimer _timer;
   };
 }
 #endif  // BINDPATHITEM_H_

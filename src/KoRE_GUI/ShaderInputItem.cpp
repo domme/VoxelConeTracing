@@ -26,8 +26,10 @@
 #include <QCursor>
 
 koregui::ShaderInputItem::ShaderInputItem(const kore::ShaderInput* input,
-                                        QGraphicsItem* parent)
+                                          ShaderPassItem* pass,
+                                          QGraphicsItem* parent)
                                       : _input(input),
+                                        _pass(pass),
                                         _binding(NULL),
                                         _mouseover(false),
                                         QGraphicsItem(parent) {
@@ -57,7 +59,12 @@ void koregui::ShaderInputItem::paint(QPainter* painter,
   p.setWidth(2);
 
   QBrush b;
-  b.setColor(Qt::GlobalColor::yellow);
+  switch(_input->type) {
+    case GL_FLOAT_MAT4:
+      b.setColor(Qt::GlobalColor::green);
+      break;
+    default : b.setColor(Qt::GlobalColor::red);
+  }
   b.setStyle(Qt::BrushStyle::SolidPattern);
   painter->setBrush(b);
   painter->setPen(p);
@@ -78,13 +85,6 @@ void koregui::ShaderInputItem
   _mouseover = false;
   QGraphicsItem::hoverLeaveEvent(event);
 }
-
-<<<<<<< HEAD
-void koregui::ShaderInputItem
-  ::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-  // TODO(dospelt) change color?
-=======
 void koregui::ShaderInputItem::setBinding(koregui::BindPathItem* binding) {
   _binding = binding;
->>>>>>> 3d276fe... Bugfixes and finishing binding in GUI
 }

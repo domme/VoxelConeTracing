@@ -27,13 +27,14 @@
 #include <QGraphicsItem>
 #include <QKeyEvent>
 #include <QList>
+#include <QCursor>
 #include <QMenu>
 
-#include "KoRE_GUI/ShaderProgramItem.h"
+#include "KoRE_GUI/ShaderPassItem.h"
 #include "KoRE_GUI/ResourceViewer.h"
-#include "KoRE_GUI/FrameBufferItem.h"
-#include "KoRE_GUI/FrameBufferEditor.h"
+#include "KoRE_GUI/FrameBufferStageItem.h"
 
+#include "KoRE/RenderManager.h"
 #include "KoRE/ResourceManager.h"
 #include "KoRE/FrameBuffer.h"
 
@@ -43,6 +44,7 @@ koregui::RenderViewer::RenderViewer(QWidget *parent)
     QGraphicsView(parent) {
   setWindowTitle("RenderView");
   _scene.setBackgroundBrush(QBrush(QColor(23,23,23)));
+  _scene.setParent(this);
   setScene(&_scene);
   setMinimumSize(800,600);
 }
@@ -63,6 +65,28 @@ void koregui::RenderViewer::clearScene(void) {
 void koregui::RenderViewer::keyPressEvent(QKeyEvent * event) {
   if (event->key() == Qt::Key_Escape) QGuiApplication::quit();
   if (event->key() == Qt::Key_Shift) setDragMode(ScrollHandDrag);
+  if (event->key() == Qt::Key_Delete) {
+    QList<QGraphicsItem*> sceneset = _scene.selectedItems();
+    for (unsigned int i = 0; i < sceneset.size(); i++) {
+      QGraphicsItem* itemPtr = sceneset[i];
+      // Deletion of FrameBufferStages
+      if (itemPtr->data(0) == QVariant("FRAMEBUFFERSTAGE")) {
+        auto it = std::find(_framebufferStages.begin(),
+                            _framebufferStages.end(),
+                            itemPtr);
+        if (it != _framebufferStages.end()) {
+          _framebufferStages.erase(it);
+        }
+        _scene.removeItem(itemPtr);
+        delete(itemPtr);
+      }
+      // Deletion of ShaderProgramPasses
+      if (itemPtr->data(0) == QVariant("SHADERPROGRAMPASS")) {
+        //_scene.removeItem(itemPtr);
+        delete(itemPtr);
+      }
+    }
+  }
   QGraphicsView::keyPressEvent(event);
 }
 
@@ -82,9 +106,10 @@ void koregui::RenderViewer::wheelEvent(QWheelEvent *event) {
 
 void koregui::RenderViewer::contextMenuEvent(QContextMenuEvent *event) {
   QGraphicsItem* item = itemAt(event->pos());
+  _lastpos = event->pos();
   if (item) {
-    if(item->data(0).toString() == "FRAMEBUFFER") {
-      _currentframebuffer = static_cast<koregui::FrameBufferItem*>(item);
+    if(item->data(0).toString() == "FRAMEBUFFERSTAGE") {
+      _currentframebuffer = static_cast<koregui::FrameBufferStageItem*>(item);
       QMenu menu("RenderContext", this);
       QMenu* create  = menu.addMenu(QIcon("./assets/icons/testStar.png"), "Create");
       create->addAction("ShaderPass", this, SLOT(createShaderPass()));
@@ -134,10 +159,7 @@ void koregui::RenderViewer::mouseMoveEvent(QMouseEvent *event) {
       _bindTarget = static_cast<ShaderInputItem*>(item);
       _bindTarget->setBinding(_currentpath);
       _currentpath->setEnd(_bindTarget);
-<<<<<<< HEAD
-      item->update();
-=======
->>>>>>> 3d276fe... Bugfixes and finishing binding in GUI
+      //item->update();
     } else {
       if(_bindTarget) {
         _currentpath->setEnd(NULL);
@@ -165,15 +187,54 @@ void koregui::RenderViewer
   nodeItem->setPos(x, y);
 }
 
+void koregui::RenderViewer
+  ::framebufferMoved(FrameBufferStageItem* bufferstage) {
+    uint i = 0;
+    // find bufferstage index
+    for (i; i < _framebufferStages.size(); i++) {
+      if (_framebufferStages[i] == bufferstage) {
+        break;
+      }
+    }
+    // compare to previous shaderPass, if any
+    if (i > 0) {
+      if( _framebufferStages[i]->x() < _framebufferStages[i-1]->x()) {
+        std::swap(_framebufferStages[i],_framebufferStages[i-1]);
+        kore::RenderManager::getInstance()
+          ->swapFramebufferStage(_framebufferStages[i]->getStage(),
+                                 _framebufferStages[i-1]->getStage());
+      }
+    }
+    // compare to next shaderPass, if any
+    if( i < (_framebufferStages.size() - 1)) {
+      if( _framebufferStages[i]->pos().x() > _framebufferStages[i+1]->pos().x()) {
+        std::swap(_framebufferStages[i],_framebufferStages[i+1]);
+        kore::RenderManager::getInstance()
+          ->swapFramebufferStage(_framebufferStages[i]->getStage(),
+                                 _framebufferStages[i+1]->getStage());
+      }
+    }
+}
+
 void koregui::RenderViewer::createFBOStage(void) {
-  koregui::FrameBufferItem* fbitem = new koregui::FrameBufferItem();
+  koregui::FrameBufferStageItem* fbitem = new koregui::FrameBufferStageItem();
   _scene.addItem(fbitem);
+  fbitem->setPos(mapToScene(_lastpos));
+  auto at = _framebufferStages.begin();
+  for (at; at != _framebufferStages.end(); at++) {
+     if (fbitem->x() < (*at)->x()) {
+       _framebufferStages.insert(at, fbitem);
+       return;
+     }
+  }
+  _framebufferStages.push_back(fbitem);
 }
 
 void koregui::RenderViewer::createShaderPass(void) {
   if(_currentframebuffer) {
-    koregui::ShaderProgramItem* spitem
-      = new koregui::ShaderProgramItem(_currentframebuffer);
+    koregui::ShaderPassItem* spitem
+      = new koregui::ShaderPassItem(_currentframebuffer);
+    _currentframebuffer->addShaderPass(spitem);
   }
 }
 

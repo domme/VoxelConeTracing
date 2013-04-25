@@ -33,10 +33,11 @@ void kore::SimpleOptimizer::
   // will be able to do it's lazy job undetected ;)
   //operationList.clear();
 
-  if (!operationList.empty())
+  /*if (!operationList.empty())
   {
      return;
-  }
+  }*/
+  operationList.clear();
 
   for (uint iFBO = 0; iFBO < stages.size(); ++iFBO) {
     const std::vector<Operation*>& fboStartupOps =
