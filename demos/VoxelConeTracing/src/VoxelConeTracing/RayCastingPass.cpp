@@ -63,11 +63,10 @@ RayCastingPass::RayCastingPass(VCTscene* vctScene)
 
   kore::Camera* cam = vctScene->getCamera();
 
-  ShaderProgramPass* raycastPass = new ShaderProgramPass();
-  raycastPass->setShaderProgram(raycastShader);
+  this->setShaderProgram(raycastShader);
 
   NodePass* raycastNodePass = new NodePass(fsquadnode);
-  raycastPass->addNodePass(raycastNodePass);
+  this->addNodePass(raycastNodePass);
 
   raycastNodePass->addOperation(new ViewportOp(RenderManager::getInstance()->getViewport()));
 

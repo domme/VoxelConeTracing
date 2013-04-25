@@ -76,6 +76,8 @@
 #include "VoxelConeTracing/VoxelizePass.h"
 #include "VoxelConeTracing/RayCastingPass.h"
 
+#include "vsDebugLib.h"
+
 static const uint screen_width = 1280;
 static const uint screen_height = 720;
 
@@ -119,6 +121,8 @@ void setup() {
  
   backBufferStage->addProgramPass(new VoxelizePass(&_vctScene));
   backBufferStage->addProgramPass(new RayCastingPass(&_vctScene));
+
+  RenderManager::getInstance()->addFramebufferStage(backBufferStage);
 }
 
 void shutdown(){
@@ -183,6 +187,13 @@ int main(void) {
     ->write("GLEW version: %s\n",
             reinterpret_cast<const char*>(
             glewGetString(GLEW_VERSION)));
+
+  VSDebugLib::init();
+  VSDebugLib::enableUserMessages(true);
+  VSDebugLib::addApplicationMessage(12345, 
+    GL_DEBUG_TYPE_OTHER_ARB,
+    GL_DEBUG_SEVERITY_LOW_ARB,
+    "This is just a test");
 
   //setupImageLoadStoreTest();
   // setupAtomicCounterTest();

@@ -57,15 +57,13 @@ VoxelizePass::VoxelizePass(VCTscene* vctScene)
   ResourceManager::getInstance()->addShaderProgram(voxelizeShader);
 
   VoxelGridResolution = vctScene->getVoxelGridResolution();
-
-  // /*
-  ShaderProgramPass* voxelizePass = new ShaderProgramPass;
-  voxelizePass->setShaderProgram(voxelizeShader);
+    
+  this->setShaderProgram(voxelizeShader);
   std::vector<kore::SceneNode*> _renderNodes = vctScene->getRenderNodes();
 
   for (uint i = 0; i < _renderNodes.size(); ++i) {
     NodePass* nodePass = new NodePass(_renderNodes[i]);
-    voxelizePass->addNodePass(nodePass);
+    this->addNodePass(nodePass);
 
    nodePass->addOperation(new ViewportOp(glm::ivec4(0, 0,
                                                    VoxelGridResolution,
