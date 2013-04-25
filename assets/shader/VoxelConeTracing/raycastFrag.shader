@@ -30,7 +30,7 @@ return (  uint(val.w) & 0x000000FF) << 24U
 
 void main(void) {
   const ivec3 voxelTexSize = imageSize(voxelTex);
-  const float voxelSize = length(voxelGridTransform[0] * 2.0) / voxelTexSize;
+  float voxelSize = (length(voxelGridTransform[0] * 2.0) / vec3(voxelTexSize)).x;
 
   float maxLength = length(In.viewDirVS);
   float stepSize = voxelSize / 4.0;

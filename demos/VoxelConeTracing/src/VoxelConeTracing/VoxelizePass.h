@@ -27,14 +27,12 @@
 #define VCT_SRC_VCT_VOXELIZEPASS_H_
 
 #include "KoRE/Passes/ShaderProgramPass.h"
-#include "VCTscene.h"
+#include "VoxelConeTracing/VCTscene.h"
 
 class VoxelizePass : public kore::ShaderProgramPass {
 public:
-  VoxelizePass(void);
+  VoxelizePass(VCTscene* vctScene);
   virtual ~VoxelizePass(void);
-
-  void init(VCTscene* vctScene);
 
 private:
   uint VoxelGridResolution;

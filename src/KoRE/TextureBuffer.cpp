@@ -37,7 +37,7 @@ kore::TextureBuffer::~TextureBuffer(void) {
 bool kore::TextureBuffer::create(const STextureBufferProperties& properties,
                                  const std::string& name,
                                  const GLvoid* data /*= NULL*/) {
-  GLerror::gl_ErrorCheckStart();
+  
   RenderManager* renderMgr = RenderManager::getInstance();
     
   glGenTextures(1, &_texHandle);
@@ -46,13 +46,16 @@ bool kore::TextureBuffer::create(const STextureBufferProperties& properties,
   glGenBuffers(1, &_bufferHandle);
   renderMgr->bindBuffer(GL_TEXTURE_BUFFER, _bufferHandle);
 
+  
   glBufferData(GL_TEXTURE_BUFFER, properties.size, data, properties.usageHint);
-
-  glTexBuffer(GL_TEXTURE_BUFFER, properties.internalFormat, properties.usageHint);
+  
+  GLerror::gl_ErrorCheckStart();
+  glTexBuffer(GL_TEXTURE_BUFFER, properties.internalFormat, _bufferHandle);
+  bool success = GLerror::gl_ErrorCheckFinish("TextureBuffer::create");
 
   renderMgr->bindTexture(GL_TEXTURE_BUFFER, 0);
   renderMgr->bindBuffer(GL_TEXTURE_BUFFER, 0);
-  bool success = GLerror::gl_ErrorCheckFinish("TextureBuffer::create");
+  
 
   return success;
 }

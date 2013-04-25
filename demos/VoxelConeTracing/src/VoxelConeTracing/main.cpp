@@ -72,224 +72,19 @@
 #include "VoxelConeTracing/Cube.h"
 #include "VoxelConeTracing/CubeVolume.h"
 
-const uint screen_width = 1280;
-const uint screen_height = 720;
+#include "VoxelConeTracing/VCTscene.h"
+#include "VoxelConeTracing/VoxelizePass.h"
+#include "VoxelConeTracing/RayCastingPass.h"
 
-kore::SceneNode* _cameraNode = NULL;
-kore::Camera* _pCamera = NULL;
+static const uint screen_width = 1280;
+static const uint screen_height = 720;
 
-kore::SceneNode* _rotationNode = NULL;
-kore::SceneNode* _voxelGridNode = NULL;
-kore::Texture* _voxelTexture = NULL;
-kore::TexturesComponent* _voxelTexComp;
+static kore::SceneNode* _cameraNode = NULL;
+static kore::Camera* _pCamera = NULL;
 
-kore::FrameBufferStage* _backBufferStage = NULL;
-kore::FrameBufferStage* _raycastTexStageFront = NULL;
-kore::FrameBufferStage* _raycastTexStageBack = NULL;
+static kore::SceneNode* _rotationNode = NULL;
 
-kore::SceneManager* _sceneMgr = NULL;
-kore::ResourceManager* _resMgr = NULL;
-kore::RenderManager* _renderMgr = NULL;
-std::vector<kore::SceneNode*> _renderNodes;
-
-
-void setupRaycasting() {
-  using namespace kore;
-  /*
-  // Init raycast prepare 
-  //////////////////////////////////////////////////////////////////////////
-  ShaderProgram* raycastTexShader = new ShaderProgram;
-  raycastTexShader->
-    loadShader("./assets/shader/VoxelConeTracing/raycastTexVert.shader",
-    GL_VERTEX_SHADER);
-
-
-  raycastTexShader->
-    loadShader("./assets/shader/VoxelConeTracing/raycastTexFrag.shader",
-    GL_FRAGMENT_SHADER);
-
-  raycastTexShader->init();
-  raycastTexShader->setName("raycastShader");
-  _resMgr->addShaderProgram(raycastTexShader);
-
-
-
-  FrameBuffer* raycastTexFrontFBO = new FrameBuffer("raycastTexFBO");
-  _resMgr->addFramebuffer(raycastTexFrontFBO);
-
-  FrameBuffer* raycastTexBackFBO = new FrameBuffer("raycastTexFBO");
-  _resMgr->addFramebuffer(raycastTexBackFBO);
-
-  STextureProperties texProps;
-  texProps.width = screen_width;
-  texProps.height = screen_height;
-  texProps.depth = 0;
-  texProps.format = GL_RGBA;
-  texProps.internalFormat = GL_RGBA32F;
-  texProps.pixelType = GL_FLOAT;
-  texProps.targetType = GL_TEXTURE_2D;
-
-  STextureProperties texPropsDepth;
-  texProps.width = screen_width;
-  texProps.height = screen_height;
-  texProps.depth = 0;
-  texProps.format = GL_DEPTH_STENCIL;
-  texProps.internalFormat = GL_UNSIGNED_INT_24_8;
-  texProps.pixelType = GL_UNSIGNED_INT;
-  texProps.targetType = GL_TEXTURE_2D;
-
-  Texture* texCubeFront = new Texture;
-  Texture* texCubeBack = new Texture;
-  Texture* texCubeDepthS = new Texture;
-  _resMgr->addTexture(texCubeFront);
-  _resMgr->addTexture(texCubeBack);
-  _resMgr->addTexture(texCubeDepthS);
-  
-  texCubeFront->create(texProps, "textureCubeFront");
-  texCubeBack->create(texProps, "textureCubeBack");
-  texCubeDepthS->create(texPropsDepth, "textureCubeBackDepthS");
-
-  raycastTexFrontFBO->addTextureAttachment(texCubeFront, GL_COLOR_ATTACHMENT0);
-  raycastTexFrontFBO->addTextureAttachment(texCubeDepthS, GL_DEPTH_STENCIL_ATTACHMENT);
-
-  raycastTexBackFBO->addTextureAttachment(texCubeBack, GL_COLOR_ATTACHMENT0);
-  raycastTexBackFBO->addTextureAttachment(texCubeDepthS, GL_DEPTH_STENCIL_ATTACHMENT);
-  
-  GLenum drawBuffersFront[] = {GL_COLOR_ATTACHMENT0};
-  _raycastTexStageFront = new FrameBufferStage;
-  _raycastTexStageFront->setFrameBuffer(raycastTexFrontFBO, GL_FRAMEBUFFER, drawBuffersFront, 1);
-
-  GLenum drawBuffersBack[] = {GL_COLOR_ATTACHMENT0};
-  _raycastTexStageBack = new FrameBufferStage;
-  _raycastTexStageBack->setFrameBuffer(raycastTexBackFBO, GL_FRAMEBUFFER, drawBuffersBack, 1);
-
-  ShaderProgramPass* raycastPreparePassFront = new ShaderProgramPass;
-  raycastPreparePassFront->setShaderProgram(raycastTexShader);
-  _raycastTexStageFront->addProgramPass(raycastPreparePassFront);
-
-  NodePass* nodePass = new NodePass;
-  raycastPreparePassFront->addNodePass(nodePass);
-
-  MeshComponent* cubeMeshComp =
-    static_cast<MeshComponent*> (_voxelGridNode->getComponent(COMPONENT_MESH));
-
-  // TODO: Add a cullface-op
-  nodePass
-    ->addOperation(new En)
-
-  nodePass
-    ->addOperation(OperationFactory::create(OP_BINDATTRIBUTE, "v_position",
-                                               cubeMeshComp, "v_position",
-                                               raycastTexShader));
-
-  nodePass
-    ->addOperation(OperationFactory::create(OP_BINDUNIFORM, "model Matrix",
-    _voxelGridNode->getTransform(), "voxelGridTransform", raycastTexShader));
-
-  nodePass
-    ->addOperation(OperationFactory::create(OP_BINDUNIFORM,
-    "view projection Matrix", _pCamera, "viewProj", raycastTexShader));
-
-  
-  */
-
-
-
-  
-
-  // Init ray casting
-  //////////////////////////////////////////////////////////////////////////
-
-  ShaderProgram* raycastShader = new ShaderProgram;
-  raycastShader->
-    loadShader("./assets/shader/VoxelConeTracing/raycastVert.shader",
-    GL_VERTEX_SHADER);
-  
-
-  raycastShader->
-    loadShader("./assets/shader/VoxelConeTracing/raycastFrag.shader",
-    GL_FRAGMENT_SHADER);
-
-  raycastShader->init();
-  raycastShader->setName("raycastShader");
-  _resMgr->addShaderProgram(raycastShader);
-
-  SceneNode* fsquadnode = new SceneNode();
-  _sceneMgr->getRootNode()->addChild(fsquadnode);
-
-  MeshComponent* fsqMeshComponent = new MeshComponent();
-  fsqMeshComponent->setMesh(FullscreenQuad::getInstance());
-  fsquadnode->addComponent(fsqMeshComponent);
-
-
-  ShaderProgramPass* raycastPass = new ShaderProgramPass();
-  raycastPass->setShaderProgram(raycastShader);
-
-  NodePass* raycastNodePass = new NodePass(fsquadnode);
-  raycastPass->addNodePass(raycastNodePass);
-
-  raycastNodePass->addOperation(new ViewportOp(glm::ivec4(0, 0,
-    screen_width,
-    screen_height)));
-
-  raycastNodePass
-    ->addOperation(new EnableDisableOp(GL_DEPTH_TEST,
-    EnableDisableOp::DISABLE));
-
-  raycastNodePass
-    ->addOperation(new ColorMaskOp(glm::bvec4(true, true, true, true)));
-
-  raycastNodePass->addOperation(OperationFactory::create(OP_BINDATTRIBUTE, 
-    "v_position",
-    fsqMeshComponent, 
-    "v_position",
-    raycastShader));
-
-  raycastNodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM, 
-    "ratio",
-    _pCamera, 
-    "fRatio",
-    raycastShader));
-
-  raycastNodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM, 
-    "FOV degree",
-    _pCamera, 
-    "fYfovDeg",
-    raycastShader));
-
-  raycastNodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM, 
-    "far Plane",
-    _pCamera, 
-    "fFar",
-    raycastShader));
-
-  raycastNodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
-    "inverse view Matrix",
-    _pCamera,
-    "viewI",
-    raycastShader));
-
-  raycastNodePass->addOperation(OperationFactory::create(OP_BINDIMAGETEXTURE,
-    _voxelTexture->getName(),
-    _voxelTexComp, "voxelTex",
-    raycastShader));
-
-  raycastNodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
-    "model Matrix", _voxelGridNode->getTransform(),
-    "voxelGridTransform", raycastShader));
-
-  raycastNodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
-    "inverse model Matrix", _voxelGridNode->getTransform(),
-    "voxelGridTransformI", raycastShader));
-  
-  raycastNodePass->addOperation(new RenderMesh(fsqMeshComponent));
-  _backBufferStage->addProgramPass(raycastPass);
-
-  _renderMgr->addFramebufferStage(_backBufferStage);
-}
-
-
-
+static VCTscene _vctScene;
 
 void setup() {
   using namespace kore;
@@ -299,24 +94,31 @@ void setup() {
   glDisable(GL_DEPTH_TEST);
   glDepthMask(GL_FALSE);
 
-  _sceneMgr = SceneManager::getInstance();
-  _resMgr = ResourceManager::getInstance();
-  _renderMgr = RenderManager::getInstance();
-
   //Load the scene and get all mesh nodes
-  _resMgr->loadScene("./assets/meshes/monkey.dae");
-  _renderNodes.clear();
-  _sceneMgr->getSceneNodesByComponent(COMPONENT_MESH, _renderNodes);
-  _rotationNode = _renderNodes[0];
+  ResourceManager::getInstance()->loadScene("./assets/meshes/monkey.dae");
+  
+  std::vector<SceneNode*> renderNodes;
+  SceneManager::getInstance()
+      ->getSceneNodesByComponent(COMPONENT_MESH, renderNodes);
 
-  _cameraNode = _sceneMgr->getSceneNodeByComponent(COMPONENT_CAMERA);
+  _rotationNode = renderNodes[0];
+
+  _cameraNode = SceneManager::getInstance()
+                      ->getSceneNodeByComponent(COMPONENT_CAMERA);
   _pCamera = static_cast<Camera*>(_cameraNode->getComponent(COMPONENT_CAMERA));
 
-  _backBufferStage = new FrameBufferStage;
+  FrameBufferStage* backBufferStage = new FrameBufferStage;
   GLenum drawBuffers[] = {GL_NONE};
-  _backBufferStage->setFrameBuffer(kore::FrameBuffer::BACKBUFFER,
+  backBufferStage->setFrameBuffer(kore::FrameBuffer::BACKBUFFER,
                                   GL_FRAMEBUFFER, drawBuffers, 1);
-  
+
+  SVCTparameters params;
+  params.voxel_grid_resolution = 128;
+  params.voxel_grid_sidelengths = glm::vec3(50, 50, 50);
+  _vctScene.init(params, renderNodes, _pCamera);
+ 
+  backBufferStage->addProgramPass(new VoxelizePass(&_vctScene));
+  backBufferStage->addProgramPass(new RayCastingPass(&_vctScene));
 }
 
 void shutdown(){
@@ -441,7 +243,6 @@ int main(void) {
     }
 
     kore::GLerror::gl_ErrorCheckStart();
-    clearTex3D(_voxelTexture);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT |GL_STENCIL_BUFFER_BIT);
     kore::RenderManager::getInstance()->renderFrame();
 

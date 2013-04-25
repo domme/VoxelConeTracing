@@ -112,8 +112,8 @@ void main() {
   //imageStore(voxelTex, baseVoxel, uvec4(diffColorU));
   
   uint voxelIndex = atomicCounterIncrement(voxel_index);
-  imageStore(voxelFragmentListPosition,voxelIndex,convVec3ToXYZ10(baseVoxel));
-  imageStore(voxelFragmentListColor,voxelIndex,diffColorU);
+  imageStore(voxelFragmentListPosition, int(voxelIndex), uvec4(convVec3ToXYZ10(vec3(baseVoxel))));
+  imageStore(voxelFragmentListColor, int(voxelIndex), uvec4(diffColorU));
 
  /* for (int iDepth = 1; iDepth < numVoxelsDepth; ++iDepth) {
     // Assumption: voxelGrid is parrallel to world-axes

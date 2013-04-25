@@ -24,11 +24,12 @@
 */
 
 #include "VoxelConeTracing/VCTscene.h"
+#include "VoxelConeTracing/Cube.h"
+
 #include "KoRE/RenderManager.h"
 #include "KoRE/ResourceManager.h"
 #include "KoRE/GLerror.h"
 #include "KoRE/Components/TexturesComponent.h"
-#include "Cube.h"
 
 VCTscene::VCTscene() :
   _camera(NULL),
@@ -115,32 +116,37 @@ void VCTscene::initVoxelFragList() {
 }
 
 void VCTscene::clearTex3D(kore::Texture* tex) {
-  glBindBuffer(GL_PIXEL_UNPACK_BUFFER,_tex3DclearPBO);
+  kore::RenderManager::getInstance()->bindBuffer(GL_PIXEL_UNPACK_BUFFER,_tex3DclearPBO);
   for (uint z = 0; z < _voxelGridResolution; ++z) {
+    kore::GLerror::gl_ErrorCheckStart();
     glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, z,
                     _voxelGridResolution,
                     _voxelGridResolution, 1,
                     GL_RED_INTEGER, GL_UNSIGNED_INT, 0);
+    kore::GLerror::gl_ErrorCheckFinish("Upload 3D texture values");
   }
-  glBindBuffer(GL_PIXEL_UNPACK_BUFFER,0);
+  kore::RenderManager::getInstance()->bindBuffer(GL_PIXEL_UNPACK_BUFFER,0);
 }
-
 
 void VCTscene::initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
   using namespace kore;
 
-  typedef glm::detail::tvec4<unsigned int> VoxelColorT;
-
-  VoxelColorT* colorValues
-    = new VoxelColorT[_voxelGridResolution * _voxelGridResolution];
+  unsigned int colorValues[128 * 128];
+  
+  /*unsigned int* colorValues
+    = new unsigned int[_voxelGridResolution * _voxelGridResolution]; */
   memset(colorValues, 0, _voxelGridResolution * _voxelGridResolution * sizeof(unsigned int));
 
+  GLerror::gl_ErrorCheckStart();
   glGenBuffers(1, &_tex3DclearPBO);
-  glBindBuffer(GL_PIXEL_UNPACK_BUFFER, _tex3DclearPBO);
+  RenderManager::getInstance()
+      ->bindBuffer(GL_PIXEL_UNPACK_BUFFER, _tex3DclearPBO);
   glBufferData(GL_PIXEL_UNPACK_BUFFER, 
-    _voxelGridResolution * _voxelGridResolution * sizeof(unsigned int), 
-    colorValues,GL_STATIC_DRAW);
-  glBindBuffer(GL_PIXEL_UNPACK_BUFFER,0);
+               _voxelGridResolution * _voxelGridResolution * sizeof(unsigned int), 
+               colorValues, GL_STATIC_DRAW);
+  RenderManager::getInstance()
+    ->bindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+  GLerror::gl_ErrorCheckFinish("Upload Pixel buffer values");
   
   _shdVoxelGridResolution.data = &_voxelGridResolution;
   _shdVoxelGridResolution.name = "VoxelGridResolution";
@@ -162,11 +168,9 @@ void VCTscene::initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
   RenderManager::getInstance()->activeTexture(0);
   RenderManager::getInstance()->bindTexture(GL_TEXTURE_3D, tex->getHandle());
 
-  GLerror::gl_ErrorCheckStart();
-  
   clearTex3D(tex);
   
-  GLerror::gl_ErrorCheckFinish("Upload 3D texture values");
+  
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, 0);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, 0);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_R, GL_RED);
@@ -179,6 +183,6 @@ void VCTscene::initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP);
   RenderManager::getInstance()->bindTexture(GL_TEXTURE_3D, 0);
-  delete[] colorValues;
+  //delete[] colorValues;
 }
 
