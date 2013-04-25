@@ -285,6 +285,7 @@
     <ClCompile Include="src\VoxelConeTracing\RayCastingPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\VCTscene.cpp" />
     <ClCompile Include="src\VoxelConeTracing\VoxelizePass.cpp" />
+    <ClCompile Include="src\VoxelConeTracing\vsDebugLib.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\VoxelConeTracing\Cube.h" />
@@ -293,6 +294,7 @@
     <ClInclude Include="src\VoxelConeTracing\RayCastingPass.h" />
     <ClInclude Include="src\VoxelConeTracing\VCTscene.h" />
     <ClInclude Include="src\VoxelConeTracing\VoxelizePass.h" />
+    <ClInclude Include="src\VoxelConeTracing\vsDebugLib.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\assets\shader\normalColor.fp" />
