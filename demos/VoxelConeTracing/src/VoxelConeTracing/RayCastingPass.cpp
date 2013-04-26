@@ -50,7 +50,7 @@ RayCastingPass::RayCastingPass(VCTscene* vctScene) {
 
   _raycastShader.init();
   _raycastShader.setName("raycastShader");
-  setShaderProgram(&_raycastShader);
+  this->setShaderProgram(&_raycastShader);
   
   SceneNode* fsquadnode = new SceneNode();
   SceneManager::getInstance()->getRootNode()->addChild(fsquadnode);

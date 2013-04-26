@@ -64,8 +64,8 @@ VoxelizePass::VoxelizePass(VCTscene* vctScene)
     this->addNodePass(nodePass);
 
    nodePass->addOperation(new ViewportOp(glm::ivec4(0, 0,
-                                  vctScene->getShdVoxelGridResolution(),
-                                  vctScene->getShdVoxelGridResolution())));
+                                  vctScene->getVoxelGridResolution(),
+                                  vctScene->getVoxelGridResolution())));
 
   nodePass
     ->addOperation(new EnableDisableOp(GL_DEPTH_TEST,
@@ -81,7 +81,6 @@ VoxelizePass::VoxelizePass(VCTscene* vctScene)
      ->addOperation(OperationFactory::create(OP_BINDATTRIBUTE, "v_position",
                                              meshComp, "v_position",
                                              voxelizeShader));
-
    nodePass
      ->addOperation(new BindUniform(vctScene->getShdVoxelGridResolution(),
                                   voxelizeShader->getUniform("voxelTexSize")));
@@ -105,7 +104,6 @@ VoxelizePass::VoxelizePass(VCTscene* vctScene)
      ->addOperation(OperationFactory::create(OP_BINDUNIFORM, "normal Matrix",
                                              vRenderNdoes[i]->getTransform(), "modelWorldNormal",
                                              voxelizeShader));
-
    nodePass
      ->addOperation(OperationFactory::create(OP_BINDIMAGETEXTURE,
                                       vctScene->getVoxelTex()->getName(),

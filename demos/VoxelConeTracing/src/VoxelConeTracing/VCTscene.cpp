@@ -192,6 +192,7 @@ void VCTscene::initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   RenderManager::getInstance()->bindTexture(GL_TEXTURE_3D, 0);
+
   //delete[] colorValues;
 }
 

@@ -91,7 +91,7 @@ static VCTscene _vctScene;
 void setup() {
   using namespace kore;
 
-  glClearColor(1.0f,1.0f,1.0f,1.0f);
+  glClearColor(1.0f, 0.0f,0.0f,1.0f);
   glDisable(GL_CULL_FACE);
   glDisable(GL_DEPTH_TEST);
   glDepthMask(GL_FALSE);
@@ -109,6 +109,7 @@ void setup() {
                       ->getSceneNodeByComponent(COMPONENT_CAMERA);
   _pCamera = static_cast<Camera*>(_cameraNode->getComponent(COMPONENT_CAMERA));
 
+
   FrameBufferStage* backBufferStage = new FrameBufferStage;
   GLenum drawBuffers[] = {GL_NONE};
   backBufferStage->setFrameBuffer(kore::FrameBuffer::BACKBUFFER,
@@ -119,6 +120,7 @@ void setup() {
   params.voxel_grid_sidelengths = glm::vec3(50, 50, 50);
   _vctScene.init(params, renderNodes, _pCamera);
  
+
   backBufferStage->addProgramPass(new VoxelizePass(&_vctScene));
   backBufferStage->addProgramPass(new RayCastingPass(&_vctScene));
 
@@ -189,12 +191,13 @@ int main(void) {
             reinterpret_cast<const char*>(
             glewGetString(GLEW_VERSION)));
 
+/*
   VSDebugLib::init();
   VSDebugLib::enableUserMessages(true);
   VSDebugLib::addApplicationMessage(12345, 
     GL_DEBUG_TYPE_OTHER_ARB,
     GL_DEBUG_SEVERITY_LOW_ARB,
-    "This is just a test");
+    "This is just a test");*/
 
   
   kore::RenderManager::getInstance()
