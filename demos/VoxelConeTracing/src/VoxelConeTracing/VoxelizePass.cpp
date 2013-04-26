@@ -55,19 +55,17 @@ VoxelizePass::VoxelizePass(VCTscene* vctScene)
   voxelizeShader->init();
   voxelizeShader->setName("voxelizeShader");
   ResourceManager::getInstance()->addShaderProgram(voxelizeShader);
-
-  VoxelGridResolution = vctScene->getVoxelGridResolution();
-    
+  
   this->setShaderProgram(voxelizeShader);
-  std::vector<kore::SceneNode*> _renderNodes = vctScene->getRenderNodes();
+  const std::vector<kore::SceneNode*>& vRenderNdoes = vctScene->getRenderNodes();
 
-  for (uint i = 0; i < _renderNodes.size(); ++i) {
-    NodePass* nodePass = new NodePass(_renderNodes[i]);
+  for (uint i = 0; i < vRenderNdoes.size(); ++i) {
+    NodePass* nodePass = new NodePass(vRenderNdoes[i]);
     this->addNodePass(nodePass);
 
    nodePass->addOperation(new ViewportOp(glm::ivec4(0, 0,
-                                                   VoxelGridResolution,
-                                                   VoxelGridResolution)));
+                                  vctScene->getShdVoxelGridResolution(),
+                                  vctScene->getShdVoxelGridResolution())));
 
   nodePass
     ->addOperation(new EnableDisableOp(GL_DEPTH_TEST,
@@ -77,7 +75,7 @@ VoxelizePass::VoxelizePass(VCTscene* vctScene)
     ->addOperation(new ColorMaskOp(glm::bvec4(false, false, false, false)));
 
    MeshComponent* meshComp =
-     static_cast<MeshComponent*>(_renderNodes[i]->getComponent(COMPONENT_MESH));
+     static_cast<MeshComponent*>(vRenderNdoes[i]->getComponent(COMPONENT_MESH));
    
    nodePass
      ->addOperation(OperationFactory::create(OP_BINDATTRIBUTE, "v_position",
@@ -100,12 +98,12 @@ VoxelizePass::VoxelizePass(VCTscene* vctScene)
 
    nodePass
      ->addOperation(OperationFactory::create(OP_BINDUNIFORM, "model Matrix",
-                                             _renderNodes[i]->getTransform(), "modelWorld",
+                                             vRenderNdoes[i]->getTransform(), "modelWorld",
                                              voxelizeShader));
 
    nodePass
      ->addOperation(OperationFactory::create(OP_BINDUNIFORM, "normal Matrix",
-                                             _renderNodes[i]->getTransform(), "modelWorldNormal",
+                                             vRenderNdoes[i]->getTransform(), "modelWorldNormal",
                                              voxelizeShader));
 
    nodePass
@@ -115,7 +113,7 @@ VoxelizePass::VoxelizePass(VCTscene* vctScene)
                                       voxelizeShader));
 
    const TexturesComponent* texComp =
-     static_cast<TexturesComponent*>(_renderNodes[i]->getComponent(COMPONENT_TEXTURES));
+     static_cast<TexturesComponent*>(vRenderNdoes[i]->getComponent(COMPONENT_TEXTURES));
    const Texture* tex = texComp->getTexture(0);
    
    nodePass
@@ -136,7 +134,5 @@ VoxelizePass::VoxelizePass(VCTscene* vctScene)
 }
 
 
-VoxelizePass::~VoxelizePass(void)
-{
+VoxelizePass::~VoxelizePass(void) {
 }
-

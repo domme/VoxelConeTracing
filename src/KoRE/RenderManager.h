@@ -91,6 +91,19 @@ namespace kore {
   class RenderManager {
   public:
     static RenderManager *getInstance(void);
+    
+    /*! \brief Returns the current screen-resolution.
+     * This value is the current pixel-size of the output-window and is
+     * independent of the current viewport used for rendering. */
+    inline const glm::ivec2& getScreenResolution() const {return _screenRes;}
+
+    /*! \brief Sets the screen-resolution.
+    * This value is the current pixel-size of the output-window and is
+    * independent of the current viewport used for rendering.
+    * Note that this method has to be called manually from the UI.*/
+    inline void setScreenResolution(const glm::ivec2& screenRes)
+    {_screenRes = screenRes;}
+    
     glm::ivec2 getRenderResolution() const;
     const glm::ivec4& getViewport() const;
     void setViewport(const glm::ivec4& newViewport);
@@ -153,7 +166,7 @@ namespace kore {
     virtual ~RenderManager(void);
     void resolutionChanged();
 
-
+    glm::ivec2 _screenRes;
     glm::ivec4 _viewport;
     const Optimizer* _optimizer;
 

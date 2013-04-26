@@ -37,23 +37,21 @@
 #include "KoRE\Components\TexturesComponent.h"
 
 
-RayCastingPass::RayCastingPass(VCTscene* vctScene)
-{
+RayCastingPass::RayCastingPass(VCTscene* vctScene) {
   using namespace kore;
-  ShaderProgram* raycastShader = new ShaderProgram;
-  raycastShader->
-    loadShader("./assets/shader/VoxelConeTracing/raycastVert.shader",
-    GL_VERTEX_SHADER);
-
-
-  raycastShader->
+  
+  _raycastShader
+     .loadShader("./assets/shader/VoxelConeTracing/raycastVert.shader",
+                 GL_VERTEX_SHADER);
+  
+  _raycastShader.
     loadShader("./assets/shader/VoxelConeTracing/raycastFrag.shader",
-    GL_FRAGMENT_SHADER);
+               GL_FRAGMENT_SHADER);
 
-  raycastShader->init();
-  raycastShader->setName("raycastShader");
-  ResourceManager::getInstance()->addShaderProgram(raycastShader);
-
+  _raycastShader.init();
+  _raycastShader.setName("raycastShader");
+  setShaderProgram(&_raycastShader);
+  
   SceneNode* fsquadnode = new SceneNode();
   SceneManager::getInstance()->getRootNode()->addChild(fsquadnode);
 
@@ -63,72 +61,69 @@ RayCastingPass::RayCastingPass(VCTscene* vctScene)
 
   kore::Camera* cam = vctScene->getCamera();
 
-  this->setShaderProgram(raycastShader);
+  NodePass* nodePass = new NodePass(fsquadnode);
+  this->addNodePass(nodePass);
 
-  NodePass* raycastNodePass = new NodePass(fsquadnode);
-  this->addNodePass(raycastNodePass);
+  glm::ivec4 vp(0, 0, RenderManager::getInstance()->getScreenResolution().x,
+                     RenderManager::getInstance()->getScreenResolution().y);
+  nodePass->addOperation(new ViewportOp(vp));
 
-  raycastNodePass->addOperation(new ViewportOp(RenderManager::getInstance()->getViewport()));
-
-  raycastNodePass
+  nodePass
     ->addOperation(new EnableDisableOp(GL_DEPTH_TEST,
     EnableDisableOp::DISABLE));
 
-  raycastNodePass
+  nodePass
     ->addOperation(new ColorMaskOp(glm::bvec4(true, true, true, true)));
 
-  raycastNodePass->addOperation(OperationFactory::create(OP_BINDATTRIBUTE, 
+  nodePass->addOperation(OperationFactory::create(OP_BINDATTRIBUTE, 
     "v_position",
     fsqMeshComponent, 
     "v_position",
-    raycastShader));
+    &_raycastShader));
 
-  raycastNodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM, 
+  nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM, 
     "ratio",
     cam, 
     "fRatio",
-    raycastShader));
+    &_raycastShader));
 
-  raycastNodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM, 
+  nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM, 
     "FOV degree",
     cam, 
     "fYfovDeg",
-    raycastShader));
+    &_raycastShader));
 
-  raycastNodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM, 
+  nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM, 
     "far Plane",
     cam, 
     "fFar",
-    raycastShader));
+    &_raycastShader));
 
-  raycastNodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
+  nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
     "inverse view Matrix",
     cam,
     "viewI",
-    raycastShader));
+    &_raycastShader));
 
-  raycastNodePass->addOperation(OperationFactory::create(OP_BINDIMAGETEXTURE,
+  nodePass->addOperation(OperationFactory::create(OP_BINDIMAGETEXTURE,
     vctScene->getVoxelTex()->getName(),
     static_cast<TexturesComponent*> (vctScene->getVoxelGridNode()->getComponent(COMPONENT_TEXTURES)), "voxelTex",
-    raycastShader));
+    &_raycastShader));
 
-  raycastNodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
+  nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
     "model Matrix", vctScene->getVoxelGridNode()->getTransform(),
-    "voxelGridTransform", raycastShader));
+    "voxelGridTransform", &_raycastShader));
 
-  raycastNodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
+  nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
     "inverse model Matrix", vctScene->getVoxelGridNode()->getTransform(),
-    "voxelGridTransformI", raycastShader));
+    "voxelGridTransformI", &_raycastShader));
 
-  raycastNodePass->addOperation(new RenderMesh(fsqMeshComponent));
+  nodePass->addOperation(new RenderMesh(fsqMeshComponent));
 }
 
 
-RayCastingPass::~RayCastingPass(void)
-{
+RayCastingPass::~RayCastingPass(void) {
 }
-
-
 
 /*
   // Init raycast prepare 

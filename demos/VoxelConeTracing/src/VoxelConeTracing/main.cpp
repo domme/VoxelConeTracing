@@ -150,6 +150,7 @@ int main(void) {
     exit(EXIT_FAILURE);
   }
 
+
   // disable v-sync
   glfwSwapInterval(0);
 
@@ -195,8 +196,10 @@ int main(void) {
     GL_DEBUG_SEVERITY_LOW_ARB,
     "This is just a test");
 
-  //setupImageLoadStoreTest();
-  // setupAtomicCounterTest();
+  
+  kore::RenderManager::getInstance()
+    ->setScreenResolution(glm::ivec2(screen_width, screen_height));
+
   setup();
 
   kore::Timer the_timer;

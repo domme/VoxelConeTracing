@@ -34,5 +34,8 @@ class RayCastingPass : public kore::ShaderProgramPass
 public:
   RayCastingPass(VCTscene* vctScene);
   virtual ~RayCastingPass(void);
+
+private:
+  kore::ShaderProgram _raycastShader;
 };
 #endif //VCT_SRC_VCT_RAYCASTINGPASS_H_

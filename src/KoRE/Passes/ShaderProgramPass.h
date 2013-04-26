@@ -30,7 +30,7 @@ namespace kore {
   public:
     explicit ShaderProgramPass(const ShaderProgram* prog);
     ShaderProgramPass(void);
-    ~ShaderProgramPass(void);
+    virtual ~ShaderProgramPass(void);
 
     inline std::vector<NodePass*>&
       getNodePasses() {return _nodePasses;}

@@ -168,7 +168,19 @@ void VCTscene::initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
   RenderManager::getInstance()->activeTexture(0);
   RenderManager::getInstance()->bindTexture(GL_TEXTURE_3D, tex->getHandle());
 
-  clearTex3D(tex);
+  //clearTex3D(tex);
+
+  // TODO: For some reason, the pixelbuffer-approach doesn't work... so we'll
+  // stick to manual clearing for now...
+  kore::GLerror::gl_ErrorCheckStart();
+  for (uint z = 0; z < _voxelGridResolution; ++z) {
+    kore::GLerror::gl_ErrorCheckStart();
+    glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, z,
+      _voxelGridResolution,
+      _voxelGridResolution, 1,
+      GL_RED_INTEGER, GL_UNSIGNED_INT, colorValues);
+  }
+  kore::GLerror::gl_ErrorCheckFinish("Upload 3D texture values");
   
   
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, 0);
@@ -179,9 +191,6 @@ void VCTscene::initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_A, GL_ALPHA);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP);
   RenderManager::getInstance()->bindTexture(GL_TEXTURE_3D, 0);
   //delete[] colorValues;
 }

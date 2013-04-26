@@ -37,7 +37,8 @@ kore::RenderManager::RenderManager(void)
     _vbo(0),
     _vao(0),
     _viewport(0,0,0,0),
-    _activeTextureUnitIndex(0) {
+    _activeTextureUnitIndex(0),
+    _screenRes(0,0) {
 
   //sync internal states with opengl-states:
   

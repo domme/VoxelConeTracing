@@ -35,7 +35,7 @@ public:
   virtual ~VoxelizePass(void);
 
 private:
-  uint VoxelGridResolution;
+  
 
 };
 #endif  // VCT_SRC_VCT_VOXELIZEPASS_H_

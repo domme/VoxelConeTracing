@@ -109,7 +109,7 @@ void main() {
   vec4 diffColor = texture(diffuseTex, In.uv);
   //imageAtomicRGBA8Avg(baseVoxel, vec4(diffColor.xyz,1.0));
   uint diffColorU = convVec4ToRGBA8(diffColor * vec4(255));
-  //imageStore(voxelTex, baseVoxel, uvec4(diffColorU));
+  imageStore(voxelTex, baseVoxel, uvec4(diffColorU));
   
   uint voxelIndex = atomicCounterIncrement(voxel_index);
   imageStore(voxelFragmentListPosition, int(voxelIndex), uvec4(convVec3ToXYZ10(vec3(baseVoxel))));
