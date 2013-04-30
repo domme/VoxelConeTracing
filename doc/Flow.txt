@@ -1,0 +1,23 @@
+ENGINE							GUI
+
+Create Scenegraph				Load Scene
+Create Scenenodes
+Load Components
+Attach Components
+
+Load/Create Shader				Load/Create Shader
+Compile Shader
+
+Create Selection/Query			Select Nodes to Render
+Store Selection in Op
+
+Create BindOperations			Connect NodeComponents' properties to Shader
+Assign Bindings(not binding)
+
+Create FBO						Select where to render Output
+Assign Output
+
+Validate OpSequence				viewResults
+do constant bindings
+(optimize renderqueue)
+Start consequent rendering

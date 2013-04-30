@@ -1,0 +1,21 @@
+#version 330
+// vertex position in modelspace
+layout(location = 0) in vec3 v_position;
+layout(location = 1) in vec3 v_normal;
+layout(location = 2) in vec3 v_uv0;
+
+uniform mat4 projection;
+uniform mat4 view;
+uniform mat4 model;
+
+smooth out vec3 normal;
+smooth out vec3 pos;
+out vec3 UV;
+
+void main()
+{
+  pos = (model * vec4(v_position, 1.0f)).xyz;
+  gl_Position = projection * view * vec4(pos, 1.0f);
+  normal = ( model * vec4(v_normal, 0.0) ).xyz; //Yes, I know this is wrong... just for displaying-purposes - I promise! ;)
+  UV = v_uv0;
+}

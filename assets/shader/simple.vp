@@ -1,0 +1,11 @@
+#version 330
+// vertex position in modelspace
+layout(location = 0) in vec3 v_position;
+
+uniform mat4 projection;
+uniform mat4 view;
+
+void main()
+{
+  gl_Position = projection * view * vec4(v_position, 1.0f);
+}

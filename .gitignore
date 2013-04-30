@@ -1,13 +1,24 @@
-# Compiled Object files
-*.slo
-*.lo
-*.o
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
+*~
+ipch
+cmake_install.cmake
+Makefile
+KoRE.cbp
+CMakeLists.txt.user
+CMakeFiles
+CMakeCache.txt
+*.exe
+*.pdb
+*.ilk
+*.user
+*.suo
+*.sdf
+*.opensdf
+*.obj
+*.kore
+Debug/*
+Win32/*
+*/obj/*
+KoRE.lib
+lib
+bin
+ext

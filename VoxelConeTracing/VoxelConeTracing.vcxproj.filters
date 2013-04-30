@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="src\VoxelConeTracing\FullscreenQuad.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\Cube.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\CubeVolume.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\VCTscene.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\VoxelizePass.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\RayCastingPass.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\vsDebugLib.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{0f0c3c26-026b-4d09-a040-a3505fae1021}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shader">
+      <UniqueIdentifier>{2847d3f9-7232-4f24-bcef-6958fe21db80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shader\VoxelConeTracing">
+      <UniqueIdentifier>{f676883f-5df7-4076-a346-3c8c48e3f366}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\VoxelConeTracing\FullscreenQuad.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\Cube.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\CubeVolume.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\VCTscene.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\VoxelizePass.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\RayCastingPass.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\vsDebugLib.h">
+      <Filter>src</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\assets\shader\normalColor.fp">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\..\assets\shader\normalColor.vp">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\..\assets\shader\normalmapping.frag">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\..\assets\shader\normalmapping.vert">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\..\assets\shader\simple.fp">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\..\assets\shader\simple.vp">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\..\assets\shader\VoxelConeTracing\voxelizeGeom.shader">
+      <Filter>shader\VoxelConeTracing</Filter>
+    </None>
+    <None Include="..\..\assets\shader\VoxelConeTracing\voxelizeFrag.shader">
+      <Filter>shader\VoxelConeTracing</Filter>
+    </None>
+    <None Include="..\..\assets\shader\VoxelConeTracing\voxelizeVert.shader">
+      <Filter>shader\VoxelConeTracing</Filter>
+    </None>
+    <None Include="..\..\assets\shader\VoxelConeTracing\raycastFrag.shader">
+      <Filter>shader\VoxelConeTracing</Filter>
+    </None>
+    <None Include="..\..\assets\shader\VoxelConeTracing\raycastVert.shader">
+      <Filter>shader\VoxelConeTracing</Filter>
+    </None>
+    <None Include="..\..\assets\shader\VoxelConeTracing\raycastTexFrag.shader">
+      <Filter>shader\VoxelConeTracing</Filter>
+    </None>
+    <None Include="..\..\assets\shader\VoxelConeTracing\raycastTexVert.shader">
+      <Filter>shader\VoxelConeTracing</Filter>
+    </None>
+  </ItemGroup>
+</Project>
