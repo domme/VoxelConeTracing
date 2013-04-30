@@ -33,6 +33,10 @@
 #include "KoRE/Operations/BindOperations/BindUniform.h"
 #include "KoRE/Components/TexturesComponent.h"
 #include "KoRE/Operations/RenderMesh.h"
+#include "KoRE/Operations/UseAtomicCounterBuffer.h"
+#include "KoRE/Operations/ResetAtomicCounterBuffer.h"
+#include "KoRE/Operations/BindOperations/BindTextureBuffer.h"
+#include "KoRE/Operations/MemoryBarrierOp.h"
 
 VoxelizePass::VoxelizePass(VCTscene* vctScene)
 {
@@ -59,6 +63,9 @@ VoxelizePass::VoxelizePass(VCTscene* vctScene)
   this->setShaderProgram(voxelizeShader);
   const std::vector<kore::SceneNode*>& vRenderNdoes = vctScene->getRenderNodes();
 
+  this->addStartupOperation(
+    new ResetAtomicCounterBuffer(voxelizeShader->getUniform("voxel_index"), 0));
+
   for (uint i = 0; i < vRenderNdoes.size(); ++i) {
     NodePass* nodePass = new NodePass(vRenderNdoes[i]);
     this->addNodePass(nodePass);
@@ -81,56 +88,70 @@ VoxelizePass::VoxelizePass(VCTscene* vctScene)
      ->addOperation(OperationFactory::create(OP_BINDATTRIBUTE, "v_position",
                                              meshComp, "v_position",
                                              voxelizeShader));
-   nodePass
-     ->addOperation(new BindUniform(vctScene->getShdVoxelGridResolution(),
-                                  voxelizeShader->getUniform("voxelTexSize")));
-
   nodePass
     ->addOperation(OperationFactory::create(OP_BINDATTRIBUTE, "v_normal",
                                             meshComp, "v_normal",
                                             voxelizeShader));
-
-
    nodePass
      ->addOperation(OperationFactory::create(OP_BINDATTRIBUTE, "v_uv0",
                                              meshComp, "v_uvw", voxelizeShader));
-
    nodePass
      ->addOperation(OperationFactory::create(OP_BINDUNIFORM, "model Matrix",
-                                             vRenderNdoes[i]->getTransform(), "modelWorld",
+                                             vRenderNdoes[i]->getTransform(),
+                                             "modelWorld",
                                              voxelizeShader));
-
    nodePass
      ->addOperation(OperationFactory::create(OP_BINDUNIFORM, "normal Matrix",
-                                             vRenderNdoes[i]->getTransform(), "modelWorldNormal",
+                                             vRenderNdoes[i]->getTransform(),
+                                             "modelWorldNormal",
                                              voxelizeShader));
-   nodePass
-     ->addOperation(OperationFactory::create(OP_BINDIMAGETEXTURE,
-                                      vctScene->getVoxelTex()->getName(),
-                                      static_cast<TexturesComponent*> (vctScene->getVoxelGridNode()->getComponent(COMPONENT_TEXTURES)), "voxelTex",
-                                      voxelizeShader));
-
-   const TexturesComponent* texComp =
-     static_cast<TexturesComponent*>(vRenderNdoes[i]->getComponent(COMPONENT_TEXTURES));
-   const Texture* tex = texComp->getTexture(0);
-   
-   nodePass
-     ->addOperation(OperationFactory::create(OP_BINDTEXTURE, tex->getName(),
-                                      texComp, "diffuseTex", voxelizeShader));
 
    nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
-                          "model Matrix", vctScene->getVoxelGridNode()->getTransform(),
+                          "model Matrix",
+                          vctScene->getVoxelGridNode()->getTransform(),
                           "voxelGridTransform", voxelizeShader));
 
    nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
-                          "inverse model Matrix", vctScene->getVoxelGridNode()->getTransform(),
+                          "inverse model Matrix",
+                          vctScene->getVoxelGridNode()->getTransform(),
                           "voxelGridTransformI", voxelizeShader));
+
+   nodePass
+     ->addOperation(new BindUniform(vctScene->getShdVoxelGridResolution(),
+     voxelizeShader->getUniform("voxelTexSize")));
+
+   const TexturesComponent* texComp =
+     static_cast<TexturesComponent*>(
+     vRenderNdoes[i]->getComponent(COMPONENT_TEXTURES));
+   const Texture* tex = texComp->getTexture(0);
+
+   nodePass
+     ->addOperation(OperationFactory::create(OP_BINDTEXTURE, tex->getName(),
+     texComp, "diffuseTex", voxelizeShader));
+
+   nodePass
+     ->addOperation(new BindTextureBuffer(
+        vctScene->getShdVoxelFragList(VOXELATT_POSITION),
+        voxelizeShader->getUniform("voxelFragmentListPosition")));
+
+   nodePass
+     ->addOperation(new BindTextureBuffer(
+     vctScene->getShdVoxelFragList(VOXELATT_COLOR),
+     voxelizeShader->getUniform("voxelFragmentListColor")));
+
+   nodePass
+     ->addOperation(
+        new UseAtomicCounterBuffer(voxelizeShader->getUniform("voxel_index")));
 
    nodePass
      ->addOperation(new RenderMesh(meshComp));
   }
-}
 
+  // Make sure that the contents of the imageBuffers are valid at this point
+  this->addFinishOperation(
+    new MemoryBarrierOp(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT
+                        | GL_ATOMIC_COUNTER_BARRIER_BIT));
+}
 
 VoxelizePass::~VoxelizePass(void) {
 }

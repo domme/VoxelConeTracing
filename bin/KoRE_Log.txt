@@ -1,0 +1,41 @@
+KoRE Log - Tue Apr 30 21:42:40 2013
+
+[DEBUG] added Framebuffer 'BACKBUFFER'
+Render Device: AMD Radeon HD 7800 Series
+Vendor: ATI Technologies Inc.
+OpenGL version: 4.2.12217 Core Profile/Debug Context 12.104.0.0
+GLSL version: 4.20
+GLFW version 2.7.7
+GLEW version: 1.9.0
+[DEBUG] Texture 'colotex.png' successfully loaded
+[DEBUG] Scene './assets/meshes/monkey.dae' successfully loaded:
+	 1 meshes
+	 1 cameras
+	 4 nodes
+[DEBUG] Shader './assets/shader/VoxelConeTracing/voxelizeVert.shader' compiled
+[DEBUG] Shader './assets/shader/VoxelConeTracing/voxelizeGeom.shader' compiled
+[DEBUG] Shader './assets/shader/VoxelConeTracing/voxelizeFrag.shader' compiled
+[DEBUG] Program '' compiled
+	Attribute 'v_normal' at location 0
+	Attribute 'v_position' at location 1
+	Attribute 'v_uvw' at location 2
+	Uniform 'modelWorld' at location 0
+	Uniform 'modelWorldNormal' at location 1
+	Uniform 'voxelGridTransform' at location 2
+	Uniform 'voxelGridTransformI' at location 3
+	Uniform 'voxelTexSize' at location 4
+	Uniform 'voxel_index' at location -1
+	Uniform 'diffuseTex' at location 6
+	Uniform 'voxelFragmentListColor' at location 7
+	Uniform 'voxelFragmentListPosition' at location 8
+[DEBUG] Shader './assets/shader/VoxelConeTracing/raycastVert.shader' compiled
+[DEBUG] Shader './assets/shader/VoxelConeTracing/raycastFrag.shader' compiled
+[DEBUG] Program '' compiled
+	Attribute 'v_position' at location 0
+	Uniform 'fFar' at location 0
+	Uniform 'fRatio' at location 1
+	Uniform 'fYfovDeg' at location 2
+	Uniform 'viewI' at location 3
+	Uniform 'voxelGridTransform' at location 4
+	Uniform 'voxelGridTransformI' at location 5
+	Uniform 'voxelTex' at location 6

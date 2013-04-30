@@ -23,16 +23,15 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#version 420
+#version 430
 #extension GL_ARB_shader_image_size : enable
 
-layout(r32ui) uniform volatile uimage3D voxelTex;
 layout(r32ui) uniform volatile uimageBuffer voxelFragmentListPosition;
 layout(r32ui) uniform volatile uimageBuffer voxelFragmentListColor;
 layout(binding = 0) uniform atomic_uint voxel_index;
 
 uniform sampler2D diffuseTex;
-
+uniform uint voxelTexSize;
 
 in VoxelData {
     vec3 posTexSpace;
@@ -67,23 +66,10 @@ uint convVec3ToXYZ10(vec3 val) {
             |(uint(val.x) & 0x000003FF);
 }
 
-// ERROR: 0:59: error(#132) Syntax error: "layout" parse error
-void imageAtomicRGBA8Avg(ivec3 coords,
-                         vec4 val) {
-    val.rgb *=255.0f; // Optimise following calculations
-    uint newVal = convVec4ToRGBA8(val);
-    uint prevStoredVal = 0; 
-    uint curStoredVal;
-    // Loop as long as destination value gets changed by other threads
-    while((curStoredVal = imageAtomicCompSwap(voxelTex, coords, prevStoredVal, newVal))
-          != prevStoredVal) {
-        prevStoredVal = curStoredVal;
-        vec4 rval= convRGBA8ToVec4(curStoredVal);
-        rval.xyz = (rval.xyz * rval.w); // Denormalize
-        vec4 curValF = rval + val; // Add new value
-        curValF.xyz /= (curValF.w); // Renormalize
-        newVal = convVec4ToRGBA8(curValF);
-    }
+uint ivec3_xyz10(in ivec3 val) {
+   return (uint(val.z) & 0x000003FF) << 20U
+          |(uint(val.y) & 0x000003FF) << 10U 
+          |(uint(val.x) & 0x000003FF);
 }
 
 // In.projAxisIdx keys into this array..
@@ -92,33 +78,40 @@ const vec3 worldAxes[3] = vec3[3]( vec3(1.0, 0.0, 0.0),
                                    vec3(0.0, 0.0, 1.0) );
 
 void main() {
-  const ivec3 voxelTexSize = imageSize(voxelTex);
-  const float voxelSizeTS = 1.0 / voxelTexSize.x;
-
-  //(TODO) Determine depth range
-  vec3 dPosX = dFdx(In.posTexSpace);
-  vec3 dPosY = dFdy(In.posTexSpace);
-  
-  const float depthRangeTS = max(dot(In.projAxisTexSpace, dPosX),
-                               dot(In.projAxisTexSpace, dPosY));
-
-  const int numVoxelsDepth = int(ceil(abs(depthRangeTS / voxelSizeTS)));
-
   ivec3 baseVoxel = ivec3(floor(In.posTexSpace * voxelTexSize));
   
   vec4 diffColor = texture(diffuseTex, In.uv);
-  //imageAtomicRGBA8Avg(baseVoxel, vec4(diffColor.xyz,1.0));
-  uint diffColorU = convVec4ToRGBA8(diffColor * vec4(255));
-  imageStore(voxelTex, baseVoxel, uvec4(diffColorU));
-  
-  uint voxelIndex = atomicCounterIncrement(voxel_index);
-  imageStore(voxelFragmentListPosition, int(voxelIndex), uvec4(convVec3ToXYZ10(vec3(baseVoxel))));
-  imageStore(voxelFragmentListColor, int(voxelIndex), uvec4(diffColorU));
 
- /* for (int iDepth = 1; iDepth < numVoxelsDepth; ++iDepth) {
-    // Assumption: voxelGrid is parrallel to world-axes
-    ivec3 samplePos = baseVoxel + ivec3(worldAxes[UtilIn.projAxisIdx] * iDepth);
-    imageStore(voxelTex, samplePos, vec4(1.0, 0.0, 0.0, 1.0));
-  } */
+  //AMD-Error here:
+  //imageAtomicRGBA8Avg(baseVoxel, vec4(diffColor.xyz,1.0));
+
+  uint diffColorU = convVec4ToRGBA8(diffColor * vec4(255));  
+  uint voxelIndex = atomicCounterIncrement(voxel_index);
+
+  // Store voxel-position as tex-indices
+  imageStore(voxelFragmentListPosition,
+             int(voxelIndex),
+             uvec4(ivec3_xyz10(baseVoxel)));
+
+  imageStore(voxelFragmentListColor, int(voxelIndex), uvec4(diffColorU));
 }
 
+// ERROR: 0:59: error(#132) Syntax error: "layout" parse error on AMD
+/* void imageAtomicRGBA8Avg(layout(r32ui) volatile image3D img, 
+                         ivec3 coords,
+                         vec4 val) {
+    val.rgb *=255.0f; // Optimise following calculations
+    uint newVal = convVec4ToRGBA8(val);
+    uint prevStoredVal = 0; 
+    uint curStoredVal;
+    // Loop as long as destination value gets changed by other threads
+    while((curStoredVal = imageAtomicCompSwap(img, coords, prevStoredVal, newVal))
+          != prevStoredVal) {
+        prevStoredVal = curStoredVal;
+        vec4 rval= convRGBA8ToVec4(curStoredVal);
+        rval.xyz = (rval.xyz * rval.w); // Denormalize
+        vec4 curValF = rval + val; // Add new value
+        curValF.xyz /= (curValF.w); // Renormalize
+        newVal = convVec4ToRGBA8(curValF);
+    }
+}*/
