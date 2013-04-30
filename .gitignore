@@ -15,10 +15,10 @@ CMakeCache.txt
 *.opensdf
 *.obj
 *.kore
+*.dll
 Debug/*
 Win32/*
 */obj/*
 KoRE.lib
 lib
-bin
 ext

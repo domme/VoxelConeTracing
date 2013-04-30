@@ -58,9 +58,9 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\bin\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\bin\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">obj\Debug\</IntDir>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">VoxelConeTracing</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">VoxelConeTracing_$(Configuration)</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.exe</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</GenerateManifest>
@@ -85,7 +85,6 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <AdditionalOptions> /Zm1000 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalIncludeDirectories>$(SolutionDir)ext/include;$(SolutionDir)../KoRE/src;$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <CompileAs>CompileAsCpp</CompileAs>
@@ -116,7 +115,7 @@
     </Midl>
     <Link>
       <AdditionalOptions> /machine:X86 /debug /NODEFAULTLIB:msvcrt.lib %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>..\..\ext\lib\tinyxml.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;$(SolutionDir)..\KoRE\lib\Debug\KoRE.lib;OpenGL32.lib;$(SolutionDir)ext\lib\msvc100\GLFW.lib;..\..\ext\lib\glew32.lib;..\..\ext\lib\assimp_release-dll_win32\assimp.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)\ext\lib\tinyxml.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;$(SolutionDir)\lib\Debug\KoRE.lib;OpenGL32.lib;$(SolutionDir)\ext\lib\msvc100\GLFW.lib;$(SolutionDir)\ext\lib\glew32.lib;$(SolutionDir)\ext\lib\assimp_release-dll_win32\assimp.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ImportLibrary>$(SolutionDir)bin/Debug/MainGLFW.lib</ImportLibrary>
@@ -130,6 +129,12 @@
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
+    <PreBuildEvent>
+      <Command>xcopy "$(SolutionDir)\..\KoRE\lib\$(Configuration)\KoRE.lib" "$(SolutionDir)\lib\$(Configuration)\KoRE.lib" /Y</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>Copy KoRE.lib from KoRE-folder</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -297,19 +302,21 @@
     <ClInclude Include="src\VoxelConeTracing\vsDebugLib.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\assets\shader\normalColor.fp" />
-    <None Include="..\..\assets\shader\normalColor.vp" />
-    <None Include="..\..\assets\shader\normalmapping.frag" />
-    <None Include="..\..\assets\shader\normalmapping.vert" />
-    <None Include="..\..\assets\shader\simple.fp" />
-    <None Include="..\..\assets\shader\simple.vp" />
-    <None Include="..\..\assets\shader\VoxelConeTracing\raycastFrag.shader" />
-    <None Include="..\..\assets\shader\VoxelConeTracing\raycastTexFrag.shader" />
-    <None Include="..\..\assets\shader\VoxelConeTracing\raycastTexVert.shader" />
-    <None Include="..\..\assets\shader\VoxelConeTracing\raycastVert.shader" />
-    <None Include="..\..\assets\shader\VoxelConeTracing\voxelizeFrag.shader" />
-    <None Include="..\..\assets\shader\VoxelConeTracing\voxelizeGeom.shader" />
-    <None Include="..\..\assets\shader\VoxelConeTracing\voxelizeVert.shader" />
+    <None Include="..\bin\assets\shader\VoxelConeTracing\atomicCounterFrag.shader" />
+    <None Include="..\bin\assets\shader\VoxelConeTracing\cubeVert.shader" />
+    <None Include="..\bin\assets\shader\VoxelConeTracing\cubeVolumeVert.shader" />
+    <None Include="..\bin\assets\shader\VoxelConeTracing\cubeVolume_sample3DtexFrag.shader" />
+    <None Include="..\bin\assets\shader\VoxelConeTracing\cube_sample3DtexFrag.shader" />
+    <None Include="..\bin\assets\shader\VoxelConeTracing\fullscreenQuad_simpleVert.shader" />
+    <None Include="..\bin\assets\shader\VoxelConeTracing\imageLoadFrag.shader" />
+    <None Include="..\bin\assets\shader\VoxelConeTracing\imageStoreFrag.shader" />
+    <None Include="..\bin\assets\shader\VoxelConeTracing\raycastFrag.shader" />
+    <None Include="..\bin\assets\shader\VoxelConeTracing\raycastTexFrag.shader" />
+    <None Include="..\bin\assets\shader\VoxelConeTracing\raycastTexVert.shader" />
+    <None Include="..\bin\assets\shader\VoxelConeTracing\raycastVert.shader" />
+    <None Include="..\bin\assets\shader\VoxelConeTracing\voxelizeFrag.shader" />
+    <None Include="..\bin\assets\shader\VoxelConeTracing\voxelizeGeom.shader" />
+    <None Include="..\bin\assets\shader\VoxelConeTracing\voxelizeVert.shader" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
