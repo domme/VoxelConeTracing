@@ -29,6 +29,7 @@
 #include "KoRE/Common.h"
 
 #include "KoRE/TextureBuffer.h"
+#include "KoRE/IndexedBuffer.h"
 #include "KoRE/Texture.h"
 #include "KoRE/SceneNode.h"
 #include "KoRE/Components/Camera.h"
@@ -76,20 +77,26 @@ public:
 
   inline kore::Camera* getCamera() {return _camera;}
 
+  inline kore::IndexedBuffer* getAcVoxelIndex() {return &_acVoxelIndex;}
+  inline kore::ShaderData* getShdAcVoxelIndex() {return &_shdAcVoxelIndex;}
+
 private:
   kore::Camera* _camera;
   std::vector<kore::SceneNode*> _meshNodes;
   std::vector<kore::MeshComponent*> _meshComponents;
   
   kore::TextureBuffer _voxelFragLists[VOXELATT_NUM];
-  kore::ShaderData _shdVoxelFragLists[VOXELATT_NUM];
   kore::STextureInfo _vflTexInfos[VOXELATT_NUM];
-
-  uint _voxelGridResolution;
-  glm::vec3 _voxelGridSideLengths;
-    
-  kore::ShaderData _shdVoxelGridResolution;
+  kore::ShaderData _shdVoxelFragLists[VOXELATT_NUM];
   
+  uint _voxelGridResolution;
+  kore::ShaderData _shdVoxelGridResolution;
+
+  glm::vec3 _voxelGridSideLengths;
+
+  kore::IndexedBuffer _acVoxelIndex;
+  kore::ShaderData _shdAcVoxelIndex;
+
 
   // Deprecated:
   kore::SceneNode* _voxelGridNode;

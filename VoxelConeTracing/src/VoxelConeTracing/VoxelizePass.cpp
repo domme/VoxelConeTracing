@@ -33,7 +33,7 @@
 #include "KoRE/Operations/BindOperations/BindUniform.h"
 #include "KoRE/Components/TexturesComponent.h"
 #include "KoRE/Operations/RenderMesh.h"
-#include "KoRE/Operations/UseAtomicCounterBuffer.h"
+#include "KoRE/Operations/BindOperations/BindAtomicCounterBuffer.h"
 #include "KoRE/Operations/ResetAtomicCounterBuffer.h"
 #include "KoRE/Operations/BindOperations/BindTextureBuffer.h"
 #include "KoRE/Operations/MemoryBarrierOp.h"
@@ -64,7 +64,7 @@ VoxelizePass::VoxelizePass(VCTscene* vctScene)
   const std::vector<kore::SceneNode*>& vRenderNdoes = vctScene->getRenderNodes();
 
   this->addStartupOperation(
-    new ResetAtomicCounterBuffer(voxelizeShader->getUniform("voxel_index"), 0));
+    new ResetAtomicCounterBuffer(vctScene->getShdAcVoxelIndex(), 0));
 
   for (uint i = 0; i < vRenderNdoes.size(); ++i) {
     NodePass* nodePass = new NodePass(vRenderNdoes[i]);
@@ -141,7 +141,8 @@ VoxelizePass::VoxelizePass(VCTscene* vctScene)
 
    nodePass
      ->addOperation(
-        new UseAtomicCounterBuffer(voxelizeShader->getUniform("voxel_index")));
+        new BindAtomicCounterBuffer(vctScene->getShdAcVoxelIndex(),
+                                    voxelizeShader->getUniform("voxel_index")));
 
    nodePass
      ->addOperation(new RenderMesh(meshComp));

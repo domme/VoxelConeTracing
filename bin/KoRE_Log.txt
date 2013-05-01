@@ -1,4 +1,4 @@
-KoRE Log - Tue Apr 30 21:42:40 2013
+KoRE Log - Wed May 01 16:59:53 2013
 
 [DEBUG] added Framebuffer 'BACKBUFFER'
 Render Device: AMD Radeon HD 7800 Series
@@ -29,13 +29,14 @@ GLEW version: 1.9.0
 	Uniform 'voxelFragmentListColor' at location 7
 	Uniform 'voxelFragmentListPosition' at location 8
 [DEBUG] Shader './assets/shader/VoxelConeTracing/raycastVert.shader' compiled
-[DEBUG] Shader './assets/shader/VoxelConeTracing/raycastFrag.shader' compiled
+[DEBUG] Shader './assets/shader/OctreeVisFrag.shader' compiled
 [DEBUG] Program '' compiled
 	Attribute 'v_position' at location 0
-	Uniform 'fFar' at location 0
-	Uniform 'fRatio' at location 1
-	Uniform 'fYfovDeg' at location 2
-	Uniform 'viewI' at location 3
-	Uniform 'voxelGridTransform' at location 4
-	Uniform 'voxelGridTransformI' at location 5
-	Uniform 'voxelTex' at location 6
+	Uniform 'voxel_num' at location -1
+	Uniform 'voxelFragmentListColor' at location 1
+[ERROR] Uniform 'fRatio' not found in shader 'octreeVis shader'
+[ERROR] Uniform 'fYfovDeg' not found in shader 'octreeVis shader'
+[ERROR] Uniform 'fFar' not found in shader 'octreeVis shader'
+[ERROR] Uniform 'voxelFragmentListPosition' not found in shader 'octreeVis shader'
+
+End of Log

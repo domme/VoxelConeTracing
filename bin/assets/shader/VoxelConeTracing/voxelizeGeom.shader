@@ -23,7 +23,7 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#version 430
+#version 420 core
 #extension GL_ARB_shader_image_size : enable
 
 layout(triangles) in;

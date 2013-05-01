@@ -25,6 +25,9 @@
     <ClCompile Include="src\VoxelConeTracing\vsDebugLib.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\OctreeVisPass.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -54,6 +57,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\VoxelConeTracing\vsDebugLib.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\OctreeVisPass.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
@@ -101,6 +107,9 @@
       <Filter>shader</Filter>
     </None>
     <None Include="..\bin\assets\shader\VoxelConeTracing\imageLoadFrag.shader">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\octreeVisFrag.shader">
       <Filter>shader</Filter>
     </None>
   </ItemGroup>

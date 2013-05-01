@@ -23,26 +23,19 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#version 420 core
+#ifndef VCT_SRC_VCT_OCTREEVISPASS_H_
+#define VCT_SRC_VCT_OCTREEVISPASS_H_
 
-in vec3 v_position;
-in vec3 v_normal;
-in vec3 v_uvw;
+#include "KoRE/Passes/ShaderProgramPass.h"
+#include "VoxelConeTracing/VCTscene.h"
 
-out VertexData {
-  vec3 pos;
-  vec3 normal;
-  vec2 uv;
-} Out;
+class OctreeVisPass : public kore::ShaderProgramPass
+{
+public:
+  OctreeVisPass(VCTscene* vctScene);
+  virtual ~OctreeVisPass(void);
 
-uniform mat4 modelWorld;
-uniform mat3 modelWorldNormal;
-
-void main() {
-  // We don't need to write gl_Position here because we'll generate positions
-  // in the geometry shader.
-
-  Out.pos = (modelWorld * vec4(v_position, 1.0)).xyz;
-  Out.normal = modelWorldNormal * v_normal;
-  Out.uv = v_uvw.xy;
-}
+private:
+  kore::ShaderProgram _visShader;
+};
+#endif //VCT_SRC_VCT_OCTREEVISPASS_H_

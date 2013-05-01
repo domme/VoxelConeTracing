@@ -62,7 +62,6 @@ void VCTscene::init(const SVCTparameters& params,
   initTex3D(&_voxelTex, BLACK);
   initVoxelFragList();
 
-
   _voxelGridNode = new kore::SceneNode;
   _voxelGridNode->scale(_voxelGridSideLengths / 2.0f, kore::SPACE_LOCAL);
   kore::SceneManager::getInstance()->
@@ -76,6 +75,16 @@ void VCTscene::init(const SVCTparameters& params,
   kore::MeshComponent* meshComp = new kore::MeshComponent;
   meshComp->setMesh(voxelGridCube);
   _voxelGridNode->addComponent(meshComp);
+
+  // Init atomic counters
+  uint acValue = 0;
+  _acVoxelIndex.create(GL_ATOMIC_COUNTER_BUFFER,
+                       sizeof(GLuint), GL_DYNAMIC_COPY, &acValue);
+  _shdAcVoxelIndex.component = NULL;
+  _shdAcVoxelIndex.name = "AC VoxelIndex";
+  _shdAcVoxelIndex.size = 1;
+  _shdAcVoxelIndex.type = GL_UNSIGNED_INT_ATOMIC_COUNTER;
+  _shdAcVoxelIndex.data = &_acVoxelIndex;
 }
 
 void VCTscene::initVoxelFragList() {

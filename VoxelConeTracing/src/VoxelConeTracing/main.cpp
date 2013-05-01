@@ -41,20 +41,6 @@
 #include "KoRE/ShaderProgram.h"
 #include "KoRE/Components/MeshComponent.h"
 #include "KoRE/Components/TexturesComponent.h"
-#include "KoRE/Operations/RenderMesh.h"
-#include "KoRE/Operations/BindOperations/BindAttribute.h"
-#include "KoRE/Operations/BindOperations/BindUniform.h"
-#include "KoRE/Operations/BindOperations/BindTexture.h"
-#include "KoRE/Operations/BindOperations/BindImageTexture.h"
-#include "KoRE/Operations/ColorMaskOp.h"
-#include "KoRE/Operations/EnableDisableOp.h"
-#include "KoRE/Operations/OperationFactory.h"
-#include "KoRE/Operations/UseFBO.h"
-#include "KoRE/Operations/UseShaderProgram.h"
-#include "KoRE/Operations/UseAtomicCounterBuffer.h"
-#include "KoRE/Operations/ResetAtomicCounterBuffer.h"
-#include "KoRE/Operations/MemoryBarrierOp.h"
-#include "KoRE/Operations/ViewportOp.h"
 #include "KoRE/ResourceManager.h"
 #include "KoRE/RenderManager.h"
 #include "KoRE/Components/Camera.h"
@@ -77,6 +63,7 @@
 #include "VoxelConeTracing/RayCastingPass.h"
 
 #include "vsDebugLib.h"
+#include "VoxelConeTracing/OctreeVisPass.h"
 
 static const uint screen_width = 1280;
 static const uint screen_height = 720;
@@ -122,7 +109,8 @@ void setup() {
  
 
   backBufferStage->addProgramPass(new VoxelizePass(&_vctScene));
-  backBufferStage->addProgramPass(new RayCastingPass(&_vctScene));
+  //backBufferStage->addProgramPass(new RayCastingPass(&_vctScene));
+  backBufferStage->addProgramPass(new OctreeVisPass(&_vctScene));
 
   RenderManager::getInstance()->addFramebufferStage(backBufferStage);
 }
