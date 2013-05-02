@@ -123,8 +123,8 @@ OctreeVisPass::OctreeVisPass(VCTscene* vctScene) {
                         vctScene->getShdAcVoxelIndex(),
                         _visShader.getUniform("voxel_num")));
 
- nodePass->addOperation(
-          new FunctionOp(std::bind(&OctreeVisPass::debugVoxelFragmentList, this)));
+ //nodePass->addOperation(
+ //         new FunctionOp(std::bind(&OctreeVisPass::debugVoxelFragmentList, this)));
 
   nodePass->addOperation(new RenderMesh(fsqMeshComponent));
 }
@@ -153,7 +153,7 @@ void OctreeVisPass::debugVoxelFragmentList() {
   uint numEntries = byteSize / sizeof(uint);
   kore::Log::getInstance()->write("\nVoxelFragmentList Color-contents (%i voxels):", numEntries);
   for (uint i = 0; i < numEntries; ++i) {
-    kore::Log::getInstance()->write("%i ", ptr[i]);
+    kore::Log::getInstance()->write("%u ", ptr[i]);
   }
 
   glUnmapBuffer(GL_TEXTURE_BUFFER);

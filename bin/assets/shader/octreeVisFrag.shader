@@ -46,14 +46,9 @@ uint ivec3_xyz10(in ivec3 val) {
 
 void main(void) {
   vec4 col = vec4(0.0);
-  for(int i = 0; i < int(100); ++i) {
-    uvec4 colU = imageLoad(voxelFragmentListColor, i);
-    memoryBarrier();
-     col = convRGBA8ToVec4(colU.x) / vec4(255);
-    if (length(col) > 0.1) {
-      break;
-    }
-  }
-
+  uvec4 colU = imageLoad(voxelFragmentListColor, 7000);
+  memoryBarrier();
+  col = convRGBA8ToVec4(colU.x) / vec4(255);
+  
   color = col;
 }
