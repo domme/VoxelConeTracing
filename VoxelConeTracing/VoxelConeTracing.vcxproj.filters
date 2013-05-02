@@ -28,7 +28,7 @@
     <ClCompile Include="src\VoxelConeTracing\OctreeVisPass.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\ObFlagPass.cpp">
+    <ClCompile Include="src\VoxelConeTracing\ObFlagPass.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -65,7 +65,7 @@
     <ClInclude Include="src\VoxelConeTracing\OctreeVisPass.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\ObFlagPass.h">
+    <ClInclude Include="src\VoxelConeTracing\ObFlagPass.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

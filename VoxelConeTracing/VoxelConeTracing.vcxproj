@@ -283,11 +283,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\ObFlagPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Cube.cpp" />
     <ClCompile Include="src\VoxelConeTracing\CubeVolume.cpp" />
     <ClCompile Include="src\VoxelConeTracing\FullscreenQuad.cpp" />
     <ClCompile Include="src\VoxelConeTracing\main.cpp" />
+    <ClCompile Include="src\VoxelConeTracing\ObFlagPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\OctreeVisPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\RayCastingPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\VCTscene.cpp" />
@@ -295,10 +295,10 @@
     <ClCompile Include="src\VoxelConeTracing\vsDebugLib.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\ObFlagPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Cube.h" />
     <ClInclude Include="src\VoxelConeTracing\CubeVolume.h" />
     <ClInclude Include="src\VoxelConeTracing\FullscreenQuad.h" />
+    <ClInclude Include="src\VoxelConeTracing\ObFlagPass.h" />
     <ClInclude Include="src\VoxelConeTracing\OctreeVisPass.h" />
     <ClInclude Include="src\VoxelConeTracing\RayCastingPass.h" />
     <ClInclude Include="src\VoxelConeTracing\VCTscene.h" />
