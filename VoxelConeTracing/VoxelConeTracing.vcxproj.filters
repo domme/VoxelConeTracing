@@ -31,6 +31,12 @@
     <ClCompile Include="src\VoxelConeTracing\ObFlagPass.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\ObAllocatePass.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\ObInitPass.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -68,6 +74,12 @@
     <ClInclude Include="src\VoxelConeTracing\ObFlagPass.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\ObAllocatePass.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\ObInitPass.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\bin\assets\shader\VoxelConeTracing\voxelizeFrag.shader">
@@ -86,6 +98,15 @@
       <Filter>shader</Filter>
     </None>
     <None Include="..\bin\assets\shader\VoxelConeTracing\raycastVert.shader">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\ObFlagVert.shader">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\ObInitVert.shader">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\ObAllocateVert.shader">
       <Filter>shader</Filter>
     </None>
   </ItemGroup>

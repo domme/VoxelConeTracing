@@ -23,28 +23,13 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#ifndef VCT_SRC_VCT_OBFLAGPASS_H_
-#define VCT_SRC_VCT_OBFLAGPASS_H_
+#ifndef Ob_Init_Pass_H_
+#define Ob_Init_Pass_H_
 
-#include "KoRE/Passes/ShaderProgramPass.h"
-#include "VoxelConeTracing/VCTscene.h"
-#include "KoRE/SceneManager.h"
-#include "KoRE/RenderManager.h"
-#include "KoRE/ResourceManager.h"
-
-class ObFlagPass : public kore::ShaderProgramPass
+class ObInitPass
 {
-  public:
-    ObFlagPass(VCTscene* vctScene);
-    virtual ~ObFlagPass(void);
-
-  private:
-    kore::RenderManager* _renderMgr;
-    kore::SceneManager* _sceneMgr;
-    kore::ResourceManager* _resMgr;
-
-    kore::ShaderProgram _flagShader;
-    VCTscene* _vctScene;
+public:
+  ObInitPass(void);
+  ~ObInitPass(void);
 };
-
-#endif //VCT_SRC_VCT_OBFLAGPASS_H_
+#endif //Ob_Init_Pass_H_
