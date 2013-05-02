@@ -31,11 +31,11 @@
 #include "KoRE/Operations/ColorMaskOp.h"
 #include "KoRE/Operations/OperationFactory.h"
 #include "KoRE/Operations/BindOperations/BindUniform.h"
+#include "KoRE/Operations/BindOperations/BindImageTexture.h"
 #include "KoRE/Components/TexturesComponent.h"
 #include "KoRE/Operations/RenderMesh.h"
 #include "KoRE/Operations/BindOperations/BindAtomicCounterBuffer.h"
 #include "KoRE/Operations/ResetAtomicCounterBuffer.h"
-#include "KoRE/Operations/BindOperations/BindTextureBuffer.h"
 #include "KoRE/Operations/MemoryBarrierOp.h"
 
 VoxelizePass::VoxelizePass(VCTscene* vctScene)
@@ -130,12 +130,12 @@ VoxelizePass::VoxelizePass(VCTscene* vctScene)
      texComp, "diffuseTex", voxelizeShader));
 
    nodePass
-     ->addOperation(new BindTextureBuffer(
+     ->addOperation(new BindImageTexture(
         vctScene->getShdVoxelFragList(VOXELATT_POSITION),
         voxelizeShader->getUniform("voxelFragmentListPosition")));
 
    nodePass
-     ->addOperation(new BindTextureBuffer(
+     ->addOperation(new BindImageTexture(
      vctScene->getShdVoxelFragList(VOXELATT_COLOR),
      voxelizeShader->getUniform("voxelFragmentListColor")));
 

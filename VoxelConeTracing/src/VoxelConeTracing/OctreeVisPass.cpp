@@ -37,8 +37,8 @@
 #include "KoRE\ResourceManager.h"
 #include "KoRE\Components\TexturesComponent.h"
 #include "KoRE/Operations/BindOperations/BindAtomicCounterBuffer.h"
+#include "KoRE/Operations/BindOperations/BindImageTexture.h"
 #include "KoRE/Operations/ResetAtomicCounterBuffer.h"
-#include "KoRE/Operations/BindOperations/BindTextureBuffer.h"
 #include "KoRE/Operations/MemoryBarrierOp.h"
 
 OctreeVisPass::~OctreeVisPass(void) {
@@ -111,11 +111,11 @@ OctreeVisPass::OctreeVisPass(VCTscene* vctScene) {
     "fFar",
     &_visShader));
 
-  nodePass->addOperation(new BindTextureBuffer(
+  nodePass->addOperation(new BindImageTexture(
                         vctScene->getShdVoxelFragList(VOXELATT_COLOR),
                         _visShader.getUniform("voxelFragmentListColor")));
 
-  nodePass->addOperation(new BindTextureBuffer(
+  nodePass->addOperation(new BindImageTexture(
                          vctScene->getShdVoxelFragList(VOXELATT_POSITION),
                         _visShader.getUniform("voxelFragmentListPosition")));
 
@@ -124,7 +124,7 @@ OctreeVisPass::OctreeVisPass(VCTscene* vctScene) {
                         _visShader.getUniform("voxel_num")));
 
  nodePass->addOperation(
-          new FunctionOp(std::bind(&OctreeVisPass::debugVoxelIndexAC, this)));
+          new FunctionOp(std::bind(&OctreeVisPass::debugVoxelFragmentList, this)));
 
   nodePass->addOperation(new RenderMesh(fsqMeshComponent));
 }
@@ -143,9 +143,18 @@ void OctreeVisPass::debugVoxelIndexAC() {
 }
 
 void OctreeVisPass::debugVoxelFragmentList() {
-  _renderMgr->bindBufferBase(GL_TEXTURE_BUFFER, 0,
-              _vctScene->getVoxelFragList(VOXELATT_COLOR)->getBufferHandle());
+  uint byteSize =
+    _vctScene->getVoxelFragList(VOXELATT_COLOR)->getProperties().size;
+    
+  _renderMgr->bindBuffer(GL_TEXTURE_BUFFER, _vctScene->getVoxelFragList(VOXELATT_COLOR)->getBufferHandle());
 
+  const GLuint* ptr = (const GLuint*) glMapBuffer(GL_TEXTURE_BUFFER, GL_READ_ONLY);
 
+  uint numEntries = byteSize / sizeof(uint);
+  kore::Log::getInstance()->write("\nVoxelFragmentList Color-contents (%i voxels):", numEntries);
+  for (uint i = 0; i < numEntries; ++i) {
+    kore::Log::getInstance()->write("%i ", ptr[i]);
+  }
 
+  glUnmapBuffer(GL_TEXTURE_BUFFER);
 }
