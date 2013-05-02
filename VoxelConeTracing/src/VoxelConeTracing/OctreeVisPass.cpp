@@ -32,6 +32,7 @@
 #include "KoRE\Operations\ColorMaskOp.h"
 #include "KoRE\Operations\OperationFactory.h"
 #include "KoRE\Operations\RenderMesh.h"
+#include "KoRE\Operations\FunctionOp.h"
 #include "KoRE\RenderManager.h"
 #include "KoRE\ResourceManager.h"
 #include "KoRE\Components\TexturesComponent.h"
@@ -40,6 +41,10 @@
 #include "KoRE/Operations/BindOperations/BindTextureBuffer.h"
 #include "KoRE/Operations/MemoryBarrierOp.h"
 
+
+void testFunc() {
+  kore::Log::getInstance()->write("Function operations work!");
+}
 
 OctreeVisPass::OctreeVisPass(VCTscene* vctScene) {
   using namespace kore;
@@ -114,6 +119,8 @@ OctreeVisPass::OctreeVisPass(VCTscene* vctScene) {
   nodePass->addOperation(new BindAtomicCounterBuffer(
                         vctScene->getShdAcVoxelIndex(),
                         _visShader.getUniform("voxel_num")));
+
+  nodePass->addOperation(new FunctionOp(testFunc));
 
   nodePass->addOperation(new RenderMesh(fsqMeshComponent));
 }
