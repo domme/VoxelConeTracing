@@ -123,7 +123,7 @@ OctreeVisPass::OctreeVisPass(VCTscene* vctScene) {
                         vctScene->getShdAcVoxelIndex(),
                         _visShader.getUniform("voxel_num")));
 
-  nodePass->addOperation(
+ nodePass->addOperation(
           new FunctionOp(std::bind(&OctreeVisPass::debugVoxelIndexAC, this)));
 
   nodePass->addOperation(new RenderMesh(fsqMeshComponent));
@@ -140,4 +140,11 @@ void OctreeVisPass::debugVoxelIndexAC() {
                                         GL_MAP_READ_BIT);
   kore::Log::getInstance()->write("Number of voxels: %i \n", *ptr);
   glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
+}
+
+void OctreeVisPass::debugVoxelFragmentList() {
+  _renderMgr->bindBufferBase(GL_TEXTURE_BUFFER, 0,
+              _vctScene->getVoxelFragList(VOXELATT_COLOR)->getBufferHandle());
+
+
 }

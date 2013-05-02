@@ -103,7 +103,7 @@ void setup() {
                                   GL_FRAMEBUFFER, drawBuffers, 1);
 
   SVCTparameters params;
-  params.voxel_grid_resolution = 128;
+  params.voxel_grid_resolution = 16;
   params.voxel_grid_sidelengths = glm::vec3(50, 50, 50);
   _vctScene.init(params, renderNodes, _pCamera);
  
@@ -179,13 +179,13 @@ int main(void) {
             reinterpret_cast<const char*>(
             glewGetString(GLEW_VERSION)));
 
-/*
+
   VSDebugLib::init();
   VSDebugLib::enableUserMessages(true);
   VSDebugLib::addApplicationMessage(12345, 
     GL_DEBUG_TYPE_OTHER_ARB,
     GL_DEBUG_SEVERITY_LOW_ARB,
-    "This is just a test");*/
+    "This is just a test");
 
   
   kore::RenderManager::getInstance()

@@ -72,6 +72,9 @@ public:
 
   inline kore::Texture* getVoxelTex()
                           {return &_voxelTex;}
+  
+  inline kore::TextureBuffer* getVoxelFragList(EVoxelAttributes type) 
+    { return &_voxelFragLists[type]; }
 
   inline kore::SceneNode* getVoxelGridNode() {return _voxelGridNode;}
 

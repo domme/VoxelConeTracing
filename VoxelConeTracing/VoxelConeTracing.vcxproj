@@ -130,7 +130,7 @@
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
     <PreBuildEvent>
-      <Command>xcopy "$(SolutionDir)\..\KoRE\lib\$(Configuration)\KoRE.lib" "$(SolutionDir)\lib\$(Configuration)\KoRE.lib" /Y</Command>
+      <Command>xcopy "$(SolutionDir)\..\KoRE\lib\$(Configuration)\KoRE.lib" "$(SolutionDir)\lib\$(Configuration)\" /Y</Command>
     </PreBuildEvent>
     <PreBuildEvent>
       <Message>Copy KoRE.lib from KoRE-folder</Message>

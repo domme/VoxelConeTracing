@@ -47,5 +47,6 @@ private:
   VCTscene* _vctScene;
 
   void debugVoxelIndexAC();
+  void debugVoxelFragmentList();
 };
 #endif //VCT_SRC_VCT_OCTREEVISPASS_H_
