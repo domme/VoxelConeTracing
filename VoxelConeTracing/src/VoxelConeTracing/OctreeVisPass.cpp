@@ -41,14 +41,17 @@
 #include "KoRE/Operations/BindOperations/BindTextureBuffer.h"
 #include "KoRE/Operations/MemoryBarrierOp.h"
 
-
-void testFunc() {
-  kore::Log::getInstance()->write("Function operations work!");
+OctreeVisPass::~OctreeVisPass(void) {
 }
 
 OctreeVisPass::OctreeVisPass(VCTscene* vctScene) {
   using namespace kore;
   
+  _vctScene = vctScene;
+  _renderMgr = RenderManager::getInstance();
+  _sceneMgr = SceneManager::getInstance();
+  _resMgr = ResourceManager::getInstance();
+
   _visShader
      .loadShader("./assets/shader/VoxelConeTracing/raycastVert.shader",
                  GL_VERTEX_SHADER);
@@ -120,11 +123,21 @@ OctreeVisPass::OctreeVisPass(VCTscene* vctScene) {
                         vctScene->getShdAcVoxelIndex(),
                         _visShader.getUniform("voxel_num")));
 
-  nodePass->addOperation(new FunctionOp(testFunc));
+  nodePass->addOperation(
+          new FunctionOp(std::bind(&OctreeVisPass::debugVoxelIndexAC, this)));
 
   nodePass->addOperation(new RenderMesh(fsqMeshComponent));
 }
 
 
-OctreeVisPass::~OctreeVisPass(void) {
+void OctreeVisPass::debugVoxelIndexAC() {
+  _renderMgr->bindBufferBase(GL_ATOMIC_COUNTER_BUFFER,
+                             0,
+                             _vctScene->getAcVoxelIndex()->getHandle());
+
+  GLuint* ptr = (GLuint*)glMapBufferRange(GL_ATOMIC_COUNTER_BUFFER, 0,
+                                        sizeof(GLuint),
+                                        GL_MAP_READ_BIT);
+  kore::Log::getInstance()->write("Number of voxels: %i \n", *ptr);
+  glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
 }

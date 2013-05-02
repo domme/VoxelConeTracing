@@ -28,6 +28,9 @@
 
 #include "KoRE/Passes/ShaderProgramPass.h"
 #include "VoxelConeTracing/VCTscene.h"
+#include "KoRE/SceneManager.h"
+#include "KoRE/RenderManager.h"
+#include "KoRE/ResourceManager.h"
 
 class OctreeVisPass : public kore::ShaderProgramPass
 {
@@ -36,6 +39,13 @@ public:
   virtual ~OctreeVisPass(void);
 
 private:
+  kore::RenderManager* _renderMgr;
+  kore::SceneManager* _sceneMgr;
+  kore::ResourceManager* _resMgr;
+
   kore::ShaderProgram _visShader;
+  VCTscene* _vctScene;
+
+  void debugVoxelIndexAC();
 };
 #endif //VCT_SRC_VCT_OCTREEVISPASS_H_
