@@ -283,6 +283,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\ObFlagPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Cube.cpp" />
     <ClCompile Include="src\VoxelConeTracing\CubeVolume.cpp" />
     <ClCompile Include="src\VoxelConeTracing\FullscreenQuad.cpp" />
@@ -294,6 +295,7 @@
     <ClCompile Include="src\VoxelConeTracing\vsDebugLib.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ObFlagPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Cube.h" />
     <ClInclude Include="src\VoxelConeTracing\CubeVolume.h" />
     <ClInclude Include="src\VoxelConeTracing\FullscreenQuad.h" />
@@ -305,17 +307,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\bin\assets\shader\octreeVisFrag.shader" />
-    <None Include="..\bin\assets\shader\VoxelConeTracing\atomicCounterFrag.shader" />
-    <None Include="..\bin\assets\shader\VoxelConeTracing\cubeVert.shader" />
-    <None Include="..\bin\assets\shader\VoxelConeTracing\cubeVolumeVert.shader" />
-    <None Include="..\bin\assets\shader\VoxelConeTracing\cubeVolume_sample3DtexFrag.shader" />
-    <None Include="..\bin\assets\shader\VoxelConeTracing\cube_sample3DtexFrag.shader" />
-    <None Include="..\bin\assets\shader\VoxelConeTracing\fullscreenQuad_simpleVert.shader" />
-    <None Include="..\bin\assets\shader\VoxelConeTracing\imageLoadFrag.shader" />
-    <None Include="..\bin\assets\shader\VoxelConeTracing\imageStoreFrag.shader" />
     <None Include="..\bin\assets\shader\VoxelConeTracing\raycastFrag.shader" />
-    <None Include="..\bin\assets\shader\VoxelConeTracing\raycastTexFrag.shader" />
-    <None Include="..\bin\assets\shader\VoxelConeTracing\raycastTexVert.shader" />
     <None Include="..\bin\assets\shader\VoxelConeTracing\raycastVert.shader" />
     <None Include="..\bin\assets\shader\VoxelConeTracing\voxelizeFrag.shader" />
     <None Include="..\bin\assets\shader\VoxelConeTracing\voxelizeGeom.shader" />
