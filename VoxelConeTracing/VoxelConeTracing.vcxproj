@@ -287,29 +287,32 @@
     <ClCompile Include="src\VoxelConeTracing\CubeVolume.cpp" />
     <ClCompile Include="src\VoxelConeTracing\FullscreenQuad.cpp" />
     <ClCompile Include="src\VoxelConeTracing\main.cpp" />
-    <ClCompile Include="src\VoxelConeTracing\ObAllocatePass.cpp" />
-    <ClCompile Include="src\VoxelConeTracing\ObFlagPass.cpp" />
-    <ClCompile Include="src\VoxelConeTracing\ObInitPass.cpp" />
-    <ClCompile Include="src\VoxelConeTracing\OctreeVisPass.cpp" />
-    <ClCompile Include="src\VoxelConeTracing\RayCastingPass.cpp" />
+    <ClCompile Include="src\VoxelConeTracing\Octree Building\ModifyIndirectBufferPass.cpp" />
+    <ClCompile Include="src\VoxelConeTracing\Octree Building\ObAllocatePass.cpp" />
+    <ClCompile Include="src\VoxelConeTracing\Octree Building\ObFlagPass.cpp" />
+    <ClCompile Include="src\VoxelConeTracing\Octree Building\ObInitPass.cpp" />
+    <ClCompile Include="src\VoxelConeTracing\Raycasting\OctreeVisPass.cpp" />
+    <ClCompile Include="src\VoxelConeTracing\Raycasting\RayCastingPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\VCTscene.cpp" />
-    <ClCompile Include="src\VoxelConeTracing\VoxelizePass.cpp" />
+    <ClCompile Include="src\VoxelConeTracing\Voxelization\VoxelizePass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\vsDebugLib.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\VoxelConeTracing\Cube.h" />
     <ClInclude Include="src\VoxelConeTracing\CubeVolume.h" />
     <ClInclude Include="src\VoxelConeTracing\FullscreenQuad.h" />
-    <ClInclude Include="src\VoxelConeTracing\ObAllocatePass.h" />
-    <ClInclude Include="src\VoxelConeTracing\ObFlagPass.h" />
-    <ClInclude Include="src\VoxelConeTracing\ObInitPass.h" />
-    <ClInclude Include="src\VoxelConeTracing\OctreeVisPass.h" />
-    <ClInclude Include="src\VoxelConeTracing\RayCastingPass.h" />
+    <ClInclude Include="src\VoxelConeTracing\Octree Building\ModifyIndirectBufferPass.h" />
+    <ClInclude Include="src\VoxelConeTracing\Octree Building\ObAllocatePass.h" />
+    <ClInclude Include="src\VoxelConeTracing\Octree Building\ObFlagPass.h" />
+    <ClInclude Include="src\VoxelConeTracing\Octree Building\ObInitPass.h" />
+    <ClInclude Include="src\VoxelConeTracing\Raycasting\OctreeVisPass.h" />
+    <ClInclude Include="src\VoxelConeTracing\Raycasting\RayCastingPass.h" />
     <ClInclude Include="src\VoxelConeTracing\VCTscene.h" />
-    <ClInclude Include="src\VoxelConeTracing\VoxelizePass.h" />
+    <ClInclude Include="src\VoxelConeTracing\Voxelization\VoxelizePass.h" />
     <ClInclude Include="src\VoxelConeTracing\vsDebugLib.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\bin\assets\shader\ModifyIndirectBufferVert.shader" />
     <None Include="..\bin\assets\shader\ObAllocateVert.shader" />
     <None Include="..\bin\assets\shader\ObFlagVert.shader" />
     <None Include="..\bin\assets\shader\ObInitVert.shader" />

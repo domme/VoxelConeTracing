@@ -59,11 +59,14 @@
 #include "VoxelConeTracing/CubeVolume.h"
 
 #include "VoxelConeTracing/VCTscene.h"
-#include "VoxelConeTracing/VoxelizePass.h"
-#include "VoxelConeTracing/RayCastingPass.h"
+#include "VoxelConeTracing/Voxelization/VoxelizePass.h"
+#include "VoxelConeTracing/Raycasting/RayCastingPass.h"
+#include "VoxelConeTracing/Raycasting/OctreeVisPass.h"
+#include "VoxelConeTracing/Octree Building/ObFlagPass.h"
+#include "VoxelConeTracing/Octree Building/ObAllocatePass.h"
+#include "VoxelConeTracing/Octree Building/ObInitPass.h"
 
 #include "vsDebugLib.h"
-#include "VoxelConeTracing/OctreeVisPass.h"
 
 static const uint screen_width = 1280;
 static const uint screen_height = 720;

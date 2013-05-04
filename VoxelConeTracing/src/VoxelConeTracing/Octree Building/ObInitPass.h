@@ -23,13 +23,28 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#ifndef Ob_Allocate_Pass_H_
-#define Ob_Allocate_Pass_H_
+#ifndef VCT_SRC_VCT_OBINITPASS_H_
+#define VCT_SRC_VCT_OBINITPASS_H_
 
-class ObAllocatePass
+#include "KoRE/Passes/ShaderProgramPass.h"
+#include "VoxelConeTracing/VCTscene.h"
+#include "KoRE/SceneManager.h"
+#include "KoRE/RenderManager.h"
+#include "KoRE/ResourceManager.h"
+
+class ObInitPass : public kore::ShaderProgramPass
 {
-public:
-  ObAllocatePass(void);
-  ~ObAllocatePass(void);
+  public:
+    ObInitPass(VCTscene* vctScene);
+    virtual ~ObInitPass(void);
+
+  private:
+    kore::RenderManager* _renderMgr;
+    kore::SceneManager* _sceneMgr;
+    kore::ResourceManager* _resMgr;
+
+    kore::ShaderProgram _initShader;
+    VCTscene* _vctScene;
 };
-#endif //Ob_Allocate_Pass_H_
+
+#endif // VCT_SRC_VCT_OBINITPASS_H_

@@ -16,26 +16,29 @@
     <ClCompile Include="src\VoxelConeTracing\VCTscene.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\VoxelConeTracing\VoxelizePass.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VoxelConeTracing\RayCastingPass.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\VoxelConeTracing\vsDebugLib.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\VoxelConeTracing\OctreeVisPass.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="src\VoxelConeTracing\Octree Building\ObFlagPass.cpp">
+      <Filter>src\Octree Building</Filter>
     </ClCompile>
-    <ClCompile Include="src\VoxelConeTracing\ObFlagPass.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="src\VoxelConeTracing\Octree Building\ObInitPass.cpp">
+      <Filter>src\Octree Building</Filter>
     </ClCompile>
-    <ClCompile Include="src\VoxelConeTracing\ObAllocatePass.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="src\VoxelConeTracing\Octree Building\ObAllocatePass.cpp">
+      <Filter>src\Octree Building</Filter>
     </ClCompile>
-    <ClCompile Include="src\VoxelConeTracing\ObInitPass.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="src\VoxelConeTracing\Raycasting\RayCastingPass.cpp">
+      <Filter>src\Raycasting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\Raycasting\OctreeVisPass.cpp">
+      <Filter>src\Raycasting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\Voxelization\VoxelizePass.cpp">
+      <Filter>src\Voxelization</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\Octree Building\ModifyIndirectBufferPass.cpp">
+      <Filter>src\Octree Building</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -44,6 +47,15 @@
     </Filter>
     <Filter Include="shader">
       <UniqueIdentifier>{71bd1851-892e-4181-891e-d2026d456e2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Voxelization">
+      <UniqueIdentifier>{ca8db891-1f92-4802-aada-cb00cb50819b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Octree Building">
+      <UniqueIdentifier>{999266d7-918a-4ae2-8a7c-4355c8e4ffed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Raycasting">
+      <UniqueIdentifier>{e96319dc-97fc-4c8e-a773-99653fd9ffb0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -59,26 +71,29 @@
     <ClInclude Include="src\VoxelConeTracing\VCTscene.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\VoxelConeTracing\VoxelizePass.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\VoxelConeTracing\RayCastingPass.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="src\VoxelConeTracing\vsDebugLib.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\VoxelConeTracing\OctreeVisPass.h">
-      <Filter>src</Filter>
+    <ClInclude Include="src\VoxelConeTracing\Octree Building\ObFlagPass.h">
+      <Filter>src\Octree Building</Filter>
     </ClInclude>
-    <ClInclude Include="src\VoxelConeTracing\ObFlagPass.h">
-      <Filter>src</Filter>
+    <ClInclude Include="src\VoxelConeTracing\Octree Building\ObInitPass.h">
+      <Filter>src\Octree Building</Filter>
     </ClInclude>
-    <ClInclude Include="src\VoxelConeTracing\ObAllocatePass.h">
-      <Filter>src</Filter>
+    <ClInclude Include="src\VoxelConeTracing\Octree Building\ObAllocatePass.h">
+      <Filter>src\Octree Building</Filter>
     </ClInclude>
-    <ClInclude Include="src\VoxelConeTracing\ObInitPass.h">
-      <Filter>src</Filter>
+    <ClInclude Include="src\VoxelConeTracing\Raycasting\OctreeVisPass.h">
+      <Filter>src\Raycasting</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\Raycasting\RayCastingPass.h">
+      <Filter>src\Raycasting</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\Voxelization\VoxelizePass.h">
+      <Filter>src\Voxelization</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\Octree Building\ModifyIndirectBufferPass.h">
+      <Filter>src\Octree Building</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -107,6 +122,9 @@
       <Filter>shader</Filter>
     </None>
     <None Include="..\bin\assets\shader\ObAllocateVert.shader">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\ModifyIndirectBufferVert.shader">
       <Filter>shader</Filter>
     </None>
   </ItemGroup>
