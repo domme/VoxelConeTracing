@@ -90,6 +90,8 @@ public:
   inline kore::IndexedBuffer* getAcVoxelIndex() {return &_acVoxelIndex;}
   inline kore::ShaderData* getShdAcVoxelIndex() {return &_shdAcVoxelIndex;}
 
+  
+
 private:
   kore::Camera* _camera;
   std::vector<kore::SceneNode*> _meshNodes;

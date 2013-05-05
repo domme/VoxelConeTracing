@@ -26,7 +26,7 @@
 #include "VoxelConeTracing/VCTscene.h"
 #include "VoxelConeTracing/Cube.h"
 #include "VoxelConeTracing/Octree Building/ModifyIndirectBufferPass.h"
-ude "KoRE/RenderManager.h"
+#include "KoRE/RenderManager.h"
 #include "KoRE/ResourceManager.h"
 #include "KoRE/GLerror.h"
 #include "KoRE/Components/TexturesComponent.h"
@@ -242,8 +242,6 @@ void VCTscene::initNodePool() {
   //optimization
   // numNodes = 1/7 (-1+8^(_numOctreeLevels+1))
 
-
-
   kore::Log::getInstance()->write("Allocating Octree with %u nodes\n",
                                   numNodes);
   
@@ -255,5 +253,10 @@ void VCTscene::initNodePool() {
   _nodePool.create(props, "NodePool");
 
   _nodePoolTexInfo.internalFormat = GL_R32UI;
-  _nodePoolTexInfo.texLocation = _nodePool.getTexHandle()
+  _nodePoolTexInfo.texLocation = _nodePool.getTexHandle();
+  _nodePoolTexInfo.texTarget = GL_TEXTURE_BUFFER;
+
+  _shdNodePool.name = "NodePool";
+  _shdNodePool.type = GL_TEXTURE_BUFFER;
+  _shdNodePool.data = &_nodePoolTexInfo;
 }
