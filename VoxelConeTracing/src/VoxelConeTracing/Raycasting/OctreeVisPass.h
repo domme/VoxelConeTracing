@@ -48,5 +48,6 @@ private:
 
   void debugVoxelIndexAC();
   void debugVoxelFragmentList();
+  void debugIndirectCmdBuff();
 };
 #endif //VCT_SRC_VCT_OCTREEVISPASS_H_

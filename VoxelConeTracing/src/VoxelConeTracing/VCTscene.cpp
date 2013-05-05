@@ -25,11 +25,13 @@
 
 #include "VoxelConeTracing/VCTscene.h"
 #include "VoxelConeTracing/Cube.h"
+#include "VoxelConeTracing/Octree Building/ModifyIndirectBufferPass.h"
 
 #include "KoRE/RenderManager.h"
 #include "KoRE/ResourceManager.h"
 #include "KoRE/GLerror.h"
 #include "KoRE/Components/TexturesComponent.h"
+
 
 VCTscene::VCTscene() :
   _camera(NULL),
@@ -61,6 +63,7 @@ void VCTscene::init(const SVCTparameters& params,
   
   initTex3D(&_voxelTex, BLACK);
   initVoxelFragList();
+  initIndirectCommandBuf();
 
   _voxelGridNode = new kore::SceneNode;
   _voxelGridNode->scale(_voxelGridSideLengths / 2.0f, kore::SPACE_LOCAL);
@@ -85,6 +88,29 @@ void VCTscene::init(const SVCTparameters& params,
   _shdAcVoxelIndex.size = 1;
   _shdAcVoxelIndex.type = GL_UNSIGNED_INT_ATOMIC_COUNTER;
   _shdAcVoxelIndex.data = &_acVoxelIndex;
+}
+
+void VCTscene::initIndirectCommandBuf() {
+  SDrawArraysIndirectCommand cmd;
+  cmd.numVertices = 1;
+  cmd.numPrimitives = 1;
+  cmd.firstVertexIdx = 0;
+  cmd.baseInstanceIdx = 0;
+
+  kore::STextureBufferProperties props;
+  props.internalFormat = GL_R32UI;
+  props.size = sizeof(unsigned int) * 4;
+  props.usageHint = GL_DYNAMIC_COPY;
+
+  _indirectCommandBuf.create(props, "IndirectCommandBuf",&cmd);
+  
+  _icbTexInfos.internalFormat = GL_R32UI;
+  _icbTexInfos.texLocation = _indirectCommandBuf.getTexHandle();
+  _icbTexInfos.texTarget = GL_TEXTURE_BUFFER;
+
+  _shdIndirectCommandBuf.name = "IndirectCommandBuf";
+  _shdIndirectCommandBuf.type = GL_TEXTURE_BUFFER;
+  _shdIndirectCommandBuf.data = &_icbTexInfos;
 }
 
 void VCTscene::initVoxelFragList() {
@@ -204,4 +230,3 @@ void VCTscene::initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
 
   //delete[] colorValues;
 }
-

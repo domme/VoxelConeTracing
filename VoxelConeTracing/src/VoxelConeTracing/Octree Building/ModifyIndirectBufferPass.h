@@ -49,29 +49,21 @@ class ModifyIndirectBufferPass : public kore::ShaderProgramPass
 {
   public:
     ModifyIndirectBufferPass(const kore::ShaderData* shdIndirectBuffer,
+                             const kore::ShaderData* shdACnumVoxelsBuffer,
                              VCTscene* vctScene);
     virtual ~ModifyIndirectBufferPass(void);
 
-    inline void SetCommand(const SDrawArraysIndirectCommand& cmd) {_cmd = cmd;}
-    
-    inline void SetNumVertices(uint numVertices)
-      {_cmd.numVertices = numVertices;}
-
-    inline void SetNumPrimitives(uint numPrimitives)
-      {_cmd.numPrimitives = numPrimitives;}
-
   private:
+    void initCallBuffer();
+
     kore::RenderManager* _renderMgr;
     kore::SceneManager* _sceneMgr;
     kore::ResourceManager* _resMgr;
 
-    SDrawArraysIndirectCommand _cmd;
-
-    kore::ShaderData _shdNumVertices;
-    kore::ShaderData _shdNumPrimitives;
-    kore::ShaderData _shdFirstVertexIdx;
-    kore::ShaderData _shdBaseInstanceIdx;
     const kore::ShaderData* _shdIndirectBuffer;
+    const kore::ShaderData* _shdACnumVoxelsBuffer;
+
+    kore::IndexedBuffer _callIndirectBuffer;
 
     kore::ShaderProgram _shader;
     VCTscene* _vctScene;

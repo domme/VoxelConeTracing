@@ -70,11 +70,17 @@ public:
   inline kore::ShaderData* getShdVoxelFragList(EVoxelAttributes type)
                            {return &_shdVoxelFragLists[type];}
 
+  inline kore::ShaderData* getShdIndirectCommandBuf()
+                           {return &_shdIndirectCommandBuf;}
+
   inline kore::Texture* getVoxelTex()
                           {return &_voxelTex;}
   
   inline kore::TextureBuffer* getVoxelFragList(EVoxelAttributes type) 
     { return &_voxelFragLists[type]; }
+
+  inline kore::TextureBuffer* getIndirectCommandBuff() 
+  { return &_indirectCommandBuf; }
 
   inline kore::SceneNode* getVoxelGridNode() {return _voxelGridNode;}
 
@@ -100,6 +106,9 @@ private:
   kore::IndexedBuffer _acVoxelIndex;
   kore::ShaderData _shdAcVoxelIndex;
 
+  kore::TextureBuffer _indirectCommandBuf;
+  kore::STextureInfo _icbTexInfos;
+  kore::ShaderData _shdIndirectCommandBuf;
 
   // Deprecated:
   kore::SceneNode* _voxelGridNode;
@@ -109,6 +118,8 @@ private:
   void clearTex3D(kore::Texture* tex);
   void initTex3D(kore::Texture* tex, const ETex3DContent texContent);
   void initVoxelFragList();
+  void initIndirectCommandBuf();
+
 
 
   //////////////////////////////////////////////////////////////////////////

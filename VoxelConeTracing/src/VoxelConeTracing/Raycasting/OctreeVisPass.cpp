@@ -23,7 +23,7 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#include "VoxelConeTracing/OctreeVisPass.h"
+#include "VoxelConeTracing/Raycasting/OctreeVisPass.h"
 #include "VoxelConeTracing/FullscreenQuad.h"
 
 #include "KoRE\ShaderProgram.h"
@@ -123,8 +123,8 @@ OctreeVisPass::OctreeVisPass(VCTscene* vctScene) {
                         vctScene->getShdAcVoxelIndex(),
                         _visShader.getUniform("voxel_num")));
 
- //nodePass->addOperation(
- //         new FunctionOp(std::bind(&OctreeVisPass::debugVoxelFragmentList, this)));
+ nodePass->addOperation(
+          new FunctionOp(std::bind(&OctreeVisPass::debugIndirectCmdBuff, this)));
 
   nodePass->addOperation(new RenderMesh(fsqMeshComponent));
 }
@@ -153,6 +153,19 @@ void OctreeVisPass::debugVoxelFragmentList() {
   uint numEntries = byteSize / sizeof(uint);
   kore::Log::getInstance()->write("\nVoxelFragmentList Color-contents (%i voxels):", numEntries);
   for (uint i = 0; i < numEntries; ++i) {
+    kore::Log::getInstance()->write("%u ", ptr[i]);
+  }
+
+  glUnmapBuffer(GL_TEXTURE_BUFFER);
+}
+
+void OctreeVisPass::debugIndirectCmdBuff(){
+  
+  _renderMgr->bindBuffer(GL_TEXTURE_BUFFER, _vctScene->getIndirectCommandBuff()->getBufferHandle());
+
+  const GLuint* ptr = (const GLuint*) glMapBuffer(GL_TEXTURE_BUFFER, GL_READ_ONLY);
+
+   for (uint i = 0; i < 4; ++i) {
     kore::Log::getInstance()->write("%u ", ptr[i]);
   }
 

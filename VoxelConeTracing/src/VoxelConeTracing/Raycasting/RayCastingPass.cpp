@@ -23,7 +23,7 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#include "VoxelConeTracing/RayCastingPass.h"
+#include "VoxelConeTracing/Raycasting/RayCastingPass.h"
 #include "VoxelConeTracing/FullscreenQuad.h"
 
 #include "KoRE\ShaderProgram.h"

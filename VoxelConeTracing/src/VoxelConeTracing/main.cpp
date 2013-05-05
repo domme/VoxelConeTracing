@@ -67,6 +67,7 @@
 #include "VoxelConeTracing/Octree Building/ObInitPass.h"
 
 #include "vsDebugLib.h"
+#include "Octree Building/ModifyIndirectBufferPass.h"
 
 static const uint screen_width = 1280;
 static const uint screen_height = 720;
@@ -113,8 +114,10 @@ void setup() {
 
   backBufferStage->addProgramPass(new VoxelizePass(&_vctScene));
   //backBufferStage->addProgramPass(new RayCastingPass(&_vctScene));
+  //backBufferStage->addProgramPass(new OctreeVisPass(&_vctScene));
+  backBufferStage->addProgramPass(new ModifyIndirectBufferPass(_vctScene.getShdIndirectCommandBuf(),_vctScene.getShdAcVoxelIndex(),&_vctScene));
   backBufferStage->addProgramPass(new OctreeVisPass(&_vctScene));
-
+  
   RenderManager::getInstance()->addFramebufferStage(backBufferStage);
 }
 

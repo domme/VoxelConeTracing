@@ -23,7 +23,7 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#include "VoxelConeTracing/VoxelizePass.h"
+#include "VoxelConeTracing/Voxelization/VoxelizePass.h"
 
 #include "KoRE/ResourceManager.h"
 #include "KoRE/Operations/ViewportOp.h"

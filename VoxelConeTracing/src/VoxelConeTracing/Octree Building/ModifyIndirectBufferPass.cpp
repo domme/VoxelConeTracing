@@ -36,6 +36,7 @@ ModifyIndirectBufferPass::~ModifyIndirectBufferPass(void) {
 
 ModifyIndirectBufferPass::
   ModifyIndirectBufferPass(const kore::ShaderData* shdIndirectBuffer,
+                           const kore::ShaderData* shdACnumVoxelsBuffer,
                            VCTscene* vctScene) {
   using namespace kore;
   
@@ -43,41 +44,43 @@ ModifyIndirectBufferPass::
   _renderMgr = RenderManager::getInstance();
   _sceneMgr = SceneManager::getInstance();
   _resMgr = ResourceManager::getInstance();
+  
   _shdIndirectBuffer = shdIndirectBuffer;
+  _shdACnumVoxelsBuffer = shdACnumVoxelsBuffer;
 
-  _shdNumVertices.name = "IndirectBuffer_numVertices";
-  _shdNumVertices.type = GL_UNSIGNED_INT;
-  _shdNumVertices.data = &_cmd.numVertices;
-
-  _shdNumPrimitives.name = "IndirectBuffer_numPrimitives";
-  _shdNumPrimitives.type = GL_UNSIGNED_INT;
-  _shdNumPrimitives.data = &_cmd.numPrimitives;
-
-  _shdFirstVertexIdx.name = "IndirectBuffer_firstVertexIdx";
-  _shdFirstVertexIdx.type = GL_UNSIGNED_INT;
-  _shdFirstVertexIdx.data = &_cmd.firstVertexIdx;
-
-  _shdFirstVertexIdx.name = "IndirectBuffer_baseInstanceIdx";
-  _shdFirstVertexIdx.type = GL_UNSIGNED_INT;
-  _shdFirstVertexIdx.data = &_cmd.baseInstanceIdx;
-
+  initCallBuffer();
 
   _shader.loadShader("./assets/shader/ModifyIndirectBufferVert.shader",
                      GL_VERTEX_SHADER);
-  
   _shader.init();
   _shader.setName("ModyfyIndirectBuffer shader");
   this->setShaderProgram(&_shader);
-  
-  addStartupOperation(new BindImageTexture(
-                     vctScene->getShdVoxelFragList(VOXELATT_COLOR),
-                     _initShader.getUniform("voxelFragmentListColor")));
 
-  addStartupOperation(new BindImageTexture(
-                      vctScene->getShdVoxelFragList(VOXELATT_POSITION),
-                      _initShader.getUniform("voxelFragmentListPosition")));
+  addStartupOperation(
+    new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER, &_callIndirectBuffer));
 
-   addStartupOperation(new BindAtomicCounterBuffer(
-                       vctScene->getShdAcVoxelIndex(),
-                       _initShader.getUniform("voxel_num")));
+  addStartupOperation(
+    new kore::BindImageTexture(_shdIndirectBuffer,
+                               _shader.getUniform("indirectCommandBuf")));
+
+  addStartupOperation(
+    new kore::BindAtomicCounterBuffer(_shdACnumVoxelsBuffer,
+                                      _shader.getUniform("numVoxels")));
+
+  addStartupOperation(
+    new kore::DrawIndirectOp(GL_POINTS, 0)); // Does this work without VBO?
+}
+
+void ModifyIndirectBufferPass::initCallBuffer() {
+  SDrawArraysIndirectCommand cmd;
+  cmd.numVertices = 1;
+  cmd.numPrimitives = 1;
+  cmd.firstVertexIdx = 0;
+  cmd.baseInstanceIdx = 0;
+
+  _callIndirectBuffer.create(GL_DRAW_INDIRECT_BUFFER,
+                             sizeof(SDrawArraysIndirectCommand),
+                             GL_STATIC_DRAW,
+                             &cmd,
+                             "ModifyIndirectBufPass_callBuffer");
 }
