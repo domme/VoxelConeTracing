@@ -26,9 +26,7 @@
 #include "VoxelConeTracing/VCTscene.h"
 #include "VoxelConeTracing/Cube.h"
 #include "VoxelConeTracing/Octree Building/ModifyIndirectBufferPass.h"
-#include 
-
-#include "KoRE/RenderManager.h"
+ude "KoRE/RenderManager.h"
 #include "KoRE/ResourceManager.h"
 #include "KoRE/GLerror.h"
 #include "KoRE/Components/TexturesComponent.h"
@@ -40,6 +38,7 @@ VCTscene::VCTscene() :
   _voxelGridResolution(0),
   _voxelGridSideLengths(50, 50, 50) {
 }
+
 
 VCTscene::~VCTscene() {
   glDeleteBuffers(1, &_tex3DclearPBO);
@@ -241,13 +240,20 @@ void VCTscene::initNodePool() {
   }
 
   //optimization
+  // numNodes = 1/7 (-1+8^(_numOctreeLevels+1))
+
+
 
   kore::Log::getInstance()->write("Allocating Octree with %u nodes\n",
                                   numNodes);
   
-  STextureBufferProperties props;
+  kore::STextureBufferProperties props;
   props.internalFormat = GL_R32UI;
+  props.size = sizeof(uint) * numNodes;
+  props.usageHint = GL_DYNAMIC_COPY;
+  
+  _nodePool.create(props, "NodePool");
 
-
-  _nodePool.create()
+  _nodePoolTexInfo.internalFormat = GL_R32UI;
+  _nodePoolTexInfo.texLocation = _nodePool.getTexHandle()
 }
