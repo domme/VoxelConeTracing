@@ -26,6 +26,7 @@
 #include "VoxelConeTracing/VCTscene.h"
 #include "VoxelConeTracing/Cube.h"
 #include "VoxelConeTracing/Octree Building/ModifyIndirectBufferPass.h"
+#include 
 
 #include "KoRE/RenderManager.h"
 #include "KoRE/ResourceManager.h"
@@ -49,6 +50,7 @@ void VCTscene::init(const SVCTparameters& params,
                     kore::Camera* camera) {
   _voxelGridResolution = params.voxel_grid_resolution;
   _voxelGridSideLengths = params.voxel_grid_sidelengths;
+  _numOctreeLevels = params.num_octree_levels;
 
   _meshNodes = meshNodes;
   _camera = camera;
@@ -64,6 +66,7 @@ void VCTscene::init(const SVCTparameters& params,
   initTex3D(&_voxelTex, BLACK);
   initVoxelFragList();
   initIndirectCommandBuf();
+  initNodePool();
 
   _voxelGridNode = new kore::SceneNode;
   _voxelGridNode->scale(_voxelGridSideLengths / 2.0f, kore::SPACE_LOCAL);
@@ -229,4 +232,22 @@ void VCTscene::initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
   RenderManager::getInstance()->bindTexture(GL_TEXTURE_3D, 0);
 
   //delete[] colorValues;
+}
+
+void VCTscene::initNodePool() {
+  uint numNodes = 0;
+  for (uint i = 0; i < _numOctreeLevels; ++i) {
+    numNodes += glm::pow(8.0f, (float) i);
+  }
+
+  //optimization
+
+  kore::Log::getInstance()->write("Allocating Octree with %u nodes\n",
+                                  numNodes);
+  
+  STextureBufferProperties props;
+  props.internalFormat = GL_R32UI;
+
+
+  _nodePool.create()
 }

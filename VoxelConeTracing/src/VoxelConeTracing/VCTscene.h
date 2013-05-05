@@ -38,6 +38,7 @@
 struct SVCTparameters {
   uint voxel_grid_resolution;
   glm::vec3 voxel_grid_sidelengths;
+  uint num_octree_levels;
 };
 
 enum ETex3DContent {
@@ -79,7 +80,7 @@ public:
   inline kore::TextureBuffer* getVoxelFragList(EVoxelAttributes type) 
     { return &_voxelFragLists[type]; }
 
-  inline kore::TextureBuffer* getIndirectCommandBuff() 
+  inline kore::TextureBuffer* getIndirectCommandBuff()
   { return &_indirectCommandBuf; }
 
   inline kore::SceneNode* getVoxelGridNode() {return _voxelGridNode;}
@@ -100,6 +101,7 @@ private:
   
   uint _voxelGridResolution;
   kore::ShaderData _shdVoxelGridResolution;
+  uint _numOctreeLevels;
 
   glm::vec3 _voxelGridSideLengths;
 
@@ -110,6 +112,10 @@ private:
   kore::STextureInfo _icbTexInfos;
   kore::ShaderData _shdIndirectCommandBuf;
 
+  kore::TextureBuffer _nodePool;
+  kore::STextureInfo _nodePoolTexInfo;
+  kore::ShaderData _shdNodePool;
+
   // Deprecated:
   kore::SceneNode* _voxelGridNode;
   kore::Texture _voxelTex;
@@ -119,8 +125,7 @@ private:
   void initTex3D(kore::Texture* tex, const ETex3DContent texContent);
   void initVoxelFragList();
   void initIndirectCommandBuf();
-
-
+  void initNodePool();
 
   //////////////////////////////////////////////////////////////////////////
 

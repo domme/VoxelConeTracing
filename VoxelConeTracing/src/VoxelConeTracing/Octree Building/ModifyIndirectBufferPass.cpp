@@ -57,7 +57,7 @@ ModifyIndirectBufferPass::
   this->setShaderProgram(&_shader);
 
   addStartupOperation(
-    new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER, &_callIndirectBuffer));
+    new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER, _callIndirectBuffer.getHandle()));
 
   addStartupOperation(
     new kore::BindImageTexture(_shdIndirectBuffer,
@@ -68,7 +68,7 @@ ModifyIndirectBufferPass::
                                       _shader.getUniform("numVoxels")));
 
   addStartupOperation(
-    new kore::DrawIndirectOp(GL_POINTS, 0)); // Does this work without VBO?
+    new kore::DrawIndirectOp(GL_POINTS, 0));
 }
 
 void ModifyIndirectBufferPass::initCallBuffer() {

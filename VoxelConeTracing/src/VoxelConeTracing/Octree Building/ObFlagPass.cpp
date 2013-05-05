@@ -49,16 +49,19 @@ ObFlagPass::ObFlagPass(VCTscene* vctScene) {
   _flagShader.init();
   _flagShader.setName("ObFlag shader");
   this->setShaderProgram(&_flagShader);
-  
-  addStartupOperation(new BindImageTexture(
-                     vctScene->getShdVoxelFragList(VOXELATT_COLOR),
-                     _flagShader.getUniform("voxelFragmentListColor")));
+
+  addStartupOperation(
+    new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
+    vctScene->getIndirectCommandBuff()->getBufferHandle()));
 
   addStartupOperation(new BindImageTexture(
                       vctScene->getShdVoxelFragList(VOXELATT_POSITION),
                       _flagShader.getUniform("voxelFragmentListPosition")));
 
-   addStartupOperation(new BindAtomicCounterBuffer(
-                       vctScene->getShdAcVoxelIndex(),
-                       _flagShader.getUniform("voxel_num")));
+  addStartupOperation(new BindUniform(
+                      vctScene->getShdVoxelGridResolution(),
+                      _flagShader.getUniform("voxelGridResolution")));
+
+  addStartupOperation(
+     new kore::DrawIndirectOp(GL_POINTS, 0));
 }
