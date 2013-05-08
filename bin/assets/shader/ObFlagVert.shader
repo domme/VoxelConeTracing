@@ -29,6 +29,8 @@ layout(r32ui) uniform volatile uimageBuffer voxelFragmentListPosition;
 layout(rg32ui) uniform volatile uimageBuffer nodePool;
 uniform uint voxelGridResolution;
 
+
+
 uint vec3ToUintXYZ10(vec3 val) {
     return (uint(val.z) & 0x000003FF)   << 20U
             |(uint(val.y) & 0x000003FF) << 10U 
@@ -53,6 +55,12 @@ uint getNext(in uvec2 nodeValue) {
 bool nextEmpty(in uvec2 nodeValue) {
   return getNext(nodeValue) == 0;
 }
+
+uint sizeOnLevel(in uint level) {
+  return voxelGridResolution / pow(2U, level);
+}
+
+
 
 void main() {
   uint voxelPos = imageLoad(voxelFragmentListPosition, gl_VertexID).x;

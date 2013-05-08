@@ -233,10 +233,11 @@ void VCTscene::initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
 }
 
 void VCTscene::initNodePool() {
-  uint numNodesLevel = glm::pow(_voxelGridResolution, 3U);
+  float fnumNodesLevel = glm::pow(static_cast<float>(_voxelGridResolution), 3.0f);
+  uint numNodesLevel = static_cast<uint>(glm::ceil(fnumNodesLevel));
   uint numNodes = numNodesLevel;
   uint numLevels = 1;
-
+  
   while (numNodesLevel) {
     ++numLevels;
     numNodesLevel /= 8;
