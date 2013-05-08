@@ -38,7 +38,6 @@
 struct SVCTparameters {
   uint voxel_grid_resolution;
   glm::vec3 voxel_grid_sidelengths;
-  uint num_octree_levels;
 };
 
 enum ETex3DContent {
@@ -51,6 +50,10 @@ enum EVoxelAttributes {
   VOXELATT_COLOR,
 
   VOXELATT_NUM
+};
+
+struct SNode {
+  uint color;
 };
 
 class VCTscene {
@@ -73,6 +76,9 @@ public:
 
   inline kore::ShaderData* getShdIndirectCommandBuf()
                            {return &_shdIndirectCommandBuf;}
+
+  inline kore::ShaderData* getShdNodePool()
+                           {return &_shdNodePool;}
 
   inline kore::Texture* getVoxelTex()
                           {return &_voxelTex;}
@@ -103,8 +109,7 @@ private:
   
   uint _voxelGridResolution;
   kore::ShaderData _shdVoxelGridResolution;
-  uint _numOctreeLevels;
-
+  
   glm::vec3 _voxelGridSideLengths;
 
   kore::IndexedBuffer _acVoxelIndex;

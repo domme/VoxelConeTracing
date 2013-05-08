@@ -109,8 +109,7 @@ void setup() {
   SVCTparameters params;
   params.voxel_grid_resolution = 16;
   params.voxel_grid_sidelengths = glm::vec3(50, 50, 50);
-  params.num_octree_levels = 2;
-
+  
   _vctScene.init(params, renderNodes, _pCamera);
  
 

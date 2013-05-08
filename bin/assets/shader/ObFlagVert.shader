@@ -26,9 +26,50 @@
 #version 420 core
 
 layout(r32ui) uniform volatile uimageBuffer voxelFragmentListPosition;
-layout(r32ui) uniform volatile uimageBuffer nodePool;
+layout(rg32ui) uniform volatile uimageBuffer nodePool;
 uniform uint voxelGridResolution;
 
-void main() {
+uint vec3ToUintXYZ10(vec3 val) {
+    return (uint(val.z) & 0x000003FF)   << 20U
+            |(uint(val.y) & 0x000003FF) << 10U 
+            |(uint(val.x) & 0x000003FF);
+}
 
+vec3 uintXYZ10ToVec3(uint val) {
+    return vec3( float((val & 0x000003FF)), 
+                 float((val & 0x000FFC00) >> 10U), 
+                 float((val & 0x3FF00000) >> 20U));
+}
+
+void flagNode(in uvec2 nodeValue, in uint coords) {
+  nodeValue.x = (0x00000001 << 31) | (0x7FFFFFFF & nodeValue.x); 
+  imageStore(nodePool, coords, uvec4(nodeValue));
+}
+
+uint getNext(in uvec2 nodeValue) {
+  return uint(nodeValue.x & 0x3FFFFFFF);
+}
+
+bool nextEmpty(in uvec2 nodeValue) {
+  return getNext(nodeValue) == 0;
+}
+
+void main() {
+  uint voxelPos = imageLoad(voxelFragmentListPosition, gl_VertexID).x;
+  uvec2 node = imageLoad(nodePool, 0).xy;
+  uint level = 0;
+
+  // Level 0
+  if (nextEmpty(node)) {
+    flagNode(node, 1U);
+    return;
+  }
+  
+  while (!nextEmpty(node)) {
+    ++level;
+    node = imageLoad(nodePool, getNext(node));
+
+    // Determine offset depending on voxelPos
+  }
+  
 }

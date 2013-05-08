@@ -49,8 +49,7 @@ void VCTscene::init(const SVCTparameters& params,
                     kore::Camera* camera) {
   _voxelGridResolution = params.voxel_grid_resolution;
   _voxelGridSideLengths = params.voxel_grid_sidelengths;
-  _numOctreeLevels = params.num_octree_levels;
-
+  
   _meshNodes = meshNodes;
   _camera = camera;
 
@@ -234,25 +233,27 @@ void VCTscene::initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
 }
 
 void VCTscene::initNodePool() {
-  uint numNodes = 0;
-  for (uint i = 0; i < _numOctreeLevels; ++i) {
-    numNodes += glm::pow(8.0f, (float) i);
+  uint numNodesLevel = glm::pow(_voxelGridResolution, 3U);
+  uint numNodes = numNodesLevel;
+  uint numLevels = 1;
+
+  while (numNodesLevel) {
+    ++numLevels;
+    numNodesLevel /= 8;
+    numNodes += numNodesLevel;
   }
 
-  //optimization
-  // numNodes = 1/7 (-1+8^(_numOctreeLevels+1))
-
-  kore::Log::getInstance()->write("Allocating Octree with %u nodes\n",
-                                  numNodes);
+  kore::Log::getInstance()->write("Allocating Octree with %u nodes in %u levels\n" ,
+                                  numNodes, numLevels);
   
   kore::STextureBufferProperties props;
-  props.internalFormat = GL_R32UI;
-  props.size = sizeof(uint) * numNodes;
+  props.internalFormat = GL_RG32UI;
+  props.size = 2 * sizeof(uint) * numNodes;
   props.usageHint = GL_DYNAMIC_COPY;
   
   _nodePool.create(props, "NodePool");
 
-  _nodePoolTexInfo.internalFormat = GL_R32UI;
+  _nodePoolTexInfo.internalFormat = GL_RG32UI;
   _nodePoolTexInfo.texLocation = _nodePool.getTexHandle();
   _nodePoolTexInfo.texTarget = GL_TEXTURE_BUFFER;
 
