@@ -29,7 +29,16 @@ layout(r32ui) uniform volatile uimageBuffer voxelFragmentListPosition;
 layout(rg32ui) uniform volatile uimageBuffer nodePool;
 uniform uint voxelGridResolution;
 
-
+const uvec3 childOffsets[8] = {
+  uvec3(0, 0, 0),
+  uvec3(1, 0, 0),
+  uvec3(1, 1, 0),
+  uvec3(0, 1, 0),
+  uvec3(0, 0, 1),
+  uvec3(1, 0, 1),
+  uvec3(1, 1, 1),
+  uvec3(0, 1, 1) }
+  
 
 uint vec3ToUintXYZ10(vec3 val) {
     return (uint(val.z) & 0x000003FF)   << 20U
