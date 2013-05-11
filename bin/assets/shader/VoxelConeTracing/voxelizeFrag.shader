@@ -66,7 +66,7 @@ uint convVec3ToXYZ10(vec3 val) {
             |(uint(val.x) & 0x000003FF);
 }
 
-uint ivec3_xyz10(in ivec3 val) {
+uint uvec3_xyz10(in uvec3 val) {
    return (uint(val.z) & 0x000003FF) << 20U
           |(uint(val.y) & 0x000003FF) << 10U 
           |(uint(val.x) & 0x000003FF);
@@ -78,7 +78,7 @@ const vec3 worldAxes[3] = vec3[3]( vec3(1.0, 0.0, 0.0),
                                    vec3(0.0, 0.0, 1.0) );
 
 void main() {
-  ivec3 baseVoxel = ivec3(floor(In.posTexSpace * voxelTexSize));
+  uvec3 baseVoxel = uvec3(floor(In.posTexSpace * voxelTexSize));
   
   vec4 diffColor = texture(diffuseTex, In.uv);
 
@@ -91,7 +91,7 @@ void main() {
   // Store voxel-position as tex-indices
   imageStore(voxelFragmentListPosition,
              int(voxelIndex),
-             uvec4(ivec3_xyz10(baseVoxel)));
+             uvec4(uvec3_xyz10(baseVoxel)));
 
   imageStore(voxelFragmentListColor, int(voxelIndex), uvec4(diffColorU));
 }

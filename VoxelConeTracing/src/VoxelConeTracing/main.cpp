@@ -118,6 +118,10 @@ void setup() {
   //backBufferStage->addProgramPass(new OctreeVisPass(&_vctScene));
   backBufferStage->addProgramPass(new ModifyIndirectBufferPass(_vctScene.getShdIndirectCommandBuf(),_vctScene.getShdAcVoxelIndex(),&_vctScene));
   backBufferStage->addProgramPass(new OctreeVisPass(&_vctScene));
+  //backBufferStage->addProgramPass();
+
+  ObFlagPass* obFlagPass = new ObFlagPass(&_vctScene);
+  delete obFlagPass;
   
   RenderManager::getInstance()->addFramebufferStage(backBufferStage);
 }
