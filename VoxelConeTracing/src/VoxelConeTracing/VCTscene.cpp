@@ -261,4 +261,14 @@ void VCTscene::initNodePool() {
   _shdNodePool.name = "NodePool";
   _shdNodePool.type = GL_TEXTURE_BUFFER;
   _shdNodePool.data = &_nodePoolTexInfo;
+
+  // Init to zero
+  kore::RenderManager* renderMgr = kore::RenderManager::getInstance();
+  renderMgr->bindBuffer(GL_TEXTURE_BUFFER, _nodePool.getBufferHandle());
+  uint* ptr = (uint*) glMapBufferRange(GL_TEXTURE_BUFFER, 0, props.size,
+                                       GL_READ_WRITE);
+  for (uint i = 0; i < numNodes * 2; ++i) {
+    ptr[i] = 0U;
+  }
+  glUnmapBuffer(GL_TEXTURE_BUFFER);
 }

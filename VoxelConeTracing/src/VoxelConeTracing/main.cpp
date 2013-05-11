@@ -275,5 +275,3 @@ int main(void) {
   // Exit program
   exit(EXIT_SUCCESS);
 }
-
-
