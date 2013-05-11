@@ -72,34 +72,39 @@ uint sizeOnLevel(in uint level) {
                                      
 void flagTraverse (in uvec2 node, in uint nodeAddress, in uvec3 nodePos,
                    in uvec3 voxelPos, in uint childLevel) {
-   if (nextEmpty(node)) {
-       flagNode(node, nodeAddress);
-       return;
-   }
 
-  uint sideLength = sizeOnLevel(childLevel);
-  uvec3 posMin = nodePos;
-  uvec3 posMax = nodePos + uvec3(sideLength);
-
-  for (uint iChild = 0; iChild < 8; ++iChild) {
-    posMin = nodePos + childOffsets[iChild] * uvec3(sideLength);
-    posMax = posMin + uvec3(sideLength);
-
-    if (voxelPos.x > posMin.x && voxelPos.x < posMax.x &&
-        voxelPos.y > posMin.y && voxelPos.y < posMax.y &&
-        voxelPos.z > posMin.z && voxelPos.z < posMax.z ) {
-          uint childAddress = getNext(node) + iChild;
-          uvec2 childNode = uvec2(imageLoad(nodePool, int(childAddress)));
-          flagTraverse(childNode, childAddress, posMin, voxelPos, childLevel + 1);
-          return;
-    }
-  }
 }
 
 
 void main() {
-  uint voxelPos = imageLoad(voxelFragmentListPosition, gl_VertexID).x;
-  uvec2 rootNode = imageLoad(nodePool, 0).xy;
+  uint voxelPosU = imageLoad(voxelFragmentListPosition, gl_VertexID).x;
+  uvec3 voxelPos = uintXYZ10ToVec3(voxelPos);
+  uvec2 node = imageLoad(nodePool, 0).xy;
   
-  flagTraverse(rootNode, 0, uvec3(0, 0, 0), uintXYZ10ToVec3(voxelPos), 1);
+  while(!nextEmpty(node)) {
+    uint ideLength = sizeOnLevel(childLevel);
+    uvec3 posMin = nodePos;
+    uvec3 posMax = nodePos + uvec3(sideLength);
+
+    for (uint iChild = 0; iChild < 8; ++iChild) {
+      posMin = nodePos + childOffsets[iChild] * uvec3(sideLength);
+      posMax = posMin + uvec3(sideLength);
+
+      if (voxelPos.x > posMin.x && voxelPos.x < posMax.x &&
+          voxelPos.y > posMin.y && voxelPos.y < posMax.y &&
+          voxelPos.z > posMin.z && voxelPos.z < posMax.z ) {
+            uint childAddress = getNext(node) + iChild;
+            uvec2 childNode = uvec2(imageLoad(nodePool, int(childAddress)));
+            flagTraverse(childNode, childAddress, posMin, voxelPos, childLevel + 1);
+            return;
+      }
+    }
+  }
+  
+  if (nextEmpty(node)) {
+       flagNode(node, nodeAddress);
+       return;
+   }
+
+  
 }
