@@ -69,42 +69,41 @@ uint sizeOnLevel(in uint level) {
   return uint(voxelGridResolution / pow(2U, level));
 }
 
-                                     
-void flagTraverse (in uvec2 node, in uint nodeAddress, in uvec3 nodePos,
-                   in uvec3 voxelPos, in uint childLevel) {
-
-}
-
-
 void main() {
   uint voxelPosU = imageLoad(voxelFragmentListPosition, gl_VertexID).x;
-  uvec3 voxelPos = uintXYZ10ToVec3(voxelPos);
+  uvec3 voxelPos = uintXYZ10ToVec3(voxelPosU);
   uvec2 node = imageLoad(nodePool, 0).xy;
-  
-  while(!nextEmpty(node)) {
-    uint ideLength = sizeOnLevel(childLevel);
-    uvec3 posMin = nodePos;
-    uvec3 posMax = nodePos + uvec3(sideLength);
+  uint nodeAddress = 0;
+  uvec3 nodePos = uvec3(0, 0, 0);
+  uint childLevel = 1;
+  uint sideLength = sizeOnLevel(childLevel);
+
+  // Loop as long as node != voxel
+  while(sideLength > 1) {
+    if (!nextEmpty(node)) {
+      flagNode(node, nodeAddress);
+      return;
+    }
+
+    sideLength = sizeOnLevel(childLevel);
 
     for (uint iChild = 0; iChild < 8; ++iChild) {
-      posMin = nodePos + childOffsets[iChild] * uvec3(sideLength);
-      posMax = posMin + uvec3(sideLength);
+      uvec3 posMin = nodePos + childOffsets[iChild] * uvec3(sideLength);
+      uvec3 posMax = posMin + uvec3(sideLength);
 
       if (voxelPos.x > posMin.x && voxelPos.x < posMax.x &&
           voxelPos.y > posMin.y && voxelPos.y < posMax.y &&
           voxelPos.z > posMin.z && voxelPos.z < posMax.z ) {
             uint childAddress = getNext(node) + iChild;
             uvec2 childNode = uvec2(imageLoad(nodePool, int(childAddress)));
-            flagTraverse(childNode, childAddress, posMin, voxelPos, childLevel + 1);
-            return;
-      }
-    }
-  }
-  
-  if (nextEmpty(node)) {
-       flagNode(node, nodeAddress);
-       return;
-   }
 
-  
-}
+            // Restart while-loop with the child node (aka recursion)
+            node = childNode;
+            nodeAddress = childAddress;
+            nodePos = posMin;
+            ++childLevel;
+            break;
+        } // if
+      } // for
+    } // while
+  }  // main
