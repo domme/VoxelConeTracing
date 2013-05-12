@@ -26,18 +26,15 @@
 #version 420 core
 
 layout(rg32ui) uniform volatile uimageBuffer nodePool;
-uniform uint voxelGridResolution;
+uniform atomic_uint nextFreeAddress; // Note: Has to be initialized with 1, not 0
+uniform uint octreeLevel;
 
-const uvec3 childOffsets[8] = {
-  uvec3(0, 0, 0),
-  uvec3(1, 0, 0),
-  uvec3(1, 1, 0),
-  uvec3(0, 1, 0),
-  uvec3(0, 0, 1),
-  uvec3(1, 0, 1),
-  uvec3(1, 1, 1),
-  uvec3(0, 1, 1) };
-  
+uint nodeLevelIdx = 0;
+
+const uint NODE_MASK_NEXT = 0x3FFFFFFF;
+const uint NODE_MASK_TAG = (0x00000001 << 31);
+const uint NODE_MASK_TAG_STATIC = (0x00000003 << 30);
+const uint NODE_NOT_FOUND = 0xFFFFFFFF;
 
 uint vec3ToUintXYZ10(uvec3 val) {
     return (uint(val.z) & 0x000003FF)   << 20U
@@ -51,8 +48,17 @@ uvec3 uintXYZ10ToVec3(uint val) {
                  uint((val & 0x3FF00000) >> 20U));
 }
 
+bool isFlagged(in uvec2 node) {
+  return (node.x & (0x00000001 << 31)) != 0x00000000;
+}
+
 void flagNode(in uvec2 node, in uint address) {
   node.x = (0x00000001 << 31) | (0x7FFFFFFF & node.x); 
+  imageStore(nodePool, int(address), node.xyxy);
+}
+
+void unflagNode(in uvec2 node, int uint address) {
+  node.x = (0x7FFFFFFF & node.x);
   imageStore(nodePool, int(address), node.xyxy);
 }
 
@@ -68,41 +74,101 @@ uint sizeOnLevel(in uint level) {
   return uint(voxelGridResolution / pow(2U, level));
 }
 
-void main() {
-  uint voxelPosU = imageLoad(voxelFragmentListPosition, gl_VertexID).x;
-  uvec3 voxelPos = uintXYZ10ToVec3(voxelPosU);
-  uvec2 node = imageLoad(nodePool, 0).xy;
-  uint nodeAddress = 0;
-  uvec3 nodePos = uvec3(0, 0, 0);
-  uint childLevel = 1;
-  uint sideLength = sizeOnLevel(childLevel);
+void allocChildBrickAndUnflag(uvec2 node, uint nodeAddress) {
+  uint next = atomicCounter(nextFreeAddress);
 
-  // Loop as long as node != voxel
-  while(sideLength > 1) {
-    if (!nextEmpty(node)) {
-      flagNode(node, nodeAddress);
-      return;
+  // Store next free address in node's next pointer
+  node.x = (NODE_MASK_NEXT & next);       // Next bits (30)
+
+  imageStore(nodePool, int(nodeAddress), node);
+
+  // Allocate 8 nodes
+  atomicCounterIncrement(nextFreeAddress);
+  atomicCounterIncrement(nextFreeAddress);
+  atomicCounterIncrement(nextFreeAddress);
+  atomicCounterIncrement(nextFreeAddress);
+  atomicCounterIncrement(nextFreeAddress);
+  atomicCounterIncrement(nextFreeAddress);
+  atomicCounterIncrement(nextFreeAddress);
+  atomicCounterIncrement(nextFreeAddress);
+}
+
+
+uint findNode_rec(in uvec2 node, in uint nodeAddress, int uint idx, in uint currLevel, in uint level) {
+  if (nextEmpty(node)) {
+    // We are not yet on the requested level, but this node has no children anymore
+    return NODE_NOT_FOUND;
+  }
+
+  uint next = getNext(node);
+  ++currLevel;
+
+  for (uint iChild = 0; iChild < 8; ++iChild) 
+  {
+    uint childAddress = next + iChild;
+    if (currLevel == level) // Children are on the requested level
+    {  
+      nodeLevelIdx += iChild;
+      
+      if (nodeLevelIdx == idx) 
+      {
+        return childAddress;  // This child is the node we are looking for!
+      }
     }
 
-    sideLength = sizeOnLevel(childLevel);
+    // Children are not on the requested level yet
+    else 
+    {
+      uvec2 childNode = imageLoad(nodePool, int(childAddress));
+      uint foundNodeAdd_child = findNode_rec(childNode, childAddress, idx, currLevel, level);
+      if (foundNodeAdd_child != NODE_NOT_FOUND) {
+        return foundNodeAdd_child;
+      }
+    }
+  }
+
+  return NODE_NOT_FOUND;
+}
+
+// This method returns the "idx"th node on level "level"
+uint findNode(in uint idx, in uint level) {
+  uvec2 node = imageLoad(nodePool, 0).xy;
+  uint currLevel = 0;
+  uint nodeLevelIdx = 0;
+
+  if (currLevel == level && idx == nodeLevelIdx) {
+    return 0;
+  }
+
+  while(true) {
+    uint nextAddress = getNext(node);
+    ++currLevel;
 
     for (uint iChild = 0; iChild < 8; ++iChild) {
-      uvec3 posMin = nodePos + childOffsets[iChild] * uvec3(sideLength);
-      uvec3 posMax = posMin + uvec3(sideLength);
+      uint childAddress = nextAddress + iChild;
+      uvec2 childNode = imageLoad(nodePool, int(childAddress));
 
-      if (voxelPos.x > posMin.x && voxelPos.x < posMax.x &&
-          voxelPos.y > posMin.y && voxelPos.y < posMax.y &&
-          voxelPos.z > posMin.z && voxelPos.z < posMax.z ) {
-            uint childAddress = getNext(node) + iChild;
-            uvec2 childNode = uvec2(imageLoad(nodePool, int(childAddress)));
+      if (currLevel == level) {
+        nodeLevelIdx += iChild;
+        if (nodeLevelIdx == idx) {
+          return childAddress;
+        }
+      }
+      
+      else {
+        node = childNode;
+        break;
+      }
+    }  // children
+  }  // while
+  
+}  // method
 
-            // Restart while-loop with the child node (aka recursion)
-            node = childNode;
-            nodeAddress = childAddress;
-            nodePos = posMin;
-            ++childLevel;
-            break;
-        } // if
-      } // for
-    } // while
-  }  // main
+void main() {
+  uint nodeAddress = findNode(gl_VertexID, octreeLevel);
+
+  uvec2 node = imageLoad(nodePool, int(nodeAddress));
+  if (isFlagged(node)) {
+    allocateChildBrickAndUnflag(node, nodeAddress);
+  }
+}

@@ -80,7 +80,7 @@ void main() {
 
   // Loop as long as node != voxel
   while(sideLength > 1) {
-    if (!nextEmpty(node)) {
+    if (nextEmpty(node)) {
       flagNode(node, nodeAddress);
       return;
     }
