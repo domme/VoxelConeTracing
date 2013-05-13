@@ -31,17 +31,22 @@
 #include "KoRE/SceneManager.h"
 #include "KoRE/RenderManager.h"
 #include "KoRE/ResourceManager.h"
+#include "KoRE/Operations/BindBuffer.h"
 
 class ObAllocatePass : public kore::ShaderProgramPass
 {
   public:
-    ObAllocatePass(VCTscene* vctScene);
+    ObAllocatePass(VCTscene* vctScene, uint level);
     virtual ~ObAllocatePass(void);
+
+    void setLevel(uint level);
 
   private:
     kore::RenderManager* _renderMgr;
     kore::SceneManager* _sceneMgr;
     kore::ResourceManager* _resMgr;
+
+    kore::BindBuffer* _bindIndCmdBufOp;
 
     kore::ShaderProgram _allocateShader;
     VCTscene* _vctScene;

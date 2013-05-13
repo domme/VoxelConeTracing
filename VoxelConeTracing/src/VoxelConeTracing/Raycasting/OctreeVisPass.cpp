@@ -123,8 +123,8 @@ OctreeVisPass::OctreeVisPass(VCTscene* vctScene) {
                         vctScene->getShdAcVoxelIndex(),
                         _visShader.getUniform("voxel_num")));
 
- //nodePass->addOperation(
-   //       new FunctionOp(std::bind(&OctreeVisPass::debugIndirectCmdBuff, this)));
+ nodePass->addOperation(
+          new FunctionOp(std::bind(&OctreeVisPass::debugIndirectCmdBuff, this)));
 
   nodePass->addOperation(new RenderMesh(fsqMeshComponent));
 }

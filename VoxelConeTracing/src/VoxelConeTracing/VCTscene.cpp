@@ -50,7 +50,10 @@ void VCTscene::init(const SVCTparameters& params,
                     kore::Camera* camera) {
   _voxelGridResolution = params.voxel_grid_resolution;
   _voxelGridSideLengths = params.voxel_grid_sidelengths;
-  
+  //Level based on number of Voxels (8^level = number of leaves)  
+  _numLevels = ceil(log(_voxelGridResolution*_voxelGridResolution*_voxelGridResolution)/log(8))+1;
+  kore::Log::getInstance()->write("[DEBUG] number of levels: %u \n", _numLevels);
+
   _meshNodes = meshNodes;
   _camera = camera;
 
@@ -119,12 +122,11 @@ void VCTscene::initIndirectCommandBufs() {
 
   // Allocation indirect command bufs for each octree level
   _vAllocIndCmdBufs.clear();
-                  //Level based on number of Voxels (8^level = number of leaves)  
-  uint numLevels = ceil(log(_voxelGridResolution*_voxelGridResolution*_voxelGridResolution)/log(8));
-  kore::Log::getInstance()->write("[DEBUG] number of levels: %u", numLevels);
-  for (uint iLevel = 0; iLevel < numLevels; ++iLevel) {
+                  
+  
+  for (uint iLevel = 0; iLevel < _numLevels; ++iLevel) {
     uint numVoxelsOnLevel = pow(8,iLevel);
-    kore::Log::getInstance()->write("[DEBUG] number of voxels on level %u: %u", iLevel, numVoxelsOnLevel);
+    kore::Log::getInstance()->write("[DEBUG] number of voxels on level %u: %u \n", iLevel, numVoxelsOnLevel);
     SDrawArraysIndirectCommand cmd;
     cmd.numVertices = numVoxelsOnLevel;
     cmd.numPrimitives = numVoxelsOnLevel;
@@ -262,16 +264,14 @@ void VCTscene::initNodePool() {
   float fnumNodesLevel = glm::pow(static_cast<float>(_voxelGridResolution), 3.0f);
   uint numNodesLevel = static_cast<uint>(glm::ceil(fnumNodesLevel));
   uint numNodes = numNodesLevel;
-  uint numLevels = 1;
   
   while (numNodesLevel) {
-    ++numLevels;
     numNodesLevel /= 8;
     numNodes += numNodesLevel;
   }
 
   kore::Log::getInstance()->write("Allocating Octree with %u nodes in %u levels\n" ,
-                                  numNodes, numLevels);
+                                  numNodes, _numLevels);
   
   kore::STextureBufferProperties props;
   props.internalFormat = GL_RG32UI;
@@ -304,5 +304,11 @@ void VCTscene::initNodePool() {
   // This AC stores the value of the next free node address,
   // so it has to be initialized to 1
   uint allocAcValue = 1;
-  _acNodePoolAlloc.create(GL_ATOMIC_COUNTER_BUFFER, sizeof(GL_UNSIGNED_INT), & )
+  _acNodePoolNextFree.create(GL_ATOMIC_COUNTER_BUFFER, sizeof(GL_UNSIGNED_INT),
+          GL_DYNAMIC_COPY, (void*) &allocAcValue, "AC_nextFreeNodePointer");
+
+  _shdAcNodePoolNextFree.component = NULL;
+  _shdAcNodePoolNextFree.data = &_acNodePoolNextFree;
+  _shdAcNodePoolNextFree.name = "AC Node Pool next free";
+  _shdAcNodePoolNextFree.type = GL_UNSIGNED_INT_ATOMIC_COUNTER;
 }

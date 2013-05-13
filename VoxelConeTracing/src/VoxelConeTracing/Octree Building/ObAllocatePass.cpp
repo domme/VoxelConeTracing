@@ -34,7 +34,7 @@
 ObAllocatePass::~ObAllocatePass(void) {
 }
 
-ObAllocatePass::ObAllocatePass(VCTscene* vctScene) {
+ObAllocatePass::ObAllocatePass(VCTscene* vctScene, uint level) {
   using namespace kore;
   
   _vctScene = vctScene;
@@ -49,16 +49,27 @@ ObAllocatePass::ObAllocatePass(VCTscene* vctScene) {
   _allocateShader.init();
   _allocateShader.setName("ObAllocate shader");
   this->setShaderProgram(&_allocateShader);
+
+  _bindIndCmdBufOp =
+    new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
+                         vctScene->getAllocIndCmdBufForLevel(level)->getHandle());
+  
+  addStartupOperation(_bindIndCmdBufOp);
   
   addStartupOperation(new BindImageTexture(
-                     vctScene->getShdVoxelFragList(VOXELATT_COLOR),
-                     _allocateShader.getUniform("voxelFragmentListColor")));
+                      vctScene->getShdNodePool(),
+                      _allocateShader.getUniform("nodePool")));
+  
+  addStartupOperation(new BindAtomicCounterBuffer(
+                       vctScene->getShdAcNodePoolNextFree(),
+                       _allocateShader.getUniform("nextFreeAddress")));
 
-  addStartupOperation(new BindImageTexture(
-                      vctScene->getShdVoxelFragList(VOXELATT_POSITION),
-                      _allocateShader.getUniform("voxelFragmentListPosition")));
+  addStartupOperation(new DrawIndirectOp(GL_POINTS, 0));
 
-   addStartupOperation(new BindAtomicCounterBuffer(
-                       vctScene->getShdAcVoxelIndex(),
-                       _allocateShader.getUniform("voxel_num")));
+
+}
+
+void ObAllocatePass::setLevel(uint level) {
+  _bindIndCmdBufOp->connect(GL_DRAW_INDIRECT_BUFFER,
+                    _vctScene->getAllocIndCmdBufForLevel(level)->getHandle());
 }

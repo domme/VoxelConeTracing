@@ -70,6 +70,7 @@ uint sizeOnLevel(in uint level) {
 }
 
 void main() {
+  
   uint voxelPosU = imageLoad(voxelFragmentListPosition, gl_VertexID).x;
   uvec3 voxelPos = uintXYZ10ToVec3(voxelPosU);
   uvec2 node = imageLoad(nodePool, 0).xy;
@@ -80,7 +81,7 @@ void main() {
 
   // Loop as long as node != voxel
   while(sideLength > 1) {
-    if (nextEmpty(node)) {
+      if (nextEmpty(node)) {
       flagNode(node, nodeAddress);
       return;
     }
@@ -105,5 +106,5 @@ void main() {
             break;
         } // if
       } // for
-    } // while
+    } // while 
   }  // main

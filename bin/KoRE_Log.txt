@@ -1,4 +1,4 @@
-KoRE Log - Mon May 13 15:04:01 2013
+KoRE Log - Mon May 13 17:25:42 2013
 
 [DEBUG] added Framebuffer 'BACKBUFFER'
 Render Device: AMD Radeon HD 7800 Series
@@ -12,7 +12,13 @@ GLEW version: 1.9.0
 	 1 meshes
 	 1 cameras
 	 4 nodes
-Allocating Octree with 4681 nodes in 6 levels
+[DEBUG] number of levels: 5 
+[DEBUG] number of voxels on level 0: 1 
+[DEBUG] number of voxels on level 1: 8 
+[DEBUG] number of voxels on level 2: 64 
+[DEBUG] number of voxels on level 3: 512 
+[DEBUG] number of voxels on level 4: 4096 
+Allocating Octree with 4681 nodes in 5 levels
 [DEBUG] Shader './assets/shader/VoxelConeTracing/voxelizeVert.shader' compiled
 [DEBUG] Shader './assets/shader/VoxelConeTracing/voxelizeGeom.shader' compiled
 [DEBUG] Shader './assets/shader/VoxelConeTracing/voxelizeFrag.shader' compiled
@@ -43,15 +49,4 @@ Allocating Octree with 4681 nodes in 6 levels
 [ERROR] Uniform 'fFar' not found in shader 'octreeVis shader'
 [ERROR] Uniform 'voxelFragmentListPosition' not found in shader 'octreeVis shader'
 [ERROR] Uniform 'voxel_num' not found in shader 'octreeVis shader'
-[DEBUG] Shader './assets/shader/ObFlagVert.shader' compiled
-[DEBUG] Program '' compiled
-	Uniform 'voxelGridResolution' at location 0
-	Uniform 'nodePool' at location 1
-	Uniform 'voxelFragmentListPosition' at location 2
-[DEBUG] Shader './assets/shader/ObAllocateVert.shader' compiled
-[DEBUG] Program '' compiled
-	Uniform 'nextFreeAddress' at location -1
-	Uniform 'nodePool' at location 1
-[ERROR] Uniform 'voxelFragmentListColor' not found in shader 'ObAllocate shader'
-[ERROR] Uniform 'voxelFragmentListPosition' not found in shader 'ObAllocate shader'
-[ERROR] Uniform 'voxel_num' not found in shader 'ObAllocate shader'
+543848 543848 0 0 

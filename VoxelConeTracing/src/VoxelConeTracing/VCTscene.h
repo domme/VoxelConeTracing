@@ -99,10 +99,12 @@ public:
   inline kore::IndexedBuffer* getAllocIndCmdBufForLevel(const uint level) 
   { return &_vAllocIndCmdBufs[level];}
 
-  inline kore::IndexedBuffer* getAcNodePoolAlloc() {return &_acNodePoolAlloc;}
+  inline kore::IndexedBuffer* getAcNodePoolNextFree() {return &_acNodePoolNextFree;}
 
-  inline kore::ShaderData* getShdAcNodePoolAlloc()
-  {return &_shdAcNodePoolAlloc;}
+  inline kore::ShaderData* getShdAcNodePoolNextFree()
+  {return &_shdAcNodePoolNextFree;}
+
+  inline uint getNumLevels() {return _numLevels;};
 
 private:
   kore::Camera* _camera;
@@ -121,8 +123,8 @@ private:
   kore::IndexedBuffer _acVoxelIndex;
   kore::ShaderData _shdAcVoxelIndex;
 
-  kore::IndexedBuffer _acNodePoolAlloc;
-  kore::ShaderData _shdAcNodePoolAlloc;
+  kore::IndexedBuffer _acNodePoolNextFree;
+  kore::ShaderData _shdAcNodePoolNextFree;
 
   kore::TextureBuffer _fragListIndirectCmdBuf;
   kore::STextureInfo _fragListIcbTexInfos;
@@ -138,6 +140,7 @@ private:
   kore::SceneNode* _voxelGridNode;
   kore::Texture _voxelTex;
   GLuint _tex3DclearPBO;
+  uint _numLevels;
 
   void clearTex3D(kore::Texture* tex);
   void initTex3D(kore::Texture* tex, const ETex3DContent texContent);

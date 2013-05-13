@@ -53,6 +53,7 @@
 #include "KoRE/Passes/NodePass.h"
 #include "KoRE/Events.h"
 #include "KoRE/TextureSampler.h"
+#include "KoRE/Operations/Operations.h"
 
 #include "VoxelConeTracing/FullscreenQuad.h"
 #include "VoxelConeTracing/Cube.h"
@@ -69,6 +70,8 @@
 #include "vsDebugLib.h"
 #include "Octree Building/ModifyIndirectBufferPass.h"
 
+
+
 static const uint screen_width = 1280;
 static const uint screen_height = 720;
 
@@ -78,6 +81,14 @@ static kore::Camera* _pCamera = NULL;
 static kore::SceneNode* _rotationNode = NULL;
 
 static VCTscene _vctScene;
+
+static ObAllocatePass* _obAllocatePass = NULL;
+static uint _numLevels = 0;
+
+void changeAllocPassLevel() {
+  static uint currLevel = 0;
+  _obAllocatePass->setLevel((currLevel + 1) % _numLevels);
+}
 
 void setup() {
   using namespace kore;
@@ -112,21 +123,31 @@ void setup() {
   
   _vctScene.init(params, renderNodes, _pCamera);
  
-
+  // Prepare render algorithm
   backBufferStage->addProgramPass(new VoxelizePass(&_vctScene));
-  //backBufferStage->addProgramPass(new RayCastingPass(&_vctScene));
-  //backBufferStage->addProgramPass(new OctreeVisPass(&_vctScene));
-  backBufferStage->addProgramPass(new ModifyIndirectBufferPass(_vctScene.getShdFragListIndCmdBuf(),_vctScene.getShdAcVoxelIndex(),&_vctScene));
-  backBufferStage->addProgramPass(new OctreeVisPass(&_vctScene));
-  //backBufferStage->addProgramPass();
+  backBufferStage->addProgramPass(new ModifyIndirectBufferPass(
+                                  _vctScene.getShdFragListIndCmdBuf(),
+                                  _vctScene.getShdAcVoxelIndex(),&_vctScene));
+
+  _numLevels = _vctScene.getNumLevels();
 
   ObFlagPass* obFlagPass = new ObFlagPass(&_vctScene);
-  delete obFlagPass;
+  backBufferStage->addProgramPass(obFlagPass);
+  //_obAllocatePass = new ObAllocatePass(&_vctScene, 0);
 
-  ObAllocatePass* obAllocPass = new ObAllocatePass(&_vctScene);
-  delete obAllocPass;
-  
+/*
+  for (uint iLevel = 0; iLevel < _numLevels; ++iLevel) {
+     backBufferStage->addProgramPass(obFlagPass);
+     //backBufferStage->addProgramPass(_obAllocatePass);
+     backBufferStage->addFinishOperation(
+       new kore::FunctionOp(std::bind(&changeAllocPassLevel)));
+  }
+*/
+
+  backBufferStage->addProgramPass(new OctreeVisPass(&_vctScene));
+
   RenderManager::getInstance()->addFramebufferStage(backBufferStage);
+  //////////////////////////////////////////////////////////////////////////
 }
 
 void shutdown(){
@@ -215,6 +236,14 @@ int main(void) {
   int oldMouseX = 0;
   int oldMouseY = 0;
   glfwGetMousePos(&oldMouseX,&oldMouseY);
+
+  kore::SceneManager::getInstance()->update();
+  kore::GLerror::gl_ErrorCheckStart();
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT |GL_STENCIL_BUFFER_BIT);
+  kore::RenderManager::getInstance()->renderFrame();
+
+  glfwSwapBuffers();
+  kore::GLerror::gl_ErrorCheckFinish("Main Loop");
     
   // Main loop
   while (running) {
@@ -261,12 +290,13 @@ int main(void) {
       oldMouseY = mouseY;
     }
 
-    kore::GLerror::gl_ErrorCheckStart();
+    /*kore::GLerror::gl_ErrorCheckStart();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT |GL_STENCIL_BUFFER_BIT);
     kore::RenderManager::getInstance()->renderFrame();
 
+    kore::GLerror::gl_ErrorCheckFinish("Main Loop"); */
+
     glfwSwapBuffers();
-    kore::GLerror::gl_ErrorCheckFinish("Main Loop");
 
     // Check if ESC key was pressed or window was closed
     running = !glfwGetKey(GLFW_KEY_ESC) && glfwGetWindowParam(GLFW_OPENED);
