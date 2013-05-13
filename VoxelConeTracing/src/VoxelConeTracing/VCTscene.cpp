@@ -124,7 +124,7 @@ void VCTscene::initIndirectCommandBufs() {
   kore::Log::getInstance()->write("[DEBUG] number of levels: %u", numLevels);
   for (uint iLevel = 0; iLevel < numLevels; ++iLevel) {
     uint numVoxelsOnLevel = pow(8,iLevel);
-    kore::Log::getInstance()->write("[DEBUG] Number of Levels: %u", numLevels);     kore::Log::getInstance()->write("[DEBUG] number of Vo of levels: %u", numLevels);
+    kore::Log::getInstance()->write("[DEBUG] number of voxels on level %u: %u", iLevel, numVoxelsOnLevel);
     SDrawArraysIndirectCommand cmd;
     cmd.numVertices = numVoxelsOnLevel;
     cmd.numPrimitives = numVoxelsOnLevel;
@@ -300,6 +300,9 @@ void VCTscene::initNodePool() {
 
 
   // Create node pool allocation AC
-  uint allocAcValue = 1;  // This AC stores the value 
- _acNodePoolAlloc.create(GL_ATOMIC_COUNTER_BUFFER, sizeof(GL_UNSIGNED_INT), )
+
+  // This AC stores the value of the next free node address,
+  // so it has to be initialized to 1
+  uint allocAcValue = 1;
+  _acNodePoolAlloc.create(GL_ATOMIC_COUNTER_BUFFER, sizeof(GL_UNSIGNED_INT), & )
 }
