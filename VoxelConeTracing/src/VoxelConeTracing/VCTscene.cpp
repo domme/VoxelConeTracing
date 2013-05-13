@@ -30,6 +30,7 @@
 #include "KoRE/ResourceManager.h"
 #include "KoRE/GLerror.h"
 #include "KoRE/Components/TexturesComponent.h"
+#include "KoRE/Log.h"
 
 
 VCTscene::VCTscene() :
@@ -63,7 +64,7 @@ void VCTscene::init(const SVCTparameters& params,
   
   initTex3D(&_voxelTex, BLACK);
   initVoxelFragList();
-  initIndirectCommandBuf();
+  initIndirectCommandBufs();
   initNodePool();
 
   _voxelGridNode = new kore::SceneNode;
@@ -91,7 +92,9 @@ void VCTscene::init(const SVCTparameters& params,
   _shdAcVoxelIndex.data = &_acVoxelIndex;
 }
 
-void VCTscene::initIndirectCommandBuf() {
+void VCTscene::initIndirectCommandBufs() {
+  
+  // Voxel fragment list indirect command buf
   SDrawArraysIndirectCommand cmd;
   cmd.numVertices = 1;
   cmd.numPrimitives = 1;
@@ -103,15 +106,38 @@ void VCTscene::initIndirectCommandBuf() {
   props.size = sizeof(unsigned int) * 4;
   props.usageHint = GL_DYNAMIC_COPY;
 
-  _indirectCommandBuf.create(props, "IndirectCommandBuf",&cmd);
+  _fragListIndirectCmdBuf.create(props, "IndirectCommandBuf",&cmd);
   
-  _icbTexInfos.internalFormat = GL_R32UI;
-  _icbTexInfos.texLocation = _indirectCommandBuf.getTexHandle();
-  _icbTexInfos.texTarget = GL_TEXTURE_BUFFER;
+  _fragListIcbTexInfos.internalFormat = GL_R32UI;
+  _fragListIcbTexInfos.texLocation = _fragListIndirectCmdBuf.getTexHandle();
+  _fragListIcbTexInfos.texTarget = GL_TEXTURE_BUFFER;
 
-  _shdIndirectCommandBuf.name = "IndirectCommandBuf";
-  _shdIndirectCommandBuf.type = GL_TEXTURE_BUFFER;
-  _shdIndirectCommandBuf.data = &_icbTexInfos;
+  _shdFragListIndirectCmdBuf.name = "IndirectCommandBuf";
+  _shdFragListIndirectCmdBuf.type = GL_TEXTURE_BUFFER;
+  _shdFragListIndirectCmdBuf.data = &_fragListIcbTexInfos;
+  //////////////////////////////////////////////////////////////////////////
+
+  // Allocation indirect command bufs for each octree level
+  _vAllocIndCmdBufs.clear();
+                  //Level based on number of Voxels (8^level = number of leaves)  
+  uint numLevels = ceil(log(_voxelGridResolution*_voxelGridResolution*_voxelGridResolution)/log(8));
+  kore::Log::getInstance()->write("[DEBUG] number of levels: %u", numLevels);
+  for (uint iLevel = 0; iLevel < numLevels; ++iLevel) {
+    uint numVoxelsOnLevel = pow(8,iLevel);
+    kore::Log::getInstance()->write("[DEBUG] Number of Levels: %u", numLevels);     kore::Log::getInstance()->write("[DEBUG] number of Vo of levels: %u", numLevels);
+    SDrawArraysIndirectCommand cmd;
+    cmd.numVertices = numVoxelsOnLevel;
+    cmd.numPrimitives = numVoxelsOnLevel;
+    cmd.firstVertexIdx = 0;
+    cmd.baseInstanceIdx = 0;
+
+    _vAllocIndCmdBufs.push_back(kore::IndexedBuffer());
+    _vAllocIndCmdBufs[iLevel].create(GL_DRAW_INDIRECT_BUFFER,
+                                     sizeof(SDrawArraysIndirectCommand),
+                                     GL_STATIC_DRAW,
+                                     &cmd,
+                                     "allocIndCmdBuf");
+  }
 }
 
 void VCTscene::initVoxelFragList() {
@@ -271,4 +297,9 @@ void VCTscene::initNodePool() {
     ptr[i] = 0U;
   }
   glUnmapBuffer(GL_TEXTURE_BUFFER);
+
+
+  // Create node pool allocation AC
+  uint allocAcValue = 1;  // This AC stores the value 
+ _acNodePoolAlloc.create(GL_ATOMIC_COUNTER_BUFFER, sizeof(GL_UNSIGNED_INT), )
 }

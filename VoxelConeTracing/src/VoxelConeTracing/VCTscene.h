@@ -74,9 +74,6 @@ public:
   inline kore::ShaderData* getShdVoxelFragList(EVoxelAttributes type)
                            {return &_shdVoxelFragLists[type];}
 
-  inline kore::ShaderData* getShdIndirectCommandBuf()
-                           {return &_shdIndirectCommandBuf;}
-
   inline kore::ShaderData* getShdNodePool()
                            {return &_shdNodePool;}
 
@@ -86,8 +83,11 @@ public:
   inline kore::TextureBuffer* getVoxelFragList(EVoxelAttributes type) 
     { return &_voxelFragLists[type]; }
 
-  inline kore::TextureBuffer* getIndirectCommandBuff()
-  { return &_indirectCommandBuf; }
+  inline kore::TextureBuffer* getFragListIndCmdBuf()
+  { return &_fragListIndirectCmdBuf; }
+
+  inline kore::ShaderData* getShdFragListIndCmdBuf()
+  {return &_shdFragListIndirectCmdBuf;}
 
   inline kore::SceneNode* getVoxelGridNode() {return _voxelGridNode;}
 
@@ -96,7 +96,13 @@ public:
   inline kore::IndexedBuffer* getAcVoxelIndex() {return &_acVoxelIndex;}
   inline kore::ShaderData* getShdAcVoxelIndex() {return &_shdAcVoxelIndex;}
 
-  
+  inline kore::IndexedBuffer* getAllocIndCmdBufForLevel(const uint level) 
+  { return &_vAllocIndCmdBufs[level];}
+
+  inline kore::IndexedBuffer* getAcNodePoolAlloc() {return &_acNodePoolAlloc;}
+
+  inline kore::ShaderData* getShdAcNodePoolAlloc()
+  {return &_shdAcNodePoolAlloc;}
 
 private:
   kore::Camera* _camera;
@@ -115,9 +121,14 @@ private:
   kore::IndexedBuffer _acVoxelIndex;
   kore::ShaderData _shdAcVoxelIndex;
 
-  kore::TextureBuffer _indirectCommandBuf;
-  kore::STextureInfo _icbTexInfos;
-  kore::ShaderData _shdIndirectCommandBuf;
+  kore::IndexedBuffer _acNodePoolAlloc;
+  kore::ShaderData _shdAcNodePoolAlloc;
+
+  kore::TextureBuffer _fragListIndirectCmdBuf;
+  kore::STextureInfo _fragListIcbTexInfos;
+  kore::ShaderData _shdFragListIndirectCmdBuf;
+
+  std::vector<kore::IndexedBuffer> _vAllocIndCmdBufs;
 
   kore::TextureBuffer _nodePool;
   kore::STextureInfo _nodePoolTexInfo;
@@ -131,7 +142,7 @@ private:
   void clearTex3D(kore::Texture* tex);
   void initTex3D(kore::Texture* tex, const ETex3DContent texContent);
   void initVoxelFragList();
-  void initIndirectCommandBuf();
+  void initIndirectCommandBufs();
   void initNodePool();
 
   //////////////////////////////////////////////////////////////////////////

@@ -52,7 +52,7 @@ ObFlagPass::ObFlagPass(VCTscene* vctScene) {
 
   addStartupOperation(
     new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
-    vctScene->getIndirectCommandBuff()->getBufferHandle()));
+    vctScene->getFragListIndCmdBuf()->getBufferHandle()));
 
   addStartupOperation(new BindImageTexture(
                       vctScene->getShdVoxelFragList(VOXELATT_POSITION),
