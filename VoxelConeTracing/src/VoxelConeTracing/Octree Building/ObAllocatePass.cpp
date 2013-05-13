@@ -43,11 +43,11 @@ ObAllocatePass::ObAllocatePass(VCTscene* vctScene) {
   _resMgr = ResourceManager::getInstance();
 
   _allocateShader
-     .loadShader("./assets/shader/ObFlagVert.shader",
+     .loadShader("./assets/shader/ObAllocateVert.shader",
                  GL_VERTEX_SHADER);
-  
+
   _allocateShader.init();
-  _allocateShader.setName("ObFlag shader");
+  _allocateShader.setName("ObAllocate shader");
   this->setShaderProgram(&_allocateShader);
   
   addStartupOperation(new BindImageTexture(

@@ -122,6 +122,9 @@ void setup() {
 
   ObFlagPass* obFlagPass = new ObFlagPass(&_vctScene);
   delete obFlagPass;
+
+  ObAllocatePass* obAllocPass = new ObAllocatePass(&_vctScene);
+  delete obAllocPass;
   
   RenderManager::getInstance()->addFramebufferStage(backBufferStage);
 }
