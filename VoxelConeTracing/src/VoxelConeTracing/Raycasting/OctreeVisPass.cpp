@@ -161,7 +161,7 @@ void OctreeVisPass::debugVoxelFragmentList() {
 
 void OctreeVisPass::debugIndirectCmdBuff(){
   
-  _renderMgr->bindBuffer(GL_TEXTURE_BUFFER, _vctScene->getIndirectCommandBuff()->getBufferHandle());
+  _renderMgr->bindBuffer(GL_TEXTURE_BUFFER, _vctScene->getFragListIndCmdBuf()->getBufferHandle());
 
   const GLuint* ptr = (const GLuint*) glMapBuffer(GL_TEXTURE_BUFFER, GL_READ_ONLY);
 

@@ -116,7 +116,7 @@ void setup() {
   backBufferStage->addProgramPass(new VoxelizePass(&_vctScene));
   //backBufferStage->addProgramPass(new RayCastingPass(&_vctScene));
   //backBufferStage->addProgramPass(new OctreeVisPass(&_vctScene));
-  backBufferStage->addProgramPass(new ModifyIndirectBufferPass(_vctScene.getShdIndirectCommandBuf(),_vctScene.getShdAcVoxelIndex(),&_vctScene));
+  backBufferStage->addProgramPass(new ModifyIndirectBufferPass(_vctScene.getShdFragListIndCmdBuf(),_vctScene.getShdAcVoxelIndex(),&_vctScene));
   backBufferStage->addProgramPass(new OctreeVisPass(&_vctScene));
   //backBufferStage->addProgramPass();
 
