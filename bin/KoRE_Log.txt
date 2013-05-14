@@ -1,4 +1,4 @@
-KoRE Log - Mon May 13 17:25:42 2013
+KoRE Log - Tue May 14 22:24:37 2013
 
 [DEBUG] added Framebuffer 'BACKBUFFER'
 Render Device: AMD Radeon HD 7800 Series
@@ -39,6 +39,11 @@ Allocating Octree with 4681 nodes in 5 levels
 [DEBUG] Program '' compiled
 	Uniform 'numVoxels' at location -1
 	Uniform 'indirectCommandBuf' at location 1
+[DEBUG] Shader './assets/shader/ObFlagVert.shader' compiled
+[DEBUG] Program '' compiled
+	Uniform 'nodePool' at location 0
+[ERROR] Uniform 'voxelFragmentListPosition' not found in shader 'ObFlag shader'
+[ERROR] Uniform 'voxelGridResolution' not found in shader 'ObFlag shader'
 [DEBUG] Shader './assets/shader/VoxelConeTracing/raycastVert.shader' compiled
 [DEBUG] Shader './assets/shader/OctreeVisFrag.shader' compiled
 [DEBUG] Program '' compiled
@@ -49,4 +54,7 @@ Allocating Octree with 4681 nodes in 5 levels
 [ERROR] Uniform 'fFar' not found in shader 'octreeVis shader'
 [ERROR] Uniform 'voxelFragmentListPosition' not found in shader 'octreeVis shader'
 [ERROR] Uniform 'voxel_num' not found in shader 'octreeVis shader'
+VoxelFragList indirectCmdBuf contents:
 543848 543848 0 0 
+NodePool contents:
+0 0 0 0 0 0 0 0 0 0 

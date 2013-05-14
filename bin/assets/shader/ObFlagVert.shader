@@ -54,7 +54,7 @@ uvec3 uintXYZ10ToVec3(uint val) {
 
 void flagNode(in uvec2 node, in uint address) {
   node.x = (0x00000001 << 31) | (0x7FFFFFFF & node.x); 
-  imageStore(nodePool, int(address), node.xyxy);
+  imageStore(nodePool, int(address), uvec4(node.xyxy));
 }
 
 uint getNext(in uvec2 nodeValue) {
@@ -70,7 +70,13 @@ uint sizeOnLevel(in uint level) {
 }
 
 void main() {
+  //uint voxelPosU = imageLoad(voxelFragmentListPosition, int(gl_VertexID)).x;
+  imageStore(nodePool, 0, uvec4(0));
   
+}  // main
+
+
+  /*
   uint voxelPosU = imageLoad(voxelFragmentListPosition, gl_VertexID).x;
   uvec3 voxelPos = uintXYZ10ToVec3(voxelPosU);
   uvec2 node = imageLoad(nodePool, 0).xy;
@@ -107,4 +113,5 @@ void main() {
         } // if
       } // for
     } // while 
-  }  // main
+
+  */

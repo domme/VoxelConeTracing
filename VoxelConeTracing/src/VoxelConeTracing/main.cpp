@@ -37,7 +37,7 @@
 #include <vector>
 
 
-#include "KoRE/GLerror.h"
+#include "KoRE/GLerror.h"O
 #include "KoRE/ShaderProgram.h"
 #include "KoRE/Components/MeshComponent.h"
 #include "KoRE/Components/TexturesComponent.h"

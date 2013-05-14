@@ -32,4 +32,7 @@ void main() {
   uint num = atomicCounter(numVoxels);
   imageStore(indirectCommandBuf, 0, uvec4(num));
   imageStore(indirectCommandBuf, 1, uvec4(num));
+
+  //imageStore(indirectCommandBuf, 0, uvec4(10));
+  //imageStore(indirectCommandBuf, 1, uvec4(10));
 }

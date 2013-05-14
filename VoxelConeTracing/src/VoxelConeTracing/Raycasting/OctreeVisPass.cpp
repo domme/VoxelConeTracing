@@ -126,6 +126,9 @@ OctreeVisPass::OctreeVisPass(VCTscene* vctScene) {
  nodePass->addOperation(
           new FunctionOp(std::bind(&OctreeVisPass::debugIndirectCmdBuff, this)));
 
+ nodePass->addOperation(
+          new FunctionOp(std::bind(&OctreeVisPass::debugNodePool, this)));
+
   nodePass->addOperation(new RenderMesh(fsqMeshComponent));
 }
 
@@ -164,10 +167,23 @@ void OctreeVisPass::debugIndirectCmdBuff(){
   _renderMgr->bindBuffer(GL_TEXTURE_BUFFER, _vctScene->getFragListIndCmdBuf()->getBufferHandle());
 
   const GLuint* ptr = (const GLuint*) glMapBuffer(GL_TEXTURE_BUFFER, GL_READ_ONLY);
-
+  kore::Log::getInstance()->write("VoxelFragList indirectCmdBuf contents:\n");
    for (uint i = 0; i < 4; ++i) {
     kore::Log::getInstance()->write("%u ", ptr[i]);
   }
+   kore::Log::getInstance()->write("\n");
 
+  glUnmapBuffer(GL_TEXTURE_BUFFER);
+}
+
+void OctreeVisPass::debugNodePool() {
+  _renderMgr->bindBuffer(GL_TEXTURE_BUFFER, _vctScene->getNodePool()->getBufferHandle());
+  
+  const SNode* nodePtr = (const SNode*) glMapBuffer(GL_TEXTURE_BUFFER, GL_READ_ONLY);
+  kore::Log::getInstance()->write("NodePool contents:\n");
+  for (uint i = 0; i < /*_vctScene->getNumNodes()*/ 10; ++i) {
+    kore::Log::getInstance()->write("%u ", nodePtr[i].next);
+  }
+  kore::Log::getInstance()->write("\n");
   glUnmapBuffer(GL_TEXTURE_BUFFER);
 }

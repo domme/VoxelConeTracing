@@ -37,7 +37,9 @@ VCTscene::VCTscene() :
   _camera(NULL),
   _tex3DclearPBO(KORE_GLUINT_HANDLE_INVALID),
   _voxelGridResolution(0),
-  _voxelGridSideLengths(50, 50, 50) {
+  _voxelGridSideLengths(50, 50, 50),
+  _numNodes(0),
+  _numLevels(0) {
 }
 
 
@@ -106,8 +108,8 @@ void VCTscene::initIndirectCommandBufs() {
 
   kore::STextureBufferProperties props;
   props.internalFormat = GL_R32UI;
-  props.size = sizeof(unsigned int) * 4;
-  props.usageHint = GL_DYNAMIC_COPY;
+  props.size = sizeof(SDrawArraysIndirectCommand);
+  props.usageHint = GL_STATIC_DRAW;
 
   _fragListIndirectCmdBuf.create(props, "IndirectCommandBuf",&cmd);
   
@@ -263,19 +265,19 @@ void VCTscene::initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
 void VCTscene::initNodePool() {
   float fnumNodesLevel = glm::pow(static_cast<float>(_voxelGridResolution), 3.0f);
   uint numNodesLevel = static_cast<uint>(glm::ceil(fnumNodesLevel));
-  uint numNodes = numNodesLevel;
+  _numNodes = numNodesLevel;
   
   while (numNodesLevel) {
     numNodesLevel /= 8;
-    numNodes += numNodesLevel;
+    _numNodes += numNodesLevel;
   }
 
   kore::Log::getInstance()->write("Allocating Octree with %u nodes in %u levels\n" ,
-                                  numNodes, _numLevels);
+                                  _numNodes, _numLevels);
   
   kore::STextureBufferProperties props;
   props.internalFormat = GL_RG32UI;
-  props.size = 2 * sizeof(uint) * numNodes;
+  props.size = 2 * sizeof(uint) * _numNodes;
   props.usageHint = GL_DYNAMIC_COPY;
   
   _nodePool.create(props, "NodePool");
@@ -293,7 +295,7 @@ void VCTscene::initNodePool() {
   renderMgr->bindBuffer(GL_TEXTURE_BUFFER, _nodePool.getBufferHandle());
   uint* ptr = (uint*) glMapBufferRange(GL_TEXTURE_BUFFER, 0, props.size,
                                        GL_READ_WRITE);
-  for (uint i = 0; i < numNodes * 2; ++i) {
+  for (uint i = 0; i < _numNodes * 2; ++i) {
     ptr[i] = 0U;
   }
   glUnmapBuffer(GL_TEXTURE_BUFFER);

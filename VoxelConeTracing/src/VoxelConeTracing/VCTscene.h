@@ -53,6 +53,7 @@ enum EVoxelAttributes {
 };
 
 struct SNode {
+  uint next;
   uint color;
 };
 
@@ -76,6 +77,8 @@ public:
 
   inline kore::ShaderData* getShdNodePool()
                            {return &_shdNodePool;}
+
+  inline kore::TextureBuffer* getNodePool() {return &_nodePool;}
 
   inline kore::Texture* getVoxelTex()
                           {return &_voxelTex;}
@@ -104,7 +107,8 @@ public:
   inline kore::ShaderData* getShdAcNodePoolNextFree()
   {return &_shdAcNodePoolNextFree;}
 
-  inline uint getNumLevels() {return _numLevels;};
+  inline uint getNumLevels() {return _numLevels;}
+  inline uint getNumNodes() {return _numNodes;}
 
 private:
   kore::Camera* _camera;
@@ -141,6 +145,7 @@ private:
   kore::Texture _voxelTex;
   GLuint _tex3DclearPBO;
   uint _numLevels;
+  uint _numNodes;  // Number of all nodes in the nodepool
 
   void clearTex3D(kore::Texture* tex);
   void initTex3D(kore::Texture* tex, const ETex3DContent texContent);
