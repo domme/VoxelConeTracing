@@ -181,7 +181,7 @@ void OctreeVisPass::debugNodePool() {
   
   const SNode* nodePtr = (const SNode*) glMapBuffer(GL_TEXTURE_BUFFER, GL_READ_ONLY);
   kore::Log::getInstance()->write("NodePool contents:\n");
-  for (uint i = 0; i < /*_vctScene->getNumNodes()*/ 10; ++i) {
+  for (uint i = 0; i < _vctScene->getNumNodes(); ++i) {
     kore::Log::getInstance()->write("%u ", nodePtr[i].next);
   }
   kore::Log::getInstance()->write("\n");

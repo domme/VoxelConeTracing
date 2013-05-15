@@ -30,9 +30,10 @@ layout(binding = 0) uniform atomic_uint numVoxels;
 
 void main() {
   uint num = atomicCounter(numVoxels);
-  imageStore(indirectCommandBuf, 0, uvec4(num));
-  imageStore(indirectCommandBuf, 1, uvec4(num));
+  
+  imageStore(indirectCommandBuf, 0, uvec4(num));  // Vertex-Count
+  imageStore(indirectCommandBuf, 1, uvec4(1));  // Primitive Count
 
-  //imageStore(indirectCommandBuf, 0, uvec4(10));
-  //imageStore(indirectCommandBuf, 1, uvec4(10));
+  //imageStore(indirectCommandBuf, 0, uvec4(543830));
+  //imageStore(indirectCommandBuf, 1, uvec4(543830));
 }

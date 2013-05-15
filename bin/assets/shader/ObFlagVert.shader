@@ -71,7 +71,7 @@ uint sizeOnLevel(in uint level) {
 
 void main() {
   //uint voxelPosU = imageLoad(voxelFragmentListPosition, int(gl_VertexID)).x;
-  imageStore(nodePool, 0, uvec4(0));
+  imageStore(nodePool, gl_VertexID, uvec4(gl_VertexID));
   
 }  // main
 
