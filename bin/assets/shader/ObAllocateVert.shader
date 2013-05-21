@@ -34,7 +34,7 @@ const uint NODE_MASK_TAG_STATIC = (0x00000003 << 30);
 const uint NODE_NOT_FOUND = 0xFFFFFFFF;
 
 bool isFlagged(in uvec2 node) {
-  return (node.x & (0x00000001 << 31)) != 0x00000000;
+  return (node.x & NODE_MASK_TAG) != 0U;
 }
 
 void allocChildBrickAndUnflag(uvec2 node, uint nodeAddress) {
@@ -67,7 +67,7 @@ uint findNode(in uint idx, in uint nextFree) {
       return NODE_NOT_FOUND;
     }
 
-    return nextFree - idx + 1;
+    return nextFree - (idx + 1);
 }  // method
 
 void main() {
@@ -75,6 +75,10 @@ void main() {
   uint nodeAddress = findNode(uint(gl_VertexID), nextFree);
 
   if (nodeAddress == NODE_NOT_FOUND) {
+    // DEBUG:
+    //imageStore(nodePool, 0, uvec4(gl_VertexID));
+    ////////////////////////////////////////////////
+
     return;
   }
   

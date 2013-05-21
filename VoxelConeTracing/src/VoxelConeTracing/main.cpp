@@ -37,7 +37,7 @@
 #include <vector>
 
 
-#include "KoRE/GLerror.h"O
+#include "KoRE/GLerror.h"
 #include "KoRE/ShaderProgram.h"
 #include "KoRE/Components/MeshComponent.h"
 #include "KoRE/Components/TexturesComponent.h"
@@ -87,7 +87,7 @@ static uint _numLevels = 0;
 
 void changeAllocPassLevel() {
   static uint currLevel = 0;
-  _obAllocatePass->setLevel((currLevel + 1) % _numLevels);
+  _obAllocatePass->setLevel((currLevel++) % _numLevels);
 }
 
 void setup() {
@@ -131,19 +131,25 @@ void setup() {
 
   _numLevels = _vctScene.getNumLevels();
 
-  ObFlagPass* obFlagPass = new ObFlagPass(&_vctScene);
-  backBufferStage->addProgramPass(obFlagPass);
+  //ObFlagPass* obFlagPass = new ObFlagPass(&_vctScene);
   //_obAllocatePass = new ObAllocatePass(&_vctScene, 0);
 
-/*
-  for (uint iLevel = 0; iLevel < _numLevels; ++iLevel) {
-     backBufferStage->addProgramPass(obFlagPass);
-     //backBufferStage->addProgramPass(_obAllocatePass);
-     backBufferStage->addFinishOperation(
-       new kore::FunctionOp(std::bind(&changeAllocPassLevel)));
-  }
-*/
 
+  /*
+  for (uint iLevel = 0; iLevel < _numLevels; ++iLevel) {
+    backBufferStage->addProgramPass(new ObFlagPass(&_vctScene));
+    backBufferStage->addProgramPass(new ObAllocatePass(&_vctScene, iLevel));
+  }
+  */
+
+  // 1
+  backBufferStage->addProgramPass(new ObFlagPass(&_vctScene));
+  backBufferStage->addProgramPass(new ObAllocatePass(&_vctScene, 0));
+
+  // 2 - only flag
+  backBufferStage->addProgramPass(new ObFlagPass(&_vctScene));
+  
+  
   backBufferStage->addProgramPass(new OctreeVisPass(&_vctScene));
 
   RenderManager::getInstance()->addFramebufferStage(backBufferStage);

@@ -123,15 +123,33 @@ OctreeVisPass::OctreeVisPass(VCTscene* vctScene) {
                         vctScene->getShdAcVoxelIndex(),
                         _visShader.getUniform("voxel_num")));
 
+  //nodePass->addOperation(
+    //new FunctionOp(std::bind(&OctreeVisPass::debugVoxelFragmentList, this)));
+
  nodePass->addOperation(
           new FunctionOp(std::bind(&OctreeVisPass::debugIndirectCmdBuff, this)));
 
  nodePass->addOperation(
           new FunctionOp(std::bind(&OctreeVisPass::debugNodePool, this)));
 
+ nodePass->addOperation(
+          new FunctionOp(std::bind(&OctreeVisPass::debugNextFreeAC, this)));
+
   nodePass->addOperation(new RenderMesh(fsqMeshComponent));
 }
 
+
+void OctreeVisPass::debugNextFreeAC() {
+  _renderMgr->bindBufferBase(GL_ATOMIC_COUNTER_BUFFER,
+    0,
+    _vctScene->getAcNodePoolNextFree()->getHandle());
+
+  GLuint* ptr = (GLuint*)glMapBufferRange(GL_ATOMIC_COUNTER_BUFFER, 0,
+    sizeof(GLuint),
+    GL_MAP_READ_BIT);
+  kore::Log::getInstance()->write("Next free nodepool address: %i \n", *ptr);
+  glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
+}
 
 void OctreeVisPass::debugVoxelIndexAC() {
   _renderMgr->bindBufferBase(GL_ATOMIC_COUNTER_BUFFER,
@@ -147,14 +165,14 @@ void OctreeVisPass::debugVoxelIndexAC() {
 
 void OctreeVisPass::debugVoxelFragmentList() {
   uint byteSize =
-    _vctScene->getVoxelFragList(VOXELATT_COLOR)->getProperties().size;
+    _vctScene->getVoxelFragList(VOXELATT_POSITION)->getProperties().size;
     
-  _renderMgr->bindBuffer(GL_TEXTURE_BUFFER, _vctScene->getVoxelFragList(VOXELATT_COLOR)->getBufferHandle());
+  _renderMgr->bindBuffer(GL_TEXTURE_BUFFER, _vctScene->getVoxelFragList(VOXELATT_POSITION)->getBufferHandle());
 
   const GLuint* ptr = (const GLuint*) glMapBuffer(GL_TEXTURE_BUFFER, GL_READ_ONLY);
 
   uint numEntries = byteSize / sizeof(uint);
-  kore::Log::getInstance()->write("\nVoxelFragmentList Color-contents (%i voxels):", numEntries);
+  kore::Log::getInstance()->write("\nVoxelFragmentList Position-contents (%i voxels):", numEntries);
   for (uint i = 0; i < numEntries; ++i) {
     kore::Log::getInstance()->write("%u ", ptr[i]);
   }
@@ -177,12 +195,18 @@ void OctreeVisPass::debugIndirectCmdBuff(){
 }
 
 void OctreeVisPass::debugNodePool() {
+  const uint NODE_MASK_NEXT = 0x3FFFFFFF;
+  const uint NODE_MASK_TAG = (0x00000001 << 31);
+  
   _renderMgr->bindBuffer(GL_TEXTURE_BUFFER, _vctScene->getNodePool()->getBufferHandle());
   
   const SNode* nodePtr = (const SNode*) glMapBuffer(GL_TEXTURE_BUFFER, GL_READ_ONLY);
   kore::Log::getInstance()->write("NodePool contents:\n");
-  for (uint i = 0; i < _vctScene->getNumNodes(); ++i) {
-    kore::Log::getInstance()->write("%u ", nodePtr[i].next);
+  for (uint i = 0; i < /*_vctScene->getNumNodes(); */ 100; ++i) {
+    uint next = nodePtr[i].next;
+    bool flagged = next & NODE_MASK_TAG;
+    uint nextValue = next & NODE_MASK_NEXT;
+    kore::Log::getInstance()->write("%u \t (%u | %u)\n", i, flagged, nextValue);
   }
   kore::Log::getInstance()->write("\n");
   glUnmapBuffer(GL_TEXTURE_BUFFER);

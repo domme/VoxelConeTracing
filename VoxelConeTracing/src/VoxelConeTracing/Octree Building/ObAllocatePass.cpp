@@ -55,6 +55,8 @@ ObAllocatePass::ObAllocatePass(VCTscene* vctScene, uint level) {
                          vctScene->getAllocIndCmdBufForLevel(level)->getHandle());
   
   addStartupOperation(_bindIndCmdBufOp);
+
+  addStartupOperation(new MemoryBarrierOp(GL_ALL_BARRIER_BITS));
   
   addStartupOperation(new BindImageTexture(
                       vctScene->getShdNodePool(),

@@ -60,17 +60,12 @@ uint convVec4ToRGBA8(vec4 val) {
             |(uint(val.x) & 0x000000FF);
 }
 
-uint convVec3ToXYZ10(vec3 val) {
+uint convVec3ToXYZ10(uvec3 val) {
     return (uint(val.z) & 0x000003FF)   << 20U
             |(uint(val.y) & 0x000003FF) << 10U 
             |(uint(val.x) & 0x000003FF);
 }
 
-uint uvec3_xyz10(in uvec3 val) {
-   return (uint(val.z) & 0x000003FF) << 20U
-          |(uint(val.y) & 0x000003FF) << 10U 
-          |(uint(val.x) & 0x000003FF);
-}
 
 // In.projAxisIdx keys into this array..
 const vec3 worldAxes[3] = vec3[3]( vec3(1.0, 0.0, 0.0),
@@ -91,7 +86,7 @@ void main() {
   // Store voxel-position as tex-indices
   imageStore(voxelFragmentListPosition,
              int(voxelIndex),
-             uvec4(uvec3_xyz10(baseVoxel)));
+             uvec4(convVec3ToXYZ10(baseVoxel)));
 
   imageStore(voxelFragmentListColor, int(voxelIndex), uvec4(diffColorU));
 }

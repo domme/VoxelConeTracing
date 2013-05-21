@@ -33,7 +33,4 @@ void main() {
   
   imageStore(indirectCommandBuf, 0, uvec4(num));  // Vertex-Count
   imageStore(indirectCommandBuf, 1, uvec4(1));  // Primitive Count
-
-  //imageStore(indirectCommandBuf, 0, uvec4(543830));
-  //imageStore(indirectCommandBuf, 1, uvec4(543830));
 }
