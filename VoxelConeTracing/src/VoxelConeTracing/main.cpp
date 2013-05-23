@@ -146,9 +146,12 @@ void setup() {
   backBufferStage->addProgramPass(new ObFlagPass(&_vctScene));
   backBufferStage->addProgramPass(new ObAllocatePass(&_vctScene, 0));
 
-  // 2 - only flag
+  // 2 
   backBufferStage->addProgramPass(new ObFlagPass(&_vctScene));
-  
+  backBufferStage->addProgramPass(new ObAllocatePass(&_vctScene, 1));
+
+  // 3 
+  backBufferStage->addProgramPass(new ObFlagPass(&_vctScene));
   
   backBufferStage->addProgramPass(new OctreeVisPass(&_vctScene));
 

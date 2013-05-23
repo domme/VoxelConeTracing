@@ -37,15 +37,13 @@ bool isFlagged(in uvec2 node) {
   return (node.x & NODE_MASK_TAG) != 0U;
 }
 
-void allocChildBrickAndUnflag(uvec2 node, uint nodeAddress) {
-  uint next = atomicCounter(nextFreeAddress);
+void allocChildBrickAndUnflag(in uvec2 node, in uint nodeAddress) {
 
-  // Store next free address in node's next pointer
-  node.x = (NODE_MASK_NEXT & next);       // Next bits (30)
-
-  imageStore(nodePool, int(nodeAddress), node.xyxy);
+  imageStore(nodePool, int(nodeAddress),
+   uvec4(NODE_MASK_NEXT & atomicCounterIncrement(nextFreeAddress), node.y, 0, 0));
 
   // Allocate 8 nodes
+  
   atomicCounterIncrement(nextFreeAddress);
   atomicCounterIncrement(nextFreeAddress);
   atomicCounterIncrement(nextFreeAddress);
@@ -53,7 +51,8 @@ void allocChildBrickAndUnflag(uvec2 node, uint nodeAddress) {
   atomicCounterIncrement(nextFreeAddress);
   atomicCounterIncrement(nextFreeAddress);
   atomicCounterIncrement(nextFreeAddress);
-  atomicCounterIncrement(nextFreeAddress);
+
+  memoryBarrier();
 }
 
 /*          -             // 0
@@ -75,10 +74,6 @@ void main() {
   uint nodeAddress = findNode(uint(gl_VertexID), nextFree);
 
   if (nodeAddress == NODE_NOT_FOUND) {
-    // DEBUG:
-    //imageStore(nodePool, 0, uvec4(gl_VertexID));
-    ////////////////////////////////////////////////
-
     return;
   }
   

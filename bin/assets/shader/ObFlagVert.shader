@@ -52,7 +52,7 @@ uint vec3ToUintXYZ10(uvec3 val) {
 }
 
 uvec3 uintXYZ10ToVec3(uint val) {
-    return uvec3(uint((val & 0x000003FF)), 
+    return uvec3(uint((val & 0x000003FF)),
                  uint((val & 0x000FFC00) >> 10U), 
                  uint((val & 0x3FF00000) >> 20U));
 }
@@ -89,10 +89,6 @@ void main() {
         flagNode(node, nodeAddress);
         return;
       }
-
-    // Debug
-   
-    ///
 
     sideLength = sizeOnLevel(childLevel);
     uint childStartAddress = getNext(node);
