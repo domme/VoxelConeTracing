@@ -83,14 +83,6 @@ void main() {
   uint childLevel = 1;
   uint sideLength = sizeOnLevel(childLevel);
 
-  // DEBUG: Check for 3rd child in 1st level
-  if (voxelPos.x >= 0 && voxelPos.x < 8 &&
-      voxelPos.y >= 8 && voxelPos.y < 16 &&
-      voxelPos.z >= 0 && voxelPos.z < 8) {
-    imageStore(nodePool, 20, uvec4(voxelPos.y));
-  }
-  ////////////////////////////////////////////////
-
   // Loop as long as node != voxel
   for(uint i = 0; i < 5; ++i) {
       if (nextEmpty(node)) {

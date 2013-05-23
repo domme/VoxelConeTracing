@@ -67,8 +67,7 @@ ObFlagPass::ObFlagPass(VCTscene* vctScene) {
   addStartupOperation(new BindUniform(
                       vctScene->getShdVoxelGridResolution(),
                       _flagShader.getUniform("voxelGridResolution")));
-
-
+  
   addStartupOperation(
      new kore::DrawIndirectOp(GL_POINTS, 0));
 }

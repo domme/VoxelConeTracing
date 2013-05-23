@@ -60,7 +60,7 @@ uint convVec4ToRGBA8(vec4 val) {
             |(uint(val.x) & 0x000000FF);
 }
 
-uint convVec3ToXYZ10(uvec3 val) {
+uint vec3ToUintXYZ10(uvec3 val) {
     return (uint(val.z) & 0x000003FF)   << 20U
             |(uint(val.y) & 0x000003FF) << 10U 
             |(uint(val.x) & 0x000003FF);
@@ -83,10 +83,12 @@ void main() {
   uint diffColorU = convVec4ToRGBA8(diffColor * vec4(255));  
   uint voxelIndex = atomicCounterIncrement(voxel_index);
 
+  memoryBarrier();
+
   // Store voxel-position as tex-indices
   imageStore(voxelFragmentListPosition,
              int(voxelIndex),
-             uvec4(convVec3ToXYZ10(baseVoxel)));
+             uvec4(vec3ToUintXYZ10(baseVoxel)));
 
   imageStore(voxelFragmentListColor, int(voxelIndex), uvec4(diffColorU));
 }

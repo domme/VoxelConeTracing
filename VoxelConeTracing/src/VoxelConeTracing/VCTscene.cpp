@@ -73,9 +73,9 @@ void VCTscene::init(const SVCTparameters& params,
   initNodePool();
 
   _voxelGridNode = new kore::SceneNode;
-  _voxelGridNode->scale(_voxelGridSideLengths / 2.0f, kore::SPACE_LOCAL);
   kore::SceneManager::getInstance()->
       getRootNode()->addChild(_voxelGridNode);
+  _voxelGridNode->scale(_voxelGridSideLengths / 2.0f, kore::SPACE_LOCAL);
 
   kore::TexturesComponent* texComp = new kore::TexturesComponent;
   texComp->addTexture(&_voxelTex);
@@ -151,7 +151,7 @@ void VCTscene::initVoxelFragList() {
   props.size = sizeof(unsigned int)
                * _voxelGridResolution
                * _voxelGridResolution
-               * _voxelGridResolution * 2;
+               * _voxelGridResolution * 1000;
   props.usageHint = GL_DYNAMIC_COPY;
 
   _voxelFragLists[VOXELATT_POSITION]
