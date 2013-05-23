@@ -23,13 +23,14 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#version 420 core
+#version 430 core
 
-layout(rg32ui) uniform volatile uimageBuffer nodePool;
+layout(rg32ui) uniform coherent uimageBuffer nodePool;
 layout(binding = 0) uniform atomic_uint nextFreeAddress; // Note: Has to be initialized with 1, not 0
 
 const uint NODE_MASK_NEXT = 0x3FFFFFFF;
 const uint NODE_MASK_TAG = (0x00000001 << 31);
+const uint NODE_MASK_LOCK = (0x00000001 << 30);
 const uint NODE_MASK_TAG_STATIC = (0x00000003 << 30);
 const uint NODE_NOT_FOUND = 0xFFFFFFFF;
 
@@ -40,10 +41,10 @@ bool isFlagged(in uvec2 node) {
 void allocChildBrickAndUnflag(in uvec2 node, in uint nodeAddress) {
 
   imageStore(nodePool, int(nodeAddress),
-   uvec4(NODE_MASK_NEXT & atomicCounterIncrement(nextFreeAddress), node.y, 0, 0));
+   uvec4(atomicCounter(nextFreeAddress), node.y, 0, 0));
 
   // Allocate 8 nodes
-  
+  atomicCounterIncrement(nextFreeAddress);
   atomicCounterIncrement(nextFreeAddress);
   atomicCounterIncrement(nextFreeAddress);
   atomicCounterIncrement(nextFreeAddress);
@@ -53,6 +54,7 @@ void allocChildBrickAndUnflag(in uvec2 node, in uint nodeAddress) {
   atomicCounterIncrement(nextFreeAddress);
 
   memoryBarrier();
+  
 }
 
 /*          -             // 0
@@ -65,20 +67,18 @@ uint findNode(in uint idx, in uint nextFree) {
     if (idx + 1 > nextFree) {
       return NODE_NOT_FOUND;
     }
-
     return nextFree - (idx + 1);
 }  // method
 
 void main() {
   uint nextFree = atomicCounter(nextFreeAddress);
   uint nodeAddress = findNode(uint(gl_VertexID), nextFree);
-
   if (nodeAddress == NODE_NOT_FOUND) {
     return;
   }
-  
   uvec2 node = imageLoad(nodePool, int(nodeAddress)).xy;
   if (isFlagged(node)) {
     allocChildBrickAndUnflag(node, nodeAddress);
   }
+
 }
