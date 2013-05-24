@@ -1,10 +1,10 @@
-KoRE Log - Fri May 24 16:02:35 2013
+KoRE Log - Fri May 24 17:20:16 2013
 
 [DEBUG] added Framebuffer 'BACKBUFFER'
-Render Device: GeForce GTX 460/PCIe/SSE2
-Vendor: NVIDIA Corporation
-OpenGL version: 4.2.0
-GLSL version: 4.20 NVIDIA via Cg compiler
+Render Device: AMD Radeon HD 7800 Series
+Vendor: ATI Technologies Inc.
+OpenGL version: 4.2.12217 Core Profile/Debug Context 12.104.0.0
+GLSL version: 4.20
 GLFW version 2.7.7
 GLEW version: 1.9.0
 [DEBUG] Texture 'colotex.png' successfully loaded
@@ -23,68 +23,57 @@ Allocating Octree with 4681 nodes in 5 levels
 [DEBUG] Shader './assets/shader/VoxelConeTracing/voxelizeGeom.shader' compiled
 [DEBUG] Shader './assets/shader/VoxelConeTracing/voxelizeFrag.shader' compiled
 [DEBUG] Program '' compiled
-	Attribute 'v_normal' at location 1
-	Attribute 'v_position' at location 0
+	Attribute 'v_normal' at location 0
+	Attribute 'v_position' at location 1
 	Attribute 'v_uvw' at location 2
-	Uniform '_main_worldAxes_0[0]' at location 0
-	Uniform 'diffuseTex' at location 3
-	Uniform 'modelWorld' at location 4
-	Uniform 'modelWorldNormal' at location 5
-	Uniform 'voxelFragmentListColor' at location 6
-	Uniform 'voxelFragmentListPosition' at location 7
-	Uniform 'voxelGridTransform' at location 8
-	Uniform 'voxelGridTransformI' at location 9
-	Uniform 'voxelTexSize' at location 10
+	Uniform 'modelWorld' at location 0
+	Uniform 'modelWorldNormal' at location 1
+	Uniform 'voxelGridTransform' at location 2
+	Uniform 'voxelGridTransformI' at location 3
+	Uniform 'voxelTexSize' at location 4
 	Uniform 'voxel_index' at location -1
+	Uniform 'diffuseTex' at location 6
+	Uniform 'voxelFragmentListColor' at location 7
+	Uniform 'voxelFragmentListPosition' at location 8
 [DEBUG] Shader './assets/shader/ModifyIndirectBufferVert.shader' compiled
 [DEBUG] Program '' compiled
-	Uniform 'indirectCommandBuf' at location 0
 	Uniform 'numVoxels' at location -1
+	Uniform 'indirectCommandBuf' at location 1
 [DEBUG] Shader './assets/shader/ObFlagVert.shader' compiled
 [DEBUG] Program '' compiled
-	Attribute 'gl_VertexID' at location -1
-	Uniform 'nodePool' at location 0
-	Uniform 'voxelFragmentListPosition' at location 1
-	Uniform 'voxelGridResolution' at location 2
+	Uniform 'voxelGridResolution' at location 0
+	Uniform 'nodePool' at location 1
+	Uniform 'voxelFragmentListPosition' at location 2
 [DEBUG] Shader './assets/shader/ObAllocateVert.shader' compiled
 [DEBUG] Program '' compiled
-	Attribute 'gl_VertexID' at location -1
 	Uniform 'nextFreeAddress' at location -1
 	Uniform 'nodePool' at location 1
 [DEBUG] Program '' compiled
-	Attribute 'gl_VertexID' at location -1
-	Uniform 'nodePool' at location 0
-	Uniform 'voxelFragmentListPosition' at location 1
-	Uniform 'voxelGridResolution' at location 2
+	Uniform 'voxelGridResolution' at location 0
+	Uniform 'nodePool' at location 1
+	Uniform 'voxelFragmentListPosition' at location 2
 [DEBUG] Program '' compiled
-	Attribute 'gl_VertexID' at location -1
 	Uniform 'nextFreeAddress' at location -1
 	Uniform 'nodePool' at location 1
 [DEBUG] Program '' compiled
-	Attribute 'gl_VertexID' at location -1
-	Uniform 'nodePool' at location 0
-	Uniform 'voxelFragmentListPosition' at location 1
-	Uniform 'voxelGridResolution' at location 2
+	Uniform 'voxelGridResolution' at location 0
+	Uniform 'nodePool' at location 1
+	Uniform 'voxelFragmentListPosition' at location 2
 [DEBUG] Program '' compiled
-	Attribute 'gl_VertexID' at location -1
 	Uniform 'nextFreeAddress' at location -1
 	Uniform 'nodePool' at location 1
 [DEBUG] Program '' compiled
-	Attribute 'gl_VertexID' at location -1
-	Uniform 'nodePool' at location 0
-	Uniform 'voxelFragmentListPosition' at location 1
-	Uniform 'voxelGridResolution' at location 2
+	Uniform 'voxelGridResolution' at location 0
+	Uniform 'nodePool' at location 1
+	Uniform 'voxelFragmentListPosition' at location 2
 [DEBUG] Program '' compiled
-	Attribute 'gl_VertexID' at location -1
 	Uniform 'nextFreeAddress' at location -1
 	Uniform 'nodePool' at location 1
 [DEBUG] Program '' compiled
-	Attribute 'gl_VertexID' at location -1
-	Uniform 'nodePool' at location 0
-	Uniform 'voxelFragmentListPosition' at location 1
-	Uniform 'voxelGridResolution' at location 2
+	Uniform 'voxelGridResolution' at location 0
+	Uniform 'nodePool' at location 1
+	Uniform 'voxelFragmentListPosition' at location 2
 [DEBUG] Program '' compiled
-	Attribute 'gl_VertexID' at location -1
 	Uniform 'nextFreeAddress' at location -1
 	Uniform 'nodePool' at location 1
 [DEBUG] Shader './assets/shader/VoxelConeTracing/raycastVert.shader' compiled
@@ -98,107 +87,47 @@ Allocating Octree with 4681 nodes in 5 levels
 [ERROR] Uniform 'voxelFragmentListPosition' not found in shader 'octreeVis shader'
 [ERROR] Uniform 'voxel_num' not found in shader 'octreeVis shader'
 VoxelFragList indirectCmdBuf contents:
-444552 1 0 0 
+543848 1 0 0 
 NodePool contents:
-0 	 (0 | 1)
-1 	 (0 | 9)
-2 	 (0 | 17)
-3 	 (0 | 25)
-4 	 (0 | 33)
-5 	 (0 | 41)
-6 	 (0 | 49)
-7 	 (0 | 57)
-8 	 (0 | 65)
-9 	 (0 | 0)
-10 	 (0 | 0)
-11 	 (0 | 105)
-12 	 (0 | 0)
-13 	 (0 | 0)
-14 	 (0 | 0)
-15 	 (0 | 113)
-16 	 (0 | 0)
-17 	 (0 | 0)
-18 	 (0 | 0)
-19 	 (0 | 0)
-20 	 (0 | 0)
-21 	 (0 | 121)
-22 	 (0 | 0)
-23 	 (0 | 129)
-24 	 (0 | 137)
-25 	 (0 | 145)
-26 	 (0 | 0)
-27 	 (0 | 0)
-28 	 (0 | 0)
-29 	 (0 | 153)
-30 	 (0 | 161)
-31 	 (0 | 0)
-32 	 (0 | 169)
-33 	 (0 | 0)
-34 	 (0 | 177)
-35 	 (0 | 0)
-36 	 (0 | 0)
-37 	 (0 | 185)
-38 	 (0 | 193)
-39 	 (0 | 201)
-40 	 (0 | 0)
-41 	 (0 | 0)
-42 	 (0 | 0)
-43 	 (0 | 209)
-44 	 (0 | 0)
-45 	 (0 | 0)
-46 	 (0 | 0)
-47 	 (0 | 217)
-48 	 (0 | 0)
-49 	 (0 | 225)
-50 	 (0 | 0)
-51 	 (0 | 233)
-52 	 (0 | 241)
-53 	 (0 | 0)
-54 	 (0 | 0)
-55 	 (0 | 0)
-56 	 (0 | 0)
-57 	 (0 | 249)
-58 	 (0 | 257)
-59 	 (0 | 0)
-60 	 (0 | 265)
-61 	 (0 | 273)
-62 	 (0 | 0)
-63 	 (0 | 0)
-64 	 (0 | 0)
-65 	 (0 | 73)
-66 	 (0 | 81)
-67 	 (0 | 89)
-68 	 (0 | 0)
-69 	 (0 | 0)
-70 	 (0 | 97)
-71 	 (0 | 0)
-72 	 (0 | 0)
-73 	 (0 | 0)
-74 	 (0 | 569)
-75 	 (0 | 577)
-76 	 (0 | 0)
-77 	 (0 | 0)
-78 	 (0 | 0)
-79 	 (0 | 0)
-80 	 (0 | 0)
-81 	 (0 | 585)
-82 	 (0 | 0)
-83 	 (0 | 0)
-84 	 (0 | 593)
-85 	 (0 | 601)
-86 	 (0 | 609)
-87 	 (0 | 617)
-88 	 (0 | 625)
-89 	 (0 | 633)
-90 	 (0 | 641)
-91 	 (0 | 0)
-92 	 (0 | 0)
-93 	 (0 | 649)
-94 	 (0 | 657)
-95 	 (0 | 0)
-96 	 (0 | 0)
-97 	 (0 | 281)
-98 	 (0 | 289)
-99 	 (0 | 297)
+0: 0|1  
 
-Next free nodepool address: 555 
+
+
+
+
+
+
+1: 0|9  0|17  0|25  0|33  0|41  0|49  0|57  0|65  		
+
+
+
+
+
+
+
+9: 0|105  0|0  0|113  0|0  0|0  0|0  0|121  0|0  		17: 0|0  0|0  0|0  0|0  0|129  0|0  0|137  0|145  		25: 0|153  0|0  0|0  0|0  0|161  0|169  0|0  0|177  		33: 0|0  0|185  0|0  0|0  0|193  0|201  0|209  0|0  		41: 0|0  0|0  0|217  0|0  0|0  0|0  0|225  0|0  		49: 0|233  0|0  0|241  0|249  0|0  0|0  0|0  0|0  		57: 0|257  0|265  0|0  0|273  0|281  0|0  0|0  0|0  		65: 0|73  0|81  0|89  0|0  0|0  0|97  0|0  0|0  		
+
+
+
+
+
+
+
+105: 0|833  0|0  0|0  0|0  0|0  0|0  0|0  0|0  		113: 0|0  0|0  0|841  0|849  0|0  0|0  0|857  0|865  		121: 0|0  0|0  0|873  0|881  0|0  0|889  0|897  0|905  		129: 0|0  0|0  0|0  0|0  0|0  0|0  0|913  0|921  		137: 0|0  0|0  0|0  0|0  0|0  0|0  0|0  0|929  		145: 0|0  0|0  0|937  0|945  0|953  0|961  0|969  0|977  		153: 0|0  0|0  0|0  0|0  0|985  0|993  0|1001  0|1009  		161: 0|1017  0|1025  0|1033  0|1041  0|0  0|1049  0|1057  0|1065  		169: 0|1073  0|0  0|0  0|1081  0|1089  0|0  0|0  0|1097  		177: 0|1105  0|0  0|0  0|0  0|1113  0|0  0|0  0|0  		185: 0|1121  0|1129  0|1137  0|1145  0|1153  0|1161  0|1169  0|289  		193: 0|0  0|0  0|0  0|0  0|0  0|297  0|305  0|0  		201: 0|313  0|321  0|329  0|337  0|345  0|0  0|0  0|353  		209: 0|361  0|369  0|0  0|0  0|377  0|385  0|0  0|0  		217: 0|0  0|393  0|401  0|409  0|0  0|0  0|417  0|425  		225: 0|0  0|0  0|433  0|441  0|0  0|0  0|449  0|457  		233: 0|0  0|0  0|465  0|473  0|0  0|0  0|0  0|0  		241: 0|0  0|0  0|0  0|481  0|0  0|0  0|0  0|0  		249: 0|489  0|497  0|505  0|513  0|0  0|0  0|521  0|529  		257: 0|0  0|537  0|545  0|553  0|561  0|569  0|577  0|585  		265: 0|593  0|0  0|0  0|601  0|609  0|0  0|0  0|617  		273: 0|625  0|0  0|0  0|0  0|633  0|0  0|0  0|0  		281: 0|641  0|649  0|657  0|665  0|0  0|0  0|0  0|0  		73: 0|0  0|673  0|681  0|0  0|0  0|0  0|0  0|0  		81: 0|689  0|0  0|0  0|697  0|705  0|713  0|721  0|729  		89: 0|737  0|745  0|0  0|0  0|753  0|761  0|0  0|0  		97: 0|769  0|777  0|785  0|793  0|801  0|809  0|817  0|825  		
+
+
+
+
+
+
+
+833: 0|2673  0|0  0|0  0|0  0|0  0|0  0|0  0|0  		841: 0|0  0|0  0|0  0|0  0|0  0|0  0|0  0|2681  		849: 0|0  0|0  0|0  0|0  0|0  0|0  0|2689  0|0  		857: 0|0  0|0  0|0  0|2697  0|0  0|0  0|2705  0|2713  		865: 0|0  0|0  0|2721  0|0  0|0  0|0  0|2729  0|0  		873: 0|0  0|0  0|2737  0|2745  0|2753  0|2761  0|2769  0|2777  		881: 0|0  0|0  0|2785  0|0  0|0  0|0  0|2793  0|2801  		889: 0|0  0|0  0|0  0|0  0|0  0|0  0|2809  0|0  		897: 0|3625  0|3633  0|0  0|3641  0|3649  0|3657  0|0  0|0  		905: 0|0  0|3665  0|3673  0|3681  0|3689  0|3697  0|3705  0|3713  		913: 0|0  0|0  0|3721  0|3729  0|3737  0|3745  0|3753  0|3761  		921: 0|0  0|0  0|0  0|0  0|0  0|0  0|3769  0|0  		929: 0|0  0|0  0|0  0|0  0|3777  0|0  0|0  0|3785  		937: 0|0  0|0  0|3793  0|3801  0|0  0|0  0|3809  0|3817  		945: 0|0  0|0  0|3825  0|3833  0|3841  0|0  0|3849  0|3857  		953: 0|0  0|3865  0|3873  0|3881  0|0  0|3889  0|3897  0|3905  		961: 0|3913  0|3921  0|3929  0|3937  0|3945  0|3953  0|3961  0|0  		969: 0|3969  0|3977  0|3985  0|3993  0|0  0|4001  0|4009  0|0  		977: 0|4017  0|4025  0|4033  0|0  0|4041  0|4049  0|0  0|0  		985: 0|0  0|0  0|0  0|0  0|4057  0|4065  0|4073  0|4081  		993: 0|0  0|0  0|0  0|0  0|4089  0|0  0|4097  0|4105  		1001: 0|0  0|0  0|0  0|0  0|4113  0|4121  0|0  0|0  		1009: 0|0  0|0  0|0  0|0  0|4129  0|4137  0|0  0|4145  		1017: 0|4153  0|4161  0|4169  0|0  0|0  0|0  0|0  0|0  		1025: 0|3337  0|3345  0|3353  0|3361  0|0  0|3369  0|3377  0|0  		1033: 0|3385  0|3393  0|0  0|0  0|3401  0|3409  0|3417  0|3425  		1041: 0|3433  0|3441  0|3449  0|3457  0|0  0|3465  0|3473  0|3481  		1049: 0|0  0|3489  0|3497  0|0  0|0  0|3505  0|3513  0|0  		1057: 0|3521  0|3529  0|3537  0|3545  0|3553  0|3561  0|3569  0|3577  		1065: 0|0  0|0  0|3585  0|0  0|0  0|0  0|3593  0|0  		1073: 0|0  0|0  0|0  0|0  0|3601  0|0  0|0  0|3609  		1081: 0|0  0|0  0|0  0|0  0|3617  0|0  0|0  0|4177  		1089: 0|4185  0|0  0|0  0|4193  0|4201  0|0  0|0  0|4209  		1097: 0|4217  0|0  0|0  0|4225  0|4233  0|0  0|0  0|4241  		1105: 0|4249  0|0  0|0  0|0  0|4257  0|4265  0|0  0|0  		1113: 0|4273  0|4281  0|0  0|0  0|4289  0|4297  0|0  0|0  		1121: 0|0  0|0  0|0  0|0  0|0  0|4305  0|4313  0|0  		1129: 0|0  0|0  0|0  0|0  0|4321  0|0  0|0  0|0  		1137: 0|0  0|0  0|0  0|0  0|4329  0|0  0|0  0|0  		1145: 0|0  0|0  0|0  0|0  0|0  0|4337  0|0  0|0  		1153: 0|0  0|4345  0|4353  0|0  0|0  0|4361  0|4369  0|0  		1161: 0|4377  0|0  0|0  0|4385  0|4393  0|4401  0|4409  0|4417  		1169: 0|4425  0|0  0|0  0|0  0|4433  0|4441  0|4449  0|4457  		289: 0|0  0|1177  0|0  0|0  0|0  0|1185  0|0  0|0  		297: 0|0  0|0  0|0  0|0  0|0  0|1193  0|1201  0|0  		305: 0|0  0|0  0|0  0|0  0|0  0|1209  0|0  0|0  		313: 0|0  0|1217  0|1225  0|1233  0|1241  0|1249  0|1257  0|1441  		321: 0|1449  0|1457  0|0  0|0  0|0  0|0  0|0  0|0  		329: 0|1465  0|0  0|1473  0|1481  0|0  0|0  0|0  0|1489  		337: 0|0  0|1497  0|1505  0|0  0|1513  0|1521  0|1529  0|1537  		345: 0|1545  0|0  0|0  0|1553  0|1561  0|0  0|0  0|1569  		353: 0|1577  0|0  0|1585  0|1593  0|1601  0|0  0|1609  0|1617  		361: 0|0  0|0  0|0  0|0  0|0  0|1625  0|0  0|0  		369: 0|1633  0|1641  0|0  0|0  0|1649  0|1657  0|0  0|0  		377: 0|0  0|1665  0|0  0|0  0|1673  0|1681  0|0  0|0  		385: 0|1689  0|1697  0|0  0|0  0|1705  0|1713  0|0  0|0  		393: 0|0  0|0  0|1721  0|0  0|0  0|0  0|0  0|0  		401: 0|1729  0|1737  0|0  0|0  0|1745  0|1753  0|0  0|1761  		409: 0|1769  0|1777  0|1785  0|1793  0|0  0|1801  0|1809  0|1817  		417: 0|1825  0|1833  0|1841  0|1849  0|0  0|0  0|1857  0|1865  		425: 0|0  0|0  0|1873  0|1881  0|0  0|0  0|1889  0|0  		433: 0|0  0|0  0|1897  0|1905  0|0  0|0  0|0  0|1913  		441: 0|0  0|0  0|1921  0|0  0|0  0|0  0|1929  0|0  		449: 0|0  0|0  0|0  0|2249  0|0  0|0  0|0  0|0  		457: 0|0  0|0  0|2257  0|0  0|0  0|0  0|0  0|0  		465: 0|2265  0|2273  0|2281  0|2289  0|0  0|0  0|2297  0|2305  		473: 0|0  0|0  0|2313  0|0  0|0  0|0  0|0  0|0  		481: 0|2321  0|0  0|0  0|2329  0|0  0|0  0|0  0|0  		489: 0|0  0|2337  0|2345  0|2353  0|0  0|2361  0|2369  0|2377  		497: 0|2385  0|2393  0|2401  0|0  0|2409  0|2417  0|2425  0|2433  		505: 0|0  0|2441  0|2449  0|0  0|2457  0|2465  0|2473  0|1937  		513: 0|1945  0|1953  0|0  0|0  0|1961  0|1969  0|1977  0|0  		521: 0|0  0|0  0|1985  0|1993  0|0  0|0  0|2001  0|2009  		529: 0|2017  0|0  0|2025  0|2033  0|0  0|0  0|2041  0|2049  		537: 0|0  0|2057  0|2065  0|0  0|0  0|2073  0|2081  0|0  		545: 0|2089  0|2097  0|2105  0|2113  0|2121  0|2129  0|2137  0|2145  		553: 0|0  0|0  0|2153  0|0  0|0  0|0  0|2161  0|0  		561: 0|0  0|0  0|0  0|0  0|2169  0|2177  0|2185  0|0  		569: 0|2193  0|2201  0|2209  0|2217  0|2225  0|2233  0|2241  0|2817  		577: 0|2825  0|2833  0|2841  0|2849  0|2857  0|2865  0|0  0|0  		585: 0|0  0|2873  0|2881  0|2889  0|2897  0|2905  0|2913  0|2921  		593: 0|2929  0|0  0|0  0|2937  0|2945  0|0  0|0  0|2953  		601: 0|2961  0|0  0|0  0|2969  0|2977  0|0  0|0  0|2985  		609: 0|2993  0|0  0|0  0|3001  0|0  0|0  0|0  0|0  		617: 0|3009  0|0  0|0  0|3017  0|0  0|0  0|0  0|0  		625: 0|3025  0|3033  0|0  0|0  0|3041  0|3049  0|0  0|0  		633: 0|3057  0|3065  0|0  0|0  0|3073  0|0  0|0  0|0  		641: 0|2481  0|2489  0|2497  0|2505  0|0  0|0  0|0  0|0  		649: 0|2513  0|0  0|2521  0|2529  0|0  0|0  0|0  0|0  		657: 0|2537  0|2545  0|0  0|0  0|0  0|0  0|0  0|0  		665: 0|2553  0|2561  0|0  0|2569  0|0  0|0  0|0  0|0  		673: 0|0  0|2577  0|2585  0|0  0|0  0|0  0|0  0|0  		681: 0|0  0|2593  0|0  0|0  0|0  0|0  0|0  0|0  		689: 0|2601  0|0  0|0  0|2609  0|2617  0|0  0|0  0|2625  		697: 0|2633  0|0  0|2641  0|2649  0|2657  0|0  0|2665  0|3081  		705: 0|3089  0|3097  0|3105  0|3113  0|0  0|3121  0|3129  0|3137  		713: 0|0  0|0  0|0  0|0  0|3145  0|3153  0|0  0|0  		721: 0|0  0|0  0|0  0|3161  0|3169  0|0  0|3177  0|3185  		729: 0|3193  0|3201  0|3209  0|3217  0|0  0|3225  0|3233  0|0  		737: 0|3241  0|3249  0|0  0|0  0|0  0|3257  0|0  0|0  		745: 0|3265  0|3273  0|0  0|0  0|3281  0|3289  0|0  0|0  		753: 0|0  0|3297  0|0  0|0  0|0  0|0  0|0  0|0  		761: 0|3305  0|3313  0|0  0|0  0|3321  0|3329  0|0  0|0  		769: 0|0  0|1265  0|1273  0|0  0|0  0|1281  0|1289  0|0  		777: 0|1297  0|1305  0|1313  0|1321  0|1329  0|0  0|0  0|1337  		785: 0|1345  0|1353  0|1361  0|1369  0|1377  0|0  0|0  0|0  		793: 0|0  0|1385  0|0  0|0  0|0  0|1393  0|0  0|0  		801: 0|0  0|1401  0|1409  0|0  0|0  0|0  0|0  0|0  		809: 0|1417  0|0  0|0  0|0  0|0  0|0  0|0  0|0  		817: 0|1425  0|0  0|0  0|0  0|0  0|0  0|0  0|0  		825: 0|0  0|1433  0|0  0|0  0|0  0|0  0|0  0|0  		
+
+
+
+
+
+
+
+
+Next free nodepool address: 558 

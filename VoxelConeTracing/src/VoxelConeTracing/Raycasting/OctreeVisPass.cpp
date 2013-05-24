@@ -130,7 +130,7 @@ OctreeVisPass::OctreeVisPass(VCTscene* vctScene) {
           new FunctionOp(std::bind(&OctreeVisPass::debugIndirectCmdBuff, this)));
 
  nodePass->addOperation(
-          new FunctionOp(std::bind(&OctreeVisPass::debugNodePool, this)));
+          new FunctionOp(std::bind(&OctreeVisPass::debugNodePool_Octree, this)));
 
  nodePass->addOperation(
           new FunctionOp(std::bind(&OctreeVisPass::debugNextFreeAC, this)));
@@ -208,6 +208,86 @@ void OctreeVisPass::debugNodePool() {
     uint nextValue = next & NODE_MASK_NEXT;
     kore::Log::getInstance()->write("%u \t (%u | %u)\n", i, flagged, nextValue);
   }
+  kore::Log::getInstance()->write("\n");
+  glUnmapBuffer(GL_TEXTURE_BUFFER);
+}
+
+
+void printNode(uint address, uint flagged, uint next, bool useAddress) {
+  if (useAddress) {
+    kore::Log::getInstance()->write("%u: %u|%u  ", address, flagged, next);
+  } else 
+  {
+    kore::Log::getInstance()->write("%u|%u  ", flagged, next);
+  }
+}
+
+void printTabsForLevel(uint level, uint maxlevel) {
+
+  /*uint numNodes = pow(8U, maxlevel - level);
+
+  uint numTabbs = numNodes / 8;
+  for(uint uTab = 0; uTab < numTabbs; ++uTab) {
+    kore::Log::getInstance()->write("       ");
+  } */
+
+}
+
+void traverseOctree(const SNode* root, const SNode* parent, uint level, uint maxLevel) {
+  const uint NODE_MASK_NEXT = 0x3FFFFFFF;
+  const uint NODE_MASK_TAG = (0x00000001 << 31);
+  
+  uint next = (NODE_MASK_NEXT & parent->next);
+
+  if (root == parent && level == maxLevel) {
+    printNode(0, false, next, true);
+  }
+
+  if (next == 0U) {
+    return;
+  }
+
+  const SNode* childBrick = root + next;
+  
+  for (uint iChild = 0; iChild < 8; ++iChild) {
+    const SNode* child = childBrick + iChild;
+    
+    if (level + 1 == maxLevel) {
+      bool childFlagged = child->next & NODE_MASK_TAG;
+      uint childNext = child->next & NODE_MASK_NEXT;
+
+      printNode(next + iChild, childFlagged, childNext, iChild == 0);
+    } else {
+      traverseOctree(root, child, level + 1, maxLevel);
+    }
+
+  }
+
+  // Print additional offset between bricks
+  if (level + 1 == maxLevel) {
+     kore::Log::getInstance()->write("\t\t");
+  }
+}
+
+void OctreeVisPass::debugNodePool_Octree() {
+  _renderMgr->bindBuffer(GL_TEXTURE_BUFFER, _vctScene->getNodePool()->getBufferHandle());
+
+  const SNode* nodePtr = (const SNode*) glMapBuffer(GL_TEXTURE_BUFFER, GL_READ_ONLY);
+  kore::Log::getInstance()->write("NodePool contents:\n");
+
+  for (uint iLevel = 0; iLevel < _vctScene->getNumLevels(); ++iLevel) {
+    printTabsForLevel(iLevel, _vctScene->getNumLevels() - 1);
+    traverseOctree(nodePtr, nodePtr, 0, iLevel);
+    kore::Log::getInstance()->write("\n");
+    kore::Log::getInstance()->write("\n");
+    kore::Log::getInstance()->write("\n");
+    kore::Log::getInstance()->write("\n");
+    kore::Log::getInstance()->write("\n");
+    kore::Log::getInstance()->write("\n");
+    kore::Log::getInstance()->write("\n");
+    kore::Log::getInstance()->write("\n");
+  }
+
   kore::Log::getInstance()->write("\n");
   glUnmapBuffer(GL_TEXTURE_BUFFER);
 }
