@@ -39,10 +39,10 @@ bool isFlagged(in uvec2 node) {
 }
 
 void allocChildBrickAndUnflag(in uvec2 node, in uint nodeAddress) {
- 
   imageStore(nodePool, int(nodeAddress),
+                           //Calculation of next free address
    uvec4(NODE_MASK_NEXT & (1U + 8U * atomicCounterIncrement(nextFreeAddress)), node.y, 0, 0));
-   
+
 }
 
 // Note(dlazarek): This is problematic, because nextFree changes...
@@ -61,11 +61,9 @@ void allocChildBrickAndUnflag(in uvec2 node, in uint nodeAddress) {
 
 
 void main() {
- /* uvec2 node = imageLoad(nodePool, gl_VertexID).xy;
+  uvec2 node = imageLoad(nodePool, gl_VertexID).xy;
   
   if (isFlagged(node)) {
     allocChildBrickAndUnflag(node, uint(gl_VertexID));
-  } */
-
-  imageStore(nodePool, gl_VertexID, uvec4(gl_VertexID));
+  } 
 }

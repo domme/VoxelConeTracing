@@ -61,8 +61,8 @@ ObAllocatePass::ObAllocatePass(VCTscene* vctScene, uint level) {
 
   addStartupOperation(_bindIndCmdBufOp);
 
-  addStartupOperation(
-    new FunctionOp(std::bind(&ObAllocatePass::debugIndirectCmdBuff, this)));
+/*  addStartupOperation(
+    new FunctionOp(std::bind(&ObAllocatePass::debugIndirectCmdBuff, this))); */
   
   addStartupOperation(new BindImageTexture(
                       vctScene->getShdNodePool(),

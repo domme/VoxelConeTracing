@@ -125,9 +125,10 @@ void VCTscene::initIndirectCommandBufs() {
   // Allocation indirect command bufs for each octree level
   _vAllocIndCmdBufs.clear();
                     
+  _vAllocIndCmdBufs.resize(_numLevels);
   uint numVoxelsUpToLevel = 0;
   for (uint iLevel = 0; iLevel < _numLevels; ++iLevel) {
-    uint numVoxelsOnLevel = pow(8,iLevel);
+    uint numVoxelsOnLevel = pow(8U,iLevel);
 
     numVoxelsUpToLevel += numVoxelsOnLevel;
 
@@ -138,8 +139,6 @@ void VCTscene::initIndirectCommandBufs() {
     command.firstVertexIdx = 0;
     command.baseInstanceIdx = 0;
 
-    kore::IndexedBuffer buf;
-    _vAllocIndCmdBufs.push_back(buf);
     _vAllocIndCmdBufs[iLevel].create(GL_DRAW_INDIRECT_BUFFER,
               sizeof(SDrawArraysIndirectCommand),
               GL_STATIC_DRAW,
