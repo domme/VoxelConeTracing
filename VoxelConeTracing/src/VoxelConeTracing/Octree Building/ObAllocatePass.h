@@ -40,8 +40,9 @@ class ObAllocatePass : public kore::ShaderProgramPass
     virtual ~ObAllocatePass(void);
 
     void setLevel(uint level);
-
-  private:
+    void debugVoxelIndexAC();
+    void debugIndirectCmdBuff();
+private:
     kore::RenderManager* _renderMgr;
     kore::SceneManager* _sceneMgr;
     kore::ResourceManager* _resMgr;
@@ -50,6 +51,8 @@ class ObAllocatePass : public kore::ShaderProgramPass
 
     kore::ShaderProgram _allocateShader;
     VCTscene* _vctScene;
+
+    uint _level;
 };
 
 #endif //VCT_SRC_VCT_OBALLOCATEPASS_H_

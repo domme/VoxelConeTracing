@@ -57,6 +57,19 @@ struct SNode {
   uint color;
 };
 
+struct SDrawArraysIndirectCommand {
+  SDrawArraysIndirectCommand() :
+    numVertices(0),
+    numPrimitives(0),
+    firstVertexIdx(0),
+    baseInstanceIdx(0) {}
+
+  uint numVertices;
+  uint numPrimitives;
+  uint firstVertexIdx;
+  uint baseInstanceIdx;
+};
+
 class VCTscene {
 public:
   VCTscene();
@@ -135,7 +148,7 @@ private:
   kore::ShaderData _shdFragListIndirectCmdBuf;
 
   std::vector<kore::IndexedBuffer> _vAllocIndCmdBufs;
-
+  
   kore::TextureBuffer _nodePool;
   kore::STextureInfo _nodePoolTexInfo;
   kore::ShaderData _shdNodePool;

@@ -32,18 +32,6 @@
 #include "KoRE/RenderManager.h"
 #include "KoRE/ResourceManager.h"
 
-struct SDrawArraysIndirectCommand {
-  SDrawArraysIndirectCommand() :
-    numVertices(0),
-    numPrimitives(0),
-    firstVertexIdx(0),
-    baseInstanceIdx(0) {}
-
-  uint numVertices;
-  uint numPrimitives;
-  uint firstVertexIdx;
-  uint baseInstanceIdx;
-};
 
 class ModifyIndirectBufferPass : public kore::ShaderProgramPass
 {

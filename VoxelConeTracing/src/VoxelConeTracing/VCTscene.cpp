@@ -124,7 +124,7 @@ void VCTscene::initIndirectCommandBufs() {
 
   // Allocation indirect command bufs for each octree level
   _vAllocIndCmdBufs.clear();
-                  
+                    
   uint numVoxelsUpToLevel = 0;
   for (uint iLevel = 0; iLevel < _numLevels; ++iLevel) {
     uint numVoxelsOnLevel = pow(8,iLevel);
@@ -132,18 +132,20 @@ void VCTscene::initIndirectCommandBufs() {
     numVoxelsUpToLevel += numVoxelsOnLevel;
 
     kore::Log::getInstance()->write("[DEBUG] number of voxels on level %u: %u \n", iLevel, numVoxelsOnLevel);
-    SDrawArraysIndirectCommand cmd;
-    cmd.numVertices = numVoxelsUpToLevel;
-    cmd.numPrimitives = numVoxelsUpToLevel;
-    cmd.firstVertexIdx = 0;
-    cmd.baseInstanceIdx = 0;
+    SDrawArraysIndirectCommand command;
+    command.numVertices = numVoxelsUpToLevel;
+    command.numPrimitives = 1;
+    command.firstVertexIdx = 0;
+    command.baseInstanceIdx = 0;
 
-    _vAllocIndCmdBufs.push_back(kore::IndexedBuffer());
+    kore::IndexedBuffer buf;
+    _vAllocIndCmdBufs.push_back(buf);
     _vAllocIndCmdBufs[iLevel].create(GL_DRAW_INDIRECT_BUFFER,
-                                     sizeof(SDrawArraysIndirectCommand),
-                                     GL_STATIC_DRAW,
-                                     &cmd,
-                                     "allocIndCmdBuf");
+              sizeof(SDrawArraysIndirectCommand),
+              GL_STATIC_DRAW,
+              &command,
+              "allocIndCmdBuf");
+    
   }
 }
 
@@ -309,7 +311,7 @@ void VCTscene::initNodePool() {
   
   uint allocAcValue = 0;
   _acNodePoolNextFree.create(GL_ATOMIC_COUNTER_BUFFER, sizeof(GL_UNSIGNED_INT),
-          GL_STATIC_DRAW, (void*) &allocAcValue, "AC_nextFreeNodePointer");
+          GL_DYNAMIC_COPY, &allocAcValue, "AC_nextFreeNodePointer");
 
   _shdAcNodePoolNextFree.component = NULL;
   _shdAcNodePoolNextFree.data = &_acNodePoolNextFree;

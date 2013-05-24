@@ -23,10 +23,10 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#version 430 core
+#version 420 core
 
-layout(rg32ui) uniform coherent uimageBuffer nodePool;
-layout(binding = 0) uniform atomic_uint nextFreeAddress; // Note: Has to be initialized with 1, not 0
+layout(rg32ui) uniform volatile uimageBuffer nodePool;
+layout(binding = 0) uniform atomic_uint nextFreeAddress;
 
 const uint NODE_MASK_NEXT = 0x3FFFFFFF;
 const uint NODE_MASK_TAG = (0x00000001 << 31);
@@ -39,10 +39,10 @@ bool isFlagged(in uvec2 node) {
 }
 
 void allocChildBrickAndUnflag(in uvec2 node, in uint nodeAddress) {
-  memoryBarrier();
+ 
   imageStore(nodePool, int(nodeAddress),
-   uvec4((atomicCounter(nextFreeAddress)*8U+1), node.y, 0, 0));
-   memoryBarrier();
+   uvec4(NODE_MASK_NEXT & (1U + 8U * atomicCounterIncrement(nextFreeAddress)), node.y, 0, 0));
+   
 }
 
 // Note(dlazarek): This is problematic, because nextFree changes...
@@ -61,9 +61,11 @@ void allocChildBrickAndUnflag(in uvec2 node, in uint nodeAddress) {
 
 
 void main() {
-  uvec2 node = imageLoad(nodePool, gl_VertexID).xy;
+ /* uvec2 node = imageLoad(nodePool, gl_VertexID).xy;
   
   if (isFlagged(node)) {
     allocChildBrickAndUnflag(node, uint(gl_VertexID));
-  }
+  } */
+
+  imageStore(nodePool, gl_VertexID, uvec4(gl_VertexID));
 }

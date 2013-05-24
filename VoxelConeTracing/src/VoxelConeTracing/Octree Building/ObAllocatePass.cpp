@@ -41,6 +41,7 @@ ObAllocatePass::ObAllocatePass(VCTscene* vctScene, uint level) {
   _renderMgr = RenderManager::getInstance();
   _sceneMgr = SceneManager::getInstance();
   _resMgr = ResourceManager::getInstance();
+  _level = level;
 
   _allocateShader
      .loadShader("./assets/shader/ObAllocateVert.shader",
@@ -50,15 +51,18 @@ ObAllocatePass::ObAllocatePass(VCTscene* vctScene, uint level) {
   _allocateShader.setName("ObAllocate shader");
   this->setShaderProgram(&_allocateShader);
 
+  
+
   addStartupOperation(new MemoryBarrierOp(GL_ALL_BARRIER_BITS));
 
   _bindIndCmdBufOp =
     new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
                          vctScene->getAllocIndCmdBufForLevel(level)->getHandle());
-  
+
   addStartupOperation(_bindIndCmdBufOp);
 
-  
+  addStartupOperation(
+    new FunctionOp(std::bind(&ObAllocatePass::debugIndirectCmdBuff, this)));
   
   addStartupOperation(new BindImageTexture(
                       vctScene->getShdNodePool(),
@@ -73,7 +77,23 @@ ObAllocatePass::ObAllocatePass(VCTscene* vctScene, uint level) {
 
 }
 
+void ObAllocatePass::debugIndirectCmdBuff(){
+
+  _renderMgr->bindBuffer(GL_DRAW_INDIRECT_BUFFER, _vctScene->getAllocIndCmdBufForLevel(_level)->getHandle());
+
+  const GLuint* ptr = (const GLuint*) glMapBuffer(GL_DRAW_INDIRECT_BUFFER, GL_READ_ONLY);
+  kore::Log::getInstance()->write("Alloc indirectCmdBuf contents on level %u:\n", _level);
+  for (uint i = 0; i < 4; ++i) {
+    kore::Log::getInstance()->write("%u ", ptr[i]);
+  }
+  kore::Log::getInstance()->write("\n");
+
+  glUnmapBuffer(GL_DRAW_INDIRECT_BUFFER);
+}
+
 void ObAllocatePass::setLevel(uint level) {
+   _level = level;
+
   _bindIndCmdBufOp->connect(GL_DRAW_INDIRECT_BUFFER,
                     _vctScene->getAllocIndCmdBufForLevel(level)->getHandle());
 }
