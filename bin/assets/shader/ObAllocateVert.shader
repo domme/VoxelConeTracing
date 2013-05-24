@@ -41,44 +41,40 @@ bool isFlagged(in uvec2 node) {
 void allocChildBrickAndUnflag(in uvec2 node, in uint nodeAddress) {
 
   imageStore(nodePool, int(nodeAddress),
-   uvec4(atomicCounter(nextFreeAddress), node.y, 0, 0));
-
-  // Allocate 8 nodes
-  atomicCounterIncrement(nextFreeAddress);
-  atomicCounterIncrement(nextFreeAddress);
-  atomicCounterIncrement(nextFreeAddress);
-  atomicCounterIncrement(nextFreeAddress);
-  atomicCounterIncrement(nextFreeAddress);
-  atomicCounterIncrement(nextFreeAddress);
-  atomicCounterIncrement(nextFreeAddress);
-  atomicCounterIncrement(nextFreeAddress);
+   uvec4(NODE_MASK_NEXT & atomicCounterIncrement(nextFreeAddress), node.y, 0, 0));
 
   memoryBarrier();
-  
+
+  atomicCounterIncrement(nextFreeAddress);
+  atomicCounterIncrement(nextFreeAddress);
+  atomicCounterIncrement(nextFreeAddress);
+  atomicCounterIncrement(nextFreeAddress);
+  atomicCounterIncrement(nextFreeAddress);
+  atomicCounterIncrement(nextFreeAddress);
+  atomicCounterIncrement(nextFreeAddress);
+   
+  memoryBarrier();
 }
 
+// Note(dlazarek): This is problematic, because nextFree changes...
 /*          -             // 0
          ----           // 1
   ---- ---- ---- +***   // 2
                 12 <- nextFree
   0, 1, 2, 3... 15 gl_VertexID */
 
-uint findNode(in uint idx, in uint nextFree) {
+/*uint findNode(in uint idx, in uint nextFree) {
     if (idx + 1 > nextFree) {
       return NODE_NOT_FOUND;
     }
     return nextFree - (idx + 1);
-}  // method
+}  // method */
+
 
 void main() {
-  uint nextFree = atomicCounter(nextFreeAddress);
-  uint nodeAddress = findNode(uint(gl_VertexID), nextFree);
-  if (nodeAddress == NODE_NOT_FOUND) {
-    return;
-  }
-  uvec2 node = imageLoad(nodePool, int(nodeAddress)).xy;
+  uvec2 node = imageLoad(nodePool, gl_VertexID).xy;
+  
   if (isFlagged(node)) {
-    allocChildBrickAndUnflag(node, nodeAddress);
+    allocChildBrickAndUnflag(node, uint(gl_VertexID));
   }
-
 }

@@ -125,13 +125,16 @@ void VCTscene::initIndirectCommandBufs() {
   // Allocation indirect command bufs for each octree level
   _vAllocIndCmdBufs.clear();
                   
-  
+  uint numVoxelsUpToLevel = 0;
   for (uint iLevel = 0; iLevel < _numLevels; ++iLevel) {
     uint numVoxelsOnLevel = pow(8,iLevel);
+
+    numVoxelsUpToLevel += numVoxelsOnLevel;
+
     kore::Log::getInstance()->write("[DEBUG] number of voxels on level %u: %u \n", iLevel, numVoxelsOnLevel);
     SDrawArraysIndirectCommand cmd;
-    cmd.numVertices = numVoxelsOnLevel;
-    cmd.numPrimitives = numVoxelsOnLevel;
+    cmd.numVertices = numVoxelsUpToLevel;
+    cmd.numPrimitives = numVoxelsUpToLevel;
     cmd.firstVertexIdx = 0;
     cmd.baseInstanceIdx = 0;
 

@@ -50,13 +50,15 @@ ObAllocatePass::ObAllocatePass(VCTscene* vctScene, uint level) {
   _allocateShader.setName("ObAllocate shader");
   this->setShaderProgram(&_allocateShader);
 
+  addStartupOperation(new MemoryBarrierOp(GL_ALL_BARRIER_BITS));
+
   _bindIndCmdBufOp =
     new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
                          vctScene->getAllocIndCmdBufForLevel(level)->getHandle());
   
   addStartupOperation(_bindIndCmdBufOp);
 
-  addStartupOperation(new MemoryBarrierOp(GL_ALL_BARRIER_BITS));
+  
   
   addStartupOperation(new BindImageTexture(
                       vctScene->getShdNodePool(),
