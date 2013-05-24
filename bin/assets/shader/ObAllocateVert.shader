@@ -39,21 +39,10 @@ bool isFlagged(in uvec2 node) {
 }
 
 void allocChildBrickAndUnflag(in uvec2 node, in uint nodeAddress) {
-
+  memoryBarrier();
   imageStore(nodePool, int(nodeAddress),
-   uvec4(NODE_MASK_NEXT & atomicCounterIncrement(nextFreeAddress), node.y, 0, 0));
-
-  memoryBarrier();
-
-  atomicCounterIncrement(nextFreeAddress);
-  atomicCounterIncrement(nextFreeAddress);
-  atomicCounterIncrement(nextFreeAddress);
-  atomicCounterIncrement(nextFreeAddress);
-  atomicCounterIncrement(nextFreeAddress);
-  atomicCounterIncrement(nextFreeAddress);
-  atomicCounterIncrement(nextFreeAddress);
-   
-  memoryBarrier();
+   uvec4((atomicCounter(nextFreeAddress)*8U+1), node.y, 0, 0));
+   memoryBarrier();
 }
 
 // Note(dlazarek): This is problematic, because nextFree changes...

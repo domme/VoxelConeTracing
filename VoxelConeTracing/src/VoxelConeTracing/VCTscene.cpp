@@ -306,11 +306,10 @@ void VCTscene::initNodePool() {
 
   // Create node pool allocation AC
 
-  // This AC stores the value of the next free node address,
-  // so it has to be initialized to 1
-  uint allocAcValue = 1;
+  
+  uint allocAcValue = 0;
   _acNodePoolNextFree.create(GL_ATOMIC_COUNTER_BUFFER, sizeof(GL_UNSIGNED_INT),
-          GL_DYNAMIC_COPY, (void*) &allocAcValue, "AC_nextFreeNodePointer");
+          GL_STATIC_DRAW, (void*) &allocAcValue, "AC_nextFreeNodePointer");
 
   _shdAcNodePoolNextFree.component = NULL;
   _shdAcNodePoolNextFree.data = &_acNodePoolNextFree;
