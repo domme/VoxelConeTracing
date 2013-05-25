@@ -40,6 +40,7 @@
 #include "KoRE/Operations/BindOperations/BindImageTexture.h"
 #include "KoRE/Operations/ResetAtomicCounterBuffer.h"
 #include "KoRE/Operations/MemoryBarrierOp.h"
+#include "KoRE/Operations/BindOperations/BindUniform.h"
 
 OctreeVisPass::~OctreeVisPass(void) {
 }
@@ -111,17 +112,29 @@ OctreeVisPass::OctreeVisPass(VCTscene* vctScene) {
     "fFar",
     &_visShader));
 
-  nodePass->addOperation(new BindImageTexture(
-                        vctScene->getShdVoxelFragList(VOXELATT_COLOR),
-                        _visShader.getUniform("voxelFragmentListColor")));
 
   nodePass->addOperation(new BindImageTexture(
-                         vctScene->getShdVoxelFragList(VOXELATT_POSITION),
-                        _visShader.getUniform("voxelFragmentListPosition")));
+    vctScene->getShdNodePool(),
+    _visShader.getUniform("nodePool")));
 
-  nodePass->addOperation(new BindAtomicCounterBuffer(
-                        vctScene->getShdAcVoxelIndex(),
-                        _visShader.getUniform("voxel_num")));
+  nodePass->addOperation(new BindUniform(
+    vctScene->getShdVoxelGridResolution(),
+    _visShader.getUniform("voxelGridResolution")));
+
+  nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
+    "inverse view Matrix",
+    cam,
+    "viewI",
+    &_visShader));
+
+
+  nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
+    "model Matrix", vctScene->getVoxelGridNode()->getTransform(),
+    "voxelGridTransform", &_visShader));
+
+  nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
+    "inverse model Matrix", vctScene->getVoxelGridNode()->getTransform(),
+    "voxelGridTransformI", &_visShader));
 
   //nodePass->addOperation(
     //new FunctionOp(std::bind(&OctreeVisPass::debugVoxelFragmentList, this)));
@@ -129,8 +142,8 @@ OctreeVisPass::OctreeVisPass(VCTscene* vctScene) {
  nodePass->addOperation(
           new FunctionOp(std::bind(&OctreeVisPass::debugIndirectCmdBuff, this)));
 
- nodePass->addOperation(
-          new FunctionOp(std::bind(&OctreeVisPass::debugNodePool_Octree, this)));
+ //nodePass->addOperation(
+   //       new FunctionOp(std::bind(&OctreeVisPass::debugNodePool_Octree, this)));
 
  nodePass->addOperation(
           new FunctionOp(std::bind(&OctreeVisPass::debugNextFreeAC, this)));
