@@ -35,7 +35,7 @@
 class ObInitPass : public kore::ShaderProgramPass
 {
   public:
-    ObInitPass(VCTscene* vctScene);
+    ObInitPass(VCTscene* vctScene, bool executeOnce);
     virtual ~ObInitPass(void);
 
   private:

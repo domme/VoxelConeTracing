@@ -31,7 +31,7 @@
 
 class VoxelizePass : public kore::ShaderProgramPass {
 public:
-  VoxelizePass(VCTscene* vctScene);
+  VoxelizePass(VCTscene* vctScene, bool executeOnce);
   virtual ~VoxelizePass(void);
 
 private:

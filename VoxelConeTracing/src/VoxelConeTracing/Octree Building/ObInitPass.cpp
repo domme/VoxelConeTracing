@@ -34,8 +34,10 @@
 ObInitPass::~ObInitPass(void) {
 }
 
-ObInitPass::ObInitPass(VCTscene* vctScene) {
-  using namespace kore;
+ObInitPass::ObInitPass(VCTscene* vctScene, bool executeOnce) {
+  using namespace kore;  
+
+  this->setExecuteOnce(executeOnce);
   
   _vctScene = vctScene;
   _renderMgr = RenderManager::getInstance();

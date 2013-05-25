@@ -278,11 +278,6 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\KoRE.vcxproj">
-      <Project>{03adc7cd-d9fa-4b74-aba0-c4cc0e8868c1}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="src\VoxelConeTracing\Cube.cpp" />
     <ClCompile Include="src\VoxelConeTracing\CubeVolume.cpp" />
     <ClCompile Include="src\VoxelConeTracing\FullscreenQuad.cpp" />
@@ -322,6 +317,11 @@
     <None Include="..\bin\assets\shader\VoxelConeTracing\voxelizeFrag.shader" />
     <None Include="..\bin\assets\shader\VoxelConeTracing\voxelizeGeom.shader" />
     <None Include="..\bin\assets\shader\VoxelConeTracing\voxelizeVert.shader" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\KoRE\KoRE.vcxproj">
+      <Project>{03adc7cd-d9fa-4b74-aba0-c4cc0e8868c1}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -114,8 +114,8 @@ void setup() {
 
   FrameBufferStage* backBufferStage = new FrameBufferStage;
   GLenum drawBuffers[] = {GL_NONE};
-  backBufferStage->setFrameBuffer(kore::FrameBuffer::BACKBUFFER,
-                                  GL_FRAMEBUFFER, drawBuffers, 1);
+  backBufferStage->setFrameBuffer(kore::FrameBuffer::BACKBUFFER);
+  backBufferStage->setActiveAttachments(drawBuffers, 1);
 
   SVCTparameters params;
   params.voxel_grid_resolution = 16;
@@ -124,34 +124,16 @@ void setup() {
   _vctScene.init(params, renderNodes, _pCamera);
  
   // Prepare render algorithm
-  backBufferStage->addProgramPass(new VoxelizePass(&_vctScene));
+  backBufferStage->addProgramPass(new VoxelizePass(&_vctScene, true));
   backBufferStage->addProgramPass(new ModifyIndirectBufferPass(
                                   _vctScene.getShdFragListIndCmdBuf(),
-                                  _vctScene.getShdAcVoxelIndex(),&_vctScene));
+                                  _vctScene.getShdAcVoxelIndex(),&_vctScene, true));
 
-  _numLevels = _vctScene.getNumLevels();
-
-  //ObFlagPass* obFlagPass = new ObFlagPass(&_vctScene);
-  //_obAllocatePass = new ObAllocatePass(&_vctScene, 0);
-
-
-  
+  _numLevels = _vctScene.getNumLevels(); 
   for (uint iLevel = 0; iLevel < _numLevels; ++iLevel) {
-    backBufferStage->addProgramPass(new ObFlagPass(&_vctScene));
-    backBufferStage->addProgramPass(new ObAllocatePass(&_vctScene, iLevel));
+    backBufferStage->addProgramPass(new ObFlagPass(&_vctScene, true));
+    backBufferStage->addProgramPass(new ObAllocatePass(&_vctScene, iLevel, true));
   }
-  
-
- /* // 1
-  backBufferStage->addProgramPass(new ObFlagPass(&_vctScene));
-  backBufferStage->addProgramPass(new ObAllocatePass(&_vctScene, 0));
-
-  // 2 
-  backBufferStage->addProgramPass(new ObFlagPass(&_vctScene));
-  backBufferStage->addProgramPass(new ObAllocatePass(&_vctScene, 1));
-
-  // 3 
-  backBufferStage->addProgramPass(new ObFlagPass(&_vctScene));*/
   
   backBufferStage->addProgramPass(new OctreeVisPass(&_vctScene));
 
@@ -246,10 +228,11 @@ int main(void) {
   int oldMouseY = 0;
   glfwGetMousePos(&oldMouseX,&oldMouseY);
 
+  /*
   kore::SceneManager::getInstance()->update();
   kore::GLerror::gl_ErrorCheckStart();
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT |GL_STENCIL_BUFFER_BIT);
-  kore::RenderManager::getInstance()->renderFrame();
+  kore::RenderManager::getInstance()->renderFrame(); */
 
   glfwSwapBuffers();
   kore::GLerror::gl_ErrorCheckFinish("Main Loop");
@@ -299,11 +282,13 @@ int main(void) {
       oldMouseY = mouseY;
     }
 
-    /*kore::GLerror::gl_ErrorCheckStart();
+   // /*
+    kore::GLerror::gl_ErrorCheckStart();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT |GL_STENCIL_BUFFER_BIT);
     kore::RenderManager::getInstance()->renderFrame();
 
-    kore::GLerror::gl_ErrorCheckFinish("Main Loop"); */
+    kore::GLerror::gl_ErrorCheckFinish("Main Loop"); 
+    //*/
 
     glfwSwapBuffers();
 

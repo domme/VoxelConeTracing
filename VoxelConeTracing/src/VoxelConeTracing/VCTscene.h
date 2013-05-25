@@ -157,7 +157,10 @@ private:
   kore::SceneNode* _voxelGridNode;
   kore::Texture _voxelTex;
   GLuint _tex3DclearPBO;
+
   uint _numLevels;
+  
+
   uint _numNodes;  // Number of all nodes in the nodepool
 
   void clearTex3D(kore::Texture* tex);

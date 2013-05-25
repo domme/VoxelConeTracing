@@ -84,7 +84,7 @@ void main() {
   uint sideLength = sizeOnLevel(childLevel);
 
   // Loop as long as node != voxel
-  for(uint i = 0; i < 5; ++i) {
+  while(sideLength > 1) {
       if (nextEmpty(node)) {
         flagNode(node, nodeAddress);
         return;

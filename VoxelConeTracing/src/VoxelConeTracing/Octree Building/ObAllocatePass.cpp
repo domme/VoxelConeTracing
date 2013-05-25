@@ -34,9 +34,11 @@
 ObAllocatePass::~ObAllocatePass(void) {
 }
 
-ObAllocatePass::ObAllocatePass(VCTscene* vctScene, uint level) {
+ObAllocatePass::ObAllocatePass(VCTscene* vctScene, uint level, bool executeOnce) {
   using namespace kore;
   
+  this->setExecuteOnce(executeOnce);
+
   _vctScene = vctScene;
   _renderMgr = RenderManager::getInstance();
   _sceneMgr = SceneManager::getInstance();

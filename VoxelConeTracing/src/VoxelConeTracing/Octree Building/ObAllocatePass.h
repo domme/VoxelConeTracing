@@ -36,7 +36,7 @@
 class ObAllocatePass : public kore::ShaderProgramPass
 {
   public:
-    ObAllocatePass(VCTscene* vctScene, uint level);
+    ObAllocatePass(VCTscene* vctScene, uint level, bool executeOnce);
     virtual ~ObAllocatePass(void);
 
     void setLevel(uint level);

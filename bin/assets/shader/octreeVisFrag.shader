@@ -39,6 +39,8 @@ uniform uint voxelGridResolution;
 uniform mat4 viewI;
 uniform mat4 voxelGridTransform;
 uniform mat4 voxelGridTransformI;
+uniform uint numLevels;
+
 
 out vec4 color;
 
@@ -87,9 +89,10 @@ vec3 getOctreeColor(in uvec3 pos) {
   uvec3 nodePos = uvec3(0, 0, 0);
   uint childLevel = 1;
   uint sideLength = sizeOnLevel(childLevel);
+  
 
   // Loop as long as node != voxel
-  for(uint i = 0; i < 5; ++i) {
+  for (uint iLevel = 0; iLevel < 5; ++iLevel) {
       if (nextEmpty(node)) {
         return levelColors[childLevel-1];  // This is a leaf node-> return its color
       }
@@ -117,7 +120,7 @@ vec3 getOctreeColor(in uvec3 pos) {
       } // for
     } // while
 
-    return vec3(1.0, 0.0, 0.0);
+    return vec3(0.0, 0.0, 0.0);
 }
 
 
@@ -126,7 +129,7 @@ void main(void) {
                      / vec3(voxelGridResolution)).x;
 
   float maxLength = length(In.viewDirVS);
-  float stepSize = voxelSize;
+  float stepSize = voxelSize / 4.0;
   
   vec3 viewDirWS = normalize((viewI * vec4(In.viewDirVS, 0.0)).xyz);
   vec3 camPosWS = viewI[3].xyz;

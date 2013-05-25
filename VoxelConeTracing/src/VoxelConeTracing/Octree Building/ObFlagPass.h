@@ -35,7 +35,7 @@
 class ObFlagPass : public kore::ShaderProgramPass
 {
   public:
-    ObFlagPass(VCTscene* vctScene);
+    ObFlagPass(VCTscene* vctScene, bool executeOnce);
     virtual ~ObFlagPass(void);
 
   private:

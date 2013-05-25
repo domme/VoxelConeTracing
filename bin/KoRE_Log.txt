@@ -1,4 +1,4 @@
-KoRE Log - Sat May 25 16:06:33 2013
+KoRE Log - Sat May 25 18:34:36 2013
 
 [DEBUG] added Framebuffer 'BACKBUFFER'
 Render Device: AMD Radeon HD 7800 Series
@@ -7,7 +7,7 @@ OpenGL version: 4.2.12217 Core Profile/Debug Context 12.104.0.0
 GLSL version: 4.20
 GLFW version 2.7.7
 GLEW version: 1.9.0
-[DEBUG] Texture 'colotex.png' successfully loaded
+[DEBUG] Texture 'colotex.png' successfully loaded.
 [DEBUG] Scene './assets/meshes/monkey.dae' successfully loaded:
 	 1 meshes
 	 1 cameras
@@ -90,4 +90,139 @@ Allocating Octree with 4681 nodes in 5 levels
 	Uniform 'nodePool' at location 7
 VoxelFragList indirectCmdBuf contents:
 543848 1 0 0 
-Next free nodepool address: 558 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 
+VoxelFragList indirectCmdBuf contents:
+543848 1 0 0 
+Next free nodepool address: 147 

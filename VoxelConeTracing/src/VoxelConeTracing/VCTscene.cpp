@@ -232,7 +232,7 @@ void VCTscene::initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
   texProps.format = GL_RED_INTEGER;
   texProps.pixelType = GL_UNSIGNED_INT;
 
-  tex->create(texProps, "voxelTexture");
+  tex->init(texProps, "voxelTexture");
   
   // Create data
   RenderManager::getInstance()->activeTexture(0);
