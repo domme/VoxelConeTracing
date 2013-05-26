@@ -23,19 +23,8 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#ifndef VCT_SRC_VCT_VOXELIZEPASS_H_
-#define VCT_SRC_VCT_VOXELIZEPASS_H_
+#version 420 core
 
-#include "KoRE/Passes/ShaderProgramPass.h"
-#include "VoxelConeTracing/VCTscene.h"
-
-class VoxelizePass : public kore::ShaderProgramPass {
-public:
-  VoxelizePass(VCTscene* vctScene, kore::EOperationExecutionType executionType);
-  virtual ~VoxelizePass(void);
-
-private:
-  
-
-};
-#endif  // VCT_SRC_VCT_VOXELIZEPASS_H_
+void main() {
+    
+}  // main

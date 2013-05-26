@@ -34,10 +34,11 @@
 ObFlagPass::~ObFlagPass(void) {
 }
 
-ObFlagPass::ObFlagPass(VCTscene* vctScene, bool executeOnce) {
+ObFlagPass::ObFlagPass(VCTscene* vctScene,
+                      kore::EOperationExecutionType executionType) {
   using namespace kore;
   
-  this->setExecuteOnce(executeOnce);
+  this->setExecutionType(executionType);
 
   _vctScene = vctScene;
   _renderMgr = RenderManager::getInstance();

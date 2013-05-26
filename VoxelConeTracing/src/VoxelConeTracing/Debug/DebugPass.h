@@ -23,19 +23,35 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#ifndef VCT_SRC_VCT_VOXELIZEPASS_H_
-#define VCT_SRC_VCT_VOXELIZEPASS_H_
+#ifndef VCT_SRC_VCT_DEBUGPASS_H_
+#define VCT_SRC_VCT_DEBUGPASS_H_
 
 #include "KoRE/Passes/ShaderProgramPass.h"
 #include "VoxelConeTracing/VCTscene.h"
+#include "KoRE/SceneManager.h"
+#include "KoRE/RenderManager.h"
+#include "KoRE/ResourceManager.h"
 
-class VoxelizePass : public kore::ShaderProgramPass {
+class DebugPass : public kore::ShaderProgramPass
+{
 public:
-  VoxelizePass(VCTscene* vctScene, kore::EOperationExecutionType executionType);
-  virtual ~VoxelizePass(void);
+  DebugPass(VCTscene* vctScene, kore::EOperationExecutionType executionType);
+  virtual ~DebugPass(void);
 
 private:
-  
+  kore::RenderManager* _renderMgr;
+  kore::SceneManager* _sceneMgr;
+  kore::ResourceManager* _resMgr;
 
+  kore::ShaderProgram _debugShader;
+  VCTscene* _vctScene;
+
+  void debugVoxelIndexAC();
+  void debugVoxelFragmentList();
+  void debugIndirectCmdBuff();
+  void debugNodePool();
+  void debugNextFreeAC();
+  //void traverseOctree(const SNode* parent, uint level, uint maxLevel);
+  void debugNodePool_Octree();
 };
-#endif  // VCT_SRC_VCT_VOXELIZEPASS_H_
+#endif //VCT_SRC_VCT_OCTREEVISPASS_H_

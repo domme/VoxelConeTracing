@@ -40,6 +40,9 @@
     <ClCompile Include="src\VoxelConeTracing\Octree Building\ModifyIndirectBufferPass.cpp">
       <Filter>src\Octree Building</Filter>
     </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\Debug\Debugpass.cpp">
+      <Filter>src\Debug</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -56,6 +59,9 @@
     </Filter>
     <Filter Include="src\Raycasting">
       <UniqueIdentifier>{e96319dc-97fc-4c8e-a773-99653fd9ffb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Debug">
+      <UniqueIdentifier>{211d334f-bafc-4b6e-98e8-c69d79f7e3c0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -95,6 +101,9 @@
     <ClInclude Include="src\VoxelConeTracing\Octree Building\ModifyIndirectBufferPass.h">
       <Filter>src\Octree Building</Filter>
     </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\Debug\DebugPass.h">
+      <Filter>src\Debug</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\bin\assets\shader\VoxelConeTracing\voxelizeFrag.shader">
@@ -125,6 +134,9 @@
       <Filter>shader</Filter>
     </None>
     <None Include="..\bin\assets\shader\ModifyIndirectBufferVert.shader">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\debug.shader">
       <Filter>shader</Filter>
     </None>
   </ItemGroup>

@@ -280,6 +280,7 @@
   <ItemGroup>
     <ClCompile Include="src\VoxelConeTracing\Cube.cpp" />
     <ClCompile Include="src\VoxelConeTracing\CubeVolume.cpp" />
+    <ClCompile Include="src\VoxelConeTracing\Debug\Debugpass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\FullscreenQuad.cpp" />
     <ClCompile Include="src\VoxelConeTracing\main.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Building\ModifyIndirectBufferPass.cpp" />
@@ -295,6 +296,7 @@
   <ItemGroup>
     <ClInclude Include="src\VoxelConeTracing\Cube.h" />
     <ClInclude Include="src\VoxelConeTracing\CubeVolume.h" />
+    <ClInclude Include="src\VoxelConeTracing\Debug\DebugPass.h" />
     <ClInclude Include="src\VoxelConeTracing\FullscreenQuad.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Building\ModifyIndirectBufferPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Building\ObAllocatePass.h" />
@@ -307,6 +309,7 @@
     <ClInclude Include="src\VoxelConeTracing\vsDebugLib.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\bin\assets\shader\debug.shader" />
     <None Include="..\bin\assets\shader\ModifyIndirectBufferVert.shader" />
     <None Include="..\bin\assets\shader\ObAllocateVert.shader" />
     <None Include="..\bin\assets\shader\ObFlagVert.shader" />

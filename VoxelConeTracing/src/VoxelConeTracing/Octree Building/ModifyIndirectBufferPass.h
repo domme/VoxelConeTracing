@@ -38,7 +38,8 @@ class ModifyIndirectBufferPass : public kore::ShaderProgramPass
   public:
     ModifyIndirectBufferPass(const kore::ShaderData* shdIndirectBuffer,
                              const kore::ShaderData* shdACnumVoxelsBuffer,
-                             VCTscene* vctScene, bool executeOnce);
+                             VCTscene* vctScene,
+                             kore::EOperationExecutionType executionType);
     virtual ~ModifyIndirectBufferPass(void);
 
   private:

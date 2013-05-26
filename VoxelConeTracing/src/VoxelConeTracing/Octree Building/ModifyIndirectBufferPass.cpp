@@ -37,10 +37,11 @@ ModifyIndirectBufferPass::~ModifyIndirectBufferPass(void) {
 ModifyIndirectBufferPass::
   ModifyIndirectBufferPass(const kore::ShaderData* shdIndirectBuffer,
                            const kore::ShaderData* shdACnumVoxelsBuffer,
-                           VCTscene* vctScene, bool executeOnce) {
+                           VCTscene* vctScene,
+                           kore::EOperationExecutionType executionType) {
   using namespace kore;
   
-  this->setExecuteOnce(executeOnce);
+  this->setExecutionType(executionType);
 
   _vctScene = vctScene;
   _renderMgr = RenderManager::getInstance();

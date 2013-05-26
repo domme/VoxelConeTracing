@@ -38,11 +38,12 @@
 #include "KoRE/Operations/ResetAtomicCounterBuffer.h"
 #include "KoRE/Operations/MemoryBarrierOp.h"
 
-VoxelizePass::VoxelizePass(VCTscene* vctScene, bool executeOnce)
+VoxelizePass::VoxelizePass(VCTscene* vctScene,
+                           kore::EOperationExecutionType executionType)
 {
   using namespace kore;
 
-  this->setExecuteOnce(executeOnce);
+  this->setExecutionType(executionType);
 
   // Init Voxelize procedure
   //////////////////////////////////////////////////////////////////////////

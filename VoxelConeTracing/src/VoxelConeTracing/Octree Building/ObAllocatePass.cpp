@@ -34,10 +34,11 @@
 ObAllocatePass::~ObAllocatePass(void) {
 }
 
-ObAllocatePass::ObAllocatePass(VCTscene* vctScene, uint level, bool executeOnce) {
+ObAllocatePass::ObAllocatePass(VCTscene* vctScene, uint level,
+                               kore::EOperationExecutionType executionType) {
   using namespace kore;
   
-  this->setExecuteOnce(executeOnce);
+  this->setExecutionType(executionType);
 
   _vctScene = vctScene;
   _renderMgr = RenderManager::getInstance();

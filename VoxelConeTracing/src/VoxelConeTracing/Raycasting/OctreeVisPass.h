@@ -45,13 +45,6 @@ private:
 
   kore::ShaderProgram _visShader;
   VCTscene* _vctScene;
-
-  void debugVoxelIndexAC();
-  void debugVoxelFragmentList();
-  void debugIndirectCmdBuff();
-  void debugNodePool();
-  void debugNextFreeAC();
-  //void traverseOctree(const SNode* parent, uint level, uint maxLevel);
-  void debugNodePool_Octree();
+   
 };
 #endif //VCT_SRC_VCT_OCTREEVISPASS_H_

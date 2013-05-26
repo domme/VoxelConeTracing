@@ -69,6 +69,7 @@
 
 #include "vsDebugLib.h"
 #include "Octree Building/ModifyIndirectBufferPass.h"
+#include "Debug/DebugPass.h"
 
 
 
@@ -124,18 +125,20 @@ void setup() {
   _vctScene.init(params, renderNodes, _pCamera);
  
   // Prepare render algorithm
-  backBufferStage->addProgramPass(new VoxelizePass(&_vctScene, true));
+  backBufferStage->addProgramPass(new VoxelizePass(&_vctScene, kore::EXECUTE_ONCE));
   backBufferStage->addProgramPass(new ModifyIndirectBufferPass(
                                   _vctScene.getShdFragListIndCmdBuf(),
-                                  _vctScene.getShdAcVoxelIndex(),&_vctScene, true));
+                                  _vctScene.getShdAcVoxelIndex(),&_vctScene,
+                                  kore::EXECUTE_ONCE));
 
   _numLevels = _vctScene.getNumLevels(); 
   for (uint iLevel = 0; iLevel < _numLevels; ++iLevel) {
-    backBufferStage->addProgramPass(new ObFlagPass(&_vctScene, true));
-    backBufferStage->addProgramPass(new ObAllocatePass(&_vctScene, iLevel, true));
+    backBufferStage->addProgramPass(new ObFlagPass(&_vctScene, kore::EXECUTE_ONCE));
+    backBufferStage->addProgramPass(new ObAllocatePass(&_vctScene, iLevel, kore::EXECUTE_ONCE));
   }
   
   backBufferStage->addProgramPass(new OctreeVisPass(&_vctScene));
+  backBufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
 
   RenderManager::getInstance()->addFramebufferStage(backBufferStage);
   //////////////////////////////////////////////////////////////////////////
