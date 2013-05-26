@@ -105,10 +105,11 @@ uint sizeOnLevel(in uint level) {
   return uint(voxelGridResolution / pow(2U, level));
 }
 
-vec3 getOctreeColor(in uvec3 pos) {
+vec3 getOctreeColor(in uvec3 pos, out uvec3 outNodePosMin, out uvec3 outNodePosMax) {
   uvec2 node = imageLoad(nodePool, 0).xy;
   uint nodeAddress = 0;
   uvec3 nodePos = uvec3(0, 0, 0);
+  uvec3 nodePosMax = uvec3(1, 1, 1);
   uint childLevel = 1;
   uint sideLength = sizeOnLevel(childLevel);
   
@@ -116,6 +117,8 @@ vec3 getOctreeColor(in uvec3 pos) {
   // Loop as long as node != voxel
   for (uint iLevel = 0; iLevel < 5; ++iLevel) {
       if (nextEmpty(node)) {
+        outNodePosMin = nodePos;
+        outNodePosMax = nodePosMax;
         return levelColors[childLevel-1];  // This is a leaf node-> return its color
       }
 
@@ -136,12 +139,16 @@ vec3 getOctreeColor(in uvec3 pos) {
             node = childNode;
             nodeAddress = childAddress;
             nodePos = posMin;
+            nodePosMax = posMax;
             childLevel += 1;
             break;
         } // if
       } // for
     } // while
 
+    // Not inside octree
+    outNodePosMin = uvec3(NODE_NOT_FOUND);
+    outNodePosMax = uvec3(NODE_NOT_FOUND);
     return vec3(0.0, 0.0, 0.0);
 }
 
@@ -158,34 +165,48 @@ void main(void) {
   float tLeave = 0.0;
   
   if (!intersectRayWithAABB(rayOriginTex, rayDirTex, vec3(0.0), vec3(1.0), tEnter, tLeave)) {
-    color = vec4(1.0, 0.0, 0.0, 0.0);
+    color = vec4(0.0, 0.0, 0.0, 0.0);
     return;
   }
 
   
   vec4 col = vec4(0.0);
-  float stepSize = 1.0 / float(voxelGridResolution * 5);
-  for (float f = tEnter; f < tLeave; f += stepSize) {
+  
+  for (float f = tEnter + 0.001; f < tLeave; ) {
     vec3 posTex = (rayOriginTex + rayDirTex * f);
 
-    if (posTex.x < 0.0 ||
-        posTex.x > 1.0 ||
-        posTex.y < 0.0 ||
-        posTex.y > 1.0 ||
-        posTex.z < 0.0 ||
-        posTex.z > 1.0) {
-          continue;  // Outside of voxelGrid
-    }
-
-    posTex *= vec3(voxelGridResolution);
-    uvec3 samplePos = uvec3(floor(posTex));
+    uvec3 samplePos = uvec3(floor(posTex * vec3(voxelGridResolution)));
 
     // Now traverse the octree with samplePos...
-     col = vec4(getOctreeColor(samplePos), 1.0);
-        
-    if (length(col.xyz) > 0.001) {
-      break;
+    uvec3 nodePosMin = uvec3(0);
+    uvec3 nodePosMax = uvec3(0);
+    col = vec4(getOctreeColor(samplePos, nodePosMin, nodePosMax), 1.0);
+    
+    // If a non-black color was returned: abort.
+    if (length(col.xyz) > 0.01) {
+      color = col;
+      return;
     }
+      
+    // Black color was returned: we are either not inside the octree grid
+    // or not on the leaf level. If we are not on the leaf-level: skip empty node
+    if (nodePosMin.x != NODE_NOT_FOUND) {
+      float tNodeEnter = 0.0f;
+      float tNodeLeave = 0.0f;
+
+      vec3 nodePosMinTex = vec3(nodePosMin) / vec3(voxelGridResolution);
+      vec3 nodePosMaxTex = vec3(nodePosMax) / vec3(voxelGridResolution);
+
+      if (intersectRayWithAABB(rayOriginTex, rayDirTex, nodePosMinTex, nodePosMaxTex, tNodeEnter, tNodeLeave)) {
+        f = tNodeLeave + 0.001;
+        continue;
+      }
+    }
+
+    // This should not happen
+    color = vec4(1.0, 0.0, 0.0, 0.0);
+    return; // Prevent infinite loop
+
   }
   
   color = col;
