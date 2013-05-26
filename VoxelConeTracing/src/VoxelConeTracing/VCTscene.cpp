@@ -159,7 +159,7 @@ void VCTscene::initVoxelFragList() {
   props.size = sizeof(unsigned int)
                * _voxelGridResolution
                * _voxelGridResolution
-               * _voxelGridResolution * 1000;
+               * _voxelGridResolution * 200;
   props.usageHint = GL_DYNAMIC_COPY;
 
   _voxelFragLists[VOXELATT_POSITION]
@@ -205,10 +205,8 @@ void VCTscene::clearTex3D(kore::Texture* tex) {
 void VCTscene::initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
   using namespace kore;
 
-  unsigned int colorValues[128 * 128];
-  
-  /*unsigned int* colorValues
-    = new unsigned int[_voxelGridResolution * _voxelGridResolution]; */
+  unsigned int* colorValues
+    = new unsigned int[_voxelGridResolution * _voxelGridResolution];
   memset(colorValues, 0, _voxelGridResolution * _voxelGridResolution * sizeof(unsigned int));
 
   GLerror::gl_ErrorCheckStart();
