@@ -136,5 +136,8 @@ OctreeVisPass::OctreeVisPass(VCTscene* vctScene) {
     "inverse model Matrix", vctScene->getVoxelGridNode()->getTransform(),
     "voxelGridTransformI", &_visShader));
 
+  nodePass->addOperation(new BindUniform(vctScene->getShdNumLevels(),
+                         _visShader.getUniform("numLevels")));
+
   nodePass->addOperation(new RenderMesh(fsqMeshComponent));
 }

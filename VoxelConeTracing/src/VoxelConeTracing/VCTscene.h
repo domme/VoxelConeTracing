@@ -120,6 +120,8 @@ public:
   inline kore::ShaderData* getShdAcNodePoolNextFree()
   {return &_shdAcNodePoolNextFree;}
 
+  inline kore::ShaderData* getShdNumLevels() { return &_shdNumLevels;}
+
   inline uint getNumLevels() {return _numLevels;}
   inline uint getNumNodes() {return _numNodes;}
 
@@ -159,6 +161,7 @@ private:
   GLuint _tex3DclearPBO;
 
   uint _numLevels;
+  kore::ShaderData _shdNumLevels;
   
 
   uint _numNodes;  // Number of all nodes in the nodepool

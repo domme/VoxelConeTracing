@@ -56,6 +56,10 @@ void VCTscene::init(const SVCTparameters& params,
   _numLevels = ceil(log(_voxelGridResolution*_voxelGridResolution*_voxelGridResolution)/log(8))+1;
   kore::Log::getInstance()->write("[DEBUG] number of levels: %u \n", _numLevels);
 
+  _shdNumLevels.type = GL_UNSIGNED_INT;
+  _shdNumLevels.name = "Num levels";
+  _shdNumLevels.data = &_numLevels;
+
   _meshNodes = meshNodes;
   _camera = camera;
 

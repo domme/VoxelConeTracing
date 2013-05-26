@@ -16,12 +16,7 @@ const uint NODE_NOT_FOUND = 0xFFFFFFFF;
                               vec3( 149.0 / 255.0, 245.0 / 255.0, 202.0 / 255.0),  // light green
                               vec3( 218.0 / 255.0, 245.0 / 255.0, 233.0 / 255.0) };  // white green */
 
-
-const vec3 levelColors[5] = { vec3( 0.0, 0.0, 0.0 ),
-                              vec3( 0.0, 0.0, 0.0 ),
-                              vec3( 0.0, 0.0, 0.0 ),
-                              vec3( 0.0, 0.0, 0.0 ),
-                              vec3( 218.0 / 255.0, 245.0 / 255.0, 233.0 / 255.0) };  // white green
+const vec3 leafColor = vec3( 218.0 / 255.0, 245.0 / 255.0, 233.0 / 255.0);  // white green
 
 const uvec3 childOffsets[8] = {
   uvec3(0, 0, 0),
@@ -115,11 +110,15 @@ vec3 getOctreeColor(in uvec3 pos, out uvec3 outNodePosMin, out uvec3 outNodePosM
   
 
   // Loop as long as node != voxel
-  for (uint iLevel = 0; iLevel < 5; ++iLevel) {
+  for (uint iLevel = 0; iLevel < numLevels; ++iLevel) {
       if (nextEmpty(node)) {
         outNodePosMin = nodePos;
         outNodePosMax = nodePosMax;
-        return levelColors[childLevel-1];  // This is a leaf node-> return its color
+        if (childLevel == numLevels) {
+           return leafColor; // This is a leaf node-> return its color
+        } else {
+          return vec3(0.0, 0.0, 0.0);
+        }
       }
 
     sideLength = sizeOnLevel(childLevel);

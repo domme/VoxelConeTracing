@@ -119,7 +119,7 @@ void setup() {
   backBufferStage->setActiveAttachments(drawBuffers, 1);
 
   SVCTparameters params;
-  params.voxel_grid_resolution = 16;
+  params.voxel_grid_resolution = 32;
   params.voxel_grid_sidelengths = glm::vec3(50, 50, 50);
   
   _vctScene.init(params, renderNodes, _pCamera);
@@ -138,7 +138,7 @@ void setup() {
   }
   
   backBufferStage->addProgramPass(new OctreeVisPass(&_vctScene));
-  backBufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
+  //backBufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
 
   RenderManager::getInstance()->addFramebufferStage(backBufferStage);
   //////////////////////////////////////////////////////////////////////////
