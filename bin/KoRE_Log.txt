@@ -1,4 +1,4 @@
-KoRE Log - Sun May 26 13:08:45 2013
+KoRE Log - Sun May 26 15:52:54 2013
 
 [DEBUG] added Framebuffer 'BACKBUFFER'
 Render Device: AMD Radeon HD 7800 Series
@@ -85,9 +85,9 @@ Allocating Octree with 4681 nodes in 5 levels
 	Uniform 'fYfovDeg' at location 2
 	Uniform 'viewI' at location 3
 	Uniform 'voxelGridResolution' at location 4
-	Uniform 'voxelGridTransform' at location 5
-	Uniform 'voxelGridTransformI' at location 6
-	Uniform 'nodePool' at location 7
+	Uniform 'voxelGridTransformI' at location 5
+	Uniform 'nodePool' at location 6
+[ERROR] Uniform 'voxelGridTransform' not found in shader 'octreeVis shader'
 [DEBUG] Shader './assets/shader/debug.shader' compiled
 [DEBUG] Program '' compiled
 VoxelFragList indirectCmdBuf contents:

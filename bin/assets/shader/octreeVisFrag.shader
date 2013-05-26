@@ -71,6 +71,28 @@ uvec3 uintXYZ10ToVec3(uint val) {
 }
 
 
+/*
+ * This function implements the "slab test" algorithm for intersecting a ray
+ * with a box
+ (http://www.siggraph.org/education/materials/HyperGraph/raytrace/rtinter3.htm)
+ */
+bool intersectRayWithAABB (in vec3 ro, in vec3 rd,         // Ray-origin and -direction
+                           in vec3 boxMin, in vec3 boxMax,
+                           out float tEnter, out float tLeave)
+{
+    vec3 tempMin = (boxMin - ro) / rd; 
+    vec3 tempMax = (boxMax - ro) / rd;
+    
+    vec3 v3Max = max (tempMax, tempMin);
+    vec3 v3Min = min (tempMax, tempMin);
+    
+    tLeave = min (v3Max.x, min (v3Max.y, v3Max.z));
+    tEnter = max (max (v3Min.x, 0.0), max (v3Min.y, v3Min.z));    
+    
+    return tLeave > tEnter;
+}
+
+
 uint getNext(in uvec2 nodeValue) {
   return nodeValue.x & NODE_MASK_NEXT;
 }
@@ -125,33 +147,38 @@ vec3 getOctreeColor(in uvec3 pos) {
 
 
 void main(void) {
-  float voxelSize = (length(voxelGridTransform[0] * 2.0)
-                     / vec3(voxelGridResolution)).x;
-
-  float maxLength = length(In.viewDirVS);
-  float stepSize = voxelSize / 4.0;
-  
-  vec3 viewDirWS = normalize((viewI * vec4(In.viewDirVS, 0.0)).xyz);
   vec3 camPosWS = viewI[3].xyz;
+  vec3 viewDirWS = normalize((viewI * vec4(In.viewDirVS, 0.0)).xyz);
 
+  // Get ray origin and ray direction in texspace
+  vec3 rayDirTex = normalize((voxelGridTransformI * vec4(viewDirWS, 0.0)).xyz);
+  vec3 rayOriginTex = (voxelGridTransformI *  vec4(camPosWS, 1.0)).xyz * 0.5 + 0.5;
+
+  float tEnter = 0.0;
+  float tLeave = 0.0;
+  
+  if (!intersectRayWithAABB(rayOriginTex, rayDirTex, vec3(0.0), vec3(1.0), tEnter, tLeave)) {
+    color = vec4(1.0, 0.0, 0.0, 0.0);
+    return;
+  }
+
+  
   vec4 col = vec4(0.0);
-  for (float f = 0; f < maxLength; f += stepSize) {
-    vec3 pos = camPosWS + viewDirWS * f;
+  float stepSize = 1.0 / float(voxelGridResolution * 5);
+  for (float f = tEnter; f < tLeave; f += stepSize) {
+    vec3 posTex = (rayOriginTex + rayDirTex * f);
 
-    // Get the position in the voxelGrid-coordinate frame and convert to tex-space
-    vec3 posTexSpace = (voxelGridTransformI * vec4(pos, 1.0)).xyz * 0.5 + 0.5;
-
-    if (posTexSpace.x < 0.0 ||
-        posTexSpace.x > 1.0 ||
-        posTexSpace.y < 0.0 ||
-        posTexSpace.y > 1.0 ||
-        posTexSpace.z < 0.0 ||
-        posTexSpace.z > 1.0) {
+    if (posTex.x < 0.0 ||
+        posTex.x > 1.0 ||
+        posTex.y < 0.0 ||
+        posTex.y > 1.0 ||
+        posTex.z < 0.0 ||
+        posTex.z > 1.0) {
           continue;  // Outside of voxelGrid
     }
 
-    posTexSpace *= vec3(voxelGridResolution);
-    uvec3 samplePos = uvec3(floor(posTexSpace));
+    posTex *= vec3(voxelGridResolution);
+    uvec3 samplePos = uvec3(floor(posTex));
 
     // Now traverse the octree with samplePos...
      col = vec4(getOctreeColor(samplePos), 1.0);
