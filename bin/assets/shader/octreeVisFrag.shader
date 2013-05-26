@@ -197,8 +197,8 @@ void main(void) {
       vec3 nodePosMinTex = vec3(nodePosMin) / vec3(voxelGridResolution);
       vec3 nodePosMaxTex = vec3(nodePosMax) / vec3(voxelGridResolution);
 
-      if (intersectRayWithAABB(rayOriginTex, rayDirTex, nodePosMinTex, nodePosMaxTex, tNodeEnter, tNodeLeave)) {
-        f = tNodeLeave + 0.001;
+      if (intersectRayWithAABB(posTex, rayDirTex, nodePosMinTex, nodePosMaxTex, tNodeEnter, tNodeLeave)) {
+        f += tNodeLeave + 0.001;
         continue;
       }
     }
