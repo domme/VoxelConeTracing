@@ -161,5 +161,8 @@ void OctreeVisPass::setDisplayLevel(uint level) {
     level = _vctScene->getNumLevels() - 1;
   }
 
+  if (level == 0xFFFFFFFF) { // overflow 
+    level = 0;
+  }
   _displayLevel = level;
 }

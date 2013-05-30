@@ -23,8 +23,8 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#ifndef VCT_SRC_VCT_OCTREEMIPMAPPASS_H_
-#define VCT_SRC_VCT_OCTREEMIPMAPPASS_H_
+#ifndef VCT_SRC_VCT_WRITELEAFNODESPASS_H_
+#define VCT_SRC_VCT_WRITELEAFNODESPASS_H_
 
 #include "KoRE/Passes/ShaderProgramPass.h"
 #include "VoxelConeTracing/VCTscene.h"

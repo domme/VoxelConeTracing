@@ -39,6 +39,7 @@ public:
   virtual ~OctreeVisPass(void);
 
   void setDisplayLevel(uint level);
+  inline uint getDisplayLevel() const {return _displayLevel;}
 
 private:
   kore::RenderManager* _renderMgr;

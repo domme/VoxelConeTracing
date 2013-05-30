@@ -1,4 +1,4 @@
-KoRE Log - Thu May 30 17:24:00 2013
+KoRE Log - Thu May 30 19:04:47 2013
 
 [DEBUG] added Framebuffer 'BACKBUFFER'
 Render Device: AMD Radeon HD 7800 Series
@@ -117,6 +117,21 @@ Allocating Octree with 19173961 nodes in 9 levels
 	Uniform 'nodePool' at location 2
 	Uniform 'voxelFragList_color' at location 3
 	Uniform 'voxelFragList_pos' at location 4
+[DEBUG] Shader './assets/shader/OctreeMipmap.shader' compiled
+[DEBUG] Program '' compiled
+	Uniform 'nodePool' at location 0
+[DEBUG] Program '' compiled
+	Uniform 'nodePool' at location 0
+[DEBUG] Program '' compiled
+	Uniform 'nodePool' at location 0
+[DEBUG] Program '' compiled
+	Uniform 'nodePool' at location 0
+[DEBUG] Program '' compiled
+	Uniform 'nodePool' at location 0
+[DEBUG] Program '' compiled
+	Uniform 'nodePool' at location 0
+[DEBUG] Program '' compiled
+	Uniform 'nodePool' at location 0
 [DEBUG] Shader './assets/shader/VoxelConeTracing/raycastVert.shader' compiled
 [DEBUG] Shader './assets/shader/OctreeVisFrag.shader' compiled
 [DEBUG] Program '' compiled

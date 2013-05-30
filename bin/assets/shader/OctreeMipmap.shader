@@ -85,7 +85,7 @@ void main() {
   }
 
   uint childAddress = getNext(node);
-  uvec2 child = imageLoad(nodePool, int(childAddress));
+  uvec2 child = imageLoad(nodePool, int(childAddress)).xy;
 
   if (!isFlagged(child)) {
     // The first child is not flagged. This means that no color has been
@@ -101,7 +101,7 @@ void main() {
                uvec4(NODE_MASK_NEXT & child.x, child.y, 0, 0));
 
   for (uint iChild = 1; iChild < 8; ++iChild) {
-    child = imageLoad(nodePool, int(childAddress + iChild));
+    child = imageLoad(nodePool, int(childAddress + iChild)).xy;
     color += convRGBA8ToVec4(child.y);
 
     // Unflag child
@@ -114,5 +114,5 @@ void main() {
 
   // Store the average color value in the parent and flag him.
   imageStore(nodePool, gl_VertexID,
-             uvec4((1 << 31) | (0x7FFFFFFF & node.x), colorU, 0, 0);
+             uvec4((1 << 31) | (0x7FFFFFFF & node.x), colorU, 0, 0));
 }

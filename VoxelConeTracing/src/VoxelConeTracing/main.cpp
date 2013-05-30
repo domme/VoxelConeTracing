@@ -87,7 +87,11 @@ static kore::FrameBufferStage* _backbufferStage = NULL;
 static VCTscene _vctScene;
 
 static ObAllocatePass* _obAllocatePass = NULL;
+static OctreeVisPass* _octreeVisPass = NULL;
 static uint _numLevels = 0;
+
+static bool _oldPageUp = false;
+static bool _oldPageDown = false;
 
 void changeAllocPassLevel() {
   static uint currLevel = 0;
@@ -147,8 +151,14 @@ void setup() {
   }
 
   _backbufferStage->addProgramPass(new WriteLeafNodesPass(&_vctScene, kore::EXECUTE_ONCE));
+
+  // Mipmap the values from bottom to top
+  for (uint iLevel = _numLevels - 2; iLevel > 0; --iLevel) {
+    _backbufferStage->addProgramPass(new OctreeMipmapPass(&_vctScene, iLevel, kore::EXECUTE_ONCE));
+  }
   
-  _backbufferStage->addProgramPass(new OctreeVisPass(&_vctScene));
+  _octreeVisPass = new OctreeVisPass(&_vctScene);
+  _backbufferStage->addProgramPass(_octreeVisPass);
   _backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
 
   RenderManager::getInstance()->addFramebufferStage(_backbufferStage);
@@ -263,6 +273,25 @@ int main(void) {
 
       if (glfwGetKey(GLFW_KEY_RIGHT) || glfwGetKey('D')) {
         _pCamera->moveSideways(cameraMoveSpeed * static_cast<float>(time));
+      }
+
+      if (glfwGetKey(GLFW_KEY_PAGEUP)) {
+        if (!_oldPageUp) {
+          _oldPageUp = true;
+          _octreeVisPass->setDisplayLevel(_octreeVisPass->getDisplayLevel() + 1);
+        }
+      } else {
+        _oldPageUp = false;
+      }
+
+      if (glfwGetKey(GLFW_KEY_PAGEDOWN)) {
+        if (!_oldPageDown) {
+          _oldPageDown = true;
+          _octreeVisPass->setDisplayLevel(_octreeVisPass->getDisplayLevel() - 1);
+        }
+        
+      } else {
+        _oldPageDown = false;
       }
 
       int mouseX = 0;
