@@ -90,26 +90,30 @@ void main() {
   if (!isFlagged(child)) {
     // The first child is not flagged. This means that no color has been
     // written here before.
-    return;
+    //return;
   }
 
   // Average the color from all 8 children
   // TODO: Do proper alpha-weighted average!
-  vec4 color = convRGBA8ToVec4(child.y);
-  // Unflag child
-    imageStore(nodePool, int(childAddress),
-               uvec4(NODE_MASK_NEXT & child.x, child.y, 0, 0));
-
-  for (uint iChild = 1; iChild < 8; ++iChild) {
+  vec4 color = vec4(0);
+  
+  float weights = 0;
+  for (uint iChild = 0; iChild < 8; ++iChild) {
     child = imageLoad(nodePool, int(childAddress + iChild)).xy;
-    color += convRGBA8ToVec4(child.y);
+    vec4 childColor = convRGBA8ToVec4(child.y);
 
+    if (childColor.a > 1) {
+      weights += 1;
+      color += childColor;
+    }
+
+    
     // Unflag child
     imageStore(nodePool, int(childAddress + iChild),
                uvec4(NODE_MASK_NEXT & child.x, child.y, 0, 0));
   }
 
-  color /= 8.0;
+  color /= max(weights, 1.0);
   uint colorU = convVec4ToRGBA8(color);
 
   // Store the average color value in the parent and flag him.

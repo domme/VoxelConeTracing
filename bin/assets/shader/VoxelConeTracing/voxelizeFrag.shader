@@ -75,7 +75,7 @@ const vec3 worldAxes[3] = vec3[3]( vec3(1.0, 0.0, 0.0),
 void main() {
   uvec3 baseVoxel = uvec3(floor(In.posTexSpace * voxelTexSize));
   
-  vec4 diffColor = texture(diffuseTex, In.uv);
+  vec4 diffColor = vec4(texture(diffuseTex, In.uv).xyz, 1.0);
 
   //AMD-Error here:
   //imageAtomicRGBA8Avg(baseVoxel, vec4(diffColor.xyz,1.0));

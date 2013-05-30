@@ -101,16 +101,18 @@ vec4 getOctreeColor(in uvec3 pos, out uvec3 outNodePosMin, out uvec3 outNodePosM
   uint childLevel = 1;
   uint sideLength = sizeOnLevel(childLevel);
   
-  for (uint iLevel = 0; iLevel < numLevels; ++iLevel) {
-      if (nextEmpty(node)) {
+  for (uint iLevel = 0; iLevel <= targetLevel; ++iLevel) {
+   if ((iLevel == targetLevel)) {
         outNodePosMin = nodePos;
         outNodePosMax = nodePosMax;
-        if (childLevel - 1 == targetLevel) {
-           return vec4(convRGBA8ToVec4(node.y)) / 255.0; // This is a leaf node-> return its color
-        } else {
-          return vec4(0.0, 0.0, 0.0, 0.0);
-        }
-      }
+        return vec4(convRGBA8ToVec4(node.y)) / 255.0; // This is a leaf node-> return its color
+    }
+
+    if (nextEmpty(node)) {
+      outNodePosMin = nodePos;
+      outNodePosMax = nodePosMax;
+      return vec4(0.0, 0.0, 0.0, 0.0);
+    }
 
     sideLength = sizeOnLevel(childLevel);
     uint childStartAddress = getNext(node);
@@ -160,8 +162,6 @@ void main(void) {
   }
 
   
-  vec4 col = vec4(0.0);
-  
   for (float f = tEnter + 0.001; f < tLeave; ) {
     vec3 posTex = (rayOriginTex + rayDirTex * f);
 
@@ -170,13 +170,15 @@ void main(void) {
     // Now traverse the octree with samplePos...
     uvec3 nodePosMin = uvec3(0);
     uvec3 nodePosMax = uvec3(0);
-    col = getOctreeColor(samplePos, nodePosMin, nodePosMax);
-    
-    // If a non-black color was returned: abort.
-    if (length(col.xyz) > 0.001) {
-      color = col;
+    vec4 col = getOctreeColor(samplePos, nodePosMin, nodePosMax);
+        
+    color = vec4((1 - color.a) * col.xyz + color.xyz, color.a);
+    color.a = (1-color.a) * col.a + color.a;
+
+    if(color.a > 0.99) {
       return;
     }
+    
       
     // Black color was returned: we are either not inside the octree grid
     // or not on the leaf level. If we are not on the leaf-level: skip empty node
@@ -194,10 +196,8 @@ void main(void) {
     }
 
     // This should not happen
-    color = vec4(1.0, 0.0, 0.0, 0.0);
+    //color = vec4(1.0, 0.0, 0.0, 0.0);
     return; // Prevent infinite loop
 
   }
-  
-  color = col;
 }
