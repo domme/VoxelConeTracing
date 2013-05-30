@@ -100,18 +100,24 @@ vec4 getOctreeColor(in uvec3 pos, out uvec3 outNodePosMin, out uvec3 outNodePosM
   uvec3 nodePosMax = uvec3(1, 1, 1);
   uint childLevel = 1;
   uint sideLength = sizeOnLevel(childLevel);
+  vec4 col = vec4(0);
   
   for (uint iLevel = 0; iLevel <= targetLevel; ++iLevel) {
+     vec4 newColor = vec4(convRGBA8ToVec4(node.y)) / 255.0;
+
+     col = vec4((1 - col.a) * newColor.xyz + col.xyz, col.a);
+     col.a = (1-col.a) * newColor.a + col.a;
+
    if ((iLevel == targetLevel)) {
         outNodePosMin = nodePos;
         outNodePosMax = nodePosMax;
-        return vec4(convRGBA8ToVec4(node.y)) / 255.0; // This is a leaf node-> return its color
+        return col;
     }
 
     if (nextEmpty(node)) {
       outNodePosMin = nodePos;
       outNodePosMax = nodePosMax;
-      return vec4(0.0, 0.0, 0.0, 0.0);
+      return col;
     }
 
     sideLength = sizeOnLevel(childLevel);
