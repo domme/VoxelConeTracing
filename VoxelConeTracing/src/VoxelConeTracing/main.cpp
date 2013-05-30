@@ -66,6 +66,8 @@
 #include "VoxelConeTracing/Octree Building/ObFlagPass.h"
 #include "VoxelConeTracing/Octree Building/ObAllocatePass.h"
 #include "VoxelConeTracing/Octree Building/ObInitPass.h"
+#include "VoxelConeTracing/Octree Mipmap/WriteLeafNodesPass.h"
+#include "VoxelConeTracing/Octree Mipmap/OctreeMipmapPass.h"
 
 #include "vsDebugLib.h"
 #include "Octree Building/ModifyIndirectBufferPass.h"
@@ -119,7 +121,7 @@ void setup() {
 
 
   SVCTparameters params;
-  params.voxel_grid_resolution = 256;
+  params.voxel_grid_resolution = 64;
   params.voxel_grid_sidelengths = glm::vec3(50, 50, 50);
   params.fraglist_size_multiplier = 10;
   
@@ -134,15 +136,17 @@ void setup() {
   // Prepare render algorithm
   _backbufferStage->addProgramPass(new VoxelizePass(&_vctScene, kore::EXECUTE_ONCE));
   _backbufferStage->addProgramPass(new ModifyIndirectBufferPass(
-    _vctScene.getShdFragListIndCmdBuf(),
-    _vctScene.getShdAcVoxelIndex(),&_vctScene,
-    kore::EXECUTE_ONCE));
+                                      _vctScene.getShdFragListIndCmdBuf(),
+                                      _vctScene.getShdAcVoxelIndex(),&_vctScene,
+                                      kore::EXECUTE_ONCE));
 
   _numLevels = _vctScene.getNumLevels(); 
   for (uint iLevel = 0; iLevel < _numLevels; ++iLevel) {
     _backbufferStage->addProgramPass(new ObFlagPass(&_vctScene, kore::EXECUTE_ONCE));
     _backbufferStage->addProgramPass(new ObAllocatePass(&_vctScene, iLevel, kore::EXECUTE_ONCE));
   }
+
+  _backbufferStage->addProgramPass(new WriteLeafNodesPass(&_vctScene, kore::EXECUTE_ONCE));
   
   _backbufferStage->addProgramPass(new OctreeVisPass(&_vctScene));
   _backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
@@ -167,7 +171,7 @@ int main(void) {
   glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 4);
   glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 2);
   glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-  //glfwOpenWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+  glfwOpenWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 
   // Open an OpenGL window
   if (!glfwOpenWindow(screen_width, screen_height, 8, 8, 8, 8, 24, 8, GLFW_WINDOW)) {

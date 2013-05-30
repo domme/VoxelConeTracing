@@ -59,22 +59,17 @@ OctreeMipmapPass::
                  GL_VERTEX_SHADER);
   shp->init();
   shp->setName("ModyfyIndirectBuffer shader");
-
-
+  
   // Launch a thread for every node up to _level
   addStartupOperation(
     new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
                   _vctScene->getAllocIndCmdBufForLevel(_level)->getHandle()));
 
   addStartupOperation(new BindImageTexture(
-    vctScene->getShdVoxelFragList(VOXELATT_POSITION),
-    shp->getUniform("voxelFragList_pos")));
+    vctScene->getShdNodePool(), shp->getUniform("nodePool")));
 
-  addStartupOperation(new BindImageTexture(
-    vctScene->getShdVoxelFragList(VOXELATT_COLOR),
-    shp->getUniform("voxelFragList_color")));
-
-
+  addStartupOperation(new MemoryBarrierOp(GL_ALL_BARRIER_BITS));
+  
   addStartupOperation(
     new kore::DrawIndirectOp(GL_POINTS, 0));
 }

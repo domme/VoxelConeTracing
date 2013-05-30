@@ -80,7 +80,7 @@ void main() {
   //AMD-Error here:
   //imageAtomicRGBA8Avg(baseVoxel, vec4(diffColor.xyz,1.0));
 
-  uint diffColorU = convVec4ToRGBA8(diffColor * vec4(255));  
+  uint diffColorU = convVec4ToRGBA8(diffColor * vec4(255));
   uint voxelIndex = atomicCounterIncrement(voxel_index);
 
   memoryBarrier();

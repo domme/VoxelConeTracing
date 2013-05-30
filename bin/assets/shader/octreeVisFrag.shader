@@ -10,14 +10,6 @@ const uint NODE_MASK_TAG = (0x00000001 << 31);
 const uint NODE_MASK_TAG_STATIC = (0x00000003 << 30);
 const uint NODE_NOT_FOUND = 0xFFFFFFFF;
 
-/*const vec3 levelColors[5] = { vec3( 37.0 / 255.0, 27.0 / 255.0, 224.0 / 255.0),  // deep blue
-                              vec3( 121.0 / 255.0, 115.0 / 255.0, 222.0 / 255.0),  // lighter blue
-                              vec3( 80.0 / 255.0, 185.0 / 255.0, 242.0 / 255.0),  // light blue
-                              vec3( 149.0 / 255.0, 245.0 / 255.0, 202.0 / 255.0),  // light green
-                              vec3( 218.0 / 255.0, 245.0 / 255.0, 233.0 / 255.0) };  // white green */
-
-const vec3 leafColor = vec3( 218.0 / 255.0, 245.0 / 255.0, 233.0 / 255.0);  // white green
-
 const uvec3 childOffsets[8] = {
   uvec3(0, 0, 0),
   uvec3(1, 0, 0),
@@ -100,7 +92,7 @@ uint sizeOnLevel(in uint level) {
   return uint(voxelGridResolution / pow(2U, level));
 }
 
-vec3 getOctreeColor(in uvec3 pos, out uvec3 outNodePosMin, out uvec3 outNodePosMax) {
+vec4 getOctreeColor(in uvec3 pos, out uvec3 outNodePosMin, out uvec3 outNodePosMax) {
   uvec2 node = imageLoad(nodePool, 0).xy;
   uint nodeAddress = 0;
   uvec3 nodePos = uvec3(0, 0, 0);
@@ -115,9 +107,9 @@ vec3 getOctreeColor(in uvec3 pos, out uvec3 outNodePosMin, out uvec3 outNodePosM
         outNodePosMin = nodePos;
         outNodePosMax = nodePosMax;
         if (childLevel == numLevels) {
-           return leafColor; // This is a leaf node-> return its color
+           return vec4(convRGBA8ToVec4(node.y)) / 255.0; // This is a leaf node-> return its color
         } else {
-          return vec3(0.0, 0.0, 0.0);
+          return vec4(0.0, 0.0, 0.0, 0.0);
         }
       }
 
@@ -148,7 +140,7 @@ vec3 getOctreeColor(in uvec3 pos, out uvec3 outNodePosMin, out uvec3 outNodePosM
     // Not inside octree
     outNodePosMin = uvec3(NODE_NOT_FOUND);
     outNodePosMax = uvec3(NODE_NOT_FOUND);
-    return vec3(0.0, 0.0, 0.0);
+    return vec4(0.0, 0.0, 0.0, 0.0);
 }
 
 
@@ -179,10 +171,10 @@ void main(void) {
     // Now traverse the octree with samplePos...
     uvec3 nodePosMin = uvec3(0);
     uvec3 nodePosMax = uvec3(0);
-    col = vec4(getOctreeColor(samplePos, nodePosMin, nodePosMax), 1.0);
+    col = getOctreeColor(samplePos, nodePosMin, nodePosMax);
     
     // If a non-black color was returned: abort.
-    if (length(col.xyz) > 0.01) {
+    if (length(col.xyz) > 0.001) {
       color = col;
       return;
     }

@@ -25,8 +25,7 @@
 
 #version 420 core
 
-layout(r32ui) uniform volatile uimageBuffer voxelFragList_pos;
-layout(r32ui) uniform volatile uimageBuffer voxelFragList_color;
+layout(rg32ui) uniform volatile uimageBuffer nodePool;
 
 const uint NODE_MASK_NEXT = 0x3FFFFFFF;
 const uint NODE_MASK_TAG = (0x00000001 << 31);
@@ -96,14 +95,14 @@ void main() {
 
   // Average the color from all 8 children
   // TODO: Do proper alpha-weighted average!
-  vec4 color = convRGBA8toVec4(child.y);
+  vec4 color = convRGBA8ToVec4(child.y);
   // Unflag child
     imageStore(nodePool, int(childAddress),
                uvec4(NODE_MASK_NEXT & child.x, child.y, 0, 0));
 
   for (uint iChild = 1; iChild < 8; ++iChild) {
     child = imageLoad(nodePool, int(childAddress + iChild));
-    color += convRGBA8toVec4(child.y);
+    color += convRGBA8ToVec4(child.y);
 
     // Unflag child
     imageStore(nodePool, int(childAddress + iChild),
@@ -111,9 +110,9 @@ void main() {
   }
 
   color /= 8.0;
-  uint colorU = convVec4toRGBA8(color);
+  uint colorU = convVec4ToRGBA8(color);
 
   // Store the average color value in the parent and flag him.
   imageStore(nodePool, gl_VertexID,
-             uvec4((1 << 31) | (NODE_MASK_NEXT & node.x), colorU, 0, 0);
+             uvec4((1 << 31) | (0x7FFFFFFF & node.x), colorU, 0, 0);
 }

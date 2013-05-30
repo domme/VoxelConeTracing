@@ -77,6 +77,8 @@ ObAllocatePass::ObAllocatePass(VCTscene* vctScene, uint level,
 
   addStartupOperation(new DrawIndirectOp(GL_POINTS, 0));
 
+  addFinishOperation(new MemoryBarrierOp(GL_ALL_BARRIER_BITS));
+
 
 }
 

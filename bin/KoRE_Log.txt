@@ -1,9 +1,9 @@
-KoRE Log - Thu May 30 13:07:28 2013
+KoRE Log - Thu May 30 17:13:01 2013
 
 [DEBUG] added Framebuffer 'BACKBUFFER'
 Render Device: AMD Radeon HD 7800 Series
 Vendor: ATI Technologies Inc.
-OpenGL version: 4.2.12217 Core Profile Context 12.104.0.0
+OpenGL version: 4.2.12217 Core Profile/Debug Context 12.104.0.0
 GLSL version: 4.20
 GLFW version 2.7.7
 GLEW version: 1.9.0
@@ -94,6 +94,13 @@ Allocating Octree with 299593 nodes in 7 levels
 [DEBUG] Program '' compiled
 	Uniform 'nextFreeAddress' at location -1
 	Uniform 'nodePool' at location 1
+[DEBUG] Shader './assets/shader/OctreeWriteLeafs.shader' compiled
+[DEBUG] Program 'OctreeWrite shader' compiled
+	Uniform 'numLevels' at location 0
+	Uniform 'voxelGridResolution' at location 1
+	Uniform 'nodePool' at location 2
+	Uniform 'voxelFragList_color' at location 3
+	Uniform 'voxelFragList_pos' at location 4
 [DEBUG] Shader './assets/shader/VoxelConeTracing/raycastVert.shader' compiled
 [DEBUG] Shader './assets/shader/OctreeVisFrag.shader' compiled
 [DEBUG] Program '' compiled
