@@ -53,6 +53,13 @@ OctreeVisPass::OctreeVisPass(VCTscene* vctScene) {
   _sceneMgr = SceneManager::getInstance();
   _resMgr = ResourceManager::getInstance();
 
+  _displayLevel = _vctScene->getNumLevels() - 1;
+  _shdDisplayLevel.component = NULL;
+  _shdDisplayLevel.data = &_displayLevel;
+  _shdDisplayLevel.type = GL_UNSIGNED_INT;
+  _shdDisplayLevel.name = "Octree Display Level";
+  
+
   _visShader
      .loadShader("./assets/shader/VoxelConeTracing/raycastVert.shader",
                  GL_VERTEX_SHADER);
@@ -143,5 +150,16 @@ OctreeVisPass::OctreeVisPass(VCTscene* vctScene) {
   nodePass->addOperation(new BindUniform(vctScene->getShdNumLevels(),
   _visShader.getUniform("numLevels"))); 
 
+  nodePass->addOperation(new BindUniform(&_shdDisplayLevel,
+                                  _visShader.getUniform("targetLevel"))); 
+
   nodePass->addOperation(new RenderMesh(fsqMeshComponent));
+}
+
+void OctreeVisPass::setDisplayLevel(uint level) {
+  if (level >= _vctScene->getNumLevels()) {
+    level = _vctScene->getNumLevels() - 1;
+  }
+
+  _displayLevel = level;
 }

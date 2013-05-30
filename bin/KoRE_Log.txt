@@ -1,4 +1,4 @@
-KoRE Log - Thu May 30 17:13:01 2013
+KoRE Log - Thu May 30 17:24:00 2013
 
 [DEBUG] added Framebuffer 'BACKBUFFER'
 Render Device: AMD Radeon HD 7800 Series
@@ -13,8 +13,8 @@ Max TextureBuffer size: 268435456
 	 1 meshes
 	 1 cameras
 	 4 nodes
-[DEBUG] number of levels: 7 
-Allocating voxel fragment lists of size 10.000000 MB
+[DEBUG] number of levels: 9 
+Allocating voxel fragment lists of size 640.000000 MB
 [DEBUG] number of voxels on level 0: 1 
 [DEBUG] number of voxels on level 1: 8 
 [DEBUG] number of voxels on level 2: 64 
@@ -22,7 +22,9 @@ Allocating voxel fragment lists of size 10.000000 MB
 [DEBUG] number of voxels on level 4: 4096 
 [DEBUG] number of voxels on level 5: 32768 
 [DEBUG] number of voxels on level 6: 262144 
-Allocating Octree with 299593 nodes in 7 levels
+[DEBUG] number of voxels on level 7: 2097152 
+[DEBUG] number of voxels on level 8: 16777216 
+Allocating Octree with 19173961 nodes in 9 levels
 [DEBUG] Shader './assets/shader/VoxelConeTracing/voxelizeVert.shader' compiled
 [DEBUG] Shader './assets/shader/VoxelConeTracing/voxelizeGeom.shader' compiled
 [DEBUG] Shader './assets/shader/VoxelConeTracing/voxelizeFrag.shader' compiled
@@ -94,6 +96,20 @@ Allocating Octree with 299593 nodes in 7 levels
 [DEBUG] Program '' compiled
 	Uniform 'nextFreeAddress' at location -1
 	Uniform 'nodePool' at location 1
+[DEBUG] Program '' compiled
+	Uniform 'voxelGridResolution' at location 0
+	Uniform 'nodePool' at location 1
+	Uniform 'voxelFragmentListPosition' at location 2
+[DEBUG] Program '' compiled
+	Uniform 'nextFreeAddress' at location -1
+	Uniform 'nodePool' at location 1
+[DEBUG] Program '' compiled
+	Uniform 'voxelGridResolution' at location 0
+	Uniform 'nodePool' at location 1
+	Uniform 'voxelFragmentListPosition' at location 2
+[DEBUG] Program '' compiled
+	Uniform 'nextFreeAddress' at location -1
+	Uniform 'nodePool' at location 1
 [DEBUG] Shader './assets/shader/OctreeWriteLeafs.shader' compiled
 [DEBUG] Program 'OctreeWrite shader' compiled
 	Uniform 'numLevels' at location 0
@@ -109,13 +125,14 @@ Allocating Octree with 299593 nodes in 7 levels
 	Uniform 'fRatio' at location 1
 	Uniform 'fYfovDeg' at location 2
 	Uniform 'numLevels' at location 3
-	Uniform 'viewI' at location 4
-	Uniform 'voxelGridResolution' at location 5
-	Uniform 'voxelGridTransformI' at location 6
-	Uniform 'nodePool' at location 7
+	Uniform 'targetLevel' at location 4
+	Uniform 'viewI' at location 5
+	Uniform 'voxelGridResolution' at location 6
+	Uniform 'voxelGridTransformI' at location 7
+	Uniform 'nodePool' at location 8
 [ERROR] Uniform 'voxelGridTransform' not found in shader 'octreeVis shader'
 [DEBUG] Shader './assets/shader/debug.shader' compiled
 [DEBUG] Program '' compiled
 VoxelFragList indirectCmdBuf contents:
-808788 1 0 0 
-Next free nodepool address: 2243 
+1160320 1 0 0 
+Next free nodepool address: 35691 

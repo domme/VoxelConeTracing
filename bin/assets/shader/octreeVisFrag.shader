@@ -27,6 +27,7 @@ uniform mat4 viewI;
 uniform mat4 voxelGridTransform;
 uniform mat4 voxelGridTransformI;
 uniform uint numLevels;
+uniform uint targetLevel;
 
 
 out vec4 color;
@@ -100,13 +101,11 @@ vec4 getOctreeColor(in uvec3 pos, out uvec3 outNodePosMin, out uvec3 outNodePosM
   uint childLevel = 1;
   uint sideLength = sizeOnLevel(childLevel);
   
-
-  // Loop as long as node != voxel
   for (uint iLevel = 0; iLevel < numLevels; ++iLevel) {
       if (nextEmpty(node)) {
         outNodePosMin = nodePos;
         outNodePosMax = nodePosMax;
-        if (childLevel == numLevels) {
+        if (childLevel - 1 == targetLevel) {
            return vec4(convRGBA8ToVec4(node.y)) / 255.0; // This is a leaf node-> return its color
         } else {
           return vec4(0.0, 0.0, 0.0, 0.0);

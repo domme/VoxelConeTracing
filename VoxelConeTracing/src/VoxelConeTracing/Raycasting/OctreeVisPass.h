@@ -38,6 +38,8 @@ public:
   OctreeVisPass(VCTscene* vctScene);
   virtual ~OctreeVisPass(void);
 
+  void setDisplayLevel(uint level);
+
 private:
   kore::RenderManager* _renderMgr;
   kore::SceneManager* _sceneMgr;
@@ -45,6 +47,9 @@ private:
 
   kore::ShaderProgram _visShader;
   VCTscene* _vctScene;
+
+  uint _displayLevel;
+  kore::ShaderData _shdDisplayLevel;
    
 };
 #endif //VCT_SRC_VCT_OCTREEVISPASS_H_
