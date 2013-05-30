@@ -43,6 +43,15 @@
     <ClCompile Include="src\VoxelConeTracing\Debug\Debugpass.cpp">
       <Filter>src\Debug</Filter>
     </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\Util\MathUtil.cpp">
+      <Filter>src\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\WriteLeafNodesPass.cpp">
+      <Filter>src\Octree Mipmap</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\OctreeMipmapPass.cpp">
+      <Filter>src\Octree Mipmap</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -62,6 +71,12 @@
     </Filter>
     <Filter Include="src\Debug">
       <UniqueIdentifier>{211d334f-bafc-4b6e-98e8-c69d79f7e3c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Util">
+      <UniqueIdentifier>{ede7f9cf-91d8-48e5-b0d0-894f2a975a46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Octree Mipmap">
+      <UniqueIdentifier>{284cb751-efc0-48f1-8ed9-d274225b133d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -104,6 +119,15 @@
     <ClInclude Include="src\VoxelConeTracing\Debug\DebugPass.h">
       <Filter>src\Debug</Filter>
     </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\Util\MathUtil.h">
+      <Filter>src\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\WriteLeafNodesPass.h">
+      <Filter>src\Octree Mipmap</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\OctreeMipmapPass.h">
+      <Filter>src\Octree Mipmap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\bin\assets\shader\VoxelConeTracing\voxelizeFrag.shader">
@@ -137,6 +161,12 @@
       <Filter>shader</Filter>
     </None>
     <None Include="..\bin\assets\shader\debug.shader">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\OctreeWriteLeafs.shader">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\OctreeMipmap.shader">
       <Filter>shader</Filter>
     </None>
   </ItemGroup>

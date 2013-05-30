@@ -89,7 +89,7 @@
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <CompileAs>CompileAsCpp</CompileAs>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExceptionHandling>Async</ExceptionHandling>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <Optimization>Disabled</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -100,6 +100,7 @@
       <AssemblerListingLocation>Debug</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <ProgramDataBaseFileName>$(OutDir)\MainGLFW.pdb</ProgramDataBaseFileName>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;GLFW_INCLUDE_GL3;CMAKE_INTDIR=\"Debug\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -135,6 +136,18 @@
     <PreBuildEvent>
       <Message>Copy KoRE.lib from KoRE-folder</Message>
     </PreBuildEvent>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>
+      </Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>
+      </Outputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -287,8 +300,11 @@
     <ClCompile Include="src\VoxelConeTracing\Octree Building\ObAllocatePass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Building\ObFlagPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Building\ObInitPass.cpp" />
+    <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\OctreeMipmapPass.cpp" />
+    <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\WriteLeafNodesPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Raycasting\OctreeVisPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Raycasting\RayCastingPass.cpp" />
+    <ClCompile Include="src\VoxelConeTracing\Util\MathUtil.cpp" />
     <ClCompile Include="src\VoxelConeTracing\VCTscene.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Voxelization\VoxelizePass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\vsDebugLib.cpp" />
@@ -302,8 +318,11 @@
     <ClInclude Include="src\VoxelConeTracing\Octree Building\ObAllocatePass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Building\ObFlagPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Building\ObInitPass.h" />
+    <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\OctreeMipmapPass.h" />
+    <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\WriteLeafNodesPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Raycasting\OctreeVisPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Raycasting\RayCastingPass.h" />
+    <ClInclude Include="src\VoxelConeTracing\Util\MathUtil.h" />
     <ClInclude Include="src\VoxelConeTracing\VCTscene.h" />
     <ClInclude Include="src\VoxelConeTracing\Voxelization\VoxelizePass.h" />
     <ClInclude Include="src\VoxelConeTracing\vsDebugLib.h" />
@@ -314,7 +333,9 @@
     <None Include="..\bin\assets\shader\ObAllocateVert.shader" />
     <None Include="..\bin\assets\shader\ObFlagVert.shader" />
     <None Include="..\bin\assets\shader\ObInitVert.shader" />
+    <None Include="..\bin\assets\shader\OctreeMipmap.shader" />
     <None Include="..\bin\assets\shader\octreeVisFrag.shader" />
+    <None Include="..\bin\assets\shader\OctreeWriteLeafs.shader" />
     <None Include="..\bin\assets\shader\VoxelConeTracing\raycastFrag.shader" />
     <None Include="..\bin\assets\shader\VoxelConeTracing\raycastVert.shader" />
     <None Include="..\bin\assets\shader\VoxelConeTracing\voxelizeFrag.shader" />

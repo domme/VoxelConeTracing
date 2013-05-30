@@ -1,9 +1,114 @@
-KoRE Log - Sun May 26 18:39:04 2013
+KoRE Log - Thu May 30 13:07:28 2013
 
 [DEBUG] added Framebuffer 'BACKBUFFER'
 Render Device: AMD Radeon HD 7800 Series
 Vendor: ATI Technologies Inc.
-OpenGL version: 4.2.12217 Core Profile/Debug Context 12.104.0.0
+OpenGL version: 4.2.12217 Core Profile Context 12.104.0.0
 GLSL version: 4.20
 GLFW version 2.7.7
 GLEW version: 1.9.0
+Max TextureBuffer size: 268435456 
+[DEBUG] Texture 'colotex.png' successfully loaded.
+[DEBUG] Scene './assets/meshes/monkey.dae' successfully loaded:
+	 1 meshes
+	 1 cameras
+	 4 nodes
+[DEBUG] number of levels: 7 
+Allocating voxel fragment lists of size 10.000000 MB
+[DEBUG] number of voxels on level 0: 1 
+[DEBUG] number of voxels on level 1: 8 
+[DEBUG] number of voxels on level 2: 64 
+[DEBUG] number of voxels on level 3: 512 
+[DEBUG] number of voxels on level 4: 4096 
+[DEBUG] number of voxels on level 5: 32768 
+[DEBUG] number of voxels on level 6: 262144 
+Allocating Octree with 299593 nodes in 7 levels
+[DEBUG] Shader './assets/shader/VoxelConeTracing/voxelizeVert.shader' compiled
+[DEBUG] Shader './assets/shader/VoxelConeTracing/voxelizeGeom.shader' compiled
+[DEBUG] Shader './assets/shader/VoxelConeTracing/voxelizeFrag.shader' compiled
+[DEBUG] Program '' compiled
+	Attribute 'v_normal' at location 0
+	Attribute 'v_position' at location 1
+	Attribute 'v_uvw' at location 2
+	Uniform 'modelWorld' at location 0
+	Uniform 'modelWorldNormal' at location 1
+	Uniform 'voxelGridTransform' at location 2
+	Uniform 'voxelGridTransformI' at location 3
+	Uniform 'voxelTexSize' at location 4
+	Uniform 'voxel_index' at location -1
+	Uniform 'diffuseTex' at location 6
+	Uniform 'voxelFragmentListColor' at location 7
+	Uniform 'voxelFragmentListPosition' at location 8
+[DEBUG] Shader './assets/shader/ModifyIndirectBufferVert.shader' compiled
+[DEBUG] Program '' compiled
+	Uniform 'numVoxels' at location -1
+	Uniform 'indirectCommandBuf' at location 1
+[DEBUG] Shader './assets/shader/ObFlagVert.shader' compiled
+[DEBUG] Program '' compiled
+	Uniform 'voxelGridResolution' at location 0
+	Uniform 'nodePool' at location 1
+	Uniform 'voxelFragmentListPosition' at location 2
+[DEBUG] Shader './assets/shader/ObAllocateVert.shader' compiled
+[DEBUG] Program '' compiled
+	Uniform 'nextFreeAddress' at location -1
+	Uniform 'nodePool' at location 1
+[DEBUG] Program '' compiled
+	Uniform 'voxelGridResolution' at location 0
+	Uniform 'nodePool' at location 1
+	Uniform 'voxelFragmentListPosition' at location 2
+[DEBUG] Program '' compiled
+	Uniform 'nextFreeAddress' at location -1
+	Uniform 'nodePool' at location 1
+[DEBUG] Program '' compiled
+	Uniform 'voxelGridResolution' at location 0
+	Uniform 'nodePool' at location 1
+	Uniform 'voxelFragmentListPosition' at location 2
+[DEBUG] Program '' compiled
+	Uniform 'nextFreeAddress' at location -1
+	Uniform 'nodePool' at location 1
+[DEBUG] Program '' compiled
+	Uniform 'voxelGridResolution' at location 0
+	Uniform 'nodePool' at location 1
+	Uniform 'voxelFragmentListPosition' at location 2
+[DEBUG] Program '' compiled
+	Uniform 'nextFreeAddress' at location -1
+	Uniform 'nodePool' at location 1
+[DEBUG] Program '' compiled
+	Uniform 'voxelGridResolution' at location 0
+	Uniform 'nodePool' at location 1
+	Uniform 'voxelFragmentListPosition' at location 2
+[DEBUG] Program '' compiled
+	Uniform 'nextFreeAddress' at location -1
+	Uniform 'nodePool' at location 1
+[DEBUG] Program '' compiled
+	Uniform 'voxelGridResolution' at location 0
+	Uniform 'nodePool' at location 1
+	Uniform 'voxelFragmentListPosition' at location 2
+[DEBUG] Program '' compiled
+	Uniform 'nextFreeAddress' at location -1
+	Uniform 'nodePool' at location 1
+[DEBUG] Program '' compiled
+	Uniform 'voxelGridResolution' at location 0
+	Uniform 'nodePool' at location 1
+	Uniform 'voxelFragmentListPosition' at location 2
+[DEBUG] Program '' compiled
+	Uniform 'nextFreeAddress' at location -1
+	Uniform 'nodePool' at location 1
+[DEBUG] Shader './assets/shader/VoxelConeTracing/raycastVert.shader' compiled
+[DEBUG] Shader './assets/shader/OctreeVisFrag.shader' compiled
+[DEBUG] Program '' compiled
+	Attribute 'v_position' at location 0
+	Uniform 'fFar' at location 0
+	Uniform 'fRatio' at location 1
+	Uniform 'fYfovDeg' at location 2
+	Uniform 'numLevels' at location 3
+	Uniform 'viewI' at location 4
+	Uniform 'voxelGridResolution' at location 5
+	Uniform 'voxelGridTransformI' at location 6
+	Uniform 'nodePool' at location 7
+[ERROR] Uniform 'voxelGridTransform' not found in shader 'octreeVis shader'
+[DEBUG] Shader './assets/shader/debug.shader' compiled
+[DEBUG] Program '' compiled
+VoxelFragList indirectCmdBuf contents:
+808788 1 0 0 
+Next free nodepool address: 2243 

@@ -26,17 +26,18 @@
 #include "VoxelConeTracing/VCTscene.h"
 #include "VoxelConeTracing/Cube.h"
 #include "VoxelConeTracing/Octree Building/ModifyIndirectBufferPass.h"
+#include "VoxelConeTracing/Util/MathUtil.h"
 #include "KoRE/RenderManager.h"
 #include "KoRE/ResourceManager.h"
 #include "KoRE/GLerror.h"
 #include "KoRE/Components/TexturesComponent.h"
 #include "KoRE/Log.h"
 
-
 VCTscene::VCTscene() :
   _camera(NULL),
   _tex3DclearPBO(KORE_GLUINT_HANDLE_INVALID),
   _voxelGridResolution(0),
+  _fragListSizeMultiplier(1),
   _voxelGridSideLengths(50, 50, 50),
   _numNodes(0),
   _numLevels(0) {
@@ -52,6 +53,7 @@ void VCTscene::init(const SVCTparameters& params,
                     kore::Camera* camera) {
   _voxelGridResolution = params.voxel_grid_resolution;
   _voxelGridSideLengths = params.voxel_grid_sidelengths;
+  _fragListSizeMultiplier = params.fraglist_size_multiplier;
   //Level based on number of Voxels (8^level = number of leaves)  
   _numLevels = ceil(log(_voxelGridResolution*_voxelGridResolution*_voxelGridResolution)/log(8))+1;
   kore::Log::getInstance()->write("[DEBUG] number of levels: %u \n", _numLevels);
@@ -154,13 +156,19 @@ void VCTscene::initIndirectCommandBufs() {
 
 void VCTscene::initVoxelFragList() {
   // Positions
+  uint fraglistSizeByte = sizeof(unsigned int)
+                          * _voxelGridResolution
+                          * _voxelGridResolution
+                          * _voxelGridResolution * _fragListSizeMultiplier;
+
+  kore::Log::getInstance()
+                    ->write("Allocating voxel fragment lists of size %f MB\n",
+                             MathUtil::byteToMB(fraglistSizeByte));
+  
   kore::STextureBufferProperties props;
   props.internalFormat = GL_R32UI;
-  props.size = sizeof(unsigned int)
-               * _voxelGridResolution
-               * _voxelGridResolution
-               * _voxelGridResolution * 200;
-  props.usageHint = GL_DYNAMIC_COPY;
+  props.size = fraglistSizeByte;
+  props.usageHint = GL_STATIC_DRAW;
 
   _voxelFragLists[VOXELATT_POSITION]
                               .create(props, "VoxelFragmentList_Position");
@@ -265,7 +273,7 @@ void VCTscene::initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   RenderManager::getInstance()->bindTexture(GL_TEXTURE_3D, 0);
 
-  //delete[] colorValues;
+  delete[] colorValues;
 }
 
 void VCTscene::initNodePool() {

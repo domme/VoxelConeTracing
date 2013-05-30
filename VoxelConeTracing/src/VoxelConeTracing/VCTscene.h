@@ -37,6 +37,7 @@
 
 struct SVCTparameters {
   uint voxel_grid_resolution;
+  uint fraglist_size_multiplier;
   glm::vec3 voxel_grid_sidelengths;
 };
 
@@ -162,6 +163,8 @@ private:
 
   uint _numLevels;
   kore::ShaderData _shdNumLevels;
+
+  uint _fragListSizeMultiplier;
   
 
   uint _numNodes;  // Number of all nodes in the nodepool

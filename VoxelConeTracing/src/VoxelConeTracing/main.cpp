@@ -80,6 +80,7 @@ static kore::SceneNode* _cameraNode = NULL;
 static kore::Camera* _pCamera = NULL;
 
 static kore::SceneNode* _rotationNode = NULL;
+static kore::FrameBufferStage* _backbufferStage = NULL;
 
 static VCTscene _vctScene;
 
@@ -99,6 +100,10 @@ void setup() {
   glDisable(GL_DEPTH_TEST);
   glDepthMask(GL_FALSE);
 
+  GLint maxTexBufferSize = 0;
+  glGetIntegerv(GL_MAX_TEXTURE_BUFFER_SIZE, &maxTexBufferSize);
+  Log::getInstance()->write("Max TextureBuffer size: %i \n", maxTexBufferSize);
+
   //Load the scene and get all mesh nodes
   ResourceManager::getInstance()->loadScene("./assets/meshes/monkey.dae");
   
@@ -113,34 +118,36 @@ void setup() {
   _pCamera = static_cast<Camera*>(_cameraNode->getComponent(COMPONENT_CAMERA));
 
 
-  FrameBufferStage* backBufferStage = new FrameBufferStage;
-  GLenum drawBuffers[] = {GL_NONE};
-  backBufferStage->setFrameBuffer(kore::FrameBuffer::BACKBUFFER);
-  backBufferStage->setActiveAttachments(drawBuffers, 1);
-
   SVCTparameters params;
-  params.voxel_grid_resolution = 64;
+  params.voxel_grid_resolution = 256;
   params.voxel_grid_sidelengths = glm::vec3(50, 50, 50);
+  params.fraglist_size_multiplier = 10;
   
   _vctScene.init(params, renderNodes, _pCamera);
+
+
+  _backbufferStage = new FrameBufferStage;
+  GLenum drawBuffers[] = {GL_NONE};
+  _backbufferStage->setFrameBuffer(kore::FrameBuffer::BACKBUFFER);
+  _backbufferStage->setActiveAttachments(drawBuffers, 1);
  
   // Prepare render algorithm
-  backBufferStage->addProgramPass(new VoxelizePass(&_vctScene, kore::EXECUTE_ONCE));
-  backBufferStage->addProgramPass(new ModifyIndirectBufferPass(
-                                  _vctScene.getShdFragListIndCmdBuf(),
-                                  _vctScene.getShdAcVoxelIndex(),&_vctScene,
-                                  kore::EXECUTE_ONCE));
+  _backbufferStage->addProgramPass(new VoxelizePass(&_vctScene, kore::EXECUTE_ONCE));
+  _backbufferStage->addProgramPass(new ModifyIndirectBufferPass(
+    _vctScene.getShdFragListIndCmdBuf(),
+    _vctScene.getShdAcVoxelIndex(),&_vctScene,
+    kore::EXECUTE_ONCE));
 
   _numLevels = _vctScene.getNumLevels(); 
   for (uint iLevel = 0; iLevel < _numLevels; ++iLevel) {
-    backBufferStage->addProgramPass(new ObFlagPass(&_vctScene, kore::EXECUTE_ONCE));
-    backBufferStage->addProgramPass(new ObAllocatePass(&_vctScene, iLevel, kore::EXECUTE_ONCE));
+    _backbufferStage->addProgramPass(new ObFlagPass(&_vctScene, kore::EXECUTE_ONCE));
+    _backbufferStage->addProgramPass(new ObAllocatePass(&_vctScene, iLevel, kore::EXECUTE_ONCE));
   }
   
-  backBufferStage->addProgramPass(new OctreeVisPass(&_vctScene));
-  //backBufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
+  _backbufferStage->addProgramPass(new OctreeVisPass(&_vctScene));
+  _backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
 
-  RenderManager::getInstance()->addFramebufferStage(backBufferStage);
+  RenderManager::getInstance()->addFramebufferStage(_backbufferStage);
   //////////////////////////////////////////////////////////////////////////
 }
 
@@ -160,7 +167,7 @@ int main(void) {
   glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 4);
   glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 2);
   glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-  glfwOpenWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+  //glfwOpenWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 
   // Open an OpenGL window
   if (!glfwOpenWindow(screen_width, screen_height, 8, 8, 8, 8, 24, 8, GLFW_WINDOW)) {
@@ -230,15 +237,6 @@ int main(void) {
   int oldMouseX = 0;
   int oldMouseY = 0;
   glfwGetMousePos(&oldMouseX,&oldMouseY);
-
-  /*
-  kore::SceneManager::getInstance()->update();
-  kore::GLerror::gl_ErrorCheckStart();
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT |GL_STENCIL_BUFFER_BIT);
-  kore::RenderManager::getInstance()->renderFrame(); */
-
-  glfwSwapBuffers();
-  kore::GLerror::gl_ErrorCheckFinish("Main Loop");
     
   // Main loop
   while (running) {
@@ -299,9 +297,25 @@ int main(void) {
     running = !glfwGetKey(GLFW_KEY_ESC) && glfwGetWindowParam(GLFW_OPENED);
   }
 
+  // Wait for all rendering processes to finish
+  
+  glFlush();
+  glFinish();
+  glMemoryBarrier(GL_ALL_BARRIER_BITS);
+  
+  // Do manual cleanup
+  kore::RenderManager::getInstance()->removeFrameBufferStage(_backbufferStage);
+  delete _backbufferStage;
+  
   // Close window and terminate GLFW
-  glfwTerminate();
   shutdown();
+  
+  try{
+    glfwTerminate(); }
+  catch(std::exception& e) {
+    kore::Log::getInstance()->write("[ERROR] Exception on program closing");
+  }
+
   // Exit program
-  exit(EXIT_SUCCESS);
-}
+   exit(EXIT_SUCCESS);
+} 

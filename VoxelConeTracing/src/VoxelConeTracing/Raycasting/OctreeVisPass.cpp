@@ -82,62 +82,66 @@ OctreeVisPass::OctreeVisPass(VCTscene* vctScene) {
   nodePass->addOperation(new ViewportOp(vp));
 
   nodePass
-    ->addOperation(new EnableDisableOp(GL_DEPTH_TEST,
-    EnableDisableOp::DISABLE));
+  ->addOperation(new EnableDisableOp(GL_DEPTH_TEST,
+  EnableDisableOp::DISABLE));
 
+  
   nodePass
-    ->addOperation(new ColorMaskOp(glm::bvec4(true, true, true, true)));
+  ->addOperation(new ColorMaskOp(glm::bvec4(true, true, true, true)));
 
+  
   nodePass->addOperation(OperationFactory::create(OP_BINDATTRIBUTE, 
-    "v_position",
-    fsqMeshComponent, 
-    "v_position",
-    &_visShader));
+                                                  "v_position",
+                                                  fsqMeshComponent, 
+                                                  "v_position",
+                                                  &_visShader));
+
+  
+  nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM, 
+                                                  "ratio",
+                                                  cam, 
+                                                  "fRatio",
+                                                  &_visShader));
+  
+  nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM, 
+  "FOV degree",
+  cam, 
+  "fYfovDeg",
+  &_visShader));
 
   nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM, 
-    "ratio",
-    cam, 
-    "fRatio",
-    &_visShader));
+  "far Plane",
+  cam, 
+  "fFar",
+  &_visShader));
 
-  nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM, 
-    "FOV degree",
-    cam, 
-    "fYfovDeg",
-    &_visShader));
-
-  nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM, 
-    "far Plane",
-    cam, 
-    "fFar",
-    &_visShader));
-
-
+  
   nodePass->addOperation(new BindImageTexture(
-    vctScene->getShdNodePool(),
-    _visShader.getUniform("nodePool")));
+                          vctScene->getShdNodePool(),
+                          _visShader.getUniform("nodePool")));
 
+ 
   nodePass->addOperation(new BindUniform(
-    vctScene->getShdVoxelGridResolution(),
-    _visShader.getUniform("voxelGridResolution")));
+                            vctScene->getShdVoxelGridResolution(),
+                            _visShader.getUniform("voxelGridResolution")));
 
   nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
-    "inverse view Matrix",
-    cam,
-    "viewI",
-    &_visShader));
+                                                  "inverse view Matrix",
+                                                  cam,
+                                                  "viewI",
+                                                  &_visShader));
 
 
   nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
-    "model Matrix", vctScene->getVoxelGridNode()->getTransform(),
-    "voxelGridTransform", &_visShader));
+  "model Matrix", vctScene->getVoxelGridNode()->getTransform(),
+  "voxelGridTransform", &_visShader));
 
   nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
-    "inverse model Matrix", vctScene->getVoxelGridNode()->getTransform(),
-    "voxelGridTransformI", &_visShader));
+  "inverse model Matrix", vctScene->getVoxelGridNode()->getTransform(),
+  "voxelGridTransformI", &_visShader));
 
   nodePass->addOperation(new BindUniform(vctScene->getShdNumLevels(),
-                         _visShader.getUniform("numLevels")));
+  _visShader.getUniform("numLevels"))); 
 
   nodePass->addOperation(new RenderMesh(fsqMeshComponent));
 }
