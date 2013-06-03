@@ -103,8 +103,11 @@ vec4 getOctreeColor(in uvec3 pos, out uvec3 outNodePosMin, out uvec3 outNodePosM
   vec4 col = vec4(0);
   
   for (uint iLevel = 0; iLevel <= targetLevel; ++iLevel) {
-     vec4 newColor = vec4(convRGBA8ToVec4(node.y)) / 255.0;
+     
 
+     // Compositing
+     /*
+     vec4 newColor = vec4(convRGBA8ToVec4(node.y)) / 255.0;
      col = vec4((1 - col.a) * newColor.xyz + col.xyz, col.a);
      col.a = (1-col.a) * newColor.a + col.a;
 
@@ -119,6 +122,22 @@ vec4 getOctreeColor(in uvec3 pos, out uvec3 outNodePosMin, out uvec3 outNodePosM
       outNodePosMax = nodePosMax;
       return col;
     }
+    */
+    ////////////////////////////////////////////////////////
+
+    // Non-compositing
+    if ((iLevel == targetLevel)) {
+        outNodePosMin = nodePos;
+        outNodePosMax = nodePosMax;
+        return vec4(convRGBA8ToVec4(node.y)) / 255.0;
+    }
+
+    if (nextEmpty(node)) {
+      outNodePosMin = nodePos;
+      outNodePosMax = nodePosMax;
+      return vec4(0.0, 0.0, 0.0, 0.0);
+    }
+    ////////////////////////////////////////////////////
 
     sideLength = sizeOnLevel(childLevel);
     uint childStartAddress = getNext(node);
@@ -177,11 +196,19 @@ void main(void) {
     uvec3 nodePosMin = uvec3(0);
     uvec3 nodePosMax = uvec3(0);
     vec4 col = getOctreeColor(samplePos, nodePosMin, nodePosMax);
-        
-    color = vec4((1 - color.a) * col.xyz + color.xyz, color.a);
+      
+    // Compositing  
+    /*color = vec4((1 - color.a) * col.xyz + color.xyz, color.a);
     color.a = (1-color.a) * col.a + color.a;
 
     if(color.a > 0.99) {
+      return;
+    }
+    */
+    ////////////////////////////////////////////////////////////////////
+
+    if (length(col) > 0.001) {
+      color = col;
       return;
     }
     

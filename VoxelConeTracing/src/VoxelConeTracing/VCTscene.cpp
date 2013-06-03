@@ -55,7 +55,14 @@ void VCTscene::init(const SVCTparameters& params,
   _voxelGridSideLengths = params.voxel_grid_sidelengths;
   _fragListSizeMultiplier = params.fraglist_size_multiplier;
   //Level based on number of Voxels (8^level = number of leaves)  
-  _numLevels = ceil(log(_voxelGridResolution*_voxelGridResolution*_voxelGridResolution)/log(8))+1;
+  _numLevels = 0;
+  uint resOnLevel = _voxelGridResolution;
+  while(resOnLevel > 0) {
+    ++_numLevels;
+    resOnLevel = resOnLevel / 2;
+  }
+
+  //_numLevels = ceil(log(_voxelGridResolution*_voxelGridResolution*_voxelGridResolution)/log(8))+1;
   kore::Log::getInstance()->write("[DEBUG] number of levels: %u \n", _numLevels);
 
   _shdNumLevels.type = GL_UNSIGNED_INT;
@@ -292,7 +299,7 @@ void VCTscene::initNodePool() {
   kore::STextureBufferProperties props;
   props.internalFormat = GL_RG32UI;
   props.size = 2 * sizeof(uint) * _numNodes;
-  props.usageHint = GL_DYNAMIC_COPY;
+  props.usageHint = GL_STATIC_DRAW;
   
   _nodePool.create(props, "NodePool");
 
@@ -307,9 +314,16 @@ void VCTscene::initNodePool() {
   // Init to zero
   kore::RenderManager* renderMgr = kore::RenderManager::getInstance();
   renderMgr->bindBuffer(GL_TEXTURE_BUFFER, _nodePool.getBufferHandle());
-  uint* ptr = (uint*) glMapBufferRange(GL_TEXTURE_BUFFER, 0, props.size,
+  uint* ptr = (uint*) glMapBufferRange(GL_TEXTURE_BUFFER, 0, props.size / 2,
                                        GL_READ_WRITE);
-  for (uint i = 0; i < _numNodes * 2; ++i) {
+  for (uint i = 0; i < _numNodes ; ++i) {
+    ptr[i] = 0U;
+  }
+  glUnmapBuffer(GL_TEXTURE_BUFFER);
+
+  ptr = (uint*) glMapBufferRange(GL_TEXTURE_BUFFER, props.size / 2, props.size / 2,
+    GL_READ_WRITE);
+  for (uint i = 0; i < _numNodes ; ++i) {
     ptr[i] = 0U;
   }
   glUnmapBuffer(GL_TEXTURE_BUFFER);

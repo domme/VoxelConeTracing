@@ -33,6 +33,7 @@ const uint NODE_NOT_FOUND = 0xFFFFFFFF;
 layout(r32ui) uniform volatile uimageBuffer voxelFragmentListPosition;
 layout(rg32ui) uniform volatile uimageBuffer nodePool;
 uniform uint voxelGridResolution;
+uniform uint numLevels;
 
 const uvec3 childOffsets[8] = {
   uvec3(0, 0, 0),
@@ -84,7 +85,7 @@ void main() {
   uint sideLength = sizeOnLevel(childLevel);
 
   // Loop as long as node != voxel
-  while(sideLength > 1) {
+  for( uint iLevel = 0; iLevel < numLevels -1; ++iLevel) {
       if (nextEmpty(node)) {
         flagNode(node, nodeAddress);
         return;
