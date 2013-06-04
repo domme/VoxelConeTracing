@@ -1,4 +1,4 @@
-KoRE Log - Mon Jun 03 19:01:03 2013
+KoRE Log - Tue Jun 04 18:10:05 2013
 
 [DEBUG] added Framebuffer 'BACKBUFFER'
 Render Device: AMD Radeon HD 7800 Series
@@ -18,8 +18,8 @@ Max TextureBuffer size: 268435456
 	 17 meshes
 	 1 cameras
 	 19 nodes
-[DEBUG] number of levels: 10 
-Allocating voxel fragment lists of size 512.000000 MB
+[DEBUG] number of levels: 9 
+Allocating voxel fragment lists of size 64.000000 MB
 [DEBUG] number of voxels on level 0: 1 
 [DEBUG] number of voxels on level 1: 8 
 [DEBUG] number of voxels on level 2: 64 
@@ -29,8 +29,7 @@ Allocating voxel fragment lists of size 512.000000 MB
 [DEBUG] number of voxels on level 6: 262144 
 [DEBUG] number of voxels on level 7: 2097152 
 [DEBUG] number of voxels on level 8: 16777216 
-[DEBUG] number of voxels on level 9: 134217728 
-Allocating Octree with 153391689 nodes in 10 levels
+Allocating Octree with 19173961 nodes in 9 levels
 [DEBUG] Shader './assets/shader/VoxelConeTracing/voxelizeVert.shader' compiled
 [DEBUG] Shader './assets/shader/VoxelConeTracing/voxelizeGeom.shader' compiled
 [DEBUG] Shader './assets/shader/VoxelConeTracing/voxelizeFrag.shader' compiled
@@ -125,14 +124,6 @@ Allocating Octree with 153391689 nodes in 10 levels
 [DEBUG] Program '' compiled
 	Uniform 'nextFreeAddress' at location -1
 	Uniform 'nodePool' at location 1
-[DEBUG] Program '' compiled
-	Uniform 'numLevels' at location 0
-	Uniform 'voxelGridResolution' at location 1
-	Uniform 'nodePool' at location 2
-	Uniform 'voxelFragmentListPosition' at location 3
-[DEBUG] Program '' compiled
-	Uniform 'nextFreeAddress' at location -1
-	Uniform 'nodePool' at location 1
 [DEBUG] Shader './assets/shader/OctreeWriteLeafs.shader' compiled
 [DEBUG] Program 'OctreeWrite shader' compiled
 	Uniform 'numLevels' at location 0
@@ -141,8 +132,6 @@ Allocating Octree with 153391689 nodes in 10 levels
 	Uniform 'voxelFragList_color' at location 3
 	Uniform 'voxelFragList_pos' at location 4
 [DEBUG] Shader './assets/shader/OctreeMipmap.shader' compiled
-[DEBUG] Program '' compiled
-	Uniform 'nodePool' at location 0
 [DEBUG] Program '' compiled
 	Uniform 'nodePool' at location 0
 [DEBUG] Program '' compiled
@@ -174,5 +163,5 @@ Allocating Octree with 153391689 nodes in 10 levels
 [DEBUG] Shader './assets/shader/debug.shader' compiled
 [DEBUG] Program '' compiled
 VoxelFragList indirectCmdBuf contents:
-14489840 1 0 0 
-Next free nodepool address: 349290 
+12014176 1 0 0 
+Next free nodepool address: 81861 

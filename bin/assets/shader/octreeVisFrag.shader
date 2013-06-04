@@ -93,7 +93,7 @@ uint sizeOnLevel(in uint level) {
   return uint(voxelGridResolution / pow(2U, level));
 }
 
-vec4 getOctreeColor(in uvec3 pos, out uvec3 outNodePosMin, out uvec3 outNodePosMax) {
+vec4 getOctreeColor(in uvec3 pos, in uint currTargetLevel, out uvec3 outNodePosMin, out uvec3 outNodePosMax) {
   uvec2 node = imageLoad(nodePool, 0).xy;
   uint nodeAddress = 0;
   uvec3 nodePos = uvec3(0, 0, 0);
@@ -102,7 +102,7 @@ vec4 getOctreeColor(in uvec3 pos, out uvec3 outNodePosMin, out uvec3 outNodePosM
   uint sideLength = sizeOnLevel(childLevel);
   vec4 col = vec4(0);
   
-  for (uint iLevel = 0; iLevel <= targetLevel; ++iLevel) {
+  for (uint iLevel = 0; iLevel <= currTargetLevel; ++iLevel) {
      
 
      // Compositing
@@ -126,7 +126,7 @@ vec4 getOctreeColor(in uvec3 pos, out uvec3 outNodePosMin, out uvec3 outNodePosM
     ////////////////////////////////////////////////////////
 
     // Non-compositing
-    if ((iLevel == targetLevel)) {
+    if ((iLevel == currTargetLevel)) {
         outNodePosMin = nodePos;
         outNodePosMax = nodePosMax;
         return vec4(convRGBA8ToVec4(node.y)) / 255.0;
@@ -186,7 +186,8 @@ void main(void) {
     return;
   }
 
-  
+  tEnter = max(tEnter, 0.0);
+
   for (float f = tEnter + 0.001; f < tLeave; ) {
     vec3 posTex = (rayOriginTex + rayDirTex * f);
 
@@ -195,7 +196,12 @@ void main(void) {
     // Now traverse the octree with samplePos...
     uvec3 nodePosMin = uvec3(0);
     uvec3 nodePosMax = uvec3(0);
-    vec4 col = getOctreeColor(samplePos, nodePosMin, nodePosMax);
+
+    float fDistanceFactor = f / tLeave;
+    fDistanceFactor *= fDistanceFactor;
+    
+    uint currTargetLevel = uint(floor((1.0 - fDistanceFactor) * float(targetLevel))) + 1;
+    vec4 col = getOctreeColor(samplePos, clamp(currTargetLevel, 1U, targetLevel), nodePosMin, nodePosMax);
       
     // Compositing  
     /*color = vec4((1 - color.a) * col.xyz + color.xyz, color.a);
@@ -207,10 +213,12 @@ void main(void) {
     */
     ////////////////////////////////////////////////////////////////////
 
+    // Non-Compositing
     if (length(col) > 0.001) {
       color = col;
       return;
     }
+    /////////////////////
     
       
     // Black color was returned: we are either not inside the octree grid
