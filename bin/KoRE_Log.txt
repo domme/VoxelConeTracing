@@ -1,13 +1,13 @@
-KoRE Log - Tue Jun 04 18:10:05 2013
+KoRE Log - Tue Jun 04 18:21:32 2013
 
 [DEBUG] added Framebuffer 'BACKBUFFER'
-Render Device: AMD Radeon HD 7800 Series
-Vendor: ATI Technologies Inc.
-OpenGL version: 4.2.12217 Core Profile/Debug Context 12.104.0.0
-GLSL version: 4.20
+Render Device: GeForce GTX 460/PCIe/SSE2
+Vendor: NVIDIA Corporation
+OpenGL version: 4.2.0
+GLSL version: 4.20 NVIDIA via Cg compiler
 GLFW version 2.7.7
 GLEW version: 1.9.0
-Max TextureBuffer size: 268435456 
+Max TextureBuffer size: 134217728 
 [DEBUG] Texture 'kamen.png' successfully loaded.
 [DEBUG] Texture 'KAMEN-stup.png' successfully loaded.
 [DEBUG] Texture 'grey.png' successfully loaded.
@@ -34,134 +34,167 @@ Allocating Octree with 19173961 nodes in 9 levels
 [DEBUG] Shader './assets/shader/VoxelConeTracing/voxelizeGeom.shader' compiled
 [DEBUG] Shader './assets/shader/VoxelConeTracing/voxelizeFrag.shader' compiled
 [DEBUG] Program '' compiled
-	Attribute 'v_normal' at location 0
-	Attribute 'v_position' at location 1
+	Attribute 'v_normal' at location 1
+	Attribute 'v_position' at location 0
 	Attribute 'v_uvw' at location 2
-	Uniform 'modelWorld' at location 0
-	Uniform 'modelWorldNormal' at location 1
-	Uniform 'voxelGridTransform' at location 2
-	Uniform 'voxelGridTransformI' at location 3
-	Uniform 'voxelTexSize' at location 4
+	Uniform '_main_worldAxes_0[0]' at location 0
+	Uniform 'diffuseTex' at location 3
+	Uniform 'modelWorld' at location 4
+	Uniform 'modelWorldNormal' at location 5
+	Uniform 'voxelFragmentListColor' at location 6
+	Uniform 'voxelFragmentListPosition' at location 7
+	Uniform 'voxelGridTransform' at location 8
+	Uniform 'voxelGridTransformI' at location 9
+	Uniform 'voxelTexSize' at location 10
 	Uniform 'voxel_index' at location -1
-	Uniform 'diffuseTex' at location 6
-	Uniform 'voxelFragmentListColor' at location 7
-	Uniform 'voxelFragmentListPosition' at location 8
 [DEBUG] Shader './assets/shader/ModifyIndirectBufferVert.shader' compiled
 [DEBUG] Program '' compiled
+	Uniform 'indirectCommandBuf' at location 0
 	Uniform 'numVoxels' at location -1
-	Uniform 'indirectCommandBuf' at location 1
 [DEBUG] Shader './assets/shader/ObFlagVert.shader' compiled
 [DEBUG] Program '' compiled
-	Uniform 'numLevels' at location 0
-	Uniform 'voxelGridResolution' at location 1
-	Uniform 'nodePool' at location 2
-	Uniform 'voxelFragmentListPosition' at location 3
+	Attribute 'gl_VertexID' at location -1
+	Uniform 'nodePool' at location 0
+	Uniform 'numLevels' at location 1
+	Uniform 'voxelFragmentListPosition' at location 2
+	Uniform 'voxelGridResolution' at location 3
 [DEBUG] Shader './assets/shader/ObAllocateVert.shader' compiled
 [DEBUG] Program '' compiled
+	Attribute 'gl_VertexID' at location -1
 	Uniform 'nextFreeAddress' at location -1
 	Uniform 'nodePool' at location 1
 [DEBUG] Program '' compiled
-	Uniform 'numLevels' at location 0
-	Uniform 'voxelGridResolution' at location 1
-	Uniform 'nodePool' at location 2
-	Uniform 'voxelFragmentListPosition' at location 3
+	Attribute 'gl_VertexID' at location -1
+	Uniform 'nodePool' at location 0
+	Uniform 'numLevels' at location 1
+	Uniform 'voxelFragmentListPosition' at location 2
+	Uniform 'voxelGridResolution' at location 3
 [DEBUG] Program '' compiled
+	Attribute 'gl_VertexID' at location -1
 	Uniform 'nextFreeAddress' at location -1
 	Uniform 'nodePool' at location 1
 [DEBUG] Program '' compiled
-	Uniform 'numLevels' at location 0
-	Uniform 'voxelGridResolution' at location 1
-	Uniform 'nodePool' at location 2
-	Uniform 'voxelFragmentListPosition' at location 3
+	Attribute 'gl_VertexID' at location -1
+	Uniform 'nodePool' at location 0
+	Uniform 'numLevels' at location 1
+	Uniform 'voxelFragmentListPosition' at location 2
+	Uniform 'voxelGridResolution' at location 3
 [DEBUG] Program '' compiled
+	Attribute 'gl_VertexID' at location -1
 	Uniform 'nextFreeAddress' at location -1
 	Uniform 'nodePool' at location 1
 [DEBUG] Program '' compiled
-	Uniform 'numLevels' at location 0
-	Uniform 'voxelGridResolution' at location 1
-	Uniform 'nodePool' at location 2
-	Uniform 'voxelFragmentListPosition' at location 3
+	Attribute 'gl_VertexID' at location -1
+	Uniform 'nodePool' at location 0
+	Uniform 'numLevels' at location 1
+	Uniform 'voxelFragmentListPosition' at location 2
+	Uniform 'voxelGridResolution' at location 3
 [DEBUG] Program '' compiled
+	Attribute 'gl_VertexID' at location -1
 	Uniform 'nextFreeAddress' at location -1
 	Uniform 'nodePool' at location 1
 [DEBUG] Program '' compiled
-	Uniform 'numLevels' at location 0
-	Uniform 'voxelGridResolution' at location 1
-	Uniform 'nodePool' at location 2
-	Uniform 'voxelFragmentListPosition' at location 3
+	Attribute 'gl_VertexID' at location -1
+	Uniform 'nodePool' at location 0
+	Uniform 'numLevels' at location 1
+	Uniform 'voxelFragmentListPosition' at location 2
+	Uniform 'voxelGridResolution' at location 3
 [DEBUG] Program '' compiled
+	Attribute 'gl_VertexID' at location -1
 	Uniform 'nextFreeAddress' at location -1
 	Uniform 'nodePool' at location 1
 [DEBUG] Program '' compiled
-	Uniform 'numLevels' at location 0
-	Uniform 'voxelGridResolution' at location 1
-	Uniform 'nodePool' at location 2
-	Uniform 'voxelFragmentListPosition' at location 3
+	Attribute 'gl_VertexID' at location -1
+	Uniform 'nodePool' at location 0
+	Uniform 'numLevels' at location 1
+	Uniform 'voxelFragmentListPosition' at location 2
+	Uniform 'voxelGridResolution' at location 3
 [DEBUG] Program '' compiled
+	Attribute 'gl_VertexID' at location -1
 	Uniform 'nextFreeAddress' at location -1
 	Uniform 'nodePool' at location 1
 [DEBUG] Program '' compiled
-	Uniform 'numLevels' at location 0
-	Uniform 'voxelGridResolution' at location 1
-	Uniform 'nodePool' at location 2
-	Uniform 'voxelFragmentListPosition' at location 3
+	Attribute 'gl_VertexID' at location -1
+	Uniform 'nodePool' at location 0
+	Uniform 'numLevels' at location 1
+	Uniform 'voxelFragmentListPosition' at location 2
+	Uniform 'voxelGridResolution' at location 3
 [DEBUG] Program '' compiled
+	Attribute 'gl_VertexID' at location -1
 	Uniform 'nextFreeAddress' at location -1
 	Uniform 'nodePool' at location 1
 [DEBUG] Program '' compiled
-	Uniform 'numLevels' at location 0
-	Uniform 'voxelGridResolution' at location 1
-	Uniform 'nodePool' at location 2
-	Uniform 'voxelFragmentListPosition' at location 3
+	Attribute 'gl_VertexID' at location -1
+	Uniform 'nodePool' at location 0
+	Uniform 'numLevels' at location 1
+	Uniform 'voxelFragmentListPosition' at location 2
+	Uniform 'voxelGridResolution' at location 3
 [DEBUG] Program '' compiled
+	Attribute 'gl_VertexID' at location -1
 	Uniform 'nextFreeAddress' at location -1
 	Uniform 'nodePool' at location 1
 [DEBUG] Program '' compiled
-	Uniform 'numLevels' at location 0
-	Uniform 'voxelGridResolution' at location 1
-	Uniform 'nodePool' at location 2
-	Uniform 'voxelFragmentListPosition' at location 3
+	Attribute 'gl_VertexID' at location -1
+	Uniform 'nodePool' at location 0
+	Uniform 'numLevels' at location 1
+	Uniform 'voxelFragmentListPosition' at location 2
+	Uniform 'voxelGridResolution' at location 3
 [DEBUG] Program '' compiled
+	Attribute 'gl_VertexID' at location -1
 	Uniform 'nextFreeAddress' at location -1
 	Uniform 'nodePool' at location 1
 [DEBUG] Shader './assets/shader/OctreeWriteLeafs.shader' compiled
 [DEBUG] Program 'OctreeWrite shader' compiled
-	Uniform 'numLevels' at location 0
-	Uniform 'voxelGridResolution' at location 1
-	Uniform 'nodePool' at location 2
-	Uniform 'voxelFragList_color' at location 3
-	Uniform 'voxelFragList_pos' at location 4
+	Attribute 'gl_VertexID' at location -1
+	Uniform 'nodePool' at location 0
+	Uniform 'numLevels' at location 1
+	Uniform 'voxelFragList_color' at location 2
+	Uniform 'voxelFragList_pos' at location 3
+	Uniform 'voxelGridResolution' at location 4
 [DEBUG] Shader './assets/shader/OctreeMipmap.shader' compiled
 [DEBUG] Program '' compiled
+	Attribute 'gl_VertexID' at location -1
 	Uniform 'nodePool' at location 0
 [DEBUG] Program '' compiled
+	Attribute 'gl_VertexID' at location -1
 	Uniform 'nodePool' at location 0
 [DEBUG] Program '' compiled
+	Attribute 'gl_VertexID' at location -1
 	Uniform 'nodePool' at location 0
 [DEBUG] Program '' compiled
+	Attribute 'gl_VertexID' at location -1
 	Uniform 'nodePool' at location 0
 [DEBUG] Program '' compiled
+	Attribute 'gl_VertexID' at location -1
 	Uniform 'nodePool' at location 0
 [DEBUG] Program '' compiled
+	Attribute 'gl_VertexID' at location -1
 	Uniform 'nodePool' at location 0
 [DEBUG] Program '' compiled
+	Attribute 'gl_VertexID' at location -1
 	Uniform 'nodePool' at location 0
 [DEBUG] Shader './assets/shader/VoxelConeTracing/raycastVert.shader' compiled
 [DEBUG] Shader './assets/shader/OctreeVisFrag.shader' compiled
-[DEBUG] Program '' compiled
+[DEBUG] '' program Log Fragment info
+-------------
+0(96) : warning C7050: "_outNodePosMin" might be used before being initialized
+0(96) : warning C7050: "_outNodePosMax" might be used before being initialized
+
 	Attribute 'v_position' at location 0
 	Uniform 'fFar' at location 0
 	Uniform 'fRatio' at location 1
 	Uniform 'fYfovDeg' at location 2
-	Uniform 'targetLevel' at location 3
-	Uniform 'viewI' at location 4
-	Uniform 'voxelGridResolution' at location 5
-	Uniform 'voxelGridTransformI' at location 6
-	Uniform 'nodePool' at location 7
+	Uniform 'nodePool' at location 3
+	Uniform 'targetLevel' at location 4
+	Uniform 'viewI' at location 5
+	Uniform 'voxelGridResolution' at location 6
+	Uniform 'voxelGridTransformI' at location 7
 [ERROR] Uniform 'voxelGridTransform' not found in shader 'octreeVis shader'
 [ERROR] Uniform 'numLevels' not found in shader 'octreeVis shader'
 [DEBUG] Shader './assets/shader/debug.shader' compiled
 [DEBUG] Program '' compiled
 VoxelFragList indirectCmdBuf contents:
-12014176 1 0 0 
-Next free nodepool address: 81861 
+9333049 1 0 0 
+Next free nodepool address: 81858 
+
+End of Log

@@ -299,7 +299,7 @@ void VCTscene::initNodePool() {
   kore::STextureBufferProperties props;
   props.internalFormat = GL_RG32UI;
   props.size = 2 * sizeof(uint) * _numNodes;
-  props.usageHint = GL_STATIC_DRAW;
+  props.usageHint = GL_DYNAMIC_COPY;
   
   _nodePool.create(props, "NodePool");
 
