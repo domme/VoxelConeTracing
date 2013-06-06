@@ -37,7 +37,6 @@ VCTscene::VCTscene() :
   _camera(NULL),
   _tex3DclearPBO(KORE_GLUINT_HANDLE_INVALID),
   _voxelGridResolution(0),
-  _fragListSizeMultiplier(1),
   _voxelGridSideLengths(50, 50, 50)
    {
 }
@@ -52,7 +51,7 @@ void VCTscene::init(const SVCTparameters& params,
                     kore::Camera* camera) {
   _voxelGridResolution = params.voxel_grid_resolution;
   _voxelGridSideLengths = params.voxel_grid_sidelengths;
-  _fragListSizeMultiplier = params.fraglist_size_multiplier;
+ 
   //Level based on number of Voxels (8^level = number of leaves)  
   
   _meshNodes = meshNodes;
@@ -64,10 +63,10 @@ void VCTscene::init(const SVCTparameters& params,
   _shdVoxelGridResolution.type = GL_UNSIGNED_INT;
   
   _nodePool.init(_voxelGridResolution);
-
+  _voxelFragList.init(_voxelGridResolution,params.fraglist_size_multiplier);
+  
+  
   //initTex3D(&_voxelTex, BLACK);
-  initVoxelFragList();
-  initIndirectCommandBufs();
   
   
 
@@ -96,85 +95,14 @@ void VCTscene::init(const SVCTparameters& params,
   _shdAcVoxelIndex.data = &_acVoxelIndex;
 }
 
-void VCTscene::initIndirectCommandBufs() {
-  
-  // Voxel fragment list indirect command buf
-  SDrawArraysIndirectCommand cmd;
-  cmd.numVertices = 1;
-  cmd.numPrimitives = 1;
-  cmd.firstVertexIdx = 0;
-  cmd.baseInstanceIdx = 0;
-
-  kore::STextureBufferProperties props;
-  props.internalFormat = GL_R32UI;
-  props.size = sizeof(SDrawArraysIndirectCommand);
-  props.usageHint = GL_STATIC_DRAW;
-
-  _fragListIndirectCmdBuf.create(props, "IndirectCommandBuf",&cmd);
-  
-  _fragListIcbTexInfos.internalFormat = GL_R32UI;
-  _fragListIcbTexInfos.texLocation = _fragListIndirectCmdBuf.getTexHandle();
-  _fragListIcbTexInfos.texTarget = GL_TEXTURE_BUFFER;
-
-  _shdFragListIndirectCmdBuf.name = "IndirectCommandBuf";
-  _shdFragListIndirectCmdBuf.type = GL_TEXTURE_BUFFER;
-  _shdFragListIndirectCmdBuf.data = &_fragListIcbTexInfos;
-  //////////////////////////////////////////////////////////////////////////
-
-  
-}
-
-void VCTscene::initVoxelFragList() {
-  // Positions
-  uint fraglistSizeByte = sizeof(unsigned int)
-                          * _voxelGridResolution
-                          * _voxelGridResolution
-                          * _voxelGridResolution * _fragListSizeMultiplier;
-
-  kore::Log::getInstance()
-                    ->write("Allocating voxel fragment lists of size %f MB\n",
-                             MathUtil::byteToMB(fraglistSizeByte));
-  
-  kore::STextureBufferProperties props;
-  props.internalFormat = GL_R32UI;
-  props.size = fraglistSizeByte;
-  props.usageHint = GL_STATIC_DRAW;
-
-  _voxelFragLists[VOXELATT_POSITION]
-                              .create(props, "VoxelFragmentList_Position");
-  _voxelFragLists[VOXELATT_COLOR].create(props, "VoxelFragmentList_Color");
-
-  
-  _vflTexInfos[VOXELATT_POSITION].internalFormat = props.internalFormat;
-  _vflTexInfos[VOXELATT_POSITION].texTarget = GL_TEXTURE_BUFFER;
-  _vflTexInfos[VOXELATT_POSITION].texLocation
-                        = _voxelFragLists[VOXELATT_POSITION].getTexHandle();
-
-  _vflTexInfos[VOXELATT_COLOR].internalFormat = props.internalFormat;
-  _vflTexInfos[VOXELATT_COLOR].texTarget = GL_TEXTURE_BUFFER;
-  _vflTexInfos[VOXELATT_COLOR].texLocation
-                       = _voxelFragLists[VOXELATT_COLOR].getTexHandle();
-  
-
-  _shdVoxelFragLists[VOXELATT_POSITION].component = NULL;
-  _shdVoxelFragLists[VOXELATT_POSITION].data = &_vflTexInfos[VOXELATT_POSITION];
-  _shdVoxelFragLists[VOXELATT_POSITION].name = "VoxelFragmentList_Position";
-  _shdVoxelFragLists[VOXELATT_POSITION].type = GL_TEXTURE_BUFFER;
-
-  _shdVoxelFragLists[VOXELATT_COLOR].component = NULL;
-  _shdVoxelFragLists[VOXELATT_COLOR].data = &_vflTexInfos[VOXELATT_COLOR];
-  _shdVoxelFragLists[VOXELATT_COLOR].name = "VoxelFragmentList_Color";
-  _shdVoxelFragLists[VOXELATT_COLOR].type = GL_TEXTURE_BUFFER;
-}
-
 void VCTscene::clearTex3D(kore::Texture* tex) {
   kore::RenderManager::getInstance()->bindBuffer(GL_PIXEL_UNPACK_BUFFER,_tex3DclearPBO);
   for (uint z = 0; z < _voxelGridResolution; ++z) {
     kore::GLerror::gl_ErrorCheckStart();
     glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, z,
-                    _voxelGridResolution,
-                    _voxelGridResolution, 1,
-                    GL_RED_INTEGER, GL_UNSIGNED_INT, 0);
+      _voxelGridResolution,
+      _voxelGridResolution, 1,
+      GL_RED_INTEGER, GL_UNSIGNED_INT, 0);
     kore::GLerror::gl_ErrorCheckFinish("Upload 3D texture values");
   }
   kore::RenderManager::getInstance()->bindBuffer(GL_PIXEL_UNPACK_BUFFER,0);

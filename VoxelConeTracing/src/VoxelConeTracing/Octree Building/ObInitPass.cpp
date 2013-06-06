@@ -54,11 +54,11 @@ ObInitPass::ObInitPass(VCTscene* vctScene,
   this->setShaderProgram(&_initShader);
   
   addStartupOperation(new BindImageTexture(
-                     vctScene->getShdVoxelFragList(VOXELATT_COLOR),
+                     vctScene->getVoxelFragList()->getShdVoxelFragList(VOXELATT_COLOR),
                      _initShader.getUniform("voxelFragmentListColor")));
 
   addStartupOperation(new BindImageTexture(
-                      vctScene->getShdVoxelFragList(VOXELATT_POSITION),
+                      vctScene->getVoxelFragList()->getShdVoxelFragList(VOXELATT_POSITION),
                       _initShader.getUniform("voxelFragmentListPosition")));
 
    addStartupOperation(new BindAtomicCounterBuffer(

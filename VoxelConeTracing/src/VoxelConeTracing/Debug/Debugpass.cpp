@@ -107,9 +107,9 @@ void DebugPass::debugVoxelIndexAC() {
 
 void DebugPass::debugVoxelFragmentList() {
   uint byteSize =
-    _vctScene->getVoxelFragList(VOXELATT_POSITION)->getProperties().size;
+    _vctScene->getVoxelFragList()->getVoxelFragList(VOXELATT_POSITION)->getProperties().size;
     
-  _renderMgr->bindBuffer(GL_TEXTURE_BUFFER, _vctScene->getVoxelFragList(VOXELATT_POSITION)->getBufferHandle());
+  _renderMgr->bindBuffer(GL_TEXTURE_BUFFER, _vctScene->getVoxelFragList()->getVoxelFragList(VOXELATT_POSITION)->getBufferHandle());
 
   const GLuint* ptr = (const GLuint*) glMapBuffer(GL_TEXTURE_BUFFER, GL_READ_ONLY);
 
@@ -124,7 +124,7 @@ void DebugPass::debugVoxelFragmentList() {
 
 void DebugPass::debugIndirectCmdBuff(){
   
-  _renderMgr->bindBuffer(GL_TEXTURE_BUFFER, _vctScene->getFragListIndCmdBuf()->getBufferHandle());
+  _renderMgr->bindBuffer(GL_TEXTURE_BUFFER, _vctScene->getVoxelFragList()->getFragListIndCmdBuf()->getBufferHandle());
 
   const GLuint* ptr = (const GLuint*) glMapBuffer(GL_TEXTURE_BUFFER, GL_READ_ONLY);
   kore::Log::getInstance()->write("VoxelFragList indirectCmdBuf contents:\n");

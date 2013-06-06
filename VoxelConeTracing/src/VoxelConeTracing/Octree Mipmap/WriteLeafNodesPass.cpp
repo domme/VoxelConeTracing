@@ -56,17 +56,17 @@ WriteLeafNodesPass::
   // Launch a thread for every node up to the max level
   addStartupOperation(
     new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
-        _vctScene->getFragListIndCmdBuf()->getBufferHandle()));
+        _vctScene->getVoxelFragList()->getFragListIndCmdBuf()->getBufferHandle()));
 
   addStartupOperation(new BindUniform(vctScene->getNodePool()->getShdNumLevels(),
                                               shp->getUniform("numLevels")));
 
   addStartupOperation(new BindImageTexture(
-    vctScene->getShdVoxelFragList(VOXELATT_POSITION),
+    vctScene->getVoxelFragList()->getShdVoxelFragList(VOXELATT_POSITION),
     shp->getUniform("voxelFragList_pos")));
 
   addStartupOperation(new BindImageTexture(
-    vctScene->getShdVoxelFragList(VOXELATT_COLOR),
+    vctScene->getVoxelFragList()->getShdVoxelFragList(VOXELATT_COLOR),
     shp->getUniform("voxelFragList_color")));
 
   addStartupOperation(new BindImageTexture(

@@ -35,6 +35,7 @@
 #include "KoRE/Components/Camera.h"
 #include "KoRE/Components/MeshComponent.h"
 #include "NodePool.h"
+#include "VoxelFragList.h"
 
 struct SVCTparameters {
   uint voxel_grid_resolution;
@@ -45,13 +46,6 @@ struct SVCTparameters {
 enum ETex3DContent {
   COLOR_PALETTE,
   BLACK
-};
-
-enum EVoxelAttributes {
-  VOXELATT_POSITION = 0,
-  VOXELATT_COLOR,
-
-  VOXELATT_NUM
 };
 
 struct SNode {
@@ -87,22 +81,8 @@ public:
   inline kore::ShaderData* getShdVoxelGridResolution()
                             {return &_shdVoxelGridResolution;}
 
-  inline kore::ShaderData* getShdVoxelFragList(EVoxelAttributes type)
-                           {return &_shdVoxelFragLists[type];}
-
-
-
   inline kore::Texture* getVoxelTex()
                           {return &_voxelTex;}
-  
-  inline kore::TextureBuffer* getVoxelFragList(EVoxelAttributes type) 
-    { return &_voxelFragLists[type]; }
-
-  inline kore::TextureBuffer* getFragListIndCmdBuf()
-  { return &_fragListIndirectCmdBuf; }
-
-  inline kore::ShaderData* getShdFragListIndCmdBuf()
-  {return &_shdFragListIndirectCmdBuf;}
 
   inline kore::SceneNode* getVoxelGridNode() {return _voxelGridNode;}
 
@@ -112,6 +92,7 @@ public:
   inline kore::ShaderData* getShdAcVoxelIndex() {return &_shdAcVoxelIndex;}
 
   inline NodePool* getNodePool() {return &_nodePool;}
+  inline VoxelFragList* getVoxelFragList() {return &_voxelFragList;}
 
  
 private:
@@ -119,42 +100,23 @@ private:
   std::vector<kore::SceneNode*> _meshNodes;
 
   NodePool _nodePool;
+  VoxelFragList _voxelFragList;
 
-  kore::TextureBuffer _voxelFragLists[VOXELATT_NUM];
-  kore::STextureInfo _vflTexInfos[VOXELATT_NUM];
-  kore::ShaderData _shdVoxelFragLists[VOXELATT_NUM];
   
   uint _voxelGridResolution;
   kore::ShaderData _shdVoxelGridResolution;
-  
   glm::vec3 _voxelGridSideLengths;
 
   kore::IndexedBuffer _acVoxelIndex;
   kore::ShaderData _shdAcVoxelIndex;
-
-
-  kore::TextureBuffer _fragListIndirectCmdBuf;
-  kore::STextureInfo _fragListIcbTexInfos;
-  kore::ShaderData _shdFragListIndirectCmdBuf;
-
-  
-  
 
   // Deprecated:
   kore::SceneNode* _voxelGridNode;
   kore::Texture _voxelTex;
   GLuint _tex3DclearPBO;
 
-
-  uint _fragListSizeMultiplier;
-  
-
   void clearTex3D(kore::Texture* tex);
   void initTex3D(kore::Texture* tex, const ETex3DContent texContent);
-  void initVoxelFragList();
-  void initIndirectCommandBufs();
-  void initNodePool();
-
   //////////////////////////////////////////////////////////////////////////
 };
 

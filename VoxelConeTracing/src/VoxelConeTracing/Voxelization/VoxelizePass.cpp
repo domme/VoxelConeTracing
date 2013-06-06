@@ -134,12 +134,12 @@ VoxelizePass::VoxelizePass(VCTscene* vctScene,
 
    nodePass
      ->addOperation(new BindImageTexture(
-        vctScene->getShdVoxelFragList(VOXELATT_POSITION),
+        vctScene->getVoxelFragList()->getShdVoxelFragList(VOXELATT_POSITION),
         voxelizeShader->getUniform("voxelFragmentListPosition")));
 
    nodePass
      ->addOperation(new BindImageTexture(
-     vctScene->getShdVoxelFragList(VOXELATT_COLOR),
+     vctScene->getVoxelFragList()->getShdVoxelFragList(VOXELATT_COLOR),
      voxelizeShader->getUniform("voxelFragmentListColor")));
 
    nodePass

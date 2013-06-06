@@ -140,7 +140,7 @@ void setup() {
   // Prepare render algorithm
   _backbufferStage->addProgramPass(new VoxelizePass(&_vctScene, kore::EXECUTE_ONCE));
   _backbufferStage->addProgramPass(new ModifyIndirectBufferPass(
-                                      _vctScene.getShdFragListIndCmdBuf(),
+                                      _vctScene.getVoxelFragList()->getShdFragListIndCmdBuf(),
                                       _vctScene.getShdAcVoxelIndex(),&_vctScene,
                                       kore::EXECUTE_ONCE));
 

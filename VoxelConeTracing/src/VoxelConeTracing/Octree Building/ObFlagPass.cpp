@@ -55,12 +55,12 @@ ObFlagPass::ObFlagPass(VCTscene* vctScene,
 
   addStartupOperation(
     new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
-    vctScene->getFragListIndCmdBuf()->getBufferHandle()));
+    vctScene->getVoxelFragList()->getFragListIndCmdBuf()->getBufferHandle()));
 
   addStartupOperation(new MemoryBarrierOp(GL_ALL_BARRIER_BITS));
 
   addStartupOperation(new BindImageTexture(
-                      vctScene->getShdVoxelFragList(VOXELATT_POSITION),
+                      vctScene->getVoxelFragList()->getShdVoxelFragList(VOXELATT_POSITION),
                       _flagShader.getUniform("voxelFragmentListPosition")));
 
   addStartupOperation(new BindUniform(
