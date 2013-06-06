@@ -9,7 +9,6 @@ CMakeCache.txt
 *.exe
 *.pdb
 *.ilk
-*.user
 *.suo
 *.sdf
 *.opensdf
