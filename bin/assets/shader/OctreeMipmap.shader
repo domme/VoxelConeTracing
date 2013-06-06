@@ -110,10 +110,12 @@ void main() {
     ////////////////////////////////////////
 
     // Non-compositing
+    ///*
     if (childColor.a > 1) {
       weights += 1;
       color += childColor;
     }
+    //*/
     ////////////////////////////////
 
     

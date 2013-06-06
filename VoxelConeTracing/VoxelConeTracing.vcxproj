@@ -304,8 +304,10 @@
     <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\WriteLeafNodesPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Raycasting\OctreeVisPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Raycasting\RayCastingPass.cpp" />
+    <ClCompile Include="src\VoxelConeTracing\Scene\NodePool.cpp" />
+    <ClCompile Include="src\VoxelConeTracing\Scene\VCTscene.cpp" />
+    <ClCompile Include="src\VoxelConeTracing\Scene\VoxelFragList.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Util\MathUtil.cpp" />
-    <ClCompile Include="src\VoxelConeTracing\VCTscene.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Voxelization\VoxelizePass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\vsDebugLib.cpp" />
   </ItemGroup>
@@ -322,8 +324,10 @@
     <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\WriteLeafNodesPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Raycasting\OctreeVisPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Raycasting\RayCastingPass.h" />
+    <ClInclude Include="src\VoxelConeTracing\Scene\NodePool.h" />
+    <ClInclude Include="src\VoxelConeTracing\Scene\VCTscene.h" />
+    <ClInclude Include="src\VoxelConeTracing\Scene\VoxelFragList.h" />
     <ClInclude Include="src\VoxelConeTracing\Util\MathUtil.h" />
-    <ClInclude Include="src\VoxelConeTracing\VCTscene.h" />
     <ClInclude Include="src\VoxelConeTracing\Voxelization\VoxelizePass.h" />
     <ClInclude Include="src\VoxelConeTracing\vsDebugLib.h" />
   </ItemGroup>

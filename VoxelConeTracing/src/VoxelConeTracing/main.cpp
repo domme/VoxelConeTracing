@@ -75,8 +75,8 @@
 
 
 
-static const uint screen_width = 1280;
-static const uint screen_height = 720;
+static const uint screen_width = 512;
+static const uint screen_height = 512;
 
 static kore::SceneNode* _cameraNode = NULL;
 static kore::Camera* _pCamera = NULL;
@@ -111,7 +111,7 @@ void setup() {
   Log::getInstance()->write("Max TextureBuffer size: %i \n", maxTexBufferSize);
 
   //Load the scene and get all mesh nodes
-  ResourceManager::getInstance()->loadScene("./assets/meshes/sibenik.dae");
+  ResourceManager::getInstance()->loadScene("./assets/meshes/monkey.dae");
   
   std::vector<SceneNode*> renderNodes;
   SceneManager::getInstance()
@@ -181,7 +181,7 @@ int main(void) {
   glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 4);
   glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 2);
   glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-  glfwOpenWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+  //glfwOpenWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 
   // Open an OpenGL window
   if (!glfwOpenWindow(screen_width, screen_height, 8, 8, 8, 8, 24, 8, GLFW_WINDOW)) {

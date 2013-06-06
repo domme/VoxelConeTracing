@@ -20,7 +20,9 @@ const uvec3 childOffsets[8] = {
   uvec3(1, 1, 1),
   uvec3(0, 1, 1) };
 
-layout(rg32ui) uniform volatile uimageBuffer nodePool;
+ const uint pow2[] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
+
+layout(rg32ui) uniform uimageBuffer nodePool;
 
 uniform uint voxelGridResolution;
 uniform mat4 viewI;
@@ -90,7 +92,7 @@ bool nextEmpty(in uvec2 nodeValue) {
 }
 
 uint sizeOnLevel(in uint level) {
-  return uint(voxelGridResolution / pow(2U, level));
+  return uint(voxelGridResolution / pow2[level]);
 }
 
 vec4 getOctreeColor(in uvec3 pos, in uint currTargetLevel, out uvec3 outNodePosMin, out uvec3 outNodePosMax) {
@@ -98,8 +100,6 @@ vec4 getOctreeColor(in uvec3 pos, in uint currTargetLevel, out uvec3 outNodePosM
   uint nodeAddress = 0;
   uvec3 nodePos = uvec3(0, 0, 0);
   uvec3 nodePosMax = uvec3(1, 1, 1);
-  uint childLevel = 1;
-  uint sideLength = sizeOnLevel(childLevel);
   vec4 col = vec4(0);
   
   for (uint iLevel = 0; iLevel <= currTargetLevel; ++iLevel) {
@@ -126,6 +126,7 @@ vec4 getOctreeColor(in uvec3 pos, in uint currTargetLevel, out uvec3 outNodePosM
     ////////////////////////////////////////////////////////
 
     // Non-compositing
+  // /*
     if ((iLevel == currTargetLevel)) {
         outNodePosMin = nodePos;
         outNodePosMax = nodePosMax;
@@ -137,9 +138,10 @@ vec4 getOctreeColor(in uvec3 pos, in uint currTargetLevel, out uvec3 outNodePosM
       outNodePosMax = nodePosMax;
       return vec4(0.0, 0.0, 0.0, 0.0);
     }
+    //*/
     ////////////////////////////////////////////////////
 
-    sideLength = sizeOnLevel(childLevel);
+    uint sideLength = sizeOnLevel(iLevel + 1);
     uint childStartAddress = getNext(node);
 
     for (uint iChild = 0; iChild < 8; ++iChild) {
@@ -157,7 +159,6 @@ vec4 getOctreeColor(in uvec3 pos, in uint currTargetLevel, out uvec3 outNodePosM
             nodeAddress = childAddress;
             nodePos = posMin;
             nodePosMax = posMax;
-            childLevel += 1;
             break;
         } // if
       } // for
@@ -200,11 +201,12 @@ void main(void) {
     float fDistanceFactor = f / tLeave;
     fDistanceFactor *= fDistanceFactor;
     
-    uint currTargetLevel = uint(floor((1.0 - fDistanceFactor) * float(targetLevel))) + 1;
+    uint currTargetLevel =  targetLevel;//uint(floor((1.0 - fDistanceFactor) * float(targetLevel))) + 1;
     vec4 col = getOctreeColor(samplePos, clamp(currTargetLevel, 1U, targetLevel), nodePosMin, nodePosMax);
       
     // Compositing  
-    /*color = vec4((1 - color.a) * col.xyz + color.xyz, color.a);
+    /*
+    color = vec4((1 - color.a) * col.xyz + color.xyz, color.a);
     color.a = (1-color.a) * col.a + color.a;
 
     if(color.a > 0.99) {
@@ -214,10 +216,12 @@ void main(void) {
     ////////////////////////////////////////////////////////////////////
 
     // Non-Compositing
+    ///*
     if (length(col) > 0.001) {
       color = col;
       return;
     }
+    //*/
     /////////////////////
     
       
@@ -239,6 +243,6 @@ void main(void) {
     // This should not happen
     //color = vec4(1.0, 0.0, 0.0, 0.0);
     return; // Prevent infinite loop
-
-  }
+   
+  } 
 }

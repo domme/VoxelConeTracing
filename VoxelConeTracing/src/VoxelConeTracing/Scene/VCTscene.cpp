@@ -23,7 +23,7 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#include "VoxelConeTracing/VCTscene.h"
+#include "VoxelConeTracing/Scene/VCTscene.h"
 #include "VoxelConeTracing/Cube.h"
 #include "VoxelConeTracing/Octree Building/ModifyIndirectBufferPass.h"
 #include "VoxelConeTracing/Util/MathUtil.h"
@@ -38,9 +38,8 @@ VCTscene::VCTscene() :
   _tex3DclearPBO(KORE_GLUINT_HANDLE_INVALID),
   _voxelGridResolution(0),
   _fragListSizeMultiplier(1),
-  _voxelGridSideLengths(50, 50, 50),
-  _numNodes(0),
-  _numLevels(0) {
+  _voxelGridSideLengths(50, 50, 50)
+   {
 }
 
 
@@ -55,44 +54,31 @@ void VCTscene::init(const SVCTparameters& params,
   _voxelGridSideLengths = params.voxel_grid_sidelengths;
   _fragListSizeMultiplier = params.fraglist_size_multiplier;
   //Level based on number of Voxels (8^level = number of leaves)  
-  _numLevels = 0;
-  uint resOnLevel = _voxelGridResolution;
-  while(resOnLevel > 0) {
-    ++_numLevels;
-    resOnLevel = resOnLevel / 2;
-  }
-
-  //_numLevels = ceil(log(_voxelGridResolution*_voxelGridResolution*_voxelGridResolution)/log(8))+1;
-  kore::Log::getInstance()->write("[DEBUG] number of levels: %u \n", _numLevels);
-
-  _shdNumLevels.type = GL_UNSIGNED_INT;
-  _shdNumLevels.name = "Num levels";
-  _shdNumLevels.data = &_numLevels;
-
+  
   _meshNodes = meshNodes;
   _camera = camera;
 
-  _meshComponents.clear();
-  _meshComponents.resize(_meshNodes.size());
-  for (uint i = 0; i < _meshNodes.size(); ++i) {
-    _meshComponents[i]
-      = static_cast<kore::MeshComponent*>
-      (_meshNodes[i]->getComponent(kore::COMPONENT_MESH));
-  }
+  _shdVoxelGridResolution.data = &_voxelGridResolution;
+  _shdVoxelGridResolution.name = "VoxelGridResolution";
+  _shdVoxelGridResolution.size = 1;
+  _shdVoxelGridResolution.type = GL_UNSIGNED_INT;
   
-  initTex3D(&_voxelTex, BLACK);
+  _nodePool.init(_voxelGridResolution);
+
+  //initTex3D(&_voxelTex, BLACK);
   initVoxelFragList();
   initIndirectCommandBufs();
-  initNodePool();
+  
+  
 
   _voxelGridNode = new kore::SceneNode;
   kore::SceneManager::getInstance()->
       getRootNode()->addChild(_voxelGridNode);
   _voxelGridNode->scale(_voxelGridSideLengths / 2.0f, kore::SPACE_LOCAL);
 
-  kore::TexturesComponent* texComp = new kore::TexturesComponent;
-  texComp->addTexture(&_voxelTex);
-  _voxelGridNode->addComponent(texComp);
+  //kore::TexturesComponent* texComp = new kore::TexturesComponent;
+  //texComp->addTexture(&_voxelTex);
+  //_voxelGridNode->addComponent(texComp);
 
   Cube* voxelGridCube = new Cube(2.0f);
   kore::MeshComponent* meshComp = new kore::MeshComponent;
@@ -135,30 +121,7 @@ void VCTscene::initIndirectCommandBufs() {
   _shdFragListIndirectCmdBuf.data = &_fragListIcbTexInfos;
   //////////////////////////////////////////////////////////////////////////
 
-  // Allocation indirect command bufs for each octree level
-  _vAllocIndCmdBufs.clear();
-                    
-  _vAllocIndCmdBufs.resize(_numLevels);
-  uint numVoxelsUpToLevel = 0;
-  for (uint iLevel = 0; iLevel < _numLevels; ++iLevel) {
-    uint numVoxelsOnLevel = pow(8U,iLevel);
-
-    numVoxelsUpToLevel += numVoxelsOnLevel;
-
-    kore::Log::getInstance()->write("[DEBUG] number of voxels on level %u: %u \n", iLevel, numVoxelsOnLevel);
-    SDrawArraysIndirectCommand command;
-    command.numVertices = numVoxelsUpToLevel;
-    command.numPrimitives = 1;
-    command.firstVertexIdx = 0;
-    command.baseInstanceIdx = 0;
-
-    _vAllocIndCmdBufs[iLevel].create(GL_DRAW_INDIRECT_BUFFER,
-              sizeof(SDrawArraysIndirectCommand),
-              GL_STATIC_DRAW,
-              &command,
-              "allocIndCmdBuf");
-    
-  }
+  
 }
 
 void VCTscene::initVoxelFragList() {
@@ -234,11 +197,6 @@ void VCTscene::initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
   RenderManager::getInstance()
     ->bindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
   GLerror::gl_ErrorCheckFinish("Upload Pixel buffer values");
-  
-  _shdVoxelGridResolution.data = &_voxelGridResolution;
-  _shdVoxelGridResolution.name = "VoxelGridResolution";
-  _shdVoxelGridResolution.size = 1;
-  _shdVoxelGridResolution.type = GL_UNSIGNED_INT;
 
   STextureProperties texProps;
   texProps.targetType = GL_TEXTURE_3D;
@@ -284,60 +242,5 @@ void VCTscene::initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
 }
 
 void VCTscene::initNodePool() {
-  float fnumNodesLevel = glm::pow(static_cast<float>(_voxelGridResolution), 3.0f);
-  uint numNodesLevel = static_cast<uint>(glm::ceil(fnumNodesLevel));
-  _numNodes = numNodesLevel;
-  
-  while (numNodesLevel) {
-    numNodesLevel /= 8;
-    _numNodes += numNodesLevel;
-  }
 
-  kore::Log::getInstance()->write("Allocating Octree with %u nodes in %u levels\n" ,
-                                  _numNodes, _numLevels);
-  
-  kore::STextureBufferProperties props;
-  props.internalFormat = GL_RG32UI;
-  props.size = 2 * sizeof(uint) * _numNodes;
-  props.usageHint = GL_DYNAMIC_COPY;
-  
-  _nodePool.create(props, "NodePool");
-
-  _nodePoolTexInfo.internalFormat = GL_RG32UI;
-  _nodePoolTexInfo.texLocation = _nodePool.getTexHandle();
-  _nodePoolTexInfo.texTarget = GL_TEXTURE_BUFFER;
-
-  _shdNodePool.name = "NodePool";
-  _shdNodePool.type = GL_TEXTURE_BUFFER;
-  _shdNodePool.data = &_nodePoolTexInfo;
-
-  // Init to zero
-  kore::RenderManager* renderMgr = kore::RenderManager::getInstance();
-  renderMgr->bindBuffer(GL_TEXTURE_BUFFER, _nodePool.getBufferHandle());
-  uint* ptr = (uint*) glMapBufferRange(GL_TEXTURE_BUFFER, 0, props.size / 2,
-                                       GL_READ_WRITE);
-  for (uint i = 0; i < _numNodes ; ++i) {
-    ptr[i] = 0U;
-  }
-  glUnmapBuffer(GL_TEXTURE_BUFFER);
-
-  ptr = (uint*) glMapBufferRange(GL_TEXTURE_BUFFER, props.size / 2, props.size / 2,
-    GL_READ_WRITE);
-  for (uint i = 0; i < _numNodes ; ++i) {
-    ptr[i] = 0U;
-  }
-  glUnmapBuffer(GL_TEXTURE_BUFFER);
-
-
-  // Create node pool allocation AC
-
-  
-  uint allocAcValue = 0;
-  _acNodePoolNextFree.create(GL_ATOMIC_COUNTER_BUFFER, sizeof(GL_UNSIGNED_INT),
-          GL_DYNAMIC_COPY, &allocAcValue, "AC_nextFreeNodePointer");
-
-  _shdAcNodePoolNextFree.component = NULL;
-  _shdAcNodePoolNextFree.data = &_acNodePoolNextFree;
-  _shdAcNodePoolNextFree.name = "AC Node Pool next free";
-  _shdAcNodePoolNextFree.type = GL_UNSIGNED_INT_ATOMIC_COUNTER;
 }

@@ -34,6 +34,7 @@
 #include "KoRE/SceneNode.h"
 #include "KoRE/Components/Camera.h"
 #include "KoRE/Components/MeshComponent.h"
+#include "NodePool.h"
 
 struct SVCTparameters {
   uint voxel_grid_resolution;
@@ -89,10 +90,7 @@ public:
   inline kore::ShaderData* getShdVoxelFragList(EVoxelAttributes type)
                            {return &_shdVoxelFragLists[type];}
 
-  inline kore::ShaderData* getShdNodePool()
-                           {return &_shdNodePool;}
 
-  inline kore::TextureBuffer* getNodePool() {return &_nodePool;}
 
   inline kore::Texture* getVoxelTex()
                           {return &_voxelTex;}
@@ -113,24 +111,15 @@ public:
   inline kore::IndexedBuffer* getAcVoxelIndex() {return &_acVoxelIndex;}
   inline kore::ShaderData* getShdAcVoxelIndex() {return &_shdAcVoxelIndex;}
 
-  inline kore::IndexedBuffer* getAllocIndCmdBufForLevel(const uint level) 
-  { return &_vAllocIndCmdBufs[level];}
+  inline NodePool* getNodePool() {return &_nodePool;}
 
-  inline kore::IndexedBuffer* getAcNodePoolNextFree() {return &_acNodePoolNextFree;}
-
-  inline kore::ShaderData* getShdAcNodePoolNextFree()
-  {return &_shdAcNodePoolNextFree;}
-
-  inline kore::ShaderData* getShdNumLevels() { return &_shdNumLevels;}
-
-  inline uint getNumLevels() {return _numLevels;}
-  inline uint getNumNodes() {return _numNodes;}
-
+ 
 private:
   kore::Camera* _camera;
   std::vector<kore::SceneNode*> _meshNodes;
-  std::vector<kore::MeshComponent*> _meshComponents;
-  
+
+  NodePool _nodePool;
+
   kore::TextureBuffer _voxelFragLists[VOXELATT_NUM];
   kore::STextureInfo _vflTexInfos[VOXELATT_NUM];
   kore::ShaderData _shdVoxelFragLists[VOXELATT_NUM];
@@ -143,31 +132,22 @@ private:
   kore::IndexedBuffer _acVoxelIndex;
   kore::ShaderData _shdAcVoxelIndex;
 
-  kore::IndexedBuffer _acNodePoolNextFree;
-  kore::ShaderData _shdAcNodePoolNextFree;
 
   kore::TextureBuffer _fragListIndirectCmdBuf;
   kore::STextureInfo _fragListIcbTexInfos;
   kore::ShaderData _shdFragListIndirectCmdBuf;
 
-  std::vector<kore::IndexedBuffer> _vAllocIndCmdBufs;
   
-  kore::TextureBuffer _nodePool;
-  kore::STextureInfo _nodePoolTexInfo;
-  kore::ShaderData _shdNodePool;
+  
 
   // Deprecated:
   kore::SceneNode* _voxelGridNode;
   kore::Texture _voxelTex;
   GLuint _tex3DclearPBO;
 
-  uint _numLevels;
-  kore::ShaderData _shdNumLevels;
 
   uint _fragListSizeMultiplier;
   
-
-  uint _numNodes;  // Number of all nodes in the nodepool
 
   void clearTex3D(kore::Texture* tex);
   void initTex3D(kore::Texture* tex, const ETex3DContent texContent);
@@ -176,7 +156,6 @@ private:
   void initNodePool();
 
   //////////////////////////////////////////////////////////////////////////
-
 };
 
 #endif  // VCT_SRC_VCT_VCTSCENE_H_
