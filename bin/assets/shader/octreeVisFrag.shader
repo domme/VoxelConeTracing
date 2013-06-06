@@ -22,7 +22,8 @@ const uvec3 childOffsets[8] = {
 
  const uint pow2[] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
 
-layout(rg32ui) uniform uimageBuffer nodePool;
+layout(r32ui) uniform volatile uimageBuffer nodePool_next;
+layout(r32ui) uniform volatile uimageBuffer nodePool_color;
 
 uniform uint voxelGridResolution;
 uniform mat4 viewI;
@@ -83,12 +84,12 @@ bool intersectRayWithAABB (in vec3 ro, in vec3 rd,         // Ray-origin and -di
 }
 
 
-uint getNext(in uvec2 nodeValue) {
-  return nodeValue.x & NODE_MASK_NEXT;
+uint getNextAddress(in uint nodeNext) {
+  return nodeNext & NODE_MASK_NEXT;
 }
 
-bool nextEmpty(in uvec2 nodeValue) {
-  return getNext(nodeValue) == 0U;
+bool nextEmpty(in uint nodeNext) {
+  return (nodeNext & NODE_MASK_NEXT) == 0U;
 }
 
 uint sizeOnLevel(in uint level) {
@@ -96,7 +97,7 @@ uint sizeOnLevel(in uint level) {
 }
 
 vec4 getOctreeColor(in uvec3 pos, in uint currTargetLevel, out uvec3 outNodePosMin, out uvec3 outNodePosMax) {
-  uvec2 node = imageLoad(nodePool, 0).xy;
+  uint nodeNext = imageLoad(nodePool_next, 0).x;
   uint nodeAddress = 0;
   uvec3 nodePos = uvec3(0, 0, 0);
   uvec3 nodePosMax = uvec3(1, 1, 1);
@@ -104,7 +105,6 @@ vec4 getOctreeColor(in uvec3 pos, in uint currTargetLevel, out uvec3 outNodePosM
   
   for (uint iLevel = 0; iLevel <= currTargetLevel; ++iLevel) {
      
-
      // Compositing
      /*
      vec4 newColor = vec4(convRGBA8ToVec4(node.y)) / 255.0;
@@ -130,10 +130,11 @@ vec4 getOctreeColor(in uvec3 pos, in uint currTargetLevel, out uvec3 outNodePosM
     if ((iLevel == currTargetLevel)) {
         outNodePosMin = nodePos;
         outNodePosMax = nodePosMax;
-        return vec4(convRGBA8ToVec4(node.y)) / 255.0;
+        uint nodeColorU = imageLoad(nodePool_color, int(nodeAddress)).x;
+        return vec4(convRGBA8ToVec4(nodeColorU)) / 255.0;
     }
 
-    if (nextEmpty(node)) {
+    if (nextEmpty(nodeNext)) {
       outNodePosMin = nodePos;
       outNodePosMax = nodePosMax;
       return vec4(0.0, 0.0, 0.0, 0.0);
@@ -142,7 +143,7 @@ vec4 getOctreeColor(in uvec3 pos, in uint currTargetLevel, out uvec3 outNodePosM
     ////////////////////////////////////////////////////
 
     uint sideLength = sizeOnLevel(iLevel + 1);
-    uint childStartAddress = getNext(node);
+    uint childStartAddress = getNextAddress(nodeNext);
 
     for (uint iChild = 0; iChild < 8; ++iChild) {
       uvec3 posMin = nodePos + childOffsets[iChild] * uvec3(sideLength);
@@ -152,10 +153,10 @@ vec4 getOctreeColor(in uvec3 pos, in uint currTargetLevel, out uvec3 outNodePosM
          pos.y >= posMin.y && pos.y < posMax.y &&
          pos.z >= posMin.z && pos.z < posMax.z ) {
             uint childAddress = childStartAddress + iChild;
-            uvec2 childNode = uvec2(imageLoad(nodePool, int(childAddress)));
+            uint childNodeNext = imageLoad(nodePool_next, int(childAddress)).x;
 
             // Restart while-loop with the child node (aka recursion)
-            node = childNode;
+            nodeNext = childNodeNext;
             nodeAddress = childAddress;
             nodePos = posMin;
             nodePosMax = posMax;

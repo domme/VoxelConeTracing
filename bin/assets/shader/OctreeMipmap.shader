@@ -25,7 +25,8 @@
 
 #version 420 core
 
-layout(rg32ui) uniform volatile uimageBuffer nodePool;
+layout(r32ui) uniform volatile uimageBuffer nodePool_next;
+layout(r32ui) uniform volatile uimageBuffer nodePool_color;
 
 const uint NODE_MASK_NEXT = 0x3FFFFFFF;
 const uint NODE_MASK_TAG = (0x00000001 << 31);
@@ -59,16 +60,16 @@ uvec3 uintXYZ10ToVec3(uint val) {
                  uint((val & 0x3FF00000) >> 20U));
 }
 
-bool isFlagged(in uvec2 node) {
-  return (node.x & NODE_MASK_TAG) != 0U;
+bool isFlagged(in uint nodeNext) {
+  return (nodeNext & NODE_MASK_TAG) != 0U;
 }
 
-uint getNext(in uvec2 nodeValue) {
-  return nodeValue.x & NODE_MASK_NEXT;
+uint getNextAddress(in uint nodeNext) {
+  return nodeNext & NODE_MASK_NEXT;
 }
 
-bool hasNext(in uvec2 nodeValue) {
-  return getNext(nodeValue) != 0U;
+bool hasNext(in uint nodeNext) {
+  return getNextAddress(nodeNext) != 0U;
 }
 
 /*
@@ -78,29 +79,21 @@ We re-use flagging here to mark all nodes that have been mip-mapped in the
 previous pass (or are the result from writing the leaf-levels*/
 void main() {
   // Load some node
-  uvec2 node = imageLoad(nodePool, gl_VertexID).xy;
+  uint nodeNext = imageLoad(nodePool_next, gl_VertexID).x;
 
-  if (!hasNext(node)) { 
+  if (!hasNext(nodeNext)) { 
     return;  // No child-pointer set - mipmapping is not possible anyway
   }
 
-  uint childAddress = getNext(node);
-  uvec2 child = imageLoad(nodePool, int(childAddress)).xy;
-
-  if (!isFlagged(child)) {
-    // The first child is not flagged. This means that no color has been
-    // written here before.
-    //return;
-  }
+  uint childAddress = getNextAddress(nodeNext);
 
   // Average the color from all 8 children
   // TODO: Do proper alpha-weighted average!
   vec4 color = vec4(0);
-  
   float weights = 0;
   for (uint iChild = 0; iChild < 8; ++iChild) {
-    child = imageLoad(nodePool, int(childAddress + iChild)).xy;
-    vec4 childColor = convRGBA8ToVec4(child.y);
+    uint childColorU = imageLoad(nodePool_color, int(childAddress + iChild)).x;
+    vec4 childColor = convRGBA8ToVec4(childColorU);
 
     //Compositing
     /*
@@ -117,17 +110,11 @@ void main() {
     }
     //*/
     ////////////////////////////////
-
-    
-    // Unflag child
-    imageStore(nodePool, int(childAddress + iChild),
-               uvec4(NODE_MASK_NEXT & child.x, child.y, 0, 0));
   }
 
   color /= max(weights, 1.0);
   uint colorU = convVec4ToRGBA8(color);
 
-  // Store the average color value in the parent and flag him.
-  imageStore(nodePool, gl_VertexID,
-             uvec4((1 << 31) | (0x7FFFFFFF & node.x), colorU, 0, 0));
+  // Store the average color value in the parent.
+  imageStore(nodePool_color, gl_VertexID, uvec4(colorU));
 }

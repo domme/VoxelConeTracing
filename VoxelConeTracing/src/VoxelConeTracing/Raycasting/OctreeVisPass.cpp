@@ -53,7 +53,7 @@ OctreeVisPass::OctreeVisPass(VCTscene* vctScene) {
   _sceneMgr = SceneManager::getInstance();
   _resMgr = ResourceManager::getInstance();
 
-  _displayLevel = _vctScene->getNumLevels() - 1;
+  _displayLevel = _vctScene->getNodePool()->getNumLevels() - 1;
   _shdDisplayLevel.component = NULL;
   _shdDisplayLevel.data = &_displayLevel;
   _shdDisplayLevel.type = GL_UNSIGNED_INT;
@@ -123,11 +123,13 @@ OctreeVisPass::OctreeVisPass(VCTscene* vctScene) {
   &_visShader));
 
   
-  nodePass->addOperation(new BindImageTexture(
-                          vctScene->getShdNodePool(),
-                          _visShader.getUniform("nodePool")));
-
- 
+  addStartupOperation(new BindImageTexture(
+    vctScene->getNodePool()->getShdNodePool(NEXT),
+    _visShader.getUniform("nodePool_next")));
+  addStartupOperation(new BindImageTexture(
+    vctScene->getNodePool()->getShdNodePool(COLOR),
+    _visShader.getUniform("nodePool_color")));
+   
   nodePass->addOperation(new BindUniform(
                             vctScene->getShdVoxelGridResolution(),
                             _visShader.getUniform("voxelGridResolution")));
@@ -147,8 +149,8 @@ OctreeVisPass::OctreeVisPass(VCTscene* vctScene) {
   "inverse model Matrix", vctScene->getVoxelGridNode()->getTransform(),
   "voxelGridTransformI", &_visShader));
 
-  nodePass->addOperation(new BindUniform(vctScene->getShdNumLevels(),
-  _visShader.getUniform("numLevels"))); 
+  nodePass->addOperation(new BindUniform(vctScene->getNodePool()->getShdNumLevels(),
+                                         _visShader.getUniform("numLevels"))); 
 
   nodePass->addOperation(new BindUniform(&_shdDisplayLevel,
                                   _visShader.getUniform("targetLevel"))); 
@@ -157,8 +159,8 @@ OctreeVisPass::OctreeVisPass(VCTscene* vctScene) {
 }
 
 void OctreeVisPass::setDisplayLevel(uint level) {
-  if (level >= _vctScene->getNumLevels()) {
-    level = _vctScene->getNumLevels() - 1;
+  if (level >= _vctScene->getNodePool()->getNumLevels()) {
+    level = _vctScene->getNodePool()->getNumLevels() - 1;
   }
 
   if (level == 0xFFFFFFFF) { // overflow 

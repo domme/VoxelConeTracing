@@ -60,7 +60,8 @@ ObAllocatePass::ObAllocatePass(VCTscene* vctScene, uint level,
 
   _bindIndCmdBufOp =
     new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
-                         vctScene->getAllocIndCmdBufForLevel(level)->getHandle());
+                         vctScene->getNodePool()->
+                         getAllocIndCmdBufForLevel(level)->getHandle());
 
   addStartupOperation(_bindIndCmdBufOp);
 
@@ -68,23 +69,21 @@ ObAllocatePass::ObAllocatePass(VCTscene* vctScene, uint level,
     new FunctionOp(std::bind(&ObAllocatePass::debugIndirectCmdBuff, this))); */
   
   addStartupOperation(new BindImageTexture(
-                      vctScene->getShdNodePool(),
-                      _allocateShader.getUniform("nodePool")));
+                      vctScene->getNodePool()->getShdNodePool(NEXT),
+                      _allocateShader.getUniform("nodePool_next")));
   
   addStartupOperation(new BindAtomicCounterBuffer(
-                       vctScene->getShdAcNodePoolNextFree(),
+                       vctScene->getNodePool()->getShdAcNextFree(),
                        _allocateShader.getUniform("nextFreeAddress")));
 
   addStartupOperation(new DrawIndirectOp(GL_POINTS, 0));
-
   addFinishOperation(new MemoryBarrierOp(GL_ALL_BARRIER_BITS));
-
-
 }
 
 void ObAllocatePass::debugIndirectCmdBuff(){
 
-  _renderMgr->bindBuffer(GL_DRAW_INDIRECT_BUFFER, _vctScene->getAllocIndCmdBufForLevel(_level)->getHandle());
+  _renderMgr->bindBuffer(GL_DRAW_INDIRECT_BUFFER, _vctScene->getNodePool()->
+                        getAllocIndCmdBufForLevel(_level)->getHandle());
 
   const GLuint* ptr = (const GLuint*) glMapBuffer(GL_DRAW_INDIRECT_BUFFER, GL_READ_ONLY);
   kore::Log::getInstance()->write("Alloc indirectCmdBuf contents on level %u:\n", _level);
@@ -97,8 +96,8 @@ void ObAllocatePass::debugIndirectCmdBuff(){
 }
 
 void ObAllocatePass::setLevel(uint level) {
-   _level = level;
+  _level = level;
 
   _bindIndCmdBufOp->connect(GL_DRAW_INDIRECT_BUFFER,
-                    _vctScene->getAllocIndCmdBufForLevel(level)->getHandle());
+    _vctScene->getNodePool()->getAllocIndCmdBufForLevel(level)->getHandle());
 }

@@ -27,7 +27,7 @@
 #define VCT_SRC_VCT_VOXELIZEPASS_H_
 
 #include "KoRE/Passes/ShaderProgramPass.h"
-#include "VoxelConeTracing/VCTscene.h"
+#include "VoxelConeTracing/Scene/VCTscene.h"
 
 class VoxelizePass : public kore::ShaderProgramPass {
 public:

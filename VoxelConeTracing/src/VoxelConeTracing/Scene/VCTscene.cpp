@@ -240,7 +240,3 @@ void VCTscene::initTex3D(kore::Texture* tex, const ETex3DContent texContent) {
 
   delete[] colorValues;
 }
-
-void VCTscene::initNodePool() {
-
-}

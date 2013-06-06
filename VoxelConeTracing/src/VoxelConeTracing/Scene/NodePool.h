@@ -56,14 +56,21 @@ public:
 
   inline uint getNumLevels() {return _numLevels;}
   inline uint getNumNodes() {return _numNodes;}
-  inline kore::IndexedBuffer* getAcNodePoolNextFree() {return &_acNodePoolNextFree;}
+  
+  inline kore::IndexedBuffer* getAcNodePoolNextFree()
+  {return &_acNodePoolNextFree;}
+
+  inline kore::ShaderData* getShdAcNextFree()
+  {return &_shdAcNodePoolNextFree;}
 
   inline kore::IndexedBuffer* getAllocIndCmdBufForLevel(const uint level) 
-  { return &_vAllocIndCmdBufs[level];}
-  
-  void bind(kore::ShaderProgramPass* shPass, ENodePoolAttributes eAttribute);
-  void bindACnextFree(kore::ShaderProgramPass* shPass);
-  void bindInfos(kore::ShaderProgram* shPass);
+  {return &_vAllocIndCmdBufs[level];}
+
+  inline kore::ShaderData* getShdNodePool(ENodePoolAttributes eAttribute)
+  {return &_shdNodePool[eAttribute];}
+
+  inline kore::ShaderData* getShdNumLevels()
+  {return &_shdNumLevels;}
 
 private:
   kore::TextureBuffer _nodePool[NODEPOOL_ATTRIBUTES_NUM];

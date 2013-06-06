@@ -29,9 +29,10 @@ const uint NODE_MASK_NEXT = 0x3FFFFFFF;
 const uint NODE_MASK_TAG = (0x00000001 << 31);
 const uint NODE_MASK_TAG_STATIC = (0x00000003 << 30);
 const uint NODE_NOT_FOUND = 0xFFFFFFFF;
+const uint pow2[] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
 
 layout(r32ui) uniform volatile uimageBuffer voxelFragmentListPosition;
-layout(rg32ui) uniform volatile uimageBuffer nodePool;
+layout(r32ui) uniform volatile uimageBuffer nodePool_next;
 uniform uint voxelGridResolution;
 uniform uint numLevels;
 
@@ -58,41 +59,41 @@ uvec3 uintXYZ10ToVec3(uint val) {
                  uint((val & 0x3FF00000) >> 20U));
 }
 
-void flagNode(in uvec2 node, in uint address) {
-  node.x = (0x00000001 << 31) | (0x7FFFFFFF & node.x); 
-  imageStore(nodePool, int(address), uvec4(node.xyxy));
+void flagNode(in uint nodeNext, in uint address) {
+  nodeNext = (0x00000001 << 31) | (0x7FFFFFFF & nodeNext); 
+  imageStore(nodePool_next, int(address), uvec4(nodeNext));
 }
 
-uint getNext(in uvec2 nodeValue) {
-  return nodeValue.x & NODE_MASK_NEXT;
+uint getNextAddress(in uint nodeNext) {
+  return nodeNext & NODE_MASK_NEXT;
 }
 
-bool nextEmpty(in uvec2 nodeValue) {
-  return getNext(nodeValue) == 0U;
+bool nextEmpty(in uint nodeNext) {
+  return (nodeNext & NODE_MASK_NEXT) == 0U;
 }
 
 uint sizeOnLevel(in uint level) {
-  return uint(voxelGridResolution / pow(2U, level));
+  return uint(voxelGridResolution / pow2[level]);
 }
 
 void main() {
   uint voxelPosU = imageLoad(voxelFragmentListPosition, gl_VertexID).x;
   uvec3 voxelPos = uintXYZ10ToVec3(voxelPosU);
-  uvec2 node = imageLoad(nodePool, 0).xy;
+  uint nodeNext = imageLoad(nodePool_next, 0).x;
   uint nodeAddress = 0;
   uvec3 nodePos = uvec3(0, 0, 0);
   uint childLevel = 1;
   uint sideLength = sizeOnLevel(childLevel);
 
   // Loop as long as node != voxel
-  for( uint iLevel = 0; iLevel < numLevels -1; ++iLevel) {
-      if (nextEmpty(node)) {
-        flagNode(node, nodeAddress);
+  for(uint iLevel = 0; iLevel < numLevels -1; ++iLevel) {
+      if (nextEmpty(nodeNext)) {
+        flagNode(nodeNext, nodeAddress);
         return;
       }
 
     sideLength = sizeOnLevel(childLevel);
-    uint childStartAddress = getNext(node);
+    uint childStartAddress = getNextAddress(nodeNext);
 
     for (uint iChild = 0; iChild < 8; ++iChild) {
       uvec3 posMin = nodePos + childOffsets[iChild] * uvec3(sideLength);
@@ -102,17 +103,15 @@ void main() {
           voxelPos.y >= posMin.y && voxelPos.y < posMax.y &&
           voxelPos.z >= posMin.z && voxelPos.z < posMax.z ) {
             uint childAddress = childStartAddress + iChild;
-            uvec2 childNode = uvec2(imageLoad(nodePool, int(childAddress)));
+            uint childNodeNext = imageLoad(nodePool_next, int(childAddress)).x;
 
             // Restart while-loop with the child node (aka recursion)
-            node = childNode;
+            nodeNext = childNodeNext;
             nodeAddress = childAddress;
             nodePos = posMin;
             childLevel += 1;
-             
             break;
         } // if
       } // for
-    } // while 
-  
+    } // while
 }  // main

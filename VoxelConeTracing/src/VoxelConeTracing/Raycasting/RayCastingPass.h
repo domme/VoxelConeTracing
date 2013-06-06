@@ -27,7 +27,7 @@
 #define VCT_SRC_VCT_RAYCASTINGPASS_H_
 
 #include "KoRE/Passes/ShaderProgramPass.h"
-#include "VoxelConeTracing/VCTscene.h"
+#include "VoxelConeTracing/Scene/VCTscene.h"
 
 class RayCastingPass : public kore::ShaderProgramPass
 {

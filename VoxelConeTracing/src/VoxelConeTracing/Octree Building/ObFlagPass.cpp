@@ -63,16 +63,16 @@ ObFlagPass::ObFlagPass(VCTscene* vctScene,
                       vctScene->getShdVoxelFragList(VOXELATT_POSITION),
                       _flagShader.getUniform("voxelFragmentListPosition")));
 
-  addStartupOperation(new BindImageTexture(
-                      vctScene->getShdNodePool(),
-                      _flagShader.getUniform("nodePool")));
-
   addStartupOperation(new BindUniform(
                       vctScene->getShdVoxelGridResolution(),
                       _flagShader.getUniform("voxelGridResolution")));
 
-  addStartupOperation(new BindUniform(vctScene->getShdNumLevels(),
-    _flagShader.getUniform("numLevels"))); 
+  addStartupOperation(new BindUniform(vctScene->getNodePool()->getShdNumLevels(),
+                    _flagShader.getUniform("numLevels")));
+
+  addStartupOperation(new BindImageTexture(
+                    vctScene->getNodePool()->getShdNodePool(NEXT),
+                    _flagShader.getUniform("nodePool_next")));
   
   addStartupOperation(
      new kore::DrawIndirectOp(GL_POINTS, 0));

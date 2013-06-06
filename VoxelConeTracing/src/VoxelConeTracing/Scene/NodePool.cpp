@@ -23,9 +23,11 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
+
 #include "VoxelConeTracing/Scene/NodePool.h"
 #include "KoRE/RenderManager.h"
 #include <sstream>
+#include "KoRE/Operations/BindOperations/BindImageTexture.h"
 
 struct SDrawArraysIndirectCommand {
   SDrawArraysIndirectCommand() :
@@ -45,15 +47,18 @@ NodePool::NodePool() {
 }
 
 void NodePool::init(uint voxelGridResolution) {
+  // Calculate num nodes
   float fnumNodesLevel = glm::pow(static_cast<float>(voxelGridResolution), 3.0f);
   uint numNodesLevel = static_cast<uint>(glm::ceil(fnumNodesLevel));
   _numNodes = numNodesLevel;
-
+  
   while (numNodesLevel) {
     numNodesLevel /= 8;
     _numNodes += numNodesLevel;
   }
+  //////////////////////////////////////////////////////////////////////////
 
+  // Calculate num Levels
   _numLevels = log(voxelGridResolution * 
                    voxelGridResolution *
                    voxelGridResolution)/log(8) + 1;
@@ -62,9 +67,12 @@ void NodePool::init(uint voxelGridResolution) {
   _shdNumLevels.type = GL_UNSIGNED_INT;
   _shdNumLevels.name = "Num levels";
   _shdNumLevels.data = &_numLevels;
-
+  
   kore::Log::getInstance()->write("Allocating Octree with %u nodes in %u levels\n" ,
     _numNodes, _numLevels);
+  //////////////////////////////////////////////////////////////////////////
+
+  initAllocIndCmdBufs();
 
   kore::STextureBufferProperties nodePoolBufProps;
   nodePoolBufProps.internalFormat = GL_R32UI;
@@ -91,15 +99,15 @@ void NodePool::init(uint voxelGridResolution) {
     uint* ptr = (uint*) glMapBufferRange(GL_TEXTURE_BUFFER, 0,
       nodePoolBufProps.size / 2, 
       GL_READ_WRITE);
-    for (uint i = 0; i < _numNodes ; ++i) {
-      ptr[i] = 0U;
+    for (uint iNode = 0; iNode < _numNodes / 2; ++iNode) {
+      ptr[iNode] = 0U;
     }
     glUnmapBuffer(GL_TEXTURE_BUFFER);
 
     ptr = (uint*) glMapBufferRange(GL_TEXTURE_BUFFER, nodePoolBufProps.size / 2,
       nodePoolBufProps.size / 2, GL_READ_WRITE);
-    for (uint i = 0; i < _numNodes ; ++i) {
-      ptr[i] = 0U;
+    for (uint iNode = 0; iNode < _numNodes / 2; ++iNode) {
+      ptr[iNode] = 0U;
     }
     glUnmapBuffer(GL_TEXTURE_BUFFER);
   }
@@ -121,9 +129,6 @@ NodePool::~NodePool() {
 
 }
 
-void NodePool::bind(kore::ShaderProgramPass* shPass) {
-
-}
 
 void NodePool::initAllocIndCmdBufs() {
   // Allocation indirect command bufs for each octree level
@@ -135,7 +140,8 @@ void NodePool::initAllocIndCmdBufs() {
 
     numVoxelsUpToLevel += numVoxelsOnLevel;
 
-    kore::Log::getInstance()->write("[DEBUG] number of voxels on level %u: %u \n", iLevel, numVoxelsOnLevel);
+    kore::Log::getInstance()->write("[DEBUG] number of voxels on level %u: %u \n",
+                                    iLevel, numVoxelsOnLevel);
     SDrawArraysIndirectCommand command;
     command.numVertices = numVoxelsUpToLevel;
     command.numPrimitives = 1;
@@ -150,6 +156,8 @@ void NodePool::initAllocIndCmdBufs() {
 
   }
 }
+
+
 
 
 

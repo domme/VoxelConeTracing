@@ -25,7 +25,7 @@
 
 #version 420 core
 
-layout(rg32ui) uniform volatile uimageBuffer nodePool;
+layout(r32ui) uniform volatile uimageBuffer nodePool_next;
 layout(binding = 0) uniform atomic_uint nextFreeAddress;
 
 const uint NODE_MASK_NEXT = 0x3FFFFFFF;
@@ -34,36 +34,20 @@ const uint NODE_MASK_LOCK = (0x00000001 << 30);
 const uint NODE_MASK_TAG_STATIC = (0x00000003 << 30);
 const uint NODE_NOT_FOUND = 0xFFFFFFFF;
 
-bool isFlagged(in uvec2 node) {
-  return (node.x & NODE_MASK_TAG) != 0U;
+bool isFlagged(in uint nodeNext) {
+  return (nodeNext & NODE_MASK_TAG) != 0U;
 }
 
-void allocChildBrickAndUnflag(in uvec2 node, in uint nodeAddress) {
-  imageStore(nodePool, int(nodeAddress),
-                           //Calculation of next free address                  // store white color for testing...
-   uvec4(NODE_MASK_NEXT & (1U + 8U * atomicCounterIncrement(nextFreeAddress)), 0x00000000, 0, 0));
-
+void allocChildBrickAndUnflag(in uint nodeAddress) {
+  imageStore(nodePool_next, int(nodeAddress),
+                           //Calculation of next free address                  
+   uvec4(NODE_MASK_NEXT & (1U + 8U * atomicCounterIncrement(nextFreeAddress)), 0, 0, 0));
 }
-
-// Note(dlazarek): This is problematic, because nextFree changes...
-/*          -             // 0
-         ----           // 1
-  ---- ---- ---- +***   // 2
-                12 <- nextFree
-  0, 1, 2, 3... 15 gl_VertexID */
-
-/*uint findNode(in uint idx, in uint nextFree) {
-    if (idx + 1 > nextFree) {
-      return NODE_NOT_FOUND;
-    }
-    return nextFree - (idx + 1);
-}  // method */
-
 
 void main() {
-  uvec2 node = imageLoad(nodePool, gl_VertexID).xy;
+  uint nodeNext = imageLoad(nodePool_next, gl_VertexID).x;
   
-  if (isFlagged(node)) {
-    allocChildBrickAndUnflag(node, uint(gl_VertexID));
+  if (isFlagged(nodeNext)) {
+    allocChildBrickAndUnflag(uint(gl_VertexID));
   } 
 }

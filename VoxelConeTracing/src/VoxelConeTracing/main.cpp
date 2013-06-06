@@ -59,7 +59,7 @@
 #include "VoxelConeTracing/Cube.h"
 #include "VoxelConeTracing/CubeVolume.h"
 
-#include "VoxelConeTracing/VCTscene.h"
+#include "VoxelConeTracing/Scene/VCTscene.h"
 #include "VoxelConeTracing/Voxelization/VoxelizePass.h"
 #include "VoxelConeTracing/Raycasting/RayCastingPass.h"
 #include "VoxelConeTracing/Raycasting/OctreeVisPass.h"
@@ -75,8 +75,8 @@
 
 
 
-static const uint screen_width = 512;
-static const uint screen_height = 512;
+static const uint screen_width = 1280;
+static const uint screen_height = 720;
 
 static kore::SceneNode* _cameraNode = NULL;
 static kore::Camera* _pCamera = NULL;
@@ -144,7 +144,7 @@ void setup() {
                                       _vctScene.getShdAcVoxelIndex(),&_vctScene,
                                       kore::EXECUTE_ONCE));
 
-  _numLevels = _vctScene.getNumLevels(); 
+  _numLevels = _vctScene.getNodePool()->getNumLevels(); 
   for (uint iLevel = 0; iLevel < _numLevels; ++iLevel) {
     _backbufferStage->addProgramPass(new ObFlagPass(&_vctScene, kore::EXECUTE_ONCE));
     _backbufferStage->addProgramPass(new ObAllocatePass(&_vctScene, iLevel, kore::EXECUTE_ONCE));

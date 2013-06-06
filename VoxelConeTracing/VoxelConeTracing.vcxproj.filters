@@ -13,9 +13,6 @@
     <ClCompile Include="src\VoxelConeTracing\CubeVolume.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\VoxelConeTracing\VCTscene.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\VoxelConeTracing\vsDebugLib.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -52,6 +49,15 @@
     <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\OctreeMipmapPass.cpp">
       <Filter>src\Octree Mipmap</Filter>
     </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\Scene\NodePool.cpp">
+      <Filter>src\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\Scene\VCTscene.cpp">
+      <Filter>src\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\Scene\VoxelFragList.cpp">
+      <Filter>src\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -78,6 +84,9 @@
     <Filter Include="src\Octree Mipmap">
       <UniqueIdentifier>{284cb751-efc0-48f1-8ed9-d274225b133d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Scene">
+      <UniqueIdentifier>{facd2167-5dee-4c1b-a086-a1834baef4cd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\VoxelConeTracing\FullscreenQuad.h">
@@ -87,9 +96,6 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\VoxelConeTracing\CubeVolume.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\VoxelConeTracing\VCTscene.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\VoxelConeTracing\vsDebugLib.h">
@@ -127,6 +133,15 @@
     </ClInclude>
     <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\OctreeMipmapPass.h">
       <Filter>src\Octree Mipmap</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\Scene\NodePool.h">
+      <Filter>src\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\Scene\VCTscene.h">
+      <Filter>src\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\Scene\VoxelFragList.h">
+      <Filter>src\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
