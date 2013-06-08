@@ -104,29 +104,6 @@ vec4 getOctreeColor(in uvec3 pos, in uint currTargetLevel, out uvec3 outNodePosM
   vec4 col = vec4(0);
   
   for (uint iLevel = 0; iLevel <= currTargetLevel; ++iLevel) {
-     
-     // Compositing
-     /*
-     vec4 newColor = vec4(convRGBA8ToVec4(node.y)) / 255.0;
-     col = vec4((1 - col.a) * newColor.xyz + col.xyz, col.a);
-     col.a = (1-col.a) * newColor.a + col.a;
-
-   if ((iLevel == targetLevel)) {
-        outNodePosMin = nodePos;
-        outNodePosMax = nodePosMax;
-        return col;
-    }
-
-    if (nextEmpty(node)) {
-      outNodePosMin = nodePos;
-      outNodePosMax = nodePosMax;
-      return col;
-    }
-    */
-    ////////////////////////////////////////////////////////
-
-    // Non-compositing
-  // /*
     if ((iLevel == currTargetLevel)) {
         outNodePosMin = nodePos;
         outNodePosMax = nodePosMax;
@@ -134,16 +111,14 @@ vec4 getOctreeColor(in uvec3 pos, in uint currTargetLevel, out uvec3 outNodePosM
         return vec4(convRGBA8ToVec4(nodeColorU)) / 255.0;
     }
 
-    if (nextEmpty(nodeNext)) {
+    if ((nodeNext & NODE_MASK_NEXT) == 0U) {
       outNodePosMin = nodePos;
       outNodePosMax = nodePosMax;
       return vec4(0.0, 0.0, 0.0, 0.0);
     }
-    //*/
-    ////////////////////////////////////////////////////
-
+   
     uint sideLength = sizeOnLevel(iLevel + 1);
-    uint childStartAddress = getNextAddress(nodeNext);
+    uint childStartAddress = nodeNext & NODE_MASK_NEXT;
 
     for (uint iChild = 0; iChild < 8; ++iChild) {
       uvec3 posMin = nodePos + childOffsets[iChild] * uvec3(sideLength);
@@ -160,7 +135,6 @@ vec4 getOctreeColor(in uvec3 pos, in uint currTargetLevel, out uvec3 outNodePosM
             nodeAddress = childAddress;
             nodePos = posMin;
             nodePosMax = posMax;
-            break;
         } // if
       } // for
     } // while
@@ -173,77 +147,50 @@ vec4 getOctreeColor(in uvec3 pos, in uint currTargetLevel, out uvec3 outNodePosM
 
 
 void main(void) {
-  vec3 camPosWS = viewI[3].xyz;
-  vec3 viewDirWS = normalize((viewI * vec4(In.viewDirVS, 0.0)).xyz);
+ vec3 camPosWS = viewI[3].xyz;
+ vec3 viewDirWS = normalize((viewI * vec4(In.viewDirVS, 0.0)).xyz);
+ 
+ // Get ray origin and ray direction in texspace
+ vec3 rayDirTex = normalize((voxelGridTransformI * vec4(viewDirWS, 0.0)).xyz);
+ vec3 rayOriginTex = (voxelGridTransformI *  vec4(camPosWS, 1.0)).xyz * 0.5 + 0.5;
+ 
+ float tEnter = 0.0;
+ float tLeave = 0.0;
+ 
+ if (!intersectRayWithAABB(rayOriginTex, rayDirTex, vec3(0.0), vec3(1.0), tEnter, tLeave)) {
+   color = vec4(0.0, 0.0, 0.0, 0.0);
+   return;
+ }
+ 
+ tEnter = max(tEnter, 0.0);
+ 
 
-  // Get ray origin and ray direction in texspace
-  vec3 rayDirTex = normalize((voxelGridTransformI * vec4(viewDirWS, 0.0)).xyz);
-  vec3 rayOriginTex = (voxelGridTransformI *  vec4(camPosWS, 1.0)).xyz * 0.5 + 0.5;
-
-  float tEnter = 0.0;
-  float tLeave = 0.0;
-  
-  if (!intersectRayWithAABB(rayOriginTex, rayDirTex, vec3(0.0), vec3(1.0), tEnter, tLeave)) {
-    color = vec4(0.0, 0.0, 0.0, 0.0);
-    return;
-  }
-
-  tEnter = max(tEnter, 0.0);
-
-  for (float f = tEnter + 0.001; f < tLeave; ) {
-    vec3 posTex = (rayOriginTex + rayDirTex * f);
-
-    uvec3 samplePos = uvec3(floor(posTex * vec3(voxelGridResolution)));
-
-    // Now traverse the octree with samplePos...
-    uvec3 nodePosMin = uvec3(0);
-    uvec3 nodePosMax = uvec3(0);
-
-    float fDistanceFactor = f / tLeave;
-    fDistanceFactor *= fDistanceFactor;
-    
-    uint currTargetLevel =  targetLevel;//uint(floor((1.0 - fDistanceFactor) * float(targetLevel))) + 1;
-    vec4 col = getOctreeColor(samplePos, clamp(currTargetLevel, 1U, targetLevel), nodePosMin, nodePosMax);
-      
-    // Compositing  
-    /*
-    color = vec4((1 - color.a) * col.xyz + color.xyz, color.a);
-    color.a = (1-color.a) * col.a + color.a;
-
-    if(color.a > 0.99) {
-      return;
-    }
-    */
-    ////////////////////////////////////////////////////////////////////
-
-    // Non-Compositing
-    ///*
-    if (length(col) > 0.001) {
-      color = col;
-      return;
-    }
-    //*/
-    /////////////////////
-    
-      
-    // Black color was returned: we are either not inside the octree grid
-    // or not on the leaf level. If we are not on the leaf-level: skip empty node
-    if (nodePosMin.x != NODE_NOT_FOUND) {
-      float tNodeEnter = 0.0f;
-      float tNodeLeave = 0.0f;
-
-      vec3 nodePosMinTex = vec3(nodePosMin) / vec3(voxelGridResolution);
-      vec3 nodePosMaxTex = vec3(nodePosMax) / vec3(voxelGridResolution);
-
-      if (intersectRayWithAABB(posTex, rayDirTex, nodePosMinTex, nodePosMaxTex, tNodeEnter, tNodeLeave)) {
-        f += tNodeLeave + 0.001;
-        continue;
-      }
-    }
-
-    // This should not happen
-    //color = vec4(1.0, 0.0, 0.0, 0.0);
-    return; // Prevent infinite loop
+ uvec3 nodePosMin = uvec3(0);
+ uvec3 nodePosMax = uvec3(0);
+ vec3 nodePosMinTex = vec3(nodePosMin) / vec3(voxelGridResolution);
+ vec3 nodePosMaxTex = vec3(nodePosMax) / vec3(voxelGridResolution);
+ float end = tLeave;
+ for (float f = tEnter + 0.001; f < end; f += tLeave + 0.001) {
+   vec3 posTex = (rayOriginTex + rayDirTex * f);
+ 
+   uvec3 samplePos = uvec3(floor(posTex * vec3(voxelGridResolution)));
+ 
    
-  } 
+   float fDistanceFactor = f / tLeave;
+   fDistanceFactor *= fDistanceFactor;
+  
+   vec4 col = getOctreeColor(samplePos, targetLevel, nodePosMin, nodePosMax);
+     
+   if (length(col) > 0.001) {
+     color = col;
+     return;
+   }
+     
+   nodePosMinTex = vec3(nodePosMin) / vec3(voxelGridResolution);
+   nodePosMaxTex = vec3(nodePosMax) / vec3(voxelGridResolution);
+
+   if (!intersectRayWithAABB(posTex, rayDirTex, nodePosMinTex, nodePosMaxTex, tEnter, tLeave)) {
+     return; // prevent infinite loop
+   }
+ } 
 }

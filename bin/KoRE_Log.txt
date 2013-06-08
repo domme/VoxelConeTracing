@@ -1,4 +1,4 @@
-KoRE Log - Sat Jun 08 14:09:50 2013
+KoRE Log - Sat Jun 08 15:05:11 2013
 
 [DEBUG] added Framebuffer 'BACKBUFFER'
 Render Device: AMD Radeon HD 7800 Series
