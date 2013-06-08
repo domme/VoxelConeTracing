@@ -84,14 +84,6 @@ bool intersectRayWithAABB (in vec3 ro, in vec3 rd,         // Ray-origin and -di
 }
 
 
-uint getNextAddress(in uint nodeNext) {
-  return nodeNext & NODE_MASK_NEXT;
-}
-
-bool nextEmpty(in uint nodeNext) {
-  return (nodeNext & NODE_MASK_NEXT) == 0U;
-}
-
 uint sizeOnLevel(in uint level) {
   return uint(voxelGridResolution / pow2[level]);
 }
