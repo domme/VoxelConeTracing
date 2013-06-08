@@ -51,62 +51,30 @@ uniform uint voxelTexSize;
 uniform mat4 voxelGridTransform;
 uniform mat4 voxelGridTransformI;
 
+///
+uniform vec3 voxelGridSize;  // The dimensions in worlspace that make up the whole voxel-volume e.g. vec3(50,50,50);
+uniform mat4 viewProjs[3];
+//uniform vec3 worldAxes[3];
+
+///
+
+
 
 // Constants to key into worldaxes
 const uint X = 0;
 const uint Y = 1;
 const uint Z = 2;
 
-vec3 voxelGridSize;
-
-const vec3 worldAxes[3] = vec3[3]( vec3(1.0, 0.0, 0.0),
-                                   vec3(0.0, 1.0, 0.0),
-                                   vec3(0.0, 0.0, 1.0) );
-
-mat4 viewProjs[3];
-
 void init() {
-  voxelGridSize = vec3(length(voxelGridTransform[0].xyz) * 2.0,
-                       length(voxelGridTransform[1].xyz) * 2.0,
-                       length(voxelGridTransform[2].xyz) * 2.0);
-
-  // TODO: We need 3 different projection matrices if the voxelGrid is not cubical
-  mat4 camProjMatrix = mat4(2.0 / voxelGridSize.x, 0, 0, 0,
-                            0, 2.0 / voxelGridSize.y, 0, 0,
-                            0, 0, - 2.0 / voxelGridSize.z, 0,
-                            0, 0, 0, 1);
-
-  mat4 viewMats[3] = mat4[3]( mat4(1.0),    // Right
-                              mat4(1.0),    // Top
-                              mat4(1.0) );  // Far
-
-  // View Matrix for right camera
-  //                    X     y    z
-  viewMats[0][0] = vec4(0.0, 0.0, 1.0, 0.0);
-  viewMats[0][1] = vec4(0.0, 1.0, 0.0, 0.0);
-  viewMats[0][2] = vec4(1.0, 0.0, 0.0, 0.0);
-  viewMats[0][3] = vec4(0.0, 0.0, -1.0, 1.0);
-  
-  // View Matrix for top camera
-  viewMats[1][0] = vec4(1.0, 0.0, 0.0, 0.0);
-  viewMats[1][1] = vec4(0.0, 0.0, 1.0, 0.0);
-  viewMats[1][2] = vec4(0.0, 1.0, 0.0, 0.0);
-  viewMats[1][3] = vec4(0.0, 0.0, -1.0, 1.0);
 
 
-  // View Matrix for far camera
-  viewMats[2][0] = vec4(-1.0, 0.0, 0.0, 0.0);
-  viewMats[2][1] = vec4(0.0, 1.0, 0.0, 0.0);
-  viewMats[2][2] = vec4(0.0, 0.0, 1.0, 0.0);
-  viewMats[2][3] = vec4(0.0, 0.0, -1.0, 1.0);
-
-  viewProjs = mat4[3]( mat4(1.0), mat4(1.0), mat4(1.0) );
-  viewProjs[0] = camProjMatrix * viewMats[0];
-  viewProjs[1] = camProjMatrix * viewMats[1];
-  viewProjs[2] = camProjMatrix * viewMats[2];
 }
 
 uint calcProjAxis() {
+  const vec3 worldAxes[3] = vec3[3]( vec3(1.0, 0.0, 0.0),
+                                   vec3(0.0, 1.0, 0.0),
+                                   vec3(0.0, 0.0, 1.0) );
+
   // Determine world-axis along wich the projected triangle-area is maximized
   uint projAxis = 0;
   float maxArea = 0.0;
@@ -127,8 +95,12 @@ void main()
 {
   init();
 
-  vec3 voxelSize = voxelGridSize / vec3(voxelTexSize);
+  const vec3 worldAxes[3] = vec3[3]( vec3(1.0, 0.0, 0.0),
+                                   vec3(0.0, 1.0, 0.0),
+                                   vec3(0.0, 0.0, 1.0) );
 
+  vec3 voxelSize = voxelGridSize / vec3(voxelTexSize);
+  
   uint projAxisIdx = calcProjAxis();
   vec3 middle = (viewProjs[projAxisIdx] * vec4((In[0].pos + In[1].pos + In[2].pos) / 3.0, 1.0)).xyz;
   for(int i = 0; i < gl_in.length(); i++) {

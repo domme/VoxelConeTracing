@@ -138,7 +138,7 @@ void setup() {
   _backbufferStage->setActiveAttachments(drawBuffers, 1);
  
   // Prepare render algorithm
-  _backbufferStage->addProgramPass(new VoxelizePass(&_vctScene, kore::EXECUTE_ONCE));
+  _backbufferStage->addProgramPass(new VoxelizePass(params.voxel_grid_sidelengths, &_vctScene, kore::EXECUTE_ONCE));
   _backbufferStage->addProgramPass(new ModifyIndirectBufferPass(
                                       _vctScene.getVoxelFragList()->getShdFragListIndCmdBuf(),
                                       _vctScene.getShdAcVoxelIndex(),&_vctScene,

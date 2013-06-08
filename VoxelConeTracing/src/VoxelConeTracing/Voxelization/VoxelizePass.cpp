@@ -38,12 +38,15 @@
 #include "KoRE/Operations/ResetAtomicCounterBuffer.h"
 #include "KoRE/Operations/MemoryBarrierOp.h"
 
-VoxelizePass::VoxelizePass(VCTscene* vctScene,
+VoxelizePass::VoxelizePass(const glm::vec3& voxelGridSize, 
+                           VCTscene* vctScene,
                            kore::EOperationExecutionType executionType)
 {
   using namespace kore;
 
   this->setExecutionType(executionType);
+
+  this->init(voxelGridSize);
 
   // Init Voxelize procedure
   //////////////////////////////////////////////////////////////////////////
@@ -66,23 +69,59 @@ VoxelizePass::VoxelizePass(VCTscene* vctScene,
   this->setShaderProgram(voxelizeShader);
   const std::vector<kore::SceneNode*>& vRenderNdoes = vctScene->getRenderNodes();
 
+  //////////////////////////////////////////////////////////////////////////
+  // Startup operations
+  //////////////////////////////////////////////////////////////////////////
   this->addStartupOperation(
     new ResetAtomicCounterBuffer(vctScene->getShdAcVoxelIndex(), 0));
+
+
+
+  addStartupOperation(new ViewportOp(glm::ivec4(0, 0,
+    vctScene->getVoxelGridResolution(),
+    vctScene->getVoxelGridResolution())));
+
+  addStartupOperation(new EnableDisableOp(GL_DEPTH_TEST,
+    EnableDisableOp::DISABLE));
+
+  addStartupOperation(new ColorMaskOp(glm::bvec4(false, false, false, false)));
+
+  addStartupOperation(new BindUniform(&_shdVoxelGridSize,
+    voxelizeShader->getUniform("voxelGridSize")));
+
+ addStartupOperation(new BindUniform(&_shdViewProjMatsArr, voxelizeShader->getUniform("viewProjs[0]")));
+
+  addStartupOperation(OperationFactory::create(OP_BINDUNIFORM,
+    "model Matrix",
+    vctScene->getVoxelGridNode()->getTransform(),
+    "voxelGridTransform", voxelizeShader));
+
+  addStartupOperation(OperationFactory::create(OP_BINDUNIFORM,
+    "inverse model Matrix",
+    vctScene->getVoxelGridNode()->getTransform(),
+    "voxelGridTransformI", voxelizeShader));
+
+  addStartupOperation(new BindUniform(vctScene->getShdVoxelGridResolution(),
+    voxelizeShader->getUniform("voxelTexSize")));
+
+  addStartupOperation(new BindImageTexture(
+    vctScene->getVoxelFragList()->getShdVoxelFragList(VOXELATT_POSITION),
+    voxelizeShader->getUniform("voxelFragmentListPosition")));
+
+  addStartupOperation(new BindImageTexture(
+    vctScene->getVoxelFragList()->getShdVoxelFragList(VOXELATT_COLOR),
+    voxelizeShader->getUniform("voxelFragmentListColor")));
+
+  addStartupOperation(
+    new BindAtomicCounterBuffer(vctScene->getShdAcVoxelIndex(),
+    voxelizeShader->getUniform("voxel_index")));
+
+  //////////////////////////////////////////////////////////////////////////
 
   for (uint i = 0; i < vRenderNdoes.size(); ++i) {
     NodePass* nodePass = new NodePass(vRenderNdoes[i]);
     this->addNodePass(nodePass);
 
-   nodePass->addOperation(new ViewportOp(glm::ivec4(0, 0,
-                                  vctScene->getVoxelGridResolution(),
-                                  vctScene->getVoxelGridResolution())));
-
-  nodePass
-    ->addOperation(new EnableDisableOp(GL_DEPTH_TEST,
-                                       EnableDisableOp::DISABLE));
-  
-  nodePass
-    ->addOperation(new ColorMaskOp(glm::bvec4(false, false, false, false)));
 
    MeshComponent* meshComp =
      static_cast<MeshComponent*>(vRenderNdoes[i]->getComponent(COMPONENT_MESH));
@@ -108,21 +147,7 @@ VoxelizePass::VoxelizePass(VCTscene* vctScene,
                                              vRenderNdoes[i]->getTransform(),
                                              "modelWorldNormal",
                                              voxelizeShader));
-
-   nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
-                          "model Matrix",
-                          vctScene->getVoxelGridNode()->getTransform(),
-                          "voxelGridTransform", voxelizeShader));
-
-   nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
-                          "inverse model Matrix",
-                          vctScene->getVoxelGridNode()->getTransform(),
-                          "voxelGridTransformI", voxelizeShader));
-
-   nodePass
-     ->addOperation(new BindUniform(vctScene->getShdVoxelGridResolution(),
-     voxelizeShader->getUniform("voxelTexSize")));
-
+   
    const TexturesComponent* texComp =
      static_cast<TexturesComponent*>(
      vRenderNdoes[i]->getComponent(COMPONENT_TEXTURES));
@@ -131,21 +156,6 @@ VoxelizePass::VoxelizePass(VCTscene* vctScene,
    nodePass
      ->addOperation(OperationFactory::create(OP_BINDTEXTURE, tex->getName(),
      texComp, "diffuseTex", voxelizeShader));
-
-   nodePass
-     ->addOperation(new BindImageTexture(
-        vctScene->getVoxelFragList()->getShdVoxelFragList(VOXELATT_POSITION),
-        voxelizeShader->getUniform("voxelFragmentListPosition")));
-
-   nodePass
-     ->addOperation(new BindImageTexture(
-     vctScene->getVoxelFragList()->getShdVoxelFragList(VOXELATT_COLOR),
-     voxelizeShader->getUniform("voxelFragmentListColor")));
-
-   nodePass
-     ->addOperation(
-        new BindAtomicCounterBuffer(vctScene->getShdAcVoxelIndex(),
-                                    voxelizeShader->getUniform("voxel_index")));
 
    nodePass
      ->addOperation(new RenderMesh(meshComp));
@@ -157,5 +167,61 @@ VoxelizePass::VoxelizePass(VCTscene* vctScene,
                         | GL_ATOMIC_COUNTER_BARRIER_BIT));
 }
 
+void VoxelizePass::init(const glm::vec3& voxelGridSize) {
+  _voxelGridSize = voxelGridSize;
+
+  // TODO: We need 3 different projection matrices if the voxelGrid is not cubical
+  glm::mat4 camProjMatrix(2.0f / voxelGridSize.x, 0.0f, 0.0f, 0.0f,
+                          0.0f, 2.0f / voxelGridSize.y, 0.0f, 0.0f,
+                          0.0f, 0.0f, - 2.0f / voxelGridSize.z, 0.0f,
+                          0.0f, 0.0f, 0.0f, 1.0f);
+
+  glm::mat4 viewMats[3] = { glm::mat4(1.0f),    // Right
+                            glm::mat4(1.0f),    // Top
+                            glm::mat4(1.0f) };  // Far
+
+  // View Matrix for right camera
+  //                    X     y    z
+  viewMats[0][0] = glm::vec4(0.0f, 0.0f, 1.0f, 0.0f);
+  viewMats[0][1] = glm::vec4(0.0f, 1.0f, 0.0f, 0.0f);
+  viewMats[0][2] = glm::vec4(1.0f, 0.0f, 0.0f, 0.0f);
+  viewMats[0][3] = glm::vec4(0.0f, 0.0f, -1.0f, 1.0f);
+
+  // View Matrix for top camera
+  viewMats[1][0] = glm::vec4(1.0f, 0.0f, 0.0f, 0.0f);
+  viewMats[1][1] = glm::vec4(0.0f, 0.0f, 1.0f, 0.0f);
+  viewMats[1][2] = glm::vec4(0.0f, 1.0f, 0.0f, 0.0f);
+  viewMats[1][3] = glm::vec4(0.0f, 0.0f, -1.0f, 1.0f);
+
+
+  // View Matrix for far camera
+  viewMats[2][0] = glm::vec4(-1.0f, 0.0f, 0.0f, 0.0f);
+  viewMats[2][1] = glm::vec4(0.0f, 1.0f, 0.0f, 0.0f);
+  viewMats[2][2] = glm::vec4(0.0f, 0.0f, 1.0f, 0.0f);
+  viewMats[2][3] = glm::vec4(0.0f, 0.0f, -1.0f, 1.0f);
+
+  _viewProjMats[0] = camProjMatrix * viewMats[0];
+  _viewProjMats[1] = camProjMatrix * viewMats[1];
+  _viewProjMats[2] = camProjMatrix * viewMats[2];
+
+
+  // Init ShaderDatas
+  _shdViewProjMatsArr.component = NULL;
+  _shdViewProjMatsArr.data = _viewProjMats;
+  _shdViewProjMatsArr.type = GL_FLOAT_MAT4;
+  _shdViewProjMatsArr.size = 3;
+  _shdViewProjMatsArr.name = "Voxelize ViewProjMats";
+
+  _shdVoxelGridSize.component = NULL;
+  _shdVoxelGridSize.data = &_voxelGridSize;
+  _shdVoxelGridSize.type = GL_FLOAT_VEC3;
+  _shdVoxelGridSize.size = 1;
+  _shdVoxelGridSize.name = "Voxel grid size";
+
+  //////////////////////////////////////////////////////////////////////////
+}
+
+
 VoxelizePass::~VoxelizePass(void) {
 }
+

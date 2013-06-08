@@ -31,11 +31,24 @@
 
 class VoxelizePass : public kore::ShaderProgramPass {
 public:
-  VoxelizePass(VCTscene* vctScene, kore::EOperationExecutionType executionType);
+  VoxelizePass(const glm::vec3& voxelGridSize, 
+               VCTscene* vctScene,
+               kore::EOperationExecutionType executionType);
   virtual ~VoxelizePass(void);
 
 private:
-  
+  void init(const glm::vec3& voxelGridSize);
+
+  //glm::vec3 _worldAxes[3];
+  //kore::ShaderData _shdWorldAxesArr;
+
+  glm::mat4 _viewProjMats[3];
+  kore::ShaderData _shdViewProjMatsArr;
+
+  glm::vec3 _voxelGridSize;
+  kore::ShaderData _shdVoxelGridSize;
+
+
 
 };
 #endif  // VCT_SRC_VCT_VOXELIZEPASS_H_
