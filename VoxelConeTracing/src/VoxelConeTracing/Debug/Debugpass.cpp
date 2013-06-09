@@ -67,7 +67,10 @@ DebugPass::DebugPass(VCTscene* vctScene,
   kore::Camera* cam = vctScene->getCamera();
 
 
-  //nodePass->addOperation(
+  addStartupOperation(
+    new FunctionOp(std::bind(&DebugPass::debugVoxelIndexAC, this)));
+
+  //addStartupOperation(
     //new FunctionOp(std::bind(&DebugPass::debugVoxelFragmentList, this)));
 
   addStartupOperation(

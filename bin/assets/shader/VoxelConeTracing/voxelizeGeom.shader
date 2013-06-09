@@ -24,7 +24,6 @@
 */
 
 #version 420 core
-#extension GL_ARB_shader_image_size : enable
 
 layout(triangles) in;
 layout (triangle_strip, max_vertices=3) out;
@@ -39,12 +38,8 @@ out VoxelData {
     vec3 posTexSpace;
     vec3 normal;
     vec2 uv;
-    vec3 projAxisTS;
 } Out;
 
-out VoxelUtilData {
-  flat uint projAxisIdx;
-} UtilOut;
 
 
 uniform uint voxelTexSize;
@@ -65,10 +60,6 @@ const uint X = 0;
 const uint Y = 1;
 const uint Z = 2;
 
-void init() {
-
-
-}
 
 uint calcProjAxis() {
   const vec3 worldAxes[3] = vec3[3]( vec3(1.0, 0.0, 0.0),
@@ -93,8 +84,6 @@ uint calcProjAxis() {
 
 void main()
 {
-  init();
-
   const vec3 worldAxes[3] = vec3[3]( vec3(1.0, 0.0, 0.0),
                                    vec3(0.0, 1.0, 0.0),
                                    vec3(0.0, 0.0, 1.0) );
@@ -116,12 +105,6 @@ void main()
 
     Out.normal = In[i].normal;
     Out.uv = In[i].uv;
-
-    Out.projAxisTS =
-       normalize((voxelGridTransformI * vec4(worldAxes[projAxisIdx], 0.0)).xyz
-          * 0.5 + 0.5);
-
-    UtilOut.projAxisIdx = projAxisIdx;
 
     // done with the vertex
     EmitVertex();

@@ -42,6 +42,7 @@ void allocChildBrickAndUnflag(in uint nodeAddress) {
   imageStore(nodePool_next, int(nodeAddress),
                            //Calculation of next free address                  
    uvec4(NODE_MASK_NEXT & (1U + 8U * atomicCounterIncrement(nextFreeAddress)), 0, 0, 0));
+   memoryBarrier();
 }
 
 void main() {

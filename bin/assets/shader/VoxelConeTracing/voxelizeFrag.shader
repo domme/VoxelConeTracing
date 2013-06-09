@@ -26,8 +26,8 @@
 #version 420 core
 #extension GL_ARB_shader_image_size : enable
 
-layout(r32ui) uniform volatile uimageBuffer voxelFragmentListPosition;
-layout(r32ui) uniform volatile uimageBuffer voxelFragmentListColor;
+layout(r32ui) uniform coherent uimageBuffer voxelFragmentListPosition;
+layout(r32ui) uniform coherent uimageBuffer voxelFragmentListColor;
 layout(binding = 0) uniform atomic_uint voxel_index;
 
 uniform sampler2D diffuseTex;
@@ -37,12 +37,8 @@ in VoxelData {
     vec3 posTexSpace;
     vec3 normal;
     vec2 uv;
-    vec3 projAxisTexSpace;
 } In;
 
-in VoxelUtilData {
-  flat uint projAxisIdx;
-} UtilIn;
 
 out vec4 color;
 
@@ -67,22 +63,15 @@ uint vec3ToUintXYZ10(uvec3 val) {
 }
 
 
-// In.projAxisIdx keys into this array..
-const vec3 worldAxes[3] = vec3[3]( vec3(1.0, 0.0, 0.0),
-                                   vec3(0.0, 1.0, 0.0),
-                                   vec3(0.0, 0.0, 1.0) );
-
 void main() {
   uvec3 baseVoxel = uvec3(floor(In.posTexSpace * voxelTexSize));
   
   vec4 diffColor = vec4(texture(diffuseTex, In.uv).xyz, 1.0);
 
-  //AMD-Error here:
-  //imageAtomicRGBA8Avg(baseVoxel, vec4(diffColor.xyz,1.0));
-
   uint diffColorU = convVec4ToRGBA8(diffColor * vec4(255));
-  uint voxelIndex = atomicCounterIncrement(voxel_index);
 
+  uint voxelIndex = atomicCounterIncrement(voxel_index);
+  
   memoryBarrier();
 
   // Store voxel-position as tex-indices
@@ -92,23 +81,3 @@ void main() {
 
   imageStore(voxelFragmentListColor, int(voxelIndex), uvec4(diffColorU));
 }
-
-// ERROR: 0:59: error(#132) Syntax error: "layout" parse error on AMD
-/* void imageAtomicRGBA8Avg(layout(r32ui) volatile image3D img, 
-                         ivec3 coords,
-                         vec4 val) {
-    val.rgb *=255.0f; // Optimise following calculations
-    uint newVal = convVec4ToRGBA8(val);
-    uint prevStoredVal = 0; 
-    uint curStoredVal;
-    // Loop as long as destination value gets changed by other threads
-    while((curStoredVal = imageAtomicCompSwap(img, coords, prevStoredVal, newVal))
-          != prevStoredVal) {
-        prevStoredVal = curStoredVal;
-        vec4 rval= convRGBA8ToVec4(curStoredVal);
-        rval.xyz = (rval.xyz * rval.w); // Denormalize
-        vec4 curValF = rval + val; // Add new value
-        curValF.xyz /= (curValF.w); // Renormalize
-        newVal = convVec4ToRGBA8(curValF);
-    }
-}*/

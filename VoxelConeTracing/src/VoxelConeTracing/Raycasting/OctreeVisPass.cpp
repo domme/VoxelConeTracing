@@ -88,9 +88,9 @@ OctreeVisPass::OctreeVisPass(VCTscene* vctScene) {
                      RenderManager::getInstance()->getScreenResolution().y);
   nodePass->addOperation(new ViewportOp(vp));
 
-  nodePass
+  /*nodePass
   ->addOperation(new EnableDisableOp(GL_DEPTH_TEST,
-  EnableDisableOp::DISABLE));
+  EnableDisableOp::DISABLE));*/
 
   
   nodePass
@@ -125,10 +125,10 @@ OctreeVisPass::OctreeVisPass(VCTscene* vctScene) {
   
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdNodePool(NEXT),
-    _visShader.getUniform("nodePool_next")));
+	_visShader.getUniform("nodePool_next"), GL_READ_ONLY));
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdNodePool(COLOR),
-    _visShader.getUniform("nodePool_color")));
+	_visShader.getUniform("nodePool_color"), GL_READ_ONLY));
    
   nodePass->addOperation(new BindUniform(
                             vctScene->getShdVoxelGridResolution(),

@@ -90,6 +90,7 @@ VoxelizePass::VoxelizePass(const glm::vec3& voxelGridSize,
     voxelizeShader->getUniform("voxelGridSize")));
 
  addStartupOperation(new BindUniform(&_shdViewProjMatsArr, voxelizeShader->getUniform("viewProjs[0]")));
+ addStartupOperation(new BindUniform(&_shdViewProjMatsArr, voxelizeShader->getUniform("viewProjs")));
 
   addStartupOperation(OperationFactory::create(OP_BINDUNIFORM,
     "model Matrix",

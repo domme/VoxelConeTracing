@@ -1,9 +1,9 @@
-KoRE Log - Sat Jun 08 15:05:11 2013
+KoRE Log - Sun Jun 09 12:11:46 2013
 
 [DEBUG] added Framebuffer 'BACKBUFFER'
-Render Device: AMD Radeon HD 7800 Series
+Render Device: AMD Radeon HD 6900M Series
 Vendor: ATI Technologies Inc.
-OpenGL version: 4.2.12217 Core Profile Context 12.104.0.0
+OpenGL version: 4.2.12002 Core Profile Context 9.12.0.0
 GLSL version: 4.20
 GLFW version 2.7.7
 GLEW version: 1.9.0
@@ -34,18 +34,19 @@ Allocating voxel fragment lists of size 64.000000 MB
 	Attribute 'v_uvw' at location 2
 	Uniform 'modelWorld' at location 0
 	Uniform 'modelWorldNormal' at location 1
-	Uniform 'viewProjs[0]' at location 2
+	Uniform 'viewProjs' at location 2
 	Uniform 'voxelGridSize' at location 5
 	Uniform 'voxelGridTransformI' at location 6
 	Uniform 'voxelTexSize' at location 7
-	Uniform 'voxel_index' at location -1
+	Uniform 'voxel_index' at location 8
 	Uniform 'diffuseTex' at location 9
 	Uniform 'voxelFragmentListColor' at location 10
 	Uniform 'voxelFragmentListPosition' at location 11
+[ERROR] Uniform 'viewProjs[0]' not found in shader 'voxelizeShader'
 [ERROR] Uniform 'voxelGridTransform' not found in shader 'voxelizeShader'
 [DEBUG] Shader './assets/shader/ModifyIndirectBufferVert.shader' compiled
 [DEBUG] Program '' compiled
-	Uniform 'numVoxels' at location -1
+	Uniform 'numVoxels' at location 0
 	Uniform 'indirectCommandBuf' at location 1
 [DEBUG] Shader './assets/shader/ObFlagVert.shader' compiled
 [DEBUG] Program '' compiled
@@ -55,7 +56,7 @@ Allocating voxel fragment lists of size 64.000000 MB
 	Uniform 'voxelFragmentListPosition' at location 3
 [DEBUG] Shader './assets/shader/ObAllocateVert.shader' compiled
 [DEBUG] Program '' compiled
-	Uniform 'nextFreeAddress' at location -1
+	Uniform 'nextFreeAddress' at location 0
 	Uniform 'nodePool_next' at location 1
 [DEBUG] Program '' compiled
 	Uniform 'numLevels' at location 0
@@ -63,7 +64,7 @@ Allocating voxel fragment lists of size 64.000000 MB
 	Uniform 'nodePool_next' at location 2
 	Uniform 'voxelFragmentListPosition' at location 3
 [DEBUG] Program '' compiled
-	Uniform 'nextFreeAddress' at location -1
+	Uniform 'nextFreeAddress' at location 0
 	Uniform 'nodePool_next' at location 1
 [DEBUG] Program '' compiled
 	Uniform 'numLevels' at location 0
@@ -71,7 +72,7 @@ Allocating voxel fragment lists of size 64.000000 MB
 	Uniform 'nodePool_next' at location 2
 	Uniform 'voxelFragmentListPosition' at location 3
 [DEBUG] Program '' compiled
-	Uniform 'nextFreeAddress' at location -1
+	Uniform 'nextFreeAddress' at location 0
 	Uniform 'nodePool_next' at location 1
 [DEBUG] Program '' compiled
 	Uniform 'numLevels' at location 0
@@ -79,7 +80,7 @@ Allocating voxel fragment lists of size 64.000000 MB
 	Uniform 'nodePool_next' at location 2
 	Uniform 'voxelFragmentListPosition' at location 3
 [DEBUG] Program '' compiled
-	Uniform 'nextFreeAddress' at location -1
+	Uniform 'nextFreeAddress' at location 0
 	Uniform 'nodePool_next' at location 1
 [DEBUG] Program '' compiled
 	Uniform 'numLevels' at location 0
@@ -87,7 +88,7 @@ Allocating voxel fragment lists of size 64.000000 MB
 	Uniform 'nodePool_next' at location 2
 	Uniform 'voxelFragmentListPosition' at location 3
 [DEBUG] Program '' compiled
-	Uniform 'nextFreeAddress' at location -1
+	Uniform 'nextFreeAddress' at location 0
 	Uniform 'nodePool_next' at location 1
 [DEBUG] Program '' compiled
 	Uniform 'numLevels' at location 0
@@ -95,7 +96,7 @@ Allocating voxel fragment lists of size 64.000000 MB
 	Uniform 'nodePool_next' at location 2
 	Uniform 'voxelFragmentListPosition' at location 3
 [DEBUG] Program '' compiled
-	Uniform 'nextFreeAddress' at location -1
+	Uniform 'nextFreeAddress' at location 0
 	Uniform 'nodePool_next' at location 1
 [DEBUG] Program '' compiled
 	Uniform 'numLevels' at location 0
@@ -103,7 +104,7 @@ Allocating voxel fragment lists of size 64.000000 MB
 	Uniform 'nodePool_next' at location 2
 	Uniform 'voxelFragmentListPosition' at location 3
 [DEBUG] Program '' compiled
-	Uniform 'nextFreeAddress' at location -1
+	Uniform 'nextFreeAddress' at location 0
 	Uniform 'nodePool_next' at location 1
 [DEBUG] Program '' compiled
 	Uniform 'numLevels' at location 0
@@ -111,7 +112,7 @@ Allocating voxel fragment lists of size 64.000000 MB
 	Uniform 'nodePool_next' at location 2
 	Uniform 'voxelFragmentListPosition' at location 3
 [DEBUG] Program '' compiled
-	Uniform 'nextFreeAddress' at location -1
+	Uniform 'nextFreeAddress' at location 0
 	Uniform 'nodePool_next' at location 1
 [DEBUG] Program '' compiled
 	Uniform 'numLevels' at location 0
@@ -119,7 +120,7 @@ Allocating voxel fragment lists of size 64.000000 MB
 	Uniform 'nodePool_next' at location 2
 	Uniform 'voxelFragmentListPosition' at location 3
 [DEBUG] Program '' compiled
-	Uniform 'nextFreeAddress' at location -1
+	Uniform 'nextFreeAddress' at location 0
 	Uniform 'nodePool_next' at location 1
 [DEBUG] Shader './assets/shader/OctreeWriteLeafs.shader' compiled
 [DEBUG] Program 'OctreeWrite shader' compiled
@@ -168,6 +169,9 @@ Allocating voxel fragment lists of size 64.000000 MB
 [ERROR] Uniform 'numLevels' not found in shader 'octreeVis shader'
 [DEBUG] Shader './assets/shader/debug.shader' compiled
 [DEBUG] Program '' compiled
+Number of voxels: 0 
 VoxelFragList indirectCmdBuf contents:
-1160320 1 0 0 
-Next free nodepool address: 35691 
+0 1 0 0 
+Next free nodepool address: 0 
+
+End of Log

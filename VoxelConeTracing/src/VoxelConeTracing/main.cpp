@@ -232,12 +232,12 @@ int main(void) {
             glewGetString(GLEW_VERSION)));
 
 
-  VSDebugLib::init();
+/*  VSDebugLib::init();
   VSDebugLib::enableUserMessages(true);
   VSDebugLib::addApplicationMessage(12345, 
     GL_DEBUG_TYPE_OTHER_ARB,
     GL_DEBUG_SEVERITY_LOW_ARB,
-    "This is just a test");
+    "This is just a test"); */
 
   
   kore::RenderManager::getInstance()
@@ -347,7 +347,7 @@ int main(void) {
   
   try{
     glfwTerminate(); }
-  catch(std::exception& e) {
+   catch(std::exception& e) {
     kore::Log::getInstance()->write("[ERROR] Exception on program closing");
   }
 
