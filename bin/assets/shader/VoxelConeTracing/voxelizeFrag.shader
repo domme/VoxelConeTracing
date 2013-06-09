@@ -23,8 +23,7 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#version 420 core
-#extension GL_ARB_shader_image_size : enable
+#version 420
 
 layout(r32ui) uniform coherent uimageBuffer voxelFragmentListPosition;
 layout(r32ui) uniform coherent uimageBuffer voxelFragmentListColor;
@@ -71,7 +70,7 @@ void main() {
   uint diffColorU = convVec4ToRGBA8(diffColor * vec4(255));
 
   uint voxelIndex = atomicCounterIncrement(voxel_index);
-  
+
   memoryBarrier();
 
   // Store voxel-position as tex-indices

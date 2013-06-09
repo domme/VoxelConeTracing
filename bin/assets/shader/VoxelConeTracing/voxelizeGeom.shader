@@ -23,7 +23,7 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#version 420 core
+#version 420
 
 layout(triangles) in;
 layout (triangle_strip, max_vertices=3) out;

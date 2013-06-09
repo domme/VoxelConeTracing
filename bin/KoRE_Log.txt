@@ -1,9 +1,9 @@
-KoRE Log - Sun Jun 09 12:11:46 2013
+KoRE Log - Sun Jun 09 21:37:50 2013
 
 [DEBUG] added Framebuffer 'BACKBUFFER'
 Render Device: AMD Radeon HD 6900M Series
 Vendor: ATI Technologies Inc.
-OpenGL version: 4.2.12002 Core Profile Context 9.12.0.0
+OpenGL version: 4.2.12002 Compatibility Profile Context 9.12.0.0
 GLSL version: 4.20
 GLFW version 2.7.7
 GLEW version: 1.9.0
@@ -173,5 +173,3 @@ Number of voxels: 0
 VoxelFragList indirectCmdBuf contents:
 0 1 0 0 
 Next free nodepool address: 0 
-
-End of Log

@@ -23,7 +23,7 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#version 420 core
+#version 420
 
 in vec3 v_position;
 in vec3 v_normal;
