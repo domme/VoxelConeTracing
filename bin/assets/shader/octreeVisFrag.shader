@@ -22,6 +22,8 @@ const uvec3 childOffsets[8] = {
 
  const uint pow2[] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
 
+ uint levelSizes[11];
+
 layout(r32ui) uniform readonly uimageBuffer nodePool_next;
 layout(r32ui) uniform readonly uimageBuffer nodePool_color;
 
@@ -87,18 +89,17 @@ uint sizeOnLevel(in uint level) {
   return uint(voxelGridResolution / pow2[level]);
 }
 
-vec4 getOctreeColor(in uvec3 pos, in int nodeAddress, in uint currTargetLevel, out uvec3 outNodePosMin, out uvec3 outNodePosMax) {
-	uvec3 nodePos = uvec3(0);
-	uvec3 nodePosMax = uvec3(1);
-  
-  for (uint iLevel = 0; iLevel < currTargetLevel; ++iLevel) {
-	uint nodeNext = imageLoad(nodePool_next, nodeAddress).x;
 
-	uint childStartAddress = nodeNext & NODE_MASK_NEXT;
+vec4 getOctreeColor(in uvec3 pos, in int nodeAddress, in uint currTargetLevel, out uvec3 nodePos, out uvec3 nodePosMax) {
+  nodePos = uvec3(0);
+  nodePosMax = uvec3(1);
+
+  for (uint iLevel = 0; iLevel < currTargetLevel; ++iLevel) {
+  uint nodeNext = imageLoad(nodePool_next, nodeAddress).x;
+
+  uint childStartAddress = nodeNext & NODE_MASK_NEXT;
     if (childStartAddress == 0U) {
-	  outNodePosMin = nodePos;
-	  outNodePosMax = nodePosMax;
-      return vec4(0.0, 0.0, 0.0, 0.0);
+      break;
     }
    
     uint sideLength = sizeOnLevel(iLevel + 1);
@@ -118,63 +119,89 @@ vec4 getOctreeColor(in uvec3 pos, in int nodeAddress, in uint currTargetLevel, o
       } // for
     } // level-for
 
-	outNodePosMin = nodePos;
-	outNodePosMax = nodePosMax;
-    uint nodeColorU = imageLoad(nodePool_color, int(nodeAddress)).x;
-    return vec4(convRGBA8ToVec4(nodeColorU)) / 255.0;
+  uint nodeColorU = imageLoad(nodePool_color, int(nodeAddress)).x;
+  return vec4(convRGBA8ToVec4(nodeColorU)) / 255.0;
 }
+
+/*
+vec4 getOctreeColor(in uvec3 pos, in int nodeAddress, in uint currTargetLevel, out uvec3 nodePos, out uvec3 nodePosMax) {
+  nodePos = uvec3(0);
+  nodePosMax = uvec3(1);
+
+  for (uint iLevel = 0; iLevel < currTargetLevel; ++iLevel) {
+    uint nodeNext = imageLoad(nodePool_next, nodeAddress).x;
+
+    uint childStartAddress = nodeNext & NODE_MASK_NEXT;
+      if (childStartAddress == 0U) {
+        break;
+      }
+   
+      uint sideLength = sizeOnLevel(iLevel + 1);
+      vec3 localNodePos = vec3(pos - nodePos) / float(sizeOnLevel(iLevel ));  // position in [0,1]³
+      uvec3 offVec = uvec3(2U * localNodePos);
+      uint off = offVec.x + 2U * offVec.y + 4U * offVec.z;
+
+      uint iChild = childStartAddress + off;
+      uvec3 posMin = nodePos + childOffsets[iChild] * uvec3(sideLength);
+      uvec3 posMax = posMin + uvec3(sideLength);
+    
+      // Restart while-loop with the child node (aka recursion)
+      nodeAddress = int(childStartAddress + iChild);
+      nodePos = posMin;
+      nodePosMax = posMax;
+    } // level-for
+
+  uint nodeColorU = imageLoad(nodePool_color, int(nodeAddress)).x;
+  return vec4(convRGBA8ToVec4(nodeColorU)) / 255.0;
+}
+*/
 
 
 void main(void) {
- //int samplePos = int(gl_FragCoord.y) * 1280 + int(gl_FragCoord.x);
- //color = convRGBA8ToVec4(imageLoad(nodePool_color, samplePos).x) / 255.0;
+  vec3 camPosWS = viewI[3].xyz;
+  vec3 viewDirWS = normalize((viewI * vec4(In.viewDirVS, 0.0)).xyz);
+  
+  // Get ray origin and ray direction in texspace
+  vec3 rayDirTex = normalize((voxelGridTransformI * vec4(viewDirWS, 0.0)).xyz);
+  vec3 rayOriginTex = (voxelGridTransformI *  vec4(camPosWS, 1.0)).xyz * 0.5 + 0.5;
+  
+  float tEnter = 0.0;
+  float tLeave = 0.0;
+  
+  if (!intersectRayWithAABB(rayOriginTex, rayDirTex, vec3(0.0), vec3(1.0), tEnter, tLeave)) {
+    color = vec4(0.0, 0.0, 0.0, 0.0);
+    return;
+  }
+  
+  tEnter = max(tEnter, 0.0);
+  
+  
+  uvec3 nodePosMin = uvec3(0);
+  uvec3 nodePosMax = uvec3(1);
+  vec3 nodePosMinTex = vec3(nodePosMin) / vec3(voxelGridResolution);
+  vec3 nodePosMaxTex = vec3(nodePosMax) / vec3(voxelGridResolution);
+  float end = tLeave;
+  for (float f = tEnter + 0.001; f < end; f += tLeave + 0.001) {
+    vec3 posTex = (rayOriginTex + rayDirTex * f);
+  
+    uvec3 samplePos = uvec3(floor(posTex * vec3(voxelGridResolution)));
 
-/* uvec3 outNodePosMin = uvec3(0);
- uvec3 outNodePosMax = uvec3(0);
- uvec3 pos = uvec3(23, 214, 187);
- 
- color = getOctreeColor(pos, targetLevel, outNodePosMin, outNodePosMax); */
-
-	vec3 camPosWS = viewI[3].xyz;
-	vec3 viewDirWS = normalize((viewI * vec4(In.viewDirVS, 0.0)).xyz);
-	
-	// Get ray origin and ray direction in texspace
-	vec3 rayDirTex = normalize((voxelGridTransformI * vec4(viewDirWS, 0.0)).xyz);
-	vec3 rayOriginTex = (voxelGridTransformI *  vec4(camPosWS, 1.0)).xyz * 0.5 + 0.5;
-	
-	float tEnter = 0.0;
-	float tLeave = 0.0;
-	
-	if (!intersectRayWithAABB(rayOriginTex, rayDirTex, vec3(0.0), vec3(1.0), tEnter, tLeave)) {
-	  color = vec4(0.0, 0.0, 0.0, 0.0);
-	  return;
-	}
-	
-	tEnter = max(tEnter, 0.0);
-	
-	
-	uvec3 nodePosMin = uvec3(0);
-	uvec3 nodePosMax = uvec3(1);
-	vec3 nodePosMinTex = vec3(nodePosMin) / vec3(voxelGridResolution);
-	vec3 nodePosMaxTex = vec3(nodePosMax) / vec3(voxelGridResolution);
-	float end = tLeave;
-	for (float f = tEnter + 0.002; f < end; f += tLeave + 0.002) {
-	  vec3 posTex = (rayOriginTex + rayDirTex * f);
-	
-	  uvec3 samplePos = uvec3(floor(posTex * vec3(voxelGridResolution)));
-	 
-	  vec4 col = getOctreeColor(samplePos, 0, targetLevel, nodePosMin, nodePosMax);
-	    
-	  if (length(col) > 0.001) {
-	    color = col;
-	    return;
-	  }
-	    
-	  nodePosMinTex = vec3(nodePosMin) / vec3(voxelGridResolution);
-	  nodePosMaxTex = vec3(nodePosMax) / vec3(voxelGridResolution);
-	
-	  if (!intersectRayWithAABB(posTex, rayDirTex, nodePosMinTex, nodePosMaxTex, tEnter, tLeave)) {
-	    return; // prevent infinite loop
-	  }
-	} 
+    float fDistanceFactor = f / end;
+    fDistanceFactor *= fDistanceFactor;
+    
+    uint currTargetLevel = targetLevel; //uint(floor((1.0 - fDistanceFactor) * float(targetLevel))) + 1;
+    vec4 newCol = getOctreeColor(samplePos, 0, clamp(currTargetLevel, 1U, targetLevel), nodePosMin, nodePosMax);
+    color = (1.0 - color.a) * newCol + color;
+    
+    if (color.a > 0.99) {
+      return;
+    }
+      
+    nodePosMinTex = vec3(nodePosMin) / vec3(voxelGridResolution);
+    nodePosMaxTex = vec3(nodePosMax) / vec3(voxelGridResolution);
+  
+    if (!intersectRayWithAABB(posTex, rayDirTex, nodePosMinTex, nodePosMaxTex, tEnter, tLeave)) {
+      return; // prevent infinite loop
+    }
+  } 
 }
