@@ -39,12 +39,12 @@ uniform uint numLevels;
 const uvec3 childOffsets[8] = {
   uvec3(0, 0, 0),
   uvec3(1, 0, 0),
-  uvec3(1, 1, 0),
   uvec3(0, 1, 0),
+  uvec3(1, 1, 0),
   uvec3(0, 0, 1),
   uvec3(1, 0, 1),
-  uvec3(1, 1, 1),
-  uvec3(0, 1, 1) };
+  uvec3(0, 1, 1), 
+  uvec3(1, 1, 1)};
   
 
 uint vec3ToUintXYZ10(uvec3 val) {

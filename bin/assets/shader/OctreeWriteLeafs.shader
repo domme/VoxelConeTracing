@@ -50,12 +50,12 @@ const uint pow2[] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
 const uvec3 childOffsets[8] = {
   uvec3(0, 0, 0),
   uvec3(1, 0, 0),
-  uvec3(1, 1, 0),
   uvec3(0, 1, 0),
+  uvec3(1, 1, 0),
   uvec3(0, 0, 1),
   uvec3(1, 0, 1),
-  uvec3(1, 1, 1),
-  uvec3(0, 1, 1) };
+  uvec3(0, 1, 1), 
+  uvec3(1, 1, 1)};
 
 vec4 convRGBA8ToVec4(uint val) {
     return vec4( float((val & 0x000000FF)), 

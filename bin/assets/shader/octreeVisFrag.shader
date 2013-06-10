@@ -13,12 +13,12 @@ const uint NODE_NOT_FOUND = 0xFFFFFFFF;
 const uvec3 childOffsets[8] = {
   uvec3(0, 0, 0),
   uvec3(1, 0, 0),
-  uvec3(1, 1, 0),
   uvec3(0, 1, 0),
+  uvec3(1, 1, 0),
   uvec3(0, 0, 1),
   uvec3(1, 0, 1),
-  uvec3(1, 1, 1),
-  uvec3(0, 1, 1) };
+  uvec3(0, 1, 1), 
+  uvec3(1, 1, 1)};
 
  const uint pow2[] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
 
@@ -90,43 +90,11 @@ uint sizeOnLevel(in uint level) {
 }
 
 
+
+///*
 vec4 getOctreeColor(in uvec3 pos, in int nodeAddress, in uint currTargetLevel, out uvec3 nodePos, out uvec3 nodePosMax) {
   nodePos = uvec3(0);
-  nodePosMax = uvec3(1);
-
-  for (uint iLevel = 0; iLevel < currTargetLevel; ++iLevel) {
-  uint nodeNext = imageLoad(nodePool_next, nodeAddress).x;
-
-  uint childStartAddress = nodeNext & NODE_MASK_NEXT;
-    if (childStartAddress == 0U) {
-      break;
-    }
-   
-    uint sideLength = sizeOnLevel(iLevel + 1);
-
-    for (uint iChild = 0; iChild < 8; ++iChild) {
-      uvec3 posMin = nodePos + childOffsets[iChild] * uvec3(sideLength);
-      uvec3 posMax = posMin + uvec3(sideLength);
-
-      if(pos.x >= posMin.x && pos.x < posMax.x &&
-         pos.y >= posMin.y && pos.y < posMax.y &&
-         pos.z >= posMin.z && pos.z < posMax.z ) {
-            // Restart while-loop with the child node (aka recursion)
-            nodeAddress = int(childStartAddress + iChild);
-            nodePos = posMin;
-            nodePosMax = posMax;
-        } // if
-      } // for
-    } // level-for
-
-  uint nodeColorU = imageLoad(nodePool_color, int(nodeAddress)).x;
-  return vec4(convRGBA8ToVec4(nodeColorU)) / 255.0;
-}
-
-/*
-vec4 getOctreeColor(in uvec3 pos, in int nodeAddress, in uint currTargetLevel, out uvec3 nodePos, out uvec3 nodePosMax) {
-  nodePos = uvec3(0);
-  nodePosMax = uvec3(1);
+  nodePosMax = uvec3(voxelGridResolution);
 
   for (uint iLevel = 0; iLevel < currTargetLevel; ++iLevel) {
     uint nodeNext = imageLoad(nodePool_next, nodeAddress).x;
@@ -137,16 +105,15 @@ vec4 getOctreeColor(in uvec3 pos, in int nodeAddress, in uint currTargetLevel, o
       }
    
       uint sideLength = sizeOnLevel(iLevel + 1);
-      vec3 localNodePos = vec3(pos - nodePos) / float(sizeOnLevel(iLevel ));  // position in [0,1]³
-      uvec3 offVec = uvec3(2U * localNodePos);
+      vec3 localNodePos = (vec3(pos) - vec3(nodePos)) / float(sizeOnLevel(iLevel));  // position in [0,1]ï¿½
+      uvec3 offVec = uvec3(2.0 * localNodePos);
       uint off = offVec.x + 2U * offVec.y + 4U * offVec.z;
 
-      uint iChild = childStartAddress + off;
-      uvec3 posMin = nodePos + childOffsets[iChild] * uvec3(sideLength);
+      uvec3 posMin = nodePos + childOffsets[off] * uvec3(sideLength);
       uvec3 posMax = posMin + uvec3(sideLength);
     
       // Restart while-loop with the child node (aka recursion)
-      nodeAddress = int(childStartAddress + iChild);
+      nodeAddress = int(childStartAddress + off);
       nodePos = posMin;
       nodePosMax = posMax;
     } // level-for
@@ -154,7 +121,7 @@ vec4 getOctreeColor(in uvec3 pos, in int nodeAddress, in uint currTargetLevel, o
   uint nodeColorU = imageLoad(nodePool_color, int(nodeAddress)).x;
   return vec4(convRGBA8ToVec4(nodeColorU)) / 255.0;
 }
-*/
+//*/
 
 
 void main(void) {
@@ -177,7 +144,7 @@ void main(void) {
   
   
   uvec3 nodePosMin = uvec3(0);
-  uvec3 nodePosMax = uvec3(1);
+  uvec3 nodePosMax = uvec3(voxelGridResolution);
   vec3 nodePosMinTex = vec3(nodePosMin) / vec3(voxelGridResolution);
   vec3 nodePosMaxTex = vec3(nodePosMax) / vec3(voxelGridResolution);
   float end = tLeave;
