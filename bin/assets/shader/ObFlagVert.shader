@@ -80,38 +80,35 @@ uint sizeOnLevel(in uint level) {
 void main() {
   uint voxelPosU = imageLoad(voxelFragmentListPosition, gl_VertexID).x;
   uvec3 voxelPos = uintXYZ10ToVec3(voxelPosU);
-  uint nodeNext = imageLoad(nodePool_next, 0).x;
-  uint nodeAddress = 0;
-  uvec3 nodePos = uvec3(0, 0, 0);
-  uint childLevel = 1;
-  uint sideLength = sizeOnLevel(childLevel);
+  vec3 posTex = vec3(voxelPos) / vec3(voxelGridResolution);
 
-  // Loop as long as node != voxel
-  for(uint iLevel = 0; iLevel < numLevels -1; ++iLevel) {
-      if (nextEmpty(nodeNext)) {
+  int nodeAddress = 0;
+  vec3 nodePosTex = vec3(0.0);
+  vec3 nodePosMaxTex = vec3(1.0);
+  float sideLength = 0.5;
+
+  //////////////////////////////////////////////////////////////////////////////
+  
+  for (uint iLevel = 0; iLevel < numLevels -1; ++iLevel) {
+    uint nodeNext = imageLoad(nodePool_next, nodeAddress).x;
+
+    uint childStartAddress = nodeNext & NODE_MASK_NEXT;
+      if (childStartAddress == 0U) {
         flagNode(nodeNext, nodeAddress);
-        return;
+        break;
       }
+       
+      uvec3 offVec = uvec3(2.0 * posTex);
+      uint off = offVec.x + 2U * offVec.y + 4U * offVec.z;
 
-    sideLength = sizeOnLevel(childLevel);
-    uint childStartAddress = getNextAddress(nodeNext);
+      // Restart while-loop with the child node (aka recursion)
+      nodeAddress = int(childStartAddress + off);
+      nodePosTex += vec3(childOffsets[off]) * vec3(sideLength);
+      nodePosMaxTex = nodePosTex + vec3(sideLength);
 
-    for (uint iChild = 0; iChild < 8; ++iChild) {
-      uvec3 posMin = nodePos + childOffsets[iChild] * uvec3(sideLength);
-      uvec3 posMax = posMin + uvec3(sideLength);
+      sideLength = sideLength / 2.0;
+      posTex = 2.0 * posTex - vec3(offVec);
+    } // level-for
+}
 
-      if (voxelPos.x >= posMin.x && voxelPos.x < posMax.x &&
-          voxelPos.y >= posMin.y && voxelPos.y < posMax.y &&
-          voxelPos.z >= posMin.z && voxelPos.z < posMax.z ) {
-            uint childAddress = childStartAddress + iChild;
-            uint childNodeNext = imageLoad(nodePool_next, int(childAddress)).x;
 
-            // Restart while-loop with the child node (aka recursion)
-            nodeNext = childNodeNext;
-            nodeAddress = childAddress;
-            nodePos = posMin;
-            childLevel += 1;
-        } // if
-      } // for
-    } // while
-}  // main
