@@ -103,18 +103,19 @@ void main() {
   uint voxelColorU = imageLoad(voxelFragList_color, gl_VertexID).x;
 
   uvec3 voxelPos = uintXYZ10ToVec3(voxelPosU);
-  
-  // Find the correct leaf node by traversing the octree with voxelPos
-  uint nodeNext = imageLoad(nodePool_next, 0).x;
-  uint nodeAddress = 0;
-  uvec3 nodePos = uvec3(0, 0, 0);
-  uint childLevel = 1;
-  uint sideLength = sizeOnLevel(childLevel);
+  vec3 posTex = vec3(voxelPos) / vec3(voxelGridResolution);
 
-  // Loop as long as node != voxel
-  for(uint iLevel = 0; iLevel < numLevels; ++iLevel) {
-      if (nextEmpty(nodeNext)) {
-        if (childLevel == numLevels) {  // This is a leaf node! Yuppieee! ;)
+  int nodeAddress = 0;
+  vec3 nodePosTex = vec3(0.0);
+  vec3 nodePosMaxTex = vec3(1.0);
+  float sideLength = 0.5;
+  
+  for (uint iLevel = 0; iLevel < numLevels; ++iLevel) {
+    uint nodeNext = imageLoad(nodePool_next, nodeAddress).x;
+
+    uint childStartAddress = nodeNext & NODE_MASK_NEXT;
+      if (childStartAddress == 0U) {
+        if (iLevel == numLevels - 1) {  // This is a leaf node! Yuppieee! ;)
           
             // Write the color into the node
             // TODO: Many different voxels will write into one node... mix their colors properly!
@@ -122,32 +123,18 @@ void main() {
                       uvec4(voxelColorU));
 
            memoryBarrier();
-        }
-
-        return;  // Exit in any case because we are at the end of this subtree
+         }
       }
+       
+      uvec3 offVec = uvec3(2.0 * posTex);
+      uint off = offVec.x + 2U * offVec.y + 4U * offVec.z;
 
-    sideLength = sizeOnLevel(childLevel);
-    uint childStartAddress = getNextAddress(nodeNext);
+      // Restart while-loop with the child node (aka recursion)
+      nodeAddress = int(childStartAddress + off);
+      nodePosTex += vec3(childOffsets[off]) * vec3(sideLength);
+      nodePosMaxTex = nodePosTex + vec3(sideLength);
 
-    for (uint iChild = 0; iChild < 8; ++iChild) {
-      uvec3 posMin = nodePos + childOffsets[iChild] * uvec3(sideLength);
-      uvec3 posMax = posMin + uvec3(sideLength);
-
-      if (voxelPos.x >= posMin.x && voxelPos.x < posMax.x &&
-          voxelPos.y >= posMin.y && voxelPos.y < posMax.y &&
-          voxelPos.z >= posMin.z && voxelPos.z < posMax.z ) {
-            uint childAddress = childStartAddress + iChild;
-            uint childNodeNext = imageLoad(nodePool_next, int(childAddress)).x;
-
-            // Restart while-loop with the child node (aka recursion)
-            nodeNext = childNodeNext;
-            nodeAddress = childAddress;
-            nodePos = posMin;
-            childLevel += 1;
-             
-            break;
-        } // if
-      } // for
-    } // while 
+      sideLength = sideLength / 2.0;
+      posTex = 2.0 * posTex - vec3(offVec);
+    } // level-for
 }
