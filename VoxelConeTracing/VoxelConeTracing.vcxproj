@@ -180,6 +180,7 @@
     <ClCompile Include="src\VoxelConeTracing\main.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Building\ModifyIndirectBufferPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Building\ObAllocatePass.cpp" />
+    <ClCompile Include="src\VoxelConeTracing\Octree Building\ObClearPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Building\ObFlagPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Building\ObInitPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\OctreeMipmapPass.cpp" />
@@ -200,6 +201,7 @@
     <ClInclude Include="src\VoxelConeTracing\FullscreenQuad.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Building\ModifyIndirectBufferPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Building\ObAllocatePass.h" />
+    <ClInclude Include="src\VoxelConeTracing\Octree Building\ObClearPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Building\ObFlagPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Building\ObInitPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\OctreeMipmapPass.h" />
@@ -217,6 +219,7 @@
     <None Include="..\bin\assets\shader\debug.shader" />
     <None Include="..\bin\assets\shader\ModifyIndirectBufferVert.shader" />
     <None Include="..\bin\assets\shader\ObAllocateVert.shader" />
+    <None Include="..\bin\assets\shader\ObClearVert.shader" />
     <None Include="..\bin\assets\shader\ObFlagVert.shader" />
     <None Include="..\bin\assets\shader\ObInitVert.shader" />
     <None Include="..\bin\assets\shader\OctreeMipmap.shader" />

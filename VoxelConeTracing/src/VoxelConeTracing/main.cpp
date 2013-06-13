@@ -72,6 +72,7 @@
 #include "vsDebugLib.h"
 #include "Octree Building/ModifyIndirectBufferPass.h"
 #include "Debug/DebugPass.h"
+#include "Octree Building/ObClearPass.h"
 
 
 
@@ -111,7 +112,7 @@ void setup() {
   Log::getInstance()->write("Max TextureBuffer size: %i \n", maxTexBufferSize);
 
   //Load the scene and get all mesh nodes
-  ResourceManager::getInstance()->loadScene("./assets/meshes/sibenik.dae");
+  ResourceManager::getInstance()->loadScene("./assets/meshes/monkey.dae");
   
   std::vector<SceneNode*> renderNodes;
   SceneManager::getInstance()
@@ -138,6 +139,7 @@ void setup() {
   _backbufferStage->setActiveAttachments(drawBuffers, 1);
  
   // Prepare render algorithm
+  _backbufferStage->addProgramPass(new ObClearPass(&_vctScene,kore::EXECUTE_ONCE));
   _backbufferStage->addProgramPass(new VoxelizePass(params.voxel_grid_sidelengths, &_vctScene, kore::EXECUTE_ONCE));
   _backbufferStage->addProgramPass(new ModifyIndirectBufferPass(
                                       _vctScene.getVoxelFragList()->getShdFragListIndCmdBuf(),
@@ -181,7 +183,7 @@ int main(void) {
   glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 4);
   glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 2);
   glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-  //glfwOpenWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+  glfwOpenWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 
   // Open an OpenGL window
   if (!glfwOpenWindow(screen_width, screen_height, 8, 8, 8, 8, 24, 8, GLFW_WINDOW)) {
@@ -232,13 +234,8 @@ int main(void) {
             glewGetString(GLEW_VERSION)));
 
 
-/*  VSDebugLib::init();
+  VSDebugLib::init();
   VSDebugLib::enableUserMessages(true);
-  VSDebugLib::addApplicationMessage(12345, 
-    GL_DEBUG_TYPE_OTHER_ARB,
-    GL_DEBUG_SEVERITY_LOW_ARB,
-    "This is just a test"); */
-
   
   kore::RenderManager::getInstance()
     ->setScreenResolution(glm::ivec2(screen_width, screen_height));

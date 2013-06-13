@@ -58,6 +58,9 @@
     <ClCompile Include="src\VoxelConeTracing\Scene\VoxelFragList.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\Octree Building\ObClearPass.cpp">
+      <Filter>src\Octree Building</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -143,6 +146,9 @@
     <ClInclude Include="src\VoxelConeTracing\Scene\VoxelFragList.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\Octree Building\ObClearPass.h">
+      <Filter>src\Octree Building</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\bin\assets\shader\VoxelConeTracing\voxelizeFrag.shader">
@@ -182,6 +188,9 @@
       <Filter>shader</Filter>
     </None>
     <None Include="..\bin\assets\shader\OctreeMipmap.shader">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\ObClearVert.shader">
       <Filter>shader</Filter>
     </None>
   </ItemGroup>

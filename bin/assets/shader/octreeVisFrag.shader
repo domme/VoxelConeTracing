@@ -20,6 +20,7 @@ const uvec3 childOffsets[8] = {
   uvec3(0, 1, 1), 
   uvec3(1, 1, 1)};
 
+
  const uint pow2[] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
 
  uint levelSizes[11];
@@ -144,7 +145,7 @@ void main(void) {
   
   vec3 nodePosMin = vec3(0.0);
   vec3 nodePosMax = vec3(1.0);
-
+  
   float end = tLeave;
   for (float f = tEnter + 0.001; f < end; f += tLeave + 0.001) {
     vec3 posTex = (rayOriginTex + rayDirTex * f);

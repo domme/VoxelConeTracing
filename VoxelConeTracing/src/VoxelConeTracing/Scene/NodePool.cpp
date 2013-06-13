@@ -93,7 +93,7 @@ void NodePool::init(uint voxelGridResolution) {
     _shdNodePool[i].type = GL_TEXTURE_BUFFER;
     _shdNodePool[i].data = &_nodePoolTexInfo[i];
 
-    // Init to zero
+    /*// Init to zero
     kore::RenderManager* renderMgr = kore::RenderManager::getInstance();
     renderMgr->bindBuffer(GL_TEXTURE_BUFFER, _nodePool[i].getBufferHandle());
     uint* ptr = (uint*) glMapBufferRange(GL_TEXTURE_BUFFER, 0,
@@ -109,7 +109,7 @@ void NodePool::init(uint voxelGridResolution) {
     for (uint iNode = 0; iNode < _numNodes / 2; ++iNode) {
       ptr[iNode] = 0U;
     }
-    glUnmapBuffer(GL_TEXTURE_BUFFER);
+    glUnmapBuffer(GL_TEXTURE_BUFFER);*/
   }
   // Create node pool allocation AC
 
