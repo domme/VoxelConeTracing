@@ -126,7 +126,8 @@ void setup() {
   SVCTparameters params;
   params.voxel_grid_resolution = 512;
   params.voxel_grid_sidelengths = glm::vec3(50, 50, 50);
-  params.fraglist_size_multiplier = 0.5;
+  params.fraglist_size_multiplier = 1;
+  params.fraglist_size_divisor = 4;
   
   _vctScene.init(params, renderNodes, _pCamera);
 
@@ -175,6 +176,7 @@ int main(void) {
   if (!glfwInit()) {
     kore::Log::getInstance()->write("[ERROR] could not load window manager\n");
     exit(EXIT_FAILURE);
+    return -1;
   }
 
   glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 4);
@@ -191,12 +193,17 @@ int main(void) {
 
   glfwSetWindowTitle("Sparse Voxel Octree Demo");
 
-
   // disable v-sync
-  glfwSwapInterval(0);
+  //glfwSwapInterval(0);
 
   // initialize GLEW
-  glewInit();
+  glewExperimental = true;
+  if (glewInit() != GLEW_OK) {
+    kore::Log::getInstance()->write("[ERROR] could not init glew\n");
+    exit(EXIT_FAILURE);
+    return -1;
+  }
+
     
   // log versions
   int GLFWmajor, GLFWminor, GLFWrev;

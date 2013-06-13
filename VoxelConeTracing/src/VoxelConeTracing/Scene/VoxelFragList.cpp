@@ -48,13 +48,15 @@ VoxelFragList::~VoxelFragList()
 {
 }
 
-void VoxelFragList::init(uint voxelGridResolution, float fragListSizeMultiplier){
+void VoxelFragList::init(uint voxelGridResolution, uint fragListSizeMultiplier, uint fragListSizeDivisor){
   // Positions
-  uint fraglistSizeByte = (uint)( 
-     (float)(sizeof(uint)
+  uint fraglistSizeByte =
+    (sizeof(uint)
     * voxelGridResolution
     * voxelGridResolution
-    * voxelGridResolution) * fragListSizeMultiplier);
+    * voxelGridResolution
+    * fragListSizeMultiplier)
+    / fragListSizeDivisor;
   
   GLint maxTexBufferSize = 0;
   glGetIntegerv(GL_MAX_TEXTURE_BUFFER_SIZE, &maxTexBufferSize);
@@ -68,7 +70,7 @@ void VoxelFragList::init(uint voxelGridResolution, float fragListSizeMultiplier)
   kore::STextureBufferProperties props;
   props.internalFormat = GL_R32UI;
   props.size = fraglistSizeByte;
-  props.usageHint = GL_STATIC_DRAW;
+  props.usageHint = GL_DYNAMIC_COPY;
 
   _voxelFragLists[VOXELATT_POSITION].create(props, "VoxelFragmentList_Position");
   _voxelFragLists[VOXELATT_COLOR].create(props, "VoxelFragmentList_Color");

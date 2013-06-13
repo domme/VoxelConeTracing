@@ -63,7 +63,7 @@ void VCTscene::init(const SVCTparameters& params,
   _shdVoxelGridResolution.type = GL_UNSIGNED_INT;
   
   _nodePool.init(_voxelGridResolution);
-  _voxelFragList.init(_voxelGridResolution,params.fraglist_size_multiplier);
+  _voxelFragList.init(_voxelGridResolution, params.fraglist_size_multiplier, params.fraglist_size_divisor);
   
   
   //initTex3D(&_voxelTex, BLACK);
