@@ -103,9 +103,7 @@ void setup() {
   using namespace kore;
 
   glClearColor(1.0f, 0.0f,0.0f,1.0f);
-  glDisable(GL_CULL_FACE);
-  glDisable(GL_DEPTH_TEST);
-  glDepthMask(GL_FALSE);
+
 
   GLint maxTexBufferSize = 0;
   glGetIntegerv(GL_MAX_TEXTURE_BUFFER_SIZE, &maxTexBufferSize);
@@ -126,7 +124,7 @@ void setup() {
 
 
   SVCTparameters params;
-  params.voxel_grid_resolution = 256;
+  params.voxel_grid_resolution = 512;
   params.voxel_grid_sidelengths = glm::vec3(50, 50, 50);
   params.fraglist_size_multiplier = 1;
   
@@ -134,9 +132,8 @@ void setup() {
 
 
   _backbufferStage = new FrameBufferStage;
-  GLenum drawBuffers[] = {GL_NONE};
   _backbufferStage->setFrameBuffer(kore::FrameBuffer::BACKBUFFER);
-  _backbufferStage->setActiveAttachments(drawBuffers, 1);
+
  
   // Prepare render algorithm
   _backbufferStage->addProgramPass(new ObClearPass(&_vctScene,kore::EXECUTE_ONCE));
@@ -186,7 +183,7 @@ int main(void) {
   glfwOpenWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 
   // Open an OpenGL window
-  if (!glfwOpenWindow(screen_width, screen_height, 8, 8, 8, 8, 24, 8, GLFW_WINDOW)) {
+  if (!glfwOpenWindow(screen_width, screen_height, 8, 8, 8, 0, 24, 8, GLFW_WINDOW)) {
     kore::Log::getInstance()->write("[ERROR] could not open render window\n");
     glfwTerminate();
     exit(EXIT_FAILURE);
@@ -199,13 +196,8 @@ int main(void) {
   glfwSwapInterval(0);
 
   // initialize GLEW
-  glewExperimental = GL_TRUE;
-  if (glewInit()) {
-    kore::Log::getInstance()->write("[ERROR] could not open initialize extension manager\n");
-    glfwTerminate();
-    exit(EXIT_FAILURE);
-  }
-  
+  glewInit();
+    
   // log versions
   int GLFWmajor, GLFWminor, GLFWrev;
   glfwGetVersion(&GLFWmajor, &GLFWminor, &GLFWrev);

@@ -59,9 +59,9 @@ uvec3 uintXYZ10ToVec3(uint val) {
                  uint((val & 0x3FF00000) >> 20U));
 }
 
-void flagNode(in uint nodeNext, in uint address) {
+void flagNode(in uint nodeNext, in int address) {
   nodeNext = (0x00000001 << 31) | (0x7FFFFFFF & nodeNext); 
-  imageStore(nodePool_next, int(address), uvec4(nodeNext));
+  imageStore(nodePool_next, address, uvec4(nodeNext));
   memoryBarrier();
 }
 
