@@ -110,7 +110,7 @@ void setup() {
   Log::getInstance()->write("Max TextureBuffer size: %i \n", maxTexBufferSize);
 
   //Load the scene and get all mesh nodes
-  ResourceManager::getInstance()->loadScene("./assets/meshes/monkey.dae");
+  ResourceManager::getInstance()->loadScene("./assets/meshes/sibenik.dae");
   
   std::vector<SceneNode*> renderNodes;
   SceneManager::getInstance()
