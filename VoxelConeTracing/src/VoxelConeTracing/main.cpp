@@ -126,9 +126,9 @@ void setup() {
 
 
   SVCTparameters params;
-  params.voxel_grid_resolution = 256;
+  params.voxel_grid_resolution = 512;
   params.voxel_grid_sidelengths = glm::vec3(50, 50, 50);
-  params.fraglist_size_multiplier = 1;
+  params.fraglist_size_multiplier = 0.5;
   
   _vctScene.init(params, renderNodes, _pCamera);
 

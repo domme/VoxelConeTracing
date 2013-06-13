@@ -42,7 +42,7 @@ class VoxelFragList
 public:
   VoxelFragList();
   ~VoxelFragList();
-  void init(uint voxelGridResolution, uint fragListSizeMultiplier);
+  void init(uint voxelGridResolution, float fragListSizeMultiplier);
 
   inline kore::ShaderData* getShdVoxelFragList(EVoxelAttributes type)
   {return &_shdVoxelFragLists[type];}
