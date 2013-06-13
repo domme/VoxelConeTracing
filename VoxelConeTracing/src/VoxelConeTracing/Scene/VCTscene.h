@@ -39,7 +39,7 @@
 
 struct SVCTparameters {
   uint voxel_grid_resolution;
-  uint fraglist_size_multiplier;
+  float fraglist_size_multiplier;
   glm::vec3 voxel_grid_sidelengths;
 };
 

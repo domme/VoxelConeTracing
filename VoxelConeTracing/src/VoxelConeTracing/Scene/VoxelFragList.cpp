@@ -48,12 +48,18 @@ VoxelFragList::~VoxelFragList()
 {
 }
 
-void VoxelFragList::init(uint voxelGridResolution, uint fragListSizeMultiplier){
+void VoxelFragList::init(uint voxelGridResolution, float fragListSizeMultiplier){
   // Positions
-  uint fraglistSizeByte = sizeof(unsigned int)
+  uint fraglistSizeByte = (uint)( 
+     (float)(sizeof(uint)
     * voxelGridResolution
     * voxelGridResolution
-    * voxelGridResolution * fragListSizeMultiplier;
+    * voxelGridResolution) * fragListSizeMultiplier);
+  
+  GLint maxTexBufferSize = 0;
+  glGetIntegerv(GL_MAX_TEXTURE_BUFFER_SIZE, &maxTexBufferSize);
+  maxTexBufferSize = maxTexBufferSize * sizeof(uint);
+  //fraglistSizeByte = glm::min((uint)maxTexBufferSize,fraglistSizeByte);
 
   kore::Log::getInstance()
     ->write("Allocating voxel fragment lists of size %f MB\n",
