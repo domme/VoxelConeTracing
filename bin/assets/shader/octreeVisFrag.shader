@@ -92,7 +92,7 @@ uint sizeOnLevel(in uint level) {
 
 
 ///*
-vec4 getOctreeColor(in vec3 posTex, in int nodeAddress, in uint currTargetLevel, out vec3 nodePosTex, out vec3 nodePosMaxTex) {
+int traverseOctree(in vec3 posTex, in int nodeAddress, in uint currTargetLevel, out vec3 nodePosTex, out vec3 nodePosMaxTex) {
   nodePosTex = vec3(0.0);
   nodePosMaxTex = vec3(1.0);
   float sideLength = 0.5;
@@ -117,8 +117,7 @@ vec4 getOctreeColor(in vec3 posTex, in int nodeAddress, in uint currTargetLevel,
       posTex = 2.0 * posTex - vec3(offVec);
     } // level-for
 
-  uint nodeColorU = imageLoad(nodePool_color, int(nodeAddress)).x;
-  return vec4(convRGBA8ToVec4(nodeColorU)) / 255.0;
+  return nodeAddress;
 }
 //*/
 
@@ -153,7 +152,12 @@ void main(void) {
     fDistanceFactor *= fDistanceFactor;*/
     
     uint currTargetLevel = targetLevel; //uint(floor((1.0 - fDistanceFactor) * float(targetLevel))) + 1;
-    vec4 newCol = getOctreeColor(posTex, 0, clamp(currTargetLevel, 1U, targetLevel), nodePosMin, nodePosMax);
+    int address = traverseOctree(posTex, 0, clamp(currTargetLevel, 1U, targetLevel), nodePosMin, nodePosMax);
+    
+    uint nodeColorU = imageLoad(nodePool_color, address).x;
+    memoryBarrier();
+
+    vec4 newCol = vec4(convRGBA8ToVec4(nodeColorU)) / 255.0;
     color = (1.0 - color.a) * newCol + color;
     
     if (color.a > 0.99) {
