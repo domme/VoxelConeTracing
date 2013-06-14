@@ -199,5 +199,8 @@
     <None Include="..\bin\assets\shader\ObClearVert.shader">
       <Filter>shader</Filter>
     </None>
+    <None Include="..\bin\assets\shader\ConeTraceFrag.shader">
+      <Filter>shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

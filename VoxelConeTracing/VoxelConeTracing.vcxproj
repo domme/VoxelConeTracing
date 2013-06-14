@@ -218,6 +218,7 @@
     <ClInclude Include="src\VoxelConeTracing\vsDebugLib.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\bin\assets\shader\ConeTraceFrag.shader" />
     <None Include="..\bin\assets\shader\debug.shader" />
     <None Include="..\bin\assets\shader\ModifyIndirectBufferVert.shader" />
     <None Include="..\bin\assets\shader\ObAllocateVert.shader" />

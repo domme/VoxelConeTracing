@@ -22,7 +22,7 @@ const uvec3 childOffsets[8] = {
 
  const uint pow2[] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
 
- uint levelSizes[11];
+uint levelSizes[11];
 
 layout(r32ui) uniform readonly uimageBuffer nodePool_next;
 layout(r32ui) uniform readonly uimageBuffer nodePool_color;
@@ -31,7 +31,6 @@ uniform uint voxelGridResolution;
 uniform mat4 viewI;
 uniform mat4 voxelGridTransformI;
 uniform uint numLevels;
-uniform uint targetLevel;
 
 
 out vec4 color;
@@ -85,35 +84,35 @@ bool intersectRayWithAABB (in vec3 ro, in vec3 rd,         // Ray-origin and -di
 }
 
 
-uint sizeOnLevel(in uint level) {
-  return uint(voxelGridResolution / pow2[level]);
-}
-
-
-
 ///*
-int traverseOctree(in vec3 posTex, in int nodeAddress, in uint currTargetLevel, out vec3 nodePosTex, out vec3 nodePosMaxTex) {
+int traverseOctree(in vec3 posTex, in float d, in int nodeAddress, out vec3 nodePosTex, out vec3 nodePosMaxTex) {
   nodePosTex = vec3(0.0);
   nodePosMaxTex = vec3(1.0);
-  float sideLength = 0.5;
+  float sideLength = 1.0;
   
-  for (uint iLevel = 0; iLevel < currTargetLevel; ++iLevel) {
+  for (uint iLevel = 0; iLevel < numLevels; ++iLevel) {
+    float voxelSize = sideLength;
+    float projVoxelSize = voxelSize / d;
+
+    if (projVoxelSize < ((1.0 / 1280.0) * 50.0)) {
+      break;
+    }
+    
     uint nodeNext = imageLoad(nodePool_next, nodeAddress).x;
 
     uint childStartAddress = nodeNext & NODE_MASK_NEXT;
       if (childStartAddress == 0U) {
         break;
       }
-       
+      
       uvec3 offVec = uvec3(2.0 * posTex);
       uint off = offVec.x + 2U * offVec.y + 4U * offVec.z;
 
       // Restart while-loop with the child node (aka recursion)
+      sideLength = sideLength / 2.0;
       nodeAddress = int(childStartAddress + off);
       nodePosTex += vec3(childOffsets[off]) * vec3(sideLength);
       nodePosMaxTex = nodePosTex + vec3(sideLength);
-
-      sideLength = sideLength / 2.0;
       posTex = 2.0 * posTex - vec3(offVec);
     } // level-for
 
@@ -139,10 +138,11 @@ void main(void) {
   }
   
   tEnter = max(tEnter, 0.0);
-  
-  
+    
   vec3 nodePosMin = vec3(0.0);
   vec3 nodePosMax = vec3(1.0);
+
+
   
   float end = tLeave;
   for (float f = tEnter + 0.001; f < end; f += tLeave + 0.001) {
@@ -150,9 +150,8 @@ void main(void) {
   
     /*float fDistanceFactor = f / end;
     fDistanceFactor *= fDistanceFactor;*/
-    
-    uint currTargetLevel = targetLevel; //uint(floor((1.0 - fDistanceFactor) * float(targetLevel))) + 1;
-    int address = traverseOctree(posTex, 0, clamp(currTargetLevel, 1U, targetLevel), nodePosMin, nodePosMax);
+   
+    int address = traverseOctree(posTex, f, 0, nodePosMin, nodePosMax);
     
     uint nodeColorU = imageLoad(nodePool_color, address).x;
     memoryBarrier();

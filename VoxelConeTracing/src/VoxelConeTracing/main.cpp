@@ -73,6 +73,7 @@
 #include "Octree Building/ModifyIndirectBufferPass.h"
 #include "Debug/DebugPass.h"
 #include "Octree Building/ObClearPass.h"
+#include "Raycasting/ConeTracePass.h"
 
 
 
@@ -157,8 +158,10 @@ void setup() {
     _backbufferStage->addProgramPass(new OctreeMipmapPass(&_vctScene, iLevel, kore::EXECUTE_ONCE));
   }
   
+/*
   _octreeVisPass = new OctreeVisPass(&_vctScene);
-  _backbufferStage->addProgramPass(_octreeVisPass);
+  _backbufferStage->addProgramPass(_octreeVisPass);*/
+  _backbufferStage->addProgramPass(new ConeTracePass(&_vctScene));
   _backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
 
   RenderManager::getInstance()->addFramebufferStage(_backbufferStage);
@@ -273,7 +276,7 @@ int main(void) {
         _pCamera->moveSideways(cameraMoveSpeed * static_cast<float>(time));
       }
 
-      if (glfwGetKey(GLFW_KEY_PAGEUP)) {
+      if (glfwGetKey(GLFW_KEY_PAGEUP) &&_octreeVisPass!=NULL) {
         if (!_oldPageUp) {
           _oldPageUp = true;
           _octreeVisPass->setDisplayLevel(_octreeVisPass->getDisplayLevel() + 1);
@@ -282,7 +285,7 @@ int main(void) {
         _oldPageUp = false;
       }
 
-      if (glfwGetKey(GLFW_KEY_PAGEDOWN)) {
+      if (glfwGetKey(GLFW_KEY_PAGEDOWN &&_octreeVisPass!=NULL)) {
         if (!_oldPageDown) {
           _oldPageDown = true;
           _octreeVisPass->setDisplayLevel(_octreeVisPass->getDisplayLevel() - 1);
