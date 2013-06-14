@@ -1,5 +1,4 @@
 #version 420
-#extension GL_ARB_shader_image_size : enable
 
 in VertexData {
   vec3 viewDirVS;
