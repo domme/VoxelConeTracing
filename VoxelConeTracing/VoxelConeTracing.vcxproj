@@ -185,6 +185,7 @@
     <ClCompile Include="src\VoxelConeTracing\Octree Building\ObInitPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\OctreeMipmapPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\WriteLeafNodesPass.cpp" />
+    <ClCompile Include="src\VoxelConeTracing\Raycasting\ConeTracePass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Raycasting\OctreeVisPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Raycasting\RayCastingPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Scene\NodePool.cpp" />
@@ -206,6 +207,7 @@
     <ClInclude Include="src\VoxelConeTracing\Octree Building\ObInitPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\OctreeMipmapPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\WriteLeafNodesPass.h" />
+    <ClInclude Include="src\VoxelConeTracing\Raycasting\ConeTracePass.h" />
     <ClInclude Include="src\VoxelConeTracing\Raycasting\OctreeVisPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Raycasting\RayCastingPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Scene\NodePool.h" />

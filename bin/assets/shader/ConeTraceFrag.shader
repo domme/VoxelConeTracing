@@ -27,8 +27,10 @@ const uvec3 childOffsets[8] = {
 layout(r32ui) uniform readonly uimageBuffer nodePool_next;
 layout(r32ui) uniform readonly uimageBuffer nodePool_color;
 
+uniform uint voxelGridResolution;
 uniform mat4 viewI;
 uniform mat4 voxelGridTransformI;
+uniform uint numLevels;
 uniform uint targetLevel;
 
 
@@ -81,6 +83,14 @@ bool intersectRayWithAABB (in vec3 ro, in vec3 rd,         // Ray-origin and -di
     
     return tLeave > tEnter;
 }
+
+
+uint sizeOnLevel(in uint level) {
+  return uint(voxelGridResolution / pow2[level]);
+}
+
+
+
 ///*
 int traverseOctree(in vec3 posTex, in int nodeAddress, in uint currTargetLevel, out vec3 nodePosTex, out vec3 nodePosMaxTex) {
   nodePosTex = vec3(0.0);

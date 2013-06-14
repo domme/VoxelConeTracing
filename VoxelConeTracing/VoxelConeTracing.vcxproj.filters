@@ -61,6 +61,9 @@
     <ClCompile Include="src\VoxelConeTracing\Octree Building\ObClearPass.cpp">
       <Filter>src\Octree Building</Filter>
     </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\Raycasting\ConeTracePass.cpp">
+      <Filter>src\Raycasting</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -148,6 +151,9 @@
     </ClInclude>
     <ClInclude Include="src\VoxelConeTracing\Octree Building\ObClearPass.h">
       <Filter>src\Octree Building</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\Raycasting\ConeTracePass.h">
+      <Filter>src\Raycasting</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

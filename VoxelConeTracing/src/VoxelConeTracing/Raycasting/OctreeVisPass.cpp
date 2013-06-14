@@ -27,20 +27,12 @@
 #include "VoxelConeTracing/FullscreenQuad.h"
 
 #include "KoRE\ShaderProgram.h"
-#include "KoRE\Operations\ViewportOp.h"
-#include "KoRE\Operations\EnableDisableOp.h"
-#include "KoRE\Operations\ColorMaskOp.h"
-#include "KoRE\Operations\OperationFactory.h"
-#include "KoRE\Operations\RenderMesh.h"
-#include "KoRE\Operations\FunctionOp.h"
+#include "KoRE\Operations\Operations.h"
+
 #include "KoRE\RenderManager.h"
 #include "KoRE\ResourceManager.h"
 #include "KoRE\Components\TexturesComponent.h"
-#include "KoRE/Operations/BindOperations/BindAtomicCounterBuffer.h"
-#include "KoRE/Operations/BindOperations/BindImageTexture.h"
-#include "KoRE/Operations/ResetAtomicCounterBuffer.h"
-#include "KoRE/Operations/MemoryBarrierOp.h"
-#include "KoRE/Operations/BindOperations/BindUniform.h"
+
 
 OctreeVisPass::~OctreeVisPass(void) {
 }
@@ -125,14 +117,10 @@ OctreeVisPass::OctreeVisPass(VCTscene* vctScene) {
   
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdNodePool(NEXT),
-	_visShader.getUniform("nodePool_next"), GL_READ_ONLY));
+  _visShader.getUniform("nodePool_next"), GL_READ_ONLY));
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdNodePool(COLOR),
-	_visShader.getUniform("nodePool_color"), GL_READ_ONLY));
-   
-  nodePass->addOperation(new BindUniform(
-                            vctScene->getShdVoxelGridResolution(),
-                            _visShader.getUniform("voxelGridResolution")));
+  _visShader.getUniform("nodePool_color"), GL_READ_ONLY));
 
   nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
                                                   "inverse view Matrix",
@@ -142,15 +130,8 @@ OctreeVisPass::OctreeVisPass(VCTscene* vctScene) {
 
 
   nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
-  "model Matrix", vctScene->getVoxelGridNode()->getTransform(),
-  "voxelGridTransform", &_visShader));
-
-  nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
   "inverse model Matrix", vctScene->getVoxelGridNode()->getTransform(),
   "voxelGridTransformI", &_visShader));
-
-  nodePass->addOperation(new BindUniform(vctScene->getNodePool()->getShdNumLevels(),
-                                         _visShader.getUniform("numLevels"))); 
 
   nodePass->addOperation(new BindUniform(&_shdDisplayLevel,
                                   _visShader.getUniform("targetLevel"))); 
