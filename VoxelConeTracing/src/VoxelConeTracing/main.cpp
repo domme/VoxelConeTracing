@@ -337,7 +337,7 @@ int main(void) {
   glFinish();
   glMemoryBarrier(GL_ALL_BARRIER_BITS);
   
-  // Do manual cleanup
+  // Do manual cleanupS
   kore::RenderManager::getInstance()->removeFrameBufferStage(_backbufferStage);
   delete _backbufferStage;
   

@@ -96,19 +96,19 @@ void main() {
     vec4 childColor = convRGBA8ToVec4(childColorU);
 
     //Compositing
-    /*
+    ///*
     weights += 1;
     color += childColor;
-    */
+    //*/
     ////////////////////////////////////////
 
     // Non-compositing
-    ///*
+    /*
     if (childColor.a > 1) {
       weights += 1;
       color += childColor;
     }
-    //*/
+    */
     ////////////////////////////////
   }
 

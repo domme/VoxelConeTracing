@@ -90,6 +90,9 @@ ConeTracePass::ConeTracePass(VCTscene* vctScene){
       "fFar",
       &_coneTraceShader));
 
+    nodePass->addOperation(new BindUniform(_renderMgr->getShdScreenRes(),
+      _coneTraceShader.getUniform("screenRes"))); 
+
     addStartupOperation(new BindImageTexture(
       vctScene->getNodePool()->getShdNodePool(NEXT),
       _coneTraceShader.getUniform("nodePool_next"), GL_READ_ONLY));
