@@ -77,7 +77,7 @@ This shader is launched for every node up to a specific level, so that gl_Vertex
 exactly matches all node-addresses in a dense octree.
 We re-use flagging here to mark all nodes that have been mip-mapped in the
 previous pass (or are the result from writing the leaf-levels*/
-void main() {
+/*void main() {
   // Load some node
   uint nodeNext = imageLoad(nodePool_next, gl_VertexID).x;
 
@@ -95,24 +95,50 @@ void main() {
     uint childColorU = imageLoad(nodePool_color, int(childAddress + iChild)).x;
     vec4 childColor = convRGBA8ToVec4(childColorU);
 
-    //Compositing
-    ///*
-    weights += 1;
     color += childColor;
-    //*/
-    ////////////////////////////////////////
+ }
 
-    // Non-compositing
-    /*
-    if (childColor.a > 1) {
-      weights += 1;
-      color += childColor;
-    }
-    */
-    ////////////////////////////////
+  color /= max(weights, 8.0);
+  uint colorU = convVec4ToRGBA8(color);
+
+  // Store the average color value in the parent.
+  imageStore(nodePool_color, gl_VertexID, uvec4(colorU));
+}*/
+
+///*
+//This shader is launched for every node up to a specific level, so that gl_VertexID 
+//exactly matches all node-addresses in a dense octree.
+//We re-use flagging here to mark all nodes that have been mip-mapped in the
+//previous pass (or are the result from writing the leaf-levels*/
+void main() {
+  // Load some node
+  uint nodeNext = imageLoad(nodePool_next, gl_VertexID).x;
+
+  if (!hasNext(nodeNext)) { 
+    return;  // No child-pointer set - mipmapping is not possible anyway
   }
 
-  color /= max(weights, 1.0);
+  uint childAddress = getNextAddress(nodeNext);
+
+  // Average the color from all 8 children
+  // TODO: Do proper alpha-weighted average!
+  vec4 color = vec4(0);
+  uint weights = 0;
+  for (uint iChild = 0; iChild < 8; ++iChild) {
+    uint childColorU = imageLoad(nodePool_color, int(childAddress + iChild)).x;
+    memoryBarrier();
+
+    vec4 childColor = convRGBA8ToVec4(childColorU);
+
+    
+
+    if (childColor.a > 0) {
+      color += childColor;
+      weights += 1;
+    }
+  }
+
+  color = vec4(color.xyz / max(weights, 1), color.a / 8);
   uint colorU = convVec4ToRGBA8(color);
 
   // Store the average color value in the parent.
