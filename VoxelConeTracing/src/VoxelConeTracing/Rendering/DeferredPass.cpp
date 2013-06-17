@@ -24,21 +24,77 @@
 */
 
 #include "DeferredPass.h"
+#include "KoRE\Passes\NodePass.h"
+#include "KoRE\Operations\Operations.h"
+#include "KoRE\Components\TexturesComponent.h"
 
 
-DeferredPass::DeferredPass(VCTscene* vctScene){
-  _vctScene = vctScene;
 
-  _deferredShader.loadShader("./assets/shader/deferredVert.shader",
+DeferredPass::DeferredPass(kore::Camera* cam, std::vector<kore::SceneNode*>& vRenderNodes){
+  using namespace kore;
+  
+  kore::RenderManager* renderMgr = kore::RenderManager::getInstance();
+
+  kore::ShaderProgram* shader = new kore::ShaderProgram;
+  this->setShaderProgram(shader);
+
+  shader->loadShader("./assets/shader/deferredVert.shader",
     GL_VERTEX_SHADER);
-
-  _deferredShader.loadShader("./assets/shader/deferredFrag.shader",
+  shader->loadShader("./assets/shader/deferredFrag.shader",
     GL_FRAGMENT_SHADER);
-  _deferredShader.init();
-  _deferredShader.setName("deferred shader");
-  this->setShaderProgram(&_deferredShader);
 
+  shader->init();
+  shader->setName("deferred shader");
 
+  addStartupOperation(new EnableDisableOp(GL_DEPTH_TEST, EnableDisableOp::ENABLE));
+  addStartupOperation(new ColorMaskOp(glm::bvec4(true, true, true, true)));
+  addStartupOperation(new ViewportOp(glm::ivec4(0, 0,
+                                     renderMgr->getScreenResolution().x,
+                                     renderMgr->getScreenResolution().y)));
+  
+  for (uint i = 0; i < vRenderNodes.size(); ++i) {
+    NodePass* nodePass = new NodePass(vRenderNodes[i]);
+    this->addNodePass(nodePass);
+
+    MeshComponent* meshComp =
+      static_cast<MeshComponent*>(vRenderNodes[i]->getComponent(COMPONENT_MESH));
+
+    nodePass
+      ->addOperation(OperationFactory::create(OP_BINDATTRIBUTE, "v_position",
+                                              meshComp, "v_position", shader));
+    nodePass
+      ->addOperation(OperationFactory::create(OP_BINDATTRIBUTE, "v_normal",
+                                              meshComp, "v_normal", shader));
+    nodePass
+      ->addOperation(OperationFactory::create(OP_BINDATTRIBUTE, "v_uv0",
+                                              meshComp, "v_uv0", shader));
+    nodePass
+      ->addOperation(OperationFactory::create(OP_BINDUNIFORM, "projection Matrix",
+                                              cam,"projectionMat", shader));
+    nodePass
+      ->addOperation(OperationFactory::create(OP_BINDUNIFORM, "view Matrix",
+                                              cam, "viewMat", shader));
+    nodePass
+      ->addOperation(OperationFactory::create(OP_BINDUNIFORM, "model Matrix",
+                                              vRenderNodes[i]->getTransform(),
+                                              "modelMat", shader));
+    nodePass
+      ->addOperation(OperationFactory::create(OP_BINDUNIFORM, "normal Matrix",
+                                              vRenderNodes[i]->getTransform(),
+                                              "normalMat", shader));
+
+    const TexturesComponent* texComp =
+      static_cast<TexturesComponent*>(
+      vRenderNodes[i]->getComponent(COMPONENT_TEXTURES));
+    const Texture* tex = texComp->getTexture(0);
+
+    nodePass
+      ->addOperation(OperationFactory::create(OP_BINDTEXTURE, tex->getName(),
+                                              texComp, "diffuseTex", shader));
+
+    nodePass
+      ->addOperation(new RenderMesh(meshComp));
+  }
 }
 
 

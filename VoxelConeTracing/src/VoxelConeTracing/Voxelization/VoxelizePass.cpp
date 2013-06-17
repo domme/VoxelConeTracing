@@ -67,7 +67,7 @@ VoxelizePass::VoxelizePass(const glm::vec3& voxelGridSize,
   ResourceManager::getInstance()->addShaderProgram(voxelizeShader);
   
   this->setShaderProgram(voxelizeShader);
-  const std::vector<kore::SceneNode*>& vRenderNdoes = vctScene->getRenderNodes();
+  const std::vector<kore::SceneNode*>& vRenderNodes = vctScene->getRenderNodes();
 
   //////////////////////////////////////////////////////////////////////////
   // Startup operations
@@ -119,13 +119,13 @@ VoxelizePass::VoxelizePass(const glm::vec3& voxelGridSize,
 
   //////////////////////////////////////////////////////////////////////////
 
-  for (uint i = 0; i < vRenderNdoes.size(); ++i) {
-    NodePass* nodePass = new NodePass(vRenderNdoes[i]);
+  for (uint i = 0; i < vRenderNodes.size(); ++i) {
+    NodePass* nodePass = new NodePass(vRenderNodes[i]);
     this->addNodePass(nodePass);
 
 
    MeshComponent* meshComp =
-     static_cast<MeshComponent*>(vRenderNdoes[i]->getComponent(COMPONENT_MESH));
+     static_cast<MeshComponent*>(vRenderNodes[i]->getComponent(COMPONENT_MESH));
    
    nodePass
      ->addOperation(OperationFactory::create(OP_BINDATTRIBUTE, "v_position",
@@ -140,18 +140,18 @@ VoxelizePass::VoxelizePass(const glm::vec3& voxelGridSize,
                                              meshComp, "v_uvw", voxelizeShader));
    nodePass
      ->addOperation(OperationFactory::create(OP_BINDUNIFORM, "model Matrix",
-                                             vRenderNdoes[i]->getTransform(),
+                                             vRenderNodes[i]->getTransform(),
                                              "modelWorld",
                                              voxelizeShader));
    nodePass
      ->addOperation(OperationFactory::create(OP_BINDUNIFORM, "normal Matrix",
-                                             vRenderNdoes[i]->getTransform(),
+                                             vRenderNodes[i]->getTransform(),
                                              "modelWorldNormal",
                                              voxelizeShader));
    
    const TexturesComponent* texComp =
      static_cast<TexturesComponent*>(
-     vRenderNdoes[i]->getComponent(COMPONENT_TEXTURES));
+     vRenderNodes[i]->getComponent(COMPONENT_TEXTURES));
    const Texture* tex = texComp->getTexture(0);
 
    nodePass

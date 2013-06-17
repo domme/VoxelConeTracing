@@ -32,12 +32,9 @@
 class DeferredPass : public kore::ShaderProgramPass
 {
 public:
-  DeferredPass(VCTscene* vctScene);
+  DeferredPass(kore::Camera* cam, std::vector<kore::SceneNode*>& vRenderNodes);
   ~DeferredPass(void);
 
-private:
-   kore::ShaderProgram _deferredShader;
-   VCTscene* _vctScene;
 };
 
 #endif //VCT_SRC_VCT_DEFERREDPASS_H_

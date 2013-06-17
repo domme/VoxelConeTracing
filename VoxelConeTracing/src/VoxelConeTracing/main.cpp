@@ -107,7 +107,6 @@ void setup() {
 
   glClearColor(1.0f, 0.0f,0.0f,1.0f);
 
-
   GLint maxTexBufferSize = 0;
   glGetIntegerv(GL_MAX_TEXTURE_BUFFER_SIZE, &maxTexBufferSize);
   Log::getInstance()->write("Max TextureBuffer size: %i \n", maxTexBufferSize);
@@ -124,8 +123,7 @@ void setup() {
   _cameraNode = SceneManager::getInstance()
                       ->getSceneNodeByComponent(COMPONENT_CAMERA);
   _pCamera = static_cast<Camera*>(_cameraNode->getComponent(COMPONENT_CAMERA));
-
-
+  
   SVCTparameters params;
   params.voxel_grid_resolution = 256;
   params.voxel_grid_sidelengths = glm::vec3(50, 50, 50);
@@ -135,57 +133,83 @@ void setup() {
   _vctScene.init(params, renderNodes, _pCamera);
 
 
-  _backbufferStage = new FrameBufferStage;
-  _backbufferStage->setFrameBuffer(kore::FrameBuffer::BACKBUFFER);
 
-  // Prepare render algorithm
-  _backbufferStage->addProgramPass(new ObClearPass(&_vctScene,kore::EXECUTE_ONCE));
-  _backbufferStage->addProgramPass(new VoxelizePass(params.voxel_grid_sidelengths, &_vctScene, kore::EXECUTE_ONCE));
-  _backbufferStage->addProgramPass(new ModifyIndirectBufferPass(
-                                      _vctScene.getVoxelFragList()->getShdFragListIndCmdBuf(),
-                                      _vctScene.getShdAcVoxelIndex(),&_vctScene,
-                                      kore::EXECUTE_ONCE));
-
-  _numLevels = _vctScene.getNodePool()->getNumLevels(); 
-  for (uint iLevel = 0; iLevel < _numLevels; ++iLevel) {
-    _backbufferStage->addProgramPass(new ObFlagPass(&_vctScene, kore::EXECUTE_ONCE));
-    _backbufferStage->addProgramPass(new ObAllocatePass(&_vctScene, iLevel, kore::EXECUTE_ONCE));
-  }
-
-  _backbufferStage->addProgramPass(new WriteLeafNodesPass(&_vctScene, kore::EXECUTE_ONCE));
-
-  // Mipmap the values from bottom to top
-  for (uint iLevel = _numLevels - 2; iLevel > 0; --iLevel) {
-    _backbufferStage->addProgramPass(new OctreeMipmapPass(&_vctScene, iLevel, kore::EXECUTE_ONCE));
-  }
-  
-/*
-  _octreeVisPass = new OctreeVisPass(&_vctScene);
-  _backbufferStage->addProgramPass(_octreeVisPass);*/
-  _backbufferStage->addProgramPass(new ConeTracePass(&_vctScene));
-  _backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
-
-  RenderManager::getInstance()->addFramebufferStage(_backbufferStage);
-
-
+  //////////////////////////////////////////////////////////////////////////
   _gbufferStage = new FrameBufferStage;
   FrameBuffer* gbuffer = new FrameBuffer("gbuffer");
-  STextureProperties props;
-//TODO
-  gbuffer->addTextureAttachment(props,"DiffuseColor",GL_COLOR_ATTACHMENT0);
-//TODO
-  gbuffer->addTextureAttachment(props,"Normal",GL_COLOR_ATTACHMENT1);
-//TODO
-  gbuffer->addTextureAttachment(props,"Position",GL_COLOR_ATTACHMENT2);
 
+  GLenum drawBufs[] = {GL_COLOR_ATTACHMENT0, 
+                       GL_COLOR_ATTACHMENT1,
+                       GL_COLOR_ATTACHMENT2};
+  _gbufferStage->setActiveAttachments(drawBufs, 3U);
+
+  STextureProperties props;
+  props.width = screen_width;
+  props.height = screen_height;
+  props.targetType = GL_TEXTURE_2D;
+
+  props.format = GL_RGB;
+  props.internalFormat = GL_RGB8;
+  props.pixelType = GL_UNSIGNED_BYTE;
+  gbuffer->addTextureAttachment(props,"DiffuseColor",GL_COLOR_ATTACHMENT0);
+
+  props.format = GL_RGB;
+  props.internalFormat = GL_RGB32F;
+  props.pixelType = GL_FLOAT;
+  gbuffer->addTextureAttachment(props,"Position",GL_COLOR_ATTACHMENT1);
+
+  props.format = GL_RGB;
+  props.internalFormat = GL_RGB32F;
+  props.pixelType = GL_FLOAT;
+  gbuffer->addTextureAttachment(props,"Normal",GL_COLOR_ATTACHMENT2);
+
+  props.format = GL_DEPTH_STENCIL;
+  props.internalFormat = GL_DEPTH24_STENCIL8;
+  props.pixelType = GL_UNSIGNED_INT_24_8;
+  gbuffer->addTextureAttachment(props, "Depth_Stencil", GL_DEPTH_STENCIL_ATTACHMENT);
 
   _gbufferStage->setFrameBuffer(gbuffer);
 
-  _gbufferStage->addProgramPass(new DeferredPass(&_vctScene));
+  _gbufferStage->addProgramPass(new DeferredPass(_pCamera, renderNodes));
 
   RenderManager::getInstance()->addFramebufferStage(_gbufferStage);
+  //////////////////////////////////////////////////////////////////////////
 
-
+  //
+  //_backbufferStage = new FrameBufferStage;
+  //_backbufferStage->setFrameBuffer(kore::FrameBuffer::BACKBUFFER);
+  //GLenum drawBufsBack[] = {GL_NONE};
+  //_gbufferStage->setActiveAttachments(drawBufs, 1U);
+  //
+  //// Prepare render algorithm
+  //_backbufferStage->addProgramPass(new ObClearPass(&_vctScene,kore::EXECUTE_ONCE));
+  //_backbufferStage->addProgramPass(new VoxelizePass(params.voxel_grid_sidelengths, &_vctScene, kore::EXECUTE_ONCE));
+  //_backbufferStage->addProgramPass(new ModifyIndirectBufferPass(
+  //                                    _vctScene.getVoxelFragList()->getShdFragListIndCmdBuf(),
+  //                                    _vctScene.getShdAcVoxelIndex(),&_vctScene,
+  //                                    kore::EXECUTE_ONCE));
+  //
+  //_numLevels = _vctScene.getNodePool()->getNumLevels(); 
+  //for (uint iLevel = 0; iLevel < _numLevels; ++iLevel) {
+  //  _backbufferStage->addProgramPass(new ObFlagPass(&_vctScene, kore::EXECUTE_ONCE));
+  //  _backbufferStage->addProgramPass(new ObAllocatePass(&_vctScene, iLevel, kore::EXECUTE_ONCE));
+  //}
+  //
+  //_backbufferStage->addProgramPass(new WriteLeafNodesPass(&_vctScene, kore::EXECUTE_ONCE));
+  //
+  //// Mipmap the values from bottom to top
+  //for (uint iLevel = _numLevels - 2; iLevel > 0; --iLevel) {
+  //  _backbufferStage->addProgramPass(new OctreeMipmapPass(&_vctScene, iLevel, kore::EXECUTE_ONCE));
+  //}
+  //
+  /*//
+  //_octreeVisPass = new OctreeVisPass(&_vctScene);
+  //_backbufferStage->addProgramPass(_octreeVisPass);*/
+  //_backbufferStage->addProgramPass(new ConeTracePass(&_vctScene));
+  //_backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
+  //
+  //RenderManager::getInstance()->addFramebufferStage(_backbufferStage);
+  
   //////////////////////////////////////////////////////////////////////////
 }
 
