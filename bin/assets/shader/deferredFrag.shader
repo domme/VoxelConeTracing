@@ -38,5 +38,5 @@ void main(void)
 {
   color[0] = vec4(texture(diffuseTex, In.uv).rgb, 0);
   color[1] = vec4(In.position, 0); 
-  color[2] = vec4(In.normal, 0);
+  color[2] = vec4(normalize(In.normal), 0);
 }

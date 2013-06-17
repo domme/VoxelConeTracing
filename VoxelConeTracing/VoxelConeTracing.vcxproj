@@ -173,6 +173,7 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="RenderPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Cube.cpp" />
     <ClCompile Include="src\VoxelConeTracing\CubeVolume.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Debug\Debugpass.cpp" />
@@ -197,6 +198,7 @@
     <ClCompile Include="src\VoxelConeTracing\vsDebugLib.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="RenderPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Cube.h" />
     <ClInclude Include="src\VoxelConeTracing\CubeVolume.h" />
     <ClInclude Include="src\VoxelConeTracing\Debug\DebugPass.h" />

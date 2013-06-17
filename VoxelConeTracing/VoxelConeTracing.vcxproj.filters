@@ -67,6 +67,9 @@
     <ClCompile Include="src\VoxelConeTracing\Rendering\DeferredPass.cpp">
       <Filter>src\Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="RenderPass.cpp">
+      <Filter>src\Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -162,6 +165,9 @@
       <Filter>src\Raycasting</Filter>
     </ClInclude>
     <ClInclude Include="src\VoxelConeTracing\Rendering\DeferredPass.h">
+      <Filter>src\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass.h">
       <Filter>src\Rendering</Filter>
     </ClInclude>
   </ItemGroup>

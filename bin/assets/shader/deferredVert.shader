@@ -34,8 +34,6 @@ uniform mat4 viewMat;
 uniform mat4 modelMat;
 uniform mat3 normalMat;
 
-smooth out vec2 uv;
-
 // World-space vectors
 out VertexData {
   vec3 position;
