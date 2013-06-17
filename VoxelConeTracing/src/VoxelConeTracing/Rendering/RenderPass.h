@@ -30,7 +30,7 @@
 class RenderPass : public kore::ShaderProgramPass
 {
 public:
-  RenderPass(void);
+  RenderPass(kore::FrameBuffer* gBuffer);
   ~RenderPass(void);
 };
 

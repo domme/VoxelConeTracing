@@ -75,6 +75,7 @@
 #include "Octree Building/ObClearPass.h"
 #include "Raycasting/ConeTracePass.h"
 #include "Rendering/DeferredPass.h"
+#include "Rendering/RenderPass.h"
 
 
 
@@ -87,6 +88,7 @@ static kore::Camera* _pCamera = NULL;
 static kore::SceneNode* _rotationNode = NULL;
 static kore::FrameBufferStage* _backbufferStage = NULL;
 static kore::FrameBufferStage* _gbufferStage = NULL;
+static kore::FrameBuffer* _gBuffer = NULL;
 
 static VCTscene _vctScene;
 
@@ -136,7 +138,7 @@ void setup() {
 
   //////////////////////////////////////////////////////////////////////////
   _gbufferStage = new FrameBufferStage;
-  FrameBuffer* gbuffer = new FrameBuffer("gbuffer");
+  _gBuffer = new FrameBuffer("gbuffer");
 
   GLenum drawBufs[] = {GL_COLOR_ATTACHMENT0, 
                        GL_COLOR_ATTACHMENT1,
@@ -151,36 +153,36 @@ void setup() {
   props.format = GL_RGB;
   props.internalFormat = GL_RGB8;
   props.pixelType = GL_UNSIGNED_BYTE;
-  gbuffer->addTextureAttachment(props,"DiffuseColor",GL_COLOR_ATTACHMENT0);
+  _gBuffer->addTextureAttachment(props,"DiffuseColor",GL_COLOR_ATTACHMENT0);
 
   props.format = GL_RGB;
   props.internalFormat = GL_RGB32F;
   props.pixelType = GL_FLOAT;
-  gbuffer->addTextureAttachment(props,"Position",GL_COLOR_ATTACHMENT1);
+  _gBuffer->addTextureAttachment(props,"Position",GL_COLOR_ATTACHMENT1);
 
   props.format = GL_RGB;
   props.internalFormat = GL_RGB32F;
   props.pixelType = GL_FLOAT;
-  gbuffer->addTextureAttachment(props,"Normal",GL_COLOR_ATTACHMENT2);
+  _gBuffer->addTextureAttachment(props,"Normal",GL_COLOR_ATTACHMENT2);
 
   props.format = GL_DEPTH_STENCIL;
   props.internalFormat = GL_DEPTH24_STENCIL8;
   props.pixelType = GL_UNSIGNED_INT_24_8;
-  gbuffer->addTextureAttachment(props, "Depth_Stencil", GL_DEPTH_STENCIL_ATTACHMENT);
+  _gBuffer->addTextureAttachment(props, "Depth_Stencil", GL_DEPTH_STENCIL_ATTACHMENT);
 
-  _gbufferStage->setFrameBuffer(gbuffer);
+  _gbufferStage->setFrameBuffer(_gBuffer);
 
   _gbufferStage->addProgramPass(new DeferredPass(_pCamera, renderNodes));
 
   RenderManager::getInstance()->addFramebufferStage(_gbufferStage);
   //////////////////////////////////////////////////////////////////////////
 
-  //
-  //_backbufferStage = new FrameBufferStage;
-  //_backbufferStage->setFrameBuffer(kore::FrameBuffer::BACKBUFFER);
-  //GLenum drawBufsBack[] = {GL_NONE};
-  //_gbufferStage->setActiveAttachments(drawBufs, 1U);
-  //
+  
+  _backbufferStage = new FrameBufferStage;
+  _backbufferStage->setFrameBuffer(kore::FrameBuffer::BACKBUFFER);
+  GLenum drawBufsBack[] = {GL_NONE};
+  _backbufferStage->setActiveAttachments(drawBufs, 1U);
+  
   //// Prepare render algorithm
   //_backbufferStage->addProgramPass(new ObClearPass(&_vctScene,kore::EXECUTE_ONCE));
   //_backbufferStage->addProgramPass(new VoxelizePass(params.voxel_grid_sidelengths, &_vctScene, kore::EXECUTE_ONCE));
@@ -208,8 +210,11 @@ void setup() {
   //_backbufferStage->addProgramPass(new ConeTracePass(&_vctScene));
   //_backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
   //
-  //RenderManager::getInstance()->addFramebufferStage(_backbufferStage);
   
+  
+  _backbufferStage->addProgramPass(new RenderPass(_gBuffer));
+  
+  RenderManager::getInstance()->addFramebufferStage(_backbufferStage);
   //////////////////////////////////////////////////////////////////////////
 }
 

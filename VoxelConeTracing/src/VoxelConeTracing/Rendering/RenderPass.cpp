@@ -27,22 +27,27 @@
 #include "VoxelConeTracing/FullscreenQuad.h"
 #include "KoRE/Operations/Operations.h"
 
-RenderPass::RenderPass(void)
-{
+RenderPass::RenderPass(kore::FrameBuffer* gBuffer) {
   using namespace kore;
 
-  _renderMgr = RenderManager::getInstance();
-  _sceneMgr = SceneManager::getInstance();
-  _resMgr = ResourceManager::getInstance();
+  RenderManager* renderMgr = RenderManager::getInstance();
 
-  _coneTraceShader.loadShader("./assets/shader/VoxelConeTracing/raycastVert.shader",
+  ShaderProgram* shader = new ShaderProgram;
+
+  shader->loadShader("./assets/shader/finalRenderVert.shader",
                               GL_VERTEX_SHADER);
 
-  _coneTraceShader.loadShader("./assets/shader/ConeTraceFrag.shader",
+  shader->loadShader("./assets/shader/finalRenderFrag.shader",
                               GL_FRAGMENT_SHADER);
-  _coneTraceShader.init();
-  _coneTraceShader.setName("cone trace shader");
-  this->setShaderProgram(&_coneTraceShader);
+  shader->init();
+  shader->setName("final render shader");
+  this->setShaderProgram(shader);
+
+  addStartupOperation(new EnableDisableOp(GL_DEPTH_TEST, EnableDisableOp::ENABLE));
+  addStartupOperation(new ColorMaskOp(glm::bvec4(true, true, true, true)));
+  addStartupOperation(new ViewportOp(glm::ivec4(0, 0,
+                                     renderMgr->getScreenResolution().x,
+                                     renderMgr->getScreenResolution().y)));
 
   SceneNode* fsquadnode = new SceneNode();
   SceneManager::getInstance()->getRootNode()->addChild(fsquadnode);
@@ -50,71 +55,24 @@ RenderPass::RenderPass(void)
   MeshComponent* fsqMeshComponent = new MeshComponent();
   fsqMeshComponent->setMesh(FullscreenQuad::getInstance());
   fsquadnode->addComponent(fsqMeshComponent);
-
-  kore::Camera* cam = vctScene->getCamera();
-
+  
   NodePass* nodePass = new NodePass(fsquadnode);
   this->addNodePass(nodePass);
 
-  glm::ivec4 vp(0, 0, RenderManager::getInstance()->getScreenResolution().x,
-    RenderManager::getInstance()->getScreenResolution().y);
-  nodePass->addOperation(new ViewportOp(vp));
-
-  nodePass
-    ->addOperation(new ColorMaskOp(glm::bvec4(true, true, true, true)));
-
+  std::vector<ShaderData>& vGBufferTex = gBuffer->getOutputs();
+  
+  nodePass->addOperation(new BindTexture(&vGBufferTex[0],
+                         shader->getUniform("gBuffer_color")));
+  nodePass->addOperation(new BindTexture(&vGBufferTex[1],
+                         shader->getUniform("gBuffer_pos")));
+  nodePass->addOperation(new BindTexture(&vGBufferTex[2],
+                         shader->getUniform("gBuffer_normal")));
 
   nodePass->addOperation(OperationFactory::create(OP_BINDATTRIBUTE, 
-    "v_position",
-    fsqMeshComponent, 
-    "v_position",
-    &_coneTraceShader));
-
-
-  nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM, 
-    "ratio",
-    cam, 
-    "fRatio",
-    &_coneTraceShader));
-
-  nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM, 
-    "FOV degree",
-    cam, 
-    "fYfovDeg",
-    &_coneTraceShader));
-
-  nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM, 
-    "far Plane",
-    cam, 
-    "fFar",
-    &_coneTraceShader));
-
-  nodePass->addOperation(new BindUniform(_renderMgr->getShdScreenRes(),
-    _coneTraceShader.getUniform("screenRes"))); 
-
-  addStartupOperation(new BindImageTexture(
-    vctScene->getNodePool()->getShdNodePool(NEXT),
-    _coneTraceShader.getUniform("nodePool_next"), GL_READ_ONLY));
-  addStartupOperation(new BindImageTexture(
-    vctScene->getNodePool()->getShdNodePool(COLOR),
-    _coneTraceShader.getUniform("nodePool_color"), GL_READ_ONLY));
-
-  nodePass->addOperation(new BindUniform(
-    vctScene->getShdVoxelGridResolution(),
-    _coneTraceShader.getUniform("voxelGridResolution")));
-
-  nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
-    "inverse view Matrix",
-    cam,
-    "viewI",
-    &_coneTraceShader));
-
-  nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
-    "inverse model Matrix", vctScene->getVoxelGridNode()->getTransform(),
-    "voxelGridTransformI", &_coneTraceShader));
-
-  nodePass->addOperation(new BindUniform(vctScene->getNodePool()->getShdNumLevels(),
-    _coneTraceShader.getUniform("numLevels"))); 
+                                                  "v_position",
+                                                  fsqMeshComponent, 
+                                                  "v_position",
+                                                  shader));
 
   nodePass->addOperation(new RenderMesh(fsqMeshComponent));
 }
