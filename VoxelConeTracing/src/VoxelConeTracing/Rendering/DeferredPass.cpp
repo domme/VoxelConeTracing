@@ -51,6 +51,7 @@ DeferredPass::DeferredPass(kore::Camera* cam, std::vector<kore::SceneNode*>& vRe
   addStartupOperation(new ViewportOp(glm::ivec4(0, 0,
                                      renderMgr->getScreenResolution().x,
                                      renderMgr->getScreenResolution().y)));
+  addStartupOperation(new ClearOp());
   
   for (uint i = 0; i < vRenderNodes.size(); ++i) {
     NodePass* nodePass = new NodePass(vRenderNodes[i]);

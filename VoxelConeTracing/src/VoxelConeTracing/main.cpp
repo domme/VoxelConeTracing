@@ -107,7 +107,7 @@ void changeAllocPassLevel() {
 void setup() {
   using namespace kore;
 
-  glClearColor(1.0f, 0.0f,0.0f,1.0f);
+  glClearColor(0.0f, 0.0f,0.0f,1.0f);
 
   GLint maxTexBufferSize = 0;
   glGetIntegerv(GL_MAX_TEXTURE_BUFFER_SIZE, &maxTexBufferSize);
@@ -179,10 +179,10 @@ void setup() {
 
   
   _backbufferStage = new FrameBufferStage;
+  GLenum drawBufsBack[] = {GL_BACK_LEFT};
+  _backbufferStage->setActiveAttachments(drawBufsBack, 1U);
   _backbufferStage->setFrameBuffer(kore::FrameBuffer::BACKBUFFER);
-  GLenum drawBufsBack[] = {GL_NONE};
-  _backbufferStage->setActiveAttachments(drawBufs, 1U);
-  
+
   //// Prepare render algorithm
   //_backbufferStage->addProgramPass(new ObClearPass(&_vctScene,kore::EXECUTE_ONCE));
   //_backbufferStage->addProgramPass(new VoxelizePass(params.voxel_grid_sidelengths, &_vctScene, kore::EXECUTE_ONCE));
@@ -210,10 +210,10 @@ void setup() {
   //_backbufferStage->addProgramPass(new ConeTracePass(&_vctScene));
   //_backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
   //
-  
-  
+
+
   _backbufferStage->addProgramPass(new RenderPass(_gBuffer));
-  
+
   RenderManager::getInstance()->addFramebufferStage(_backbufferStage);
   //////////////////////////////////////////////////////////////////////////
 }

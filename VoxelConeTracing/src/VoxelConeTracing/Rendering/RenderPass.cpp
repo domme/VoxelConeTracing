@@ -48,6 +48,8 @@ RenderPass::RenderPass(kore::FrameBuffer* gBuffer) {
   addStartupOperation(new ViewportOp(glm::ivec4(0, 0,
                                      renderMgr->getScreenResolution().x,
                                      renderMgr->getScreenResolution().y)));
+  addStartupOperation(new ClearOp());
+  
 
   SceneNode* fsquadnode = new SceneNode();
   SceneManager::getInstance()->getRootNode()->addChild(fsquadnode);
