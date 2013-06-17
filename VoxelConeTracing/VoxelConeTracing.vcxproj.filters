@@ -64,6 +64,9 @@
     <ClCompile Include="src\VoxelConeTracing\Raycasting\ConeTracePass.cpp">
       <Filter>src\Raycasting</Filter>
     </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\Rendering\DeferredPass.cpp">
+      <Filter>src\Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -92,6 +95,9 @@
     </Filter>
     <Filter Include="src\Scene">
       <UniqueIdentifier>{facd2167-5dee-4c1b-a086-a1834baef4cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Rendering">
+      <UniqueIdentifier>{0a76992a-31a4-41f7-89e6-e482e424e6ac}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -155,6 +161,9 @@
     <ClInclude Include="src\VoxelConeTracing\Raycasting\ConeTracePass.h">
       <Filter>src\Raycasting</Filter>
     </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\Rendering\DeferredPass.h">
+      <Filter>src\Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\bin\assets\shader\VoxelConeTracing\voxelizeFrag.shader">
@@ -200,6 +209,12 @@
       <Filter>shader</Filter>
     </None>
     <None Include="..\bin\assets\shader\ConeTraceFrag.shader">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\deferredFrag.shader">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\deferredVert.shader">
       <Filter>shader</Filter>
     </None>
   </ItemGroup>

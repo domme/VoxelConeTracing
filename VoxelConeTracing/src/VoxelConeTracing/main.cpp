@@ -74,6 +74,7 @@
 #include "Debug/DebugPass.h"
 #include "Octree Building/ObClearPass.h"
 #include "Raycasting/ConeTracePass.h"
+#include "Rendering/DeferredPass.h"
 
 
 
@@ -85,6 +86,7 @@ static kore::Camera* _pCamera = NULL;
 
 static kore::SceneNode* _rotationNode = NULL;
 static kore::FrameBufferStage* _backbufferStage = NULL;
+static kore::FrameBufferStage* _gbufferStage = NULL;
 
 static VCTscene _vctScene;
 
@@ -136,7 +138,6 @@ void setup() {
   _backbufferStage = new FrameBufferStage;
   _backbufferStage->setFrameBuffer(kore::FrameBuffer::BACKBUFFER);
 
- 
   // Prepare render algorithm
   _backbufferStage->addProgramPass(new ObClearPass(&_vctScene,kore::EXECUTE_ONCE));
   _backbufferStage->addProgramPass(new VoxelizePass(params.voxel_grid_sidelengths, &_vctScene, kore::EXECUTE_ONCE));
@@ -165,6 +166,26 @@ void setup() {
   _backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
 
   RenderManager::getInstance()->addFramebufferStage(_backbufferStage);
+
+
+  _gbufferStage = new FrameBufferStage;
+  FrameBuffer* gbuffer = new FrameBuffer("gbuffer");
+  STextureProperties props;
+//TODO
+  gbuffer->addTextureAttachment(props,"DiffuseColor",GL_COLOR_ATTACHMENT0);
+//TODO
+  gbuffer->addTextureAttachment(props,"Normal",GL_COLOR_ATTACHMENT1);
+//TODO
+  gbuffer->addTextureAttachment(props,"Position",GL_COLOR_ATTACHMENT2);
+
+
+  _gbufferStage->setFrameBuffer(gbuffer);
+
+  _gbufferStage->addProgramPass(new DeferredPass(&_vctScene));
+
+  RenderManager::getInstance()->addFramebufferStage(_gbufferStage);
+
+
   //////////////////////////////////////////////////////////////////////////
 }
 

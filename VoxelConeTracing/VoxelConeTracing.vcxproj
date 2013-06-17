@@ -188,6 +188,7 @@
     <ClCompile Include="src\VoxelConeTracing\Raycasting\ConeTracePass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Raycasting\OctreeVisPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Raycasting\RayCastingPass.cpp" />
+    <ClCompile Include="src\VoxelConeTracing\Rendering\DeferredPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Scene\NodePool.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Scene\VCTscene.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Scene\VoxelFragList.cpp" />
@@ -210,6 +211,7 @@
     <ClInclude Include="src\VoxelConeTracing\Raycasting\ConeTracePass.h" />
     <ClInclude Include="src\VoxelConeTracing\Raycasting\OctreeVisPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Raycasting\RayCastingPass.h" />
+    <ClInclude Include="src\VoxelConeTracing\Rendering\DeferredPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Scene\NodePool.h" />
     <ClInclude Include="src\VoxelConeTracing\Scene\VCTscene.h" />
     <ClInclude Include="src\VoxelConeTracing\Scene\VoxelFragList.h" />
@@ -220,6 +222,8 @@
   <ItemGroup>
     <None Include="..\bin\assets\shader\ConeTraceFrag.shader" />
     <None Include="..\bin\assets\shader\debug.shader" />
+    <None Include="..\bin\assets\shader\deferredFrag.shader" />
+    <None Include="..\bin\assets\shader\deferredVert.shader" />
     <None Include="..\bin\assets\shader\ModifyIndirectBufferVert.shader" />
     <None Include="..\bin\assets\shader\ObAllocateVert.shader" />
     <None Include="..\bin\assets\shader\ObClearVert.shader" />
