@@ -223,5 +223,11 @@
     <None Include="..\bin\assets\shader\deferredVert.shader">
       <Filter>shader</Filter>
     </None>
+    <None Include="..\bin\assets\shader\finalRenderFrag.shader">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\finalRenderVert.shader">
+      <Filter>shader</Filter>
+    </None>
   </ItemGroup>
 </Project>
