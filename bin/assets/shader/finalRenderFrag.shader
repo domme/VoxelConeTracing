@@ -35,7 +35,16 @@ uniform sampler2D gBuffer_color;
 uniform sampler2D gBuffer_pos;
 uniform sampler2D gBuffer_normal;
 
+uniform vec3 dirLightDirWS;
+uniform vec3 dirLightCol;
+vec3 dirLightDirectionWS = normalize(vec3(-1.0, 1.0, 1.0));
+vec3 dirLightColor = vec3(1.0, 1.0, 1.0);
+
 void main(void)
 {
-  color = texture(gBuffer_color, In.uv);
+  vec3 posWS = vec3(texture(gBuffer_pos, In.uv));
+  vec3 normalWS = normalize(texture(gBuffer_normal, In.uv).xyz);
+  vec3 diffColor = texture(gBuffer_color, In.uv).xyz;
+    
+  color = vec4(max(dot(normalWS, dirLightDirectionWS), 0.0) * dirLightColor * diffColor, 1.0);
 }
