@@ -127,7 +127,7 @@ void setup() {
   _pCamera = static_cast<Camera*>(_cameraNode->getComponent(COMPONENT_CAMERA));
   
   SVCTparameters params;
-  params.voxel_grid_resolution = 256;
+  params.voxel_grid_resolution = 512;
   params.voxel_grid_sidelengths = glm::vec3(50, 50, 50);
   params.fraglist_size_multiplier = 1;
   params.fraglist_size_divisor = 1;
@@ -140,10 +140,12 @@ void setup() {
   _gbufferStage = new FrameBufferStage;
   _gBuffer = new FrameBuffer("gbuffer");
 
-  GLenum drawBufs[] = {GL_COLOR_ATTACHMENT0, 
-                       GL_COLOR_ATTACHMENT1,
-                       GL_COLOR_ATTACHMENT2};
-  _gbufferStage->setActiveAttachments(drawBufs, 3U);
+  std::vector<GLenum> drawBufs;
+  drawBufs.resize(3);
+  drawBufs[0] = GL_COLOR_ATTACHMENT0;
+  drawBufs[1] = GL_COLOR_ATTACHMENT1;
+  drawBufs[2] = GL_COLOR_ATTACHMENT2;
+  _gbufferStage->setActiveAttachments(drawBufs);
 
   STextureProperties props;
   props.width = screen_width;
@@ -179,40 +181,39 @@ void setup() {
 
   
   _backbufferStage = new FrameBufferStage;
-  GLenum drawBufsBack[] = {GL_BACK_LEFT};
-  _backbufferStage->setActiveAttachments(drawBufsBack, 1U);
+  drawBufs.clear();
+  drawBufs.push_back(GL_BACK_LEFT);
+  _backbufferStage->setActiveAttachments(drawBufs);
   _backbufferStage->setFrameBuffer(kore::FrameBuffer::BACKBUFFER);
 
   //// Prepare render algorithm
-  //_backbufferStage->addProgramPass(new ObClearPass(&_vctScene,kore::EXECUTE_ONCE));
-  //_backbufferStage->addProgramPass(new VoxelizePass(params.voxel_grid_sidelengths, &_vctScene, kore::EXECUTE_ONCE));
-  //_backbufferStage->addProgramPass(new ModifyIndirectBufferPass(
-  //                                    _vctScene.getVoxelFragList()->getShdFragListIndCmdBuf(),
-  //                                    _vctScene.getShdAcVoxelIndex(),&_vctScene,
-  //                                    kore::EXECUTE_ONCE));
-  //
-  //_numLevels = _vctScene.getNodePool()->getNumLevels(); 
-  //for (uint iLevel = 0; iLevel < _numLevels; ++iLevel) {
-  //  _backbufferStage->addProgramPass(new ObFlagPass(&_vctScene, kore::EXECUTE_ONCE));
-  //  _backbufferStage->addProgramPass(new ObAllocatePass(&_vctScene, iLevel, kore::EXECUTE_ONCE));
-  //}
-  //
-  //_backbufferStage->addProgramPass(new WriteLeafNodesPass(&_vctScene, kore::EXECUTE_ONCE));
-  //
-  //// Mipmap the values from bottom to top
-  //for (uint iLevel = _numLevels - 2; iLevel > 0; --iLevel) {
-  //  _backbufferStage->addProgramPass(new OctreeMipmapPass(&_vctScene, iLevel, kore::EXECUTE_ONCE));
-  //}
+  _backbufferStage->addProgramPass(new ObClearPass(&_vctScene,kore::EXECUTE_ONCE));
+  _backbufferStage->addProgramPass(new VoxelizePass(params.voxel_grid_sidelengths, &_vctScene, kore::EXECUTE_ONCE));
+  _backbufferStage->addProgramPass(new ModifyIndirectBufferPass(
+                                      _vctScene.getVoxelFragList()->getShdFragListIndCmdBuf(),
+                                      _vctScene.getShdAcVoxelIndex(),&_vctScene,
+                                      kore::EXECUTE_ONCE));
+  
+  _numLevels = _vctScene.getNodePool()->getNumLevels(); 
+  for (uint iLevel = 0; iLevel < _numLevels; ++iLevel) {
+    _backbufferStage->addProgramPass(new ObFlagPass(&_vctScene, kore::EXECUTE_ONCE));
+    _backbufferStage->addProgramPass(new ObAllocatePass(&_vctScene, iLevel, kore::EXECUTE_ONCE));
+  }
+  
+  _backbufferStage->addProgramPass(new WriteLeafNodesPass(&_vctScene, kore::EXECUTE_ONCE));
+  
+  // Mipmap the values from bottom to top
+  for (uint iLevel = _numLevels - 2; iLevel > 0; --iLevel) {
+    _backbufferStage->addProgramPass(new OctreeMipmapPass(&_vctScene, iLevel, kore::EXECUTE_ONCE));
+  }
   //
   /*//
   //_octreeVisPass = new OctreeVisPass(&_vctScene);
   //_backbufferStage->addProgramPass(_octreeVisPass);*/
-  //_backbufferStage->addProgramPass(new ConeTracePass(&_vctScene));
+  _backbufferStage->addProgramPass(new ConeTracePass(&_vctScene));
   //_backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
-  //
-
-
-  _backbufferStage->addProgramPass(new RenderPass(_gBuffer));
+  
+  _backbufferStage->addProgramPass(new RenderPass(_gBuffer, &_vctScene));
 
   RenderManager::getInstance()->addFramebufferStage(_backbufferStage);
   //////////////////////////////////////////////////////////////////////////

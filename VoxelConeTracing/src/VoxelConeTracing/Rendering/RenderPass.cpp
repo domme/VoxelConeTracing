@@ -27,14 +27,15 @@
 #include "VoxelConeTracing/FullscreenQuad.h"
 #include "KoRE/Operations/Operations.h"
 
-RenderPass::RenderPass(kore::FrameBuffer* gBuffer) {
+
+RenderPass::RenderPass(kore::FrameBuffer* gBuffer, VCTscene* vctScene) {
   using namespace kore;
 
   RenderManager* renderMgr = RenderManager::getInstance();
 
   ShaderProgram* shader = new ShaderProgram;
 
-  shader->loadShader("./assets/shader/finalRenderVert.shader",
+  shader->loadShader("./assets/shader/VoxelConeTracing/raycastVert.shader",
                               GL_VERTEX_SHADER);
 
   shader->loadShader("./assets/shader/finalRenderFrag.shader",
@@ -50,6 +51,7 @@ RenderPass::RenderPass(kore::FrameBuffer* gBuffer) {
                                      renderMgr->getScreenResolution().y)));
   addStartupOperation(new ClearOp());
   
+  kore::Camera* cam = vctScene->getCamera();
 
   SceneNode* fsquadnode = new SceneNode();
   SceneManager::getInstance()->getRootNode()->addChild(fsquadnode);
@@ -75,6 +77,51 @@ RenderPass::RenderPass(kore::FrameBuffer* gBuffer) {
                                                   fsqMeshComponent, 
                                                   "v_position",
                                                   shader));
+
+  nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM, 
+                                                  "ratio",
+                                                  cam, 
+                                                  "fRatio",
+                                                  shader));
+
+  nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM, 
+                                                  "FOV degree",
+                                                  cam, 
+                                                  "fYfovDeg",
+                                                  shader));
+
+  nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM, 
+                                                  "far Plane",
+                                                  cam, 
+                                                  "fFar",
+                                                  shader));
+
+  nodePass->addOperation(new BindUniform(renderMgr->getShdScreenRes(),
+                                         shader->getUniform("screenRes"))); 
+
+  addStartupOperation(new BindImageTexture(
+    vctScene->getNodePool()->getShdNodePool(NEXT),
+    shader->getUniform("nodePool_next"), GL_READ_ONLY));
+  addStartupOperation(new BindImageTexture(
+    vctScene->getNodePool()->getShdNodePool(COLOR),
+    shader->getUniform("nodePool_color"), GL_READ_ONLY));
+
+  nodePass->addOperation(new BindUniform(
+    vctScene->getShdVoxelGridResolution(),
+    shader->getUniform("voxelGridResolution")));
+
+  nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
+                                                  "inverse view Matrix",
+                                                  cam,
+                                                  "viewI",
+                                                  shader));
+
+  nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
+    "inverse model Matrix", vctScene->getVoxelGridNode()->getTransform(),
+    "voxelGridTransformI", shader));
+
+  nodePass->addOperation(new BindUniform(vctScene->getNodePool()->getShdNumLevels(),
+                                         shader->getUniform("numLevels"))); 
 
   nodePass->addOperation(new RenderMesh(fsqMeshComponent));
 }

@@ -5,6 +5,7 @@ layout (location = 0) in vec3 v_position;
 out VertexData {
   vec3 viewDirVS;
   float pixelSizeVS;
+  vec2 uv;
 } Out;
 
 
@@ -28,6 +29,7 @@ void main(void)
   float near = 1.0f; // Assuming a near-plane distance of 1 here!
                           // h
   Out.pixelSizeVS = (2.0 * near * tanFov_2) / screenRes.y;
+  Out.uv = 0.5 * v_position.xy + 0.5;
 
   gl_Position = vec4( v_position, 1.0 );
 }

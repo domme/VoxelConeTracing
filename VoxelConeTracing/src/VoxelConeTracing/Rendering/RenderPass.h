@@ -23,6 +23,7 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 #include "KoRE\Passes\ShaderProgramPass.h"
+#include "VoxelConeTracing/Scene/VCTscene.h"
 
 #ifndef VCT_SRC_VCT_RENDERPASS_H_
 #define VCT_SRC_VCT_RENDERPASS_H_
@@ -30,7 +31,7 @@
 class RenderPass : public kore::ShaderProgramPass
 {
 public:
-  RenderPass(kore::FrameBuffer* gBuffer);
+  RenderPass(kore::FrameBuffer* gBuffer, VCTscene* vctScene);
   ~RenderPass(void);
 };
 
