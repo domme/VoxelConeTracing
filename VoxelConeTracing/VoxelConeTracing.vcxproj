@@ -190,6 +190,7 @@
     <ClCompile Include="src\VoxelConeTracing\Raycasting\RayCastingPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Rendering\DeferredPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Rendering\RenderPass.cpp" />
+    <ClCompile Include="src\VoxelConeTracing\Scene\BrickPool.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Scene\NodePool.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Scene\VCTscene.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Scene\VoxelFragList.cpp" />
@@ -214,6 +215,7 @@
     <ClInclude Include="src\VoxelConeTracing\Raycasting\RayCastingPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Rendering\DeferredPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Rendering\RenderPass.h" />
+    <ClInclude Include="src\VoxelConeTracing\Scene\BrickPool.h" />
     <ClInclude Include="src\VoxelConeTracing\Scene\NodePool.h" />
     <ClInclude Include="src\VoxelConeTracing\Scene\VCTscene.h" />
     <ClInclude Include="src\VoxelConeTracing\Scene\VoxelFragList.h" />

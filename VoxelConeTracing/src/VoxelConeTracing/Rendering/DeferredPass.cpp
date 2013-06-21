@@ -27,6 +27,7 @@
 #include "KoRE\Passes\NodePass.h"
 #include "KoRE\Operations\Operations.h"
 #include "KoRE\Components\TexturesComponent.h"
+#include "KoRE\RenderManager.h"
 
 
 

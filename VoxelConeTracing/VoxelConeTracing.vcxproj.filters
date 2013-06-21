@@ -70,6 +70,9 @@
     <ClCompile Include="src\VoxelConeTracing\Rendering\RenderPass.cpp">
       <Filter>src\Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\Scene\BrickPool.cpp">
+      <Filter>src\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -169,6 +172,9 @@
     </ClInclude>
     <ClInclude Include="src\VoxelConeTracing\Rendering\RenderPass.h">
       <Filter>src\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\Scene\BrickPool.h">
+      <Filter>src\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

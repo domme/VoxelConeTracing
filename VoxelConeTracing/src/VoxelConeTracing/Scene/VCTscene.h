@@ -34,14 +34,16 @@
 #include "KoRE/SceneNode.h"
 #include "KoRE/Components/Camera.h"
 #include "KoRE/Components/MeshComponent.h"
-#include "NodePool.h"
+#include "VoxelConeTracing/Scene/NodePool.h"
 #include "VoxelFragList.h"
+#include "BrickPool.h"
 
 struct SVCTparameters {
   uint voxel_grid_resolution;
   uint fraglist_size_multiplier;
   uint fraglist_size_divisor;
   glm::vec3 voxel_grid_sidelengths;
+  uint brickPoolResolution;
 };
 
 enum ETex3DContent {
@@ -82,9 +84,6 @@ public:
   inline kore::ShaderData* getShdVoxelGridResolution()
                             {return &_shdVoxelGridResolution;}
 
-  inline kore::Texture* getVoxelTex()
-                          {return &_voxelTex;}
-
   inline kore::SceneNode* getVoxelGridNode() {return _voxelGridNode;}
 
   inline kore::Camera* getCamera() {return _camera;}
@@ -93,14 +92,15 @@ public:
   inline kore::ShaderData* getShdAcVoxelIndex() {return &_shdAcVoxelIndex;}
 
   inline NodePool* getNodePool() {return &_nodePool;}
+  inline BrickPool* getBrickPool() {return &_brickPool;}
   inline VoxelFragList* getVoxelFragList() {return &_voxelFragList;}
-
- 
+   
 private:
   kore::Camera* _camera;
   std::vector<kore::SceneNode*> _meshNodes;
 
   NodePool _nodePool;
+  BrickPool _brickPool;
   VoxelFragList _voxelFragList;
 
   
@@ -111,14 +111,8 @@ private:
   kore::IndexedBuffer _acVoxelIndex;
   kore::ShaderData _shdAcVoxelIndex;
 
-  // Deprecated:
   kore::SceneNode* _voxelGridNode;
-  kore::Texture _voxelTex;
-  GLuint _tex3DclearPBO;
 
-  void clearTex3D(kore::Texture* tex);
-  void initTex3D(kore::Texture* tex, const ETex3DContent texContent);
-  //////////////////////////////////////////////////////////////////////////
 };
 
 #endif  // VCT_SRC_VCT_VCTSCENE_H_

@@ -26,6 +26,7 @@
 #include "RenderPass.h"
 #include "VoxelConeTracing/FullscreenQuad.h"
 #include "KoRE/Operations/Operations.h"
+#include "KoRE/RenderManager.h"
 
 
 RenderPass::RenderPass(kore::FrameBuffer* gBuffer, VCTscene* vctScene) {

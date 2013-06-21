@@ -105,11 +105,6 @@ RayCastingPass::RayCastingPass(VCTscene* vctScene) {
     "viewI",
     &_raycastShader));
 
-  nodePass->addOperation(OperationFactory::create(OP_BINDIMAGETEXTURE,
-    vctScene->getVoxelTex()->getName(),
-    static_cast<TexturesComponent*> (vctScene->getVoxelGridNode()->getComponent(COMPONENT_TEXTURES)), "voxelTex",
-    &_raycastShader));
-
   nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
     "model Matrix", vctScene->getVoxelGridNode()->getTransform(),
     "voxelGridTransform", &_raycastShader));

@@ -45,10 +45,7 @@ const uvec3 childOffsets[8] = {
   uvec3(0, 1, 1), 
   uvec3(1, 1, 1)};
 
-
- const uint pow2[] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
-
-uint levelSizes[11];
+const uint pow2[] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
 
 layout(r32ui) uniform readonly uimageBuffer nodePool_next;
 layout(r32ui) uniform readonly uimageBuffer nodePool_color;

@@ -127,10 +127,11 @@ void setup() {
   _pCamera = static_cast<Camera*>(_cameraNode->getComponent(COMPONENT_CAMERA));
   
   SVCTparameters params;
-  params.voxel_grid_resolution = 512;
+  params.voxel_grid_resolution = 256;
   params.voxel_grid_sidelengths = glm::vec3(50, 50, 50);
   params.fraglist_size_multiplier = 1;
   params.fraglist_size_divisor = 1;
+  params.brickPoolResolution = 64 * 9;
   
   _vctScene.init(params, renderNodes, _pCamera);
 
@@ -213,7 +214,7 @@ void setup() {
   _backbufferStage->addProgramPass(new ConeTracePass(&_vctScene));
   //_backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
   
-  _backbufferStage->addProgramPass(new RenderPass(_gBuffer, &_vctScene));
+  //_backbufferStage->addProgramPass(new RenderPass(_gBuffer, &_vctScene));
 
   RenderManager::getInstance()->addFramebufferStage(_backbufferStage);
   //////////////////////////////////////////////////////////////////////////
