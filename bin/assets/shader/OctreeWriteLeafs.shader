@@ -37,6 +37,7 @@ layout(r32ui) uniform volatile uimageBuffer voxelFragList_pos;
 layout(r32ui) uniform volatile uimageBuffer voxelFragList_color;
 layout(r32ui) uniform volatile uimageBuffer nodePool_next;
 layout(r32ui) uniform volatile uimageBuffer nodePool_color;
+
 uniform uint numLevels;  // Number of levels in the octree
 uniform uint voxelGridResolution;
 
@@ -81,19 +82,6 @@ uvec3 uintXYZ10ToVec3(uint val) {
     return uvec3(uint((val & 0x000003FF)),
                  uint((val & 0x000FFC00) >> 10U), 
                  uint((val & 0x3FF00000) >> 20U));
-}
-
-
-uint getNextAddress(in uint nodeNext) {
-  return nodeNext & NODE_MASK_NEXT;
-}
-
-bool nextEmpty(in uint nodeNext) {
-  return (nodeNext & NODE_MASK_NEXT) == 0U;
-}
-
-uint sizeOnLevel(in uint level) {
-  return uint(voxelGridResolution / pow2[level]);
 }
 
 

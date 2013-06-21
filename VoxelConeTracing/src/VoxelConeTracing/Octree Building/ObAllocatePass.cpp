@@ -71,18 +71,6 @@ ObAllocatePass::ObAllocatePass(VCTscene* vctScene, uint level,
   addStartupOperation(new BindImageTexture(
                       vctScene->getNodePool()->getShdNodePool(NEXT),
                       _allocateShader.getUniform("nodePool_next")));
-
-  addStartupOperation(new BindImageTexture(
-                      vctScene->getNodePool()->getShdNodePool(COLOR),
-                      _allocateShader.getUniform("nodePool_color")));
-
-  addStartupOperation(
-    new BindAtomicCounterBuffer(vctScene->getBrickPool()->getShdAcNextFree(),
-                                _allocateShader.getUniform("nextFreeBrick")));
-
-  addStartupOperation(
-      new BindUniform(vctScene->getBrickPool()->getShdBrickPoolResolution(),
-                      _allocateShader.getUniform("brickPoolResolution")));
   
   addStartupOperation(new BindAtomicCounterBuffer(
                        vctScene->getNodePool()->getShdAcNextFree(),

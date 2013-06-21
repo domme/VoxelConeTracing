@@ -26,9 +26,7 @@
 #version 420 core
 
 layout(r32ui) uniform volatile uimageBuffer nodePool_next;
-layout(r32ui) uniform volatile uimageBuffer nodePool_color;
 layout(binding = 0) uniform atomic_uint nextFreeAddress;
-layout(binding = 1) uniform atomic_uint nextFreeBrick;
 
 uniform uint brickPoolResolution;
 
@@ -57,23 +55,10 @@ void allocChildBrickAndUnflag(in int nodeAddress) {
    memoryBarrier();
 }
 
-void allocTextureBrick(in int nodeAddress) {
-  uint nextFreeTexBrick = atomicCounterIncrement(nextFreeBrick);
-
-  uvec3 texAddress = uvec3(0);
-  texAddress.x = nextFreeTexBrick % brickPoolResolution;
-  texAddress.y = nextFreeTexBrick / brickPoolResolution;
-  texAddress.z = nextFreeTexBrick / (brickPoolResolution * brickPoolResolution);
-
-  imageStore(nodePool_color, nodeAddress, 
-      uvec4(vec3ToUintXYZ10(texAddress), 0, 0, 0));
-}
-
 void main() {
   uint nodeNext = imageLoad(nodePool_next, gl_VertexID).x;
   
   if (isFlagged(nodeNext)) {
     allocChildBrickAndUnflag(gl_VertexID);
-    allocTextureBrick(gl_VertexID);
   } 
 }

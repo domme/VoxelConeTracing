@@ -73,36 +73,16 @@ bool hasNext(in uint nodeNext) {
 }
 
 /*
-This shader is launched for every node up to a specific level, so that gl_VertexID 
-exactly matches all node-addresses in a dense octree.
-We re-use flagging here to mark all nodes that have been mip-mapped in the
-previous pass (or are the result from writing the leaf-levels*/
-/*void main() {
-  // Load some node
-  uint nodeNext = imageLoad(nodePool_next, gl_VertexID).x;
+void allocTextureBrick(in int nodeAddress) {
+  uint nextFreeTexBrick = atomicCounterIncrement(nextFreeBrick);
 
-  if (!hasNext(nodeNext)) { 
-    return;  // No child-pointer set - mipmapping is not possible anyway
-  }
+  uvec3 texAddress = uvec3(0);
+  texAddress.x = nextFreeTexBrick % brickPoolResolution;
+  texAddress.y = nextFreeTexBrick / brickPoolResolution;
+  texAddress.z = nextFreeTexBrick / (brickPoolResolution * brickPoolResolution);
 
-  uint childAddress = getNextAddress(nodeNext);
-
-  // Average the color from all 8 children
-  // TODO: Do proper alpha-weighted average!
-  vec4 color = vec4(0);
-  float weights = 0;
-  for (uint iChild = 0; iChild < 8; ++iChild) {
-    uint childColorU = imageLoad(nodePool_color, int(childAddress + iChild)).x;
-    vec4 childColor = convRGBA8ToVec4(childColorU);
-
-    color += childColor;
- }
-
-  color /= max(weights, 8.0);
-  uint colorU = convVec4ToRGBA8(color);
-
-  // Store the average color value in the parent.
-  imageStore(nodePool_color, gl_VertexID, uvec4(colorU));
+  imageStore(nodePool_color, nodeAddress, 
+      uvec4(vec3ToUintXYZ10(texAddress), 0, 0, 0));
 }*/
 
 ///*
