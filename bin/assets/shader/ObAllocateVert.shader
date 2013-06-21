@@ -30,7 +30,7 @@ layout(binding = 0) uniform atomic_uint nextFreeAddress;
 
 uniform uint brickPoolResolution;
 
-const uint NODE_MASK_NEXT = 0x3FFFFFFF;
+const uint NODE_MASK_VALUE = 0x3FFFFFFF;
 const uint NODE_MASK_TAG = (0x00000001 << 31);
 const uint NODE_MASK_LOCK = (0x00000001 << 30);
 const uint NODE_MASK_TAG_STATIC = (0x00000003 << 30);
@@ -51,7 +51,7 @@ void allocChildBrickAndUnflag(in int nodeAddress) {
 
   imageStore(nodePool_next, nodeAddress,
                            //Calculation of next free address                  
-   uvec4(NODE_MASK_NEXT & (1U + 8U * nextFreeBrick), 0, 0, 0));
+   uvec4(NODE_MASK_VALUE & (1U + 8U * nextFreeBrick), 0, 0, 0));
    memoryBarrier();
 }
 

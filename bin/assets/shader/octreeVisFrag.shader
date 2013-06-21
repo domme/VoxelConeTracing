@@ -4,7 +4,7 @@ in VertexData {
   vec3 viewDirVS;
 } In;
 
-const uint NODE_MASK_NEXT = 0x3FFFFFFF;
+const uint NODE_MASK_VALUE = 0x3FFFFFFF;
 const uint NODE_MASK_TAG = (0x00000001 << 31);
 const uint NODE_MASK_TAG_STATIC = (0x00000003 << 30);
 const uint NODE_NOT_FOUND = 0xFFFFFFFF;
@@ -90,7 +90,7 @@ int traverseOctree(in vec3 posTex, in int nodeAddress, in uint currTargetLevel, 
   for (uint iLevel = 0; iLevel < currTargetLevel; ++iLevel) {
     uint nodeNext = imageLoad(nodePool_next, nodeAddress).x;
 
-    uint childStartAddress = nodeNext & NODE_MASK_NEXT;
+    uint childStartAddress = nodeNext & NODE_MASK_VALUE;
       if (childStartAddress == 0U) {
         break;
       }

@@ -28,7 +28,10 @@
 layout(r32ui) uniform volatile uimageBuffer nodePool_next;
 layout(r32ui) uniform volatile uimageBuffer nodePool_color;
 
-const uint NODE_MASK_NEXT = 0x3FFFFFFF;
+uniform uint level;
+uniform uint numLevels;
+
+const uint NODE_MASK_VALUE = 0x3FFFFFFF;
 const uint NODE_MASK_TAG = (0x00000001 << 31);
 const uint NODE_MASK_LOCK = (0x00000001 << 30);
 const uint NODE_MASK_TAG_STATIC = (0x00000003 << 30);
@@ -65,11 +68,52 @@ bool isFlagged(in uint nodeNext) {
 }
 
 uint getNextAddress(in uint nodeNext) {
-  return nodeNext & NODE_MASK_NEXT;
+  return nodeNext & NODE_MASK_VALUE;
 }
 
 bool hasNext(in uint nodeNext) {
   return getNextAddress(nodeNext) != 0U;
+}
+
+
+uint getLevelStartAddress(in int targetLevel) {
+  uint parentNext = imageLoad(nodePool_next, 0).x;
+  uint currentNext = imageLoad(nodePool_next, 1).x;
+  
+  uint levelStartAddress = 0;
+  uint nextLevelStartAddress = 1;
+
+  for(int iLevel = 0; iLevel < targetLevel; ++iLevel) {
+    // Try to go deeper into the tree
+    uint childNext = imageLoad(nodePool_next, int(NODE_MASK_VALUE & currentNext)).x;
+
+    if (childNext == 0x00000000) {
+      // Move parent address further
+      parentNext += 1;
+      currentNext = imageLoad(nodePool_next, int(NODE_MASK_VALUE & parentNext)).x;
+      --iLevel; //don't advance level
+    } else {
+      // Move further down
+      parentNext = currentNext;
+      currentNext = childNext;
+    }
+  }
+
+  return parentNext;
+}
+
+
+uint findNode(in int targetLevel, in int index) {
+  uint levelStartAddress = getLevelStartAddress(targetLevel);
+  uint nextLevelStartAddress = getLevelStartAddress(targetLevel + 1);
+
+  if (levelStartAddress != NODE_NOT_FOUND
+     && nextLevelStartAddress != NODE_NOT_FOUND
+     && levelStartAddress + index < nextLevelStartAddress) {
+    return levelStartAddress + index;
+  }
+
+  return NODE_NOT_FOUND;
 }
 
 /*
@@ -91,8 +135,14 @@ void allocTextureBrick(in int nodeAddress) {
 //We re-use flagging here to mark all nodes that have been mip-mapped in the
 //previous pass (or are the result from writing the leaf-levels*/
 void main() {
+  uint nodeAddress = findNode(int(level), gl_VertexID);
+
+  if(nodeAddress == NODE_NOT_FOUND) {
+    return;
+  }
+
   // Load some node
-  uint nodeNext = imageLoad(nodePool_next, gl_VertexID).x;
+  uint nodeNext = imageLoad(nodePool_next, int(nodeAddress)).x;
 
   if (!hasNext(nodeNext)) { 
     return;  // No child-pointer set - mipmapping is not possible anyway
@@ -110,7 +160,6 @@ void main() {
 
     vec4 childColor = convRGBA8ToVec4(childColorU);
 
-    
 
     if (childColor.a > 0) {
       color += childColor;

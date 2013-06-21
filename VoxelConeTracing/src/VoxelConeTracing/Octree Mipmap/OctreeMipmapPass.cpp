@@ -69,6 +69,9 @@ OctreeMipmapPass::
     vctScene->getNodePool()->getShdNodePool(NEXT), shp->getUniform("nodePool_next")));
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdNodePool(COLOR), shp->getUniform("nodePool_color")));
+
+  addStartupOperation(new BindUniform(&_shdLevel, shp->getUniform("level")));
+  addStartupOperation(new BindUniform(vctScene->getNodePool()->getShdNumLevels(), shp->getUniform("numLevels")));
   
   addStartupOperation(new MemoryBarrierOp(GL_ALL_BARRIER_BITS));
   

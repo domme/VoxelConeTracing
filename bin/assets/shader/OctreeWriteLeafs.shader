@@ -41,7 +41,7 @@ layout(r32ui) uniform volatile uimageBuffer nodePool_color;
 uniform uint numLevels;  // Number of levels in the octree
 uniform uint voxelGridResolution;
 
-const uint NODE_MASK_NEXT = 0x3FFFFFFF;
+const uint NODE_MASK_VALUE = 0x3FFFFFFF;
 const uint NODE_MASK_TAG = (0x00000001 << 31);
 const uint NODE_MASK_LOCK = (0x00000001 << 30);
 const uint NODE_MASK_TAG_STATIC = (0x00000003 << 30);
@@ -101,7 +101,7 @@ void main() {
   for (uint iLevel = 0; iLevel < numLevels; ++iLevel) {
     uint nodeNext = imageLoad(nodePool_next, nodeAddress).x;
 
-    uint childStartAddress = nodeNext & NODE_MASK_NEXT;
+    uint childStartAddress = nodeNext & NODE_MASK_VALUE;
       if (childStartAddress == 0U) {
         if (iLevel == numLevels - 1) {  // This is a leaf node! Yuppieee! ;)
           

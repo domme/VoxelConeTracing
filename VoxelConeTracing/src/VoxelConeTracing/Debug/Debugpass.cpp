@@ -140,7 +140,7 @@ void DebugPass::debugIndirectCmdBuff(){
 }
 
 void DebugPass::debugNodePool() {
-  //const uint NODE_MASK_NEXT = 0x3FFFFFFF;
+  //const uint NODE_MASK_VALUE = 0x3FFFFFFF;
   //const uint NODE_MASK_TAG = (0x00000001 << 31);
   //
   //_renderMgr->bindBuffer(GL_TEXTURE_BUFFER, _vctScene->getNodePool()->getBufferHandle());
@@ -150,7 +150,7 @@ void DebugPass::debugNodePool() {
   //for (uint i = 0; i < /*_vctScene->getNumNodes(); */ 100; ++i) {
   //  uint next = nodePtr[i].next;
   //  bool flagged = next & NODE_MASK_TAG;
-  //  uint nextValue = next & NODE_MASK_NEXT;
+  //  uint nextValue = next & NODE_MASK_VALUE;
   //  kore::Log::getInstance()->write("%u \t (%u | %u)\n", i, flagged, nextValue);
   //}
   //kore::Log::getInstance()->write("\n");
@@ -178,10 +178,10 @@ void printTabsForLevel(uint level, uint maxlevel) {
 }
 
 void traverseOctree(const SNode* root, const SNode* parent, uint level, uint maxLevel) {
-  const uint NODE_MASK_NEXT = 0x3FFFFFFF;
+  const uint NODE_MASK_VALUE = 0x3FFFFFFF;
   const uint NODE_MASK_TAG = (0x00000001 << 31);
   
-  uint next = (NODE_MASK_NEXT & parent->next);
+  uint next = (NODE_MASK_VALUE & parent->next);
 
   if (root == parent && level == maxLevel) {
     printNode(0, false, next, true);
@@ -198,7 +198,7 @@ void traverseOctree(const SNode* root, const SNode* parent, uint level, uint max
     
     if (level + 1 == maxLevel) {
       bool childFlagged = child->next & NODE_MASK_TAG;
-      uint childNext = child->next & NODE_MASK_NEXT;
+      uint childNext = child->next & NODE_MASK_VALUE;
 
       printNode(next + iChild, childFlagged, childNext, iChild == 0);
     } else {

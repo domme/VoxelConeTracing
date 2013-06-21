@@ -25,7 +25,7 @@
 
 #version 420 core
 
-const uint NODE_MASK_NEXT = 0x3FFFFFFF;
+const uint NODE_MASK_VALUE = 0x3FFFFFFF;
 const uint NODE_MASK_TAG = (0x00000001 << 31);
 const uint NODE_MASK_TAG_STATIC = (0x00000003 << 30);
 const uint NODE_NOT_FOUND = 0xFFFFFFFF;
@@ -66,11 +66,11 @@ void flagNode(in uint nodeNext, in int address) {
 }
 
 uint getNextAddress(in uint nodeNext) {
-  return nodeNext & NODE_MASK_NEXT;
+  return nodeNext & NODE_MASK_VALUE;
 }
 
 bool nextEmpty(in uint nodeNext) {
-  return (nodeNext & NODE_MASK_NEXT) == 0U;
+  return (nodeNext & NODE_MASK_VALUE) == 0U;
 }
 
 uint sizeOnLevel(in uint level) {
@@ -92,7 +92,7 @@ void main() {
   for (uint iLevel = 0; iLevel < numLevels -1; ++iLevel) {
     uint nodeNext = imageLoad(nodePool_next, nodeAddress).x;
 
-    uint childStartAddress = nodeNext & NODE_MASK_NEXT;
+    uint childStartAddress = nodeNext & NODE_MASK_VALUE;
       if (childStartAddress == 0U) {
         flagNode(nodeNext, nodeAddress);
         break;
