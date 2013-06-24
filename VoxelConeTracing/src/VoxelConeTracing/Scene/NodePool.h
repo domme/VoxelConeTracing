@@ -66,6 +66,9 @@ public:
   inline kore::IndexedBuffer* getAllocIndCmdBufForLevel(const uint level) 
   {return &_vAllocIndCmdBufs[level];}
 
+  inline kore::TextureBuffer* getNodePool(ENodePoolAttributes eAttribute)
+  {return &_nodePool[eAttribute];}
+
   inline kore::ShaderData* getShdNodePool(ENodePoolAttributes eAttribute)
   {return &_shdNodePool[eAttribute];}
 

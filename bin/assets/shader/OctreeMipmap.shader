@@ -76,44 +76,8 @@ bool hasNext(in uint nodeNext) {
 }
 
 
-uint getLevelStartAddress(in int targetLevel) {
-  uint parentNext = imageLoad(nodePool_next, 0).x;
-  uint currentNext = imageLoad(nodePool_next, 1).x;
-  
-  uint levelStartAddress = 0;
-  uint nextLevelStartAddress = 1;
-
-  for(int iLevel = 0; iLevel < targetLevel; ++iLevel) {
-    // Try to go deeper into the tree
-    uint childNext = imageLoad(nodePool_next, int(NODE_MASK_VALUE & currentNext)).x;
-
-    if (childNext == 0x00000000) {
-      // Move parent address further
-      parentNext += 1;
-      currentNext = imageLoad(nodePool_next, int(NODE_MASK_VALUE & parentNext)).x;
-      --iLevel; //don't advance level
-    } else {
-      // Move further down
-      parentNext = currentNext;
-      currentNext = childNext;
-    }
-  }
-
-  return parentNext;
-}
-
-
 uint findNode(in int targetLevel, in int index) {
-  uint levelStartAddress = getLevelStartAddress(targetLevel);
-  uint nextLevelStartAddress = getLevelStartAddress(targetLevel + 1);
-
-  if (levelStartAddress != NODE_NOT_FOUND
-     && nextLevelStartAddress != NODE_NOT_FOUND
-     && levelStartAddress + index < nextLevelStartAddress) {
-    return levelStartAddress + index;
-  }
-
-  return NODE_NOT_FOUND;
+  
 }
 
 /*

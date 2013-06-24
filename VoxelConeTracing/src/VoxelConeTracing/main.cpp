@@ -200,6 +200,8 @@ void setup() {
     _backbufferStage->addProgramPass(new ObFlagPass(&_vctScene, kore::EXECUTE_ONCE));
     _backbufferStage->addProgramPass(new ObAllocatePass(&_vctScene, iLevel, kore::EXECUTE_ONCE));
   }
+
+  _backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
   
   _backbufferStage->addProgramPass(new WriteLeafNodesPass(&_vctScene, kore::EXECUTE_ONCE));
   

@@ -76,8 +76,8 @@ DebugPass::DebugPass(VCTscene* vctScene,
   addStartupOperation(
           new FunctionOp(std::bind(&DebugPass::debugIndirectCmdBuff, this)));
 
- //nodePass->addOperation(
-   //       new FunctionOp(std::bind(&DebugPass::debugNodePool_Octree, this)));
+ addStartupOperation(
+          new FunctionOp(std::bind(&DebugPass::debugNodePool, this)));
 
  addStartupOperation(
           new FunctionOp(std::bind(&DebugPass::debugNextFreeAC, this)));
@@ -140,6 +140,16 @@ void DebugPass::debugIndirectCmdBuff(){
 }
 
 void DebugPass::debugNodePool() {
+  _renderMgr->bindBuffer(GL_TEXTURE_BUFFER, _vctScene->getNodePool()->getNodePool(NEXT)->getBufferHandle());
+  const uint* nodePtr = (const uint*) glMapBuffer(GL_TEXTURE_BUFFER, GL_READ_ONLY);
+  kore::Log::getInstance()->write("NodePool contents:\n");
+  for (uint i = 0; i < _vctScene->getNodePool()->getNumNodes(); ++i) {
+    kore::Log::getInstance()->write("%u: %u\n", i, nodePtr[i]);
+  }
+  kore::Log::getInstance()->write("\n");
+  glUnmapBuffer(GL_TEXTURE_BUFFER);
+
+
   //const uint NODE_MASK_VALUE = 0x3FFFFFFF;
   //const uint NODE_MASK_TAG = (0x00000001 << 31);
   //
@@ -159,29 +169,28 @@ void DebugPass::debugNodePool() {
 
 void printNode(uint address, uint flagged, uint next, bool useAddress) {
   if (useAddress) {
-    kore::Log::getInstance()->write("%u: %u|%u  ", address, flagged, next);
+    kore::Log::getInstance()->write("%u: %u", address, next);
   } else 
   {
-    kore::Log::getInstance()->write("%u|%u  ", flagged, next);
+    kore::Log::getInstance()->write("%u ", next);
   }
 }
 
 void printTabsForLevel(uint level, uint maxlevel) {
 
-  /*uint numNodes = pow(8U, maxlevel - level);
+  uint numNodes = pow(8U, maxlevel - level);
 
   uint numTabbs = numNodes / 8;
   for(uint uTab = 0; uTab < numTabbs; ++uTab) {
     kore::Log::getInstance()->write("       ");
-  } */
-
+  }
 }
 
-void traverseOctree(const SNode* root, const SNode* parent, uint level, uint maxLevel) {
+void traverseOctree(const uint* root, const uint* parent, uint level, uint maxLevel) {
   const uint NODE_MASK_VALUE = 0x3FFFFFFF;
   const uint NODE_MASK_TAG = (0x00000001 << 31);
   
-  uint next = (NODE_MASK_VALUE & parent->next);
+  uint next = (NODE_MASK_VALUE & (*parent));
 
   if (root == parent && level == maxLevel) {
     printNode(0, false, next, true);
@@ -191,14 +200,14 @@ void traverseOctree(const SNode* root, const SNode* parent, uint level, uint max
     return;
   }
 
-  const SNode* childBrick = root + next;
+  const uint* childBrick = root + next;
   
   for (uint iChild = 0; iChild < 8; ++iChild) {
-    const SNode* child = childBrick + iChild;
+    const uint* child = childBrick + iChild;
     
     if (level + 1 == maxLevel) {
-      bool childFlagged = child->next & NODE_MASK_TAG;
-      uint childNext = child->next & NODE_MASK_VALUE;
+      bool childFlagged = (*child) & NODE_MASK_TAG;
+      uint childNext = (*child) & NODE_MASK_VALUE;
 
       printNode(next + iChild, childFlagged, childNext, iChild == 0);
     } else {
@@ -214,9 +223,9 @@ void traverseOctree(const SNode* root, const SNode* parent, uint level, uint max
 }
 
 void DebugPass::debugNodePool_Octree() {
-  /*_renderMgr->bindBuffer(GL_TEXTURE_BUFFER, _vctScene->getNodePool()->getBufferHandle());
+  _renderMgr->bindBuffer(GL_TEXTURE_BUFFER, _vctScene->getNodePool()->getNodePool(NEXT)->getBufferHandle());
 
-  const SNode* nodePtr = (const SNode*) glMapBuffer(GL_TEXTURE_BUFFER, GL_READ_ONLY);
+  const uint* nodePtr = (const uint*) glMapBuffer(GL_TEXTURE_BUFFER, GL_READ_ONLY);
   kore::Log::getInstance()->write("NodePool contents:\n");
 
   for (uint iLevel = 0; iLevel < _vctScene->getNodePool()->getNumLevels(); ++iLevel) {
@@ -233,5 +242,5 @@ void DebugPass::debugNodePool_Octree() {
   }
 
   kore::Log::getInstance()->write("\n");
-  glUnmapBuffer(GL_TEXTURE_BUFFER);*/
+  glUnmapBuffer(GL_TEXTURE_BUFFER);
 }

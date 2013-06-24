@@ -59,7 +59,7 @@ void NodePool::init(uint voxelGridResolution) {
   //////////////////////////////////////////////////////////////////////////
 
   // Calculate num Levels
-  _numLevels = log(voxelGridResolution * 
+  _numLevels = log((int)voxelGridResolution * 
                    voxelGridResolution *
                    voxelGridResolution)/log(8) + 1;
   kore::Log::getInstance()->write("[DEBUG] number of levels: %u \n", _numLevels);
