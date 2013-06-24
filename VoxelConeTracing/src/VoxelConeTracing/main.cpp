@@ -131,11 +131,9 @@ void setup() {
   params.voxel_grid_sidelengths = glm::vec3(50, 50, 50);
   params.fraglist_size_multiplier = 1;
   params.fraglist_size_divisor = 1;
-  params.brickPoolResolution = 64 * 9;
-  
+  params.brickPoolResolution = 64 * 3;
+
   _vctScene.init(params, renderNodes, _pCamera);
-
-
 
   //////////////////////////////////////////////////////////////////////////
   _gbufferStage = new FrameBufferStage;
@@ -206,13 +204,15 @@ void setup() {
   _backbufferStage->addProgramPass(new WriteLeafNodesPass(&_vctScene, kore::EXECUTE_ONCE));
   
   // Mipmap the values from bottom to top
-  for (uint iLevel = _numLevels - 2; iLevel > 0; --iLevel) {
+  for (int iLevel = _numLevels - 2; iLevel >= 0;) {
+    kore::Log::getInstance()->write("%u\n", iLevel);
     _backbufferStage->addProgramPass(new OctreeMipmapPass(&_vctScene, iLevel, kore::EXECUTE_ONCE));
+    --iLevel;
   }
   //
-  /*//
+  //
   //_octreeVisPass = new OctreeVisPass(&_vctScene);
-  //_backbufferStage->addProgramPass(_octreeVisPass);*/
+  //_backbufferStage->addProgramPass(_octreeVisPass);
   _backbufferStage->addProgramPass(new ConeTracePass(&_vctScene));
   //_backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
   
@@ -330,7 +330,8 @@ int main(void) {
         _pCamera->moveSideways(cameraMoveSpeed * static_cast<float>(time));
       }
 
-      if (glfwGetKey(GLFW_KEY_PAGEUP) &&_octreeVisPass!=NULL) {
+/* Octree Vis levels
+      if (glfwGetKey(GLFW_KEY_PAGEUP)) {
         if (!_oldPageUp) {
           _oldPageUp = true;
           _octreeVisPass->setDisplayLevel(_octreeVisPass->getDisplayLevel() + 1);
@@ -339,7 +340,7 @@ int main(void) {
         _oldPageUp = false;
       }
 
-      if (glfwGetKey(GLFW_KEY_PAGEDOWN &&_octreeVisPass!=NULL)) {
+      if (glfwGetKey(GLFW_KEY_PAGEDOWN)) {
         if (!_oldPageDown) {
           _oldPageDown = true;
           _octreeVisPass->setDisplayLevel(_octreeVisPass->getDisplayLevel() - 1);
@@ -348,6 +349,7 @@ int main(void) {
       } else {
         _oldPageDown = false;
       }
+*/
 
       int mouseX = 0;
       int mouseY = 0;

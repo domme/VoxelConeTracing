@@ -76,8 +76,11 @@ DebugPass::DebugPass(VCTscene* vctScene,
   addStartupOperation(
           new FunctionOp(std::bind(&DebugPass::debugIndirectCmdBuff, this)));
 
- addStartupOperation(
-          new FunctionOp(std::bind(&DebugPass::debugNodePool, this)));
+  addStartupOperation(
+    new FunctionOp(std::bind(&DebugPass::debugLevelAddressBuf, this)));
+
+ /*addStartupOperation(
+          new FunctionOp(std::bind(&DebugPass::debugNodePool, this)));*/
 
  addStartupOperation(
           new FunctionOp(std::bind(&DebugPass::debugNextFreeAC, this)));
@@ -135,6 +138,20 @@ void DebugPass::debugIndirectCmdBuff(){
     kore::Log::getInstance()->write("%u ", ptr[i]);
   }
    kore::Log::getInstance()->write("\n");
+
+  glUnmapBuffer(GL_TEXTURE_BUFFER);
+}
+
+
+void DebugPass::debugLevelAddressBuf(){
+  _renderMgr->bindBuffer(GL_TEXTURE_BUFFER, _vctScene->getNodePool()->getLevelAddressBuffer()->getBufferHandle());
+
+  const GLuint* ptr = (const GLuint*) glMapBuffer(GL_TEXTURE_BUFFER, GL_READ_ONLY);
+  kore::Log::getInstance()->write("LevelAddressBuffer contents:\n");
+  for (uint i = 0; i < _vctScene->getNodePool()->getNumLevels(); ++i) {
+    kore::Log::getInstance()->write("%u\n", ptr[i]);
+  }
+  kore::Log::getInstance()->write("\n");
 
   glUnmapBuffer(GL_TEXTURE_BUFFER);
 }

@@ -74,6 +74,29 @@ void NodePool::init(uint voxelGridResolution) {
 
   initAllocIndCmdBufs();
 
+  // Init levelAddressBuffer
+  kore::STextureBufferProperties levelAddressProps;
+  levelAddressProps.internalFormat = GL_R32UI;
+  levelAddressProps.size = sizeof(uint) * _numLevels;
+  levelAddressProps.usageHint = GL_DYNAMIC_COPY;
+
+  std::vector<uint> initialValues;
+  initialValues.resize(_numLevels, 0xFFFFFFFF);
+  initialValues[0] = 0;
+  initialValues[1] = 1;
+  _levelAddressBuffer.create(levelAddressProps, "LevelAddress Buffer", &initialValues[0]);
+
+  _levelAddressBuffer_texInfo.internalFormat = GL_R32UI;
+  _levelAddressBuffer_texInfo.texLocation = _levelAddressBuffer.getTexHandle();
+  _levelAddressBuffer_texInfo.texTarget = GL_TEXTURE_BUFFER;
+  
+  _shdLevelAddressBuffer.name = "LevelAddress Buffer";
+  _shdLevelAddressBuffer.data = &_levelAddressBuffer_texInfo;
+  _shdLevelAddressBuffer.size = 1;
+  _shdLevelAddressBuffer.type = GL_TEXTURE_BUFFER;
+  //////////////////////////////////////////////////////////////////////////
+
+
   kore::STextureBufferProperties nodePoolBufProps;
   nodePoolBufProps.internalFormat = GL_R32UI;
   nodePoolBufProps.size = sizeof(uint) * _numNodes;
@@ -143,7 +166,7 @@ void NodePool::initAllocIndCmdBufs() {
     kore::Log::getInstance()->write("[DEBUG] number of voxels on level %u: %u \n",
                                     iLevel, numVoxelsOnLevel);
     SDrawArraysIndirectCommand command;
-    command.numVertices = numVoxelsUpToLevel;
+    command.numVertices = numVoxelsOnLevel;
     command.numPrimitives = 1;
     command.firstVertexIdx = 0;
     command.baseInstanceIdx = 0;

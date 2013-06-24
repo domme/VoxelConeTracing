@@ -53,5 +53,6 @@ private:
   void debugNextFreeAC();
   //void traverseOctree(const SNode* parent, uint level, uint maxLevel);
   void debugNodePool_Octree();
+  void debugLevelAddressBuf();
 };
 #endif //VCT_SRC_VCT_OCTREEVISPASS_H_

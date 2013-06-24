@@ -43,6 +43,7 @@ class ObAllocatePass : public kore::ShaderProgramPass
     void setLevel(uint level);
     void debugVoxelIndexAC();
     void debugIndirectCmdBuff();
+    void setLevelAddressBuffer();
 private:
     kore::RenderManager* _renderMgr;
     kore::SceneManager* _sceneMgr;
@@ -53,6 +54,7 @@ private:
     kore::ShaderProgram _allocateShader;
     VCTscene* _vctScene;
 
+    kore::ShaderData _shdLevel;
     uint _level;
 };
 

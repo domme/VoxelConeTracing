@@ -75,6 +75,12 @@ public:
   inline kore::ShaderData* getShdNumLevels()
   {return &_shdNumLevels;}
 
+  inline kore::TextureBuffer* getLevelAddressBuffer() 
+  {return &_levelAddressBuffer;}
+
+  inline kore::ShaderData* getShdLevelAddressBuffer()
+  {return &_shdLevelAddressBuffer;}
+  
 private:
   kore::TextureBuffer _nodePool[NODEPOOL_ATTRIBUTES_NUM];
   kore::STextureInfo _nodePoolTexInfo[NODEPOOL_ATTRIBUTES_NUM];
@@ -88,6 +94,10 @@ private:
 
   kore::IndexedBuffer _acNodePoolNextFree;
   kore::ShaderData _shdAcNodePoolNextFree;
+
+  kore::TextureBuffer _levelAddressBuffer;
+  kore::STextureInfo _levelAddressBuffer_texInfo;
+  kore::ShaderData _shdLevelAddressBuffer;
 
   void initAllocIndCmdBufs();
 };

@@ -24,7 +24,7 @@
 */
 
 #include "VoxelConeTracing/Octree Building/ModifyIndirectBufferPass.h"
-#include "VoxelConeTracing/FullscreenQuad.h"
+
 
 #include "KoRE\RenderManager.h"
 #include "KoRE\ResourceManager.h"

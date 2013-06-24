@@ -26,9 +26,12 @@
 #version 420 core
 
 layout(r32ui) uniform volatile uimageBuffer nodePool_next;
+layout(r32ui) uniform volatile uimageBuffer levelAddressBuffer;
 layout(binding = 0) uniform atomic_uint nextFreeAddress;
 
 uniform uint brickPoolResolution;
+uniform uint level;
+
 
 const uint NODE_MASK_VALUE = 0x3FFFFFFF;
 const uint NODE_MASK_TAG = (0x00000001 << 31);
@@ -48,10 +51,14 @@ bool isFlagged(in uint nodeNext) {
 
 void allocChildBrickAndUnflag(in int nodeAddress) {
   uint nextFreeBrick = atomicCounterIncrement(nextFreeAddress);
+  uint nextFreeAddress = (1U + 8U * nextFreeBrick);
+  memoryBarrier();
 
-  imageStore(nodePool_next, nodeAddress,
+    imageStore(nodePool_next, nodeAddress,
                            //Calculation of next free address                  
-   uvec4(NODE_MASK_VALUE & (1U + 8U * nextFreeBrick), 0, 0, 0));
+   uvec4(NODE_MASK_VALUE & nextFreeAddress, 0, 0, 0));
+
+   imageAtomicMin(levelAddressBuffer, int(level + 1), int(nextFreeAddress));
    memoryBarrier();
 }
 

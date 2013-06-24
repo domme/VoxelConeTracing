@@ -46,6 +46,11 @@ ObAllocatePass::ObAllocatePass(VCTscene* vctScene, uint level,
   _resMgr = ResourceManager::getInstance();
   _level = level;
 
+  _shdLevel.component = NULL;
+  _shdLevel.data = &_level;
+  _shdLevel.name = "OctreeLevel";
+  _shdLevel.type = GL_UNSIGNED_INT;
+
   _allocateShader
      .loadShader("./assets/shader/ObAllocateVert.shader",
                  GL_VERTEX_SHADER);
@@ -65,8 +70,13 @@ ObAllocatePass::ObAllocatePass(VCTscene* vctScene, uint level,
 
   addStartupOperation(_bindIndCmdBufOp);
 
-/*  addStartupOperation(
-    new FunctionOp(std::bind(&ObAllocatePass::debugIndirectCmdBuff, this))); */
+  
+
+  addStartupOperation(new BindUniform(&_shdLevel, _allocateShader.getUniform("level")));
+
+  addStartupOperation(new BindImageTexture(
+    _vctScene->getNodePool()->getShdLevelAddressBuffer(),
+    _allocateShader.getUniform("levelAddressBuffer")));
   
   addStartupOperation(new BindImageTexture(
                       vctScene->getNodePool()->getShdNodePool(NEXT),
@@ -78,10 +88,31 @@ ObAllocatePass::ObAllocatePass(VCTscene* vctScene, uint level,
 
   addStartupOperation(new DrawIndirectOp(GL_POINTS, 0));
   addFinishOperation(new MemoryBarrierOp(GL_ALL_BARRIER_BITS));
+
+  /*addFinishOperation(
+    new FunctionOp(std::bind(&ObAllocatePass::setLevelAddressBuffer, this)));*/
+}
+
+
+void ObAllocatePass::setLevelAddressBuffer() {
+  if (_level < 1) {
+    return;
+  }
+
+  uint nextFree = 0;
+  _renderMgr->bindBufferBase(GL_ATOMIC_COUNTER_BUFFER,
+                             0, _vctScene->getNodePool()->getAcNodePoolNextFree()->getHandle());
+  GLuint* ptr = (GLuint*)glMapBufferRange(GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(GLuint), GL_MAP_READ_BIT);
+  nextFree = (*ptr);
+  glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
+
+  _renderMgr->bindBuffer(GL_TEXTURE_BUFFER, _vctScene->getNodePool()->getLevelAddressBuffer()->getBufferHandle());
+  ptr = (GLuint*) glMapBuffer(GL_TEXTURE_BUFFER, GL_READ_WRITE);
+  ptr[_level + 1] = 1U + nextFree * 8U;
+  glUnmapBuffer(GL_TEXTURE_BUFFER);
 }
 
 void ObAllocatePass::debugIndirectCmdBuff(){
-
   _renderMgr->bindBuffer(GL_DRAW_INDIRECT_BUFFER, _vctScene->getNodePool()->
                         getAllocIndCmdBufForLevel(_level)->getHandle());
 

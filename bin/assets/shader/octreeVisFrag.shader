@@ -2,6 +2,8 @@
 
 in VertexData {
   vec3 viewDirVS;
+  float pixelSizeVS;
+  vec2 uv;
 } In;
 
 const uint NODE_MASK_VALUE = 0x3FFFFFFF;

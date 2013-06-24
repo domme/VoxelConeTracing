@@ -27,9 +27,9 @@
 
 layout(r32ui) uniform volatile uimageBuffer nodePool_next;
 layout(r32ui) uniform volatile uimageBuffer nodePool_color;
+layout(r32ui) uniform volatile uimageBuffer levelAddressBuffer;
 
 uniform uint level;
-uniform uint numLevels;
 
 const uint NODE_MASK_VALUE = 0x3FFFFFFF;
 const uint NODE_MASK_TAG = (0x00000001 << 31);
@@ -75,11 +75,6 @@ bool hasNext(in uint nodeNext) {
   return getNextAddress(nodeNext) != 0U;
 }
 
-
-uint findNode(in int targetLevel, in int index) {
-  
-}
-
 /*
 void allocTextureBrick(in int nodeAddress) {
   uint nextFreeTexBrick = atomicCounterIncrement(nextFreeBrick);
@@ -91,7 +86,20 @@ void allocTextureBrick(in int nodeAddress) {
 
   imageStore(nodePool_color, nodeAddress, 
       uvec4(vec3ToUintXYZ10(texAddress), 0, 0, 0));
-}*/
+} */
+
+uint getThreadNode() {
+  uint levelStart = imageLoad(levelAddressBuffer, int(level)).x;
+  uint nextLevelStart = imageLoad(levelAddressBuffer, int(level + 1)).x;
+  memoryBarrier();
+
+  uint index = levelStart + uint(gl_VertexID);
+  if (index >= nextLevelStart) {
+    return NODE_NOT_FOUND;
+  }
+
+  return index;
+}
 
 ///*
 //This shader is launched for every node up to a specific level, so that gl_VertexID 
@@ -99,7 +107,7 @@ void allocTextureBrick(in int nodeAddress) {
 //We re-use flagging here to mark all nodes that have been mip-mapped in the
 //previous pass (or are the result from writing the leaf-levels*/
 void main() {
-  uint nodeAddress = findNode(int(level), gl_VertexID);
+  uint nodeAddress = getThreadNode();
 
   if(nodeAddress == NODE_NOT_FOUND) {
     return;
@@ -131,9 +139,14 @@ void main() {
     }
   }
 
-  color = vec4(color.xyz / max(weights, 1), color.a / 8);
-  uint colorU = convVec4ToRGBA8(color);
+  color = /*color / max(weights, 1);*/ vec4(color.xyz / max(weights, 1), color.a / 8);
 
-  // Store the average color value in the parent.
-  imageStore(nodePool_color, gl_VertexID, uvec4(colorU));
+  
+    uint colorU = convVec4ToRGBA8(color);
+
+    // Store the average color value in the parent.
+    imageStore(nodePool_color, int(nodeAddress), uvec4(colorU));
+  
+
+  
 }
