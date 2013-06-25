@@ -66,7 +66,7 @@ ObAllocatePass::ObAllocatePass(VCTscene* vctScene, uint level,
   _bindIndCmdBufOp =
     new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
                          vctScene->getNodePool()->
-                         getThreadBuf_upToLevel(level)->getHandle());
+                         getCompleteThreadBuf(level)->getHandle());
 
   addStartupOperation(_bindIndCmdBufOp);
 
@@ -112,7 +112,7 @@ void ObAllocatePass::setLevelAddressBuffer() {
 
 void ObAllocatePass::debugIndirectCmdBuff(){
   _renderMgr->bindBuffer(GL_DRAW_INDIRECT_BUFFER, _vctScene->getNodePool()->
-                        getThreadBuf_upToLevel(_level)->getHandle());
+                        getCompleteThreadBuf(_level)->getHandle());
 
   const GLuint* ptr = (const GLuint*) glMapBuffer(GL_DRAW_INDIRECT_BUFFER, GL_READ_ONLY);
   kore::Log::getInstance()->write("Alloc indirectCmdBuf contents on level %u:\n", _level);
@@ -128,5 +128,5 @@ void ObAllocatePass::setLevel(uint level) {
   _level = level;
 
   _bindIndCmdBufOp->connect(GL_DRAW_INDIRECT_BUFFER,
-    _vctScene->getNodePool()->getThreadBuf_upToLevel(level)->getHandle());
+    _vctScene->getNodePool()->getCompleteThreadBuf(level)->getHandle());
 }

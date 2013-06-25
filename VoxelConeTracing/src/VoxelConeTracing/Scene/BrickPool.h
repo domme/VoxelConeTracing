@@ -54,7 +54,7 @@ public:
 
   void init(uint brickPoolResolution, NodePool* nodePool);
   
-  inline kore::IndexedBuffer* getAcBrickPoolNextFree()
+  inline kore::IndexedBuffer* getAcNextFree()
   {return &_acBrickPoolNextFree;}
 
   inline kore::ShaderData* getShdAcNextFree()

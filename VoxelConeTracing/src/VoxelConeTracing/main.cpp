@@ -108,13 +108,16 @@ void setup() {
   using namespace kore;
 
   glClearColor(0.0f, 0.0f,0.0f,1.0f);
+  glDisable(GL_CULL_FACE);
 
   GLint maxTexBufferSize = 0;
   glGetIntegerv(GL_MAX_TEXTURE_BUFFER_SIZE, &maxTexBufferSize);
   Log::getInstance()->write("Max TextureBuffer size: %i \n", maxTexBufferSize);
 
   //Load the scene and get all mesh nodes
-  ResourceManager::getInstance()->loadScene("./assets/meshes/sibenik.dae");
+  //ResourceManager::getInstance()->loadScene("./assets/meshes/sibenik.dae");
+  ResourceManager::getInstance()->loadScene("./assets/meshes/sponza_diff.dae");
+  //ResourceManager::getInstance()->loadScene("./assets/meshes/sponza_outerCube.dae");
   
   std::vector<SceneNode*> renderNodes;
   SceneManager::getInstance()
@@ -127,7 +130,7 @@ void setup() {
   _pCamera = static_cast<Camera*>(_cameraNode->getComponent(COMPONENT_CAMERA));
   
   SVCTparameters params;
-  params.voxel_grid_resolution = 256;
+  params.voxel_grid_resolution = 512;
   params.voxel_grid_sidelengths = glm::vec3(50, 50, 50);
   params.fraglist_size_multiplier = 1;
   params.fraglist_size_divisor = 1;
@@ -173,7 +176,7 @@ void setup() {
 
   _gbufferStage->setFrameBuffer(_gBuffer);
 
-  _gbufferStage->addProgramPass(new DeferredPass(_pCamera, renderNodes));
+  //_gbufferStage->addProgramPass(new DeferredPass(_pCamera, renderNodes));
 
   RenderManager::getInstance()->addFramebufferStage(_gbufferStage);
   //////////////////////////////////////////////////////////////////////////
@@ -211,9 +214,9 @@ void setup() {
   }
   //
   //
-  //_octreeVisPass = new OctreeVisPass(&_vctScene);
-  //_backbufferStage->addProgramPass(_octreeVisPass);
-  _backbufferStage->addProgramPass(new ConeTracePass(&_vctScene));
+  _octreeVisPass = new OctreeVisPass(&_vctScene);
+  _backbufferStage->addProgramPass(_octreeVisPass);
+  //_backbufferStage->addProgramPass(new ConeTracePass(&_vctScene));
   //_backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
   
   //_backbufferStage->addProgramPass(new RenderPass(_gBuffer, &_vctScene));
@@ -330,27 +333,27 @@ int main(void) {
         _pCamera->moveSideways(cameraMoveSpeed * static_cast<float>(time));
       }
 
-/* Octree Vis levels
-      if (glfwGetKey(GLFW_KEY_PAGEUP)) {
-        if (!_oldPageUp) {
-          _oldPageUp = true;
-          _octreeVisPass->setDisplayLevel(_octreeVisPass->getDisplayLevel() + 1);
+      if (_octreeVisPass) {
+        if (glfwGetKey(GLFW_KEY_PAGEUP)) {
+          if (!_oldPageUp) {
+            _oldPageUp = true;
+            _octreeVisPass->setDisplayLevel(_octreeVisPass->getDisplayLevel() + 1);
+          }
+        } else {
+          _oldPageUp = false;
         }
-      } else {
-        _oldPageUp = false;
-      }
 
-      if (glfwGetKey(GLFW_KEY_PAGEDOWN)) {
-        if (!_oldPageDown) {
-          _oldPageDown = true;
-          _octreeVisPass->setDisplayLevel(_octreeVisPass->getDisplayLevel() - 1);
+        if (glfwGetKey(GLFW_KEY_PAGEDOWN)) {
+          if (!_oldPageDown) {
+            _oldPageDown = true;
+            _octreeVisPass->setDisplayLevel(_octreeVisPass->getDisplayLevel() - 1);
+          }
+
+        } else {
+          _oldPageDown = false;
         }
-        
-      } else {
-        _oldPageDown = false;
       }
-*/
-
+      
       int mouseX = 0;
       int mouseY = 0;
       glfwGetMousePos(&mouseX,&mouseY);

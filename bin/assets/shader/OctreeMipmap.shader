@@ -29,6 +29,9 @@ layout(r32ui) uniform volatile uimageBuffer nodePool_next;
 layout(r32ui) uniform volatile uimageBuffer nodePool_color;
 layout(r32ui) uniform volatile uimageBuffer levelAddressBuffer;
 
+layout(binding = 0) uniform atomic_uint nextFreeBrick;
+uniform uint brickPoolResolution;
+
 uniform uint level;
 
 const uint NODE_MASK_VALUE = 0x3FFFFFFF;
@@ -75,7 +78,10 @@ bool hasNext(in uint nodeNext) {
   return getNextAddress(nodeNext) != 0U;
 }
 
-/*
+bool hasBrick(in uint colorU) {
+  return (colorU & NODE_MASK_TAG) != 0;
+}
+
 void allocTextureBrick(in int nodeAddress) {
   uint nextFreeTexBrick = atomicCounterIncrement(nextFreeBrick);
 
@@ -86,7 +92,7 @@ void allocTextureBrick(in int nodeAddress) {
 
   imageStore(nodePool_color, nodeAddress, 
       uvec4(vec3ToUintXYZ10(texAddress), 0, 0, 0));
-} */
+}
 
 uint getThreadNode() {
   uint levelStart = imageLoad(levelAddressBuffer, int(level)).x;
@@ -94,6 +100,7 @@ uint getThreadNode() {
   memoryBarrier();
 
   uint index = levelStart + uint(gl_VertexID);
+
   if (index >= nextLevelStart) {
     return NODE_NOT_FOUND;
   }
@@ -130,8 +137,11 @@ void main() {
     uint childColorU = imageLoad(nodePool_color, int(childAddress + iChild)).x;
     memoryBarrier();
 
-    vec4 childColor = convRGBA8ToVec4(childColorU);
+    /*if (hasBrick(childColorU)) {
+      
+    }*/
 
+    vec4 childColor = convRGBA8ToVec4(childColorU);
 
     if (childColor.a > 0) {
       color += childColor;
@@ -139,14 +149,11 @@ void main() {
     }
   }
 
-  color = /*color / max(weights, 1);*/ vec4(color.xyz / max(weights, 1), color.a / 8);
+  color = color / max(weights, 1); // vec4(color.xyz / max(weights, 1), color.a / 8);
 
   
-    uint colorU = convVec4ToRGBA8(color);
+  uint colorU = convVec4ToRGBA8(color);
 
-    // Store the average color value in the parent.
-    imageStore(nodePool_color, int(nodeAddress), uvec4(colorU));
-  
-
-  
+  // Store the average color value in the parent.
+  imageStore(nodePool_color, int(nodeAddress), uvec4(colorU));
 }

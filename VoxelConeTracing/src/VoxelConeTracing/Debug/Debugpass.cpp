@@ -84,6 +84,9 @@ DebugPass::DebugPass(VCTscene* vctScene,
 
  addStartupOperation(
           new FunctionOp(std::bind(&DebugPass::debugNextFreeAC, this)));
+
+ addStartupOperation(
+   new FunctionOp(std::bind(&DebugPass::debugBrickAc, this)));
 }
 
 
@@ -108,6 +111,17 @@ void DebugPass::debugVoxelIndexAC() {
                                         sizeof(GLuint),
                                         GL_MAP_READ_BIT);
   kore::Log::getInstance()->write("Number of voxels: %i \n", *ptr);
+  glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
+}
+
+void DebugPass::debugBrickAc() {
+  _renderMgr->bindBufferBase(GL_ATOMIC_COUNTER_BUFFER,
+                             0, _vctScene->getBrickPool()->getAcNextFree()->getHandle());
+
+  GLuint* ptr = (GLuint*)glMapBufferRange(GL_ATOMIC_COUNTER_BUFFER, 0,
+                                          sizeof(GLuint),
+                                          GL_MAP_READ_BIT);
+  kore::Log::getInstance()->write("Number of bricks: %i \n", *ptr);
   glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
 }
 

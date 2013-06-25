@@ -63,10 +63,10 @@ public:
   inline kore::ShaderData* getShdAcNextFree()
   {return &_shdAcNodePoolNextFree;}
 
-  inline kore::IndexedBuffer* getThreadBuf_denseLevel(const uint level) 
+  inline kore::IndexedBuffer* getDenseThreadBuf(const uint level) 
   {return &_vThreadBufs_denseLevel[level];}
 
-  inline kore::IndexedBuffer* getThreadBuf_upToLevel(const uint level)
+  inline kore::IndexedBuffer* getCompleteThreadBuf(const uint level)
   {return &_vThreadBufs_upToLevel[level];}
 
   inline kore::TextureBuffer* getNodePool(ENodePoolAttributes eAttribute)

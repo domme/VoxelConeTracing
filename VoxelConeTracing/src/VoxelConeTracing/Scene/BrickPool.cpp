@@ -82,6 +82,9 @@ void BrickPool::init(uint brickPoolResolution, NodePool* nodePool) {
   //////////////////////////////////////////////////////////////////////////
   // .... blablabla ;)
 
+
+  //////////////////////////////////////////////////////////////////////////
+  // NextFreeBrick -- Atomic counter
   uint allocAcValue = 0;
   _acBrickPoolNextFree.create(GL_ATOMIC_COUNTER_BUFFER, sizeof(GL_UNSIGNED_INT),
                      GL_DYNAMIC_COPY, &allocAcValue, "AC_nextFreeBrickPointer");

@@ -63,11 +63,19 @@ OctreeMipmapPass::
   // Launch a thread for every node up to _level
   addStartupOperation(
     new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
-                  _vctScene->getNodePool()->getThreadBuf_denseLevel(_level)->getHandle()));
+                  _vctScene->getNodePool()->getDenseThreadBuf(_level)->getHandle()));
 
   addStartupOperation(new BindImageTexture(
     _vctScene->getNodePool()->getShdLevelAddressBuffer(),
     shp->getUniform("levelAddressBuffer")));
+   
+  addStartupOperation(
+    new BindUniform(_vctScene->getBrickPool()->getShdBrickPoolResolution(),
+                    shp->getUniform("brickPoolResolution")));
+
+  addStartupOperation(
+    new BindAtomicCounterBuffer(_vctScene->getBrickPool()->getShdAcNextFree(),
+                                shp->getUniform("nextFreeBrick")));
 
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdNodePool(NEXT), shp->getUniform("nodePool_next")));
