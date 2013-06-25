@@ -63,8 +63,11 @@ public:
   inline kore::ShaderData* getShdAcNextFree()
   {return &_shdAcNodePoolNextFree;}
 
-  inline kore::IndexedBuffer* getAllocIndCmdBufForLevel(const uint level) 
-  {return &_vAllocIndCmdBufs[level];}
+  inline kore::IndexedBuffer* getThreadBuf_denseLevel(const uint level) 
+  {return &_vThreadBufs_denseLevel[level];}
+
+  inline kore::IndexedBuffer* getThreadBuf_upToLevel(const uint level)
+  {return &_vThreadBufs_upToLevel[level];}
 
   inline kore::TextureBuffer* getNodePool(ENodePoolAttributes eAttribute)
   {return &_nodePool[eAttribute];}
@@ -86,7 +89,9 @@ private:
   kore::STextureInfo _nodePoolTexInfo[NODEPOOL_ATTRIBUTES_NUM];
   kore::ShaderData _shdNodePool[NODEPOOL_ATTRIBUTES_NUM];
 
-  std::vector<kore::IndexedBuffer> _vAllocIndCmdBufs;
+  /// Thread buffers
+  std::vector<kore::IndexedBuffer> _vThreadBufs_denseLevel;
+  std::vector<kore::IndexedBuffer> _vThreadBufs_upToLevel;
 
   uint _numNodes;  // Number of all nodes in the nodepool
   uint _numLevels;
@@ -99,7 +104,7 @@ private:
   kore::STextureInfo _levelAddressBuffer_texInfo;
   kore::ShaderData _shdLevelAddressBuffer;
 
-  void initAllocIndCmdBufs();
+  void initThreadBuffers();
 };
 
 #endif  // VCT_SRC_VCT_NODEPOOL_H_

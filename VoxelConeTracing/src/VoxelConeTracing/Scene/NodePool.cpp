@@ -72,7 +72,7 @@ void NodePool::init(uint voxelGridResolution) {
     _numNodes, _numLevels);
   //////////////////////////////////////////////////////////////////////////
 
-  initAllocIndCmdBufs();
+  initThreadBuffers();
 
   // Init levelAddressBuffer
   kore::STextureBufferProperties levelAddressProps;
@@ -153,10 +153,14 @@ NodePool::~NodePool() {
 }
 
 
-void NodePool::initAllocIndCmdBufs() {
+void NodePool::initThreadBuffers() {
   // Allocation indirect command bufs for each octree level
-  _vAllocIndCmdBufs.clear();
-  _vAllocIndCmdBufs.resize(_numLevels);
+  _vThreadBufs_denseLevel.clear();
+  _vThreadBufs_upToLevel.clear();
+
+  _vThreadBufs_denseLevel.resize(_numLevels);
+  _vThreadBufs_upToLevel.resize(_numLevels);
+
   uint numVoxelsUpToLevel = 0;
   for (uint iLevel = 0; iLevel < _numLevels; ++iLevel) {
     uint numVoxelsOnLevel = pow(8U,iLevel);
@@ -171,12 +175,18 @@ void NodePool::initAllocIndCmdBufs() {
     command.firstVertexIdx = 0;
     command.baseInstanceIdx = 0;
 
-    _vAllocIndCmdBufs[iLevel].create(GL_DRAW_INDIRECT_BUFFER,
-      sizeof(SDrawArraysIndirectCommand),
-      GL_STATIC_DRAW,
-      &command,
-      "allocIndCmdBuf");
+    _vThreadBufs_denseLevel[iLevel].create(GL_DRAW_INDIRECT_BUFFER,
+                                          sizeof(SDrawArraysIndirectCommand),
+                                          GL_STATIC_DRAW,
+                                          &command,
+                                          "ThreadBuffers_denseLevel");
 
+    command.numVertices = numVoxelsUpToLevel;
+    _vThreadBufs_upToLevel[iLevel].create(GL_DRAW_INDIRECT_BUFFER,
+                                          sizeof(SDrawArraysIndirectCommand),
+                                          GL_STATIC_DRAW,
+                                          &command,
+                                          "ThreadBuffers_upToLevel");
   }
 }
 

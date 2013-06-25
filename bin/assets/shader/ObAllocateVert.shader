@@ -58,6 +58,7 @@ void allocChildBrickAndUnflag(in int nodeAddress) {
                            //Calculation of next free address                  
    uvec4(NODE_MASK_VALUE & nextFreeAddress, 0, 0, 0));
 
+   // Create levelAddress indirection buffer by storing the start-addresses on each level
    imageAtomicMin(levelAddressBuffer, int(level + 1), int(nextFreeAddress));
    memoryBarrier();
 }
