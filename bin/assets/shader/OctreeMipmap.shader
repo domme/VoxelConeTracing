@@ -36,9 +36,11 @@ uniform uint level;
 
 const uint NODE_MASK_VALUE = 0x3FFFFFFF;
 const uint NODE_MASK_TAG = (0x00000001 << 31);
-const uint NODE_MASK_LOCK = (0x00000001 << 30);
-const uint NODE_MASK_TAG_STATIC = (0x00000003 << 30);
+const uint NODE_MASK_BRICK = (0x00000001 << 30);
 const uint NODE_NOT_FOUND = 0xFFFFFFFF;
+
+uint childNextU[] = {0, 0, 0, 0, 0, 0, 0, 0};
+uint childColorU[] = {0, 0, 0, 0, 0, 0, 0, 0};
 
 vec4 convRGBA8ToVec4(uint val) {
     return vec4( float((val & 0x000000FF)), 
@@ -70,28 +72,90 @@ bool isFlagged(in uint nodeNext) {
   return (nodeNext & NODE_MASK_TAG) != 0U;
 }
 
-uint getNextAddress(in uint nodeNext) {
-  return nodeNext & NODE_MASK_VALUE;
+bool hasBrick(in uint nextU) {
+  return (nextU & NODE_MASK_BRICK) != 0;
 }
 
-bool hasNext(in uint nodeNext) {
-  return getNextAddress(nodeNext) != 0U;
+void loadChildTile(in int tileAddress) {
+  for (int i = 0; i < 8; ++i) {
+    childNextU[i] = imageLoad(nodePool_next, tileAddress + i).x;
+    childColorU[i] = imageLoad(nodePool_color, tileAddress + i).x;
+  }
+
+  memoryBarrier();
 }
 
-bool hasBrick(in uint colorU) {
-  return (colorU & NODE_MASK_TAG) != 0;
-}
 
-void allocTextureBrick(in int nodeAddress) {
+// Allocate brick-texture, store pointer in color and return the coordinate of the lower-left voxel.
+uvec3 allocTextureBrick(in int nodeAddress, in uint nodeNextU) {
   uint nextFreeTexBrick = atomicCounterIncrement(nextFreeBrick);
 
   uvec3 texAddress = uvec3(0);
-  texAddress.x = nextFreeTexBrick % brickPoolResolution;
-  texAddress.y = nextFreeTexBrick / brickPoolResolution;
-  texAddress.z = nextFreeTexBrick / (brickPoolResolution * brickPoolResolution);
+  texAddress.x = ((nextFreeTexBrick * 3) % brickPoolResolution);
+  texAddress.y = ((nextFreeTexBrick * 3) / brickPoolResolution);
+  texAddress.z = ((nextFreeTexBrick * 3) / (brickPoolResolution * brickPoolResolution));
 
+  // Store brick-pointer
   imageStore(nodePool_color, nodeAddress, 
       uvec4(vec3ToUintXYZ10(texAddress), 0, 0, 0));
+
+  // Set the flag to indicate the brick-existance
+  imageStore(nodePool_next, nodeAddress,
+             uvec4(NODE_MASK_BRICK | nodeNextU, 0, 0, 0));
+
+  return texAddress;
+}
+
+
+bool computeBrickNeeded()  {
+  uint colorU = childColorU[0];
+  uint nextU = childNextU[0];
+  
+  if ((NODE_MASK_BRICK & nextU) != 0) { // Has a brick 
+    return true;
+  }
+
+  vec4 color = convRGBA8ToVec4(NODE_MASK_VALUE & colorU);
+  
+  for (int i = 1; i < 8; ++i) {
+    colorU = childColorU[i];
+    nextU = childNextU[i];
+
+    if ((NODE_MASK_BRICK & nextU) != 0) { 
+      // Has a brick, we also need a brick in the parent element
+      return true;
+    }
+
+    // We need a brick if the color-difference is too high
+    vec4 currColor = convRGBA8ToVec4(NODE_MASK_VALUE & colorU);
+    if (length(currColor - color) > 10) {
+          return true;
+    }
+  }
+
+  // Yey! We don't need a brick!!
+  return false;
+}
+
+
+void compAndStoreAvgConstColor(in int nodeAddress) {
+  vec4 color = vec4(0);
+  uint weights = 0;
+  for (uint iChild = 0; iChild < 8; ++iChild) {
+    vec4 childColor = convRGBA8ToVec4(childColorU[iChild]);
+
+    if (childColor.a > 0) {
+      color += childColor;
+      weights += 1;
+    }
+  }
+
+  color = color / max(weights, 1); // vec4(color.xyz / max(weights, 1), color.a / 8);
+
+  uint colorU = convVec4ToRGBA8(color);
+
+  // Store the average color value in the parent.
+  imageStore(nodePool_color, nodeAddress, uvec4(colorU));
 }
 
 uint getThreadNode() {
@@ -120,40 +184,34 @@ void main() {
     return;
   }
 
-  // Load some node
-  uint nodeNext = imageLoad(nodePool_next, int(nodeAddress)).x;
+  uint nodeNextU = imageLoad(nodePool_next, int(nodeAddress)).x;
 
-  if (!hasNext(nodeNext)) { 
+  if ((NODE_MASK_VALUE & nodeNextU) == 0) { 
     return;  // No child-pointer set - mipmapping is not possible anyway
   }
 
-  uint childAddress = getNextAddress(nodeNext);
+  uint childAddress = NODE_MASK_VALUE & nodeNextU;
+  loadChildTile(int(childAddress));  // Loads the child-values into the global arrays
 
+  compAndStoreAvgConstColor(int(nodeAddress));
+  /*
+  bool brickNeeded = computeBrickNeeded();
+  if (brickNeeded) {
+    allocTextureBrick(int(nodeAddress), nodeNextU);
+
+    // Crazy shit gauss-mipmapping and neightbour-finding
+  } else {
+    compAndStoreAvgConstColor(int(nodeAddress));
+
+  } */
+
+
+
+  ////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
   // Average the color from all 8 children
   // TODO: Do proper alpha-weighted average!
-  vec4 color = vec4(0);
-  uint weights = 0;
-  for (uint iChild = 0; iChild < 8; ++iChild) {
-    uint childColorU = imageLoad(nodePool_color, int(childAddress + iChild)).x;
-    memoryBarrier();
-
-    /*if (hasBrick(childColorU)) {
-      
-    }*/
-
-    vec4 childColor = convRGBA8ToVec4(childColorU);
-
-    if (childColor.a > 0) {
-      color += childColor;
-      weights += 1;
-    }
-  }
-
-  color = color / max(weights, 1); // vec4(color.xyz / max(weights, 1), color.a / 8);
-
-  
-  uint colorU = convVec4ToRGBA8(color);
-
-  // Store the average color value in the parent.
-  imageStore(nodePool_color, int(nodeAddress), uvec4(colorU));
+ 
+  ////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
 }

@@ -115,8 +115,8 @@ void setup() {
   Log::getInstance()->write("Max TextureBuffer size: %i \n", maxTexBufferSize);
 
   //Load the scene and get all mesh nodes
-  //ResourceManager::getInstance()->loadScene("./assets/meshes/sibenik.dae");
-  ResourceManager::getInstance()->loadScene("./assets/meshes/sponza_diff.dae");
+  ResourceManager::getInstance()->loadScene("./assets/meshes/sibenik.dae");
+  //ResourceManager::getInstance()->loadScene("./assets/meshes/sponza_diff.dae");
   //ResourceManager::getInstance()->loadScene("./assets/meshes/sponza_outerCube.dae");
   
   std::vector<SceneNode*> renderNodes;
@@ -130,7 +130,7 @@ void setup() {
   _pCamera = static_cast<Camera*>(_cameraNode->getComponent(COMPONENT_CAMERA));
   
   SVCTparameters params;
-  params.voxel_grid_resolution = 512;
+  params.voxel_grid_resolution = 256;
   params.voxel_grid_sidelengths = glm::vec3(50, 50, 50);
   params.fraglist_size_multiplier = 1;
   params.fraglist_size_divisor = 1;
