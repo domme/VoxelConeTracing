@@ -202,8 +202,6 @@ void setup() {
     _backbufferStage->addProgramPass(new ObAllocatePass(&_vctScene, iLevel, kore::EXECUTE_ONCE));
   }
 
-  _backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
-  
   _backbufferStage->addProgramPass(new WriteLeafNodesPass(&_vctScene, kore::EXECUTE_ONCE));
   
   // Mipmap the values from bottom to top
@@ -221,6 +219,7 @@ void setup() {
   
   //_backbufferStage->addProgramPass(new RenderPass(_gBuffer, &_vctScene));
 
+  _backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
   RenderManager::getInstance()->addFramebufferStage(_backbufferStage);
   //////////////////////////////////////////////////////////////////////////
 }

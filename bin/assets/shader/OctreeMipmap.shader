@@ -193,8 +193,7 @@ void main() {
   uint childAddress = NODE_MASK_VALUE & nodeNextU;
   loadChildTile(int(childAddress));  // Loads the child-values into the global arrays
 
-  compAndStoreAvgConstColor(int(nodeAddress));
-  /*
+
   bool brickNeeded = computeBrickNeeded();
   if (brickNeeded) {
     allocTextureBrick(int(nodeAddress), nodeNextU);
@@ -202,10 +201,7 @@ void main() {
     // Crazy shit gauss-mipmapping and neightbour-finding
   } else {
     compAndStoreAvgConstColor(int(nodeAddress));
-
-  } */
-
-
+  }
 
   ////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////////
