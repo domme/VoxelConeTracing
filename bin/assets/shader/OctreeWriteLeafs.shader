@@ -37,14 +37,17 @@ layout(r32ui) uniform volatile uimageBuffer voxelFragList_pos;
 layout(r32ui) uniform volatile uimageBuffer voxelFragList_color;
 layout(r32ui) uniform volatile uimageBuffer nodePool_next;
 layout(r32ui) uniform volatile uimageBuffer nodePool_color;
+layout(rgba8) uniform volatile image3D brickPool_color;
+layout(binding = 0) uniform atomic_uint nextFreeBrick;
+uniform uint brickPoolResolution;
 
 uniform uint numLevels;  // Number of levels in the octree
 uniform uint voxelGridResolution;
 
+
 const uint NODE_MASK_VALUE = 0x3FFFFFFF;
 const uint NODE_MASK_TAG = (0x00000001 << 31);
-const uint NODE_MASK_LOCK = (0x00000001 << 30);
-const uint NODE_MASK_TAG_STATIC = (0x00000003 << 30);
+const uint NODE_MASK_BRICK = (0x00000001 << 30);
 const uint NODE_NOT_FOUND = 0xFFFFFFFF;
 const uint pow2[] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
 
@@ -84,6 +87,30 @@ uvec3 uintXYZ10ToVec3(uint val) {
                  uint((val & 0x3FF00000) >> 20U));
 }
 
+uvec3 allocTextureBrick(in int nodeAddress, in uint nodeNextU) {
+  uint nextFreeTexBrick = atomicCounterIncrement(nextFreeBrick);
+
+  uvec3 texAddress = uvec3(0);
+  texAddress.x = ((nextFreeTexBrick * 3) % brickPoolResolution);
+  texAddress.y = ((nextFreeTexBrick * 3) / brickPoolResolution);
+  texAddress.z = ((nextFreeTexBrick * 3) / (brickPoolResolution * brickPoolResolution));
+
+  // Store brick-pointer
+  imageStore(nodePool_color, nodeAddress, 
+      uvec4(vec3ToUintXYZ10(texAddress), 0, 0, 0));
+
+  // Set the flag to indicate the brick-existance
+  imageStore(nodePool_next, nodeAddress,
+             uvec4(NODE_MASK_BRICK | nodeNextU, 0, 0, 0));
+
+  memoryBarrier();
+  return texAddress;
+}
+
+void storeVoxelColorInBrick(in uvec3 brickCoords, in uint voxelColorU) {
+  
+}
+
 
 void main() {
   // Get the voxel's position and color from the voxel frag list.
@@ -104,8 +131,17 @@ void main() {
     uint childStartAddress = nodeNext & NODE_MASK_VALUE;
       if (childStartAddress == 0U) {
         if (iLevel == numLevels - 1) {  // This is a leaf node! Yuppieee! ;)
-          
-            // Write the color into the node
+    
+            /*uvec3 brickCoords = uvec3(0);
+            // Allocate a brick if it does not have any yet
+            if ((NODE_MASK_BRICK & nodeNext) == 0) {
+              brickCoords = allocTextureBrick(nodeAddress, nodeNext);
+            } else {
+              brickCoords = NODE_MASK_VALUE & imageLoad(nodePool_color, nodeAddress).x;
+            }*/
+
+
+            // Write the color into the brick
             // TODO: Many different voxels will write into one node... mix their colors properly!
            imageStore(nodePool_color, int(nodeAddress),
                       uvec4(voxelColorU));

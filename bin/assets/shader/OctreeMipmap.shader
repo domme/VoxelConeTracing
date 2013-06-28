@@ -164,13 +164,13 @@ void compAndStoreAvgConstColor(in int nodeAddress) {
 // Fill the texture brick with values from the children
 // Brickcoords are the coordinates of the lower-left voxel
 void mipmapBrick(uvec3 brickCoords) {
-  for (uint z = 0; z < 3; ++z) {
+ /* for (uint z = 0; z < 3; ++z) {
     for (uint y = 0; y < 3; ++y) {
       for (uint x = 0; x < 3; ++x) {
          imageStore(
       }
     }
-  }
+  } */
 }
 
 
@@ -207,13 +207,14 @@ void main() {
 
   uint childAddress = NODE_MASK_VALUE & nodeNextU;
   loadChildTile(int(childAddress));  // Loads the child-values into the global arrays
-  
-  bool brickNeeded = computeBrickNeeded();
+  compAndStoreAvgConstColor(int(nodeAddress));
+
+  /*bool brickNeeded = computeBrickNeeded();
   if (brickNeeded) {
     allocTextureBrick(int(nodeAddress), nodeNextU);
 
     // Crazy shit gauss-mipmapping and neightbour-finding
   } else {
     compAndStoreAvgConstColor(int(nodeAddress));
-  }
+  } */
 }

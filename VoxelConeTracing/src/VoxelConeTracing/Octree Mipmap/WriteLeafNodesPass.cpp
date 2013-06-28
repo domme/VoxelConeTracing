@@ -77,6 +77,16 @@ WriteLeafNodesPass::
     vctScene->getNodePool()->getShdNodePool(COLOR),
     shp->getUniform("nodePool_color")));
 
+  addStartupOperation(new BindImageTexture(
+    vctScene->getBrickPool()->getShdBrickPool(BRICKPOOL_COLOR),
+    shp->getUniform("brickPool_color")));
+
+  addStartupOperation(new BindUniform(vctScene->getBrickPool()->getShdAcNextFree(),
+    shp->getUniform("nextFreeBrick")));
+
+  addStartupOperation(new BindUniform(vctScene->getBrickPool()->getShdBrickPoolResolution(),
+    shp->getUniform("brickPoolResolution")));
+
   addStartupOperation(new BindUniform(
     vctScene->getShdVoxelGridResolution(),
     shp->getUniform("voxelGridResolution")));
