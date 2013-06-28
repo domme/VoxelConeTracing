@@ -28,6 +28,7 @@
 layout(r32ui) uniform volatile uimageBuffer nodePool_next;
 layout(r32ui) uniform volatile uimageBuffer nodePool_color;
 layout(r32ui) uniform volatile uimageBuffer levelAddressBuffer;
+layout(rgba8) uniform image3D brickPool_color;
 
 layout(binding = 0) uniform atomic_uint nextFreeBrick;
 uniform uint brickPoolResolution;
@@ -158,6 +159,22 @@ void compAndStoreAvgConstColor(in int nodeAddress) {
   imageStore(nodePool_color, nodeAddress, uvec4(colorU));
 }
 
+
+
+// Fill the texture brick with values from the children
+// Brickcoords are the coordinates of the lower-left voxel
+void mipmapBrick(uvec3 brickCoords) {
+  for (uint z = 0; z < 3; ++z) {
+    for (uint y = 0; y < 3; ++y) {
+      for (uint x = 0; x < 3; ++x) {
+         imageStore(
+      }
+    }
+  }
+}
+
+
+
 uint getThreadNode() {
   uint levelStart = imageLoad(levelAddressBuffer, int(level)).x;
   uint nextLevelStart = imageLoad(levelAddressBuffer, int(level + 1)).x;
@@ -179,21 +196,18 @@ uint getThreadNode() {
 //previous pass (or are the result from writing the leaf-levels*/
 void main() {
   uint nodeAddress = getThreadNode();
-
   if(nodeAddress == NODE_NOT_FOUND) {
-    return;
+    return;  // The requested threadID-node does not belong to the current level
   }
 
   uint nodeNextU = imageLoad(nodePool_next, int(nodeAddress)).x;
-
   if ((NODE_MASK_VALUE & nodeNextU) == 0) { 
     return;  // No child-pointer set - mipmapping is not possible anyway
   }
 
   uint childAddress = NODE_MASK_VALUE & nodeNextU;
   loadChildTile(int(childAddress));  // Loads the child-values into the global arrays
-
-
+  
   bool brickNeeded = computeBrickNeeded();
   if (brickNeeded) {
     allocTextureBrick(int(nodeAddress), nodeNextU);
@@ -202,12 +216,4 @@ void main() {
   } else {
     compAndStoreAvgConstColor(int(nodeAddress));
   }
-
-  ////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////
-  // Average the color from all 8 children
-  // TODO: Do proper alpha-weighted average!
- 
-  ////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////
 }
