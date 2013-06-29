@@ -216,9 +216,9 @@ void main(void)
  
  // Voxel-Reflections
  //if (dot(normalWS, vec3(0,1,0)) > 0.99) {
-   vec3 reflectDir = normalize(reflect(normalize(posWS - viewI[3].xyz), normalWS));
-   float voxelSize = (1.0 / float(voxelGridResolution)) * length(voxelGridTransformI[0].xyz);
-   outColor += nl * 0.5 * traceOctree(posWS + normalWS, reflectDir);
+ //  vec3 reflectDir = normalize(reflect(normalize(posWS - viewI[3].xyz), normalWS));
+ //  float voxelSize = (1.0 / float(voxelGridResolution)) * length(voxelGridTransformI[0].xyz);
+ //  outColor += nl * 0.5 * traceOctree(posWS + normalWS, reflectDir);
  //}
  
  
