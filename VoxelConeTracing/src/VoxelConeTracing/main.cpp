@@ -132,7 +132,7 @@ void setup() {
   SVCTparameters params;
   params.voxel_grid_resolution = 256;
   params.voxel_grid_sidelengths = glm::vec3(50, 50, 50);
-  params.fraglist_size_multiplier = 1;
+  params.fraglist_size_multiplier = 10;
   params.fraglist_size_divisor = 1;
   params.brickPoolResolution = 64 * 3;
 
@@ -176,9 +176,9 @@ void setup() {
 
   _gbufferStage->setFrameBuffer(_gBuffer);
 
-  _gbufferStage->addProgramPass(new DeferredPass(_pCamera, renderNodes));
+  //_gbufferStage->addProgramPass(new DeferredPass(_pCamera, renderNodes));
 
-  RenderManager::getInstance()->addFramebufferStage(_gbufferStage);
+  //RenderManager::getInstance()->addFramebufferStage(_gbufferStage);
   //////////////////////////////////////////////////////////////////////////
 
   
@@ -189,7 +189,7 @@ void setup() {
   _backbufferStage->setFrameBuffer(kore::FrameBuffer::BACKBUFFER);
 
   //// Prepare render algorithm
-  /*_backbufferStage->addProgramPass(new ObClearPass(&_vctScene,kore::EXECUTE_ONCE));
+  _backbufferStage->addProgramPass(new ObClearPass(&_vctScene,kore::EXECUTE_ONCE));
   _backbufferStage->addProgramPass(new VoxelizePass(params.voxel_grid_sidelengths, &_vctScene, kore::EXECUTE_ONCE));
   _backbufferStage->addProgramPass(new ModifyIndirectBufferPass(
                                       _vctScene.getVoxelFragList()->getShdFragListIndCmdBuf(),
@@ -212,13 +212,13 @@ void setup() {
   }
   //
   //
-  //_octreeVisPass = new OctreeVisPass(&_vctScene);
-  //_backbufferStage->addProgramPass(_octreeVisPass);
+  _octreeVisPass = new OctreeVisPass(&_vctScene);
+  _backbufferStage->addProgramPass(_octreeVisPass);
   //_backbufferStage->addProgramPass(new ConeTracePass(&_vctScene));
   //_backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
-  */
   
-  _backbufferStage->addProgramPass(new RenderPass(_gBuffer, &_vctScene));
+  
+  //_backbufferStage->addProgramPass(new RenderPass(_gBuffer, &_vctScene));
 
   //_backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
   RenderManager::getInstance()->addFramebufferStage(_backbufferStage);
