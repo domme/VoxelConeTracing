@@ -119,7 +119,7 @@ int traverseOctree(in vec3 posTex, in float d, in float pixelSizeTS, out vec3 no
     float voxelSize = sideLength;
     float projVoxelSize = voxelSize / d;
 
-    if (projVoxelSize < pixelSizeTS) {
+    if (projVoxelSize / 2 < pixelSizeTS) {
       break;
     }
     

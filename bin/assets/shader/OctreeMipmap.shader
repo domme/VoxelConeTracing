@@ -172,7 +172,8 @@ void compAndStoreAvgConstColor(in int nodeAddress) {
     }
   }
 
-  color = color / max(weights, 1); // vec4(color.xyz / max(weights, 1), color.a / 8);
+  //color = color / max(weights, 1); 
+  color = vec4(color.xyz / max(weights, 1), color.a / 8);
 
   uint colorU = convVec4ToRGBA8(color);
 

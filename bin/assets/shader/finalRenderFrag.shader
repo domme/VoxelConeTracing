@@ -211,14 +211,14 @@ void main(void)
   vec3 diffColor = texture(gBuffer_color, In.uv).xyz;
     
   float nl = max(dot(normalWS, dirLightDirectionWS), 0.0);
-  outColor = vec4(nl * dirLightColor * diffColor, 1.0);
+  outColor = vec4(diffColor, 1); //vec4(nl * dirLightColor * diffColor, 1.0);
 
  
  // Voxel-Reflections
  //if (dot(normalWS, vec3(0,1,0)) > 0.99) {
-   vec3 reflectDir = normalize(reflect(normalize(posWS - viewI[3].xyz), normalWS));
-   float voxelSize = (1.0 / float(voxelGridResolution)) * length(voxelGridTransformI[0].xyz);
-   outColor += nl * 0.5 * traceOctree(posWS + normalWS, reflectDir);
+ //  vec3 reflectDir = normalize(reflect(normalize(posWS - viewI[3].xyz), normalWS));
+ //  float voxelSize = (1.0 / float(voxelGridResolution)) * length(voxelGridTransformI[0].xyz);
+ //  outColor += nl * 0.5 * traceOctree(posWS + normalWS, reflectDir);
  //}
  
  

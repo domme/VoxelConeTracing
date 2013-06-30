@@ -137,7 +137,7 @@ void main(void) {
   vec3 nodePosMax = vec3(1.0);
   
   float end = tLeave;
-  for (float f = tEnter + 0.001; f < end; f += tLeave + 0.001) {
+  for (float f = tEnter + 0.00001; f < end; f += tLeave + 0.00001) {
     vec3 posTex = (rayOriginTex + rayDirTex * f);
   
     /*float fDistanceFactor = f / end;

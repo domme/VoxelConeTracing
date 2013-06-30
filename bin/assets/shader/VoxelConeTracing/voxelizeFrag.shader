@@ -65,7 +65,7 @@ uint vec3ToUintXYZ10(uvec3 val) {
 void main() {
   uvec3 baseVoxel = uvec3(floor(In.posTexSpace * voxelTexSize));
   
-  vec4 diffColor = vec4(texture(diffuseTex, In.uv).xyz, 1.0);
+  vec4 diffColor = vec4(texture(diffuseTex,  vec2(In.uv.x, 1.0 - In.uv.y)).xyz, 1.0);
 
   uint diffColorU = convVec4ToRGBA8(diffColor * vec4(255));
 

@@ -28,6 +28,7 @@
 #include "KoRE\Operations\Operations.h"
 #include "KoRE\Components\TexturesComponent.h"
 #include "KoRE\RenderManager.h"
+#include "KoRE\TextureSampler.h"
 
 
 
@@ -55,6 +56,24 @@ DeferredPass::DeferredPass(kore::Camera* cam, std::vector<kore::SceneNode*>& vRe
   addStartupOperation(new ClearOp());
   
   for (uint i = 0; i < vRenderNodes.size(); ++i) {
+    const TexturesComponent* texComp =
+      static_cast<TexturesComponent*>(
+      vRenderNodes[i]->getComponent(COMPONENT_TEXTURES));
+
+    if (!texComp) {
+      continue;
+    }
+
+    const Texture* tex = texComp->getTexture(0);
+
+    if (!tex) {
+      continue;
+    }
+
+    kore::TexSamplerProperties samplerProps;
+    samplerProps.minfilter = GL_LINEAR_MIPMAP_LINEAR;
+    shader->setSamplerProperties(0, samplerProps);
+
     NodePass* nodePass = new NodePass(vRenderNodes[i]);
     this->addNodePass(nodePass);
 
@@ -85,10 +104,7 @@ DeferredPass::DeferredPass(kore::Camera* cam, std::vector<kore::SceneNode*>& vRe
                                               vRenderNodes[i]->getTransform(),
                                               "normalMat", shader));
 
-    const TexturesComponent* texComp =
-      static_cast<TexturesComponent*>(
-      vRenderNodes[i]->getComponent(COMPONENT_TEXTURES));
-    const Texture* tex = texComp->getTexture(0);
+
 
     nodePass
       ->addOperation(OperationFactory::create(OP_BINDTEXTURE, tex->getName(),
