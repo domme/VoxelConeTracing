@@ -89,6 +89,1004 @@ bool hasBrick(in uint nextU) {
   return (nextU & NODE_MASK_BRICK) != 0;
 }
 
+
+vec4 getChildBrickColor(in int childIdx, in ivec3 offset) {
+  // If the child has a brick attatched: return the color from the requested brickCoordinates
+  // Otherwise, return its constant color
+  if (childBrickCoords[childIdx].x < 0) {
+    return imageLoad(brickPool_color, childBrickCoords[childIdx] + offset);
+  } else {
+    return convRGBA8ToVec4(NODE_MASK_VALUE & childColorU[childIdx]);
+  }
+}
+
+// Get the child brickcolor depending on the whole brick coordinates in [0..5]
+vec4 getChildBrickColor(in ivec3 brickCoords) {
+  vec3 coordsNode = vec3(brickCoords) / 4.0;
+
+  uvec3 offVec = uvec3(2.0 * coordsNode);
+  uint childIdx = offVec.x + 2U * offVec.y + 4U * offVec.z;
+
+  ivec3 localOffset = 2 * ivec3(childOffsets[childIdx]);
+
+  return getChildBrickColor(int(childIdx), localOffset);
+}
+
+///////////////////////////////////////////////////////////////////////////
+// Helper methods to issue the mipmaps
+///////////////////////////////////////////////////////////////////////////
+vec4 mmCenter() {
+  vec4 color = vec4(0);
+  float weightSum = 0.0;
+
+  //  1/4
+  float weight = 0.25;
+  color += weight * getChildBrickColor(ivec3(2,2,2));
+  weightSum += weight;
+
+  // 1/8
+  weight = 0.125;
+  color += weight * getChildBrickColor(ivec3(2,1,2));
+  color += weight * getChildBrickColor(ivec3(2,2,1));
+  color += weight * getChildBrickColor(ivec3(3,2,2));
+  color += weight * getChildBrickColor(ivec3(2,3,2));
+  color += weight * getChildBrickColor(ivec3(2,2,3));
+  color += weight * getChildBrickColor(ivec3(1,2,2));
+  weightSum += 6.0 * weight;
+  
+  // 1/16
+  weight = 0.0625;                             
+  color += weight * getChildBrickColor(ivec3(2,1,1));
+  color += weight * getChildBrickColor(ivec3(3,2,1));
+  color += weight * getChildBrickColor(ivec3(1,2,1));
+  color += weight * getChildBrickColor(ivec3(2,3,1));
+  color += weight * getChildBrickColor(ivec3(1,1,2));
+  color += weight * getChildBrickColor(ivec3(3,1,2));
+  color += weight * getChildBrickColor(ivec3(2,1,3));
+  color += weight * getChildBrickColor(ivec3(1,2,3));
+  color += weight * getChildBrickColor(ivec3(3,2,3));
+  color += weight * getChildBrickColor(ivec3(3,3,2));
+  color += weight * getChildBrickColor(ivec3(2,3,3));
+  color += weight * getChildBrickColor(ivec3(1,3,2));
+  weightSum += 12.0 * weight;
+
+  // 1/32
+  weight = 0.03125;
+  color += weight * getChildBrickColor(ivec3(1,1,1));
+  color += weight * getChildBrickColor(ivec3(3,1,1));
+  color += weight * getChildBrickColor(ivec3(3,1,3));
+  color += weight * getChildBrickColor(ivec3(1,1,3));
+  color += weight * getChildBrickColor(ivec3(1,3,1));
+  color += weight * getChildBrickColor(ivec3(3,3,1));
+  color += weight * getChildBrickColor(ivec3(3,3,3));
+  color += weight * getChildBrickColor(ivec3(1,3,3));
+  weightSum += 8.0 * weight;
+  
+  // Center color finished
+  return color / weightSum;
+}
+
+vec4 mmCenterTop() {
+  vec4 color = vec4(0);
+  float weightSum = 0.0;
+  
+  // 1/4
+  float weight = 0.25;
+  color += weight * getChildBrickColor(ivec3(2,4,2));
+  weightSum += weight;
+
+  // 1/8
+  weight = 0.125;
+  color += weight * getChildBrickColor(ivec3(2,4,1));
+  color += weight * getChildBrickColor(ivec3(3,4,2));
+  color += weight * getChildBrickColor(ivec3(2,4,3));
+  color += weight * getChildBrickColor(ivec3(1,4,2));
+  color += weight * getChildBrickColor(ivec3(2,3,2));
+  weightSum += 5.0 * weight;
+
+  // 1/16
+  weight = 0.0625;
+  color += weight * getChildBrickColor(ivec3(1,4,1));
+  color += weight * getChildBrickColor(ivec3(2,3,1));
+  color += weight * getChildBrickColor(ivec3(3,4,1));
+  color += weight * getChildBrickColor(ivec3(3,3,2));
+  color += weight * getChildBrickColor(ivec3(3,4,3));
+  color += weight * getChildBrickColor(ivec3(2,3,3));
+  color += weight * getChildBrickColor(ivec3(1,4,3));
+  color += weight * getChildBrickColor(ivec3(1,3,2));
+  weightSum += 8.0 * weight;
+
+  // 1/32
+  weight = 0.03125;
+  color += weight * getChildBrickColor(ivec3(1,3,1));
+  color += weight * getChildBrickColor(ivec3(3,3,1));
+  color += weight * getChildBrickColor(ivec3(3,3,3));
+  color += weight * getChildBrickColor(ivec3(1,3,3));
+  weightSum += 4.0 * weight;
+
+  return color / weightSum;
+}
+
+vec4 mmCenterRight() {
+  vec4 color = vec4(0);
+  float weightSum = 0.0;
+  
+  // 1/4
+  float weight = 0.25;
+  color += weight * getChildBrickColor(ivec3(4,2,2));
+  weightSum += weight;
+
+  // 1/8
+  weight = 0.125;
+  color += weight * getChildBrickColor(ivec3(4,2,1));
+  color += weight * getChildBrickColor(ivec3(4,3,2));
+  color += weight * getChildBrickColor(ivec3(4,2,3));
+  color += weight * getChildBrickColor(ivec3(4,1,2));
+  color += weight * getChildBrickColor(ivec3(3,2,2));
+  weightSum += 5.0 * weight;
+
+  // 1/16
+  weight = 0.0625;
+  color += weight * getChildBrickColor(ivec3(4,1,1));
+  color += weight * getChildBrickColor(ivec3(3,2,1));
+  color += weight * getChildBrickColor(ivec3(4,3,1));
+  color += weight * getChildBrickColor(ivec3(3,3,2));
+  color += weight * getChildBrickColor(ivec3(4,3,3));
+  color += weight * getChildBrickColor(ivec3(3,2,3));
+  color += weight * getChildBrickColor(ivec3(4,1,3));
+  color += weight * getChildBrickColor(ivec3(3,1,2));
+  weightSum += 8.0 * weight;
+
+  // 1/32
+  weight = 0.03125;
+  color += weight * getChildBrickColor(ivec3(3,1,1));
+  color += weight * getChildBrickColor(ivec3(3,3,1));
+  color += weight * getChildBrickColor(ivec3(3,3,3));
+  color += weight * getChildBrickColor(ivec3(3,1,3));
+  weightSum += 4.0 * weight;
+
+  return color / weightSum;
+}
+
+vec4 mmCenterFar() {
+  vec4 color = vec4(0);
+  float weightSum = 0.0;
+  
+  // 1/4
+  float weight = 0.25;
+  color += weight * getChildBrickColor(ivec3(2,2,4));
+  weightSum += weight;
+
+  // 1/8
+  weight = 0.125;
+  color += weight * getChildBrickColor(ivec3(1,2,4));
+  color += weight * getChildBrickColor(ivec3(2,3,4));
+  color += weight * getChildBrickColor(ivec3(3,2,4));
+  color += weight * getChildBrickColor(ivec3(2,1,4));
+  color += weight * getChildBrickColor(ivec3(2,2,3));
+  weightSum += 5.0 * weight;
+
+  // 1/16
+  weight = 0.0625;
+  color += weight * getChildBrickColor(ivec3(1,1,4));
+  color += weight * getChildBrickColor(ivec3(1,2,3));
+  color += weight * getChildBrickColor(ivec3(1,3,4));
+  color += weight * getChildBrickColor(ivec3(2,3,3));
+  color += weight * getChildBrickColor(ivec3(3,3,4));
+  color += weight * getChildBrickColor(ivec3(3,2,3));
+  color += weight * getChildBrickColor(ivec3(3,1,4));
+  color += weight * getChildBrickColor(ivec3(2,1,3));
+  weightSum += 8.0 * weight;
+
+  // 1/32
+  weight = 0.03125;
+  color += weight * getChildBrickColor(ivec3(1,1,3));
+  color += weight * getChildBrickColor(ivec3(1,3,3));
+  color += weight * getChildBrickColor(ivec3(3,3,3));
+  color += weight * getChildBrickColor(ivec3(3,1,3));
+  weightSum += 4.0 * weight;
+
+  return color / weightSum;
+}
+
+vec4 mmCenterLeft() {
+  vec4 color = vec4(0);
+  float weightSum = 0.0;
+  
+  // 1/4
+  float weight = 0.25;
+  color += weight * getChildBrickColor(ivec3(0,2,2));
+  weightSum += weight;
+
+  // 1/8
+  weight = 0.125;
+  color += weight * getChildBrickColor(ivec3(0,2,1));
+  color += weight * getChildBrickColor(ivec3(0,2,3));
+  color += weight * getChildBrickColor(ivec3(0,3,2));
+  color += weight * getChildBrickColor(ivec3(1,2,2));
+  color += weight * getChildBrickColor(ivec3(0,1,2));
+  weightSum += 5.0 * weight;
+
+  // 1/16
+  weight = 0.0625;
+  color += weight * getChildBrickColor(ivec3(0,1,1));
+  color += weight * getChildBrickColor(ivec3(1,2,1));
+  color += weight * getChildBrickColor(ivec3(0,3,1));
+  color += weight * getChildBrickColor(ivec3(1,3,2));
+  color += weight * getChildBrickColor(ivec3(0,3,3));
+  color += weight * getChildBrickColor(ivec3(1,2,3));
+  color += weight * getChildBrickColor(ivec3(0,1,3));
+  color += weight * getChildBrickColor(ivec3(1,1,2));
+  weightSum += 8.0 * weight;
+
+  // 1/32
+  weight = 0.03125;
+  color += weight * getChildBrickColor(ivec3(1,1,1));
+  color += weight * getChildBrickColor(ivec3(1,3,1));
+  color += weight * getChildBrickColor(ivec3(1,3,3));
+  color += weight * getChildBrickColor(ivec3(1,1,3));
+  weightSum += 4.0 * weight;
+
+  return color / weightSum;
+}
+
+vec4 mmCenterBottom() {
+  vec4 color = vec4(0);
+  float weightSum = 0.0;
+  
+  // 1/4
+  float weight = 0.25;
+  color += weight * getChildBrickColor(ivec3(2,0,2));
+  weightSum += weight;
+
+  // 1/8
+  weight = 0.125;
+  color += weight * getChildBrickColor(ivec3(2,0,1));
+  color += weight * getChildBrickColor(ivec3(2,0,3));
+  color += weight * getChildBrickColor(ivec3(3,0,2));
+  color += weight * getChildBrickColor(ivec3(2,1,2));
+  color += weight * getChildBrickColor(ivec3(1,0,2));
+  weightSum += 5.0 * weight;
+
+  // 1/16
+  weight = 0.0625;
+  color += weight * getChildBrickColor(ivec3(1,0,1));
+  color += weight * getChildBrickColor(ivec3(2,1,1));
+  color += weight * getChildBrickColor(ivec3(3,0,1));
+  color += weight * getChildBrickColor(ivec3(3,1,2));
+  color += weight * getChildBrickColor(ivec3(3,0,3));
+  color += weight * getChildBrickColor(ivec3(2,1,3));
+  color += weight * getChildBrickColor(ivec3(1,0,3));
+  color += weight * getChildBrickColor(ivec3(1,1,2));
+  weightSum += 8.0 * weight;
+
+  // 1/32
+  weight = 0.03125;
+  color += weight * getChildBrickColor(ivec3(1,1,1));
+  color += weight * getChildBrickColor(ivec3(3,1,1));
+  color += weight * getChildBrickColor(ivec3(3,1,3));
+  color += weight * getChildBrickColor(ivec3(1,1,3));
+  weightSum += 4.0 * weight;
+
+  return color / weightSum;
+}
+
+vec4 mmCenterNear() {
+  vec4 color = vec4(0);
+  float weightSum = 0.0;
+  
+  // 1/4
+  float weight = 0.25;
+  color += weight * getChildBrickColor(ivec3(2,2,0));
+  weightSum += weight;
+
+  // 1/8
+  weight = 0.125;
+  color += weight * getChildBrickColor(ivec3(1,2,0));
+  color += weight * getChildBrickColor(ivec3(3,2,0));
+  color += weight * getChildBrickColor(ivec3(2,3,0));
+  color += weight * getChildBrickColor(ivec3(2,2,1));
+  color += weight * getChildBrickColor(ivec3(2,1,0));
+  weightSum += 5.0 * weight;
+
+  // 1/16
+  weight = 0.0625;
+  color += weight * getChildBrickColor(ivec3(1,1,0));
+  color += weight * getChildBrickColor(ivec3(1,2,1));
+  color += weight * getChildBrickColor(ivec3(1,3,0));
+  color += weight * getChildBrickColor(ivec3(2,3,1));
+  color += weight * getChildBrickColor(ivec3(3,3,0));
+  color += weight * getChildBrickColor(ivec3(3,2,1));
+  color += weight * getChildBrickColor(ivec3(3,1,0));
+  color += weight * getChildBrickColor(ivec3(2,1,1));
+  weightSum += 8.0 * weight;
+
+  // 1/32
+  weight = 0.03125;
+  color += weight * getChildBrickColor(ivec3(1,1,1));
+  color += weight * getChildBrickColor(ivec3(1,3,1));
+  color += weight * getChildBrickColor(ivec3(3,3,1));
+  color += weight * getChildBrickColor(ivec3(3,1,1));
+  weightSum += 4.0 * weight;
+
+  return color / weightSum;
+}
+
+
+
+
+vec4 mmEdgeTopRight() {
+  vec4 color = vec4(0);
+  float weightSum = 0.0;
+  
+  // 1/4
+  float weight = 0.25;
+  color += weight * getChildBrickColor(ivec3(4,4,2));
+  weightSum += weight;
+
+  // 1/8
+  weight = 0.125;
+  color += weight * getChildBrickColor(ivec3(4,4,1));
+  color += weight * getChildBrickColor(ivec3(3,4,2));
+  color += weight * getChildBrickColor(ivec3(4,3,2));
+  color += weight * getChildBrickColor(ivec3(4,4,3));
+  weightSum += 4.0 * weight;
+
+  // 1/16
+  weight = 0.0625;
+  color += weight * getChildBrickColor(ivec3(4,3,1));
+  color += weight * getChildBrickColor(ivec3(3,4,1));
+  color += weight * getChildBrickColor(ivec3(4,3,3));
+  color += weight * getChildBrickColor(ivec3(3,4,3));
+  color += weight * getChildBrickColor(ivec3(3,3,2));
+  weightSum += 5.0 * weight;
+
+  // 1/32
+  weight = 0.03125;
+  color += weight * getChildBrickColor(ivec3(3,3,1));
+  color += weight * getChildBrickColor(ivec3(3,3,3));
+  weightSum += 2.0 * weight;
+
+  return color / weightSum;
+}
+
+vec4 mmEdgeTopFar() {
+  vec4 color = vec4(0);
+  float weightSum = 0.0;
+  
+  // 1/4
+  float weight = 0.25;
+  color += weight * getChildBrickColor(ivec3(2,4,4));
+  weightSum += weight;
+
+  // 1/8
+  weight = 0.125;
+  color += weight * getChildBrickColor(ivec3(1,4,4));
+  color += weight * getChildBrickColor(ivec3(2,4,3));
+  color += weight * getChildBrickColor(ivec3(2,3,4));
+  color += weight * getChildBrickColor(ivec3(3,4,4));
+  weightSum += 4.0 * weight;
+
+  // 1/16
+  weight = 0.0625;
+  color += weight * getChildBrickColor(ivec3(1,3,4));
+  color += weight * getChildBrickColor(ivec3(1,4,3));
+  color += weight * getChildBrickColor(ivec3(3,3,4));
+  color += weight * getChildBrickColor(ivec3(3,4,3));
+  color += weight * getChildBrickColor(ivec3(2,3,3));
+  weightSum += 5.0 * weight;
+
+  // 1/32
+  weight = 0.03125;
+  color += weight * getChildBrickColor(ivec3(1,3,3));
+  color += weight * getChildBrickColor(ivec3(3,3,3));
+  weightSum += 2.0 * weight;
+
+  return color / weightSum;
+}
+
+vec4 mmEdgeTopLeft() {
+  vec4 color = vec4(0);
+  float weightSum = 0.0;
+  
+  // 1/4
+  float weight = 0.25;
+  color += weight * getChildBrickColor(ivec3(0,4,2));
+  weightSum += weight;
+
+  // 1/8
+  weight = 0.125;
+  color += weight * getChildBrickColor(ivec3(0,4,1));
+  color += weight * getChildBrickColor(ivec3(1,4,2));
+  color += weight * getChildBrickColor(ivec3(0,3,2));
+  color += weight * getChildBrickColor(ivec3(0,4,3));
+  weightSum += 4.0 * weight;
+
+  // 1/16
+  weight = 0.0625;
+  color += weight * getChildBrickColor(ivec3(0,3,1));
+  color += weight * getChildBrickColor(ivec3(1,4,1));
+  color += weight * getChildBrickColor(ivec3(0,3,3));
+  color += weight * getChildBrickColor(ivec3(1,4,3));
+  color += weight * getChildBrickColor(ivec3(1,3,2));
+  weightSum += 5.0 * weight;
+
+  // 1/32
+  weight = 0.03125;
+  color += weight * getChildBrickColor(ivec3(1,3,1));
+  color += weight * getChildBrickColor(ivec3(1,3,3));
+  weightSum += 2.0 * weight;
+
+  return color / weightSum;
+}
+
+vec4 mmEdgeTopNear() {
+  vec4 color = vec4(0);
+  float weightSum = 0.0;
+  
+  // 1/4
+  float weight = 0.25;
+  color += weight * getChildBrickColor(ivec3(2,4,0));
+  weightSum += weight;
+
+  // 1/8
+  weight = 0.125;
+  color += weight * getChildBrickColor(ivec3(1,4,0));
+  color += weight * getChildBrickColor(ivec3(2,4,1));
+  color += weight * getChildBrickColor(ivec3(2,3,0));
+  color += weight * getChildBrickColor(ivec3(3,4,0));
+  weightSum += 4.0 * weight;
+
+  // 1/16
+  weight = 0.0625;
+  color += weight * getChildBrickColor(ivec3(1,3,0));
+  color += weight * getChildBrickColor(ivec3(1,4,1));
+  color += weight * getChildBrickColor(ivec3(3,3,0));
+  color += weight * getChildBrickColor(ivec3(3,4,1));
+  color += weight * getChildBrickColor(ivec3(2,3,1));
+  weightSum += 5.0 * weight;
+
+  // 1/32
+  weight = 0.03125;
+  color += weight * getChildBrickColor(ivec3(1,3,1));
+  color += weight * getChildBrickColor(ivec3(3,3,1));
+  weightSum += 2.0 * weight;
+
+  return color / weightSum;
+}
+
+
+vec4 mmEdgeNearLeft() {
+  vec4 color = vec4(0);
+  float weightSum = 0.0;
+  
+  // 1/4
+  float weight = 0.25;
+  color += weight * getChildBrickColor(ivec3(0,2,0));
+  weightSum += weight;
+
+  // 1/8
+  weight = 0.125;
+  color += weight * getChildBrickColor(ivec3(0,1,0));
+  color += weight * getChildBrickColor(ivec3(1,2,0));
+  color += weight * getChildBrickColor(ivec3(0,2,1));
+  color += weight * getChildBrickColor(ivec3(0,3,0));
+  weightSum += 4.0 * weight;
+
+  // 1/16
+  weight = 0.0625;
+  color += weight * getChildBrickColor(ivec3(0,1,1));
+  color += weight * getChildBrickColor(ivec3(1,1,0));
+  color += weight * getChildBrickColor(ivec3(0,3,1));
+  color += weight * getChildBrickColor(ivec3(1,3,0));
+  color += weight * getChildBrickColor(ivec3(1,2,1));
+  weightSum += 5.0 * weight;
+
+  // 1/32
+  weight = 0.03125;
+  color += weight * getChildBrickColor(ivec3(1,1,1));
+  color += weight * getChildBrickColor(ivec3(1,3,1));
+  weightSum += 2.0 * weight;
+
+  return color / weightSum;
+}
+
+vec4 mmEdgeNearRight() {
+  vec4 color = vec4(0);
+  float weightSum = 0.0;
+  
+  // 1/4
+  float weight = 0.25;
+  color += weight * getChildBrickColor(ivec3(4,2,0));
+  weightSum += weight;
+
+  // 1/8
+  weight = 0.125;
+  color += weight * getChildBrickColor(ivec3(4,1,0));
+  color += weight * getChildBrickColor(ivec3(3,2,0));
+  color += weight * getChildBrickColor(ivec3(4,2,1));
+  color += weight * getChildBrickColor(ivec3(4,3,0));
+  weightSum += 4.0 * weight;
+
+  // 1/16
+  weight = 0.0625;
+  color += weight * getChildBrickColor(ivec3(4,1,1));
+  color += weight * getChildBrickColor(ivec3(3,1,0));
+  color += weight * getChildBrickColor(ivec3(4,3,1));
+  color += weight * getChildBrickColor(ivec3(3,3,0));
+  color += weight * getChildBrickColor(ivec3(3,2,1));
+  weightSum += 5.0 * weight;
+
+  // 1/32
+  weight = 0.03125;
+  color += weight * getChildBrickColor(ivec3(3,1,1));
+  color += weight * getChildBrickColor(ivec3(3,3,1));
+  weightSum += 2.0 * weight;
+
+  return color / weightSum;
+}
+
+vec4 mmEdgeNearBottom() {
+  vec4 color = vec4(0);
+  float weightSum = 0.0;
+  
+  // 1/4
+  float weight = 0.25;
+  color += weight * getChildBrickColor(ivec3(2,0,0));
+  weightSum += weight;
+
+  // 1/8
+  weight = 0.125;
+  color += weight * getChildBrickColor(ivec3(1,0,0));
+  color += weight * getChildBrickColor(ivec3(2,0,1));
+  color += weight * getChildBrickColor(ivec3(2,1,0));
+  color += weight * getChildBrickColor(ivec3(3,0,0));
+  weightSum += 4.0 * weight;
+
+  // 1/16
+  weight = 0.0625;
+  color += weight * getChildBrickColor(ivec3(1,1,0));
+  color += weight * getChildBrickColor(ivec3(1,0,1));
+  color += weight * getChildBrickColor(ivec3(3,1,0));
+  color += weight * getChildBrickColor(ivec3(3,0,1));
+  color += weight * getChildBrickColor(ivec3(2,1,1));
+  weightSum += 5.0 * weight;
+
+  // 1/32
+  weight = 0.03125;
+  color += weight * getChildBrickColor(ivec3(1,1,1));
+  color += weight * getChildBrickColor(ivec3(3,1,1));
+  weightSum += 2.0 * weight;
+
+  return color / weightSum;
+}
+
+
+vec4 mmEdgeBottomLeft() {
+  vec4 color = vec4(0);
+  float weightSum = 0.0;
+  
+  // 1/4
+  float weight = 0.25;
+  color += weight * getChildBrickColor(ivec3(0,0,2));
+  weightSum += weight;
+
+  // 1/8
+  weight = 0.125;
+  color += weight * getChildBrickColor(ivec3(0,0,1));
+  color += weight * getChildBrickColor(ivec3(1,0,2));
+  color += weight * getChildBrickColor(ivec3(0,1,2));
+  color += weight * getChildBrickColor(ivec3(0,0,3));
+  weightSum += 4.0 * weight;
+
+  // 1/16
+  weight = 0.0625;
+  color += weight * getChildBrickColor(ivec3(0,1,1));
+  color += weight * getChildBrickColor(ivec3(1,0,1));
+  color += weight * getChildBrickColor(ivec3(0,1,3));
+  color += weight * getChildBrickColor(ivec3(1,0,3));
+  color += weight * getChildBrickColor(ivec3(1,1,2));
+  weightSum += 5.0 * weight;
+
+  // 1/32
+  weight = 0.03125;
+  color += weight * getChildBrickColor(ivec3(1,1,1));
+  color += weight * getChildBrickColor(ivec3(1,1,3));
+  weightSum += 2.0 * weight;
+
+  return color / weightSum;
+}
+
+vec4 mmEdgeBottomRight() {
+  vec4 color = vec4(0);
+  float weightSum = 0.0;
+  
+  // 1/4
+  float weight = 0.25;
+  color += weight * getChildBrickColor(ivec3(4,0,2));
+  weightSum += weight;
+
+  // 1/8
+  weight = 0.125;
+  color += weight * getChildBrickColor(ivec3(4,0,1));
+  color += weight * getChildBrickColor(ivec3(3,0,2));
+  color += weight * getChildBrickColor(ivec3(4,1,2));
+  color += weight * getChildBrickColor(ivec3(4,0,3));
+  weightSum += 4.0 * weight;
+
+  // 1/16
+  weight = 0.0625;
+  color += weight * getChildBrickColor(ivec3(4,1,1));
+  color += weight * getChildBrickColor(ivec3(3,0,1));
+  color += weight * getChildBrickColor(ivec3(4,1,3));
+  color += weight * getChildBrickColor(ivec3(3,0,3));
+  color += weight * getChildBrickColor(ivec3(3,1,2));
+  weightSum += 5.0 * weight;
+
+  // 1/32
+  weight = 0.03125;
+  color += weight * getChildBrickColor(ivec3(3,1,1));
+  color += weight * getChildBrickColor(ivec3(3,1,3));
+  weightSum += 2.0 * weight;
+
+  return color / weightSum;
+}
+
+vec4 mmEdgeBottomFar() {
+  vec4 color = vec4(0);
+  float weightSum = 0.0;
+  
+  // 1/4
+  float weight = 0.25;
+  color += weight * getChildBrickColor(ivec3(2,0,4));
+  weightSum += weight;
+
+  // 1/8
+  weight = 0.125;
+  color += weight * getChildBrickColor(ivec3(1,0,4));
+  color += weight * getChildBrickColor(ivec3(2,0,3));
+  color += weight * getChildBrickColor(ivec3(2,1,4));
+  color += weight * getChildBrickColor(ivec3(3,0,4));
+  weightSum += 4.0 * weight;
+
+  // 1/16
+  weight = 0.0625;
+  color += weight * getChildBrickColor(ivec3(1,1,4));
+  color += weight * getChildBrickColor(ivec3(1,0,3));
+  color += weight * getChildBrickColor(ivec3(3,1,4));
+  color += weight * getChildBrickColor(ivec3(3,0,3));
+  color += weight * getChildBrickColor(ivec3(2,1,3));
+  weightSum += 5.0 * weight;
+
+  // 1/32
+  weight = 0.03125;
+  color += weight * getChildBrickColor(ivec3(1,1,3));
+  color += weight * getChildBrickColor(ivec3(3,1,3));
+  weightSum += 2.0 * weight;
+
+  return color / weightSum;
+}
+
+vec4 mmEdgeFarLeft() {
+  vec4 color = vec4(0);
+  float weightSum = 0.0;
+  
+  // 1/4
+  float weight = 0.25;
+  color += weight * getChildBrickColor(ivec3(0,2,4));
+  weightSum += weight;
+
+  // 1/8
+  weight = 0.125;
+  color += weight * getChildBrickColor(ivec3(0,1,4));
+  color += weight * getChildBrickColor(ivec3(1,2,4));
+  color += weight * getChildBrickColor(ivec3(0,2,3));
+  color += weight * getChildBrickColor(ivec3(0,3,4));
+  weightSum += 4.0 * weight;
+
+  // 1/16
+  weight = 0.0625;
+  color += weight * getChildBrickColor(ivec3(0,1,3));
+  color += weight * getChildBrickColor(ivec3(1,1,4));
+  color += weight * getChildBrickColor(ivec3(0,3,3));
+  color += weight * getChildBrickColor(ivec3(1,3,4));
+  color += weight * getChildBrickColor(ivec3(1,2,3));
+  weightSum += 5.0 * weight;
+
+  // 1/32
+  weight = 0.03125;
+  color += weight * getChildBrickColor(ivec3(1,1,3));
+  color += weight * getChildBrickColor(ivec3(1,3,3));
+  weightSum += 2.0 * weight;
+
+  return color / weightSum;
+}
+
+vec4 mmEdgeFarRight() {
+  vec4 color = vec4(0);
+  float weightSum = 0.0;
+  
+  // 1/4
+  float weight = 0.25;
+  color += weight * getChildBrickColor(ivec3(4,2,4));
+  weightSum += weight;
+
+  // 1/8
+  weight = 0.125;
+  color += weight * getChildBrickColor(ivec3(4,1,4));
+  color += weight * getChildBrickColor(ivec3(3,2,4));
+  color += weight * getChildBrickColor(ivec3(4,2,3));
+  color += weight * getChildBrickColor(ivec3(4,3,4));
+  weightSum += 4.0 * weight;
+
+  // 1/16
+  weight = 0.0625;
+  color += weight * getChildBrickColor(ivec3(4,1,3));
+  color += weight * getChildBrickColor(ivec3(3,1,4));
+  color += weight * getChildBrickColor(ivec3(4,3,3));
+  color += weight * getChildBrickColor(ivec3(3,3,4));
+  color += weight * getChildBrickColor(ivec3(3,2,3));
+  weightSum += 5.0 * weight;
+
+  // 1/32
+  weight = 0.03125;
+  color += weight * getChildBrickColor(ivec3(3,1,3));
+  color += weight * getChildBrickColor(ivec3(3,3,3));
+  weightSum += 2.0 * weight;
+
+  return color / weightSum;
+}
+
+
+
+vec4 mmCornerTopLeftNear() {
+  vec4 color = vec4(0);
+  float weightSum = 0.0;
+  
+  // 1/4
+  float weight = 0.25;
+  color += weight * getChildBrickColor(ivec3(0,4,0));
+  weightSum += weight;
+
+  // 1/8
+  weight = 0.125;
+  color += weight * getChildBrickColor(ivec3(0,3,0));
+  color += weight * getChildBrickColor(ivec3(1,4,0));
+  color += weight * getChildBrickColor(ivec3(0,4,1));
+  weightSum += 3.0 * weight;
+
+  // 1/16
+  weight = 0.0625;
+  color += weight * getChildBrickColor(ivec3(1,3,0));
+  color += weight * getChildBrickColor(ivec3(1,4,1));
+  color += weight * getChildBrickColor(ivec3(0,3,1));
+  weightSum += 3.0 * weight;
+
+  // 1/32
+  weight = 0.03125;
+  color += weight * getChildBrickColor(ivec3(1,3,1));
+  weightSum += weight;
+
+  return color / weightSum;
+}
+
+vec4 mmCornerTopRightNear() {
+  vec4 color = vec4(0);
+  float weightSum = 0.0;
+  
+  // 1/4
+  float weight = 0.25;
+  color += weight * getChildBrickColor(ivec3(4,4,0));
+  weightSum += weight;
+
+  // 1/8
+  weight = 0.125;
+  color += weight * getChildBrickColor(ivec3(4,3,0));
+  color += weight * getChildBrickColor(ivec3(3,4,0));
+  color += weight * getChildBrickColor(ivec3(4,4,1));
+  weightSum += 3.0 * weight;
+
+  // 1/16
+  weight = 0.0625;
+  color += weight * getChildBrickColor(ivec3(3,3,0));
+  color += weight * getChildBrickColor(ivec3(3,4,1));
+  color += weight * getChildBrickColor(ivec3(4,3,1));
+  weightSum += 3.0 * weight;
+
+  // 1/32
+  weight = 0.03125;
+  color += weight * getChildBrickColor(ivec3(3,3,1));
+  weightSum += weight;
+
+  return color / weightSum;
+}
+
+vec4 mmCornerTopLeftFar() {
+  vec4 color = vec4(0);
+  float weightSum = 0.0;
+  
+  // 1/4
+  float weight = 0.25;
+  color += weight * getChildBrickColor(ivec3(0,4,4));
+  weightSum += weight;
+
+  // 1/8
+  weight = 0.125;
+  color += weight * getChildBrickColor(ivec3(0,3,4));
+  color += weight * getChildBrickColor(ivec3(1,4,4));
+  color += weight * getChildBrickColor(ivec3(0,4,3));
+  weightSum += 3.0 * weight;
+
+  // 1/16
+  weight = 0.0625;
+  color += weight * getChildBrickColor(ivec3(1,3,4));
+  color += weight * getChildBrickColor(ivec3(1,4,3));
+  color += weight * getChildBrickColor(ivec3(0,3,3));
+  weightSum += 3.0 * weight;
+
+  // 1/32
+  weight = 0.03125;
+  color += weight * getChildBrickColor(ivec3(1,3,3));
+  weightSum += weight;
+
+  return color / weightSum;
+}
+
+vec4 mmCornerTopRightFar() {
+  vec4 color = vec4(0);
+  float weightSum = 0.0;
+  
+  // 1/4
+  float weight = 0.25;
+  color += weight * getChildBrickColor(ivec3(4,4,4));
+  weightSum += weight;
+
+  // 1/8
+  weight = 0.125;
+  color += weight * getChildBrickColor(ivec3(4,3,4));
+  color += weight * getChildBrickColor(ivec3(3,4,4));
+  color += weight * getChildBrickColor(ivec3(4,4,3));
+  weightSum += 3.0 * weight;
+
+  // 1/16
+  weight = 0.0625;
+  color += weight * getChildBrickColor(ivec3(3,3,4));
+  color += weight * getChildBrickColor(ivec3(3,4,3));
+  color += weight * getChildBrickColor(ivec3(4,3,3));
+  weightSum += 3.0 * weight;
+
+  // 1/32
+  weight = 0.03125;
+  color += weight * getChildBrickColor(ivec3(3,3,3));
+  weightSum += weight;
+
+  return color / weightSum;
+}
+ 
+vec4 mmCornerBottomLeftNear() {
+  vec4 color = vec4(0);
+  float weightSum = 0.0;
+  
+  // 1/4
+  float weight = 0.25;
+  color += weight * getChildBrickColor(ivec3(0,0,0));
+  weightSum += weight;
+
+  // 1/8
+  weight = 0.125;
+  color += weight * getChildBrickColor(ivec3(0,1,0));
+  color += weight * getChildBrickColor(ivec3(1,0,0));
+  color += weight * getChildBrickColor(ivec3(0,0,1));
+  weightSum += 3.0 * weight;
+
+  // 1/16
+  weight = 0.0625;
+  color += weight * getChildBrickColor(ivec3(1,1,0));
+  color += weight * getChildBrickColor(ivec3(1,0,1));
+  color += weight * getChildBrickColor(ivec3(0,1,1));
+  weightSum += 3.0 * weight;
+
+  // 1/32
+  weight = 0.03125;
+  color += weight * getChildBrickColor(ivec3(1,1,1));
+  weightSum += weight;
+
+  return color / weightSum;
+}
+ 
+vec4 mmCornerBottomRightNear() {
+  vec4 color = vec4(0);
+  float weightSum = 0.0;
+  
+  // 1/4
+  float weight = 0.25;
+  color += weight * getChildBrickColor(ivec3(4,0,0));
+  weightSum += weight;
+
+  // 1/8
+  weight = 0.125;
+  color += weight * getChildBrickColor(ivec3(4,1,0));
+  color += weight * getChildBrickColor(ivec3(3,0,0));
+  color += weight * getChildBrickColor(ivec3(4,0,1));
+  weightSum += 3.0 * weight;
+
+  // 1/16
+  weight = 0.0625;
+  color += weight * getChildBrickColor(ivec3(3,1,0));
+  color += weight * getChildBrickColor(ivec3(3,0,1));
+  color += weight * getChildBrickColor(ivec3(4,1,1));
+  weightSum += 3.0 * weight;
+
+  // 1/32
+  weight = 0.03125;
+  color += weight * getChildBrickColor(ivec3(3,1,1));
+  weightSum += weight;
+
+  return color / weightSum;
+}
+ 
+vec4 mmCornerBottomLeftFar() {
+  vec4 color = vec4(0);
+  float weightSum = 0.0;
+  
+  // 1/4
+  float weight = 0.25;
+  color += weight * getChildBrickColor(ivec3(0,0,4));
+  weightSum += weight;
+
+  // 1/8
+  weight = 0.125;
+  color += weight * getChildBrickColor(ivec3(0,1,4));
+  color += weight * getChildBrickColor(ivec3(1,0,4));
+  color += weight * getChildBrickColor(ivec3(0,0,3));
+  weightSum += 3.0 * weight;
+
+  // 1/16
+  weight = 0.0625;
+  color += weight * getChildBrickColor(ivec3(1,1,4));
+  color += weight * getChildBrickColor(ivec3(1,0,3));
+  color += weight * getChildBrickColor(ivec3(0,1,3));
+  weightSum += 3.0 * weight;
+
+  // 1/32
+  weight = 0.03125;
+  color += weight * getChildBrickColor(ivec3(1,1,3));
+  weightSum += weight;
+
+  return color / weightSum;
+}
+ 
+vec4 mmCornerBottomRightFar() {
+  vec4 color = vec4(0);
+  float weightSum = 0.0;
+  
+  // 1/4
+  float weight = 0.25;
+  color += weight * getChildBrickColor(ivec3(4,0,4));
+  weightSum += weight;
+
+  // 1/8
+  weight = 0.125;
+  color += weight * getChildBrickColor(ivec3(4,1,4));
+  color += weight * getChildBrickColor(ivec3(3,0,4));
+  color += weight * getChildBrickColor(ivec3(4,0,3));
+  weightSum += 3.0 * weight;
+
+  // 1/16
+  weight = 0.0625;
+  color += weight * getChildBrickColor(ivec3(3,1,4));
+  color += weight * getChildBrickColor(ivec3(3,0,3));
+  color += weight * getChildBrickColor(ivec3(4,1,3));
+  weightSum += 3.0 * weight;
+
+  // 1/32
+  weight = 0.03125;
+  color += weight * getChildBrickColor(ivec3(3,1,3));
+  weightSum += weight;
+
+  return color / weightSum;
+}
+
 void loadChildTile(in int tileAddress) {
   for (int i = 0; i < 8; ++i) {
     childNextU[i] = imageLoad(nodePool_next, tileAddress + i).x;
@@ -106,7 +1104,6 @@ void loadChildTile(in int tileAddress) {
     }
   }
 }
-
 
 // Allocate brick-texture, store pointer in color and return the coordinate of the lower-left voxel.
 uvec3 allocTextureBrick(in int nodeAddress, in uint nodeNextU) {
@@ -182,49 +1179,101 @@ void compAndStoreAvgConstColor(in int nodeAddress) {
 }
 
 
-vec4 getChildBrickColor(in int childIdx, in ivec3 offset) {
-  // If the child has a brick attatched: return the color from the requested brickCoordinates
-  // Otherwise, return its constant color
-  if (childBrickCoords[childIdx].x < 0) {
-    return imageLoad(brickPool_color, childBrickCoords[childIdx] + offset);
-  } else {
-    return convRGBA8ToVec4(NODE_MASK_VALUE & childColorU[childIdx]);
-  }
-}
 
-// Get the child brickcolor depending on the whole brick coordinates in [0..5]
-vec4 getChildBrickColor(in ivec3 brickCoords) {
-  
-  vec3 coordsNode = vec3(brickCoords) / 4.0;
-
-  uvec3 offVec = uvec3(2.0 * coordsNode);
-  uint childIdx = offVec.x + 2U * offVec.y + 4U * offVec.z;
-
-  ivec3 localOffset = 2 * ivec3(childOffsets[childIdx]);
-}
 
 
 // Fully mipmap the center voxel and partially mipmap the border and corner voxels
-void mipmapBrick(uvec3 brickCoords) {
-  
+void mipmapBrick(ivec3 brickCoords) {
+
+  // Pass 1
   vec4 filteredColor = mmCenter();
-  imageStore(brickPool_color, ivec3(1, 1, 1), filteredColor);
-  
-  filteredColor = mmCenterTop();
-  imageStore(brickPool_color, ivec3(1, 2, 1), filteredColor);
-  
+  imageStore(brickPool_color, brickCoords + ivec3(1, 1, 1), filteredColor);
+  //////////////////////////////////////////////////////////////////////////////
+    
+  filteredColor = mmCenterLeft();
+  imageStore(brickPool_color, brickCoords + ivec3(0, 1, 1), filteredColor);
+
   filteredColor = mmCenterRight();
-  imageStore(brickPool_color, ivec3(2, 1, 1), rightColor);
+  imageStore(brickPool_color, brickCoords + ivec3(2, 1, 1), filteredColor);
 
-  
-  
+  filteredColor = mmCenterBottom();
+  imageStore(brickPool_color, brickCoords + ivec3(1, 0, 1), filteredColor);
+
+  filteredColor = mmCenterTop();
+  imageStore(brickPool_color, brickCoords + ivec3(1, 2, 1), filteredColor);
+
+  filteredColor = mmCenterNear();
+  imageStore(brickPool_color, brickCoords + ivec3(1, 1, 0), filteredColor);
+
+  filteredColor = mmCenterFar();
+  imageStore(brickPool_color, brickCoords + ivec3(1, 1, 2), filteredColor);
   
 
-  
+  // Pass 2
+  filteredColor = mmEdgeTopRight();
+  imageStore(brickPool_color, brickCoords + ivec3(2,2,1), filteredColor);
 
-  // TODO: Switch Y- and Z-components in the mm-methods!!!
+  filteredColor = mmEdgeTopFar();   
+  imageStore(brickPool_color, brickCoords + ivec3(1,2,2), filteredColor);
+
+  filteredColor = mmEdgeTopLeft();  
+  imageStore(brickPool_color, brickCoords + ivec3(0,2,1), filteredColor);
+
+  filteredColor = mmEdgeTopNear();  
+  imageStore(brickPool_color, brickCoords + ivec3(1,2,0), filteredColor);
+
+  filteredColor = mmEdgeNearLeft();
+  imageStore(brickPool_color, brickCoords + ivec3(0,1,0), filteredColor);
+
+  filteredColor = mmEdgeNearRight();
+  imageStore(brickPool_color, brickCoords + ivec3(2,1,0), filteredColor);
+
+  filteredColor = mmEdgeNearBottom();
+  imageStore(brickPool_color, brickCoords + ivec3(1,0,0), filteredColor);
+
+  filteredColor = mmEdgeBottomLeft();
+  imageStore(brickPool_color, brickCoords + ivec3(0,0,1), filteredColor);
+
+  filteredColor = mmEdgeBottomRight();
+  imageStore(brickPool_color, brickCoords + ivec3(2,0,1), filteredColor);
+
+  filteredColor = mmEdgeBottomFar();
+  imageStore(brickPool_color, brickCoords + ivec3(1,0,2), filteredColor);
+
+  filteredColor = mmEdgeFarLeft();
+  imageStore(brickPool_color, brickCoords + ivec3(0,1,2), filteredColor);
+
+  filteredColor = mmEdgeFarRight();
+  imageStore(brickPool_color, brickCoords + ivec3(2,1,2), filteredColor);
+  ////////////////////////////////////////////////////////////////////////////
+
+
+  // Pass 3
+  filteredColor = mmCornerTopLeftNear();
+  imageStore(brickPool_color, brickCoords + ivec3(0,2,0), filteredColor);
+
+  filteredColor = mmCornerTopRightNear();
+  imageStore(brickPool_color, brickCoords + ivec3(2,2,0), filteredColor);
+
+  filteredColor = mmCornerTopLeftFar();
+  imageStore(brickPool_color, brickCoords + ivec3(0,2,2), filteredColor);
+
+  filteredColor = mmCornerTopRightFar();
+  imageStore(brickPool_color, brickCoords + ivec3(2,2,2), filteredColor);
+
+  filteredColor = mmCornerBottomLeftNear();
+  imageStore(brickPool_color, brickCoords + ivec3(0,0,0), filteredColor);
+
+  filteredColor = mmCornerBottomRightNear();
+  imageStore(brickPool_color, brickCoords + ivec3(2,0,0), filteredColor);
+
+  filteredColor = mmCornerBottomLeftFar();
+  imageStore(brickPool_color, brickCoords + ivec3(0,0,2), filteredColor);
+
+  filteredColor = mmCornerBottomRightFar();
+  imageStore(brickPool_color, brickCoords + ivec3(2,0,2), filteredColor);
+  ////////////////////////////////////////////////////////////////////////////
 }
-
 
 
 uint getThreadNode() {
@@ -260,1001 +1309,17 @@ void main() {
   uint childAddress = NODE_MASK_VALUE & nodeNextU;
   loadChildTile(int(childAddress));  // Loads the child-values into the global arrays
   
-  bool brickNeeded = computeBrickNeeded();
-  if (brickNeeded) {
-    allocTextureBrick(int(nodeAddress), nodeNextU);
-
-    // Crazy shit gauss-mipmapping and neightbour-finding
+  uvec3 texAddress = uvec3(0);
+  if ((NODE_MASK_BRICK & nodeNextU) == 0) {
+    texAddress = allocTextureBrick(int(nodeAddress), nodeNextU);
   } else {
-    compAndStoreAvgConstColor(int(nodeAddress));
+    texAddress = uintXYZ10ToVec3(NODE_MASK_VALUE & imageLoad(nodePool_color, int(nodeAddress)).x);
   }
+  
+  mipmapBrick(ivec3(texAddress));
 }
 
 
-
-
-
-
-
-
-
-
-
-
-///////////////////////////////////////////////////////////////////////////
-// Helper methods to issue the mipmaps
-///////////////////////////////////////////////////////////////////////////
-vec4 mmCenter() {
-  vec4 color = vec4(0);
-  float weightSum = 0.0;
-
-  //  1/4
-  float weight = 0.25;
-  color += weight * getChildBrickColor(ivec3(2, 2, 2));
-  weightSum += weight;
-
-  // 1/8
-  weight = 0.125;
-  color += weight * getChildBrickColor(ivec3(2, 2, 1));
-  color += weight * getChildBrickColor(ivec3(2, 1, 2));
-  color += weight * getChildBrickColor(ivec3(3, 2, 2));
-  color += weight * getChildBrickColor(ivec3(2, 2, 3));
-  color += weight * getChildBrickColor(ivec3(2, 3, 2));
-  color += weight * getChildBrickColor(ivec3(1, 2, 2));
-  weightSum += 6.0 * weight;
-  
-  // 1/16
-  weight = 0.0625;                             
-  color += weight * getChildBrickColor(ivec3(2,1,1));
-  color += weight * getChildBrickColor(ivec3(3,1,2));
-  color += weight * getChildBrickColor(ivec3(1,1,2));
-  color += weight * getChildBrickColor(ivec3(2,1,3));
-  color += weight * getChildBrickColor(ivec3(1,2,1));
-  color += weight * getChildBrickColor(ivec3(3,2,1));
-  color += weight * getChildBrickColor(ivec3(2,3,1));
-  color += weight * getChildBrickColor(ivec3(1,3,2));
-  color += weight * getChildBrickColor(ivec3(3,3,2));
-  color += weight * getChildBrickColor(ivec3(3,2,3));
-  color += weight * getChildBrickColor(ivec3(2,3,3));
-  color += weight * getChildBrickColor(ivec3(1,2,3));
-  weightSum += 12.0 * weight;
-
-  // 1/32
-  weight = 0.03125;
-  color += weight * getChildBrickColor(ivec3(1,1,1));
-  color += weight * getChildBrickColor(ivec3(3,1,1));
-  color += weight * getChildBrickColor(ivec3(3,3,1));
-  color += weight * getChildBrickColor(ivec3(1,3,1));
-  color += weight * getChildBrickColor(ivec3(1,1,3));
-  color += weight * getChildBrickColor(ivec3(3,1,3));
-  color += weight * getChildBrickColor(ivec3(3,3,3));
-  color += weight * getChildBrickColor(ivec3(1,3,3));
-  weightSum += 8.0 * weight;
-  
-  // Center color finished
-  return color / weightSum;
-}
-
-vec4 mmmCenterTop() {
-  vec4 color = vec4(0);
-  float weightSum = 0.0;
-  
-  // 1/4
-  float weight = 0.25;
-  color += weight * getChildBrickColor(ivec3(2,2,4));
-  weightSum += weight;
-
-  // 1/8
-  weight = 0.125;
-  color += weight * getChildBrickColor(ivec3(2,1,4));
-  color += weight * getChildBrickColor(ivec3(3,2,4));
-  color += weight * getChildBrickColor(ivec3(2,3,4));
-  color += weight * getChildBrickColor(ivec3(1,2,4));
-  color += weight * getChildBrickColor(ivec3(2,2,3));
-  weightSum += 5.0 * weight;
-
-  // 1/16
-  weight = 0.0625;
-  color += weight * getChildBrickColor(ivec3(1,1,4));
-  color += weight * getChildBrickColor(ivec3(2,1,3));
-  color += weight * getChildBrickColor(ivec3(3,1,4));
-  color += weight * getChildBrickColor(ivec3(3,2,3));
-  color += weight * getChildBrickColor(ivec3(3,3,4));
-  color += weight * getChildBrickColor(ivec3(2,3,3));
-  color += weight * getChildBrickColor(ivec3(1,3,4));
-  color += weight * getChildBrickColor(ivec3(1,2,3));
-  weightSum += 8.0 * weight;
-
-  // 1/32
-  weight = 0.03125;
-  color += weight * getChildBrickColor(ivec3(1,1,3));
-  color += weight * getChildBrickColor(ivec3(3,1,3));
-  color += weight * getChildBrickColor(ivec3(3,3,3));
-  color += weight * getChildBrickColor(ivec3(1,3,3));
-  weightSum += 4.0 * weight;
-
-  return color / weightSum;
-}
-
-vec4 mmCenterRight() {
-  vec4 color = vec4(0);
-  float weightSum = 0.0;
-  
-  // 1/4
-  float weight = 0.25;
-  color += weight * getChildBrickColor(ivec3(4,2,2));
-  weightSum += weight;
-
-  // 1/8
-  weight = 0.125;
-  color += weight * getChildBrickColor(ivec3(4,1,2));
-  color += weight * getChildBrickColor(ivec3(4,2,3));
-  color += weight * getChildBrickColor(ivec3(4,3,2));
-  color += weight * getChildBrickColor(ivec3(4,2,1));
-  color += weight * getChildBrickColor(ivec3(3,2,2));
-  weightSum += 5.0 * weight;
-
-  // 1/16
-  weight = 0.0625;
-  color += weight * getChildBrickColor(ivec3(4,1,1));
-  color += weight * getChildBrickColor(ivec3(3,1,2));
-  color += weight * getChildBrickColor(ivec3(4,1,3));
-  color += weight * getChildBrickColor(ivec3(3,2,3));
-  color += weight * getChildBrickColor(ivec3(4,3,3));
-  color += weight * getChildBrickColor(ivec3(3,3,2));
-  color += weight * getChildBrickColor(ivec3(4,3,1));
-  color += weight * getChildBrickColor(ivec3(3,2,1));
-  weightSum += 8.0 * weight;
-
-  // 1/32
-  weight = 0.03125;
-  color += weight * getChildBrickColor(ivec3(3,1,1));
-  color += weight * getChildBrickColor(ivec3(3,1,3));
-  color += weight * getChildBrickColor(ivec3(3,3,3));
-  color += weight * getChildBrickColor(ivec3(3,3,1));
-  weightSum += 4.0 * weight;
-
-  return color / weightSum;
-}
-
-vec4 mmCenterFar() {
-  vec4 color = vec4(0);
-  float weightSum = 0.0;
-  
-  // 1/4
-  float weight = 0.25;
-  color += weight * getChildBrickColor(ivec3(2,4,2));
-  weightSum += weight;
-
-  // 1/8
-  weight = 0.125;
-  color += weight * getChildBrickColor(ivec3(1,4,2));
-  color += weight * getChildBrickColor(ivec3(2,4,3));
-  color += weight * getChildBrickColor(ivec3(3,4,2));
-  color += weight * getChildBrickColor(ivec3(2,4,1));
-  color += weight * getChildBrickColor(ivec3(2,3,2));
-  weightSum += 5.0 * weight;
-
-  // 1/16
-  weight = 0.0625;
-  color += weight * getChildBrickColor(ivec3(1,4,1));
-  color += weight * getChildBrickColor(ivec3(1,3,2));
-  color += weight * getChildBrickColor(ivec3(1,4,3));
-  color += weight * getChildBrickColor(ivec3(2,3,3));
-  color += weight * getChildBrickColor(ivec3(3,4,3));
-  color += weight * getChildBrickColor(ivec3(3,3,2));
-  color += weight * getChildBrickColor(ivec3(3,4,1));
-  color += weight * getChildBrickColor(ivec3(2,3,1));
-  weightSum += 8.0 * weight;
-
-  // 1/32
-  weight = 0.03125;
-  color += weight * getChildBrickColor(ivec3(1,3,1));
-  color += weight * getChildBrickColor(ivec3(1,3,3));
-  color += weight * getChildBrickColor(ivec3(3,3,3));
-  color += weight * getChildBrickColor(ivec3(3,3,1));
-  weightSum += 4.0 * weight;
-
-  return color / weightSum;
-}
-
-vec4 mmCenterLeft() {
-  vec4 color = vec4(0);
-  float weightSum = 0.0;
-  
-  // 1/4
-  float weight = 0.25;
-  color += weight * getChildBrickColor(ivec3(0,2,2));
-  weightSum += weight;
-
-  // 1/8
-  weight = 0.125;
-  color += weight * getChildBrickColor(ivec3(0,1,2));
-  color += weight * getChildBrickColor(ivec3(0,3,2));
-  color += weight * getChildBrickColor(ivec3(0,2,3));
-  color += weight * getChildBrickColor(ivec3(1,2,2));
-  color += weight * getChildBrickColor(ivec3(0,2,1));
-  weightSum += 5.0 * weight;
-
-  // 1/16
-  weight = 0.0625;
-  color += weight * getChildBrickColor(ivec3(0,1,1));
-  color += weight * getChildBrickColor(ivec3(1,1,2));
-  color += weight * getChildBrickColor(ivec3(0,1,3));
-  color += weight * getChildBrickColor(ivec3(1,2,3));
-  color += weight * getChildBrickColor(ivec3(0,3,3));
-  color += weight * getChildBrickColor(ivec3(1,3,2));
-  color += weight * getChildBrickColor(ivec3(0,3,1));
-  color += weight * getChildBrickColor(ivec3(1,2,1));
-  weightSum += 8.0 * weight;
-
-  // 1/32
-  weight = 0.03125;
-  color += weight * getChildBrickColor(ivec3(1,1,1));
-  color += weight * getChildBrickColor(ivec3(1,1,3));
-  color += weight * getChildBrickColor(ivec3(1,3,3));
-  color += weight * getChildBrickColor(ivec3(1,3,1));
-  weightSum += 4.0 * weight;
-
-  return color / weightSum;
-}
-
-vec4 mmCenterBottom() {
-  vec4 color = vec4(0);
-  float weightSum = 0.0;
-  
-  // 1/4
-  float weight = 0.25;
-  color += weight * getChildBrickColor(ivec3(2,2,0));
-  weightSum += weight;
-
-  // 1/8
-  weight = 0.125;
-  color += weight * getChildBrickColor(ivec3(2,1,0));
-  color += weight * getChildBrickColor(ivec3(2,3,0));
-  color += weight * getChildBrickColor(ivec3(3,2,0));
-  color += weight * getChildBrickColor(ivec3(2,2,1));
-  color += weight * getChildBrickColor(ivec3(1,2,0));
-  weightSum += 5.0 * weight;
-
-  // 1/16
-  weight = 0.0625;
-  color += weight * getChildBrickColor(ivec3(1,1,0));
-  color += weight * getChildBrickColor(ivec3(2,1,1));
-  color += weight * getChildBrickColor(ivec3(3,1,0));
-  color += weight * getChildBrickColor(ivec3(3,2,1));
-  color += weight * getChildBrickColor(ivec3(3,3,0));
-  color += weight * getChildBrickColor(ivec3(2,3,1));
-  color += weight * getChildBrickColor(ivec3(1,3,0));
-  color += weight * getChildBrickColor(ivec3(1,2,1));
-  weightSum += 8.0 * weight;
-
-  // 1/32
-  weight = 0.03125;
-  color += weight * getChildBrickColor(ivec3(1,1,1));
-  color += weight * getChildBrickColor(ivec3(3,1,1));
-  color += weight * getChildBrickColor(ivec3(3,3,1));
-  color += weight * getChildBrickColor(ivec3(1,3,1));
-  weightSum += 4.0 * weight;
-
-  return color / weightSum;
-}
-
-vec4 mmCenterNear() {
-  vec4 color = vec4(0);
-  float weightSum = 0.0;
-  
-  // 1/4
-  float weight = 0.25;
-  color += weight * getChildBrickColor(ivec3(2,0,2));
-  weightSum += weight;
-
-  // 1/8
-  weight = 0.125;
-  color += weight * getChildBrickColor(ivec3(1,0,2));
-  color += weight * getChildBrickColor(ivec3(3,0,2));
-  color += weight * getChildBrickColor(ivec3(2,0,3));
-  color += weight * getChildBrickColor(ivec3(2,1,2));
-  color += weight * getChildBrickColor(ivec3(2,0,1));
-  weightSum += 5.0 * weight;
-
-  // 1/16
-  weight = 0.0625;
-  color += weight * getChildBrickColor(ivec3(1,0,1));
-  color += weight * getChildBrickColor(ivec3(1,1,2));
-  color += weight * getChildBrickColor(ivec3(1,0,3));
-  color += weight * getChildBrickColor(ivec3(2,1,3));
-  color += weight * getChildBrickColor(ivec3(3,0,3));
-  color += weight * getChildBrickColor(ivec3(3,1,2));
-  color += weight * getChildBrickColor(ivec3(3,0,1));
-  color += weight * getChildBrickColor(ivec3(2,1,1));
-  weightSum += 8.0 * weight;
-
-  // 1/32
-  weight = 0.03125;
-  color += weight * getChildBrickColor(ivec3(1,1,1));
-  color += weight * getChildBrickColor(ivec3(1,1,3));
-  color += weight * getChildBrickColor(ivec3(3,1,3));
-  color += weight * getChildBrickColor(ivec3(3,1,1));
-  weightSum += 4.0 * weight;
-
-  return color / weightSum;
-}
-
-
-
-
-vec4 mmEdgeTopRight() {
-  vec4 color = vec4(0);
-  float weightSum = 0.0;
-  
-  // 1/4
-  float weight = 0.25;
-  color += weight * getChildBrickColor(ivec3(4,2,4));
-  weightSum += weight;
-
-  // 1/8
-  weight = 0.125;
-  color += weight * getChildBrickColor(ivec3(4,1,4));
-  color += weight * getChildBrickColor(ivec3(3,2,4));
-  color += weight * getChildBrickColor(ivec3(4,2,3));
-  color += weight * getChildBrickColor(ivec3(4,3,4));
-  weightSum += 4.0 * weight;
-
-  // 1/16
-  weight = 0.0625;
-  color += weight * getChildBrickColor(ivec3(4,1,3));
-  color += weight * getChildBrickColor(ivec3(3,1,4));
-  color += weight * getChildBrickColor(ivec3(4,3,3));
-  color += weight * getChildBrickColor(ivec3(3,3,4));
-  color += weight * getChildBrickColor(ivec3(3,2,3));
-  weightSum += 5.0 * weight;
-
-  // 1/32
-  weight = 0.03125;
-  color += weight * getChildBrickColor(ivec3(3,1,3));
-  color += weight * getChildBrickColor(ivec3(3,3,3));
-  weightSum += 2.0 * weight;
-
-  return color / weightSum;
-}
-
-vec4 mmEdgeTopFar() {
-  vec4 color = vec4(0);
-  float weightSum = 0.0;
-  
-  // 1/4
-  float weight = 0.25;
-  color += weight * getChildBrickColor(ivec3(2,4,4));
-  weightSum += weight;
-
-  // 1/8
-  weight = 0.125;
-  color += weight * getChildBrickColor(ivec3(1,4,4));
-  color += weight * getChildBrickColor(ivec3(2,3,4));
-  color += weight * getChildBrickColor(ivec3(2,4,3));
-  color += weight * getChildBrickColor(ivec3(3,4,4));
-  weightSum += 4.0 * weight;
-
-  // 1/16
-  weight = 0.0625;
-  color += weight * getChildBrickColor(ivec3(1,4,3));
-  color += weight * getChildBrickColor(ivec3(1,3,4));
-  color += weight * getChildBrickColor(ivec3(3,4,3));
-  color += weight * getChildBrickColor(ivec3(3,3,4));
-  color += weight * getChildBrickColor(ivec3(2,3,3));
-  weightSum += 5.0 * weight;
-
-  // 1/32
-  weight = 0.03125;
-  color += weight * getChildBrickColor(ivec3(1,3,3));
-  color += weight * getChildBrickColor(ivec3(3,3,3));
-  weightSum += 2.0 * weight;
-
-  return color / weightSum;
-}
-
-vec4 mmEdgeTopLeft() {
-  vec4 color = vec4(0);
-  float weightSum = 0.0;
-  
-  // 1/4
-  float weight = 0.25;
-  color += weight * getChildBrickColor(ivec3(0,2,4));
-  weightSum += weight;
-
-  // 1/8
-  weight = 0.125;
-  color += weight * getChildBrickColor(ivec3(0,1,4));
-  color += weight * getChildBrickColor(ivec3(1,2,4));
-  color += weight * getChildBrickColor(ivec3(0,2,3));
-  color += weight * getChildBrickColor(ivec3(0,3,4));
-  weightSum += 4.0 * weight;
-
-  // 1/16
-  weight = 0.0625;
-  color += weight * getChildBrickColor(ivec3(0,1,3));
-  color += weight * getChildBrickColor(ivec3(1,1,4));
-  color += weight * getChildBrickColor(ivec3(0,3,3));
-  color += weight * getChildBrickColor(ivec3(1,3,4));
-  color += weight * getChildBrickColor(ivec3(1,2,3));
-  weightSum += 5.0 * weight;
-
-  // 1/32
-  weight = 0.03125;
-  color += weight * getChildBrickColor(ivec3(1,1,3));
-  color += weight * getChildBrickColor(ivec3(1,3,3));
-  weightSum += 2.0 * weight;
-
-  return color / weightSum;
-}
-
-vec4 mmEdgeTopNear() {
-  vec4 color = vec4(0);
-  float weightSum = 0.0;
-  
-  // 1/4
-  float weight = 0.25;
-  color += weight * getChildBrickColor(ivec3(2,0,4));
-  weightSum += weight;
-
-  // 1/8
-  weight = 0.125;
-  color += weight * getChildBrickColor(ivec3(1,0,4));
-  color += weight * getChildBrickColor(ivec3(2,1,4));
-  color += weight * getChildBrickColor(ivec3(2,0,3));
-  color += weight * getChildBrickColor(ivec3(3,0,4));
-  weightSum += 4.0 * weight;
-
-  // 1/16
-  weight = 0.0625;
-  color += weight * getChildBrickColor(ivec3(1,0,3));
-  color += weight * getChildBrickColor(ivec3(1,1,4));
-  color += weight * getChildBrickColor(ivec3(3,0,3));
-  color += weight * getChildBrickColor(ivec3(3,1,4));
-  color += weight * getChildBrickColor(ivec3(2,1,3));
-  weightSum += 5.0 * weight;
-
-  // 1/32
-  weight = 0.03125;
-  color += weight * getChildBrickColor(ivec3(1,1,3));
-  color += weight * getChildBrickColor(ivec3(3,1,3));
-  weightSum += 2.0 * weight;
-
-  return color / weightSum;
-}
-
-
-vec4 mmEdgeNearLeft() {
-  vec4 color = vec4(0);
-  float weightSum = 0.0;
-  
-  // 1/4
-  float weight = 0.25;
-  color += weight * getChildBrickColor(ivec3(0,0,2));
-  weightSum += weight;
-
-  // 1/8
-  weight = 0.125;
-  color += weight * getChildBrickColor(ivec3(0,0,1));
-  color += weight * getChildBrickColor(ivec3(1,0,2));
-  color += weight * getChildBrickColor(ivec3(0,1,2));
-  color += weight * getChildBrickColor(ivec3(0,0,3));
-  weightSum += 4.0 * weight;
-
-  // 1/16
-  weight = 0.0625;
-  color += weight * getChildBrickColor(ivec3(0,1,1));
-  color += weight * getChildBrickColor(ivec3(1,0,1));
-  color += weight * getChildBrickColor(ivec3(0,1,3));
-  color += weight * getChildBrickColor(ivec3(1,0,3));
-  color += weight * getChildBrickColor(ivec3(1,1,2));
-  weightSum += 5.0 * weight;
-
-  // 1/32
-  weight = 0.03125;
-  color += weight * getChildBrickColor(ivec3(1,1,1));
-  color += weight * getChildBrickColor(ivec3(1,1,3));
-  weightSum += 2.0 * weight;
-
-  return color / weightSum;
-}
-
-vec4 mmEdgeNearRight() {
-  vec4 color = vec4(0);
-  float weightSum = 0.0;
-  
-  // 1/4
-  float weight = 0.25;
-  color += weight * getChildBrickColor(ivec3(4,0,2));
-  weightSum += weight;
-
-  // 1/8
-  weight = 0.125;
-  color += weight * getChildBrickColor(ivec3(4,0,1));
-  color += weight * getChildBrickColor(ivec3(3,0,2));
-  color += weight * getChildBrickColor(ivec3(4,1,2));
-  color += weight * getChildBrickColor(ivec3(4,0,3));
-  weightSum += 4.0 * weight;
-
-  // 1/16
-  weight = 0.0625;
-  color += weight * getChildBrickColor(ivec3(4,1,1));
-  color += weight * getChildBrickColor(ivec3(3,0,1));
-  color += weight * getChildBrickColor(ivec3(4,1,3));
-  color += weight * getChildBrickColor(ivec3(3,0,3));
-  color += weight * getChildBrickColor(ivec3(3,1,2));
-  weightSum += 5.0 * weight;
-
-  // 1/32
-  weight = 0.03125;
-  color += weight * getChildBrickColor(ivec3(3,1,1));
-  color += weight * getChildBrickColor(ivec3(3,1,3));
-  weightSum += 2.0 * weight;
-
-  return color / weightSum;
-}
-
-vec4 mmEdgeNearBottom() {
-  vec4 color = vec4(0);
-  float weightSum = 0.0;
-  
-  // 1/4
-  float weight = 0.25;
-  color += weight * getChildBrickColor(ivec3(2,0,0));
-  weightSum += weight;
-
-  // 1/8
-  weight = 0.125;
-  color += weight * getChildBrickColor(ivec3(1,0,0));
-  color += weight * getChildBrickColor(ivec3(2,1,0));
-  color += weight * getChildBrickColor(ivec3(2,0,1));
-  color += weight * getChildBrickColor(ivec3(3,0,0));
-  weightSum += 4.0 * weight;
-
-  // 1/16
-  weight = 0.0625;
-  color += weight * getChildBrickColor(ivec3(1,0,1));
-  color += weight * getChildBrickColor(ivec3(1,1,0));
-  color += weight * getChildBrickColor(ivec3(3,0,1));
-  color += weight * getChildBrickColor(ivec3(3,1,0));
-  color += weight * getChildBrickColor(ivec3(2,1,1));
-  weightSum += 5.0 * weight;
-
-  // 1/32
-  weight = 0.03125;
-  color += weight * getChildBrickColor(ivec3(1,1,1));
-  color += weight * getChildBrickColor(ivec3(3,1,1));
-  weightSum += 2.0 * weight;
-
-  return color / weightSum;
-}
-
-
-vec4 mmEdgeBottomLeft() {
-  vec4 color = vec4(0);
-  float weightSum = 0.0;
-  
-  // 1/4
-  float weight = 0.25;
-  color += weight * getChildBrickColor(ivec3(0,2,0));
-  weightSum += weight;
-
-  // 1/8
-  weight = 0.125;
-  color += weight * getChildBrickColor(ivec3(0,1,0));
-  color += weight * getChildBrickColor(ivec3(1,2,0));
-  color += weight * getChildBrickColor(ivec3(0,2,1));
-  color += weight * getChildBrickColor(ivec3(0,3,0));
-  weightSum += 4.0 * weight;
-
-  // 1/16
-  weight = 0.0625;
-  color += weight * getChildBrickColor(ivec3(0,1,1));
-  color += weight * getChildBrickColor(ivec3(1,1,0));
-  color += weight * getChildBrickColor(ivec3(0,3,1));
-  color += weight * getChildBrickColor(ivec3(1,3,0));
-  color += weight * getChildBrickColor(ivec3(1,2,1));
-  weightSum += 5.0 * weight;
-
-  // 1/32
-  weight = 0.03125;
-  color += weight * getChildBrickColor(ivec3(1,1,1));
-  color += weight * getChildBrickColor(ivec3(1,3,1));
-  weightSum += 2.0 * weight;
-
-  return color / weightSum;
-}
-
-vec4 mmEdgeBottomRight() {
-  vec4 color = vec4(0);
-  float weightSum = 0.0;
-  
-  // 1/4
-  float weight = 0.25;
-  color += weight * getChildBrickColor(ivec3(4,2,0));
-  weightSum += weight;
-
-  // 1/8
-  weight = 0.125;
-  color += weight * getChildBrickColor(ivec3(4,1,0));
-  color += weight * getChildBrickColor(ivec3(3,2,0));
-  color += weight * getChildBrickColor(ivec3(4,2,1));
-  color += weight * getChildBrickColor(ivec3(4,3,0));
-  weightSum += 4.0 * weight;
-
-  // 1/16
-  weight = 0.0625;
-  color += weight * getChildBrickColor(ivec3(4,1,1));
-  color += weight * getChildBrickColor(ivec3(3,1,0));
-  color += weight * getChildBrickColor(ivec3(4,3,1));
-  color += weight * getChildBrickColor(ivec3(3,3,0));
-  color += weight * getChildBrickColor(ivec3(3,2,1));
-  weightSum += 5.0 * weight;
-
-  // 1/32
-  weight = 0.03125;
-  color += weight * getChildBrickColor(ivec3(3,1,1));
-  color += weight * getChildBrickColor(ivec3(3,3,1));
-  weightSum += 2.0 * weight;
-
-  return color / weightSum;
-}
-
-vec4 mmEdgeBottomFar() {
-  vec4 color = vec4(0);
-  float weightSum = 0.0;
-  
-  // 1/4
-  float weight = 0.25;
-  color += weight * getChildBrickColor(ivec3(2,4,0));
-  weightSum += weight;
-
-  // 1/8
-  weight = 0.125;
-  color += weight * getChildBrickColor(ivec3(1,4,0));
-  color += weight * getChildBrickColor(ivec3(2,3,0));
-  color += weight * getChildBrickColor(ivec3(2,4,1));
-  color += weight * getChildBrickColor(ivec3(3,4,0));
-  weightSum += 4.0 * weight;
-
-  // 1/16
-  weight = 0.0625;
-  color += weight * getChildBrickColor(ivec3(1,4,1));
-  color += weight * getChildBrickColor(ivec3(1,3,0));
-  color += weight * getChildBrickColor(ivec3(3,4,1));
-  color += weight * getChildBrickColor(ivec3(3,3,0));
-  color += weight * getChildBrickColor(ivec3(2,3,1));
-  weightSum += 5.0 * weight;
-
-  // 1/32
-  weight = 0.03125;
-  color += weight * getChildBrickColor(ivec3(1,3,1));
-  color += weight * getChildBrickColor(ivec3(3,3,1));
-  weightSum += 2.0 * weight;
-
-  return color / weightSum;
-}
-
-vec4 mmEdgeFarLeft() {
-  vec4 color = vec4(0);
-  float weightSum = 0.0;
-  
-  // 1/4
-  float weight = 0.25;
-  color += weight * getChildBrickColor(ivec3(0,4,2));
-  weightSum += weight;
-
-  // 1/8
-  weight = 0.125;
-  color += weight * getChildBrickColor(ivec3(0,4,1));
-  color += weight * getChildBrickColor(ivec3(1,4,2));
-  color += weight * getChildBrickColor(ivec3(0,3,2));
-  color += weight * getChildBrickColor(ivec3(0,4,3));
-  weightSum += 4.0 * weight;
-
-  // 1/16
-  weight = 0.0625;
-  color += weight * getChildBrickColor(ivec3(0,3,1));
-  color += weight * getChildBrickColor(ivec3(1,4,1));
-  color += weight * getChildBrickColor(ivec3(0,3,3));
-  color += weight * getChildBrickColor(ivec3(1,4,3));
-  color += weight * getChildBrickColor(ivec3(1,3,2));
-  weightSum += 5.0 * weight;
-
-  // 1/32
-  weight = 0.03125;
-  color += weight * getChildBrickColor(ivec3(1,3,1));
-  color += weight * getChildBrickColor(ivec3(1,3,3));
-  weightSum += 2.0 * weight;
-
-  return color / weightSum;
-}
-
-vec4 mmEdgeFarRight() {
-  vec4 color = vec4(0);
-  float weightSum = 0.0;
-  
-  // 1/4
-  float weight = 0.25;
-  color += weight * getChildBrickColor(ivec3(4,4,2));
-  weightSum += weight;
-
-  // 1/8
-  weight = 0.125;
-  color += weight * getChildBrickColor(ivec3(4,4,1));
-  color += weight * getChildBrickColor(ivec3(3,4,2));
-  color += weight * getChildBrickColor(ivec3(4,3,2));
-  color += weight * getChildBrickColor(ivec3(4,4,3));
-  weightSum += 4.0 * weight;
-
-  // 1/16
-  weight = 0.0625;
-  color += weight * getChildBrickColor(ivec3(4,3,1));
-  color += weight * getChildBrickColor(ivec3(3,4,1));
-  color += weight * getChildBrickColor(ivec3(4,3,3));
-  color += weight * getChildBrickColor(ivec3(3,4,3));
-  color += weight * getChildBrickColor(ivec3(3,3,2));
-  weightSum += 5.0 * weight;
-
-  // 1/32
-  weight = 0.03125;
-  color += weight * getChildBrickColor(ivec3(3,3,1));
-  color += weight * getChildBrickColor(ivec3(3,3,3));
-  weightSum += 2.0 * weight;
-
-  return color / weightSum;
-}
-
-
-
-vec4 mmCornerTopLeftNear() {
-  vec4 color = vec4(0);
-  float weightSum = 0.0;
-  
-  // 1/4
-  float weight = 0.25;
-  color += weight * getChildBrickColor(ivec3(0,0,4));
-  weightSum += weight;
-
-  // 1/8
-  weight = 0.125;
-  color += weight * getChildBrickColor(ivec3(0,0,3));
-  color += weight * getChildBrickColor(ivec3(1,0,4));
-  color += weight * getChildBrickColor(ivec3(0,1,4));
-  weightSum += 3.0 * weight;
-
-  // 1/16
-  weight = 0.0625;
-  color += weight * getChildBrickColor(ivec3(1,0,3));
-  color += weight * getChildBrickColor(ivec3(1,1,4));
-  color += weight * getChildBrickColor(ivec3(0,1,3));
-  weightSum += 3.0 * weight;
-
-  // 1/32
-  weight = 0.03125;
-  color += weight * getChildBrickColor(ivec3(1,1,3));
-  weightSum += weight;
-
-  return color / weightSum;
-}
-
-vec4 mmCornerTopRightNear() {
-  vec4 color = vec4(0);
-  float weightSum = 0.0;
-  
-  // 1/4
-  float weight = 0.25;
-  color += weight * getChildBrickColor(ivec3(4,0,4));
-  weightSum += weight;
-
-  // 1/8
-  weight = 0.125;
-  color += weight * getChildBrickColor(ivec3(4,0,3));
-  color += weight * getChildBrickColor(ivec3(3,0,4));
-  color += weight * getChildBrickColor(ivec3(4,1,4));
-  weightSum += 3.0 * weight;
-
-  // 1/16
-  weight = 0.0625;
-  color += weight * getChildBrickColor(ivec3(3,0,3));
-  color += weight * getChildBrickColor(ivec3(3,1,4));
-  color += weight * getChildBrickColor(ivec3(4,1,3));
-  weightSum += 3.0 * weight;
-
-  // 1/32
-  weight = 0.03125;
-  color += weight * getChildBrickColor(ivec3(3,1,3));
-  weightSum += weight;
-
-  return color / weightSum;
-}
-
-vec4 mmCornerTopLeftFar() {
-  vec4 color = vec4(0);
-  float weightSum = 0.0;
-  
-  // 1/4
-  float weight = 0.25;
-  color += weight * getChildBrickColor(ivec3(0,4,4));
-  weightSum += weight;
-
-  // 1/8
-  weight = 0.125;
-  color += weight * getChildBrickColor(ivec3(0,4,3));
-  color += weight * getChildBrickColor(ivec3(1,4,4));
-  color += weight * getChildBrickColor(ivec3(0,3,4));
-  weightSum += 3.0 * weight;
-
-  // 1/16
-  weight = 0.0625;
-  color += weight * getChildBrickColor(ivec3(1,4,3));
-  color += weight * getChildBrickColor(ivec3(1,3,4));
-  color += weight * getChildBrickColor(ivec3(0,3,3));
-  weightSum += 3.0 * weight;
-
-  // 1/32
-  weight = 0.03125;
-  color += weight * getChildBrickColor(ivec3(1,3,3));
-  weightSum += weight;
-
-  return color / weightSum;
-}
-
-vec4 mmCornerTopRightFar() {
-  vec4 color = vec4(0);
-  float weightSum = 0.0;
-  
-  // 1/4
-  float weight = 0.25;
-  color += weight * getChildBrickColor(ivec3(4,4,4));
-  weightSum += weight;
-
-  // 1/8
-  weight = 0.125;
-  color += weight * getChildBrickColor(ivec3(4,4,3));
-  color += weight * getChildBrickColor(ivec3(3,4,4));
-  color += weight * getChildBrickColor(ivec3(4,3,4));
-  weightSum += 3.0 * weight;
-
-  // 1/16
-  weight = 0.0625;
-  color += weight * getChildBrickColor(ivec3(3,4,3));
-  color += weight * getChildBrickColor(ivec3(3,3,4));
-  color += weight * getChildBrickColor(ivec3(4,3,3));
-  weightSum += 3.0 * weight;
-
-  // 1/32
-  weight = 0.03125;
-  color += weight * getChildBrickColor(ivec3(3,3,3));
-  weightSum += weight;
-
-  return color / weightSum;
-}
- 
-vec4 mmCornerBottomLeftNear() {
-  vec4 color = vec4(0);
-  float weightSum = 0.0;
-  
-  // 1/4
-  float weight = 0.25;
-  color += weight * getChildBrickColor(ivec3(0,0,0));
-  weightSum += weight;
-
-  // 1/8
-  weight = 0.125;
-  color += weight * getChildBrickColor(ivec3(0,0,1));
-  color += weight * getChildBrickColor(ivec3(1,0,0));
-  color += weight * getChildBrickColor(ivec3(0,1,0));
-  weightSum += 3.0 * weight;
-
-  // 1/16
-  weight = 0.0625;
-  color += weight * getChildBrickColor(ivec3(1,0,1));
-  color += weight * getChildBrickColor(ivec3(1,1,0));
-  color += weight * getChildBrickColor(ivec3(0,1,1));
-  weightSum += 3.0 * weight;
-
-  // 1/32
-  weight = 0.03125;
-  color += weight * getChildBrickColor(ivec3(1,1,1));
-  weightSum += weight;
-
-  return color / weightSum;
-}
- 
-vec4 mmCornerBottomRightNear() {
-  vec4 color = vec4(0);
-  float weightSum = 0.0;
-  
-  // 1/4
-  float weight = 0.25;
-  color += weight * getChildBrickColor(ivec3(4,0,0));
-  weightSum += weight;
-
-  // 1/8
-  weight = 0.125;
-  color += weight * getChildBrickColor(ivec3(4,0,1));
-  color += weight * getChildBrickColor(ivec3(3,0,0));
-  color += weight * getChildBrickColor(ivec3(4,1,0));
-  weightSum += 3.0 * weight;
-
-  // 1/16
-  weight = 0.0625;
-  color += weight * getChildBrickColor(ivec3(3,0,1));
-  color += weight * getChildBrickColor(ivec3(3,1,0));
-  color += weight * getChildBrickColor(ivec3(4,1,1));
-  weightSum += 3.0 * weight;
-
-  // 1/32
-  weight = 0.03125;
-  color += weight * getChildBrickColor(ivec3(3,1,1));
-  weightSum += weight;
-
-  return color / weightSum;
-}
- 
-vec4 mmCornerBottomLeftFar() {
-  vec4 color = vec4(0);
-  float weightSum = 0.0;
-  
-  // 1/4
-  float weight = 0.25;
-  color += weight * getChildBrickColor(ivec3(0,4,0));
-  weightSum += weight;
-
-  // 1/8
-  weight = 0.125;
-  color += weight * getChildBrickColor(ivec3(0,4,1));
-  color += weight * getChildBrickColor(ivec3(1,4,0));
-  color += weight * getChildBrickColor(ivec3(0,3,0));
-  weightSum += 3.0 * weight;
-
-  // 1/16
-  weight = 0.0625;
-  color += weight * getChildBrickColor(ivec3(1,4,1));
-  color += weight * getChildBrickColor(ivec3(1,3,0));
-  color += weight * getChildBrickColor(ivec3(0,3,1));
-  weightSum += 3.0 * weight;
-
-  // 1/32
-  weight = 0.03125;
-  color += weight * getChildBrickColor(ivec3(1,3,1));
-  weightSum += weight;
-
-  return color / weightSum;
-}
- 
-vec4 mmCornerBottomRightFar() {
-  vec4 color = vec4(0);
-  float weightSum = 0.0;
-  
-  // 1/4
-  float weight = 0.25;
-  color += weight * getChildBrickColor(ivec3(4,4,0));
-  weightSum += weight;
-
-  // 1/8
-  weight = 0.125;
-  color += weight * getChildBrickColor(ivec3(4,4,1));
-  color += weight * getChildBrickColor(ivec3(3,4,0));
-  color += weight * getChildBrickColor(ivec3(4,3,0));
-  weightSum += 3.0 * weight;
-
-  // 1/16
-  weight = 0.0625;
-  color += weight * getChildBrickColor(ivec3(3,4,1));
-  color += weight * getChildBrickColor(ivec3(3,3,0));
-  color += weight * getChildBrickColor(ivec3(4,3,1));
-  weightSum += 3.0 * weight;
-
-  // 1/32
-  weight = 0.03125;
-  color += weight * getChildBrickColor(ivec3(3,3,1));
-  weightSum += weight;
-
-  return color / weightSum;
-}
 
 
 
