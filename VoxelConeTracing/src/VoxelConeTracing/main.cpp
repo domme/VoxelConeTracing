@@ -189,7 +189,7 @@ void setup() {
   _backbufferStage->setFrameBuffer(kore::FrameBuffer::BACKBUFFER);
 
   //// Prepare render algorithm
-  _backbufferStage->addProgramPass(new ObClearPass(&_vctScene,kore::EXECUTE_ONCE));
+  /*_backbufferStage->addProgramPass(new ObClearPass(&_vctScene,kore::EXECUTE_ONCE));
   _backbufferStage->addProgramPass(new VoxelizePass(params.voxel_grid_sidelengths, &_vctScene, kore::EXECUTE_ONCE));
   _backbufferStage->addProgramPass(new ModifyIndirectBufferPass(
                                       _vctScene.getVoxelFragList()->getShdFragListIndCmdBuf(),
@@ -216,10 +216,11 @@ void setup() {
   //_backbufferStage->addProgramPass(_octreeVisPass);
   //_backbufferStage->addProgramPass(new ConeTracePass(&_vctScene));
   //_backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
+  */
   
   _backbufferStage->addProgramPass(new RenderPass(_gBuffer, &_vctScene));
 
-  _backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
+  //_backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
   RenderManager::getInstance()->addFramebufferStage(_backbufferStage);
   //////////////////////////////////////////////////////////////////////////
 }

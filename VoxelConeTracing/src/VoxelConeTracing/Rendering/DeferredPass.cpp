@@ -28,6 +28,7 @@
 #include "KoRE\Operations\Operations.h"
 #include "KoRE\Components\TexturesComponent.h"
 #include "KoRE\RenderManager.h"
+#include "KoRE\TextureSampler.h"
 
 
 
@@ -68,6 +69,10 @@ DeferredPass::DeferredPass(kore::Camera* cam, std::vector<kore::SceneNode*>& vRe
     if (!tex) {
       continue;
     }
+
+    kore::TexSamplerProperties samplerProps;
+    samplerProps.minfilter = GL_LINEAR_MIPMAP_LINEAR;
+    shader->setSamplerProperties(0, samplerProps);
 
     NodePass* nodePass = new NodePass(vRenderNodes[i]);
     this->addNodePass(nodePass);

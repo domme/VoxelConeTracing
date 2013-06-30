@@ -211,7 +211,7 @@ void main(void)
   vec3 diffColor = texture(gBuffer_color, In.uv).xyz;
     
   float nl = max(dot(normalWS, dirLightDirectionWS), 0.0);
-  outColor = vec4(nl * dirLightColor * diffColor, 1.0);
+  outColor = vec4(diffColor, 1); //vec4(nl * dirLightColor * diffColor, 1.0);
 
  
  // Voxel-Reflections

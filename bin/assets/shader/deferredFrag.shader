@@ -36,7 +36,7 @@ out vec4 color[3];
 
 void main(void)
 {
-  color[0] = vec4(texture(diffuseTex, In.uv).rgb, 0);
+  color[0] = vec4(texture(diffuseTex, vec2(In.uv.x, 1.0 - In.uv.y)).rgb, 0);
   color[1] = vec4(In.position, 0); 
   color[2] = vec4(normalize(In.normal), 0);
 }

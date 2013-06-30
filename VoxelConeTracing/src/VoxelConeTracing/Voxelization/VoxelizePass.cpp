@@ -134,6 +134,10 @@ VoxelizePass::VoxelizePass(const glm::vec3& voxelGridSize,
       continue;
     }
 
+    kore::TexSamplerProperties samplerProps;
+    samplerProps.minfilter = GL_LINEAR_MIPMAP_LINEAR;
+    voxelizeShader->setSamplerProperties(0, samplerProps);
+
     NodePass* nodePass = new NodePass(vRenderNodes[i]);
     this->addNodePass(nodePass);
 
