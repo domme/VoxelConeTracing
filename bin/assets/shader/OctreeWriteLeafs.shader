@@ -108,7 +108,7 @@ uvec3 allocTextureBrick(in int nodeAddress, in uint nodeNextU) {
 }
 
 void storeVoxelColorInBrick(in uvec3 brickCoords, in uint voxelColorU) {
-  
+  // Store the 
 }
 
 
