@@ -132,7 +132,7 @@ void setup() {
   SVCTparameters params;
   params.voxel_grid_resolution = 256;
   params.voxel_grid_sidelengths = glm::vec3(50, 50, 50);
-  params.fraglist_size_multiplier = 10;
+  params.fraglist_size_multiplier = 7;
   params.fraglist_size_divisor = 1;
   params.brickPoolResolution = 64 * 3;
 
@@ -212,9 +212,9 @@ void setup() {
   }
   //
   //
-  _octreeVisPass = new OctreeVisPass(&_vctScene);
-  _backbufferStage->addProgramPass(_octreeVisPass);
-  //_backbufferStage->addProgramPass(new ConeTracePass(&_vctScene));
+  /*_octreeVisPass = new OctreeVisPass(&_vctScene);
+  _backbufferStage->addProgramPass(_octreeVisPass);*/
+  _backbufferStage->addProgramPass(new ConeTracePass(&_vctScene));
   //_backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
   
   
