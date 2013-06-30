@@ -115,8 +115,8 @@ void setup() {
   Log::getInstance()->write("Max TextureBuffer size: %i \n", maxTexBufferSize);
 
   //Load the scene and get all mesh nodes
-  ResourceManager::getInstance()->loadScene("./assets/meshes/sibenik.dae");
-  //ResourceManager::getInstance()->loadScene("./assets/meshes/sponza_diff.dae");
+  //ResourceManager::getInstance()->loadScene("./assets/meshes/sibenik.dae");
+  ResourceManager::getInstance()->loadScene("./assets/meshes/sponza.dae");
   //ResourceManager::getInstance()->loadScene("./assets/meshes/sponza_outerCube.dae");
   
   std::vector<SceneNode*> renderNodes;
@@ -176,7 +176,7 @@ void setup() {
 
   _gbufferStage->setFrameBuffer(_gBuffer);
 
-  //_gbufferStage->addProgramPass(new DeferredPass(_pCamera, renderNodes));
+  _gbufferStage->addProgramPass(new DeferredPass(_pCamera, renderNodes));
 
   RenderManager::getInstance()->addFramebufferStage(_gbufferStage);
   //////////////////////////////////////////////////////////////////////////
@@ -212,12 +212,12 @@ void setup() {
   }
   //
   //
-  _octreeVisPass = new OctreeVisPass(&_vctScene);
-  _backbufferStage->addProgramPass(_octreeVisPass);
+  //_octreeVisPass = new OctreeVisPass(&_vctScene);
+  //_backbufferStage->addProgramPass(_octreeVisPass);
   //_backbufferStage->addProgramPass(new ConeTracePass(&_vctScene));
   //_backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
   
-  //_backbufferStage->addProgramPass(new RenderPass(_gBuffer, &_vctScene));
+  _backbufferStage->addProgramPass(new RenderPass(_gBuffer, &_vctScene));
 
   _backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
   RenderManager::getInstance()->addFramebufferStage(_backbufferStage);

@@ -120,6 +120,20 @@ VoxelizePass::VoxelizePass(const glm::vec3& voxelGridSize,
   //////////////////////////////////////////////////////////////////////////
 
   for (uint i = 0; i < vRenderNodes.size(); ++i) {
+    const TexturesComponent* texComp =
+      static_cast<TexturesComponent*>(
+      vRenderNodes[i]->getComponent(COMPONENT_TEXTURES));
+
+    if (!texComp) { // Mesh has no texture -> don't render it
+      continue;
+    }
+
+    const Texture* tex = texComp->getTexture(0);
+
+    if (!tex) { // Mesh has no texture -> don't render it
+      continue;
+    }
+
     NodePass* nodePass = new NodePass(vRenderNodes[i]);
     this->addNodePass(nodePass);
 
@@ -148,12 +162,7 @@ VoxelizePass::VoxelizePass(const glm::vec3& voxelGridSize,
                                              vRenderNodes[i]->getTransform(),
                                              "modelWorldNormal",
                                              voxelizeShader));
-   
-   const TexturesComponent* texComp =
-     static_cast<TexturesComponent*>(
-     vRenderNodes[i]->getComponent(COMPONENT_TEXTURES));
-   const Texture* tex = texComp->getTexture(0);
-
+  
    nodePass
      ->addOperation(OperationFactory::create(OP_BINDTEXTURE, tex->getName(),
      texComp, "diffuseTex", voxelizeShader));
