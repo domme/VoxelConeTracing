@@ -73,6 +73,9 @@
     <ClCompile Include="src\VoxelConeTracing\Scene\BrickPool.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\Rendering\ShadowMapPass.cpp">
+      <Filter>src\Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -176,6 +179,9 @@
     <ClInclude Include="src\VoxelConeTracing\Scene\BrickPool.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\Rendering\ShadowMapPass.h">
+      <Filter>src\Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\bin\assets\shader\VoxelConeTracing\voxelizeFrag.shader">
@@ -233,6 +239,12 @@
       <Filter>shader</Filter>
     </None>
     <None Include="..\bin\assets\shader\finalRenderVert.shader">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\ShadowMapFrag.shader">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\ShadowMapVert.shader">
       <Filter>shader</Filter>
     </None>
   </ItemGroup>

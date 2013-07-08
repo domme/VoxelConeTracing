@@ -76,6 +76,7 @@
 #include "Raycasting/ConeTracePass.h"
 #include "Rendering/DeferredPass.h"
 #include "Rendering/RenderPass.h"
+#include "Rendering/ShadowMapPass.h"
 
 
 
@@ -89,6 +90,9 @@ static kore::SceneNode* _rotationNode = NULL;
 static kore::FrameBufferStage* _backbufferStage = NULL;
 static kore::FrameBufferStage* _gbufferStage = NULL;
 static kore::FrameBuffer* _gBuffer = NULL;
+
+static kore::FrameBufferStage* _shadowBufferStage = NULL;
+static kore::FrameBuffer* _shadowBuffer = NULL;
 
 static VCTscene _vctScene;
 
@@ -128,13 +132,26 @@ void setup() {
   _cameraNode = SceneManager::getInstance()
                       ->getSceneNodeByComponent(COMPONENT_CAMERA);
   _pCamera = static_cast<Camera*>(_cameraNode->getComponent(COMPONENT_CAMERA));
-  
+
   SVCTparameters params;
   params.voxel_grid_resolution = 256;
   params.voxel_grid_sidelengths = glm::vec3(50, 50, 50);
   params.fraglist_size_multiplier = 7;
   params.fraglist_size_divisor = 1;
   params.brickPoolResolution = 64 * 3;
+
+  
+  
+  std::vector<SceneNode*> lightNodes;
+  SceneManager::getInstance()->getSceneNodesByComponent(COMPONENT_LIGHT,lightNodes);
+
+  for(int i=0; i<lightNodes.size(); ++i){
+    Camera* cam  = new Camera();
+    float projsize = params.voxel_grid_sidelengths.x/2;
+    cam->setProjectionOrtho(-projsize,projsize,-projsize,projsize,1,1000);
+    cam->setAspectRatio(1.0);
+    lightNodes[i]->addComponent(cam);
+  }
 
   _vctScene.init(params, renderNodes, _pCamera);
 
@@ -176,11 +193,31 @@ void setup() {
 
   _gbufferStage->setFrameBuffer(_gBuffer);
 
-  //_gbufferStage->addProgramPass(new DeferredPass(_pCamera, renderNodes));
+  _gbufferStage->addProgramPass(new DeferredPass(_pCamera, renderNodes));
 
-  //RenderManager::getInstance()->addFramebufferStage(_gbufferStage);
+  RenderManager::getInstance()->addFramebufferStage(_gbufferStage);
   //////////////////////////////////////////////////////////////////////////
+  
+  _shadowBufferStage = new kore::FrameBufferStage;
+  _shadowBuffer = new kore::FrameBuffer("shadowBuffer");
+  drawBufs.clear();
+  drawBufs.push_back(GL_NONE);
+  _shadowBufferStage->setActiveAttachments(drawBufs);
 
+  STextureProperties SMprops;
+  SMprops.width = 1024;
+  SMprops.height = 1024;
+  SMprops.targetType = GL_TEXTURE_2D;
+  SMprops.format = GL_DEPTH_COMPONENT;
+  SMprops.internalFormat = GL_DEPTH_COMPONENT16;
+  SMprops.pixelType = GL_FLOAT;
+  _shadowBuffer->addTextureAttachment(SMprops,"ShadowMap",GL_DEPTH_ATTACHMENT);
+
+  _shadowBufferStage->setFrameBuffer(_shadowBuffer);
+  _shadowBufferStage->addProgramPass(new ShadowMapPass(renderNodes,lightNodes[0]));
+
+  RenderManager::getInstance()->addFramebufferStage(_shadowBufferStage);
+//////////////////////////////////////////////////////////////////////////
   
   _backbufferStage = new FrameBufferStage;
   drawBufs.clear();
@@ -189,36 +226,36 @@ void setup() {
   _backbufferStage->setFrameBuffer(kore::FrameBuffer::BACKBUFFER);
 
   //// Prepare render algorithm
-  _backbufferStage->addProgramPass(new ObClearPass(&_vctScene,kore::EXECUTE_ONCE));
-  _backbufferStage->addProgramPass(new VoxelizePass(params.voxel_grid_sidelengths, &_vctScene, kore::EXECUTE_ONCE));
-  _backbufferStage->addProgramPass(new ModifyIndirectBufferPass(
-                                      _vctScene.getVoxelFragList()->getShdFragListIndCmdBuf(),
-                                      _vctScene.getShdAcVoxelIndex(),&_vctScene,
-                                      kore::EXECUTE_ONCE));
-  
-  _numLevels = _vctScene.getNodePool()->getNumLevels(); 
-  for (uint iLevel = 0; iLevel < _numLevels; ++iLevel) {
-    _backbufferStage->addProgramPass(new ObFlagPass(&_vctScene, kore::EXECUTE_ONCE));
-    _backbufferStage->addProgramPass(new ObAllocatePass(&_vctScene, iLevel, kore::EXECUTE_ONCE));
-  }
-
-  _backbufferStage->addProgramPass(new WriteLeafNodesPass(&_vctScene, kore::EXECUTE_ONCE));
-  
-  // Mipmap the values from bottom to top
-  for (int iLevel = _numLevels - 2; iLevel >= 0;) {
-    kore::Log::getInstance()->write("%u\n", iLevel);
-    _backbufferStage->addProgramPass(new OctreeMipmapPass(&_vctScene, iLevel, kore::EXECUTE_ONCE));
-    --iLevel;
-  }
+ // _backbufferStage->addProgramPass(new ObClearPass(&_vctScene,kore::EXECUTE_ONCE));
+ // _backbufferStage->addProgramPass(new VoxelizePass(params.voxel_grid_sidelengths, &_vctScene, kore::EXECUTE_ONCE));
+ // _backbufferStage->addProgramPass(new ModifyIndirectBufferPass(
+ //                                     _vctScene.getVoxelFragList()->getShdFragListIndCmdBuf(),
+ //                                     _vctScene.getShdAcVoxelIndex(),&_vctScene,
+ //                                     kore::EXECUTE_ONCE));
+ // 
+ // _numLevels = _vctScene.getNodePool()->getNumLevels(); 
+ // for (uint iLevel = 0; iLevel < _numLevels; ++iLevel) {
+ //   _backbufferStage->addProgramPass(new ObFlagPass(&_vctScene, kore::EXECUTE_ONCE));
+ //   _backbufferStage->addProgramPass(new ObAllocatePass(&_vctScene, iLevel, kore::EXECUTE_ONCE));
+ // }
+ //
+ // _backbufferStage->addProgramPass(new WriteLeafNodesPass(&_vctScene, kore::EXECUTE_ONCE));
+ // 
+ // // Mipmap the values from bottom to top
+ // for (int iLevel = _numLevels - 2; iLevel >= 0;) {
+ //   kore::Log::getInstance()->write("%u\n", iLevel);
+ //   _backbufferStage->addProgramPass(new OctreeMipmapPass(&_vctScene, iLevel, kore::EXECUTE_ONCE));
+ //   --iLevel;
+ // }
   //
   //
   /*_octreeVisPass = new OctreeVisPass(&_vctScene);
   _backbufferStage->addProgramPass(_octreeVisPass);*/
-  _backbufferStage->addProgramPass(new ConeTracePass(&_vctScene));
+  //_backbufferStage->addProgramPass(new ConeTracePass(&_vctScene));
   //_backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
   
   
-  //_backbufferStage->addProgramPass(new RenderPass(_gBuffer, &_vctScene));
+  _backbufferStage->addProgramPass(new RenderPass(_gBuffer, &_vctScene));
 
   //_backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
   RenderManager::getInstance()->addFramebufferStage(_backbufferStage);
