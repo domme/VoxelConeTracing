@@ -136,7 +136,7 @@ void setup() {
   SVCTparameters params;
   params.voxel_grid_resolution = 256;
   params.voxel_grid_sidelengths = glm::vec3(50, 50, 50);
-  params.fraglist_size_multiplier = 7;
+  params.fraglist_size_multiplier = 1;
   params.fraglist_size_divisor = 1;
   params.brickPoolResolution = 64 * 3;
 
@@ -146,13 +146,14 @@ void setup() {
   SceneManager::getInstance()->getSceneNodesByComponent(COMPONENT_LIGHT,lightNodes);
 
   for(int i=0; i<lightNodes.size(); ++i){
+    SceneManager::getInstance()->update();
     Camera* cam  = new Camera();
     float projsize = params.voxel_grid_sidelengths.x/2;
     cam->setProjectionOrtho(-projsize,projsize,-projsize,projsize,1,1000);
     cam->setAspectRatio(1.0);
     lightNodes[i]->addComponent(cam);
+    SceneManager::getInstance()->update();
   }
-
   _vctScene.init(params, renderNodes, _pCamera);
 
   //////////////////////////////////////////////////////////////////////////
@@ -193,6 +194,7 @@ void setup() {
 
   _gbufferStage->setFrameBuffer(_gBuffer);
 
+  //kore::Camera* lightcam = static_cast<Camera*>(lightNodes[0]->getComponent(COMPONENT_CAMERA));
   _gbufferStage->addProgramPass(new DeferredPass(_pCamera, renderNodes));
 
   RenderManager::getInstance()->addFramebufferStage(_gbufferStage);
@@ -208,10 +210,10 @@ void setup() {
   SMprops.width = 1024;
   SMprops.height = 1024;
   SMprops.targetType = GL_TEXTURE_2D;
-  SMprops.format = GL_DEPTH_COMPONENT;
-  SMprops.internalFormat = GL_DEPTH_COMPONENT16;
-  SMprops.pixelType = GL_FLOAT;
-  _shadowBuffer->addTextureAttachment(SMprops,"ShadowMap",GL_DEPTH_ATTACHMENT);
+  SMprops.format = GL_DEPTH_STENCIL;
+  SMprops.internalFormat =  GL_DEPTH24_STENCIL8;
+  SMprops.pixelType = GL_UNSIGNED_INT_24_8;
+  _shadowBuffer->addTextureAttachment(SMprops,"ShadowMap",GL_DEPTH_STENCIL_ATTACHMENT);
 
   _shadowBufferStage->setFrameBuffer(_shadowBuffer);
   _shadowBufferStage->addProgramPass(new ShadowMapPass(renderNodes,lightNodes[0]));
@@ -255,7 +257,7 @@ void setup() {
   //_backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
   
   
-  _backbufferStage->addProgramPass(new RenderPass(_gBuffer, &_vctScene));
+  _backbufferStage->addProgramPass(new RenderPass(_gBuffer, _shadowBuffer, lightNodes, &_vctScene));
 
   //_backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
   RenderManager::getInstance()->addFramebufferStage(_backbufferStage);
@@ -346,7 +348,7 @@ int main(void) {
   int oldMouseX = 0;
   int oldMouseY = 0;
   glfwGetMousePos(&oldMouseX,&oldMouseY);
-    
+  
   // Main loop
   while (running) {
     time = the_timer.timeSinceLastCall();

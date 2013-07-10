@@ -25,8 +25,8 @@
 
 #version 420 core
 
-layout(location = 0) out float shadowMap;
+layout(location = 0) out float fragmentdepth;
  
 void main(){
-    shadowMap = gl_FragCoord.z;
+    fragmentdepth  = gl_FragCoord.z;
 }

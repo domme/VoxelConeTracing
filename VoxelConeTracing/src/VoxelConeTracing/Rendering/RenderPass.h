@@ -22,16 +22,17 @@
 * \author Dominik Lazarek (dominik.lazarek@gmail.com)
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
-#include "KoRE\Passes\ShaderProgramPass.h"
-#include "VoxelConeTracing/Scene/VCTscene.h"
-
 #ifndef VCT_SRC_VCT_RENDERPASS_H_
 #define VCT_SRC_VCT_RENDERPASS_H_
+
+#include "KoRE\Passes\ShaderProgramPass.h"
+#include "VoxelConeTracing/Scene/VCTscene.h"
+#include "KoRE/SceneNode.h"
 
 class RenderPass : public kore::ShaderProgramPass
 {
 public:
-  RenderPass(kore::FrameBuffer* gBuffer, VCTscene* vctScene);
+  RenderPass(kore::FrameBuffer* gBuffer, kore::FrameBuffer* smBuffer, std::vector<kore::SceneNode*> lightNodes, VCTscene* vctScene);
   ~RenderPass(void);
 };
 

@@ -27,9 +27,11 @@
 #include "VoxelConeTracing/FullscreenQuad.h"
 #include "KoRE/Operations/Operations.h"
 #include "KoRE/RenderManager.h"
+#include "KoRE/SceneNode.h"
 
 
-RenderPass::RenderPass(kore::FrameBuffer* gBuffer, VCTscene* vctScene) {
+RenderPass::RenderPass(kore::FrameBuffer* gBuffer, kore::FrameBuffer* smBuffer,
+                       std::vector<SceneNode*> lightNodes, VCTscene* vctScene) {
   using namespace kore;
 
   RenderManager* renderMgr = RenderManager::getInstance();
@@ -65,6 +67,7 @@ RenderPass::RenderPass(kore::FrameBuffer* gBuffer, VCTscene* vctScene) {
   this->addNodePass(nodePass);
 
   std::vector<ShaderData>& vGBufferTex = gBuffer->getOutputs();
+  std::vector<ShaderData>& vSMBufferTex = smBuffer->getOutputs();
   
   nodePass->addOperation(new BindTexture(&vGBufferTex[0],
                          shader->getUniform("gBuffer_color")));
@@ -72,6 +75,22 @@ RenderPass::RenderPass(kore::FrameBuffer* gBuffer, VCTscene* vctScene) {
                          shader->getUniform("gBuffer_pos")));
   nodePass->addOperation(new BindTexture(&vGBufferTex[2],
                          shader->getUniform("gBuffer_normal")));
+  nodePass->addOperation(new BindTexture(&vSMBufferTex[0],
+                         shader->getUniform("shadowMap")));
+
+
+  kore::Camera* lightcam = static_cast<Camera*>(lightNodes[0]->getComponent(COMPONENT_CAMERA));
+  kore::LightComponent* light = static_cast<LightComponent*>(lightNodes[0]->getComponent(COMPONENT_LIGHT));
+  
+  nodePass
+    ->addOperation(new BindUniform(lightcam->getShaderData("view projection Matrix"),
+    shader->getUniform("lightCamviewProjMat")));
+  nodePass
+    ->addOperation(new BindUniform(light->getShaderData("position"),
+    shader->getUniform("lightPos")));
+  nodePass
+    ->addOperation(new BindUniform(light->getShaderData("direction"),
+    shader->getUniform("lightDir")));
 
   nodePass->addOperation(OperationFactory::create(OP_BINDATTRIBUTE, 
                                                   "v_position",

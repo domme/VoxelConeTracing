@@ -26,14 +26,16 @@
 #version 420
 
 layout (location = 0) in vec3 v_position;
+uniform mat4 lightCamviewProjMat;
 
 out VertexData {
   vec2 uv;
+  vec4 shadowCoord;
 } Out;
-
 
 void main(void)
 {
   Out.uv = 0.5 * v_position.xy + 0.5;
+  Out.shadowCoord = 0.5* (lightCamviewProjMat * vec4(v_position,1)) +0.5
   gl_Position = vec4( v_position, 1.0 );
 }
