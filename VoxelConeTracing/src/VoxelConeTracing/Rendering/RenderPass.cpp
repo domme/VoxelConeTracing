@@ -38,7 +38,7 @@ RenderPass::RenderPass(kore::FrameBuffer* gBuffer, kore::FrameBuffer* smBuffer,
 
   ShaderProgram* shader = new ShaderProgram;
 
-  shader->loadShader("./assets/shader/VoxelConeTracing/raycastVert.shader",
+  shader->loadShader("./assets/shader/finalRenderVert.shader",
                               GL_VERTEX_SHADER);
 
   shader->loadShader("./assets/shader/finalRenderFrag.shader",
@@ -83,8 +83,13 @@ RenderPass::RenderPass(kore::FrameBuffer* gBuffer, kore::FrameBuffer* smBuffer,
   kore::LightComponent* light = static_cast<LightComponent*>(lightNodes[0]->getComponent(COMPONENT_LIGHT));
   
   nodePass
-    ->addOperation(new BindUniform(lightcam->getShaderData("view projection Matrix"),
-    shader->getUniform("lightCamviewProjMat")));
+    ->addOperation(new BindUniform(lightcam->getShaderData("projection Matrix"),
+    shader->getUniform("lightCamProjMat")));
+
+  nodePass
+    ->addOperation(new BindUniform(lightcam->getShaderData("view Matrix"),
+    shader->getUniform("lightCamviewMat")));
+
   nodePass
     ->addOperation(new BindUniform(light->getShaderData("position"),
     shader->getUniform("lightPos")));

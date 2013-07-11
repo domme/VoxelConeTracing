@@ -46,14 +46,14 @@ ShadowMapPass::ShadowMapPass(std::vector<kore::SceneNode*>& vRenderNodes, kore::
   shader->setName("shadow map shader");
   this->setShaderProgram(shader);
 
-  //kore::TexSamplerProperties props;
-  //props.minfilter = GL_NEAREST;
-  //props.magfilter = GL_NEAREST;
-  //props.type = GL_SAMPLER_2D;
-  //props.wrapping = glm::vec3(GL_CLAMP_TO_EDGE);
-  //shader->setSamplerProperties(0,props);
+
+
+  addStartupOperation(new EnableDisableOp(GL_DEPTH_TEST, EnableDisableOp::ENABLE));
+  //addStartupOperation(new ColorMaskOp(glm::bvec4(false, false, false, false)));
+  addStartupOperation(new ClearOp());
 
   kore::Camera* lightcam = static_cast<Camera*>(light->getComponent(COMPONENT_CAMERA));
+
   for (uint i = 0; i < vRenderNodes.size(); ++i) {
 
     NodePass* nodePass = new NodePass(vRenderNodes[i]);
@@ -68,7 +68,12 @@ ShadowMapPass::ShadowMapPass(std::vector<kore::SceneNode*>& vRenderNodes, kore::
 
     nodePass
       ->addOperation(new BindUniform(lightcam->getShaderData("view projection Matrix"),
-                                     shader->getUniform("viewProjMat")));
+      shader->getUniform("viewProjMat")));
+
+    nodePass
+      ->addOperation(OperationFactory::create(OP_BINDUNIFORM, "model Matrix",
+      vRenderNodes[i]->getTransform(),
+      "modelMat", shader));
 
     nodePass
       ->addOperation(new RenderMesh(meshComp));

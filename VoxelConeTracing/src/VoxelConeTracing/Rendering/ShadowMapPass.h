@@ -28,6 +28,7 @@
 
 #include "KoRE/Passes/ShaderProgramPass.h"
 
+
 class ShadowMapPass : public kore::ShaderProgramPass
 {
 public:

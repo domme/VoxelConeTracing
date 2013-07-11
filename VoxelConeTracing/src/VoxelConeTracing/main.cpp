@@ -149,8 +149,8 @@ void setup() {
     SceneManager::getInstance()->update();
     Camera* cam  = new Camera();
     float projsize = params.voxel_grid_sidelengths.x/2;
-    cam->setProjectionOrtho(-projsize,projsize,-projsize,projsize,1,1000);
-    cam->setAspectRatio(1.0);
+    cam->setProjectionOrtho(-projsize,projsize,-projsize,projsize,1,50);
+    cam->setAspectRatio(1.0);   
     lightNodes[i]->addComponent(cam);
     SceneManager::getInstance()->update();
   }
@@ -206,6 +206,15 @@ void setup() {
   drawBufs.push_back(GL_NONE);
   _shadowBufferStage->setActiveAttachments(drawBufs);
 
+  //STextureProperties testTex;
+  //testTex.width = 1024;
+  //testTex.height = 1024;
+  //testTex.targetType = GL_TEXTURE_2D;
+  //testTex.format = GL_RED;
+  //testTex.internalFormat =  GL_R32F;
+  //testTex.pixelType = GL_FLOAT;
+  //_shadowBuffer->addTextureAttachment(testTex,"testTex",GL_COLOR_ATTACHMENT0);
+
   STextureProperties SMprops;
   SMprops.width = 1024;
   SMprops.height = 1024;
@@ -214,6 +223,8 @@ void setup() {
   SMprops.internalFormat =  GL_DEPTH24_STENCIL8;
   SMprops.pixelType = GL_UNSIGNED_INT_24_8;
   _shadowBuffer->addTextureAttachment(SMprops,"ShadowMap",GL_DEPTH_STENCIL_ATTACHMENT);
+
+
 
   _shadowBufferStage->setFrameBuffer(_shadowBuffer);
   _shadowBufferStage->addProgramPass(new ShadowMapPass(renderNodes,lightNodes[0]));

@@ -26,7 +26,9 @@
 #version 420 core
 
 layout(location = 0) out float fragmentdepth;
+
+in vec4 posVS;
  
 void main(){
-    fragmentdepth  = gl_FragCoord.z;
+  fragmentdepth  = gl_FragCoord.z;
 }

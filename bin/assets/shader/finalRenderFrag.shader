@@ -29,7 +29,6 @@ in VertexData {
   vec3 viewDirVS;
   float pixelSizeVS;
   vec2 uv;
-  vec4 shadowCoord;
 } In;
 
 out vec4 outColor;
@@ -42,6 +41,8 @@ uniform sampler2D shadowMap;
 
 uniform vec3 lightPos;
 uniform vec3 lightDir;
+uniform mat4 lightCamProjMat;
+uniform mat4 lightCamviewMat;
 
 const uint NODE_MASK_VALUE = 0x3FFFFFFF;
 const uint NODE_MASK_TAG = (0x00000001 << 31);
@@ -237,23 +238,29 @@ vec3 dirLightColor = vec3(1.0, 1.0, 1.0);
 
 void main(void)
 {
-  vec3 posWS = vec3(texture(gBuffer_pos, In.uv));
+  vec4 posWS = vec4(vec3(texture(gBuffer_pos, In.uv)),1);
   vec3 normalWS = normalize(texture(gBuffer_normal, In.uv).xyz);
   //vec3 diffColor = texture(gBuffer_color, In.uv).xyz;
 
-  //float shadowvalue = texture(shadowMap, In.uv); 
   //float nl = max(dot(normalWS, normalize(lightDir)), 0.0);
   //outColor = vec4(nl * dirLightColor * diffColor, 1.0);
 
   
-  float visibility = 1.0;
-  if ( texture( shadowMap, In.shadowCoord.xy ).z  <  In.shadowCoord.z){
-    visibility = 0;
-  }
- outColor = visibility * phong(In.uv, normalWS, normalize(lightDir), normalize(posWS));
- //outColor =  texture(shadowMap, In.uv).xxxx;
+ float visibility = 1.0;
+ vec4 lightVS = lightCamviewMat * posWS;
+ vec4 lightProj = lightCamProjMat * lightVS;
+ lightProj.xyz /= lightProj.w;
+ lightProj.xy = 0.5 * lightProj.xy + 0.5;
+ float e = 0.01;
+ if ( texture(shadowMap, lightProj.xy).z+e  <  abs(lightVS.z)/50){
+   visibility = 0.1;
+ }
+ outColor = visibility * phong(In.uv, normalWS, normalize(lightDir), normalize(vec3(posWS)));
+ 
+ 
+ //outColor = texture(shadowMap, In.uv).xxxx;
 
-//outColor = vec4(diffColor, 1); //vec4(nl * dirLightColor * diffColor, 1.0);
+
 
  
  // Voxel-Reflections

@@ -26,9 +26,11 @@
 #version 420 core
 
 layout (location = 0) in vec3 v_position;
+out vec4 posVS;
  
 uniform mat4 viewProjMat;
+uniform mat4 modelMat;
  
 void main(){
- gl_Position =  viewProjMat * vec4(v_position,1);
+ gl_Position = viewProjMat * modelMat* vec4(v_position,1);
 }
