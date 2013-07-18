@@ -244,15 +244,20 @@ void main(void)
 
   //float nl = max(dot(normalWS, normalize(lightDir)), 0.0);
   //outColor = vec4(nl * dirLightColor * diffColor, 1.0);
-
+  mat4 vt = mat4(0.5,0.0,0.0,0.5,
+                       0.0,0.5,0.0,0.5,
+                       0.0,0.0,0.5,0.5,
+                       0.0,0.0,0.0,1.0);
   
  float visibility = 1.0;
- vec4 lightVS = lightCamviewMat * posWS;
- vec4 lightProj = lightCamProjMat * lightVS;
- lightProj.xyz /= lightProj.w;
- lightProj.xy = 0.5 * lightProj.xy + 0.5;
+ vec4 posLVS = lightCamviewMat * posWS;
+ vec4 posLProj = lightCamProjMat * posLVS;
+ posLProj.xyz /= posLProj.w;
+ posLProj = vt * posLProj;
+
+
  float e = 0.01;
- if ( texture(shadowMap, lightProj.xy).z+e  <  abs(lightVS.z)/50){
+ if ( texture(shadowMap, posLProj.xy).z+e  <  abs(posLProj.z)/50){
    visibility = 0.1;
  }
  outColor = visibility * phong(In.uv, normalWS, normalize(lightDir), normalize(vec3(posWS)));
