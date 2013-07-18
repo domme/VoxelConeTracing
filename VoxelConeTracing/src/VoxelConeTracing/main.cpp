@@ -120,7 +120,7 @@ void setup() {
 
   //Load the scene and get all mesh nodes
   //ResourceManager::getInstance()->loadScene("./assets/meshes/sibenik.dae");
-  ResourceManager::getInstance()->loadScene("./assets/meshes/sponza.dae");
+  ResourceManager::getInstance()->loadScene("./assets/meshes/sponza_small.dae");
   //ResourceManager::getInstance()->loadScene("./assets/meshes/sponza_outerCube.dae");
   
   std::vector<SceneNode*> renderNodes;
@@ -133,27 +133,30 @@ void setup() {
                       ->getSceneNodeByComponent(COMPONENT_CAMERA);
   _pCamera = static_cast<Camera*>(_cameraNode->getComponent(COMPONENT_CAMERA));
 
+  
   SVCTparameters params;
   params.voxel_grid_resolution = 256;
   params.voxel_grid_sidelengths = glm::vec3(50, 50, 50);
   params.fraglist_size_multiplier = 1;
   params.fraglist_size_divisor = 1;
-  params.brickPoolResolution = 64 * 3;
-
+  params.brickPoolResolution = 64 * 3;                                                                    
   
   
   std::vector<SceneNode*> lightNodes;
   SceneManager::getInstance()->getSceneNodesByComponent(COMPONENT_LIGHT,lightNodes);
 
   for(int i=0; i<lightNodes.size(); ++i){
-    SceneManager::getInstance()->update();
     Camera* cam  = new Camera();
-    float projsize = params.voxel_grid_sidelengths.x/2;
-    cam->setProjectionOrtho(-projsize,projsize,-projsize,projsize,1,50);
+    float projsize = params.voxel_grid_sidelengths.x / 2;
+    cam->setProjectionOrtho(-projsize,projsize,-projsize,projsize,1,100);
     cam->setAspectRatio(1.0);   
+    //_pCamera = cam;
     lightNodes[i]->addComponent(cam);
-    SceneManager::getInstance()->update();
+    lightNodes[i]->setDirty(true);
   }
+  SceneManager::getInstance()->update();
+
+ 
   _vctScene.init(params, renderNodes, _pCamera);
 
   //////////////////////////////////////////////////////////////////////////
@@ -216,18 +219,18 @@ void setup() {
   //_shadowBuffer->addTextureAttachment(testTex,"testTex",GL_COLOR_ATTACHMENT0);
 
   STextureProperties SMprops;
-  SMprops.width = 1024;
-  SMprops.height = 1024;
+  SMprops.width = 2048;
+  SMprops.height = 2048;
   SMprops.targetType = GL_TEXTURE_2D;
   SMprops.format = GL_DEPTH_STENCIL;
   SMprops.internalFormat =  GL_DEPTH24_STENCIL8;
   SMprops.pixelType = GL_UNSIGNED_INT_24_8;
   _shadowBuffer->addTextureAttachment(SMprops,"ShadowMap",GL_DEPTH_STENCIL_ATTACHMENT);
 
-
-
   _shadowBufferStage->setFrameBuffer(_shadowBuffer);
-  _shadowBufferStage->addProgramPass(new ShadowMapPass(renderNodes,lightNodes[0]));
+  _shadowBufferStage->addProgramPass(new ShadowMapPass(
+                                      renderNodes,lightNodes[0],
+                                      glm::uvec2(SMprops.width, SMprops.height)));
 
   RenderManager::getInstance()->addFramebufferStage(_shadowBufferStage);
 //////////////////////////////////////////////////////////////////////////

@@ -32,7 +32,7 @@
 class ShadowMapPass : public kore::ShaderProgramPass
 {
 public:
-  ShadowMapPass(std::vector<kore::SceneNode*>& vRenderNodes,kore::SceneNode* light);
+  ShadowMapPass(std::vector<kore::SceneNode*>& vRenderNodes,kore::SceneNode* light, glm::uvec2 smSize);
   ~ShadowMapPass(void);
 };
 #endif //VCT_SRC_VCT_SHADOWMAPPASS_H_

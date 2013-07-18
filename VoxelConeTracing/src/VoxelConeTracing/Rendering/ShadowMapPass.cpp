@@ -29,7 +29,7 @@
 #include "KoRE\Operations\Operations.h"
 
 
-ShadowMapPass::ShadowMapPass(std::vector<kore::SceneNode*>& vRenderNodes, kore::SceneNode* light)
+ShadowMapPass::ShadowMapPass(std::vector<kore::SceneNode*>& vRenderNodes, kore::SceneNode* light, glm::uvec2 smSize)
 {
   using namespace kore;
 
@@ -49,6 +49,7 @@ ShadowMapPass::ShadowMapPass(std::vector<kore::SceneNode*>& vRenderNodes, kore::
 
 
   addStartupOperation(new EnableDisableOp(GL_DEPTH_TEST, EnableDisableOp::ENABLE));
+  addStartupOperation(new ViewportOp(glm::ivec4(0,0,smSize.x, smSize.y)));
   //addStartupOperation(new ColorMaskOp(glm::bvec4(false, false, false, false)));
   addStartupOperation(new ClearOp());
 

@@ -45,6 +45,16 @@ RenderPass::RenderPass(kore::FrameBuffer* gBuffer, kore::FrameBuffer* smBuffer,
                               GL_FRAGMENT_SHADER);
   shader->init();
   shader->setName("final render shader");
+
+  kore::TexSamplerProperties texSamplerProps;
+  texSamplerProps.wrapping = glm::uvec3(GL_CLAMP_TO_EDGE);
+  texSamplerProps.minfilter = GL_NEAREST;
+  texSamplerProps.magfilter = GL_NEAREST;
+
+  shader->setSamplerProperties(0, texSamplerProps);
+  shader->setSamplerProperties(1, texSamplerProps);
+  shader->setSamplerProperties(2, texSamplerProps);
+  shader->setSamplerProperties(3, texSamplerProps);
   this->setShaderProgram(shader);
 
   addStartupOperation(new EnableDisableOp(GL_DEPTH_TEST, EnableDisableOp::ENABLE));
