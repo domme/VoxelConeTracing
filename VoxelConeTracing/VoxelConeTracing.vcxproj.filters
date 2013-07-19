@@ -76,6 +76,12 @@
     <ClCompile Include="src\VoxelConeTracing\Rendering\ShadowMapPass.cpp">
       <Filter>src\Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\BorderTransfer.cpp">
+      <Filter>src\Octree Mipmap</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\LightInjectionPass.cpp">
+      <Filter>src\Octree Mipmap</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -181,6 +187,12 @@
     </ClInclude>
     <ClInclude Include="src\VoxelConeTracing\Rendering\ShadowMapPass.h">
       <Filter>src\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\BorderTransfer.h">
+      <Filter>src\Octree Mipmap</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\LightInjectionPass.h">
+      <Filter>src\Octree Mipmap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -183,6 +183,8 @@
     <ClCompile Include="src\VoxelConeTracing\Octree Building\ObClearPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Building\ObFlagPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Building\ObInitPass.cpp" />
+    <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\BorderTransfer.cpp" />
+    <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\LightInjectionPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\OctreeMipmapPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\WriteLeafNodesPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Raycasting\ConeTracePass.cpp" />
@@ -209,6 +211,8 @@
     <ClInclude Include="src\VoxelConeTracing\Octree Building\ObClearPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Building\ObFlagPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Building\ObInitPass.h" />
+    <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\BorderTransfer.h" />
+    <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\LightInjectionPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\OctreeMipmapPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\WriteLeafNodesPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Raycasting\ConeTracePass.h" />
