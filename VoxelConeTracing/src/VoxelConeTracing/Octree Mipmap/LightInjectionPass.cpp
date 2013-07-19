@@ -46,7 +46,7 @@ LightInjectionPass::LightInjectionPass(VCTscene* vctScene,
   shader->setName("light injection shader");
 
   addStartupOperation(new EnableDisableOp(GL_DEPTH_TEST, EnableDisableOp::DISABLE));
-  addStartupOperation(new ColorMaskOp(glm::bvec4(false, false, false, false)));
+  addStartupOperation(new ColorMaskOp(glm::bvec4(true, true, true, true)));
   addStartupOperation(new ViewportOp(glm::ivec4(0, 0,
     shadowMapFBO->getTexture(GL_DEPTH_STENCIL_ATTACHMENT)->getProperties().width,
     shadowMapFBO->getTexture(GL_DEPTH_STENCIL_ATTACHMENT)->getProperties().height)));

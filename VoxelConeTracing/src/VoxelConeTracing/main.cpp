@@ -276,7 +276,7 @@ void setup() {
   
   //_backbufferStage->addProgramPass(new RenderPass(_gBuffer, _shadowBuffer, lightNodes, &_vctScene));
 
-  //_backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
+  _backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
   RenderManager::getInstance()->addFramebufferStage(_backbufferStage);
   //////////////////////////////////////////////////////////////////////////
 }

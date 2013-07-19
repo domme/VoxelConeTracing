@@ -151,7 +151,7 @@ void main(void) {
     uint nodeRadianceU = imageLoad(nodePool_radiance, address).x;
     memoryBarrier();
 
-    vec4 radiance = vec4(convRGBA8ToVec4(nodeRadianceU)) / 255.0 + 0.1;
+    vec4 radiance = vec4(convRGBA8ToVec4(nodeRadianceU)) / 255.0;
     vec4 newCol = (vec4(convRGBA8ToVec4(nodeColorU)) / 255.0) * radiance;
     
     color = (1.0 - color.a) * newCol + color;
