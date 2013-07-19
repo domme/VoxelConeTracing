@@ -33,7 +33,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string>
-#include <ctime>
+#include <ctime> 
 #include <vector>
 
 
@@ -77,6 +77,7 @@
 #include "Rendering/DeferredPass.h"
 #include "Rendering/RenderPass.h"
 #include "Rendering/ShadowMapPass.h"
+#include "Octree Mipmap/LightInjectionPass.h"
 
 
 
@@ -257,6 +258,8 @@ void setup() {
   
   _backbufferStage->addProgramPass(new WriteLeafNodesPass(&_vctScene, kore::EXECUTE_ONCE));
   
+  _backbufferStage->addProgramPass(new LightInjectionPass(&_vctScene, lightNodes[0], _shadowBuffer, kore::EXECUTE_ONCE));
+
   // Mipmap the values from bottom to top
   for (int iLevel = _numLevels - 2; iLevel >= 0;) {
     kore::Log::getInstance()->write("%u\n", iLevel);
@@ -265,9 +268,9 @@ void setup() {
   }
   
   
-  //_octreeVisPass = new OctreeVisPass(&_vctScene);
-  //_backbufferStage->addProgramPass(_octreeVisPass);
-  _backbufferStage->addProgramPass(new ConeTracePass(&_vctScene));
+  _octreeVisPass = new OctreeVisPass(&_vctScene);
+  _backbufferStage->addProgramPass(_octreeVisPass);
+  //_backbufferStage->addProgramPass(new ConeTracePass(&_vctScene));
   //_backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
   
   

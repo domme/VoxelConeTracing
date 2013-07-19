@@ -36,7 +36,7 @@
 class LightInjectionPass : public kore::ShaderProgramPass
 {
 public:
-  LightInjectionPass(VCTscene* vctScene, kore::Camera* lightViewCam,
+  LightInjectionPass(VCTscene* vctScene, kore::SceneNode* lightNode,
                       kore::FrameBuffer* shadowMapFBO,
                       kore::EOperationExecutionType executionType);
   virtual ~LightInjectionPass(void);

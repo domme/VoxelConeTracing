@@ -103,24 +103,27 @@ OctreeVisPass::OctreeVisPass(VCTscene* vctScene) {
                                                   &_visShader));
   
   nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM, 
-  "FOV degree",
-  cam, 
-  "fYfovDeg",
-  &_visShader));
+                                                    "FOV degree",
+                                                    cam, 
+                                                    "fYfovDeg",
+                                                    &_visShader));
 
   nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM, 
-  "far Plane",
-  cam, 
-  "fFar",
-  &_visShader));
+                                                    "far Plane",
+                                                    cam, 
+                                                    "fFar",
+                                                    &_visShader));
 
   
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdNodePool(NEXT),
-  _visShader.getUniform("nodePool_next"), GL_READ_ONLY));
+    _visShader.getUniform("nodePool_next"), GL_READ_ONLY));
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdNodePool(COLOR),
-  _visShader.getUniform("nodePool_color"), GL_READ_ONLY));
+    _visShader.getUniform("nodePool_color"), GL_READ_ONLY));
+  addStartupOperation(new BindImageTexture(
+    vctScene->getNodePool()->getShdNodePool(RADIANCE),
+    _visShader.getUniform("nodePool_radiance"), GL_READ_ONLY));
 
   nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
                                                   "inverse view Matrix",

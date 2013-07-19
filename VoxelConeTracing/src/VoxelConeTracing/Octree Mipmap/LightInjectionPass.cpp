@@ -23,14 +23,90 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#include  "VoxelConeTracing/Octree Mipmap/LightInjectionPass.h"
+#include "VoxelConeTracing/Octree Mipmap/LightInjectionPass.h"
+#include "KoRE/Operations/Operations.h"
+#include "VoxelConeTracing/FullscreenQuad.h"
 
 
 LightInjectionPass::LightInjectionPass(VCTscene* vctScene,
-                                kore::Camera* lightViewCam,
+                                kore::SceneNode* lightNode,
                                 kore::FrameBuffer* shadowMapFBO,
                                 kore::EOperationExecutionType executionType) {
+
+  using namespace kore;
+
+  ShaderProgram* shader = new ShaderProgram;
+
+  shader->loadShader("./assets/shader/FullscreenQuadVert.shader",
+    GL_VERTEX_SHADER);
+
+  shader->loadShader("./assets/shader/LightInjectionFrag.shader",
+    GL_FRAGMENT_SHADER);
+  shader->init();
+  shader->setName("light injection shader");
+
+  addStartupOperation(new EnableDisableOp(GL_DEPTH_TEST, EnableDisableOp::DISABLE));
+  addStartupOperation(new ColorMaskOp(glm::bvec4(false, false, false, false)));
+  addStartupOperation(new ViewportOp(glm::ivec4(0, 0,
+    shadowMapFBO->getTexture(GL_DEPTH_STENCIL_ATTACHMENT)->getProperties().width,
+    shadowMapFBO->getTexture(GL_DEPTH_STENCIL_ATTACHMENT)->getProperties().height)));
+ 
+  SceneNode* fsquadnode = new SceneNode();
+  SceneManager::getInstance()->getRootNode()->addChild(fsquadnode);
+
+  MeshComponent* fsqMeshComponent = new MeshComponent();
+  fsqMeshComponent->setMesh(FullscreenQuad::getInstance());
+  fsquadnode->addComponent(fsqMeshComponent);
+
+  NodePass* nodePass = new NodePass(fsquadnode);
+  this->addNodePass(nodePass);
+
+  std::vector<ShaderData>& vSMBufferTex = shadowMapFBO->getOutputs();
+  nodePass->addOperation(new BindTexture(
+                         &vSMBufferTex[0],
+                         shader->getUniform("shadowMap")));
+
+  nodePass->addOperation(new BindAttribute(
+                         fsqMeshComponent->getShaderData("v_position"),
+                         shader->getAttribute("v_position")));
+
+  kore::Camera* lightViewCam = static_cast<Camera*>(lightNode->getComponent(COMPONENT_CAMERA));
+  nodePass->addOperation(new BindUniform(
+                         lightViewCam->getShaderData("ratio"),
+                         shader->getUniform("fRatio")));
   
+  nodePass->addOperation(new BindUniform(
+                         lightViewCam->getShaderData("FOV degree"),
+                         shader->getUniform("fYfovDeg")));
+
+  nodePass->addOperation(new BindUniform(
+                         lightViewCam->getShaderData("far Plane"),
+                         shader->getUniform("fFar")));
+  nodePass->addOperation(new BindUniform(
+                         lightViewCam->getShaderData("inverse view Matrix"),
+                         shader->getUniform("lightViewI")));
+  
+  nodePass->addOperation(new BindUniform(
+                        vctScene->getVoxelGridNode()->getTransform()->getShaderData("inverse model Matrix"),
+                        shader->getUniform("voxelGridTransformI")));
+  nodePass->addOperation(new BindUniform(
+                        vctScene->getNodePool()->getShdNumLevels(),
+                        shader->getUniform("numLevels")));
+
+  kore::LightComponent* lightComp = static_cast<LightComponent*>(lightNode->getComponent(COMPONENT_LIGHT));
+  nodePass->addOperation(new BindUniform(
+                         lightComp->getShaderData("color"),
+                         shader->getUniform("lightColor")));
+
+  nodePass->addOperation(new BindImageTexture(
+                         vctScene->getNodePool()->getShdNodePool(NEXT),
+                         shader->getUniform("nodePool_next"), GL_READ_ONLY));
+
+  nodePass->addOperation(new BindImageTexture(
+                         vctScene->getNodePool()->getShdNodePool(RADIANCE),
+                         shader->getUniform("nodePool_radiance"), GL_READ_WRITE));
+
+  this->addFinishOperation(new MemoryBarrierOp(GL_ALL_BARRIER_BITS));
 }
 
 LightInjectionPass::~LightInjectionPass(void) {
