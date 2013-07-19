@@ -230,12 +230,15 @@
     <ClInclude Include="src\VoxelConeTracing\vsDebugLib.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\bin\assets\shader\BorderTransferVert.shader" />
     <None Include="..\bin\assets\shader\ConeTraceFrag.shader" />
     <None Include="..\bin\assets\shader\debug.shader" />
     <None Include="..\bin\assets\shader\deferredFrag.shader" />
     <None Include="..\bin\assets\shader\deferredVert.shader" />
     <None Include="..\bin\assets\shader\finalRenderFrag.shader" />
     <None Include="..\bin\assets\shader\finalRenderVert.shader" />
+    <None Include="..\bin\assets\shader\FullscreenQuadVert.shader" />
+    <None Include="..\bin\assets\shader\LightInjectionFrag.shader" />
     <None Include="..\bin\assets\shader\ModifyIndirectBufferVert.shader" />
     <None Include="..\bin\assets\shader\ObAllocateVert.shader" />
     <None Include="..\bin\assets\shader\ObClearVert.shader" />

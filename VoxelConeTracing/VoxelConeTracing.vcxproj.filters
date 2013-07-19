@@ -259,5 +259,14 @@
     <None Include="..\bin\assets\shader\ShadowMapVert.shader">
       <Filter>shader</Filter>
     </None>
+    <None Include="..\bin\assets\shader\LightInjectionFrag.shader">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\FullscreenQuadVert.shader">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\BorderTransferVert.shader">
+      <Filter>shader</Filter>
+    </None>
   </ItemGroup>
 </Project>
