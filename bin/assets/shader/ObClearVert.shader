@@ -27,10 +27,14 @@
 
 layout(r32ui) uniform volatile uimageBuffer nodePool_color;
 layout(r32ui) uniform volatile uimageBuffer nodePool_next;
+layout(r32ui) uniform volatile uimageBuffer nodePool_radiance;
+layout(r32ui) uniform volatile uimageBuffer nodePool_normal;
 
 void main() {
   imageStore(nodePool_color,gl_VertexID,uvec4(0));
   imageStore(nodePool_next,gl_VertexID,uvec4(0));
+  imageStore(nodePool_radiance,gl_VertexID,uvec4(0));
+  imageStore(nodePool_normal,gl_VertexID,uvec4(0));
 }
 
 

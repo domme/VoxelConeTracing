@@ -36,18 +36,16 @@
 class LightInjectionPass : public kore::ShaderProgramPass
 {
 public:
-  LightInjectionPass(VCTscene* vctScene, kore::Camera* lightViewCam, 
-    kore::EOperationExecutionType executionType);
-  virtual ~OctreeMipmapPass(void);
+  LightInjectionPass(VCTscene* vctScene, kore::Camera* lightViewCam,
+                      kore::FrameBuffer* shadowMapFBO,
+                      kore::EOperationExecutionType executionType);
+  virtual ~LightInjectionPass(void);
 
 private:
   kore::RenderManager* _renderMgr;
   kore::SceneManager* _sceneMgr;
   kore::ResourceManager* _resMgr;
   VCTscene* _vctScene;
-
-  kore::ShaderData _shdLevel;
-  uint _level;
 };
 
 #endif

@@ -241,37 +241,37 @@ void setup() {
   _backbufferStage->setActiveAttachments(drawBufs);
   _backbufferStage->setFrameBuffer(kore::FrameBuffer::BACKBUFFER);
 
-  //// Prepare render algorithm
- // _backbufferStage->addProgramPass(new ObClearPass(&_vctScene,kore::EXECUTE_ONCE));
- // _backbufferStage->addProgramPass(new VoxelizePass(params.voxel_grid_sidelengths, &_vctScene, kore::EXECUTE_ONCE));
- // _backbufferStage->addProgramPass(new ModifyIndirectBufferPass(
- //                                     _vctScene.getVoxelFragList()->getShdFragListIndCmdBuf(),
- //                                     _vctScene.getShdAcVoxelIndex(),&_vctScene,
- //                                     kore::EXECUTE_ONCE));
- // 
- // _numLevels = _vctScene.getNodePool()->getNumLevels(); 
- // for (uint iLevel = 0; iLevel < _numLevels; ++iLevel) {
- //   _backbufferStage->addProgramPass(new ObFlagPass(&_vctScene, kore::EXECUTE_ONCE));
- //   _backbufferStage->addProgramPass(new ObAllocatePass(&_vctScene, iLevel, kore::EXECUTE_ONCE));
- // }
- //
- // _backbufferStage->addProgramPass(new WriteLeafNodesPass(&_vctScene, kore::EXECUTE_ONCE));
- // 
- // // Mipmap the values from bottom to top
- // for (int iLevel = _numLevels - 2; iLevel >= 0;) {
- //   kore::Log::getInstance()->write("%u\n", iLevel);
- //   _backbufferStage->addProgramPass(new OctreeMipmapPass(&_vctScene, iLevel, kore::EXECUTE_ONCE));
- //   --iLevel;
- // }
-  //
-  //
-  /*_octreeVisPass = new OctreeVisPass(&_vctScene);
-  _backbufferStage->addProgramPass(_octreeVisPass);*/
-  //_backbufferStage->addProgramPass(new ConeTracePass(&_vctScene));
+  // Prepare render algorithm
+  _backbufferStage->addProgramPass(new ObClearPass(&_vctScene,kore::EXECUTE_ONCE));
+  _backbufferStage->addProgramPass(new VoxelizePass(params.voxel_grid_sidelengths, &_vctScene, kore::EXECUTE_ONCE));
+  _backbufferStage->addProgramPass(new ModifyIndirectBufferPass(
+                                      _vctScene.getVoxelFragList()->getShdFragListIndCmdBuf(),
+                                      _vctScene.getShdAcVoxelIndex(),&_vctScene,
+                                      kore::EXECUTE_ONCE));
+  
+  _numLevels = _vctScene.getNodePool()->getNumLevels(); 
+  for (uint iLevel = 0; iLevel < _numLevels; ++iLevel) {
+    _backbufferStage->addProgramPass(new ObFlagPass(&_vctScene, kore::EXECUTE_ONCE));
+    _backbufferStage->addProgramPass(new ObAllocatePass(&_vctScene, iLevel, kore::EXECUTE_ONCE));
+  }
+  
+  _backbufferStage->addProgramPass(new WriteLeafNodesPass(&_vctScene, kore::EXECUTE_ONCE));
+  
+  // Mipmap the values from bottom to top
+  for (int iLevel = _numLevels - 2; iLevel >= 0;) {
+    kore::Log::getInstance()->write("%u\n", iLevel);
+    _backbufferStage->addProgramPass(new OctreeMipmapPass(&_vctScene, iLevel, kore::EXECUTE_ONCE));
+    --iLevel;
+  }
+  
+  
+  //_octreeVisPass = new OctreeVisPass(&_vctScene);
+  //_backbufferStage->addProgramPass(_octreeVisPass);
+  _backbufferStage->addProgramPass(new ConeTracePass(&_vctScene));
   //_backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
   
   
-  _backbufferStage->addProgramPass(new RenderPass(_gBuffer, _shadowBuffer, lightNodes, &_vctScene));
+  //_backbufferStage->addProgramPass(new RenderPass(_gBuffer, _shadowBuffer, lightNodes, &_vctScene));
 
   //_backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
   RenderManager::getInstance()->addFramebufferStage(_backbufferStage);

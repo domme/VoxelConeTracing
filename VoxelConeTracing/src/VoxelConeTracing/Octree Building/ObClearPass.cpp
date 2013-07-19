@@ -63,6 +63,14 @@ ObClearPass::ObClearPass(VCTscene* vctScene,
   addStartupOperation(new BindImageTexture(
                     vctScene->getNodePool()->getShdNodePool(NEXT),
                     shader->getUniform("nodePool_next")));
+
+  addStartupOperation(new BindImageTexture(
+                    vctScene->getNodePool()->getShdNodePool(RADIANCE),
+                    shader->getUniform("nodePool_radiance")));
+
+  addStartupOperation(new BindImageTexture(
+                      vctScene->getNodePool()->getShdNodePool(NORMAL),
+                      shader->getUniform("nodePool_normal")));
   
   addStartupOperation(new kore::DrawIndirectOp(GL_POINTS, 0));
 

@@ -81,7 +81,7 @@ bool intersectRayWithAABB (in vec3 ro, in vec3 rd,         // Ray-origin and -di
     tLeave = min (v3Max.x, min (v3Max.y, v3Max.z));
     tEnter = max (max (v3Min.x, 0.0), max (v3Min.y, v3Min.z));    
     
-    return tLeave > tEnter;
+    return tLeave >= tEnter;
 }
 ///*
 int traverseOctree(in vec3 posTex, in int nodeAddress, in uint currTargetLevel, out vec3 nodePosTex, out vec3 nodePosMaxTex) {
