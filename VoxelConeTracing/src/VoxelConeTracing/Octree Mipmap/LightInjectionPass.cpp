@@ -35,6 +35,13 @@ LightInjectionPass::LightInjectionPass(VCTscene* vctScene,
 
   using namespace kore;
 
+  this->setExecutionType(executionType);
+  _vctScene = vctScene;
+  _renderMgr = RenderManager::getInstance();
+  _sceneMgr = SceneManager::getInstance();
+  _resMgr = ResourceManager::getInstance();
+
+
   ShaderProgram* shader = new ShaderProgram;
 
   shader->loadShader("./assets/shader/FullscreenQuadVert.shader",
@@ -42,8 +49,18 @@ LightInjectionPass::LightInjectionPass(VCTscene* vctScene,
 
   shader->loadShader("./assets/shader/LightInjectionFrag.shader",
     GL_FRAGMENT_SHADER);
-  shader->init();
   shader->setName("light injection shader");
+  shader->init();
+
+  this->setShaderProgram(shader);
+
+  kore::TexSamplerProperties texSamplerProps;
+  texSamplerProps.wrapping = glm::uvec3(GL_CLAMP_TO_EDGE);
+  texSamplerProps.minfilter = GL_NEAREST;
+  texSamplerProps.magfilter = GL_NEAREST;
+
+  shader->setSamplerProperties(0, texSamplerProps);
+  shader->setSamplerProperties(1, texSamplerProps);
 
   addStartupOperation(new EnableDisableOp(GL_DEPTH_TEST, EnableDisableOp::DISABLE));
   addStartupOperation(new ColorMaskOp(glm::bvec4(true, true, true, true)));
@@ -65,6 +82,9 @@ LightInjectionPass::LightInjectionPass(VCTscene* vctScene,
   nodePass->addOperation(new BindTexture(
                          &vSMBufferTex[0],
                          shader->getUniform("shadowMap")));
+  nodePass->addOperation(new BindTexture(
+                         &vSMBufferTex[1],
+                          shader->getUniform("smPosition")));
 
   nodePass->addOperation(new BindAttribute(
                          fsqMeshComponent->getShaderData("v_position"),
@@ -105,6 +125,8 @@ LightInjectionPass::LightInjectionPass(VCTscene* vctScene,
   nodePass->addOperation(new BindImageTexture(
                          vctScene->getNodePool()->getShdNodePool(RADIANCE),
                          shader->getUniform("nodePool_radiance"), GL_READ_WRITE));
+
+  nodePass->addOperation(new RenderMesh(fsqMeshComponent));
 
   this->addFinishOperation(new MemoryBarrierOp(GL_ALL_BARRIER_BITS));
 }

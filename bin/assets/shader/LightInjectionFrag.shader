@@ -26,7 +26,7 @@
 #version 420
 
 in VertexData {
-  vec3 viewDirVS;
+  vec3 posFarVS;
   vec2 uv;
 } In;
 
@@ -54,10 +54,12 @@ uniform mat4 voxelGridTransformI;
 uniform uint numLevels;
 
 uniform sampler2D shadowMap;
+uniform sampler2D smPosition;
 uniform float fFar;
 uniform mat4 lightViewI;
 uniform vec3 lightColor;
 
+out vec4 outColor;
 
 vec4 convRGBA8ToVec4(uint val) {
     return vec4( float((val & 0x000000FF)), 
@@ -89,12 +91,14 @@ uvec3 uintXYZ10ToVec3(uint val) {
 void main() {
   float depth = abs(texture(shadowMap, In.uv).x);
 
+  outColor = vec4(depth);
+
   if (abs(depth - 1.0) < 0.0001) {
     return;  // No valid depth value
   }
 
-  vec3 posGrid = (voxelGridTransformI * lightViewI * vec4(In.viewDirVS * depth, 1.0)).xyz;
-  vec3 posTex = vec3(posGrid) / length(voxelGridTransformI[0]) * 0.5 + 0.5;
+  vec4 posWS = lightViewI * vec4(vec3(In.posFarVS.xy, In.posFarVS.z * depth), 1.0);
+  vec3 posTex = (voxelGridTransformI * posWS).xyz * 0.5 + 0.5;
   
   int nodeAddress = 0;
   vec3 nodePosTex = vec3(0.0);
@@ -129,5 +133,7 @@ void main() {
       sideLength = sideLength / 2.0;
       posTex = 2.0 * posTex - vec3(offVec);
     } // level-for  
+
+    
 }
 

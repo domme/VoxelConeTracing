@@ -25,10 +25,10 @@
 
 #version 420 core
 
-layout(location = 0) out float fragmentdepth;
+layout(location = 0) out vec4 position;
 
-in vec4 posVS;
+in vec4 posWS;
  
 void main(){
-  fragmentdepth  = gl_FragCoord.z;
+  position = posWS;
 }

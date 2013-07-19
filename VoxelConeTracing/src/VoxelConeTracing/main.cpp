@@ -207,17 +207,8 @@ void setup() {
   _shadowBufferStage = new kore::FrameBufferStage;
   _shadowBuffer = new kore::FrameBuffer("shadowBuffer");
   drawBufs.clear();
-  drawBufs.push_back(GL_NONE);
+  drawBufs.push_back(GL_COLOR_ATTACHMENT0);
   _shadowBufferStage->setActiveAttachments(drawBufs);
-
-  //STextureProperties testTex;
-  //testTex.width = 1024;
-  //testTex.height = 1024;
-  //testTex.targetType = GL_TEXTURE_2D;
-  //testTex.format = GL_RED;
-  //testTex.internalFormat =  GL_R32F;
-  //testTex.pixelType = GL_FLOAT;
-  //_shadowBuffer->addTextureAttachment(testTex,"testTex",GL_COLOR_ATTACHMENT0);
 
   STextureProperties SMprops;
   SMprops.width = 2048;
@@ -228,10 +219,15 @@ void setup() {
   SMprops.pixelType = GL_UNSIGNED_INT_24_8;
   _shadowBuffer->addTextureAttachment(SMprops,"ShadowMap",GL_DEPTH_STENCIL_ATTACHMENT);
 
+  SMprops.format = GL_RGB;
+  SMprops.internalFormat =  GL_RGB32F;
+  SMprops.pixelType = GL_FLOAT;
+  _shadowBuffer->addTextureAttachment(SMprops,"SMposition",GL_COLOR_ATTACHMENT0);
+
   _shadowBufferStage->setFrameBuffer(_shadowBuffer);
   _shadowBufferStage->addProgramPass(new ShadowMapPass(
                                       renderNodes,lightNodes[0],
-                                      glm::uvec2(SMprops.width, SMprops.height)));
+                                      glm::uvec2(SMprops.width,SMprops.height)));
 
   RenderManager::getInstance()->addFramebufferStage(_shadowBufferStage);
 //////////////////////////////////////////////////////////////////////////
@@ -258,7 +254,7 @@ void setup() {
   
   _backbufferStage->addProgramPass(new WriteLeafNodesPass(&_vctScene, kore::EXECUTE_ONCE));
   
-  _backbufferStage->addProgramPass(new LightInjectionPass(&_vctScene, lightNodes[0], _shadowBuffer, kore::EXECUTE_ONCE));
+  _backbufferStage->addProgramPass(new LightInjectionPass(&_vctScene, lightNodes[0], _shadowBuffer, kore::EXECUTE_REPEATING));
 
   // Mipmap the values from bottom to top
   for (int iLevel = _numLevels - 2; iLevel >= 0;) {
@@ -266,8 +262,7 @@ void setup() {
     _backbufferStage->addProgramPass(new OctreeMipmapPass(&_vctScene, iLevel, kore::EXECUTE_ONCE));
     --iLevel;
   }
-  
-  
+
   _octreeVisPass = new OctreeVisPass(&_vctScene);
   _backbufferStage->addProgramPass(_octreeVisPass);
   //_backbufferStage->addProgramPass(new ConeTracePass(&_vctScene));

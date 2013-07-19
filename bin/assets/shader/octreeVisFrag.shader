@@ -152,9 +152,13 @@ void main(void) {
     memoryBarrier();
 
     vec4 radiance = vec4(convRGBA8ToVec4(nodeRadianceU)) / 255.0;
-    vec4 newCol = (vec4(convRGBA8ToVec4(nodeColorU)) / 255.0) * radiance;
+    vec4 newCol = (vec4(convRGBA8ToVec4(nodeColorU)) / 255.0);
     
     color = (1.0 - color.a) * newCol + color;
+
+    if (length(radiance) > 0) {
+      color = radiance;
+    }
     
     if (color.a > 0.99) {
       return;
