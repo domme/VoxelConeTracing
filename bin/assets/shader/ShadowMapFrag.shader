@@ -25,10 +25,10 @@
 
 #version 420 core
 
-layout(location = 0) out vec4 position;
+out vec4 color;
 
 in vec4 posWS;
  
 void main(){
-  position = posWS;
+  color = posWS;
 }

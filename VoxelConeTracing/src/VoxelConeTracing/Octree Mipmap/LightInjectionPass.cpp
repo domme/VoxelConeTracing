@@ -64,9 +64,7 @@ LightInjectionPass::LightInjectionPass(VCTscene* vctScene,
 
   addStartupOperation(new EnableDisableOp(GL_DEPTH_TEST, EnableDisableOp::DISABLE));
   addStartupOperation(new ColorMaskOp(glm::bvec4(true, true, true, true)));
-  addStartupOperation(new ViewportOp(glm::ivec4(0, 0,
-    shadowMapFBO->getTexture(GL_DEPTH_STENCIL_ATTACHMENT)->getProperties().width,
-    shadowMapFBO->getTexture(GL_DEPTH_STENCIL_ATTACHMENT)->getProperties().height)));
+  addStartupOperation(new ViewportOp(glm::ivec4(0, 0, 1280, 720)));
  
   SceneNode* fsquadnode = new SceneNode();
   SceneManager::getInstance()->getRootNode()->addChild(fsquadnode);
@@ -91,13 +89,6 @@ LightInjectionPass::LightInjectionPass(VCTscene* vctScene,
                          shader->getAttribute("v_position")));
 
   kore::Camera* lightViewCam = static_cast<Camera*>(lightNode->getComponent(COMPONENT_CAMERA));
-  nodePass->addOperation(new BindUniform(
-                         lightViewCam->getShaderData("ratio"),
-                         shader->getUniform("fRatio")));
-  
-  nodePass->addOperation(new BindUniform(
-                         lightViewCam->getShaderData("FOV degree"),
-                         shader->getUniform("fYfovDeg")));
 
   nodePass->addOperation(new BindUniform(
                          lightViewCam->getShaderData("far Plane"),

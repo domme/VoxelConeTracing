@@ -205,7 +205,7 @@ void DebugPass::debugRadianceNodePool() {
   bool success = false;
   for (uint i = 0; i < _vctScene->getNodePool()->getNumNodes(); ++i) {
     if (nodePtr[i] != 0) {
-      kore::Log::getInstance()->write("%u: %u\n", i, nodePtr[i]);
+      //kore::Log::getInstance()->write("%u: %u\n", i, nodePtr[i]);
       success = true;
     }
   }

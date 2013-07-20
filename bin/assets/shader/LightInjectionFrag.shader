@@ -89,16 +89,17 @@ uvec3 uintXYZ10ToVec3(uint val) {
 
 
 void main() {
-  float depth = abs(texture(shadowMap, In.uv).x);
+  //outColor = texture(smPosition, In.uv); //vec4(depth);
 
-  outColor = vec4(depth);
-
-  if (abs(depth - 1.0) < 0.0001) {
-    return;  // No valid depth value
-  }
-
-  vec4 posWS = lightViewI * vec4(vec3(In.posFarVS.xy, In.posFarVS.z * depth), 1.0);
+  vec4 posWS = vec4(texture(smPosition, In.uv).xyz, 1.0); // lightViewI * vec4(vec3(In.posFarVS.xy, In.posFarVS.z * depth), 1.0);
   vec3 posTex = (voxelGridTransformI * posWS).xyz * 0.5 + 0.5;
+
+  outColor = posWS;
+
+  if (posTex.x < 0 || posTex.y < 0 || posTex.z < 0 ||
+      posTex.x > 1 || posTex.y > 1 || posTex.z > 1) {
+        return;
+  }
   
   int nodeAddress = 0;
   vec3 nodePosTex = vec3(0.0);

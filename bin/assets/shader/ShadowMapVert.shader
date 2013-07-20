@@ -32,6 +32,6 @@ uniform mat4 viewProjMat;
 uniform mat4 modelMat;
  
 void main(){
-  posWS = viewProjMat * modelMat* vec4(v_position,1);
-  gl_Position = posWS;
+  posWS = modelMat* vec4(v_position,1);
+  gl_Position = viewProjMat * posWS;
 }
