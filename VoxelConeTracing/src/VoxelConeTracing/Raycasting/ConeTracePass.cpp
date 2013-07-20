@@ -99,6 +99,9 @@ ConeTracePass::ConeTracePass(VCTscene* vctScene){
     addStartupOperation(new BindImageTexture(
       vctScene->getNodePool()->getShdNodePool(COLOR),
       _coneTraceShader.getUniform("nodePool_color"), GL_READ_ONLY));
+    addStartupOperation(new BindImageTexture(
+      vctScene->getNodePool()->getShdNodePool(RADIANCE),
+      _coneTraceShader.getUniform("nodePool_radiance"), GL_READ_ONLY));
 
     nodePass->addOperation(new BindUniform(
       vctScene->getShdVoxelGridResolution(),

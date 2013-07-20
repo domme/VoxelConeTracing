@@ -140,10 +140,7 @@ void main(void) {
   float end = tLeave;
   for (float f = tEnter + 0.00001; f < end; f += tLeave + 0.00001) {
     vec3 posTex = (rayOriginTex + rayDirTex * f);
-  
-    /*float fDistanceFactor = f / end;
-    fDistanceFactor *= fDistanceFactor;*/
-    
+      
     uint currTargetLevel = targetLevel; //uint(floor((1.0 - fDistanceFactor) * float(targetLevel))) + 1;
     int address = traverseOctree(posTex, 0, clamp(currTargetLevel, 1U, targetLevel), nodePosMin, nodePosMax);
     
@@ -152,17 +149,17 @@ void main(void) {
     memoryBarrier();
 
     vec4 radiance = vec4(convRGBA8ToVec4(nodeRadianceU)) / 255.0;
-    vec4 newCol = (vec4(convRGBA8ToVec4(nodeColorU)) / 255.0);
+    vec4 newCol = (vec4(convRGBA8ToVec4(nodeColorU)) / 255.0) * radiance;
     
     color = (1.0 - color.a) * newCol + color;
 
-    if (length(radiance) > 0) {
+    /*if (length(radiance) > 0) {
       color = radiance;
     }
     
     if (color.a > 0.99) {
       return;
-    }
+    } */
     
     if (!intersectRayWithAABB(posTex, rayDirTex, nodePosMin, nodePosMax, tEnter, tLeave)) {
       return; // prevent infinite loop

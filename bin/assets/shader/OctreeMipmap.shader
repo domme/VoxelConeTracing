@@ -27,6 +27,7 @@
 
 layout(r32ui) uniform volatile uimageBuffer nodePool_next;
 layout(r32ui) uniform volatile uimageBuffer nodePool_color;
+layout(r32ui) uniform volatile uimageBuffer nodePool_radiance;
 layout(r32ui) uniform volatile uimageBuffer levelAddressBuffer;
 layout(rgba8) uniform image3D brickPool_color;
 
@@ -42,6 +43,7 @@ const uint NODE_NOT_FOUND = 0xFFFFFFFF;
 
 uint childNextU[] = {0, 0, 0, 0, 0, 0, 0, 0};
 uint childColorU[] = {0, 0, 0, 0, 0, 0, 0, 0};
+uint childRadianceU[] = {0, 0, 0, 0, 0, 0, 0, 0};
 
 vec4 convRGBA8ToVec4(uint val) {
     return vec4( float((val & 0x000000FF)), 
@@ -81,6 +83,7 @@ void loadChildTile(in int tileAddress) {
   for (int i = 0; i < 8; ++i) {
     childNextU[i] = imageLoad(nodePool_next, tileAddress + i).x;
     childColorU[i] = imageLoad(nodePool_color, tileAddress + i).x;
+    childRadianceU[i] = imageLoad(nodePool_radiance, tileAddress + i).x;
   }
 
   memoryBarrier();
@@ -160,20 +163,21 @@ void compAndStoreAvgConstColor(in int nodeAddress) {
   imageStore(nodePool_color, nodeAddress, uvec4(colorU));
 }
 
+void compAndStoreAvgConstRadiance(in int nodeAddress) {
+  vec4 radiance = vec4(0);
+  
+  for (uint iChild = 0; iChild < 8; ++iChild) {
+    vec4 childRadiance = convRGBA8ToVec4(childRadianceU[iChild]);
+    radiance += childRadiance;
+  }
 
+  radiance /= 8;
 
-// Fill the texture brick with values from the children
-// Brickcoords are the coordinates of the lower-left voxel
-void mipmapBrick(uvec3 brickCoords) {
- /* for (uint z = 0; z < 3; ++z) {
-    for (uint y = 0; y < 3; ++y) {
-      for (uint x = 0; x < 3; ++x) {
-         imageStore(
-      }
-    }
-  } */
+  uint radianceU = convVec4ToRGBA8(radiance);
+
+  // Store the average color value in the parent.
+  imageStore(nodePool_radiance, nodeAddress, uvec4(radianceU));
 }
-
 
 
 uint getThreadNode() {
@@ -209,7 +213,7 @@ void main() {
   uint childAddress = NODE_MASK_VALUE & nodeNextU;
   loadChildTile(int(childAddress));  // Loads the child-values into the global arrays
   compAndStoreAvgConstColor(int(nodeAddress));
-
+  compAndStoreAvgConstRadiance(int(nodeAddress));
   /*bool brickNeeded = computeBrickNeeded();
   if (brickNeeded) {
     allocTextureBrick(int(nodeAddress), nodeNextU);

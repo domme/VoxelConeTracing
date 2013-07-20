@@ -49,6 +49,7 @@ const uint pow2[] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
 
 layout(r32ui) uniform readonly uimageBuffer nodePool_next;
 layout(r32ui) uniform readonly uimageBuffer nodePool_color;
+layout(r32ui) uniform readonly uimageBuffer nodePool_radiance;
 
 uniform uint voxelGridResolution;
 uniform mat4 viewI;
@@ -178,10 +179,13 @@ void main(void) {
     int address = traverseOctree(posTex, f, pixelSizeTS, nodePosMin, nodePosMax);
     
     uint nodeColorU = imageLoad(nodePool_color, address).x;
+    uint nodeRadianceU = imageLoad(nodePool_radiance, address).x;
     memoryBarrier();
 
     vec4 newCol = vec4(convRGBA8ToVec4(nodeColorU)) / 255.0;
-    
+    vec4 radiance = vec4(convRGBA8ToVec4(nodeRadianceU)) / 255.0;
+
+    newCol *= radiance;
     
     if (!intersectRayWithAABB(posTex, rayDirTex, nodePosMin, nodePosMax, tEnter, tLeave)) {
       return; // prevent infinite loop

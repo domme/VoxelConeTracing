@@ -254,7 +254,7 @@ void setup() {
   
   _backbufferStage->addProgramPass(new WriteLeafNodesPass(&_vctScene, kore::EXECUTE_ONCE));
   
-  _backbufferStage->addProgramPass(new LightInjectionPass(&_vctScene, lightNodes[0], _shadowBuffer, kore::EXECUTE_REPEATING));
+  _backbufferStage->addProgramPass(new LightInjectionPass(&_vctScene, lightNodes[0], _shadowBuffer, kore::EXECUTE_ONCE));
 
   // Mipmap the values from bottom to top
   for (int iLevel = _numLevels - 2; iLevel >= 0;) {
@@ -263,13 +263,13 @@ void setup() {
     --iLevel;
   }
 
-  _octreeVisPass = new OctreeVisPass(&_vctScene);
-  _backbufferStage->addProgramPass(_octreeVisPass);
+  //_octreeVisPass = new OctreeVisPass(&_vctScene);
+  //_backbufferStage->addProgramPass(_octreeVisPass);
   //_backbufferStage->addProgramPass(new ConeTracePass(&_vctScene));
   //_backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
   
   
-  //_backbufferStage->addProgramPass(new RenderPass(_gBuffer, _shadowBuffer, lightNodes, &_vctScene));
+  _backbufferStage->addProgramPass(new RenderPass(_gBuffer, _shadowBuffer, lightNodes, &_vctScene));
 
   _backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
   RenderManager::getInstance()->addFramebufferStage(_backbufferStage);
