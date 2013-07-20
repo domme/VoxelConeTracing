@@ -27,7 +27,8 @@
 // vertex position in modelspace
 layout(location = 0) in vec3 v_position;
 layout(location = 1) in vec3 v_normal;
-layout(location = 2) in vec3 v_uv0;
+layout(location = 2) in vec3 v_tangent;
+layout(location = 3) in vec3 v_uv0;
 
 uniform mat4 projectionMat;
 uniform mat4 viewMat;
@@ -38,6 +39,7 @@ uniform mat3 normalMat;
 out VertexData {
   vec3 position;
   vec3 normal;
+  vec3 tangent;
   vec2 uv;
 } Out;
 
@@ -47,5 +49,6 @@ void main()
   gl_Position = projectionMat * viewMat * vec4(Out.position, 1.0);
 
   Out.normal = normalMat * v_normal;
+  Out.tangent = (modelMat * vec4(v_tangent, 0.0));
   Out.uv = v_uv0.xy;
 }

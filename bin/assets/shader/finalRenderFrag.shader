@@ -36,6 +36,7 @@ out vec4 outColor;
 uniform sampler2D gBuffer_color;
 uniform sampler2D gBuffer_pos;
 uniform sampler2D gBuffer_normal;
+uniform sampler2D gBuffer_tangent;
 uniform sampler2D shadowMap;
 
 
@@ -215,7 +216,7 @@ vec4 coneTrace(in vec3 posTex, in vec3 dirTex, in float coneAngleRad) {
     vec4 newCol = vec4(convRGBA8ToVec4(nodeColorU)) / 255.0;
     vec4 radiance = vec4(convRGBA8ToVec4(nodeRadianceU)) / 255.0;
 
-    newCol *= radiance;
+    newCol.xyz *= radiance.xyz;
     
     if (!intersectRayWithAABB(posTex, rayDirTex, nodePosMin, nodePosMax, tEnter, tLeave)) {
       return color; // prevent infinite loop
@@ -235,51 +236,30 @@ vec4 coneTrace(in vec3 posTex, in vec3 dirTex, in float coneAngleRad) {
   return color;
 }
 
-vec4 gatherIndirectIllum(in vec3 surfacePosWS, in vec3 surfaceNormalWS) {
+vec4 gatherIndirectIllum(in vec3 posWS, in vec3 normalWS, in vec3 tangentWS) {
+  mat3 surfaceMat = mat3(tangentWS, normalWS, normalize(cross(normalWS, tangentWS)));
+
   vec4 color = vec4(0);
   int weights = 0;
-  vec3 posTex = (voxelGridTransformI * vec4(surfacePosWS, 1.0)).xyz * 0.5 + 0.5;
+  vec3 posTex = (voxelGridTransformI * vec4(posWS, 1.0)).xyz * 0.5 + 0.5;
 
-  
-  vec3 dir = vec3(0,1,0);
-  float nd = max(dot(surfaceNormalWS, dir), 0);
-  if (nd > 0.0001) {
-    color += nd * coneTrace(posTex, dir, 0.0);
-    ++weights;
-  }
-  
-  dir = vec3(1,0,0);
-  nd = max(dot(surfaceNormalWS, dir), 0);
-  if (nd > 0.0001) {
-    color += nd * coneTrace(posTex, dir, 0.0);
-    ++weights;
-  }
-  dir = vec3(0,0,1);
-  nd = max(dot(surfaceNormalWS, dir), 0);
-  if (nd > 0.0001) {
-    color += nd * coneTrace(posTex, dir, 0.0);
-    ++weights;
-  }
-  dir = vec3(0, -1, 0);
-  nd = max(dot(surfaceNormalWS, dir), 0);
-  if (nd > 0.0001) {
-    color += nd * coneTrace(posTex, dir, 0.0);
-    ++weights;
-  }
-  dir = vec3(-1, 0, 0);
-  nd = max(dot(surfaceNormalWS, dir), 0);
-  if (nd > 0.0001) {
-    color += nd * coneTrace(posTex, dir, 0.0);
-    ++weights;
-  }
-  dir = vec3(0,0,-1);
-  nd = max(dot(surfaceNormalWS, dir), 0);
-  if (nd > 0.0001) {
-    color += nd * coneTrace(posTex, dir, 0.0);
-    ++weights;
-  }
+  // Along 
+  vec3 dir = normalWS;
+  color += coneTrace(posTex, dir, 0.0f);
 
-  return color / float(weights);
+  dir = normalize(surfaceMat * vec3(1,1,0));
+  color += max(dot(dir, normalWS), 0) * coneTrace(posTex, dir, 0.0f);
+
+  dir = normalize(surfaceMat * vec3(-1,1,0));
+  color += max(dot(dir, normalWS), 0) * coneTrace(posTex, dir, 0.0f);
+
+  dir = normalize(surfaceMat * vec3(0,1,1));
+  color += max(dot(dir, normalWS), 0) * coneTrace(posTex, dir, 0.0f);
+
+  dir = normalize(surfaceMat * vec3(0,1,-1));
+  color += max(dot(dir, normalWS), 0) * coneTrace(posTex, dir, 0.0f);
+
+  return color / 5;
 }
 
 
@@ -290,6 +270,7 @@ void main(void)
 {
   vec4 posWS = vec4(vec3(texture(gBuffer_pos, In.uv)),1);
   vec3 normalWS = normalize(texture(gBuffer_normal, In.uv).xyz);
+  vec3 tangentWS = normalize(texture(gBuffer_tangent, In.uv).xyz);
   //vec3 diffColor = texture(gBuffer_color, In.uv).xyz;
 
 
@@ -307,6 +288,5 @@ void main(void)
  
 
  outColor = visibility * phong(In.uv, normalWS, normalize(lightDir), normalize(vec3(posWS)));
- outColor += gatherIndirectIllum(posWS, normalWS);
-
+ outColor += gatherIndirectIllum(posWS.xyz + normalWS, normalWS, tangentWS);
 }

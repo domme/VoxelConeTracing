@@ -136,9 +136,9 @@ void setup() {
 
   
   SVCTparameters params;
-  params.voxel_grid_resolution = 256;
+  params.voxel_grid_resolution = 128;
   params.voxel_grid_sidelengths = glm::vec3(50, 50, 50);
-  params.fraglist_size_multiplier = 1;
+  params.fraglist_size_multiplier = 100;
   params.fraglist_size_divisor = 1;
   params.brickPoolResolution = 64 * 3;                                                                    
   
@@ -165,10 +165,11 @@ void setup() {
   _gBuffer = new FrameBuffer("gbuffer");
 
   std::vector<GLenum> drawBufs;
-  drawBufs.resize(3);
+  drawBufs.resize(4);
   drawBufs[0] = GL_COLOR_ATTACHMENT0;
   drawBufs[1] = GL_COLOR_ATTACHMENT1;
   drawBufs[2] = GL_COLOR_ATTACHMENT2;
+  drawBufs[3] = GL_COLOR_ATTACHMENT3;
   _gbufferStage->setActiveAttachments(drawBufs);
 
   STextureProperties props;
@@ -190,6 +191,11 @@ void setup() {
   props.internalFormat = GL_RGB32F;
   props.pixelType = GL_FLOAT;
   _gBuffer->addTextureAttachment(props,"Normal",GL_COLOR_ATTACHMENT2);
+
+  props.format = GL_RGB;
+  props.internalFormat = GL_RGB32F;
+  props.pixelType = GL_FLOAT;
+  _gBuffer->addTextureAttachment(props, "Tangent", GL_COLOR_ATTACHMENT3);
 
   props.format = GL_DEPTH_STENCIL;
   props.internalFormat = GL_DEPTH24_STENCIL8;

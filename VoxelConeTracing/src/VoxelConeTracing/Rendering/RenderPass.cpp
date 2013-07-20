@@ -55,6 +55,7 @@ RenderPass::RenderPass(kore::FrameBuffer* gBuffer, kore::FrameBuffer* smBuffer,
   shader->setSamplerProperties(1, texSamplerProps);
   shader->setSamplerProperties(2, texSamplerProps);
   shader->setSamplerProperties(3, texSamplerProps);
+  shader->setSamplerProperties(4, texSamplerProps);
   this->setShaderProgram(shader);
 
   addStartupOperation(new EnableDisableOp(GL_DEPTH_TEST, EnableDisableOp::ENABLE));
@@ -85,6 +86,8 @@ RenderPass::RenderPass(kore::FrameBuffer* gBuffer, kore::FrameBuffer* smBuffer,
                          shader->getUniform("gBuffer_pos")));
   nodePass->addOperation(new BindTexture(&vGBufferTex[2],
                          shader->getUniform("gBuffer_normal")));
+  nodePass->addOperation(new BindTexture(&vGBufferTex[3],
+                        shader->getUniform("gBuffer_tangent")));
   nodePass->addOperation(new BindTexture(&vSMBufferTex[0],
                          shader->getUniform("shadowMap")));
 
