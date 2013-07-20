@@ -58,7 +58,7 @@ OctreeMipmapPass::
   shp->loadShader("./assets/shader/OctreeMipmap.shader",
                  GL_VERTEX_SHADER);
   shp->init();
-  shp->setName("ModyfyIndirectBuffer shader");
+  shp->setName("OctreeMipmap shader");
   
   // Launch a thread for every node up to _level
   addStartupOperation(
@@ -69,13 +69,18 @@ OctreeMipmapPass::
     _vctScene->getNodePool()->getShdLevelAddressBuffer(),
     shp->getUniform("levelAddressBuffer")));
    
-  addStartupOperation(
+  /// Brick-Uniforms ///
+  /*addStartupOperation(
     new BindUniform(_vctScene->getBrickPool()->getShdBrickPoolResolution(),
-                    shp->getUniform("brickPoolResolution")));
+                    shp->getUniform("brickPoolResolution")));*/
 
-  addStartupOperation(
+  /*addStartupOperation(
     new BindAtomicCounterBuffer(_vctScene->getBrickPool()->getShdAcNextFree(),
-                                shp->getUniform("nextFreeBrick")));
+                                shp->getUniform("nextFreeBrick"))); */
+
+    /*addStartupOperation(new BindImageTexture(
+    vctScene->getBrickPool()->getShdBrickPool(BRICKPOOL_COLOR),
+                            shp->getUniform("brickPool_color")));*/
 
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdNodePool(NEXT), shp->getUniform("nodePool_next")));
@@ -83,9 +88,7 @@ OctreeMipmapPass::
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdNodePool(COLOR), shp->getUniform("nodePool_color")));
 
-  addStartupOperation(new BindImageTexture(
-    vctScene->getBrickPool()->getShdBrickPool(BRICKPOOL_COLOR),
-                            shp->getUniform("brickPool_color")));
+
 
   addStartupOperation(new BindUniform(&_shdLevel, shp->getUniform("level")));
     

@@ -85,8 +85,8 @@ DebugPass::DebugPass(VCTscene* vctScene,
  addStartupOperation(
           new FunctionOp(std::bind(&DebugPass::debugNextFreeAC, this)));
 
- addStartupOperation(
-   new FunctionOp(std::bind(&DebugPass::debugBrickAc, this)));
+ //addStartupOperation(
+ //  new FunctionOp(std::bind(&DebugPass::debugBrickAc, this)));
 }
 
 
@@ -205,6 +205,7 @@ void DebugPass::debugRadianceNodePool() {
   bool success = false;
   for (uint i = 0; i < _vctScene->getNodePool()->getNumNodes(); ++i) {
     if (nodePtr[i] != 0) {
+      //kore::Log::getInstance()->write("%u: %u\n", i, nodePtr[i]);
       success = true;
     }
   }
