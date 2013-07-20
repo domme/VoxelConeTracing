@@ -26,7 +26,6 @@
 #version 420
 
 in VertexData {
-  vec3 posFarVS;
   vec2 uv;
 } In;
 
@@ -53,10 +52,8 @@ layout(r32ui) uniform uimageBuffer nodePool_radiance;
 uniform mat4 voxelGridTransformI;
 uniform uint numLevels;
 
-uniform sampler2D shadowMap;
 uniform sampler2D smPosition;
 uniform float fFar;
-uniform mat4 lightViewI;
 uniform vec3 lightColor;
 
 out vec4 outColor;
@@ -89,9 +86,7 @@ uvec3 uintXYZ10ToVec3(uint val) {
 
 
 void main() {
-  //outColor = texture(smPosition, In.uv); //vec4(depth);
-
-  vec4 posWS = vec4(texture(smPosition, In.uv).xyz, 1.0); // lightViewI * vec4(vec3(In.posFarVS.xy, In.posFarVS.z * depth), 1.0);
+  vec4 posWS = vec4(texture(smPosition, In.uv).xyz, 1.0);
   vec3 posTex = (voxelGridTransformI * posWS).xyz * 0.5 + 0.5;
 
   outColor = posWS;

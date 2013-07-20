@@ -58,9 +58,7 @@ LightInjectionPass::LightInjectionPass(VCTscene* vctScene,
   texSamplerProps.wrapping = glm::uvec3(GL_CLAMP_TO_EDGE);
   texSamplerProps.minfilter = GL_NEAREST;
   texSamplerProps.magfilter = GL_NEAREST;
-
   shader->setSamplerProperties(0, texSamplerProps);
-  shader->setSamplerProperties(1, texSamplerProps);
 
   addStartupOperation(new EnableDisableOp(GL_DEPTH_TEST, EnableDisableOp::DISABLE));
   addStartupOperation(new ColorMaskOp(glm::bvec4(true, true, true, true)));
@@ -78,24 +76,12 @@ LightInjectionPass::LightInjectionPass(VCTscene* vctScene,
 
   std::vector<ShaderData>& vSMBufferTex = shadowMapFBO->getOutputs();
   nodePass->addOperation(new BindTexture(
-                         &vSMBufferTex[0],
-                         shader->getUniform("shadowMap")));
-  nodePass->addOperation(new BindTexture(
                          &vSMBufferTex[1],
                           shader->getUniform("smPosition")));
 
   nodePass->addOperation(new BindAttribute(
                          fsqMeshComponent->getShaderData("v_position"),
                          shader->getAttribute("v_position")));
-
-  kore::Camera* lightViewCam = static_cast<Camera*>(lightNode->getComponent(COMPONENT_CAMERA));
-
-  nodePass->addOperation(new BindUniform(
-                         lightViewCam->getShaderData("far Plane"),
-                         shader->getUniform("fFar")));
-  nodePass->addOperation(new BindUniform(
-                         lightViewCam->getShaderData("inverse view Matrix"),
-                         shader->getUniform("lightViewI")));
   
   nodePass->addOperation(new BindUniform(
                         vctScene->getVoxelGridNode()->getTransform()->getShaderData("inverse model Matrix"),
