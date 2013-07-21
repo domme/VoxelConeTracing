@@ -82,6 +82,15 @@
     <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\LightInjectionPass.cpp">
       <Filter>src\Octree Mipmap</Filter>
     </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\Stages\SVOconstructionStage.cpp">
+      <Filter>src\Stages</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\Stages\GBufferStage.cpp">
+      <Filter>src\Stages</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\Stages\ShadowMapStage.cpp">
+      <Filter>src\Stages</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -113,6 +122,9 @@
     </Filter>
     <Filter Include="src\Rendering">
       <UniqueIdentifier>{0a76992a-31a4-41f7-89e6-e482e424e6ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Stages">
+      <UniqueIdentifier>{71acbb64-5686-4440-88fb-ae38fcef07f1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -193,6 +205,15 @@
     </ClInclude>
     <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\LightInjectionPass.h">
       <Filter>src\Octree Mipmap</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\Stages\GBufferStage.h">
+      <Filter>src\Stages</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\Stages\SVOconstructionStage.h">
+      <Filter>src\Stages</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\Stages\ShadowMapStage.h">
+      <Filter>src\Stages</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

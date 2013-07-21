@@ -1,39 +1,35 @@
-/*
- Copyright (c) 2012 The VCT Project
-
-  This file is part of VoxelConeTracing and is an implementation of
-  "Interactive Indirect Illumination Using Voxel Cone Tracing" by Crassin et al
-
-  VoxelConeTracing is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-
-  VoxelConeTracing is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with VoxelConeTracing.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-/*!
-* \author Dominik Lazarek (dominik.lazarek@gmail.com)
-* \author Andreas Weinmann (andy.weinmann@gmail.com)
-*/
-
 #version 420
 
 layout (location = 0) in vec3 v_position;
 
-
 out VertexData {
+  vec3 viewDirVS;
+  float pixelSizeVS;
   vec2 uv;
 } Out;
 
+
+uniform float fRatio;
+uniform float fYfovDeg;
+uniform float fFar;
+uniform ivec2 screenRes;
+
+const float PI = 3.1415926535897932384626433832795;
+
 void main(void)
 {
+  float fYfov = PI * (fYfovDeg / 180.0);
+
+  float tanFov_2 = tan( fYfov / 2.0 );
+  float h2 = fFar * tanFov_2;
+  float w2 = fRatio * h2;
+
+  Out.viewDirVS = vec3( v_position.xy * vec2( w2, h2 ), -fFar );
+
+  float near = 1.0f; // Assuming a near-plane distance of 1 here!
+                          // h
+  Out.pixelSizeVS = (2.0 * near * tanFov_2) / screenRes.y;
   Out.uv = 0.5 * v_position.xy + 0.5;
+
   gl_Position = vec4( v_position, 1.0 );
 }

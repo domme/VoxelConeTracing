@@ -157,7 +157,7 @@ void main(void) {
 
   // PixelSize in texture space is the pixel-viewpsace size divided by the scale
   // of the voxelGrid
-  float pixelSizeTS = In.pixelSizeVS / length(voxelGridTransformI[0]);
+  float pixelSizeTS = In.pixelSizeVS / 25;
   
   float tEnter = 0.0;
   float tLeave = 0.0;
@@ -185,7 +185,7 @@ void main(void) {
     vec4 newCol = vec4(convRGBA8ToVec4(nodeColorU)) / 255.0;
     vec4 radiance = vec4(convRGBA8ToVec4(nodeRadianceU)) / 255.0;
 
-    newCol *= radiance;
+    //newCol.xyz *= radiance.xyz;
     
     if (!intersectRayWithAABB(posTex, rayDirTex, nodePosMin, nodePosMax, tEnter, tLeave)) {
       return; // prevent infinite loop

@@ -27,16 +27,18 @@
 in VertexData {
   vec3 position;
   vec3 normal;
+  vec3 tangent;
   vec2 uv;
 } In;
 
 uniform sampler2D	diffuseTex;
 
-out vec4 color[3];
+out vec4 color[4];
 
 void main(void)
 {
   color[0] = vec4(texture(diffuseTex, vec2(In.uv.x, 1.0 - In.uv.y)).rgb, 0);
   color[1] = vec4(In.position, 0); 
   color[2] = vec4(normalize(In.normal), 0);
+  color[3] = vec4(normalize(In.tangent), 0);
 }

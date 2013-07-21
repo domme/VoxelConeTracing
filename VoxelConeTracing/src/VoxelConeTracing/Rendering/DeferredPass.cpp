@@ -87,6 +87,10 @@ DeferredPass::DeferredPass(kore::Camera* cam, std::vector<kore::SceneNode*>& vRe
       ->addOperation(OperationFactory::create(OP_BINDATTRIBUTE, "v_normal",
                                               meshComp, "v_normal", shader));
     nodePass
+      ->addOperation(OperationFactory::create(OP_BINDATTRIBUTE, "v_tangent",
+                                              meshComp, "v_tangent", shader));
+
+    nodePass
       ->addOperation(OperationFactory::create(OP_BINDATTRIBUTE, "v_uv0",
                                               meshComp, "v_uv0", shader));
     nodePass

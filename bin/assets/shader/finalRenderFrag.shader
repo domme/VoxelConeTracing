@@ -36,6 +36,7 @@ out vec4 outColor;
 uniform sampler2D gBuffer_color;
 uniform sampler2D gBuffer_pos;
 uniform sampler2D gBuffer_normal;
+uniform sampler2D gBuffer_tangent;
 uniform sampler2D shadowMap;
 
 
@@ -59,10 +60,13 @@ const uvec3 childOffsets[8] = {
   uvec3(0, 1, 1), 
   uvec3(1, 1, 1)};
 
+const float PI = 3.1415926535897932384626433832795;
+const uint pow2[] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
 
- const uint pow2[] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
+const float coneAngleDeg = 90.0;
+const float tanAngle = abs(tan((coneAngleDeg / 180.0) * PI * 0.5));
 
- uniform uint voxelGridResolution;
+uniform uint voxelGridResolution;
 uniform mat4 viewI;
 uniform mat4 voxelGridTransformI;
 uniform uint numLevels;
@@ -97,6 +101,8 @@ uvec3 uintXYZ10ToVec3(uint val) {
                  uint((val & 0x3FF00000) >> 20U));
 }
 
+
+
 vec4 phong(in vec2 uv, in vec3 normal, in vec3 lVec, in vec3 vVec)
 {
     vec4 vSpecular = vec4(0);
@@ -104,7 +110,6 @@ vec4 phong(in vec2 uv, in vec3 normal, in vec3 lVec, in vec3 vVec)
     int shininess = 0;
 
     vec4 texColor = texture(gBuffer_color, uv);
-    vec4 vAmbient = 0.2 * vec4(1,1,1,1) * texColor;
     vVec = normalize(vVec);
     normal = normalize(normal);
     float intensity = 1;
@@ -119,7 +124,7 @@ vec4 phong(in vec2 uv, in vec3 normal, in vec3 lVec, in vec3 vVec)
             vSpecular = lightcolor * specular * intensity;
             }
     }
-    return (vAmbient + vDiffuse + vSpecular);
+    return (vDiffuse + vSpecular);
 }
 
 
@@ -141,21 +146,22 @@ bool intersectRayWithAABB (in vec3 ro, in vec3 rd,         // Ray-origin and -di
     tLeave = min (v3Max.x, min (v3Max.y, v3Max.z));
     tEnter = max (max (v3Min.x, 0.0), max (v3Min.y, v3Min.z));    
     
-    return tLeave >= tEnter;
+    return tLeave > tEnter;
 }
 
-int traverseOctree(in vec3 posTex, in float d, in float pixelSizeTS, out vec3 nodePosTex, out vec3 nodePosMaxTex) {
+int traverseOctree(in vec3 posTex, in float d, out vec3 nodePosTex, out vec3 nodePosMaxTex) {
   nodePosTex = vec3(0.0);
   nodePosMaxTex = vec3(1.0);
 
   float sideLength = 1.0;
   int nodeAddress = 0;
+
+  float coneH = 2 * tanAngle * d;
   
   for (uint iLevel = 0; iLevel < numLevels; ++iLevel) {
     float voxelSize = sideLength;
-    float projVoxelSize = voxelSize / d;
-
-    if (projVoxelSize / 2 < pixelSizeTS) {
+    
+    if (voxelSize < coneH) {
       break;
     }
     
@@ -180,15 +186,10 @@ int traverseOctree(in vec3 posTex, in float d, in float pixelSizeTS, out vec3 no
   return nodeAddress;
 }
 
-vec4 coneTrace(in vec3 posTex, in vec3 dirTex, in float coneAngleRad) {
+vec4 coneTrace(in vec3 posTex, in vec3 dirTex) {
   vec4 color = vec4(0);
   vec3 rayDirTex = dirTex;
   vec3 rayOriginTex = posTex;
-
-  // PixelSize in texture space is the pixel-viewpsace size divided by the scale
-  // of the voxelGrid
-  float pixelSizeTS = In.pixelSizeVS / length(voxelGridTransformI[0]);
-  pixelSizeTS *= 10;
   
   float tEnter = 0.0;
   float tLeave = 0.0;
@@ -196,31 +197,24 @@ vec4 coneTrace(in vec3 posTex, in vec3 dirTex, in float coneAngleRad) {
   if (!intersectRayWithAABB(rayOriginTex, rayDirTex, vec3(0.0), vec3(1.0), tEnter, tLeave)) {
     return color;
   }
-  
-  tEnter = max(tEnter, 0.0);
     
   vec3 nodePosMin = vec3(0.0);
   vec3 nodePosMax = vec3(1.0);
     
   float end = tLeave;
-  for (float f = tEnter + 0.00001; f < end; f += tLeave + 0.00001) {
+  for (float f = 0.00001 + 1.0 / float(voxelGridResolution); f < end; f += tLeave + 0.00001) {
     vec3 posTex = (rayOriginTex + rayDirTex * f);
    
-    int address = traverseOctree(posTex, f, pixelSizeTS, nodePosMin, nodePosMax);
+    int address = traverseOctree(posTex, f, nodePosMin, nodePosMax);
     
     uint nodeColorU = imageLoad(nodePool_color, address).x;
     uint nodeRadianceU = imageLoad(nodePool_radiance, address).x;
-    memoryBarrier();
-
+    
     vec4 newCol = vec4(convRGBA8ToVec4(nodeColorU)) / 255.0;
     vec4 radiance = vec4(convRGBA8ToVec4(nodeRadianceU)) / 255.0;
 
-    newCol *= radiance;
+    newCol.xyz *= radiance.xyz;
     
-    if (!intersectRayWithAABB(posTex, rayDirTex, nodePosMin, nodePosMax, tEnter, tLeave)) {
-      return color; // prevent infinite loop
-    }
-
     float colorCorrection = tLeave / (1.0 / float(voxelGridResolution));
     newCol.a = 1.0 - pow((1.0 - newCol.a), colorCorrection); 
     
@@ -230,56 +224,35 @@ vec4 coneTrace(in vec3 posTex, in vec3 dirTex, in float coneAngleRad) {
     if (color.a > 0.99) {
       return color;
     }
+
+    if (!intersectRayWithAABB(posTex, rayDirTex, nodePosMin, nodePosMax, tEnter, tLeave)) {
+      return color; // prevent infinite loop
+    }
   }
 
   return color;
 }
 
-vec4 gatherIndirectIllum(in vec3 surfacePosWS, in vec3 surfaceNormalWS) {
+vec4 gatherIndirectIllum(in vec3 posWS, in vec3 normalWS, in vec3 tangentWS) {
+  mat3 surfaceMat = mat3(tangentWS, normalWS, normalize(cross(normalWS, tangentWS)));
+
   vec4 color = vec4(0);
-  int weights = 0;
-  vec3 posTex = (voxelGridTransformI * vec4(surfacePosWS, 1.0)).xyz * 0.5 + 0.5;
+  vec3 posTex = (voxelGridTransformI * vec4(posWS, 1.0)).xyz * 0.5 + 0.5;
+    
+  //float thetaStep = 180 / coneAngleDeg;
+  //float phiStep = 360 / coneAngleDeg;
 
-  
-  vec3 dir = vec3(0,1,0);
-  float nd = max(dot(surfaceNormalWS, dir), 0);
-  if (nd > 0.0001) {
-    color += nd * coneTrace(posTex, dir, 0.0);
-    ++weights;
+  float weights = 0.0;
+  for (float phi = 0; phi < 360.0; phi += coneAngleDeg) {
+    for (float theta = 0; theta < 180.0; theta += coneAngleDeg) {
+      vec3 dir = normalize(surfaceMat * vec3(sin(theta) * cos(phi),
+                                             sin(theta) * sin(phi),
+                                             cos(theta)));
+      color += max(dot(dir, normalWS), 0) * coneTrace(posTex, dir);
+      weights += max(dot(dir, normalWS), 0);
+    }
   }
-  
-  dir = vec3(1,0,0);
-  nd = max(dot(surfaceNormalWS, dir), 0);
-  if (nd > 0.0001) {
-    color += nd * coneTrace(posTex, dir, 0.0);
-    ++weights;
-  }
-  dir = vec3(0,0,1);
-  nd = max(dot(surfaceNormalWS, dir), 0);
-  if (nd > 0.0001) {
-    color += nd * coneTrace(posTex, dir, 0.0);
-    ++weights;
-  }
-  dir = vec3(0, -1, 0);
-  nd = max(dot(surfaceNormalWS, dir), 0);
-  if (nd > 0.0001) {
-    color += nd * coneTrace(posTex, dir, 0.0);
-    ++weights;
-  }
-  dir = vec3(-1, 0, 0);
-  nd = max(dot(surfaceNormalWS, dir), 0);
-  if (nd > 0.0001) {
-    color += nd * coneTrace(posTex, dir, 0.0);
-    ++weights;
-  }
-  dir = vec3(0,0,-1);
-  nd = max(dot(surfaceNormalWS, dir), 0);
-  if (nd > 0.0001) {
-    color += nd * coneTrace(posTex, dir, 0.0);
-    ++weights;
-  }
-
-  return color / float(weights);
+  return color / max(weights, 1.0);
 }
 
 
@@ -288,8 +261,18 @@ vec3 dirLightColor = vec3(1.0, 1.0, 1.0);
 
 void main(void)
 {
+  /*vec3 camPosWS = viewI[3].xyz;
+  vec3 viewDirWS = normalize((viewI * vec4(In.viewDirVS, 0.0)).xyz);
+  
+  // Get ray origin and ray direction in texspace
+  vec3 rayDirTex = normalize((voxelGridTransformI * vec4(viewDirWS, 0.0)).xyz);
+  vec3 rayOriginTex = (voxelGridTransformI *  vec4(camPosWS, 1.0)).xyz * 0.5 + 0.5;
+
+  outColor = coneTrace(rayOriginTex, rayDirTex);*/
+
   vec4 posWS = vec4(vec3(texture(gBuffer_pos, In.uv)),1);
   vec3 normalWS = normalize(texture(gBuffer_normal, In.uv).xyz);
+  vec3 tangentWS = normalize(texture(gBuffer_tangent, In.uv).xyz);
   //vec3 diffColor = texture(gBuffer_color, In.uv).xyz;
 
 
@@ -302,11 +285,10 @@ void main(void)
 
  float e = 0.0008;
  if (abs(texture(shadowMap, posLProj.xy).x) + e < abs(posLProj.z)){
-   visibility = 0.1;
+   visibility = 0.0;
  }
  
 
  outColor = visibility * phong(In.uv, normalWS, normalize(lightDir), normalize(vec3(posWS)));
- outColor += gatherIndirectIllum(posWS, normalWS);
-
+ outColor += 10 * gatherIndirectIllum(posWS.xyz + normalWS, normalWS, tangentWS);
 }

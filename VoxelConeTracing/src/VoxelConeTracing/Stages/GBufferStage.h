@@ -23,32 +23,20 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#version 420
-// vertex position in modelspace
-layout(location = 0) in vec3 v_position;
-layout(location = 1) in vec3 v_normal;
-layout(location = 2) in vec3 v_tangent;
-layout(location = 3) in vec3 v_uv0;
+#ifndef VCT_SRC_VCT_GBUFFERSTAGE_H_
+#define VCT_SRC_VCT_GBUFFERSTAGE_H_
 
-uniform mat4 projectionMat;
-uniform mat4 viewMat;
-uniform mat4 modelMat;
-uniform mat3 normalMat;
+#include "KoRE/Passes/FrameBufferStage.h"
+#include "Kore/Components/Camera.h"
+#include "Kore/SceneNode.h"
+#include "VoxelConeTracing/Rendering/DeferredPass.h"
 
-// World-space vectors
-out VertexData {
-  vec3 position;
-  vec3 normal;
-  vec3 tangent;
-  vec2 uv;
-} Out;
+class GBufferStage : public kore::FrameBufferStage {
+public:
+  GBufferStage(kore::Camera* mainCamera, std::vector<kore::SceneNode*>& vRenderNodes,
+              int width, int height);
+  virtual ~GBufferStage();
+};
 
-void main()
-{
-  Out.position = (modelMat * vec4(v_position, 1.0)).xyz;
-  gl_Position = projectionMat * viewMat * vec4(Out.position, 1.0);
 
-  Out.normal = normalMat * v_normal;
-  Out.tangent = (modelMat * vec4(v_tangent, 0.0));
-  Out.uv = v_uv0.xy;
-}
+#endif
