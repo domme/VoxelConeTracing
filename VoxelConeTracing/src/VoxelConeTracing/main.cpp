@@ -79,7 +79,9 @@
 #include "Rendering/ShadowMapPass.h"
 #include "Octree Mipmap/LightInjectionPass.h"
 
-
+#include "VoxelConeTracing/Stages/GBufferStage.h"
+#include "VoxelConeTracing/Stages/SVOconstructionStage.h"
+#include "VoxelConeTracing/Stages/ShadowMapStage.h"
 
 static const uint screen_width = 1280;
 static const uint screen_height = 720;
@@ -89,11 +91,6 @@ static kore::Camera* _pCamera = NULL;
 
 static kore::SceneNode* _rotationNode = NULL;
 static kore::FrameBufferStage* _backbufferStage = NULL;
-static kore::FrameBufferStage* _gbufferStage = NULL;
-static kore::FrameBuffer* _gBuffer = NULL;
-
-static kore::FrameBufferStage* _shadowBufferStage = NULL;
-static kore::FrameBuffer* _shadowBuffer = NULL;
 
 static VCTscene _vctScene;
 
@@ -142,7 +139,7 @@ void setup() {
   params.fraglist_size_divisor = 1;
   params.brickPoolResolution = 64 * 3;                                                                    
   
-  
+  // Make sure all lightnodes are initialized with camera components
   std::vector<SceneNode*> lightNodes;
   SceneManager::getInstance()->getSceneNodesByComponent(COMPONENT_LIGHT,lightNodes);
 
@@ -157,117 +154,29 @@ void setup() {
   }
   SceneManager::getInstance()->update();
 
- 
   _vctScene.init(params, renderNodes, _pCamera);
-
-  //////////////////////////////////////////////////////////////////////////
-  _gbufferStage = new FrameBufferStage;
-  _gBuffer = new FrameBuffer("gbuffer");
-
-  std::vector<GLenum> drawBufs;
-  drawBufs.resize(4);
-  drawBufs[0] = GL_COLOR_ATTACHMENT0;
-  drawBufs[1] = GL_COLOR_ATTACHMENT1;
-  drawBufs[2] = GL_COLOR_ATTACHMENT2;
-  drawBufs[3] = GL_COLOR_ATTACHMENT3;
-  _gbufferStage->setActiveAttachments(drawBufs);
-
-  STextureProperties props;
-  props.width = screen_width;
-  props.height = screen_height;
-  props.targetType = GL_TEXTURE_2D;
-
-  props.format = GL_RGB;
-  props.internalFormat = GL_RGB8;
-  props.pixelType = GL_UNSIGNED_BYTE;
-  _gBuffer->addTextureAttachment(props,"DiffuseColor",GL_COLOR_ATTACHMENT0);
-
-  props.format = GL_RGB;
-  props.internalFormat = GL_RGB32F;
-  props.pixelType = GL_FLOAT;
-  _gBuffer->addTextureAttachment(props,"Position",GL_COLOR_ATTACHMENT1);
-
-  props.format = GL_RGB;
-  props.internalFormat = GL_RGB32F;
-  props.pixelType = GL_FLOAT;
-  _gBuffer->addTextureAttachment(props,"Normal",GL_COLOR_ATTACHMENT2);
-
-  props.format = GL_RGB;
-  props.internalFormat = GL_RGB32F;
-  props.pixelType = GL_FLOAT;
-  _gBuffer->addTextureAttachment(props, "Tangent", GL_COLOR_ATTACHMENT3);
-
-  props.format = GL_DEPTH_STENCIL;
-  props.internalFormat = GL_DEPTH24_STENCIL8;
-  props.pixelType = GL_UNSIGNED_INT_24_8;
-  _gBuffer->addTextureAttachment(props, "Depth_Stencil", GL_DEPTH_STENCIL_ATTACHMENT);
-
-  _gbufferStage->setFrameBuffer(_gBuffer);
-
-  //kore::Camera* lightcam = static_cast<Camera*>(lightNodes[0]->getComponent(COMPONENT_CAMERA));
-  _gbufferStage->addProgramPass(new DeferredPass(_pCamera, renderNodes));
-
-  RenderManager::getInstance()->addFramebufferStage(_gbufferStage);
-  //////////////////////////////////////////////////////////////////////////
-  
-  _shadowBufferStage = new kore::FrameBufferStage;
-  _shadowBuffer = new kore::FrameBuffer("shadowBuffer");
-  drawBufs.clear();
-  drawBufs.push_back(GL_COLOR_ATTACHMENT0);
-  _shadowBufferStage->setActiveAttachments(drawBufs);
-
-  STextureProperties SMprops;
-  SMprops.width = 2048;
-  SMprops.height = 2048;
-  SMprops.targetType = GL_TEXTURE_2D;
-  SMprops.format = GL_DEPTH_STENCIL;
-  SMprops.internalFormat =  GL_DEPTH24_STENCIL8;
-  SMprops.pixelType = GL_UNSIGNED_INT_24_8;
-  _shadowBuffer->addTextureAttachment(SMprops,"ShadowMap",GL_DEPTH_STENCIL_ATTACHMENT);
-
-  SMprops.format = GL_RGB;
-  SMprops.internalFormat =  GL_RGB32F;
-  SMprops.pixelType = GL_FLOAT;
-  _shadowBuffer->addTextureAttachment(SMprops,"SMposition",GL_COLOR_ATTACHMENT0);
-
-  _shadowBufferStage->setFrameBuffer(_shadowBuffer);
-  _shadowBufferStage->addProgramPass(new ShadowMapPass(
-                                      renderNodes,lightNodes[0],
-                                      glm::uvec2(SMprops.width,SMprops.height)));
-
-  RenderManager::getInstance()->addFramebufferStage(_shadowBufferStage);
-//////////////////////////////////////////////////////////////////////////
-  
-  _backbufferStage = new FrameBufferStage;
-  drawBufs.clear();
-  drawBufs.push_back(GL_BACK_LEFT);
-  _backbufferStage->setActiveAttachments(drawBufs);
-  _backbufferStage->setFrameBuffer(kore::FrameBuffer::BACKBUFFER);
-
-  // Prepare render algorithm
-  _backbufferStage->addProgramPass(new ObClearPass(&_vctScene,kore::EXECUTE_ONCE));
-  _backbufferStage->addProgramPass(new VoxelizePass(params.voxel_grid_sidelengths, &_vctScene, kore::EXECUTE_ONCE));
-  _backbufferStage->addProgramPass(new ModifyIndirectBufferPass(
-                                      _vctScene.getVoxelFragList()->getShdFragListIndCmdBuf(),
-                                      _vctScene.getShdAcVoxelIndex(),&_vctScene,
-                                      kore::EXECUTE_ONCE));
-  
   _numLevels = _vctScene.getNodePool()->getNumLevels(); 
-  for (uint iLevel = 0; iLevel < _numLevels; ++iLevel) {
-    _backbufferStage->addProgramPass(new ObFlagPass(&_vctScene, kore::EXECUTE_ONCE));
-    _backbufferStage->addProgramPass(new ObAllocatePass(&_vctScene, iLevel, kore::EXECUTE_ONCE));
-  }
-  
-  _backbufferStage->addProgramPass(new WriteLeafNodesPass(&_vctScene, kore::EXECUTE_ONCE));
-  
-  _backbufferStage->addProgramPass(new LightInjectionPass(&_vctScene, lightNodes[0], _shadowBuffer, kore::EXECUTE_ONCE));
 
-  // Mipmap the values from bottom to top
-  for (int iLevel = _numLevels - 2; iLevel >= 0;) {
-    kore::Log::getInstance()->write("%u\n", iLevel);
-    _backbufferStage->addProgramPass(new OctreeMipmapPass(&_vctScene, iLevel, kore::EXECUTE_ONCE));
-    --iLevel;
-  }
+  // GBuffer Stage
+  FrameBufferStage* gBufferStage =
+    new GBufferStage(_pCamera, renderNodes, screen_width, screen_height);
+  
+  RenderManager::getInstance()->addFramebufferStage(gBufferStage);
+  //////////////////////////////////////////////////////////////////////////
+
+  // Shadowmap Stage
+  FrameBufferStage* shadowMapStage =
+    new ShadowMapStage(lightNodes[0], renderNodes, 2048, 2048);
+
+  RenderManager::getInstance()->addFramebufferStage(shadowMapStage);
+  //////////////////////////////////////////////////////////////////////////
+    
+  // Voxelize & SVO Stage
+  FrameBufferStage* svoStage =
+    new SVOconstructionStage(lightNodes[0], renderNodes, params, _vctScene, shadowMapStage->getFrameBuffer());
+
+  RenderManager::getInstance()->addFramebufferStage(svoStage);
+  ////////////////////////////////////////////////////////////////////////// 
 
   //_octreeVisPass = new OctreeVisPass(&_vctScene);
   //_backbufferStage->addProgramPass(_octreeVisPass);
@@ -275,7 +184,13 @@ void setup() {
   //_backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
   
   
-  _backbufferStage->addProgramPass(new RenderPass(_gBuffer, _shadowBuffer, lightNodes, &_vctScene));
+  _backbufferStage = new FrameBufferStage;
+  std::vector<GLenum> drawBufs;
+  drawBufs.clear();
+  drawBufs.push_back(GL_BACK_LEFT);
+  _backbufferStage->addProgramPass(new RenderPass(
+    gBufferStage->getFrameBuffer(), shadowMapStage->getFrameBuffer(),
+    lightNodes, &_vctScene));
 
   _backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
   RenderManager::getInstance()->addFramebufferStage(_backbufferStage);
