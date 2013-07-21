@@ -366,7 +366,7 @@ int main(void) {
   int oldMouseX = 0;
   int oldMouseY = 0;
   glfwGetMousePos(&oldMouseX,&oldMouseY);
-  
+   
   // Main loop
   while (running) {
     time = the_timer.timeSinceLastCall();
