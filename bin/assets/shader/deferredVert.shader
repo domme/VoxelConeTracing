@@ -49,6 +49,6 @@ void main()
   gl_Position = projectionMat * viewMat * vec4(Out.position, 1.0);
 
   Out.normal = normalMat * v_normal;
-  Out.tangent = (modelMat * vec4(v_tangent, 0.0));
+  Out.tangent = (modelMat * vec4(v_tangent, 0.0)).xyz;
   Out.uv = v_uv0.xy;
 }

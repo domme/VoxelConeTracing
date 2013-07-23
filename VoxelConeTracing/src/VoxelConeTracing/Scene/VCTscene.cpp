@@ -73,7 +73,7 @@ void VCTscene::init(const SVCTparameters& params,
   _nodePool.init(_voxelGridResolution);
 
   // Deactivate BrickPool for now
-  //_brickPool.init(params.brickPoolResolution, &_nodePool);
+  _brickPool.init(params.brickPoolResolution, &_nodePool);
 
   _voxelFragList.init(_voxelGridResolution, params.fraglist_size_multiplier, params.fraglist_size_divisor);
 

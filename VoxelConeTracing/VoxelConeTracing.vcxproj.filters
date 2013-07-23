@@ -126,6 +126,21 @@
     <Filter Include="src\Stages">
       <UniqueIdentifier>{71acbb64-5686-4440-88fb-ae38fcef07f1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="shader\Voxelize">
+      <UniqueIdentifier>{410e8ce5-2f4c-40ce-9a4e-7a07fbd7cd83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shader\Octree Building">
+      <UniqueIdentifier>{f171a40b-e8af-4ac8-b1b5-ccf45b4da83b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shader\Octree Mipmapping">
+      <UniqueIdentifier>{a5ce8ab3-663c-42a7-86aa-e83746c80552}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shader\Raycasting">
+      <UniqueIdentifier>{75db69f2-ce54-4ac0-93a4-16494d45b763}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shader\Rendering">
+      <UniqueIdentifier>{a2ced7ee-5b18-4ce8-95ec-0b3fcb7c32af}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\VoxelConeTracing\FullscreenQuad.h">
@@ -217,77 +232,77 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\bin\assets\shader\VoxelConeTracing\voxelizeFrag.shader">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="..\bin\assets\shader\VoxelConeTracing\voxelizeGeom.shader">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="..\bin\assets\shader\VoxelConeTracing\voxelizeVert.shader">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="..\bin\assets\shader\octreeVisFrag.shader">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="..\bin\assets\shader\VoxelConeTracing\raycastFrag.shader">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="..\bin\assets\shader\VoxelConeTracing\raycastVert.shader">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="..\bin\assets\shader\ObFlagVert.shader">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="..\bin\assets\shader\ObInitVert.shader">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="..\bin\assets\shader\ObAllocateVert.shader">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="..\bin\assets\shader\ModifyIndirectBufferVert.shader">
-      <Filter>shader</Filter>
-    </None>
     <None Include="..\bin\assets\shader\debug.shader">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="..\bin\assets\shader\OctreeWriteLeafs.shader">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="..\bin\assets\shader\OctreeMipmap.shader">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="..\bin\assets\shader\ObClearVert.shader">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="..\bin\assets\shader\ConeTraceFrag.shader">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="..\bin\assets\shader\deferredFrag.shader">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="..\bin\assets\shader\deferredVert.shader">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="..\bin\assets\shader\finalRenderFrag.shader">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="..\bin\assets\shader\finalRenderVert.shader">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="..\bin\assets\shader\ShadowMapFrag.shader">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="..\bin\assets\shader\ShadowMapVert.shader">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="..\bin\assets\shader\LightInjectionFrag.shader">
       <Filter>shader</Filter>
     </None>
     <None Include="..\bin\assets\shader\FullscreenQuadVert.shader">
       <Filter>shader</Filter>
     </None>
+    <None Include="..\bin\assets\shader\VoxelConeTracing\voxelizeFrag.shader">
+      <Filter>shader\Voxelize</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\VoxelConeTracing\voxelizeGeom.shader">
+      <Filter>shader\Voxelize</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\VoxelConeTracing\voxelizeVert.shader">
+      <Filter>shader\Voxelize</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\ObAllocateVert.shader">
+      <Filter>shader\Octree Building</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\ObClearVert.shader">
+      <Filter>shader\Octree Building</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\ObFlagVert.shader">
+      <Filter>shader\Octree Building</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\ObInitVert.shader">
+      <Filter>shader\Octree Building</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\ModifyIndirectBufferVert.shader">
+      <Filter>shader\Octree Building</Filter>
+    </None>
     <None Include="..\bin\assets\shader\BorderTransferVert.shader">
-      <Filter>shader</Filter>
+      <Filter>shader\Octree Mipmapping</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\LightInjectionFrag.shader">
+      <Filter>shader\Octree Mipmapping</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\OctreeMipmap.shader">
+      <Filter>shader\Octree Mipmapping</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\OctreeWriteLeafs.shader">
+      <Filter>shader\Octree Mipmapping</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\ConeTraceFrag.shader">
+      <Filter>shader\Raycasting</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\VoxelConeTracing\raycastFrag.shader">
+      <Filter>shader\Raycasting</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\VoxelConeTracing\raycastVert.shader">
+      <Filter>shader\Raycasting</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\octreeVisFrag.shader">
+      <Filter>shader\Raycasting</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\ShadowMapVert.shader">
+      <Filter>shader\Rendering</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\ShadowMapFrag.shader">
+      <Filter>shader\Rendering</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\finalRenderVert.shader">
+      <Filter>shader\Rendering</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\finalRenderFrag.shader">
+      <Filter>shader\Rendering</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\deferredFrag.shader">
+      <Filter>shader\Rendering</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\deferredVert.shader">
+      <Filter>shader\Rendering</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -70,17 +70,17 @@ OctreeMipmapPass::
     shp->getUniform("levelAddressBuffer")));
    
   /// Brick-Uniforms ///
-  /*addStartupOperation(
+  addStartupOperation(
     new BindUniform(_vctScene->getBrickPool()->getShdBrickPoolResolution(),
-                    shp->getUniform("brickPoolResolution")));*/
+                    shp->getUniform("brickPoolResolution")));
 
-  /*addStartupOperation(
+  addStartupOperation(
     new BindAtomicCounterBuffer(_vctScene->getBrickPool()->getShdAcNextFree(),
-                                shp->getUniform("nextFreeBrick"))); */
+                                shp->getUniform("nextFreeBrick"))); 
 
-    /*addStartupOperation(new BindImageTexture(
+    addStartupOperation(new BindImageTexture(
     vctScene->getBrickPool()->getShdBrickPool(BRICKPOOL_COLOR),
-                            shp->getUniform("brickPool_color")));*/
+                            shp->getUniform("brickPool_color")));
 
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdNodePool(NEXT), shp->getUniform("nodePool_next")));

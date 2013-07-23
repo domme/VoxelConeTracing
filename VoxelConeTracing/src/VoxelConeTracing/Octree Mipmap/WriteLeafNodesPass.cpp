@@ -47,7 +47,7 @@ WriteLeafNodesPass::
 
   kore::ShaderProgram* shp = new kore::ShaderProgram;
   this->setShaderProgram(shp);
-  shp->setName("OctreeWrite shader");
+  shp->setName("OctreeWriteLeaf shader");
   shp->loadShader("./assets/shader/OctreeWriteLeafs.shader",
                  GL_VERTEX_SHADER);
   shp->init();

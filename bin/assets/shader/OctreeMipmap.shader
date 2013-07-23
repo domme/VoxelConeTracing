@@ -41,6 +41,16 @@ const uint NODE_MASK_TAG = (0x00000001 << 31);
 const uint NODE_MASK_BRICK = (0x00000001 << 30);
 const uint NODE_NOT_FOUND = 0xFFFFFFFF;
 
+const uvec3 childOffsets[8] = {
+  uvec3(0, 0, 0),
+  uvec3(1, 0, 0),
+  uvec3(0, 1, 0),
+  uvec3(1, 1, 0),
+  uvec3(0, 0, 1),
+  uvec3(1, 0, 1),
+  uvec3(0, 1, 1), 
+  uvec3(1, 1, 1)};
+
 uint childNextU[] = {0, 0, 0, 0, 0, 0, 0, 0};
 uint childColorU[] = {0, 0, 0, 0, 0, 0, 0, 0};
 uint childRadianceU[] = {0, 0, 0, 0, 0, 0, 0, 0};
@@ -108,6 +118,31 @@ uvec3 allocTextureBrick(in int nodeAddress, in uint nodeNextU) {
              uvec4(NODE_MASK_BRICK | nodeNextU, 0, 0, 0));
 
   return texAddress;
+}
+
+uvec3 alloc2x2x2TextureBrick(in int nodeAddress, in uint nodeNextU) {
+  uint nextFreeTexBrick = atomicCounterIncrement(nextFreeBrick);
+  uvec3 texAddress = uvec3(0);
+  texAddress.x = ((nextFreeTexBrick * 2) % brickPoolResolution);
+  texAddress.y = ((nextFreeTexBrick * 2) / brickPoolResolution);
+  texAddress.z = ((nextFreeTexBrick * 2) / (brickPoolResolution * brickPoolResolution));
+
+  // Store brick-pointer
+  imageStore(nodePool_color, nodeAddress, 
+      uvec4(vec3ToUintXYZ10(texAddress), 0, 0, 0));
+
+  // Set the flag to indicate the brick-existance
+  imageStore(nodePool_next, nodeAddress,
+             uvec4(NODE_MASK_BRICK | nodeNextU, 0, 0, 0));
+
+  return texAddress;
+}
+
+void writeBrickValues(uvec3 brickAddress){
+  for (uint iChild = 0; iChild < 8; ++iChild) {
+    uvec3 texAddress = brickAddress + childOffsets[iChild];
+    imageStore(brickPool_color, ivec3(texAddress), convRGBA8ToVec4(childColorU[iChild]));
+  }
 }
 
 
@@ -212,8 +247,12 @@ void main() {
 
   uint childAddress = NODE_MASK_VALUE & nodeNextU;
   loadChildTile(int(childAddress));  // Loads the child-values into the global arrays
-  compAndStoreAvgConstColor(int(nodeAddress));
-  compAndStoreAvgConstRadiance(int(nodeAddress));
+  
+  uvec3 brickAddress = alloc2x2x2TextureBrick(int(nodeAddress), nodeNextU);
+  writeBrickValues(brickAddress);
+  
+  //compAndStoreAvgConstColor(int(nodeAddress));
+  //compAndStoreAvgConstRadiance(int(nodeAddress));
   /*bool brickNeeded = computeBrickNeeded();
   if (brickNeeded) {
     allocTextureBrick(int(nodeAddress), nodeNextU);
