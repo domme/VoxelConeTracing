@@ -133,11 +133,11 @@ void setup() {
 
   
   SVCTparameters params;
-  params.voxel_grid_resolution = 128;
+  params.voxel_grid_resolution = 256;
   params.voxel_grid_sidelengths = glm::vec3(50, 50, 50);
-  params.fraglist_size_multiplier = 50;
+  params.fraglist_size_multiplier = 1;
   params.fraglist_size_divisor = 1;
-  params.brickPoolResolution = 64 * 2;                                                                    
+  params.brickPoolResolution = 64 * 2;
   
   // Make sure all lightnodes are initialized with camera components
   std::vector<SceneNode*> lightNodes;
@@ -178,19 +178,20 @@ void setup() {
   RenderManager::getInstance()->addFramebufferStage(svoStage);
   ////////////////////////////////////////////////////////////////////////// 
 
-  //_octreeVisPass = new OctreeVisPass(&_vctScene);
-  //_backbufferStage->addProgramPass(_octreeVisPass);
-  //_backbufferStage->addProgramPass(new ConeTracePass(&_vctScene));
-  //_backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
-  
   
   _backbufferStage = new FrameBufferStage;
   std::vector<GLenum> drawBufs;
   drawBufs.clear();
   drawBufs.push_back(GL_BACK_LEFT);
-  _backbufferStage->addProgramPass(new RenderPass(
+
+  //_octreeVisPass = new OctreeVisPass(&_vctScene);
+  //_backbufferStage->addProgramPass(_octreeVisPass);
+  _backbufferStage->addProgramPass(new ConeTracePass(&_vctScene));
+  //_backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
+
+  /*_backbufferStage->addProgramPass(new RenderPass(
     gBufferStage->getFrameBuffer(), shadowMapStage->getFrameBuffer(),
-    lightNodes, &_vctScene));
+    lightNodes, &_vctScene));*/
 
   _backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
   RenderManager::getInstance()->addFramebufferStage(_backbufferStage);
@@ -212,7 +213,7 @@ int main(void) {
   }
 
   glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 4);
-  glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 2);
+  glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 3);
   glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   glfwOpenWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 

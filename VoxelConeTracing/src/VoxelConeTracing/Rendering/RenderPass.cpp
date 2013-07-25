@@ -139,7 +139,7 @@ RenderPass::RenderPass(kore::FrameBuffer* gBuffer, kore::FrameBuffer* smBuffer,
 
   addStartupOperation(new BindImageTexture(
     vctScene->getBrickPool()->getShdBrickPool(BRICKPOOL_COLOR),
-    shader->getUniform("brickPool_color"), GL_READ_ONLY));
+    shader->getUniform("brickPool_color"), GL_READ_WRITE));
 
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdNodePool(NEXT),

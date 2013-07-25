@@ -23,7 +23,7 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#version 420 core
+#version 430 core
 
 layout(r32ui) uniform volatile uimageBuffer nodePool_next;
 layout(r32ui) uniform volatile uimageBuffer nodePool_color;
@@ -89,43 +89,47 @@ bool hasBrick(in uint nextU) {
   return (nextU & NODE_MASK_BRICK) != 0;
 }
 
+uint filterBrick(in ivec3 texAddress) {
+  vec4 color = vec4(0);
+  int weights = 0;
+  for (int i = 0; i < 8; ++i) {
+    vec4 currCol = imageLoad(brickPool_color, texAddress + ivec3(childOffsets[i]));
+
+    if (currCol.a > 0.1) {
+      ++weights;
+      color += currCol;
+    }
+  }
+
+  color = vec4(color.xyz / max(weights, 1), color.a / 8);
+  return convVec4ToRGBA8(color * 255);
+}
+
 void loadChildTile(in int tileAddress) {
   for (int i = 0; i < 8; ++i) {
     childNextU[i] = imageLoad(nodePool_next, tileAddress + i).x;
+    memoryBarrier();
+
     childColorU[i] = imageLoad(nodePool_color, tileAddress + i).x;
+    if (hasBrick(childNextU[i])) {
+      // if the child has a brick, the color value is the brick address
+      childColorU[i] = filterBrick(ivec3(uintXYZ10ToVec3(childColorU[i])));
+    }
     childRadianceU[i] = imageLoad(nodePool_radiance, tileAddress + i).x;
   }
-
   memoryBarrier();
 }
 
 
 // Allocate brick-texture, store pointer in color and return the coordinate of the lower-left voxel.
-uvec3 allocTextureBrick(in int nodeAddress, in uint nodeNextU) {
-  uint nextFreeTexBrick = atomicCounterIncrement(nextFreeBrick);
-
-  uvec3 texAddress = uvec3(0);
-  texAddress.x = ((nextFreeTexBrick * 3) % brickPoolResolution);
-  texAddress.y = ((nextFreeTexBrick * 3) / brickPoolResolution);
-  texAddress.z = ((nextFreeTexBrick * 3) / (brickPoolResolution * brickPoolResolution));
-
-  // Store brick-pointer
-  imageStore(nodePool_color, nodeAddress, 
-      uvec4(vec3ToUintXYZ10(texAddress), 0, 0, 0));
-
-  // Set the flag to indicate the brick-existance
-  imageStore(nodePool_next, nodeAddress,
-             uvec4(NODE_MASK_BRICK | nodeNextU, 0, 0, 0));
-
-  return texAddress;
-}
-
 uvec3 alloc2x2x2TextureBrick(in int nodeAddress, in uint nodeNextU) {
   uint nextFreeTexBrick = atomicCounterIncrement(nextFreeBrick);
   uvec3 texAddress = uvec3(0);
-  texAddress.x = ((nextFreeTexBrick * 2) % brickPoolResolution);
-  texAddress.y = ((nextFreeTexBrick * 2) / brickPoolResolution);
-  texAddress.z = ((nextFreeTexBrick * 2) / (brickPoolResolution * brickPoolResolution));
+  uint brickPoolResBricks = brickPoolResolution / 2;
+  texAddress.x = nextFreeTexBrick % brickPoolResBricks;
+  texAddress.y = (nextFreeTexBrick / brickPoolResBricks) % brickPoolResBricks;
+  texAddress.z = nextFreeTexBrick / (brickPoolResBricks * brickPoolResBricks);
+  texAddress *= 2;
 
   // Store brick-pointer
   imageStore(nodePool_color, nodeAddress, 
@@ -141,7 +145,7 @@ uvec3 alloc2x2x2TextureBrick(in int nodeAddress, in uint nodeNextU) {
 void writeBrickValues(uvec3 brickAddress){
   for (uint iChild = 0; iChild < 8; ++iChild) {
     uvec3 texAddress = brickAddress + childOffsets[iChild];
-    imageStore(brickPool_color, ivec3(texAddress), convRGBA8ToVec4(childColorU[iChild]));
+    imageStore(brickPool_color, ivec3(texAddress), convRGBA8ToVec4(childColorU[iChild])/255);
   }
 }
 
@@ -247,8 +251,8 @@ void main() {
 
   uint childAddress = NODE_MASK_VALUE & nodeNextU;
   loadChildTile(int(childAddress));  // Loads the child-values into the global arrays
-  
   uvec3 brickAddress = alloc2x2x2TextureBrick(int(nodeAddress), nodeNextU);
+    memoryBarrier();
   writeBrickValues(brickAddress);
   
   //compAndStoreAvgConstColor(int(nodeAddress));

@@ -32,8 +32,10 @@ in VertexData {
 
 const uint NODE_MASK_VALUE = 0x3FFFFFFF;
 const uint NODE_MASK_TAG = (0x00000001 << 31);
+const uint NODE_MASK_BRICK = (0x00000001 << 30);
 const uint NODE_MASK_TAG_STATIC = (0x00000003 << 30);
 const uint NODE_NOT_FOUND = 0xFFFFFFFF;
+
 
 const uvec3 childOffsets[8] = {
   uvec3(0, 0, 0),
@@ -50,12 +52,12 @@ const uint pow2[] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
 layout(r32ui) uniform readonly uimageBuffer nodePool_next;
 layout(r32ui) uniform readonly uimageBuffer nodePool_color;
 layout(r32ui) uniform readonly uimageBuffer nodePool_radiance;
+layout(rgba8) uniform readonly image3D brickPool_color;
 
 uniform uint voxelGridResolution;
 uniform mat4 viewI;
 uniform mat4 voxelGridTransformI;
 uniform uint numLevels;
-
 
 out vec4 color;
 
@@ -85,6 +87,10 @@ uvec3 uintXYZ10ToVec3(uint val) {
                  uint((val & 0x3FF00000) >> 20U));
 }
 
+bool hasBrick(in uint nextU) {
+  return (nextU & NODE_MASK_BRICK) != 0;
+}
+
 
 /*
  * This function implements the "slab test" algorithm for intersecting a ray
@@ -104,7 +110,7 @@ bool intersectRayWithAABB (in vec3 ro, in vec3 rd,         // Ray-origin and -di
     tLeave = min (v3Max.x, min (v3Max.y, v3Max.z));
     tEnter = max (max (v3Min.x, 0.0), max (v3Min.y, v3Min.z));    
     
-    return tLeave >= tEnter;
+    return tLeave > tEnter;
 }
 
 
@@ -146,6 +152,33 @@ int traverseOctree(in vec3 posTex, in float d, in float pixelSizeTS, out vec3 no
 }
 //*/
 
+                                                // TODO: Add ray-direction here...
+vec4 getColorFromNode(in int address, in uint nodeColorU) {
+  uint nodeNextU = imageLoad(nodePool_next, address).x;
+  memoryBarrier();
+
+  if (hasBrick(nodeNextU)) {
+    ivec3 brickAddress = ivec3(uintXYZ10ToVec3(nodeColorU));
+    
+    // TODO: Raycast...
+    
+    // For now, just return the mean color...
+     vec4 color = vec4(0);
+      int weights = 0;
+      for (int i = 0; i < 8; ++i) {
+        vec4 currCol = imageLoad(brickPool_color, brickAddress + ivec3(childOffsets[i]));
+
+        if (currCol.a > 0.1) {
+          ++weights;
+          color += currCol;
+        }
+      }
+
+      return vec4(color.xyz / max(weights, 1), color.a / 8);
+  }
+
+  return convRGBA8ToVec4(nodeColorU) / 255;
+}
 
 void main(void) {
   vec3 camPosWS = viewI[3].xyz;
@@ -157,7 +190,7 @@ void main(void) {
 
   // PixelSize in texture space is the pixel-viewpsace size divided by the scale
   // of the voxelGrid
-  float pixelSizeTS = In.pixelSizeVS / 25;
+  float pixelSizeTS = In.pixelSizeVS / length(voxelGridTransformI[0]);
   
   float tEnter = 0.0;
   float tLeave = 0.0;
@@ -182,7 +215,7 @@ void main(void) {
     uint nodeRadianceU = imageLoad(nodePool_radiance, address).x;
     memoryBarrier();
 
-    vec4 newCol = vec4(convRGBA8ToVec4(nodeColorU)) / 255.0;
+    vec4 newCol = getColorFromNode(address, nodeColorU); //vec4(convRGBA8ToVec4(nodeColorU)) / 255.0;
     vec4 radiance = vec4(convRGBA8ToVec4(nodeRadianceU)) / 255.0;
 
     //newCol.xyz *= radiance.xyz;

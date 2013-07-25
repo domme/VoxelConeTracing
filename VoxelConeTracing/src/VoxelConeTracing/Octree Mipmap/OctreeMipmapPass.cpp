@@ -79,8 +79,8 @@ OctreeMipmapPass::
                                 shp->getUniform("nextFreeBrick"))); 
 
     addStartupOperation(new BindImageTexture(
-    vctScene->getBrickPool()->getShdBrickPool(BRICKPOOL_COLOR),
-                            shp->getUniform("brickPool_color")));
+                    vctScene->getBrickPool()->getShdBrickPool(BRICKPOOL_COLOR),
+                                          shp->getUniform("brickPool_color")));
 
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdNodePool(NEXT), shp->getUniform("nodePool_next")));
@@ -91,12 +91,10 @@ OctreeMipmapPass::
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdNodePool(RADIANCE), shp->getUniform("nodePool_radiance")));
 
-
-
   addStartupOperation(new BindUniform(&_shdLevel, shp->getUniform("level")));
-    
-  addStartupOperation(new MemoryBarrierOp(GL_ALL_BARRIER_BITS));
   
   addStartupOperation(
     new kore::DrawIndirectOp(GL_POINTS, 0));
+
+  addFinishOperation(new MemoryBarrierOp(GL_ALL_BARRIER_BITS));
 }
