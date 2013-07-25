@@ -75,6 +75,25 @@ void BrickPool::init(uint brickPoolResolution, NodePool* nodePool) {
   _shdBrickPool[BRICKPOOL_COLOR].name = "BrickPool_Attribute_Color";
   _shdBrickPool[BRICKPOOL_COLOR].type = GL_IMAGE_3D;
   _shdBrickPool[BRICKPOOL_COLOR].data = &_brickPoolTexInfo[BRICKPOOL_COLOR];
+  _shdBrickPool[BRICKPOOL_COLOR].size = 1;
+  _shdBrickPool[BRICKPOOL_COLOR].component = NULL;
+
+  _shdBrickPoolTexture[BRICKPOOL_COLOR].name = "BrickPool_Attribute_ColorTexture";
+  _shdBrickPoolTexture[BRICKPOOL_COLOR].type = GL_SAMPLER_3D;
+  _shdBrickPoolTexture[BRICKPOOL_COLOR].data = &_brickPoolTexInfo[BRICKPOOL_COLOR];
+  _shdBrickPoolTexture[BRICKPOOL_COLOR].size = 1;
+  _shdBrickPoolTexture[BRICKPOOL_COLOR].component = NULL;
+
+  kore::RenderManager::getInstance()->bindTexture(GL_TEXTURE_3D, _brickPool[BRICKPOOL_COLOR].getHandle());
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, 0);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, 0);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_R, GL_RED);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_G, GL_GREEN);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_B, GL_BLUE);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_A, GL_ALPHA);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  kore::RenderManager::getInstance()->bindTexture(GL_TEXTURE_3D, 0);
 
 
   //////////////////////////////////////////////////////////////////////////

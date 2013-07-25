@@ -70,12 +70,9 @@ void VCTscene::init(const SVCTparameters& params,
   _shdVoxelGridResolution.size = 1;
   _shdVoxelGridResolution.type = GL_UNSIGNED_INT;
   
-  _nodePool.init(_voxelGridResolution);
-
-  // Deactivate BrickPool for now
-  _brickPool.init(params.brickPoolResolution, &_nodePool);
-
   _voxelFragList.init(_voxelGridResolution, params.fraglist_size_multiplier, params.fraglist_size_divisor);
+  _nodePool.init(_voxelGridResolution);
+  _brickPool.init(params.brickPoolResolution, &_nodePool);
 
   // Init atomic counters
   uint acValue = 0;

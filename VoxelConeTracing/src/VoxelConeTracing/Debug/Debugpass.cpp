@@ -85,8 +85,8 @@ DebugPass::DebugPass(VCTscene* vctScene,
  addStartupOperation(
           new FunctionOp(std::bind(&DebugPass::debugNextFreeAC, this)));
 
- //addStartupOperation(
- //  new FunctionOp(std::bind(&DebugPass::debugBrickAc, this)));
+ addStartupOperation(
+   new FunctionOp(std::bind(&DebugPass::debugBrickAc, this)));
 }
 
 

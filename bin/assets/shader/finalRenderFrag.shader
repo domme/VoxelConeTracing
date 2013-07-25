@@ -74,7 +74,7 @@ uniform uint numLevels;
 layout(r32ui) uniform readonly uimageBuffer nodePool_next;
 layout(r32ui) uniform readonly uimageBuffer nodePool_color;
 layout(r32ui) uniform readonly uimageBuffer nodePool_radiance;
-layout(rgba8) uniform image3D brickPool_color;
+layout(rgba8) uniform volatile image3D brickPool_color;
 
 vec4 convRGBA8ToVec4(uint val) {
     return vec4( float((val & 0x000000FF)), 
@@ -290,8 +290,11 @@ void main(void)
  }
  
 
- outColor = visibility * phong(In.uv, normalWS, normalize(lightDir), normalize(vec3(posWS)));
- outColor += 10 * gatherIndirectIllum(posWS.xyz + normalWS, normalWS, tangentWS);
+ //outColor = visibility * phong(In.uv, normalWS, normalize(lightDir), normalize(vec3(posWS)));
+ //outColor += 10 * gatherIndirectIllum(posWS.xyz + normalWS, normalWS, tangentWS);
 
- //outColor = imageLoad(brickPool_color,ivec3(In.uv,0));
+ vec4 brickColor = imageLoad(brickPool_color, ivec3(In.uv,0));
+ memoryBarrier();
+ 
+ outColor = brickColor;
 }

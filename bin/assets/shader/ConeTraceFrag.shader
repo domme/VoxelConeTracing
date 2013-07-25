@@ -32,8 +32,10 @@ in VertexData {
 
 const uint NODE_MASK_VALUE = 0x3FFFFFFF;
 const uint NODE_MASK_TAG = (0x00000001 << 31);
+const uint NODE_MASK_BRICK = (0x00000001 << 30);
 const uint NODE_MASK_TAG_STATIC = (0x00000003 << 30);
 const uint NODE_NOT_FOUND = 0xFFFFFFFF;
+
 
 const uvec3 childOffsets[8] = {
   uvec3(0, 0, 0),
@@ -50,12 +52,12 @@ const uint pow2[] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
 layout(r32ui) uniform readonly uimageBuffer nodePool_next;
 layout(r32ui) uniform readonly uimageBuffer nodePool_color;
 layout(r32ui) uniform readonly uimageBuffer nodePool_radiance;
+uniform sampler3D brickPool_color;
 
 uniform uint voxelGridResolution;
 uniform mat4 viewI;
 uniform mat4 voxelGridTransformI;
 uniform uint numLevels;
-
 
 out vec4 color;
 
@@ -85,6 +87,10 @@ uvec3 uintXYZ10ToVec3(uint val) {
                  uint((val & 0x3FF00000) >> 20U));
 }
 
+bool hasBrick(in uint nextU) {
+  return (nextU & NODE_MASK_BRICK) != 0;
+}
+
 
 /*
  * This function implements the "slab test" algorithm for intersecting a ray
@@ -104,7 +110,7 @@ bool intersectRayWithAABB (in vec3 ro, in vec3 rd,         // Ray-origin and -di
     tLeave = min (v3Max.x, min (v3Max.y, v3Max.z));
     tEnter = max (max (v3Min.x, 0.0), max (v3Min.y, v3Min.z));    
     
-    return tLeave >= tEnter;
+    return tLeave > tEnter;
 }
 
 
@@ -146,6 +152,39 @@ int traverseOctree(in vec3 posTex, in float d, in float pixelSizeTS, out vec3 no
 }
 //*/
 
+                                                // TODO: Add ray-direction here...
+vec4 raycastBrick(in uint nodeColorU, in vec3 enter, in vec3 leave) {
+  
+    ivec3 brickAddress = ivec3(uintXYZ10ToVec3(nodeColorU));
+    ivec3 brickRes = textureSize(brickPool_color, 0);
+    vec3 brickSizeTex = 2 / vec3(brickRes);
+
+    vec3 brickAddressUVW = vec3(brickAddress) / vec3(brickRes);
+    vec3 enterUVW = brickAddressUVW + enter * brickSizeTex;
+    vec3 leaveUVW = brickAddressUVW + leave * brickSizeTex;
+    vec3 dirUVW = leaveUVW - enterUVW;
+
+    float fMax = length(dirUVW);
+    dirUVW = normalize(dirUVW);
+
+    float stepSize = 1.0 / vec3(brickRes);
+    
+    vec4 color = vec4(0);
+
+    //color = texture(brickPool_color, enterUVW);
+
+    for (float f = 0.0; f < fMax; f += stepSize) {
+      vec4 newCol = texture(brickPool_color, enterUVW + dirUVW * f);
+      newCol.xyz *= newCol.a;
+      color = (1.0 - color.a) * newCol + color;
+    
+      if (color.a > 0.99) {
+         break;
+      }
+    } //*/
+
+  return color;
+}
 
 void main(void) {
   vec3 camPosWS = viewI[3].xyz;
@@ -157,7 +196,7 @@ void main(void) {
 
   // PixelSize in texture space is the pixel-viewpsace size divided by the scale
   // of the voxelGrid
-  float pixelSizeTS = In.pixelSizeVS / 25;
+  float pixelSizeTS = In.pixelSizeVS / length(voxelGridTransformI[0]);
   
   float tEnter = 0.0;
   float tLeave = 0.0;
@@ -177,28 +216,40 @@ void main(void) {
     vec3 posTex = (rayOriginTex + rayDirTex * f);
    
     int address = traverseOctree(posTex, f, pixelSizeTS, nodePosMin, nodePosMax);
+
+    float colorCorrection = tLeave / (1.0 / float(voxelGridResolution));
+    bool advance = intersectRayWithAABB(posTex, rayDirTex, nodePosMin, nodePosMax, tEnter, tLeave);
     
     uint nodeColorU = imageLoad(nodePool_color, address).x;
     uint nodeRadianceU = imageLoad(nodePool_radiance, address).x;
     memoryBarrier();
 
-    vec4 newCol = vec4(convRGBA8ToVec4(nodeColorU)) / 255.0;
+    vec4 newCol = vec4(0);
+    if (hasBrick(imageLoad(nodePool_next, address).x)) {
+      vec3 enterPos = (posTex - nodePosMin) / float(nodePosMax.x - nodePosMin.x);
+      vec3 leavePos = ((posTex + rayDirTex * tLeave) - nodePosMin) / float(nodePosMax.x - nodePosMin.x);
+      newCol = raycastBrick(nodeColorU, enterPos, leavePos);
+    } 
+    else {
+      newCol =  vec4(convRGBA8ToVec4(nodeColorU)) / 255.0;
+      newCol.xyz *= newCol.a;
+    }
+
     vec4 radiance = vec4(convRGBA8ToVec4(nodeRadianceU)) / 255.0;
 
     //newCol.xyz *= radiance.xyz;
-    
-    if (!intersectRayWithAABB(posTex, rayDirTex, nodePosMin, nodePosMax, tEnter, tLeave)) {
-      return; // prevent infinite loop
-    }
-
-    float colorCorrection = tLeave / (1.0 / float(voxelGridResolution));
     newCol.a = 1.0 - pow((1.0 - newCol.a), colorCorrection); 
-    
-    newCol.xyz *= newCol.a;
     color = (1.0 - color.a) * newCol + color;
     
     if (color.a > 0.99) {
       return;
     }
+
+    
+    if (!advance) {
+      return; // prevent infinite loop
+    }
+
+
   } 
 }
