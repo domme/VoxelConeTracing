@@ -45,6 +45,12 @@ ConeTracePass::ConeTracePass(VCTscene* vctScene){
     _coneTraceShader.setName("cone trace shader");
     this->setShaderProgram(&_coneTraceShader);
 
+    TexSamplerProperties samplerProps;
+    samplerProps.minfilter = GL_LINEAR;
+    samplerProps.magfilter = GL_LINEAR;
+    samplerProps.wrapping = glm::uvec3(GL_REPEAT, GL_REPEAT, GL_REPEAT);
+    _coneTraceShader.setSamplerProperties(0, samplerProps);
+
     SceneNode* fsquadnode = new SceneNode();
     SceneManager::getInstance()->getRootNode()->addChild(fsquadnode);
 

@@ -22,7 +22,7 @@
 * \author Dominik Lazarek (dominik.lazarek@gmail.com)
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
-#version 420
+#version 430
 
 in VertexData {
   vec3 viewDirVS;
@@ -115,7 +115,8 @@ bool intersectRayWithAABB (in vec3 ro, in vec3 rd,         // Ray-origin and -di
 
 
 ///*
-int traverseOctree(in vec3 posTex, in float d, in float pixelSizeTS, out vec3 nodePosTex, out vec3 nodePosMaxTex) {
+int traverseOctree(in vec3 posTex, in float d, in float pixelSizeTS,
+                   out vec3 nodePosTex, out vec3 nodePosMaxTex, out float outSideLength) {
   nodePosTex = vec3(0.0);
   nodePosMaxTex = vec3(1.0);
 
@@ -148,33 +149,35 @@ int traverseOctree(in vec3 posTex, in float d, in float pixelSizeTS, out vec3 no
       posTex = 2.0 * posTex - vec3(offVec);
     } // level-for
 
+  outSideLength = sideLength;
   return nodeAddress;
 }
 //*/
 
                                                 // TODO: Add ray-direction here...
-vec4 raycastBrick(in uint nodeColorU, in vec3 enter, in vec3 leave) {
+vec4 raycastBrick(in uint nodeColorU, in vec3 enter, in vec3 dir,
+                  in float stepLength, in float alphaCorrection) {
   
     ivec3 brickAddress = ivec3(uintXYZ10ToVec3(nodeColorU));
-    ivec3 brickRes = textureSize(brickPool_color, 0);
-    vec3 brickSizeTex = 2 / vec3(brickRes);
+    ivec3 brickRes = textureSize(brickPool_color, 0); // TODO: make uniform
+    vec3 brickSizeUVW = vec3(2) / vec3(brickRes);
 
-    vec3 brickAddressUVW = vec3(brickAddress) / vec3(brickRes);
-    vec3 enterUVW = brickAddressUVW + enter * brickSizeTex;
-    vec3 leaveUVW = brickAddressUVW + leave * brickSizeTex;
-    vec3 dirUVW = leaveUVW - enterUVW;
+    ivec3 brickMaxUVW = brickAddress + brickSizeUVW;
 
-    float fMax = length(dirUVW);
-    dirUVW = normalize(dirUVW);
+    vec3 brickAddressUVW = vec3(brickAddress) / vec3(brickRes); // Correct
 
+    vec3 enterUVW = brickAddressUVW + enter * brickSizeUVW;
     float stepSize = 1.0 / vec3(brickRes);
     
     vec4 color = vec4(0);
 
-    //color = texture(brickPool_color, enterUVW);
-
-    for (float f = 0.0; f < fMax; f += stepSize) {
-      vec4 newCol = texture(brickPool_color, enterUVW + dirUVW * f);
+    /*color = texture(brickPool_color, brickAddressUVW + vec3(stepSize));
+    color.a = 1.0 - pow((1.0 - color.a), alphaCorrection);
+    color.xyz *= color.a;*/
+    
+    for (float f = 0.0; f < stepLength - 0.0000001; f += stepSize) {
+      vec4 newCol = texture(brickPool_color, enterUVW + dir * f);
+      newCol.a = 1.0 - pow((1.0 - newCol.a), alphaCorrection); 
       newCol.xyz *= newCol.a;
       color = (1.0 - color.a) * newCol + color;
     
@@ -215,9 +218,10 @@ void main(void) {
   for (float f = tEnter + 0.00001; f < end; f += tLeave + 0.00001) {
     vec3 posTex = (rayOriginTex + rayDirTex * f);
    
-    int address = traverseOctree(posTex, f, pixelSizeTS, nodePosMin, nodePosMax);
+    float foundNodeSideLength = 1.0;
+    int address = traverseOctree(posTex, f, pixelSizeTS, nodePosMin, nodePosMax, foundNodeSideLength);
 
-    float colorCorrection = tLeave / (1.0 / float(voxelGridResolution));
+    float alphaCorrection = tLeave / (1.0 / float(voxelGridResolution));
     bool advance = intersectRayWithAABB(posTex, rayDirTex, nodePosMin, nodePosMax, tEnter, tLeave);
     
     uint nodeColorU = imageLoad(nodePool_color, address).x;
@@ -226,19 +230,21 @@ void main(void) {
 
     vec4 newCol = vec4(0);
     if (hasBrick(imageLoad(nodePool_next, address).x)) {
-      vec3 enterPos = (posTex - nodePosMin) / float(nodePosMax.x - nodePosMin.x);
-      vec3 leavePos = ((posTex + rayDirTex * tLeave) - nodePosMin) / float(nodePosMax.x - nodePosMin.x);
-      newCol = raycastBrick(nodeColorU, enterPos, leavePos);
+      float normalizedNodeSize = foundNodeSideLength;
+      vec3 enterPos = (posTex - nodePosMin) / normalizedNodeSize;
+      float rayCastAlphaCorrection = normalizedNodeSize / (1.0 / float(voxelGridResolution));
+
+      newCol = raycastBrick(nodeColorU, enterPos, rayDirTex, tLeave / normalizedNodeSize, rayCastAlphaCorrection);
     } 
     else {
       newCol =  vec4(convRGBA8ToVec4(nodeColorU)) / 255.0;
+      newCol.a = 1.0 - pow((1.0 - newCol.a), alphaCorrection); 
       newCol.xyz *= newCol.a;
     }
 
     vec4 radiance = vec4(convRGBA8ToVec4(nodeRadianceU)) / 255.0;
 
     //newCol.xyz *= radiance.xyz;
-    newCol.a = 1.0 - pow((1.0 - newCol.a), colorCorrection); 
     color = (1.0 - color.a) * newCol + color;
     
     if (color.a > 0.99) {

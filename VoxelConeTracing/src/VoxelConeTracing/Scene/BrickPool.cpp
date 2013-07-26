@@ -93,6 +93,7 @@ void BrickPool::init(uint brickPoolResolution, NodePool* nodePool) {
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_A, GL_ALPHA);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  
   kore::RenderManager::getInstance()->bindTexture(GL_TEXTURE_3D, 0);
 
 
