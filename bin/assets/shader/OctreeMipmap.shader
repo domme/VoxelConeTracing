@@ -146,7 +146,7 @@ uvec3 alloc2x2x2TextureBrick(in int nodeAddress, in uint nodeNextU) {
 void writeBrickValues(uvec3 brickAddress){
   for (uint iChild = 0; iChild < 8; ++iChild) {
     uvec3 texAddress = brickAddress + childOffsets[iChild];
-    imageStore(brickPool_color, ivec3(texAddress), convRGBA8ToVec4(childColorU[iChild])/255);
+    imageStore(brickPool_color, ivec3(texAddress), vec4(vec3(childOffsets[iChild]), 0.5));//convRGBA8ToVec4(childColorU[iChild])/255*/);
   }
 }
 

@@ -136,7 +136,7 @@ void setup() {
   SVCTparameters params;
   params.voxel_grid_resolution = 256;
   params.voxel_grid_sidelengths = glm::vec3(50, 50, 50);
-  params.fraglist_size_multiplier = 10;
+  params.fraglist_size_multiplier = 5;
   params.fraglist_size_divisor = 1;
   params.brickPoolResolution = 64 * 2;
   
