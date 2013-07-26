@@ -99,10 +99,6 @@ LightInjectionPass::LightInjectionPass(VCTscene* vctScene,
                          vctScene->getNodePool()->getShdNodePool(NEXT),
                          shader->getUniform("nodePool_next"), GL_READ_ONLY));
 
-  nodePass->addOperation(new BindImageTexture(
-                         vctScene->getNodePool()->getShdNodePool(RADIANCE),
-                         shader->getUniform("nodePool_radiance"), GL_READ_WRITE));
-
   nodePass->addOperation(new RenderMesh(fsqMeshComponent));
 
   this->addFinishOperation(new MemoryBarrierOp(GL_ALL_BARRIER_BITS));

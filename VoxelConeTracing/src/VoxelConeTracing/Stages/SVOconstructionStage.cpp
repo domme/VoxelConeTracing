@@ -63,7 +63,7 @@ SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
 
   // Mipmap the values from bottom to top
   for (int iLevel = _numLevels - 2; iLevel >= 0;) {
-    kore::Log::getInstance()->write("%u\n", iLevel);
+    //kore::Log::getInstance()->write("%u\n", iLevel);
     this->addProgramPass(new OctreeMipmapPass(&vctScene, iLevel, kore::EXECUTE_ONCE));
     --iLevel;
   }

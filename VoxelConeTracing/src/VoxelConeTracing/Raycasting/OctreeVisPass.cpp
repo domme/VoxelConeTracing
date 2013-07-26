@@ -60,8 +60,9 @@ OctreeVisPass::OctreeVisPass(VCTscene* vctScene) {
     loadShader("./assets/shader/OctreeVisFrag.shader",
                GL_FRAGMENT_SHADER);
 
-  _visShader.init();
   _visShader.setName("octreeVis shader");
+  _visShader.init();
+  
   this->setShaderProgram(&_visShader);
   
   SceneNode* fsquadnode = new SceneNode();
@@ -121,9 +122,6 @@ OctreeVisPass::OctreeVisPass(VCTscene* vctScene) {
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdNodePool(COLOR),
     _visShader.getUniform("nodePool_color"), GL_READ_ONLY));
-  addStartupOperation(new BindImageTexture(
-    vctScene->getNodePool()->getShdNodePool(RADIANCE),
-    _visShader.getUniform("nodePool_radiance"), GL_READ_ONLY));
 
   nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM,
                                                   "inverse view Matrix",

@@ -80,9 +80,6 @@ DebugPass::DebugPass(VCTscene* vctScene,
     new FunctionOp(std::bind(&DebugPass::debugLevelAddressBuf, this)));
 
  addStartupOperation(
-          new FunctionOp(std::bind(&DebugPass::debugRadianceNodePool, this)));
-
- addStartupOperation(
           new FunctionOp(std::bind(&DebugPass::debugNextFreeAC, this)));
 
  addStartupOperation(
@@ -198,27 +195,27 @@ void DebugPass::debugNodePool() {
   //glUnmapBuffer(GL_TEXTURE_BUFFER);
 }
 
-void DebugPass::debugRadianceNodePool() {
-  _renderMgr->bindBuffer(GL_TEXTURE_BUFFER, _vctScene->getNodePool()->getNodePool(RADIANCE)->getBufferHandle());
-  const uint* nodePtr = (const uint*) glMapBuffer(GL_TEXTURE_BUFFER, GL_READ_ONLY);
-  kore::Log::getInstance()->write("\n");
-  bool success = false;
-  for (uint i = 0; i < _vctScene->getNodePool()->getNumNodes(); ++i) {
-    if (nodePtr[i] != 0) {
-      //kore::Log::getInstance()->write("%u: %u\n", i, nodePtr[i]);
-      success = true;
-    }
-  }
-
-  if (success) {
-    kore::Log::getInstance()->write("Radiance-Injection: SUCCESS\n");
-  } else {
-    kore::Log::getInstance()->write("Radiance-Injection: FAILED\n");
-  }
-  
-  kore::Log::getInstance()->write("\n");
-  glUnmapBuffer(GL_TEXTURE_BUFFER);
-}
+//void DebugPass::debugRadianceNodePool() {
+//  _renderMgr->bindBuffer(GL_TEXTURE_BUFFER, _vctScene->getNodePool()->getNodePool(RADIANCE)->getBufferHandle());
+//  const uint* nodePtr = (const uint*) glMapBuffer(GL_TEXTURE_BUFFER, GL_READ_ONLY);
+//  kore::Log::getInstance()->write("\n");
+//  bool success = false;
+//  for (uint i = 0; i < _vctScene->getNodePool()->getNumNodes(); ++i) {
+//    if (nodePtr[i] != 0) {
+//      //kore::Log::getInstance()->write("%u: %u\n", i, nodePtr[i]);
+//      success = true;
+//    }
+//  }
+//
+//  if (success) {
+//    kore::Log::getInstance()->write("Radiance-Injection: SUCCESS\n");
+//  } else {
+//    kore::Log::getInstance()->write("Radiance-Injection: FAILED\n");
+//  }
+//  
+//  kore::Log::getInstance()->write("\n");
+//  glUnmapBuffer(GL_TEXTURE_BUFFER);
+//}
 
 void printNode(uint address, uint flagged, uint next, bool useAddress) {
   if (useAddress) {

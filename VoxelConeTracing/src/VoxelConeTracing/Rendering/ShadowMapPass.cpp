@@ -42,8 +42,10 @@ ShadowMapPass::ShadowMapPass(std::vector<kore::SceneNode*>& vRenderNodes, kore::
 
   shader->loadShader("./assets/shader/ShadowMapFrag.shader",
     GL_FRAGMENT_SHADER);
-  shader->init();
+
   shader->setName("shadow map shader");
+  shader->init();
+  
   this->setShaderProgram(shader);
 
 

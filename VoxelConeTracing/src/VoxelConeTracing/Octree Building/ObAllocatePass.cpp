@@ -55,8 +55,8 @@ ObAllocatePass::ObAllocatePass(VCTscene* vctScene, uint level,
      .loadShader("./assets/shader/ObAllocateVert.shader",
                  GL_VERTEX_SHADER);
 
-  _allocateShader.init();
   _allocateShader.setName("ObAllocate shader");
+  _allocateShader.init();
   this->setShaderProgram(&_allocateShader);
 
   

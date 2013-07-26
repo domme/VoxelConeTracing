@@ -47,7 +47,7 @@ const uvec3 childOffsets[8] = {
 const uint pow2[] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
 
 layout(r32ui) uniform readonly uimageBuffer nodePool_next;
-layout(r32ui) uniform uimageBuffer nodePool_radiance;
+
 
 uniform mat4 voxelGridTransformI;
 uniform uint numLevels;
@@ -108,11 +108,10 @@ void main() {
       if (childStartAddress == 0U) {
         if (iLevel == numLevels - 1) {  // This is a leaf node! Yuppieee! ;)
 
-           vec4 radiance = vec4(lightColor * 255, 255);
-           uint radianceU = convVec4ToRGBA8(radiance);
-
-           imageStore(nodePool_radiance, int(nodeAddress),
-                      uvec4(radianceU));
+           
+           //TODO INJECT TO TEXTURE
+           //imageStore(nodePool_radiance, int(nodeAddress),
+           //           uvec4(radianceU));
 
            memoryBarrier();
          }

@@ -48,8 +48,9 @@ RayCastingPass::RayCastingPass(VCTscene* vctScene) {
     loadShader("./assets/shader/VoxelConeTracing/raycastFrag.shader",
                GL_FRAGMENT_SHADER);
 
-  _raycastShader.init();
   _raycastShader.setName("raycastShader");
+  _raycastShader.init();
+  
   this->setShaderProgram(&_raycastShader);
   
   SceneNode* fsquadnode = new SceneNode();

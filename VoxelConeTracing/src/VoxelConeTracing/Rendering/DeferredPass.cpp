@@ -44,9 +44,9 @@ DeferredPass::DeferredPass(kore::Camera* cam, std::vector<kore::SceneNode*>& vRe
     GL_VERTEX_SHADER);
   shader->loadShader("./assets/shader/deferredFrag.shader",
     GL_FRAGMENT_SHADER);
-
-  shader->init();
+  
   shader->setName("deferred shader");
+  shader->init();
 
   addStartupOperation(new EnableDisableOp(GL_DEPTH_TEST, EnableDisableOp::ENABLE));
   addStartupOperation(new ColorMaskOp(glm::bvec4(true, true, true, true)));

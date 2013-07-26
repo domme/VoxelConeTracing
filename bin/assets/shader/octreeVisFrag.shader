@@ -28,7 +28,6 @@ const uvec3 childOffsets[8] = {
 
 layout(r32ui) uniform readonly uimageBuffer nodePool_next;
 layout(r32ui) uniform readonly uimageBuffer nodePool_color;
-layout(r32ui) uniform readonly uimageBuffer nodePool_radiance;
 
 uniform mat4 viewI;
 uniform mat4 voxelGridTransformI;
@@ -145,11 +144,8 @@ void main(void) {
     int address = traverseOctree(posTex, 0, clamp(currTargetLevel, 1U, targetLevel), nodePosMin, nodePosMax);
     
     uint nodeColorU = imageLoad(nodePool_color, address).x;
-    uint nodeRadianceU = imageLoad(nodePool_radiance, address).x;
     memoryBarrier();
-
-    vec4 radiance = vec4(convRGBA8ToVec4(nodeRadianceU)) / 255.0;
-    vec4 newCol = (vec4(convRGBA8ToVec4(nodeColorU)) / 255.0) * radiance;
+    vec4 newCol = (vec4(convRGBA8ToVec4(nodeColorU)) / 255.0);
     
     color = (1.0 - color.a) * newCol + color;
 

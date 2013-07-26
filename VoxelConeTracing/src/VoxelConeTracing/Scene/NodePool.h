@@ -39,9 +39,13 @@
 enum ENodePoolAttributes {
   NEXT = 0,
   COLOR,
-  RADIANCE,
   NORMAL,
-  
+  NEIGHBOUR_X,
+  NEIGHBOUR_NEG_X,
+  NEIGHBOUR_Y,
+  NEIGHBOUR_NEG_Y,
+  NEIGHBOUR_Z,
+  NEIGHBOUR_NEG_Z,
   /*
   Additional attributes later
   */

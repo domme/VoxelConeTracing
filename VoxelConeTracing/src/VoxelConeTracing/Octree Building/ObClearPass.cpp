@@ -38,8 +38,8 @@ ObClearPass::ObClearPass(VCTscene* vctScene,
   ShaderProgram* shader = new ShaderProgram();
   shader->loadShader("./assets/shader/ObClearVert.shader",
                  GL_VERTEX_SHADER);
-  shader->init();
   shader->setName("ObClear shader");
+  shader->init();
   this->setShaderProgram(shader);
 
   SDrawArraysIndirectCommand cmd;
@@ -65,12 +65,33 @@ ObClearPass::ObClearPass(VCTscene* vctScene,
                     shader->getUniform("nodePool_next")));
 
   addStartupOperation(new BindImageTexture(
-                    vctScene->getNodePool()->getShdNodePool(RADIANCE),
-                    shader->getUniform("nodePool_radiance")));
-
-  addStartupOperation(new BindImageTexture(
                       vctScene->getNodePool()->getShdNodePool(NORMAL),
                       shader->getUniform("nodePool_normal")));
+
+  /*
+  addStartupOperation(new BindImageTexture(
+                    vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_X),
+                    shader->getUniform("nodePool_X")));
+
+  addStartupOperation(new BindImageTexture(
+                  vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_NEG_X),
+                  shader->getUniform("nodePool_X_neg")));
+
+  addStartupOperation(new BindImageTexture(
+                  vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_Y),
+                  shader->getUniform("nodePool_Y")));
+
+  addStartupOperation(new BindImageTexture(
+                    vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_NEG_Y),
+                    shader->getUniform("nodePool_Y_neg")));
+
+  addStartupOperation(new BindImageTexture(
+                vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_Z),
+                shader->getUniform("nodePool_Z")));
+
+  addStartupOperation(new BindImageTexture(
+                  vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_NEG_Z),
+                  shader->getUniform("nodePool_Z_neg"))); */
   
   addStartupOperation(new kore::DrawIndirectOp(GL_POINTS, 0));
 

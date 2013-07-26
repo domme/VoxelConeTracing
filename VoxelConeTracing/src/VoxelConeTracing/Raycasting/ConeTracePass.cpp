@@ -41,13 +41,14 @@ ConeTracePass::ConeTracePass(VCTscene* vctScene){
 
     _coneTraceShader.loadShader("./assets/shader/ConeTraceFrag.shader",
       GL_FRAGMENT_SHADER);
-    _coneTraceShader.init();
     _coneTraceShader.setName("cone trace shader");
+    _coneTraceShader.init();
+    
     this->setShaderProgram(&_coneTraceShader);
 
     TexSamplerProperties samplerProps;
-    samplerProps.minfilter = GL_LINEAR;
-    samplerProps.magfilter = GL_LINEAR;
+    samplerProps.minfilter = GL_NEAREST;
+    samplerProps.magfilter = GL_NEAREST;
     samplerProps.wrapping = glm::uvec3(GL_REPEAT, GL_REPEAT, GL_REPEAT);
     _coneTraceShader.setSamplerProperties(0, samplerProps);
 
@@ -105,9 +106,6 @@ ConeTracePass::ConeTracePass(VCTscene* vctScene){
     addStartupOperation(new BindImageTexture(
       vctScene->getNodePool()->getShdNodePool(COLOR),
       _coneTraceShader.getUniform("nodePool_color"), GL_READ_ONLY));
-    addStartupOperation(new BindImageTexture(
-      vctScene->getNodePool()->getShdNodePool(RADIANCE),
-      _coneTraceShader.getUniform("nodePool_radiance"), GL_READ_ONLY));
 
     addStartupOperation(new BindTexture(vctScene->getBrickPool()->getShdBrickPoolTexture(BRICKPOOL_COLOR),
                                         _coneTraceShader.getUniform("brickPool_color")));

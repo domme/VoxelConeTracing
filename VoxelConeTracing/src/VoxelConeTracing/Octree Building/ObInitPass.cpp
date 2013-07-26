@@ -49,8 +49,9 @@ ObInitPass::ObInitPass(VCTscene* vctScene,
      .loadShader("./assets/shader/ObFlagVert.shader",
                  GL_VERTEX_SHADER);
   
-  _initShader.init();
   _initShader.setName("ObFlag shader");
+  _initShader.init();
+  
   this->setShaderProgram(&_initShader);
   
   addStartupOperation(new BindImageTexture(

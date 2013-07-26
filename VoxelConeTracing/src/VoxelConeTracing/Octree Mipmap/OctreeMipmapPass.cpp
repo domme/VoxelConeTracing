@@ -57,8 +57,9 @@ OctreeMipmapPass::
 
   shp->loadShader("./assets/shader/OctreeMipmap.shader",
                  GL_VERTEX_SHADER);
-  shp->init();
   shp->setName("OctreeMipmap shader");
+  shp->init();
+  
   
   // Launch a thread for every node up to _level
   addStartupOperation(
@@ -87,9 +88,6 @@ OctreeMipmapPass::
 
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdNodePool(COLOR), shp->getUniform("nodePool_color")));
-
-  addStartupOperation(new BindImageTexture(
-    vctScene->getNodePool()->getShdNodePool(RADIANCE), shp->getUniform("nodePool_radiance")));
 
   addStartupOperation(new BindUniform(&_shdLevel, shp->getUniform("level")));
   

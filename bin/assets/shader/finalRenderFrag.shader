@@ -73,7 +73,6 @@ uniform uint numLevels;
 
 layout(r32ui) uniform readonly uimageBuffer nodePool_next;
 layout(r32ui) uniform readonly uimageBuffer nodePool_color;
-layout(r32ui) uniform readonly uimageBuffer nodePool_radiance;
 layout(rgba8) uniform volatile image3D brickPool_color;
 
 vec4 convRGBA8ToVec4(uint val) {
@@ -209,12 +208,8 @@ vec4 coneTrace(in vec3 posTex, in vec3 dirTex) {
     int address = traverseOctree(posTex, f, nodePosMin, nodePosMax);
     
     uint nodeColorU = imageLoad(nodePool_color, address).x;
-    uint nodeRadianceU = imageLoad(nodePool_radiance, address).x;
     
     vec4 newCol = vec4(convRGBA8ToVec4(nodeColorU)) / 255.0;
-    vec4 radiance = vec4(convRGBA8ToVec4(nodeRadianceU)) / 255.0;
-
-    newCol.xyz *= radiance.xyz;
     
     float colorCorrection = tLeave / (1.0 / float(voxelGridResolution));
     newCol.a = 1.0 - pow((1.0 - newCol.a), colorCorrection); 

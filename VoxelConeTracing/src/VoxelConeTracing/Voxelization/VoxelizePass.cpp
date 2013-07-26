@@ -62,8 +62,9 @@ VoxelizePass::VoxelizePass(const glm::vec3& voxelGridSize,
   voxelizeShader->
     loadShader("./assets/shader/VoxelConeTracing/voxelizeFrag.shader",
     GL_FRAGMENT_SHADER);
-  voxelizeShader->init();
   voxelizeShader->setName("voxelizeShader");
+  voxelizeShader->init();
+  
   ResourceManager::getInstance()->addShaderProgram(voxelizeShader);
   
   this->setShaderProgram(voxelizeShader);

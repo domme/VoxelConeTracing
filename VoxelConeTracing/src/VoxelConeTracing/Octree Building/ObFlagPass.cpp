@@ -48,9 +48,9 @@ ObFlagPass::ObFlagPass(VCTscene* vctScene,
   _flagShader
      .loadShader("./assets/shader/ObFlagVert.shader",
                  GL_VERTEX_SHADER);
-  
-  _flagShader.init();
   _flagShader.setName("ObFlag shader");
+  _flagShader.init();
+  
   this->setShaderProgram(&_flagShader);
 
   addStartupOperation(

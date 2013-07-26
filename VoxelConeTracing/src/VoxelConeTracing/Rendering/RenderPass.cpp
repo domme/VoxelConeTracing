@@ -43,8 +43,9 @@ RenderPass::RenderPass(kore::FrameBuffer* gBuffer, kore::FrameBuffer* smBuffer,
 
   shader->loadShader("./assets/shader/finalRenderFrag.shader",
                               GL_FRAGMENT_SHADER);
-  shader->init();
   shader->setName("final render shader");
+  shader->init();
+  
 
   kore::TexSamplerProperties texSamplerProps;
   texSamplerProps.wrapping = glm::uvec3(GL_CLAMP_TO_EDGE);
@@ -147,9 +148,6 @@ RenderPass::RenderPass(kore::FrameBuffer* gBuffer, kore::FrameBuffer* smBuffer,
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdNodePool(COLOR),
     shader->getUniform("nodePool_color"), GL_READ_ONLY));
-  addStartupOperation(new BindImageTexture(
-    vctScene->getNodePool()->getShdNodePool(RADIANCE),
-    shader->getUniform("nodePool_radiance"), GL_READ_ONLY));
 
   nodePass->addOperation(new BindUniform(
     vctScene->getShdVoxelGridResolution(),

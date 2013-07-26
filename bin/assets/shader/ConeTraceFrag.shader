@@ -51,7 +51,6 @@ const uint pow2[] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
 
 layout(r32ui) uniform readonly uimageBuffer nodePool_next;
 layout(r32ui) uniform readonly uimageBuffer nodePool_color;
-layout(r32ui) uniform readonly uimageBuffer nodePool_radiance;
 uniform sampler3D brickPool_color;
 
 uniform uint voxelGridResolution;
@@ -167,7 +166,7 @@ vec4 raycastBrick(in uint nodeColorU, in vec3 enter, in vec3 dir,
 
     
     float stepSize = 1.0 / vec3(brickRes);
-    vec3 enterUVW = brickAddressUVW + enter * (brickSizeUVW / 2);
+    vec3 enterUVW = brickAddressUVW + enter * brickSizeUVW;
     
     vec4 color = vec4(0);
 
@@ -175,7 +174,7 @@ vec4 raycastBrick(in uint nodeColorU, in vec3 enter, in vec3 dir,
     color.a = 1.0 - pow((1.0 - color.a), alphaCorrection);
     color.xyz *= color.a;*/
     
-    for (float f = 0.00001; f < stepLength - 0.0000001; f += stepSize) {
+    for (float f = stepSize / 2; f < stepLength - stepSize / 2; f += stepSize) {
       vec4 newCol = texture(brickPool_color, enterUVW + dir * f);
       newCol.a = 1.0 - pow((1.0 - newCol.a), alphaCorrection); 
       newCol.xyz *= newCol.a;
@@ -226,7 +225,6 @@ void main(void) {
     bool advance = intersectRayWithAABB(posTex, rayDirTex, nodePosMin, nodePosMax, tEnter, tLeave);
     
     uint nodeColorU = imageLoad(nodePool_color, address).x;
-    uint nodeRadianceU = imageLoad(nodePool_radiance, address).x;
     memoryBarrier();
 
     vec4 newCol = vec4(0);
@@ -234,17 +232,16 @@ void main(void) {
       float normalizedNodeSize = foundNodeSideLength;
       vec3 enterPos = (posTex - nodePosMin) / (normalizedNodeSize);
       float rayCastAlphaCorrection = normalizedNodeSize / (1.0 / float(voxelGridResolution));
-
       newCol = raycastBrick(nodeColorU, enterPos, rayDirTex, tLeave / normalizedNodeSize, rayCastAlphaCorrection);
     } 
     else {
       newCol =  vec4(convRGBA8ToVec4(nodeColorU)) / 255.0;
-      //newCol.a = 0.0;// clamp((1.0 - pow((1.0 - newCol.a), alphaCorrection)),0.0,1.0);
+      if (dot(newCol.xyz, newCol.xyz) > 0) {
+        newCol.a = 1.0 - pow((1.0 - newCol.a), alphaCorrection);
+      } 
       newCol.xyz *= newCol.a;
     }
      
-    vec4 radiance = vec4(convRGBA8ToVec4(nodeRadianceU)) / 255.0;
-
     //newCol.xyz *= radiance.xyz;
     color = (1.0 - color.a) * newCol + color;
     
