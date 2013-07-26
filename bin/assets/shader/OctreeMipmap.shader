@@ -91,17 +91,18 @@ bool hasBrick(in uint nextU) {
 
 uint filterBrick(in ivec3 texAddress) {
   vec4 color = vec4(0);
-  int weights = 0;
+  uint weights = 0;
   for (int i = 0; i < 8; ++i) {
     vec4 currCol = imageLoad(brickPool_color, texAddress + ivec3(childOffsets[i]));
+    memoryBarrier();
 
-    if (currCol.a > 0.1) {
+    if (currCol.a > 0.001) {
       ++weights;
       color += currCol;
     }
   }
 
-  color = vec4(color.xyz / max(weights, 1), color.a / 8);
+  color = vec4(color.xyz / max(float(weights), 1), color.a / 8);
   return convVec4ToRGBA8(color * 255);
 }
 
@@ -132,7 +133,7 @@ uvec3 alloc2x2x2TextureBrick(in int nodeAddress, in uint nodeNextU) {
   texAddress *= 2;
 
   // Store brick-pointer
-  imageStore(nodePool_color, nodeAddress, 
+  imageStore(nodePool_color, nodeAddress,
       uvec4(vec3ToUintXYZ10(texAddress), 0, 0, 0));
 
   // Set the flag to indicate the brick-existance

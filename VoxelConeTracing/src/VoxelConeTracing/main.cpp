@@ -118,7 +118,8 @@ void setup() {
 
   //Load the scene and get all mesh nodes
   //ResourceManager::getInstance()->loadScene("./assets/meshes/sibenik.dae");
-  ResourceManager::getInstance()->loadScene("./assets/meshes/sponza_diff_small_combi.dae");
+  //ResourceManager::getInstance()->loadScene("./assets/meshes/sponza_diff_small_combi.dae");
+  ResourceManager::getInstance()->loadScene("./assets/meshes/sponza_diff_big_combi.dae");
   //ResourceManager::getInstance()->loadScene("./assets/meshes/sponza_outerCube.dae");
   
   std::vector<SceneNode*> renderNodes;
@@ -135,7 +136,7 @@ void setup() {
   SVCTparameters params;
   params.voxel_grid_resolution = 256;
   params.voxel_grid_sidelengths = glm::vec3(50, 50, 50);
-  params.fraglist_size_multiplier = 1;
+  params.fraglist_size_multiplier = 10;
   params.fraglist_size_divisor = 1;
   params.brickPoolResolution = 64 * 2;
   
@@ -277,7 +278,7 @@ int main(void) {
   kore::Timer the_timer;
   the_timer.start();
   double time = 0;
-  float cameraMoveSpeed = 20.0f;
+  float cameraMoveSpeed = 40.0f;
   
   int oldMouseX = 0;
   int oldMouseY = 0;

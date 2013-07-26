@@ -63,6 +63,9 @@ public:
   inline kore::ShaderData* getShdBrickPool(EBrickPoolAttributes eAttribute)
   {return &_shdBrickPool[eAttribute];}
 
+  inline kore::ShaderData* getShdBrickPoolTexture(EBrickPoolAttributes eAttribute)
+  {return &_shdBrickPoolTexture[eAttribute];}
+
   inline kore::ShaderData* getShdBrickPoolResolution() {
     return &_shdBrickPoolResolution;
   }
@@ -71,6 +74,7 @@ private:
   kore::Texture _brickPool[BRICKPOOL_ATTRIBUTES_NUM];
   kore::STextureInfo _brickPoolTexInfo[BRICKPOOL_ATTRIBUTES_NUM];
   kore::ShaderData _shdBrickPool[BRICKPOOL_ATTRIBUTES_NUM];
+  kore::ShaderData _shdBrickPoolTexture[BRICKPOOL_ATTRIBUTES_NUM];
 
   kore::IndexedBuffer _acBrickPoolNextFree;
   kore::ShaderData _shdAcBrickPoolNextFree;
