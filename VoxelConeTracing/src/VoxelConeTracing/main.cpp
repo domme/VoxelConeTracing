@@ -181,6 +181,7 @@ void setup() {
 
   
   _backbufferStage = new FrameBufferStage;
+  _backbufferStage->setFrameBuffer(kore::FrameBuffer::BACKBUFFER);
   std::vector<GLenum> drawBufs;
   drawBufs.clear();
   drawBufs.push_back(GL_BACK_LEFT);
