@@ -28,7 +28,12 @@
 layout(r32ui) uniform volatile uimageBuffer nodePool_next;
 layout(r32ui) uniform volatile uimageBuffer nodePool_color;
 layout(r32ui) uniform volatile uimageBuffer levelAddressBuffer;
+
 layout(rgba8) uniform image3D brickPool_color;
+
+
+
+
 
 layout(binding = 0) uniform atomic_uint nextFreeBrick;
 uniform uint brickPoolResolution;

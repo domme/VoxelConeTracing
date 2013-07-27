@@ -116,6 +116,25 @@ void setup() {
   glGetIntegerv(GL_MAX_TEXTURE_BUFFER_SIZE, &maxTexBufferSize);
   Log::getInstance()->write("Max TextureBuffer size: %i \n", maxTexBufferSize);
 
+  GLint maxImgUnits = 0;
+  glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &maxImgUnits);
+  Log::getInstance()->write("Max Img units: %i \n", maxImgUnits);
+
+  GLint maxVertexImgUnits = 0;
+  glGetIntegerv(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS, &maxVertexImgUnits);
+  Log::getInstance()->write("Max vertex Img units: %i \n", maxVertexImgUnits);
+
+  GLint maxImgUniforms = 0;
+  glGetIntegerv(GL_MAX_COMBINED_IMAGE_UNIFORMS, &maxImgUniforms);
+  Log::getInstance()->write("Max Img uniforms: %i \n", maxImgUniforms);
+
+  GLint maxVertexImgUniforms = 0;
+  glGetIntegerv(GL_MAX_VERTEX_IMAGE_UNIFORMS, &maxVertexImgUniforms);
+  Log::getInstance()->write("Max vertex Img uniforms: %i \n", maxVertexImgUniforms);
+
+  
+  
+
   //Load the scene and get all mesh nodes
   //ResourceManager::getInstance()->loadScene("./assets/meshes/sibenik.dae");
   //ResourceManager::getInstance()->loadScene("./assets/meshes/sponza_diff_small_combi.dae");
