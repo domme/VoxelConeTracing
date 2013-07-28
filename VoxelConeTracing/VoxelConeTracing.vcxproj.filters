@@ -97,6 +97,9 @@
     <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\BorderTransferPass.cpp">
       <Filter>src\Octree Mipmap</Filter>
     </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\Octree Building\NeighbourPointersTraversePass.cpp">
+      <Filter>src\Octree Building</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -242,6 +245,9 @@
     <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\BorderTransferPass.h">
       <Filter>src\Octree Mipmap</Filter>
     </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\Octree Building\NeighbourPointersTraversePass.h">
+      <Filter>src\Octree Building</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\bin\assets\shader\debug.shader">
@@ -321,6 +327,9 @@
     </None>
     <None Include="..\bin\assets\shader\BorderTransfer.shader">
       <Filter>shader\Octree Mipmapping</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\NeighbourPointerTraverse.shader">
+      <Filter>shader\Octree Building</Filter>
     </None>
   </ItemGroup>
 </Project>

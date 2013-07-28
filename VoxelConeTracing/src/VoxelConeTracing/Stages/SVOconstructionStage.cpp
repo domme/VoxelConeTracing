@@ -35,6 +35,7 @@
 #include "../Octree Building/NeighbourPointersPass.h"
 #include "../Octree Building/ObClearNeighboursPass.h"
 #include "../Octree Mipmap/BorderTransferPass.h"
+#include "../Octree Building/NeighbourPointersTraversePass.h"
 
 SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
                                std::vector<kore::SceneNode*>& vRenderNodes,
@@ -61,8 +62,9 @@ SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
   for (uint iLevel = 0; iLevel < _numLevels; ++iLevel) {
     this->addProgramPass(new ObFlagPass(&vctScene, kore::EXECUTE_ONCE));
     this->addProgramPass(new ObAllocatePass(&vctScene, iLevel, kore::EXECUTE_ONCE));
+    this->addProgramPass(new NeighbourPointersTraversePass(&vctScene, kore::EXECUTE_ONCE));
   }
-  
+
   this->addProgramPass(new WriteLeafNodesPass(&vctScene, kore::EXECUTE_ONCE));
   this->addProgramPass(new LightInjectionPass(&vctScene, lightNode, shadowMapFBO, kore::EXECUTE_ONCE));
 
@@ -70,23 +72,12 @@ SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
   for (int iLevel = _numLevels - 2; iLevel >= 0;) {
     //kore::Log::getInstance()->write("%u\n", iLevel);
     this->addProgramPass(new OctreeMipmapPass(&vctScene, iLevel, kore::EXECUTE_ONCE));
-    this->addProgramPass(new NeighbourPointersPass(&vctScene, iLevel, kore::EXECUTE_ONCE));
-
+    //this->addProgramPass(new NeighbourPointersPass(&vctScene, iLevel, kore::EXECUTE_ONCE));
     --iLevel;
   }
 
 
   this->addProgramPass(new BorderTransferPass(&vctScene, _numLevels - 1, EXECUTE_ONCE));
-  //this->addProgramPass(new BorderTransferPass(&vctScene, _numLevels - 2, EXECUTE_ONCE));
-
-  /*for (int iLevel = _numLevels - 1; iLevel >= 0;) {
-    // DEBUG: Test the neighbour-pointers
-    this->addProgramPass(new BorderTransferPass(&vctScene, iLevel, EXECUTE_ONCE));
-
-    --iLevel;
-  } */
-  
-
   
   
 }

@@ -198,7 +198,7 @@ void main(void) {
 
   // PixelSize in texture space is the pixel-viewpsace size divided by the scale
   // of the voxelGrid
-  float pixelSizeTS = In.pixelSizeVS / length(voxelGridTransformI[0]);
+  float pixelSizeTS = In.pixelSizeVS / length(voxelGridTransformI[0]) / 1000;
   
   float tEnter = 0.0;
   float tLeave = 0.0;
