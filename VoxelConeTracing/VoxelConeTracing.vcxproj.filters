@@ -76,9 +76,6 @@
     <ClCompile Include="src\VoxelConeTracing\Rendering\ShadowMapPass.cpp">
       <Filter>src\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\BorderTransfer.cpp">
-      <Filter>src\Octree Mipmap</Filter>
-    </ClCompile>
     <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\LightInjectionPass.cpp">
       <Filter>src\Octree Mipmap</Filter>
     </ClCompile>
@@ -96,6 +93,9 @@
     </ClCompile>
     <ClCompile Include="src\VoxelConeTracing\Octree Building\ObClearNeighboursPass.cpp">
       <Filter>src\Octree Building</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\BorderTransferPass.cpp">
+      <Filter>src\Octree Mipmap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -221,9 +221,6 @@
     <ClInclude Include="src\VoxelConeTracing\Rendering\ShadowMapPass.h">
       <Filter>src\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\BorderTransfer.h">
-      <Filter>src\Octree Mipmap</Filter>
-    </ClInclude>
     <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\LightInjectionPass.h">
       <Filter>src\Octree Mipmap</Filter>
     </ClInclude>
@@ -241,6 +238,9 @@
     </ClInclude>
     <ClInclude Include="src\VoxelConeTracing\Octree Building\ObClearNeighboursPass.h">
       <Filter>src\Octree Building</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\BorderTransferPass.h">
+      <Filter>src\Octree Mipmap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -273,9 +273,6 @@
     </None>
     <None Include="..\bin\assets\shader\ModifyIndirectBufferVert.shader">
       <Filter>shader\Octree Building</Filter>
-    </None>
-    <None Include="..\bin\assets\shader\BorderTransferVert.shader">
-      <Filter>shader\Octree Mipmapping</Filter>
     </None>
     <None Include="..\bin\assets\shader\LightInjectionFrag.shader">
       <Filter>shader\Octree Mipmapping</Filter>
@@ -321,6 +318,9 @@
     </None>
     <None Include="..\bin\assets\shader\ObClearNeighbours.shader">
       <Filter>shader\Octree Building</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\BorderTransfer.shader">
+      <Filter>shader\Octree Mipmapping</Filter>
     </None>
   </ItemGroup>
 </Project>

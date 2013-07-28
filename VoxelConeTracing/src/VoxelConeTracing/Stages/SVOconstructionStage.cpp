@@ -34,6 +34,7 @@
 #include "../Octree Mipmap/OctreeMipmapPass.h"
 #include "../Octree Building/NeighbourPointersPass.h"
 #include "../Octree Building/ObClearNeighboursPass.h"
+#include "../Octree Mipmap/BorderTransferPass.h"
 
 SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
                                std::vector<kore::SceneNode*>& vRenderNodes,
@@ -70,8 +71,24 @@ SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
     //kore::Log::getInstance()->write("%u\n", iLevel);
     this->addProgramPass(new OctreeMipmapPass(&vctScene, iLevel, kore::EXECUTE_ONCE));
     this->addProgramPass(new NeighbourPointersPass(&vctScene, iLevel, kore::EXECUTE_ONCE));
+
     --iLevel;
   }
+
+
+  this->addProgramPass(new BorderTransferPass(&vctScene, _numLevels - 1, EXECUTE_ONCE));
+  //this->addProgramPass(new BorderTransferPass(&vctScene, _numLevels - 2, EXECUTE_ONCE));
+
+  /*for (int iLevel = _numLevels - 1; iLevel >= 0;) {
+    // DEBUG: Test the neighbour-pointers
+    this->addProgramPass(new BorderTransferPass(&vctScene, iLevel, EXECUTE_ONCE));
+
+    --iLevel;
+  } */
+  
+
+  
+  
 }
 
 SVOconstructionStage::~SVOconstructionStage() {

@@ -24,14 +24,14 @@
 */
 
 
-#include "VoxelConeTracing/Octree Building/NeighbourPointersPass.h"
+#include "VoxelConeTracing/Octree Mipmap/BorderTransferPass.h"
 #include "KoRE\RenderManager.h"
 #include "VoxelConeTracing/Scene/VCTscene.h"
 #include "Kore\Operations\Operations.h"
 
-NeighbourPointersPass::
-  NeighbourPointersPass(VCTscene* vctScene, uint level,
-                        kore::EOperationExecutionType executionType) {
+BorderTransferPass::
+  BorderTransferPass(VCTscene* vctScene, uint level,
+                     kore::EOperationExecutionType executionType) {
   using namespace kore;
 
   this->setExecutionType(executionType);
@@ -43,9 +43,9 @@ NeighbourPointersPass::
   _shdLevel.type = GL_UNSIGNED_INT;
   _shdLevel.data = &_level;
     
-  _shader.loadShader("./assets/shader/NeighbourPointer.shader",
+  _shader.loadShader("./assets/shader/BorderTransfer.shader",
                       GL_VERTEX_SHADER);
-  _shader.setName("NeighbourPointer shader");
+  _shader.setName("BorderTransfer shader");
   _shader.init();
 
   this->setShaderProgram(&_shader);
@@ -55,43 +55,29 @@ NeighbourPointersPass::
     vctScene->getNodePool()->getDenseThreadBuf(_level)->getHandle()));
 
   addStartupOperation(new BindUniform(&_shdLevel, _shader.getUniform("level")));
-
-  addStartupOperation(new BindImageTexture(
-    vctScene->getNodePool()->getShdNodePool(NEXT),
-    _shader.getUniform("nodePool_next"), GL_READ_ONLY));
+  addStartupOperation(new BindUniform(vctScene->getNodePool()->getShdNumLevels(),
+                                      _shader.getUniform("numLevels")));
 
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdLevelAddressBuffer(),
     _shader.getUniform("levelAddressBuffer"), GL_READ_ONLY));
 
   addStartupOperation(new BindImageTexture(
-    vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_X),
-    _shader.getUniform("nodePool_X")));
-
-  addStartupOperation(new BindImageTexture(
-    vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_NEG_X),
-    _shader.getUniform("nodePool_X_neg")));
-
-  addStartupOperation(new BindImageTexture(
-    vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_Y),
-    _shader.getUniform("nodePool_Y")));
-
-  addStartupOperation(new BindImageTexture(
-    vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_NEG_Y),
-    _shader.getUniform("nodePool_Y_neg")));
+    vctScene->getNodePool()->getShdNodePool(COLOR),
+    _shader.getUniform("nodePool_color")));
 
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_Z),
-    _shader.getUniform("nodePool_Z")));
+    _shader.getUniform("nodePool_X")));
 
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_NEG_Z),
-    _shader.getUniform("nodePool_Z_neg")));
+    _shader.getUniform("nodePool_X_neg")));
 
   addStartupOperation(new DrawIndirectOp(GL_POINTS, 0));
 
 }
 
-NeighbourPointersPass::~NeighbourPointersPass(void) {
+BorderTransferPass::~BorderTransferPass(void) {
 
 }

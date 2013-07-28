@@ -137,8 +137,8 @@ void setup() {
 
   //Load the scene and get all mesh nodes
   //ResourceManager::getInstance()->loadScene("./assets/meshes/sibenik.dae");
-  //ResourceManager::getInstance()->loadScene("./assets/meshes/sponza_diff_small_combi.dae");
-  ResourceManager::getInstance()->loadScene("./assets/meshes/sponza_diff_big_combi.dae");
+  ResourceManager::getInstance()->loadScene("./assets/meshes/sponza_diff_small_combi.dae");
+  //ResourceManager::getInstance()->loadScene("./assets/meshes/sponza_diff_big_combi.dae");
   //ResourceManager::getInstance()->loadScene("./assets/meshes/sponza_outerCube.dae");
   
   std::vector<SceneNode*> renderNodes;

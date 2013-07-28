@@ -103,67 +103,68 @@ void main() {
   imageStore(nodePool_Z_neg, int(childStartAddress + 6), uvec4(childStartAddress + 2));
   imageStore(nodePool_Z_neg, int(childStartAddress + 7), uvec4(childStartAddress + 3));
 
-
+  
   // Load child-tiles
-  uint childChildTiles[] = {0,0,0,0,0,0,0,0};
+  uint ccAddress[] = {0,0,0,0,0,0,0,0};
   for (int i = 0; i < 8; ++i) {
-    childChildTiles[i] =
+    ccAddress[i] =
      NODE_MASK_VALUE & imageLoad(nodePool_next, int(childStartAddress + i)).x;
   }
+  memoryBarrier();
 
 
   // Child-child-neighbours X
-  uint childIndices[] = {0,2,4,6};
-  for (int i = 0; i < 3; ++i) {
-    if (childChildTiles[childIndices[i]] != 0 && childChildTiles[childIndices[i + 1]] != 0) {
-      imageStore(nodePool_X, int(childChildTiles[childIndices[i]] + 1), uvec4(childChildTiles[childIndices[i + 1]] + 0));
-      imageStore(nodePool_X, int(childChildTiles[childIndices[i]] + 3), uvec4(childChildTiles[childIndices[i + 1]] + 2));
-      imageStore(nodePool_X, int(childChildTiles[childIndices[i]] + 5), uvec4(childChildTiles[childIndices[i + 1]] + 4));
-      imageStore(nodePool_X, int(childChildTiles[childIndices[i]] + 7), uvec4(childChildTiles[childIndices[i + 1]] + 6));
+  uint child[] = {0,2,4,6};
+  for (int i = 0; i < 4; ++i) {
+    if (ccAddress[child[i]] != 0 && ccAddress[child[i] + 1] != 0) {
+      imageStore(nodePool_X, int(ccAddress[child[i]] + 1), uvec4(ccAddress[child[i] + 1] + 0));
+      imageStore(nodePool_X, int(ccAddress[child[i]] + 3), uvec4(ccAddress[child[i] + 1] + 2));
+      imageStore(nodePool_X, int(ccAddress[child[i]] + 5), uvec4(ccAddress[child[i] + 1] + 4));
+      imageStore(nodePool_X, int(ccAddress[child[i]] + 7), uvec4(ccAddress[child[i] + 1] + 6));
 
-      imageStore(nodePool_X_neg, int(childChildTiles[childIndices[i + 1]] + 0), uvec4(childChildTiles[childIndices[i]] + 1));
-      imageStore(nodePool_X_neg, int(childChildTiles[childIndices[i + 1]] + 2), uvec4(childChildTiles[childIndices[i]] + 3));
-      imageStore(nodePool_X_neg, int(childChildTiles[childIndices[i + 1]] + 4), uvec4(childChildTiles[childIndices[i]] + 5));
-      imageStore(nodePool_X_neg, int(childChildTiles[childIndices[i + 1]] + 6), uvec4(childChildTiles[childIndices[i]] + 7));
+      imageStore(nodePool_X_neg, int(ccAddress[child[i] + 1] + 0), uvec4(ccAddress[child[i]] + 1));
+      imageStore(nodePool_X_neg, int(ccAddress[child[i] + 1] + 2), uvec4(ccAddress[child[i]] + 3));
+      imageStore(nodePool_X_neg, int(ccAddress[child[i] + 1] + 4), uvec4(ccAddress[child[i]] + 5));
+      imageStore(nodePool_X_neg, int(ccAddress[child[i] + 1] + 6), uvec4(ccAddress[child[i]] + 7));
     }
   }
 
   // Child-child-neighbours Y
-  childIndices[0] = 0;
-  childIndices[1] = 1;
-  childIndices[2] = 4;
-  childIndices[3] = 5;
-  for (int i = 0; i < 3; ++i) {
-    if (childChildTiles[childIndices[i]] != 0 && childChildTiles[childIndices[i + 2]] != 0) {
-      imageStore(nodePool_Y, int(childChildTiles[childIndices[i]] + 2), uvec4(childChildTiles[childIndices[i + 2]] + 0));
-      imageStore(nodePool_Y, int(childChildTiles[childIndices[i]] + 3), uvec4(childChildTiles[childIndices[i + 2]] + 1));
-      imageStore(nodePool_Y, int(childChildTiles[childIndices[i]] + 6), uvec4(childChildTiles[childIndices[i + 2]] + 4));
-      imageStore(nodePool_Y, int(childChildTiles[childIndices[i]] + 7), uvec4(childChildTiles[childIndices[i + 2]] + 5));
+  child[0] = 0;
+  child[1] = 1;
+  child[2] = 4;
+  child[3] = 5;
+  for (int i = 0; i < 4; ++i) {
+    if (ccAddress[child[i]] != 0 && ccAddress[child[i] + 2] != 0) {
+      imageStore(nodePool_Y, int(ccAddress[child[i]] + 2), uvec4(ccAddress[child[i] + 2] + 0));
+      imageStore(nodePool_Y, int(ccAddress[child[i]] + 3), uvec4(ccAddress[child[i] + 2] + 1));
+      imageStore(nodePool_Y, int(ccAddress[child[i]] + 6), uvec4(ccAddress[child[i] + 2] + 4));
+      imageStore(nodePool_Y, int(ccAddress[child[i]] + 7), uvec4(ccAddress[child[i] + 2] + 5));
 
-      imageStore(nodePool_Y_neg, int(childChildTiles[childIndices[i + 2]] + 0), uvec4(childChildTiles[childIndices[i]] + 2));
-      imageStore(nodePool_Y_neg, int(childChildTiles[childIndices[i + 2]] + 1), uvec4(childChildTiles[childIndices[i]] + 3));
-      imageStore(nodePool_Y_neg, int(childChildTiles[childIndices[i + 2]] + 4), uvec4(childChildTiles[childIndices[i]] + 6));
-      imageStore(nodePool_Y_neg, int(childChildTiles[childIndices[i + 2]] + 5), uvec4(childChildTiles[childIndices[i]] + 7));
+      imageStore(nodePool_Y_neg, int(ccAddress[child[i] + 2] + 0), uvec4(ccAddress[child[i]] + 2));
+      imageStore(nodePool_Y_neg, int(ccAddress[child[i] + 2] + 1), uvec4(ccAddress[child[i]] + 3));
+      imageStore(nodePool_Y_neg, int(ccAddress[child[i] + 2] + 4), uvec4(ccAddress[child[i]] + 6));
+      imageStore(nodePool_Y_neg, int(ccAddress[child[i] + 2] + 5), uvec4(ccAddress[child[i]] + 7));
     }
   }
 
 
   // Child-child-neighbours Z
-  childIndices[0] = 0;
-  childIndices[1] = 1;
-  childIndices[2] = 2;
-  childIndices[3] = 3;
-  for (int i = 0; i < 3; ++i) {
-    if (childChildTiles[childIndices[i]] != 0 && childChildTiles[childIndices[i + 4]] != 0) {
-      imageStore(nodePool_Y, int(childChildTiles[childIndices[i]] + 4), uvec4(childChildTiles[childIndices[i + 4]] + 0));
-      imageStore(nodePool_Y, int(childChildTiles[childIndices[i]] + 5), uvec4(childChildTiles[childIndices[i + 4]] + 1));
-      imageStore(nodePool_Y, int(childChildTiles[childIndices[i]] + 6), uvec4(childChildTiles[childIndices[i + 4]] + 2));
-      imageStore(nodePool_Y, int(childChildTiles[childIndices[i]] + 7), uvec4(childChildTiles[childIndices[i + 4]] + 3));
+  child[0] = 0;
+  child[1] = 1;
+  child[2] = 2;
+  child[3] = 3;
+  for (int i = 0; i < 4; ++i) {
+    if (ccAddress[child[i]] != 0 && ccAddress[child[i] + 4] != 0) {
+      imageStore(nodePool_Z, int(ccAddress[child[i]] + 4), uvec4(ccAddress[child[i] + 4] + 0));
+      imageStore(nodePool_Z, int(ccAddress[child[i]] + 5), uvec4(ccAddress[child[i] + 4] + 1));
+      imageStore(nodePool_Z, int(ccAddress[child[i]] + 6), uvec4(ccAddress[child[i] + 4] + 2));
+      imageStore(nodePool_Z, int(ccAddress[child[i]] + 7), uvec4(ccAddress[child[i] + 4] + 3));
 
-      imageStore(nodePool_Y_neg, int(childChildTiles[childIndices[i + 4]] + 0), uvec4(childChildTiles[childIndices[i]] + 4));
-      imageStore(nodePool_Y_neg, int(childChildTiles[childIndices[i + 4]] + 1), uvec4(childChildTiles[childIndices[i]] + 5));
-      imageStore(nodePool_Y_neg, int(childChildTiles[childIndices[i + 4]] + 2), uvec4(childChildTiles[childIndices[i]] + 6));
-      imageStore(nodePool_Y_neg, int(childChildTiles[childIndices[i + 4]] + 3), uvec4(childChildTiles[childIndices[i]] + 7));
+      imageStore(nodePool_Z_neg, int(ccAddress[child[i] + 4] + 0), uvec4(ccAddress[child[i]] + 4));
+      imageStore(nodePool_Z_neg, int(ccAddress[child[i] + 4] + 1), uvec4(ccAddress[child[i]] + 5));
+      imageStore(nodePool_Z_neg, int(ccAddress[child[i] + 4] + 2), uvec4(ccAddress[child[i]] + 6));
+      imageStore(nodePool_Z_neg, int(ccAddress[child[i] + 4] + 3), uvec4(ccAddress[child[i]] + 7));
     }
   }
 }

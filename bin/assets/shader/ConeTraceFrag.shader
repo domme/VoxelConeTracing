@@ -244,7 +244,7 @@ void main(void) {
      
     //newCol.xyz *= radiance.xyz;
     color = (1.0 - color.a) * newCol + color;
-    
+
     if (color.a > 0.99) {
       return;
     }
