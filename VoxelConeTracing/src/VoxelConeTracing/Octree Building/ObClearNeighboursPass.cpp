@@ -23,22 +23,22 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#include "VoxelConeTracing/Octree Building/ObClearPass.h"
+#include "VoxelConeTracing/Octree Building/ObClearNeighboursPass.h"
 #include "Kore/Operations/Operations.h"
 
-ObClearPass::~ObClearPass(void) {
+ObClearNeighboursPass::~ObClearNeighboursPass(void) {
 }
 
-ObClearPass::ObClearPass(VCTscene* vctScene,
+ObClearNeighboursPass::ObClearNeighboursPass(VCTscene* vctScene,
                       kore::EOperationExecutionType executionType) {
   using namespace kore;
   
   this->setExecutionType(executionType);
 
   ShaderProgram* shader = new ShaderProgram();
-  shader->loadShader("./assets/shader/ObClearVert.shader",
+  shader->loadShader("./assets/shader/ObClearNeighbours.shader",
                  GL_VERTEX_SHADER);
-  shader->setName("ObClear shader");
+  shader->setName("ObClearNeighbours shader");
   shader->init();
   this->setShaderProgram(shader);
 
@@ -56,19 +56,6 @@ ObClearPass::ObClearPass(VCTscene* vctScene,
   addStartupOperation(
     new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,_svoCmdBuf.getHandle()));
 
-  addStartupOperation(new BindImageTexture(
-                    vctScene->getNodePool()->getShdNodePool(COLOR),
-                    shader->getUniform("nodePool_color")));
-
-  addStartupOperation(new BindImageTexture(
-                    vctScene->getNodePool()->getShdNodePool(NEXT),
-                    shader->getUniform("nodePool_next")));
-
-  addStartupOperation(new BindImageTexture(
-                      vctScene->getNodePool()->getShdNodePool(NORMAL),
-                      shader->getUniform("nodePool_normal")));
-
-  /*
   addStartupOperation(new BindImageTexture(
                     vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_X),
                     shader->getUniform("nodePool_X")));
@@ -91,9 +78,9 @@ ObClearPass::ObClearPass(VCTscene* vctScene,
 
   addStartupOperation(new BindImageTexture(
                   vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_NEG_Z),
-                  shader->getUniform("nodePool_Z_neg"))); */
+                  shader->getUniform("nodePool_Z_neg")));
   
   addStartupOperation(new kore::DrawIndirectOp(GL_POINTS, 0));
 
-  addStartupOperation(new MemoryBarrierOp(GL_ALL_BARRIER_BITS));
+  addStartupOperation(new MemoryBarrierOp(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT));
 }

@@ -91,6 +91,12 @@
     <ClCompile Include="src\VoxelConeTracing\Stages\ShadowMapStage.cpp">
       <Filter>src\Stages</Filter>
     </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\Octree Building\NeighbourPointersPass.cpp">
+      <Filter>src\Octree Building</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\Octree Building\ObClearNeighboursPass.cpp">
+      <Filter>src\Octree Building</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -230,6 +236,12 @@
     <ClInclude Include="src\VoxelConeTracing\Stages\ShadowMapStage.h">
       <Filter>src\Stages</Filter>
     </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\Octree Building\NeighbourPointersPass.h">
+      <Filter>src\Octree Building</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\Octree Building\ObClearNeighboursPass.h">
+      <Filter>src\Octree Building</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\bin\assets\shader\debug.shader">
@@ -303,6 +315,12 @@
     </None>
     <None Include="..\bin\assets\shader\deferredVert.shader">
       <Filter>shader\Rendering</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\NeighbourPointer.shader">
+      <Filter>shader\Octree Building</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\ObClearNeighbours.shader">
+      <Filter>shader\Octree Building</Filter>
     </None>
   </ItemGroup>
 </Project>

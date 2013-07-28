@@ -179,7 +179,9 @@
     <ClCompile Include="src\VoxelConeTracing\FullscreenQuad.cpp" />
     <ClCompile Include="src\VoxelConeTracing\main.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Building\ModifyIndirectBufferPass.cpp" />
+    <ClCompile Include="src\VoxelConeTracing\Octree Building\NeighbourPointersPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Building\ObAllocatePass.cpp" />
+    <ClCompile Include="src\VoxelConeTracing\Octree Building\ObClearNeighboursPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Building\ObClearPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Building\ObFlagPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Building\ObInitPass.cpp" />
@@ -210,7 +212,9 @@
     <ClInclude Include="src\VoxelConeTracing\Debug\DebugPass.h" />
     <ClInclude Include="src\VoxelConeTracing\FullscreenQuad.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Building\ModifyIndirectBufferPass.h" />
+    <ClInclude Include="src\VoxelConeTracing\Octree Building\NeighbourPointersPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Building\ObAllocatePass.h" />
+    <ClInclude Include="src\VoxelConeTracing\Octree Building\ObClearNeighboursPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Building\ObClearPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Building\ObFlagPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Building\ObInitPass.h" />
@@ -246,7 +250,9 @@
     <None Include="..\bin\assets\shader\FullscreenQuadVert.shader" />
     <None Include="..\bin\assets\shader\LightInjectionFrag.shader" />
     <None Include="..\bin\assets\shader\ModifyIndirectBufferVert.shader" />
+    <None Include="..\bin\assets\shader\NeighbourPointer.shader" />
     <None Include="..\bin\assets\shader\ObAllocateVert.shader" />
+    <None Include="..\bin\assets\shader\ObClearNeighbours.shader" />
     <None Include="..\bin\assets\shader\ObClearVert.shader" />
     <None Include="..\bin\assets\shader\ObFlagVert.shader" />
     <None Include="..\bin\assets\shader\ObInitVert.shader" />

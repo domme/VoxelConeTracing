@@ -89,7 +89,13 @@ public:
 
   inline kore::ShaderData* getShdLevelAddressBuffer()
   {return &_shdLevelAddressBuffer;}
-  
+
+  inline kore::TextureBuffer* getCmdBufSVOnodes()
+  {return &_cmdBufSVOnodes;}
+
+  inline kore::ShaderData* getShdCmdBufSVOnodes()
+  {return &_shdCmdBufSVOnodes;}
+
 private:
   kore::TextureBuffer _nodePool[NODEPOOL_ATTRIBUTES_NUM];
   kore::STextureInfo _nodePoolTexInfo[NODEPOOL_ATTRIBUTES_NUM];
@@ -98,6 +104,9 @@ private:
   /// Thread buffers
   std::vector<kore::IndexedBuffer> _vThreadBufs_denseLevel;
   std::vector<kore::IndexedBuffer> _vThreadBufs_upToLevel;
+  kore::STextureInfo _texInfoCmdBufSVNnodes;
+  kore::TextureBuffer _cmdBufSVOnodes;
+  kore::ShaderData _shdCmdBufSVOnodes;
 
   uint _numNodes;  // Number of all nodes in the nodepool
   uint _numLevels;

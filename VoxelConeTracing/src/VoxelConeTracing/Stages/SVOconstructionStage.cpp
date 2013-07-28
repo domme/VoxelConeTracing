@@ -32,6 +32,8 @@
 #include "../Octree Mipmap/WriteLeafNodesPass.h"
 #include "../Octree Mipmap/LightInjectionPass.h"
 #include "../Octree Mipmap/OctreeMipmapPass.h"
+#include "../Octree Building/NeighbourPointersPass.h"
+#include "../Octree Building/ObClearNeighboursPass.h"
 
 SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
                                std::vector<kore::SceneNode*>& vRenderNodes,
@@ -46,12 +48,14 @@ SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
 
   // Prepare render algorithm
   this->addProgramPass(new ObClearPass(&vctScene, kore::EXECUTE_ONCE));
+  this->addProgramPass(new ObClearNeighboursPass(&vctScene, kore::EXECUTE_ONCE));
   this->addProgramPass(new VoxelizePass(vctParams.voxel_grid_sidelengths, &vctScene, kore::EXECUTE_ONCE));
   this->addProgramPass(new ModifyIndirectBufferPass(
                                       vctScene.getVoxelFragList()->getShdFragListIndCmdBuf(),
                                       vctScene.getShdAcVoxelIndex(),&vctScene,
                                       kore::EXECUTE_ONCE));
   
+  // Build SVO from top to bottom
   uint _numLevels = vctScene.getNodePool()->getNumLevels(); 
   for (uint iLevel = 0; iLevel < _numLevels; ++iLevel) {
     this->addProgramPass(new ObFlagPass(&vctScene, kore::EXECUTE_ONCE));
@@ -65,6 +69,7 @@ SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
   for (int iLevel = _numLevels - 2; iLevel >= 0;) {
     //kore::Log::getInstance()->write("%u\n", iLevel);
     this->addProgramPass(new OctreeMipmapPass(&vctScene, iLevel, kore::EXECUTE_ONCE));
+    this->addProgramPass(new NeighbourPointersPass(&vctScene, iLevel, kore::EXECUTE_ONCE));
     --iLevel;
   }
 }

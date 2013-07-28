@@ -49,14 +49,15 @@ ModifyIndirectBufferPass::
   _resMgr = ResourceManager::getInstance();
   
   _shdIndirectBuffer = shdIndirectBuffer;
-  _shdACnumVoxelsBuffer = shdACnumVoxelsBuffer;
+  _shdAcNumThreads = shdACnumVoxelsBuffer;
 
   initCallBuffer();
 
   _shader.loadShader("./assets/shader/ModifyIndirectBufferVert.shader",
                      GL_VERTEX_SHADER);
-  _shader.init();
   _shader.setName("ModyfyIndirectBuffer shader");
+  _shader.init();
+  
   this->setShaderProgram(&_shader);
 
   addStartupOperation(
@@ -67,8 +68,8 @@ ModifyIndirectBufferPass::
                                _shader.getUniform("indirectCommandBuf")));
 
   addStartupOperation(
-    new kore::BindAtomicCounterBuffer(_shdACnumVoxelsBuffer,
-                                      _shader.getUniform("numVoxels")));
+    new kore::BindAtomicCounterBuffer(_shdAcNumThreads,
+                                      _shader.getUniform("numThreads")));
 
   addStartupOperation(
     new kore::DrawIndirectOp(GL_POINTS, 0));

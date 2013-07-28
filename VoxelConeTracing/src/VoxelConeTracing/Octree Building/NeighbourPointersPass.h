@@ -23,39 +23,25 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#ifndef VCT_SRC_VCT_MODIFYINDIRECTBUFFERPASS_H_
-#define VCT_SRC_VCT_MODIFYINDIRECTBUFFERPASS_H_
+#ifndef VCT_SRC_VCT_NEIGHBOURPOINTERSPASS_H_
+#define VCT_SRC_VCT_NEIGHBOURPOINTERSPASS_H_
 
 #include "KoRE/Passes/ShaderProgramPass.h"
 #include "VoxelConeTracing/Scene/VCTscene.h"
-#include "KoRE/SceneManager.h"
-#include "KoRE/RenderManager.h"
-#include "KoRE/ResourceManager.h"
 
 
-class ModifyIndirectBufferPass : public kore::ShaderProgramPass
+class NeighbourPointersPass : public kore::ShaderProgramPass
 {
   public:
-    ModifyIndirectBufferPass(const kore::ShaderData* shdIndirectBuffer,
-                             const kore::ShaderData* shdACnumVoxelsBuffer,
-                             VCTscene* vctScene,
-                             kore::EOperationExecutionType executionType);
-    virtual ~ModifyIndirectBufferPass(void);
+    NeighbourPointersPass(VCTscene* vctScene, uint level,
+              kore::EOperationExecutionType executionType);
+    virtual ~NeighbourPointersPass(void);
 
   private:
-    void initCallBuffer();
-
-    kore::RenderManager* _renderMgr;
-    kore::SceneManager* _sceneMgr;
-    kore::ResourceManager* _resMgr;
-
-    const kore::ShaderData* _shdIndirectBuffer;
-    const kore::ShaderData* _shdAcNumThreads;
-
-    kore::IndexedBuffer _callIndirectBuffer;
-
     kore::ShaderProgram _shader;
-    VCTscene* _vctScene;
+    
+    uint _level;
+    kore::ShaderData _shdLevel;
 };
 
-#endif // VCT_SRC_VCT_MODIFYINDIRECTBUFFERPASS_H_
+#endif //VCT_SRC_VCT_NEIGHBOURPOINTERSPASS_H_

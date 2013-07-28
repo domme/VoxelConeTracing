@@ -102,7 +102,6 @@ private:
   NodePool _nodePool;
   BrickPool _brickPool;
   VoxelFragList _voxelFragList;
-
   
   uint _voxelGridResolution;
   kore::ShaderData _shdVoxelGridResolution;

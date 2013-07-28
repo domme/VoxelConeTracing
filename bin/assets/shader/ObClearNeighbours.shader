@@ -25,12 +25,20 @@
 
 #version 420 core
 
-layout(r32ui) uniform uimageBuffer indirectCommandBuf;
-layout(binding = 0) uniform atomic_uint numThreads;
+layout(r32ui) uniform volatile uimageBuffer nodePool_X;
+layout(r32ui) uniform volatile uimageBuffer nodePool_Y;
+layout(r32ui) uniform volatile uimageBuffer nodePool_Z;
+layout(r32ui) uniform volatile uimageBuffer nodePool_X_neg;
+layout(r32ui) uniform volatile uimageBuffer nodePool_Y_neg;
+layout(r32ui) uniform volatile uimageBuffer nodePool_Z_neg;
 
 void main() {
-  uint num = atomicCounter(numThreads);
-  
-  imageStore(indirectCommandBuf, 0, uvec4(num));  // Vertex-Count
-  imageStore(indirectCommandBuf, 1, uvec4(1));  // Primitive Count
+  imageStore(nodePool_X, gl_VertexID, uvec4(0));
+  imageStore(nodePool_Y, gl_VertexID, uvec4(0));
+  imageStore(nodePool_Z, gl_VertexID, uvec4(0));
+  imageStore(nodePool_X_neg, gl_VertexID, uvec4(0));
+  imageStore(nodePool_Y_neg, gl_VertexID, uvec4(0));
+  imageStore(nodePool_Z_neg, gl_VertexID, uvec4(0));
 }
+
+

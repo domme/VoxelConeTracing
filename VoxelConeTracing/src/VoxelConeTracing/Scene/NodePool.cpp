@@ -154,6 +154,32 @@ NodePool::~NodePool() {
 
 
 void NodePool::initThreadBuffers() {
+
+  // Allocate a standard cmdbuf for the whole octree. This cmdBuf will later be
+  // filled correctly with a modify-Pass.
+  // Voxel fragment list indirect command buf
+  SDrawArraysIndirectCommand svoNodesCMD;
+  svoNodesCMD.numVertices = 1;
+  svoNodesCMD.numPrimitives = 1;
+  svoNodesCMD.firstVertexIdx = 0;
+  svoNodesCMD.baseInstanceIdx = 0;
+
+  kore::STextureBufferProperties props;
+  props.internalFormat = GL_R32UI;
+  props.size = sizeof(SDrawArraysIndirectCommand);
+  props.usageHint = GL_STATIC_DRAW;
+
+  _cmdBufSVOnodes.create(props, "SVOnodes indirect command buf",&svoNodesCMD);
+
+  _texInfoCmdBufSVNnodes.internalFormat = GL_R32UI;
+  _texInfoCmdBufSVNnodes.texLocation = _cmdBufSVOnodes.getTexHandle();
+  _texInfoCmdBufSVNnodes.texTarget = GL_TEXTURE_BUFFER;
+
+  _shdCmdBufSVOnodes.name = "SVOnodes indirect command buf";
+  _shdCmdBufSVOnodes.type = GL_TEXTURE_BUFFER;
+  _shdCmdBufSVOnodes.data = &_texInfoCmdBufSVNnodes;
+
+
   // Allocation indirect command bufs for each octree level
   _vThreadBufs_denseLevel.clear();
   _vThreadBufs_upToLevel.clear();
