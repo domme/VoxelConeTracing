@@ -51,34 +51,40 @@ SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
   // Prepare render algorithm
   this->addProgramPass(new ObClearPass(&vctScene, kore::EXECUTE_ONCE));
   this->addProgramPass(new ObClearNeighboursPass(&vctScene, kore::EXECUTE_ONCE));
-  this->addProgramPass(new VoxelizePass(vctParams.voxel_grid_sidelengths, &vctScene, kore::EXECUTE_ONCE));
+  this->addProgramPass(new VoxelizePass(vctParams.voxel_grid_sidelengths,
+                                        &vctScene, kore::EXECUTE_ONCE));
   this->addProgramPass(new ModifyIndirectBufferPass(
-                                      vctScene.getVoxelFragList()->getShdFragListIndCmdBuf(),
-                                      vctScene.getShdAcVoxelIndex(),&vctScene,
-                                      kore::EXECUTE_ONCE));
+                       vctScene.getVoxelFragList()->getShdFragListIndCmdBuf(),
+                       vctScene.getShdAcVoxelIndex(),&vctScene,
+                       kore::EXECUTE_ONCE));
   
   // Build SVO from top to bottom
   uint _numLevels = vctScene.getNodePool()->getNumLevels(); 
   for (uint iLevel = 0; iLevel < _numLevels; ++iLevel) {
     this->addProgramPass(new ObFlagPass(&vctScene, kore::EXECUTE_ONCE));
-    this->addProgramPass(new ObAllocatePass(&vctScene, iLevel, kore::EXECUTE_ONCE));
-    this->addProgramPass(new NeighbourPointersPass(&vctScene, kore::EXECUTE_ONCE));
+    this->addProgramPass(new ObAllocatePass(&vctScene, iLevel,
+                                            kore::EXECUTE_ONCE));
+
+    this->addProgramPass(new NeighbourPointersPass(&vctScene,
+                                                  kore::EXECUTE_ONCE));
   }
 
   this->addProgramPass(new WriteLeafNodesPass(&vctScene, kore::EXECUTE_ONCE));
-  this->addProgramPass(new LightInjectionPass(&vctScene, lightNode, shadowMapFBO, kore::EXECUTE_ONCE));
+  this->addProgramPass(new LightInjectionPass(&vctScene,
+                                              lightNode,
+                                              shadowMapFBO,
+                                              kore::EXECUTE_ONCE));
 
   // Mipmap the values from bottom to top
   for (int iLevel = _numLevels - 2; iLevel >= 0;) {
     //kore::Log::getInstance()->write("%u\n", iLevel);
-    this->addProgramPass(new OctreeMipmapPass(&vctScene, iLevel, kore::EXECUTE_ONCE));
+    this->addProgramPass(new OctreeMipmapPass(&vctScene,
+                                              iLevel, kore::EXECUTE_ONCE));
+    this->addProgramPass(new BorderTransferPass(&vctScene,
+                                                iLevel, EXECUTE_ONCE));
     --iLevel;
   }
 
-
-  this->addProgramPass(new BorderTransferPass(&vctScene, _numLevels - 1, EXECUTE_ONCE));
-  
-  
 }
 
 SVOconstructionStage::~SVOconstructionStage() {

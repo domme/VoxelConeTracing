@@ -25,17 +25,33 @@
 
 #version 430 core
 
-layout(r32ui) uniform uimageBuffer nodePool_color;
+layout(r32ui) uniform readonly uimageBuffer nodePool_color;
 layout(r32ui) uniform readonly uimageBuffer levelAddressBuffer;
+layout(rgba8) uniform image3D brickPool_color;
 
-layout(r32ui) uniform uimageBuffer nodePool_X;
-layout(r32ui) uniform uimageBuffer nodePool_X_neg;
+layout(r32ui) uniform readonly uimageBuffer nodePool_Neighbour;
 
 uniform uint level;
 uniform uint numLevels;
+uniform uint axis;
 
 #define NODE_MASK_VALUE 0x3FFFFFFF
 #define NODE_NOT_FOUND 0xFFFFFFFF
+#define AXIS_X 0
+#define AXIS_Y 1
+#define AXIS_Z 2
+
+uint vec3ToUintXYZ10(uvec3 val) {
+    return (uint(val.z) & 0x000003FF)   << 20U
+            |(uint(val.y) & 0x000003FF) << 10U 
+            |(uint(val.x) & 0x000003FF);
+}
+
+uvec3 uintXYZ10ToVec3(uint val) {
+    return uvec3(uint((val & 0x000003FF)),
+                 uint((val & 0x000FFC00) >> 10U), 
+                 uint((val & 0x3FF00000) >> 20U));
+}
 
 uint getThreadNode() {
   uint levelStart = imageLoad(levelAddressBuffer, int(level)).x;
@@ -44,7 +60,7 @@ uint getThreadNode() {
 
   uint index = levelStart + uint(gl_VertexID);
 
-  if (level < numLevels - 1 && index >= nextLevelStart) {
+  if (index >= nextLevelStart) {
     return NODE_NOT_FOUND;
   }
 
@@ -60,18 +76,62 @@ void main() {
     return;  // The requested threadID-node does not belong to the current level
   }
 
-  uint neighbourAddress = imageLoad(nodePool_X, int(nodeAddress)).x;
+  uint neighbourAddress = imageLoad(nodePool_Neighbour, int(nodeAddress)).x;
   memoryBarrier();
 
-  if (neighbourAddress != 0) {
-    // Test: Store white in all neighbours
-    imageStore(nodePool_color, int(neighbourAddress), uvec4(0xFFFFFFFF));
+  if (neighbourAddress == 0) {
+    return; 
+  }
+  
+  ivec3 brickAddr = ivec3(uintXYZ10ToVec3(imageLoad(nodePool_color, int(nodeAddress)).x));
+  ivec3 nBrickAddr = ivec3(uintXYZ10ToVec3(imageLoad(nodePool_color, int(neighbourAddress)).x));
 
-    /*uint negNeighbourNeighbourAdd = imageLoad(nodePool_X_neg, int(neighbourAddress)).x;
-    memoryBarrier();
 
-    imageStore(nodePool_color, int(negNeighbourNeighbourAdd), uvec4(0xFFFFFFFF)); */
+  if (axis == AXIS_X) {
+    for (int y = 0; y <= 2; ++y) {
+      for (int z = 0; z <= 2; ++z) {
+        ivec3 offset = ivec3(2,y,z);
+        ivec3 nOffset = ivec3(0,y,z);
+        vec4 borderVal = imageLoad(brickPool_color, brickAddr + offset);
+        vec4 neighbourBorderVal = imageLoad(brickPool_color, nBrickAddr + nOffset);
+        memoryBarrier();
+
+        vec4 finalVal = borderVal + neighbourBorderVal; // TODO: Maybe we need a /2 here and have to use atomics
+        imageStore(brickPool_color, brickAddr + offset, finalVal);
+        imageStore(brickPool_color, nBrickAddr + nOffset, finalVal);
+      }
+    }
   }
 
-  
+  else if (axis == AXIS_Y) {
+    for (int x = 0; x <= 2; ++x) {
+      for (int z = 0; z <= 2; ++z) {
+        ivec3 offset = ivec3(x,2,z);
+        ivec3 nOffset = ivec3(x,0,z);
+        vec4 borderVal = imageLoad(brickPool_color, brickAddr + offset);
+        vec4 neighbourBorderVal = imageLoad(brickPool_color, nBrickAddr + nOffset);
+        memoryBarrier();
+
+        vec4 finalVal = borderVal + neighbourBorderVal; // TODO: Maybe we need a /2 here and have to use atomics
+        imageStore(brickPool_color, brickAddr + offset, finalVal);
+        imageStore(brickPool_color, nBrickAddr + nOffset, finalVal);
+      }
+    }
+  }
+
+  else {
+    for (int x = 0; x <= 2; ++x) {
+      for (int y = 0; y <= 2; ++y) {
+        ivec3 offset = ivec3(x,y,2);
+        ivec3 nOffset = ivec3(x,y,0);
+        vec4 borderVal = imageLoad(brickPool_color, brickAddr + offset);
+        vec4 neighbourBorderVal = imageLoad(brickPool_color, nBrickAddr + nOffset);
+        memoryBarrier();
+
+        vec4 finalVal = borderVal + neighbourBorderVal; // TODO: Maybe we need a /2 here and have to use atomics
+        imageStore(brickPool_color, brickAddr + offset, finalVal);
+        imageStore(brickPool_color, nBrickAddr + nOffset, finalVal);
+      }
+    }
+  }
 }

@@ -37,6 +37,16 @@ BorderTransferPass::
   this->setExecutionType(executionType);
   _level = level;
 
+  _axisX = 0;
+  _axisY = 1;
+  _axisZ = 2;
+  _shdAxisX.type = GL_UNSIGNED_INT;
+  _shdAxisX.data = &_axisX;
+  _shdAxisY.type = GL_UNSIGNED_INT;
+  _shdAxisY.data = &_axisY;
+  _shdAxisZ.type = GL_UNSIGNED_INT;
+  _shdAxisZ.data = &_axisZ;
+
   _shdLevel.component = NULL;
   _shdLevel.name = "Level";
   _shdLevel.size = 1;
@@ -64,17 +74,38 @@ BorderTransferPass::
 
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdNodePool(COLOR),
-    _shader.getUniform("nodePool_color")));
+    _shader.getUniform("nodePool_color"), GL_READ_ONLY));
 
+  addStartupOperation(new BindImageTexture(
+    vctScene->getBrickPool()->getShdBrickPool(BRICKPOOL_COLOR),
+    _shader.getUniform("brickPool_color")));
+
+  // X Axis 
+  addStartupOperation(new BindUniform(&_shdAxisX, _shader.getUniform("axis")));
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_X),
-    _shader.getUniform("nodePool_X")));
-
-  addStartupOperation(new BindImageTexture(
-    vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_NEG_X),
-    _shader.getUniform("nodePool_X_neg")));
+    _shader.getUniform("nodePool_Neighbour"), GL_READ_ONLY));
 
   addStartupOperation(new DrawIndirectOp(GL_POINTS, 0));
+  //////////////////////////////////////////////////////////////////////////
+
+  // Y Axis
+  addStartupOperation(new BindUniform(&_shdAxisY, _shader.getUniform("axis")));
+  addStartupOperation(new BindImageTexture(
+    vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_Y),
+    _shader.getUniform("nodePool_Neighbour"), GL_READ_ONLY));
+
+  addStartupOperation(new DrawIndirectOp(GL_POINTS, 0));
+  //////////////////////////////////////////////////////////////////////////
+
+  // Z Axis
+  addStartupOperation(new BindUniform(&_shdAxisZ, _shader.getUniform("axis")));
+  addStartupOperation(new BindImageTexture(
+    vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_Z),
+    _shader.getUniform("nodePool_Neighbour"), GL_READ_ONLY));
+
+  addStartupOperation(new DrawIndirectOp(GL_POINTS, 0));
+  //////////////////////////////////////////////////////////////////////////
 
 }
 
