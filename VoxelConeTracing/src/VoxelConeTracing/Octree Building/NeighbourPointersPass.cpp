@@ -30,18 +30,11 @@
 #include "Kore\Operations\Operations.h"
 
 NeighbourPointersPass::
-  NeighbourPointersPass(VCTscene* vctScene, uint level,
+  NeighbourPointersPass(VCTscene* vctScene,
                         kore::EOperationExecutionType executionType) {
   using namespace kore;
 
   this->setExecutionType(executionType);
-  _level = level;
-
-  _shdLevel.component = NULL;
-  _shdLevel.name = "Level";
-  _shdLevel.size = 1;
-  _shdLevel.type = GL_UNSIGNED_INT;
-  _shdLevel.data = &_level;
     
   _shader.loadShader("./assets/shader/NeighbourPointer.shader",
                       GL_VERTEX_SHADER);
@@ -52,17 +45,15 @@ NeighbourPointersPass::
 
   addStartupOperation(
     new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
-    vctScene->getNodePool()->getDenseThreadBuf(_level)->getHandle()));
+    vctScene->getVoxelFragList()->getFragListIndCmdBuf()->getBufferHandle()));
 
-  addStartupOperation(new BindUniform(&_shdLevel, _shader.getUniform("level")));
+  addStartupOperation(new BindImageTexture(
+    vctScene->getVoxelFragList()->getShdVoxelFragList(VOXELATT_POSITION),
+    _shader.getUniform("voxelFragmentListPosition"), GL_READ_ONLY));
 
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdNodePool(NEXT),
     _shader.getUniform("nodePool_next"), GL_READ_ONLY));
-
-  addStartupOperation(new BindImageTexture(
-    vctScene->getNodePool()->getShdLevelAddressBuffer(),
-    _shader.getUniform("levelAddressBuffer"), GL_READ_ONLY));
 
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_X),
@@ -87,6 +78,12 @@ NeighbourPointersPass::
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_NEG_Z),
     _shader.getUniform("nodePool_Z_neg")));
+
+  addStartupOperation(new BindUniform(vctScene->getNodePool()->getShdNumLevels(),
+                      _shader.getUniform("numLevels")));
+
+  addStartupOperation(new BindUniform(vctScene->getShdVoxelGridResolution(),
+                      _shader.getUniform("voxelGridResolution")));
 
   addStartupOperation(new DrawIndirectOp(GL_POINTS, 0));
 

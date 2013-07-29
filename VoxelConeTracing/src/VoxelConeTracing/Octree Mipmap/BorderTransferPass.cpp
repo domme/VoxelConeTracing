@@ -67,11 +67,11 @@ BorderTransferPass::
     _shader.getUniform("nodePool_color")));
 
   addStartupOperation(new BindImageTexture(
-    vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_Z),
+    vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_X),
     _shader.getUniform("nodePool_X")));
 
   addStartupOperation(new BindImageTexture(
-    vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_NEG_Z),
+    vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_NEG_X),
     _shader.getUniform("nodePool_X_neg")));
 
   addStartupOperation(new DrawIndirectOp(GL_POINTS, 0));

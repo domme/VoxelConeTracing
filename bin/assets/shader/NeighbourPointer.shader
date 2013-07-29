@@ -25,8 +25,27 @@
 
 #version 430 core
 
+#define NODE_MASK_VALUE 0x3FFFFFFF
+#define NODE_NOT_FOUND  0xFFFFFFFF
+
+const uint NODE_MASK_TAG = (0x00000001 << 31);
+const uint NODE_MASK_TAG_STATIC = (0x00000003 << 30);
+
+const uint pow2[] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
+
+const uvec3 childOffsets[8] = {
+  uvec3(0, 0, 0),
+  uvec3(1, 0, 0),
+  uvec3(0, 1, 0),
+  uvec3(1, 1, 0),
+  uvec3(0, 0, 1),
+  uvec3(1, 0, 1),
+  uvec3(0, 1, 1), 
+  uvec3(1, 1, 1)};
+
+
 layout(r32ui) uniform readonly uimageBuffer nodePool_next;
-layout(r32ui) uniform readonly uimageBuffer levelAddressBuffer;
+layout(r32ui) uniform readonly uimageBuffer voxelFragmentListPosition;
 
 layout(r32ui) uniform uimageBuffer nodePool_X;
 layout(r32ui) uniform uimageBuffer nodePool_Y;
@@ -35,43 +54,117 @@ layout(r32ui) uniform uimageBuffer nodePool_X_neg;
 layout(r32ui) uniform uimageBuffer nodePool_Y_neg;
 layout(r32ui) uniform uimageBuffer nodePool_Z_neg;
 
-uniform uint level;
+uniform uint numLevels;
+uniform uint voxelGridResolution;
 
-#define NODE_MASK_VALUE 0x3FFFFFFF
-#define NODE_NOT_FOUND 0xFFFFFFFF
-
-uint getThreadNode() {
-  uint levelStart = imageLoad(levelAddressBuffer, int(level)).x;
-  uint nextLevelStart = imageLoad(levelAddressBuffer, int(level + 1)).x;
-  memoryBarrier();
-
-  uint index = levelStart + uint(gl_VertexID);
-
-  if (index >= nextLevelStart) {
-    return NODE_NOT_FOUND;
-  }
-
-  return index;
+uvec3 uintXYZ10ToVec3(uint val) {
+    return uvec3(uint((val & 0x000003FF)),
+                 uint((val & 0x000FFC00) >> 10U), 
+                 uint((val & 0x3FF00000) >> 20U));
 }
 
-///*
-//This shader is launched for every node up to a specific level, so that gl_VertexID 
-//exactly matches all node-addresses in a dense octree. */
-void main() {
-  uint nodeAddress = getThreadNode();
-  if(nodeAddress == NODE_NOT_FOUND) {
-    return;  // The requested threadID-node does not belong to the current level
-  }
-
-  uint nodeNextU = imageLoad(nodePool_next, int(nodeAddress)).x;
-  if ((NODE_MASK_VALUE & nodeNextU) == 0) { 
-    return;  // No child-pointer set - mipmapping is not possible anyway
-  }
-
-  uint childStartAddress = NODE_MASK_VALUE & nodeNextU;
+int traverseOctree(in vec3 posTex, out uint foundOnLevel) {
+  vec3 nodePosTex = vec3(0.0);
+  vec3 nodePosMaxTex = vec3(1.0);
+  int nodeAddress = 0;
+  float sideLength = 0.5;
   
-  // Do the neighbour-pointer assignment here
+  for (uint iLevel = 0; iLevel < numLevels; ++iLevel) {
+    uint nodeNext = imageLoad(nodePool_next, nodeAddress).x;
 
+    uint childStartAddress = nodeNext & NODE_MASK_VALUE;
+      if (childStartAddress == 0U) {
+        foundOnLevel = iLevel;
+        break;
+      }
+       
+      uvec3 offVec = uvec3(2.0 * posTex);
+      uint off = offVec.x + 2U * offVec.y + 4U * offVec.z;
+
+      // Restart while-loop with the child node (aka recursion)
+      nodeAddress = int(childStartAddress + off);
+      nodePosTex += vec3(childOffsets[off]) * vec3(sideLength);
+      nodePosMaxTex = nodePosTex + vec3(sideLength);
+
+      sideLength = sideLength / 2.0;
+      posTex = 2.0 * posTex - vec3(offVec);
+  } // level-for
+
+  return nodeAddress;
+}
+
+
+void main() {
+  // Find the node for this position
+  uint voxelPosU = imageLoad(voxelFragmentListPosition, gl_VertexID).x;
+  uvec3 voxelPos = uintXYZ10ToVec3(voxelPosU);
+  vec3 posTex = vec3(voxelPos) / vec3(voxelGridResolution);
+  float stepTex = 1.0 / float(voxelGridResolution);
+  //stepTex /= 2.0;
+
+  uint nodeLevel = 0;
+  int nodeAddress = traverseOctree(posTex, nodeLevel);
+  
+  int nX = 0;
+  int nY = 0;
+  int nZ = 0;
+  int nX_neg = 0;
+  int nY_neg = 0;
+  int nZ_neg = 0;
+
+  uint neighbourLevel = 0;
+
+  if (posTex.x + stepTex < 1) {
+    nX = traverseOctree(posTex + vec3(stepTex, 0, 0), neighbourLevel);
+    if (nodeLevel != neighbourLevel) {
+      nX = 0; // invalidate neighbour-pointer if they are not on the same level
+    }
+  }
+
+  if (posTex.y + stepTex < 1) {
+    nY = traverseOctree(posTex + vec3(0, stepTex, 0), neighbourLevel); 
+    if (nodeLevel != neighbourLevel) {
+      nY = 0; // invalidate neighbour-pointer if they are not on the same level
+    }
+  }
+
+  if (posTex.z + stepTex < 1) {
+    nZ = traverseOctree(posTex + vec3(0, 0, stepTex), neighbourLevel);
+    if (nodeLevel != neighbourLevel) {
+      nZ = 0; // invalidate neighbour-pointer if they are not on the same level
+    }
+  }
+
+  if (posTex.x - stepTex > 0) {
+    nX_neg = traverseOctree(posTex - vec3(stepTex, 0, 0), neighbourLevel);
+    if (nodeLevel != neighbourLevel) {
+      nX_neg = 0; // invalidate neighbour-pointer if they are not on the same level
+    }
+  }
+
+  if (posTex.y - stepTex > 0) {
+    nY_neg = traverseOctree(posTex - vec3(0, stepTex, 0), neighbourLevel); 
+    if (nodeLevel != neighbourLevel) {
+      nY_neg = 0; // invalidate neighbour-pointer if they are not on the same level
+    }
+  }
+
+  if (posTex.z - stepTex > 0) {
+    nZ_neg = traverseOctree(posTex - vec3(0, 0, stepTex), neighbourLevel);
+    if (nodeLevel != neighbourLevel) {
+      nZ_neg = 0; // invalidate neighbour-pointer if they are not on the same level
+    }
+  }
+
+  imageStore(nodePool_X, nodeAddress, uvec4(nX));
+  imageStore(nodePool_Y, nodeAddress, uvec4(nY));
+  imageStore(nodePool_Z, nodeAddress, uvec4(nZ));
+  imageStore(nodePool_X_neg, nodeAddress, uvec4(nX_neg));
+  imageStore(nodePool_Y_neg, nodeAddress, uvec4(nY_neg));
+  imageStore(nodePool_Z_neg, nodeAddress, uvec4(nZ_neg));
+  
+
+  /*
   // First: Assign the neighbour-pointers between the children
   imageStore(nodePool_X, int(childStartAddress + 0), uvec4(childStartAddress + 1));
   imageStore(nodePool_X, int(childStartAddress + 2), uvec4(childStartAddress + 3));
@@ -102,69 +195,9 @@ void main() {
   imageStore(nodePool_Z_neg, int(childStartAddress + 5), uvec4(childStartAddress + 1));
   imageStore(nodePool_Z_neg, int(childStartAddress + 6), uvec4(childStartAddress + 2));
   imageStore(nodePool_Z_neg, int(childStartAddress + 7), uvec4(childStartAddress + 3));
-
+  ///////////////////////////////////////////////////////////////////////////////// */
   
-  // Load child-tiles
-  uint ccAddress[] = {0,0,0,0,0,0,0,0};
-  for (int i = 0; i < 8; ++i) {
-    ccAddress[i] =
-     NODE_MASK_VALUE & imageLoad(nodePool_next, int(childStartAddress + i)).x;
-  }
-  memoryBarrier();
+  
 
-
-  // Child-child-neighbours X
-  uint child[] = {0,2,4,6};
-  for (int i = 0; i < 4; ++i) {
-    if (ccAddress[child[i]] != 0 && ccAddress[child[i] + 1] != 0) {
-      imageStore(nodePool_X, int(ccAddress[child[i]] + 1), uvec4(ccAddress[child[i] + 1] + 0));
-      imageStore(nodePool_X, int(ccAddress[child[i]] + 3), uvec4(ccAddress[child[i] + 1] + 2));
-      imageStore(nodePool_X, int(ccAddress[child[i]] + 5), uvec4(ccAddress[child[i] + 1] + 4));
-      imageStore(nodePool_X, int(ccAddress[child[i]] + 7), uvec4(ccAddress[child[i] + 1] + 6));
-
-      imageStore(nodePool_X_neg, int(ccAddress[child[i] + 1] + 0), uvec4(ccAddress[child[i]] + 1));
-      imageStore(nodePool_X_neg, int(ccAddress[child[i] + 1] + 2), uvec4(ccAddress[child[i]] + 3));
-      imageStore(nodePool_X_neg, int(ccAddress[child[i] + 1] + 4), uvec4(ccAddress[child[i]] + 5));
-      imageStore(nodePool_X_neg, int(ccAddress[child[i] + 1] + 6), uvec4(ccAddress[child[i]] + 7));
-    }
-  }
-
-  // Child-child-neighbours Y
-  child[0] = 0;
-  child[1] = 1;
-  child[2] = 4;
-  child[3] = 5;
-  for (int i = 0; i < 4; ++i) {
-    if (ccAddress[child[i]] != 0 && ccAddress[child[i] + 2] != 0) {
-      imageStore(nodePool_Y, int(ccAddress[child[i]] + 2), uvec4(ccAddress[child[i] + 2] + 0));
-      imageStore(nodePool_Y, int(ccAddress[child[i]] + 3), uvec4(ccAddress[child[i] + 2] + 1));
-      imageStore(nodePool_Y, int(ccAddress[child[i]] + 6), uvec4(ccAddress[child[i] + 2] + 4));
-      imageStore(nodePool_Y, int(ccAddress[child[i]] + 7), uvec4(ccAddress[child[i] + 2] + 5));
-
-      imageStore(nodePool_Y_neg, int(ccAddress[child[i] + 2] + 0), uvec4(ccAddress[child[i]] + 2));
-      imageStore(nodePool_Y_neg, int(ccAddress[child[i] + 2] + 1), uvec4(ccAddress[child[i]] + 3));
-      imageStore(nodePool_Y_neg, int(ccAddress[child[i] + 2] + 4), uvec4(ccAddress[child[i]] + 6));
-      imageStore(nodePool_Y_neg, int(ccAddress[child[i] + 2] + 5), uvec4(ccAddress[child[i]] + 7));
-    }
-  }
-
-
-  // Child-child-neighbours Z
-  child[0] = 0;
-  child[1] = 1;
-  child[2] = 2;
-  child[3] = 3;
-  for (int i = 0; i < 4; ++i) {
-    if (ccAddress[child[i]] != 0 && ccAddress[child[i] + 4] != 0) {
-      imageStore(nodePool_Z, int(ccAddress[child[i]] + 4), uvec4(ccAddress[child[i] + 4] + 0));
-      imageStore(nodePool_Z, int(ccAddress[child[i]] + 5), uvec4(ccAddress[child[i] + 4] + 1));
-      imageStore(nodePool_Z, int(ccAddress[child[i]] + 6), uvec4(ccAddress[child[i] + 4] + 2));
-      imageStore(nodePool_Z, int(ccAddress[child[i]] + 7), uvec4(ccAddress[child[i] + 4] + 3));
-
-      imageStore(nodePool_Z_neg, int(ccAddress[child[i] + 4] + 0), uvec4(ccAddress[child[i]] + 4));
-      imageStore(nodePool_Z_neg, int(ccAddress[child[i] + 4] + 1), uvec4(ccAddress[child[i]] + 5));
-      imageStore(nodePool_Z_neg, int(ccAddress[child[i] + 4] + 2), uvec4(ccAddress[child[i]] + 6));
-      imageStore(nodePool_Z_neg, int(ccAddress[child[i] + 4] + 3), uvec4(ccAddress[child[i]] + 7));
-    }
-  }
+ 
 }

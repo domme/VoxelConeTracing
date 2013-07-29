@@ -35,7 +35,7 @@
 #include "../Octree Building/NeighbourPointersPass.h"
 #include "../Octree Building/ObClearNeighboursPass.h"
 #include "../Octree Mipmap/BorderTransferPass.h"
-#include "../Octree Building/NeighbourPointersTraversePass.h"
+
 
 SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
                                std::vector<kore::SceneNode*>& vRenderNodes,
@@ -62,7 +62,7 @@ SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
   for (uint iLevel = 0; iLevel < _numLevels; ++iLevel) {
     this->addProgramPass(new ObFlagPass(&vctScene, kore::EXECUTE_ONCE));
     this->addProgramPass(new ObAllocatePass(&vctScene, iLevel, kore::EXECUTE_ONCE));
-    this->addProgramPass(new NeighbourPointersTraversePass(&vctScene, kore::EXECUTE_ONCE));
+    this->addProgramPass(new NeighbourPointersPass(&vctScene, kore::EXECUTE_ONCE));
   }
 
   this->addProgramPass(new WriteLeafNodesPass(&vctScene, kore::EXECUTE_ONCE));
