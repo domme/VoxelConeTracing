@@ -72,7 +72,6 @@ SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
   for (int iLevel = _numLevels - 2; iLevel >= 0;) {
     //kore::Log::getInstance()->write("%u\n", iLevel);
     this->addProgramPass(new OctreeMipmapPass(&vctScene, iLevel, kore::EXECUTE_ONCE));
-    //this->addProgramPass(new NeighbourPointersPass(&vctScene, iLevel, kore::EXECUTE_ONCE));
     --iLevel;
   }
 

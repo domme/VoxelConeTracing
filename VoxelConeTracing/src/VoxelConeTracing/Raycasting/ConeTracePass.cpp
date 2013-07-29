@@ -47,8 +47,8 @@ ConeTracePass::ConeTracePass(VCTscene* vctScene){
     this->setShaderProgram(&_coneTraceShader);
 
     TexSamplerProperties samplerProps;
-    samplerProps.minfilter = GL_NEAREST;
-    samplerProps.magfilter = GL_NEAREST;
+    samplerProps.minfilter = GL_LINEAR;
+    samplerProps.magfilter = GL_LINEAR;
     samplerProps.wrapping = glm::uvec3(GL_REPEAT, GL_REPEAT, GL_REPEAT);
     _coneTraceShader.setSamplerProperties(0, samplerProps);
 

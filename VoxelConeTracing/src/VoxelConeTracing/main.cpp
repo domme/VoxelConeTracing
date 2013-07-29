@@ -157,7 +157,7 @@ void setup() {
   params.voxel_grid_sidelengths = glm::vec3(50, 50, 50);
   params.fraglist_size_multiplier = 5;
   params.fraglist_size_divisor = 1;
-  params.brickPoolResolution = 64 * 2;
+  params.brickPoolResolution = 64 * 3;
   
   // Make sure all lightnodes are initialized with camera components
   std::vector<SceneNode*> lightNodes;

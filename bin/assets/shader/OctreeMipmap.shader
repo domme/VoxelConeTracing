@@ -145,12 +145,76 @@ uvec3 alloc2x2x2TextureBrick(in int nodeAddress, in uint nodeNextU) {
   return texAddress;
 }
 
+// Allocate brick-texture, store pointer in color and return the coordinate of the lower-left voxel.
+uvec3 alloc3x3x3TextureBrick(in int nodeAddress, in uint nodeNextU) {
+  uint nextFreeTexBrick = atomicCounterIncrement(nextFreeBrick);
+  uvec3 texAddress = uvec3(0);
+  uint brickPoolResBricks = brickPoolResolution / 3;
+  texAddress.x = nextFreeTexBrick % brickPoolResBricks;
+  texAddress.y = (nextFreeTexBrick / brickPoolResBricks) % brickPoolResBricks;
+  texAddress.z = nextFreeTexBrick / (brickPoolResBricks * brickPoolResBricks);
+  texAddress *= 3;
+
+  // Store brick-pointer
+  imageStore(nodePool_color, nodeAddress,
+      uvec4(vec3ToUintXYZ10(texAddress), 0, 0, 0));
+
+  // Set the flag to indicate the brick-existance
+  imageStore(nodePool_next, nodeAddress,
+             uvec4(NODE_MASK_BRICK | nodeNextU, 0, 0, 0));
+
+  return texAddress;
+}
+
 void writeBrickValues(uvec3 brickAddress){
   for (uint iChild = 0; iChild < 8; ++iChild) {
     uvec3 texAddress = brickAddress + childOffsets[iChild];
     imageStore(brickPool_color, ivec3(texAddress), convRGBA8ToVec4(childColorU[iChild])/255); //vec4(vec3(childOffsets[iChild]), 0.5));
   }
 }
+
+
+void writeBrickValues3(uvec3 brickAddress){
+  float colorValue = 1.0; // Store white in the center
+
+  // Corners get 1/8
+  imageStore(brickPool_color, ivec3(brickAddress) + ivec3(0,0,0), vec4(colorValue / 8.0));
+  imageStore(brickPool_color, ivec3(brickAddress) + ivec3(2,0,0), vec4(colorValue / 8.0));
+  imageStore(brickPool_color, ivec3(brickAddress) + ivec3(0,2,0), vec4(colorValue / 8.0));
+  imageStore(brickPool_color, ivec3(brickAddress) + ivec3(2,2,0), vec4(colorValue / 8.0));
+  imageStore(brickPool_color, ivec3(brickAddress) + ivec3(0,0,2), vec4(colorValue / 8.0));
+  imageStore(brickPool_color, ivec3(brickAddress) + ivec3(2,0,2), vec4(colorValue / 8.0));
+  imageStore(brickPool_color, ivec3(brickAddress) + ivec3(0,2,2), vec4(colorValue / 8.0));
+  imageStore(brickPool_color, ivec3(brickAddress) + ivec3(2,2,2), vec4(colorValue / 8.0));
+
+  // Edges get 1/4
+  imageStore(brickPool_color, ivec3(brickAddress) + ivec3(1,0,0), vec4(colorValue / 4.0));
+  imageStore(brickPool_color, ivec3(brickAddress) + ivec3(0,1,0), vec4(colorValue / 4.0));
+  imageStore(brickPool_color, ivec3(brickAddress) + ivec3(0,0,1), vec4(colorValue / 4.0));
+  imageStore(brickPool_color, ivec3(brickAddress) + ivec3(2,0,1), vec4(colorValue / 4.0));
+  imageStore(brickPool_color, ivec3(brickAddress) + ivec3(2,1,0), vec4(colorValue / 4.0));
+  imageStore(brickPool_color, ivec3(brickAddress) + ivec3(1,2,0), vec4(colorValue / 4.0));
+  imageStore(brickPool_color, ivec3(brickAddress) + ivec3(0,2,1), vec4(colorValue / 4.0));
+  imageStore(brickPool_color, ivec3(brickAddress) + ivec3(0,1,2), vec4(colorValue / 4.0));
+  imageStore(brickPool_color, ivec3(brickAddress) + ivec3(1,2,2), vec4(colorValue / 4.0));
+  imageStore(brickPool_color, ivec3(brickAddress) + ivec3(2,2,1), vec4(colorValue / 4.0));
+  imageStore(brickPool_color, ivec3(brickAddress) + ivec3(2,1,2), vec4(colorValue / 4.0));
+  imageStore(brickPool_color, ivec3(brickAddress) + ivec3(1,0,2), vec4(colorValue / 4.0));
+
+  // Faces get 1/2
+  imageStore(brickPool_color, ivec3(brickAddress) + ivec3(1,1,2), vec4(colorValue / 2.0));
+  imageStore(brickPool_color, ivec3(brickAddress) + ivec3(1,0,1), vec4(colorValue / 2.0));
+  imageStore(brickPool_color, ivec3(brickAddress) + ivec3(1,1,0), vec4(colorValue / 2.0));
+  imageStore(brickPool_color, ivec3(brickAddress) + ivec3(2,1,1), vec4(colorValue / 2.0));
+  imageStore(brickPool_color, ivec3(brickAddress) + ivec3(0,1,1), vec4(colorValue / 2.0));
+  imageStore(brickPool_color, ivec3(brickAddress) + ivec3(1,2,1), vec4(colorValue / 2.0));
+
+  // Center gets 1
+  imageStore(brickPool_color, ivec3(brickAddress) + ivec3(1,1,1), vec4(colorValue));
+
+}
+
+
 
 
 bool computeBrickNeeded()  {
@@ -237,9 +301,9 @@ void main() {
 
   uint childAddress = NODE_MASK_VALUE & nodeNextU;
   loadChildTile(int(childAddress));  // Loads the child-values into the global arrays
-  uvec3 brickAddress = alloc2x2x2TextureBrick(int(nodeAddress), nodeNextU);
+  uvec3 brickAddress = alloc3x3x3TextureBrick(int(nodeAddress), nodeNextU);
     memoryBarrier();
-  writeBrickValues(brickAddress);
+  writeBrickValues3(brickAddress);
   
   //compAndStoreAvgConstColor(int(nodeAddress));
   //compAndStoreAvgConstRadiance(int(nodeAddress));
