@@ -66,6 +66,7 @@ SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
                                             kore::EXECUTE_ONCE));
 
     this->addProgramPass(new NeighbourPointersPass(&vctScene,
+                                                  iLevel,
                                                   kore::EXECUTE_ONCE));
   }
 
@@ -81,7 +82,7 @@ SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
     this->addProgramPass(new OctreeMipmapPass(&vctScene,
                                               iLevel, kore::EXECUTE_ONCE));
     this->addProgramPass(new BorderTransferPass(&vctScene,
-                                                iLevel, EXECUTE_ONCE));
+                                                iLevel, EXECUTE_ONCE)); 
     --iLevel;
   }
 

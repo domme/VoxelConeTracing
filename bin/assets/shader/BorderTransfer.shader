@@ -30,6 +30,7 @@ layout(r32ui) uniform readonly uimageBuffer levelAddressBuffer;
 layout(rgba8) uniform image3D brickPool_color;
 
 layout(r32ui) uniform readonly uimageBuffer nodePool_Neighbour;
+layout(r32ui) uniform readonly uimageBuffer nodePool_Neighbour_neg;
 
 uniform uint level;
 uniform uint numLevels;
@@ -85,11 +86,14 @@ void main() {
   if (neighbourAddress == 0) {
     return; 
   }
+
+  uint neighbourNegAddress = imageLoad(nodePool_Neighbour_neg, int(neighbourAddress)).x;
   
   ivec3 brickAddr = ivec3(uintXYZ10ToVec3(imageLoad(nodePool_color, int(nodeAddress)).x));
   ivec3 nBrickAddr = ivec3(uintXYZ10ToVec3(imageLoad(nodePool_color, int(neighbourAddress)).x));
 
 
+  
   if (axis == AXIS_X) {
     for (int y = 0; y <= 2; ++y) {
       for (int z = 0; z <= 2; ++z) {
@@ -100,8 +104,11 @@ void main() {
         memoryBarrier();
 
         vec4 finalVal = borderVal + neighbourBorderVal; // TODO: Maybe we need a /2 here and have to use atomics
-        imageStore(brickPool_color, brickAddr + offset, finalVal);
-        imageStore(brickPool_color, nBrickAddr + nOffset, finalVal);
+        //imageStore(brickPool_color, brickAddr + offset, finalVal);
+        //imageStore(brickPool_color, brickAddr + offset, finalVal);
+        if (neighbourNegAddress != nodeAddress) {
+          imageStore(brickPool_color, nBrickAddr + nOffset, vec4(1,0,0,1));
+        }
       }
     }
   }
@@ -116,8 +123,12 @@ void main() {
         memoryBarrier();
 
         vec4 finalVal = borderVal + neighbourBorderVal; // TODO: Maybe we need a /2 here and have to use atomics
-        imageStore(brickPool_color, brickAddr + offset, finalVal);
-        imageStore(brickPool_color, nBrickAddr + nOffset, finalVal);
+       // imageStore(brickPool_color, brickAddr + offset, finalVal);
+        //imageStore(brickPool_color, nBrickAddr + nOffset, finalVal);
+
+        if (neighbourNegAddress != nodeAddress) {
+          imageStore(brickPool_color, nBrickAddr + nOffset, vec4(0,1,0,1));
+        }
       }
     }
   }
@@ -132,8 +143,12 @@ void main() {
         memoryBarrier();
 
         vec4 finalVal = borderVal + neighbourBorderVal; // TODO: Maybe we need a /2 here and have to use atomics
-        imageStore(brickPool_color, brickAddr + offset, finalVal);
-        imageStore(brickPool_color, nBrickAddr + nOffset, finalVal);
+        //imageStore(brickPool_color, brickAddr + offset, finalVal);
+        //imageStore(brickPool_color, nBrickAddr + nOffset, finalVal);
+
+       // if (neighbourNegAddress != nodeAddress) {
+          imageStore(brickPool_color, nBrickAddr + nOffset, vec4(0,0,1,1));
+       // }
       }
     }
   }
@@ -179,4 +194,5 @@ void main() {
       }
     }
   }
+  
 }

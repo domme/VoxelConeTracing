@@ -54,6 +54,7 @@ layout(r32ui) uniform uimageBuffer nodePool_X_neg;
 layout(r32ui) uniform uimageBuffer nodePool_Y_neg;
 layout(r32ui) uniform uimageBuffer nodePool_Z_neg;
 
+uniform uint level;
 uniform uint numLevels;
 uniform uint voxelGridResolution;
 
@@ -99,9 +100,9 @@ void main() {
   uint voxelPosU = imageLoad(voxelFragmentListPosition, gl_VertexID).x;
   uvec3 voxelPos = uintXYZ10ToVec3(voxelPosU);
   vec3 posTex = vec3(voxelPos) / vec3(voxelGridResolution);
-  float stepTex = 1.0 / float(voxelGridResolution);
-  //stepTex /= 2.0;
-
+  float stepTex = 1.0 / float(pow2[level]);
+  //stepTex *= 1.00001;
+  
   uint nodeLevel = 0;
   int nodeAddress = traverseOctree(posTex, nodeLevel);
   

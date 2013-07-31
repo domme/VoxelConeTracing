@@ -34,11 +34,15 @@ class NeighbourPointersPass : public kore::ShaderProgramPass
 {
   public:
     NeighbourPointersPass(VCTscene* vctScene,
-              kore::EOperationExecutionType executionType);
+                          uint level,
+                          kore::EOperationExecutionType executionType);
     virtual ~NeighbourPointersPass(void);
 
   private:
     kore::ShaderProgram _shader;
+
+    uint _level;
+    kore::ShaderData _shdLevel;
 };
 
 #endif //VCT_SRC_VCT_NEIGHBOURPOINTERSTRAVERSEPASS_H_

@@ -31,10 +31,17 @@
 
 NeighbourPointersPass::
   NeighbourPointersPass(VCTscene* vctScene,
+                        uint level,
                         kore::EOperationExecutionType executionType) {
   using namespace kore;
 
   this->setExecutionType(executionType);
+
+  _level = level;
+  _shdLevel.component = NULL;
+  _shdLevel.data = &_level;
+  _shdLevel.name = "OctreeLevel";
+  _shdLevel.type = GL_UNSIGNED_INT;
     
   _shader.loadShader("./assets/shader/NeighbourPointer.shader",
                       GL_VERTEX_SHADER);
@@ -50,6 +57,8 @@ NeighbourPointersPass::
   addStartupOperation(new BindImageTexture(
     vctScene->getVoxelFragList()->getShdVoxelFragList(VOXELATT_POSITION),
     _shader.getUniform("voxelFragmentListPosition"), GL_READ_ONLY));
+
+  addStartupOperation(new BindUniform(&_shdLevel, _shader.getUniform("level")));
 
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdNodePool(NEXT),
