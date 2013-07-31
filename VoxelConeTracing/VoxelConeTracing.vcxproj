@@ -188,6 +188,9 @@
     <ClCompile Include="src\VoxelConeTracing\Octree Building\ObInitPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\BorderTransferPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\LightInjectionPass.cpp" />
+    <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\MipmapCenterPass.cpp" />
+    <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\MipmapCornersPass.cpp" />
+    <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\MipmapFacesPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\OctreeMipmapPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\WriteLeafNodesPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Raycasting\ConeTracePass.cpp" />
@@ -222,6 +225,9 @@
     <ClInclude Include="src\VoxelConeTracing\Octree Building\ObInitPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\BorderTransferPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\LightInjectionPass.h" />
+    <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\MipmapCenterPass.h" />
+    <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\MipmapCornersPass.h" />
+    <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\MipmapFacesPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\OctreeMipmapPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\WriteLeafNodesPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Raycasting\ConeTracePass.h" />
@@ -252,6 +258,9 @@
     <None Include="..\bin\assets\shader\finalRenderVert.shader" />
     <None Include="..\bin\assets\shader\FullscreenQuadVert.shader" />
     <None Include="..\bin\assets\shader\LightInjectionFrag.shader" />
+    <None Include="..\bin\assets\shader\MipmapCenter.shader" />
+    <None Include="..\bin\assets\shader\MipmapCorners.shader" />
+    <None Include="..\bin\assets\shader\MipmapFaces.shader" />
     <None Include="..\bin\assets\shader\ModifyIndirectBufferVert.shader" />
     <None Include="..\bin\assets\shader\NeighbourPointer.shader" />
     <None Include="..\bin\assets\shader\ObAllocateVert.shader" />

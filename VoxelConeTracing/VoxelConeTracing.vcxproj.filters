@@ -100,6 +100,15 @@
     <ClCompile Include="src\VoxelConeTracing\Octree Building\ClearBrickTexPass.cpp">
       <Filter>src\Octree Building</Filter>
     </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\MipmapCenterPass.cpp">
+      <Filter>src\Octree Mipmap</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\MipmapCornersPass.cpp">
+      <Filter>src\Octree Mipmap</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\MipmapFacesPass.cpp">
+      <Filter>src\Octree Mipmap</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -248,6 +257,15 @@
     <ClInclude Include="src\VoxelConeTracing\Octree Building\ClearBrickTexPass.h">
       <Filter>src\Octree Building</Filter>
     </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\MipmapCenterPass.h">
+      <Filter>src\Octree Mipmap</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\MipmapCornersPass.h">
+      <Filter>src\Octree Mipmap</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\MipmapFacesPass.h">
+      <Filter>src\Octree Mipmap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\bin\assets\shader\debug.shader">
@@ -330,6 +348,15 @@
     </None>
     <None Include="..\bin\assets\shader\ClearBrickTex.shader">
       <Filter>shader\Octree Building</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\MipmapCenter.shader">
+      <Filter>shader\Octree Mipmapping</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\MipmapCorners.shader">
+      <Filter>shader\Octree Mipmapping</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\MipmapFaces.shader">
+      <Filter>shader\Octree Mipmapping</Filter>
     </None>
   </ItemGroup>
 </Project>
