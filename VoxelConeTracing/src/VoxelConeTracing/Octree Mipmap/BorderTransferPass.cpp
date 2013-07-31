@@ -40,12 +40,21 @@ BorderTransferPass::
   _axisX = 0;
   _axisY = 1;
   _axisZ = 2;
+  _axisX_neg = 3;
+  _axisY_neg = 4;
+  _axisZ_neg = 5;
   _shdAxisX.type = GL_UNSIGNED_INT;
   _shdAxisX.data = &_axisX;
   _shdAxisY.type = GL_UNSIGNED_INT;
   _shdAxisY.data = &_axisY;
   _shdAxisZ.type = GL_UNSIGNED_INT;
   _shdAxisZ.data = &_axisZ;
+  _shdAxisX_neg.type = GL_UNSIGNED_INT;
+  _shdAxisX_neg.data = &_axisX_neg;
+  _shdAxisY_neg.type = GL_UNSIGNED_INT;
+  _shdAxisY_neg.data = &_axisY_neg;
+  _shdAxisZ_neg.type = GL_UNSIGNED_INT;
+  _shdAxisZ_neg.data = &_axisZ_neg;
 
   _shdLevel.component = NULL;
   _shdLevel.name = "Level";
@@ -65,9 +74,7 @@ BorderTransferPass::
     vctScene->getNodePool()->getDenseThreadBuf(_level)->getHandle()));
 
   addStartupOperation(new BindUniform(&_shdLevel, _shader.getUniform("level")));
-  addStartupOperation(new BindUniform(vctScene->getNodePool()->getShdNumLevels(),
-                                      _shader.getUniform("numLevels")));
-
+  
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdLevelAddressBuffer(),
     _shader.getUniform("levelAddressBuffer"), GL_READ_ONLY));
@@ -87,6 +94,7 @@ BorderTransferPass::
     _shader.getUniform("nodePool_Neighbour"), GL_READ_ONLY));
 
   addStartupOperation(new DrawIndirectOp(GL_POINTS, 0));
+  addStartupOperation(new MemoryBarrierOp(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT));
   //////////////////////////////////////////////////////////////////////////
 
   // Y Axis
@@ -96,6 +104,7 @@ BorderTransferPass::
     _shader.getUniform("nodePool_Neighbour"), GL_READ_ONLY));
 
   addStartupOperation(new DrawIndirectOp(GL_POINTS, 0));
+  addStartupOperation(new MemoryBarrierOp(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT));
   //////////////////////////////////////////////////////////////////////////
 
   // Z Axis
@@ -105,7 +114,43 @@ BorderTransferPass::
     _shader.getUniform("nodePool_Neighbour"), GL_READ_ONLY));
 
   addStartupOperation(new DrawIndirectOp(GL_POINTS, 0));
+  addStartupOperation(new MemoryBarrierOp(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT));
   //////////////////////////////////////////////////////////////////////////
+
+
+  
+  
+  /*
+  // X Axis 
+  addStartupOperation(new BindUniform(&_shdAxisX_neg, _shader.getUniform("axis")));
+  addStartupOperation(new BindImageTexture(
+    vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_NEG_X),
+    _shader.getUniform("nodePool_Neighbour"), GL_READ_ONLY));
+
+  addStartupOperation(new DrawIndirectOp(GL_POINTS, 0));
+  addStartupOperation(new MemoryBarrierOp(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT));
+  //////////////////////////////////////////////////////////////////////////
+
+  // Y Axis
+  addStartupOperation(new BindUniform(&_shdAxisY_neg, _shader.getUniform("axis")));
+  addStartupOperation(new BindImageTexture(
+    vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_NEG_Y),
+    _shader.getUniform("nodePool_Neighbour"), GL_READ_ONLY));
+
+  addStartupOperation(new DrawIndirectOp(GL_POINTS, 0));
+  addStartupOperation(new MemoryBarrierOp(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT));
+  //////////////////////////////////////////////////////////////////////////
+
+  // Z Axis
+  addStartupOperation(new BindUniform(&_shdAxisZ_neg, _shader.getUniform("axis")));
+  addStartupOperation(new BindImageTexture(
+    vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_NEG_Z),
+    _shader.getUniform("nodePool_Neighbour"), GL_READ_ONLY));
+
+  addStartupOperation(new DrawIndirectOp(GL_POINTS, 0));
+  addStartupOperation(new MemoryBarrierOp(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT));
+  //////////////////////////////////////////////////////////////////////////
+  */
 
 }
 

@@ -40,6 +40,9 @@ uniform uint axis;
 #define AXIS_X 0
 #define AXIS_Y 1
 #define AXIS_Z 2
+#define AXIS_X_NEG 3
+#define AXIS_Y_NEG 4
+#define AXIS_Z_NEG 5
 
 uint vec3ToUintXYZ10(uvec3 val) {
     return (uint(val.z) & 0x000003FF)   << 20U
@@ -119,7 +122,7 @@ void main() {
     }
   }
 
-  else {
+  else if (axis == AXIS_Z) {
     for (int x = 0; x <= 2; ++x) {
       for (int y = 0; y <= 2; ++y) {
         ivec3 offset = ivec3(x,y,2);
@@ -131,6 +134,48 @@ void main() {
         vec4 finalVal = borderVal + neighbourBorderVal; // TODO: Maybe we need a /2 here and have to use atomics
         imageStore(brickPool_color, brickAddr + offset, finalVal);
         imageStore(brickPool_color, nBrickAddr + nOffset, finalVal);
+      }
+    }
+  }
+
+
+  else if (axis == AXIS_X_NEG) {
+    for (int y = 0; y <= 2; ++y) {
+      for (int z = 0; z <= 2; ++z) {
+        ivec3 offset = ivec3(0,y,z);
+        ivec3 nOffset = ivec3(2,y,z);
+        vec4 borderVal = imageLoad(brickPool_color, brickAddr + offset);
+        
+        memoryBarrier();
+        imageStore(brickPool_color, nBrickAddr + nOffset, borderVal);
+      }
+    }
+  }
+
+
+  else if (axis == AXIS_Y_NEG) {
+    for (int x = 0; x <= 2; ++x) {
+      for (int z = 0; z <= 2; ++z) {
+        ivec3 offset = ivec3(x,0,z);
+        ivec3 nOffset = ivec3(x,2,z);
+        vec4 borderVal = imageLoad(brickPool_color, brickAddr + offset);
+       
+        memoryBarrier();
+        imageStore(brickPool_color, nBrickAddr + nOffset, borderVal);
+      }
+    }
+  }
+
+
+  else if (axis == AXIS_Z_NEG) {
+    for (int x = 0; x <= 2; ++x) {
+      for (int y = 0; y <= 2; ++y) {
+        ivec3 offset = ivec3(x,y,0);
+        ivec3 nOffset = ivec3(x,y,2);
+        vec4 borderVal = imageLoad(brickPool_color, brickAddr + offset);
+        memoryBarrier();
+
+        imageStore(brickPool_color, nBrickAddr + nOffset, borderVal);
       }
     }
   }

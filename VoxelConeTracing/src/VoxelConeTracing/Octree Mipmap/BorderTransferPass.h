@@ -46,9 +46,15 @@ class BorderTransferPass : public kore::ShaderProgramPass
     uint _axisX;
     uint _axisY;
     uint _axisZ;
+    uint _axisX_neg;
+    uint _axisY_neg;
+    uint _axisZ_neg;
     kore::ShaderData _shdAxisX;
     kore::ShaderData _shdAxisY;
     kore::ShaderData _shdAxisZ;
+    kore::ShaderData _shdAxisX_neg;
+    kore::ShaderData _shdAxisY_neg;
+    kore::ShaderData _shdAxisZ_neg;
 };
 
 #endif //VCT_SRC_VCT_BORDERTRANSFERPASS_H_
