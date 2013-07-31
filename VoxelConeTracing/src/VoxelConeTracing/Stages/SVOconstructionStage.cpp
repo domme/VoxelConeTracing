@@ -36,6 +36,7 @@
 #include "../Octree Building/ObClearNeighboursPass.h"
 #include "../Octree Mipmap/BorderTransferPass.h"
 #include "../Octree Building/ClearBrickTexPass.h"
+#include "../Octree Mipmap/MipmapCenterPass.h"
 
 
 SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
@@ -83,8 +84,9 @@ SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
   // Mipmap the values from bottom to top
   for (int iLevel = _numLevels - 2; iLevel >= 0;) {
     //kore::Log::getInstance()->write("%u\n", iLevel);
-    this->addProgramPass(new OctreeMipmapPass(&vctScene,
-                                              iLevel, kore::EXECUTE_ONCE));
+    this->addProgramPass(new MipmapCenterPass(&vctScene, iLevel, kore::EXECUTE_ONCE));
+    /*this->addProgramPass(new OctreeMipmapPass(&vctScene,
+                                              iLevel, kore::EXECUTE_ONCE)); */
     this->addProgramPass(new BorderTransferPass(&vctScene,
                                                 iLevel, EXECUTE_ONCE)); 
     --iLevel;
