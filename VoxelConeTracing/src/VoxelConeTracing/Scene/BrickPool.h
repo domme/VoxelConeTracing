@@ -66,6 +66,8 @@ public:
   inline kore::ShaderData* getShdBrickPoolTexture(EBrickPoolAttributes eAttribute)
   {return &_shdBrickPoolTexture[eAttribute];}
 
+  inline uint getBrickPoolResolution() {return _brickPoolResolution;}
+
   inline kore::ShaderData* getShdBrickPoolResolution() {
     return &_shdBrickPoolResolution;
   }

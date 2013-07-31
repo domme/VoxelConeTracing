@@ -154,36 +154,35 @@ int traverseOctree(in vec3 posTex, in float d, in float pixelSizeTS,
 //*/
 
                                                 // TODO: Add ray-direction here...
-vec4 raycastBrick(in uint nodeColorU, in vec3 enter, in vec3 dir,
-                  in float stepLength, in float alphaCorrection) {
+vec4 raycastBrick(in uint nodeColorU, in vec3 enter, in vec3 leave, in vec3 dir, 
+                  in float alphaCorrection) {
   
     ivec3 brickAddress = ivec3(uintXYZ10ToVec3(nodeColorU));
     ivec3 brickRes = textureSize(brickPool_color, 0); // TODO: make uniform
-    vec3 brickSizeUVW = vec3(3) / vec3(brickRes);
 
-    vec3 brickAddressUVW = vec3(brickAddress) / vec3(brickRes); // Correct
-    
-
-    
     float stepSize = 1.0 / vec3(brickRes);
-    vec3 enterUVW = brickAddressUVW + enter * brickSizeUVW;
+    vec3 brickAddressUVW = vec3(brickAddress) / vec3(brickRes)  + stepSize / 2.0; // Correct
     
+    vec3 enterUVW = brickAddressUVW + enter * (2 * stepSize);
+    vec3 leaveUVW = brickAddressUVW + leave * (2 * stepSize);
+    float stepLength = length(leaveUVW - enterUVW);
+
     vec4 color = vec4(0);
 
-    /*color = texture(brickPool_color, brickAddressUVW + vec3(stepSize));
-    color.a = 1.0 - pow((1.0 - color.a), alphaCorrection);
-    color.xyz *= color.a;*/
+   // color = texture(brickPool_color, brickAddressUVW + vec3(stepSize));
+   // color.a = 1.0 - pow((1.0 - color.a), alphaCorrection);
+   // color.xyz *= color.a;
     
-    for (float f = 0.00001; f < stepLength - 0.000001; f += stepSize) {
+    for (float f = 0; f < stepLength; f += stepSize) {
       vec4 newCol = texture(brickPool_color, enterUVW + dir * f);
-      newCol.a = 1.0 - pow((1.0 - newCol.a), alphaCorrection); 
+      newCol.a = 1.0;//1.0 - pow((1.0 - newCol.a), alphaCorrection); 
       newCol.xyz *= newCol.a;
       color = (1.0 - color.a) * newCol + color;
     
       if (color.a > 0.99) {
          break;
       }
-    } //*/
+    }
 
   return color;
 }
@@ -229,10 +228,10 @@ void main(void) {
 
     vec4 newCol = vec4(0);
     if (hasBrick(imageLoad(nodePool_next, address).x)) {
-      float normalizedNodeSize = foundNodeSideLength;
-      vec3 enterPos = (posTex - nodePosMin) / (normalizedNodeSize);
-      float rayCastAlphaCorrection = normalizedNodeSize / (1.0 / float(voxelGridResolution));
-      newCol = raycastBrick(nodeColorU, enterPos, rayDirTex, tLeave / normalizedNodeSize, rayCastAlphaCorrection);
+      vec3 enterPos = (posTex - nodePosMin) / foundNodeSideLength;
+      vec3 leavePos = ((posTex + rayDirTex * tLeave) - nodePosMin) / foundNodeSideLength;
+      float rayCastAlphaCorrection = foundNodeSideLength / (1.0 / float(voxelGridResolution));
+      newCol = raycastBrick(nodeColorU, enterPos, leavePos, rayDirTex, rayCastAlphaCorrection);
     } 
     else {
       newCol =  vec4(convRGBA8ToVec4(nodeColorU)) / 255.0;

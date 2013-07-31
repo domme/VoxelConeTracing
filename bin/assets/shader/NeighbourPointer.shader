@@ -101,7 +101,7 @@ void main() {
   uvec3 voxelPos = uintXYZ10ToVec3(voxelPosU);
   vec3 posTex = vec3(voxelPos) / vec3(voxelGridResolution);
   float stepTex = 1.0 / float(pow2[level]);
-  //stepTex *= 1.00001;
+  //stepTex *= 0.99;
   
   uint nodeLevel = 0;
   int nodeAddress = traverseOctree(posTex, nodeLevel);

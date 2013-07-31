@@ -35,6 +35,7 @@
 #include "../Octree Building/NeighbourPointersPass.h"
 #include "../Octree Building/ObClearNeighboursPass.h"
 #include "../Octree Mipmap/BorderTransferPass.h"
+#include "../Octree Building/ClearBrickTexPass.h"
 
 
 SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
@@ -51,6 +52,7 @@ SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
   // Prepare render algorithm
   this->addProgramPass(new ObClearPass(&vctScene, kore::EXECUTE_ONCE));
   this->addProgramPass(new ObClearNeighboursPass(&vctScene, kore::EXECUTE_ONCE));
+  this->addProgramPass(new ClearBrickTexPass(&vctScene, kore::EXECUTE_ONCE));
   this->addProgramPass(new VoxelizePass(vctParams.voxel_grid_sidelengths,
                                         &vctScene, kore::EXECUTE_ONCE));
   this->addProgramPass(new ModifyIndirectBufferPass(
@@ -61,13 +63,15 @@ SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
   // Build SVO from top to bottom
   uint _numLevels = vctScene.getNodePool()->getNumLevels(); 
   for (uint iLevel = 0; iLevel < _numLevels; ++iLevel) {
+    this->addProgramPass(new NeighbourPointersPass(&vctScene,
+                                                  iLevel,
+                                                  kore::EXECUTE_ONCE));
+
     this->addProgramPass(new ObFlagPass(&vctScene, kore::EXECUTE_ONCE));
     this->addProgramPass(new ObAllocatePass(&vctScene, iLevel,
                                             kore::EXECUTE_ONCE));
 
-    this->addProgramPass(new NeighbourPointersPass(&vctScene,
-                                                  iLevel,
-                                                  kore::EXECUTE_ONCE));
+    
   }
 
   this->addProgramPass(new WriteLeafNodesPass(&vctScene, kore::EXECUTE_ONCE));
