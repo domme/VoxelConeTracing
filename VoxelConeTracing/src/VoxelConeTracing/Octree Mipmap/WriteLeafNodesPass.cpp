@@ -63,33 +63,26 @@ WriteLeafNodesPass::
 
   addStartupOperation(new BindImageTexture(
     vctScene->getVoxelFragList()->getShdVoxelFragList(VOXELATT_POSITION),
-    shp->getUniform("voxelFragList_pos")));
+    shp->getUniform("voxelFragList_pos"), GL_READ_ONLY));
 
   addStartupOperation(new BindImageTexture(
     vctScene->getVoxelFragList()->getShdVoxelFragList(VOXELATT_COLOR),
-    shp->getUniform("voxelFragList_color")));
+    shp->getUniform("voxelFragList_color"), GL_READ_ONLY));
 
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdNodePool(NEXT),
-    shp->getUniform("nodePool_next")));
+    shp->getUniform("nodePool_next"), GL_READ_ONLY));
 
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdNodePool(COLOR),
-    shp->getUniform("nodePool_color")));
+    shp->getUniform("nodePool_color"), GL_READ_ONLY));
 
   addStartupOperation(new BindImageTexture(
     vctScene->getBrickPool()->getShdBrickPool(BRICKPOOL_COLOR),
     shp->getUniform("brickPool_color")));
 
-  addStartupOperation(new BindUniform(vctScene->getBrickPool()->getShdAcNextFree(),
-    shp->getUniform("nextFreeBrick")));
-
-  addStartupOperation(new BindUniform(vctScene->getBrickPool()->getShdBrickPoolResolution(),
-    shp->getUniform("brickPoolResolution")));
-
-  addStartupOperation(new BindUniform(
-    vctScene->getShdVoxelGridResolution(),
-    shp->getUniform("voxelGridResolution")));
+  addStartupOperation(new BindUniform(vctScene->getShdVoxelGridResolution(),
+                                      shp->getUniform("voxelGridResolution")));
 
   addStartupOperation(
     new kore::DrawIndirectOp(GL_POINTS, 0));

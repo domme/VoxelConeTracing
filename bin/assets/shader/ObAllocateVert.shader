@@ -57,13 +57,15 @@ uint allocChildTile(in int nodeAddress) {
   
    // Create levelAddress indirection buffer by storing the start-addresses on each level
    imageAtomicMin(levelAddressBuffer, int(level + 1), int(nextFreeAddress));
-   
+
+    
    return nextFreeAddress;
 }
 
 // Allocate brick-texture, store pointer in color
 void alloc3x3x3TextureBrick(in int nodeAddress) {
   uint nextFreeTexBrick = atomicCounterIncrement(nextFreeBrick);
+
   uvec3 texAddress = uvec3(0);
   uint brickPoolResBricks = brickPoolResolution / 3;
   texAddress.x = nextFreeTexBrick % brickPoolResBricks;
@@ -83,7 +85,7 @@ void main() {
     nodeNext = allocChildTile(gl_VertexID);
     alloc3x3x3TextureBrick(gl_VertexID);
     
-    // Set the flag to indicate the brick-existance and write nextFreeAdress
+    // Set the flag to indicate the brick-existance and write nextFreeAddress
     imageStore(nodePool_next, gl_VertexID,
                uvec4(NODE_MASK_BRICK | nodeNext, 0, 0, 0));
   }

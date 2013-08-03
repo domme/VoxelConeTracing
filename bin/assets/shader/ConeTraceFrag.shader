@@ -227,19 +227,12 @@ void main(void) {
     memoryBarrier();
 
     vec4 newCol = vec4(0);
-    if (hasBrick(imageLoad(nodePool_next, address).x)) {
-      vec3 enterPos = (posTex - nodePosMin) / foundNodeSideLength;
-      vec3 leavePos = ((posTex + rayDirTex * tLeave) - nodePosMin) / foundNodeSideLength;
-      float rayCastAlphaCorrection = foundNodeSideLength / (1.0 / float(voxelGridResolution));
-      newCol = raycastBrick(nodeColorU, enterPos, leavePos, rayDirTex, rayCastAlphaCorrection);
-    } 
-    else {
-      newCol =  vec4(convRGBA8ToVec4(nodeColorU)) / 255.0;
-      if (dot(newCol.xyz, newCol.xyz) > 0) {
-        newCol.a = 1.0 - pow((1.0 - newCol.a), alphaCorrection);
-      } 
-      newCol.xyz *= newCol.a;
-    }
+    
+    vec3 enterPos = (posTex - nodePosMin) / foundNodeSideLength;
+    vec3 leavePos = ((posTex + rayDirTex * tLeave) - nodePosMin) / foundNodeSideLength;
+    float rayCastAlphaCorrection = foundNodeSideLength / (1.0 / float(voxelGridResolution));
+    newCol = raycastBrick(nodeColorU, enterPos, leavePos, rayDirTex, rayCastAlphaCorrection);
+    
      
     //newCol.xyz *= radiance.xyz;
     color = (1.0 - color.a) * newCol + color;
