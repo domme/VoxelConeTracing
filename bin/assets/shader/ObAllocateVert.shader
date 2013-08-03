@@ -26,18 +26,20 @@
 #version 420 core
 
 layout(r32ui) uniform volatile uimageBuffer nodePool_next;
+layout(r32ui) uniform volatile uimageBuffer nodePool_color;
 layout(r32ui) uniform volatile uimageBuffer levelAddressBuffer;
+
 layout(binding = 0) uniform atomic_uint nextFreeAddress;
+layout(binding = 1) uniform atomic_uint nextFreeBrick;
 
 uniform uint brickPoolResolution;
 uniform uint level;
 
-
-const uint NODE_MASK_VALUE = 0x3FFFFFFF;
-const uint NODE_MASK_TAG = (0x00000001 << 31);
-const uint NODE_MASK_LOCK = (0x00000001 << 30);
-const uint NODE_MASK_TAG_STATIC = (0x00000003 << 30);
-const uint NODE_NOT_FOUND = 0xFFFFFFFF;
+#define NODE_MASK_VALUE 0x3FFFFFFF
+#define NODE_MASK_TAG (0x00000001 << 31)
+#define NODE_MASK_BRICK (0x00000001 << 30)
+#define NODE_MASK_TAG_STATIC (0x00000003 << 30)
+#define NODE_NOT_FOUND 0xFFFFFFFF
 
 uint vec3ToUintXYZ10(uvec3 val) {
     return (uint(val.z) & 0x000003FF)   << 20U
@@ -49,24 +51,40 @@ bool isFlagged(in uint nodeNext) {
   return (nodeNext & NODE_MASK_TAG) != 0U;
 }
 
-void allocChildBrickAndUnflag(in int nodeAddress) {
-  uint nextFreeBrick = atomicCounterIncrement(nextFreeAddress);
-  uint nextFreeAddress = (1U + 8U * nextFreeBrick);
-  memoryBarrier();
-
-    imageStore(nodePool_next, nodeAddress,
-                           //Calculation of next free address                  
-   uvec4(NODE_MASK_VALUE & nextFreeAddress, 0, 0, 0));
-
+uint allocChildTile(in int nodeAddress) {
+  uint nextFreeTile = atomicCounterIncrement(nextFreeAddress);
+  uint nextFreeAddress = (1U + 8U * nextFreeTile);
+  
    // Create levelAddress indirection buffer by storing the start-addresses on each level
    imageAtomicMin(levelAddressBuffer, int(level + 1), int(nextFreeAddress));
-   memoryBarrier();
+   
+   return nextFreeAddress;
+}
+
+// Allocate brick-texture, store pointer in color
+void alloc3x3x3TextureBrick(in int nodeAddress) {
+  uint nextFreeTexBrick = atomicCounterIncrement(nextFreeBrick);
+  uvec3 texAddress = uvec3(0);
+  uint brickPoolResBricks = brickPoolResolution / 3;
+  texAddress.x = nextFreeTexBrick % brickPoolResBricks;
+  texAddress.y = (nextFreeTexBrick / brickPoolResBricks) % brickPoolResBricks;
+  texAddress.z = nextFreeTexBrick / (brickPoolResBricks * brickPoolResBricks);
+  texAddress *= 3;
+
+  // Store brick-pointer
+  imageStore(nodePool_color, nodeAddress,
+      uvec4(vec3ToUintXYZ10(texAddress), 0, 0, 0));
 }
 
 void main() {
   uint nodeNext = imageLoad(nodePool_next, gl_VertexID).x;
   
   if (isFlagged(nodeNext)) {
-    allocChildBrickAndUnflag(gl_VertexID);
-  } 
+    nodeNext = allocChildTile(gl_VertexID);
+    alloc3x3x3TextureBrick(gl_VertexID);
+    
+    // Set the flag to indicate the brick-existance and write nextFreeAdress
+    imageStore(nodePool_next, nodeAddress,
+               uvec4(NODE_MASK_BRICK | nodeNext, 0, 0, 0));
+  }
 }

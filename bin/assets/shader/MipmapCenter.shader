@@ -31,19 +31,12 @@ layout(r32ui) uniform volatile uimageBuffer levelAddressBuffer;
 
 layout(rgba8) uniform image3D brickPool_color;
 
-
-
-
-
-layout(binding = 0) uniform atomic_uint nextFreeBrick;
-uniform uint brickPoolResolution;
-
 uniform uint level;
 
-const uint NODE_MASK_VALUE = 0x3FFFFFFF;
-const uint NODE_MASK_TAG = (0x00000001 << 31);
-const uint NODE_MASK_BRICK = (0x00000001 << 30);
-const uint NODE_NOT_FOUND = 0xFFFFFFFF;
+#define NODE_MASK_VALUE 0x3FFFFFFF
+#define NODE_MASK_TAG (0x00000001 << 31)
+#define NODE_MASK_BRICK (0x00000001 << 30)
+#define NODE_NOT_FOUND 0xFFFFFFFF
 
 const uvec3 childOffsets[8] = {
   uvec3(0, 0, 0),
@@ -100,26 +93,7 @@ void loadChildTile(in int tileAddress) {
   memoryBarrier();
 }
 
-// Allocate brick-texture, store pointer in color and return the coordinate of the lower-left voxel.
-uvec3 alloc3x3x3TextureBrick(in int nodeAddress, in uint nodeNextU) {
-  uint nextFreeTexBrick = atomicCounterIncrement(nextFreeBrick);
-  uvec3 texAddress = uvec3(0);
-  uint brickPoolResBricks = brickPoolResolution / 3;
-  texAddress.x = nextFreeTexBrick % brickPoolResBricks;
-  texAddress.y = (nextFreeTexBrick / brickPoolResBricks) % brickPoolResBricks;
-  texAddress.z = nextFreeTexBrick / (brickPoolResBricks * brickPoolResBricks);
-  texAddress *= 3;
 
-  // Store brick-pointer
-  imageStore(nodePool_color, nodeAddress,
-      uvec4(vec3ToUintXYZ10(texAddress), 0, 0, 0));
-
-  // Set the flag to indicate the brick-existance
-  imageStore(nodePool_next, nodeAddress,
-             uvec4(NODE_MASK_BRICK | nodeNextU, 0, 0, 0));
-
-  return texAddress;
-}
 
 uint getThreadNode() {
   uint levelStart = imageLoad(levelAddressBuffer, int(level)).x;
@@ -136,7 +110,7 @@ uint getThreadNode() {
 }
 
 // Get the child brickcolor
-vec4 getChildBrickColor(in uint childIndex, in ivec3 brickOffset) {
+vec4 getChildBrickColor(in int childIndex, in ivec3 brickOffset) {
   ivec3 childBrickAddress = ivec3(uintXYZ10ToVec3(childColorU[childIndex]));
   return imageLoad(brickPool_color, childBrickAddress + brickOffset);
 }
@@ -152,14 +126,9 @@ void main() {
     return;  // No child-pointer set - mipmapping is not possible anyway
   }
 
-  ivec3 brickAddress = ivec3(0);
-  if (!hasBrick(nodeNextU)) {
-     brickAddress = ivec3(alloc3x3x3TextureBrick(int(nodeAddress), nodeNextU));
-  } else {
-    brickAddress = ivec3(uintXYZ10ToVec3(
-                        imageLoad(nodePool_color, int(nodeAddress)).x));
-  }
-
+  ivec3 brickAddress = ivec3(uintXYZ10ToVec3(
+                       imageLoad(nodePool_color, int(nodeAddress)).x));
+  
   uint childAddress = NODE_MASK_VALUE & nodeNextU;
   loadChildTile(int(childAddress));  // Loads the child-values into the global arrays
 

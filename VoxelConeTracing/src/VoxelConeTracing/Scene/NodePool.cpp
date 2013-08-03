@@ -62,6 +62,8 @@ void NodePool::init(uint voxelGridResolution) {
   _numLevels = log((int)voxelGridResolution * 
                    voxelGridResolution *
                    voxelGridResolution)/log(8) + 1;
+  _numLevels = _numLevels - 1; // We are using bricks to represent the leaf level
+
   kore::Log::getInstance()->write("[DEBUG] number of levels: %u \n", _numLevels);
 
   _shdNumLevels.type = GL_UNSIGNED_INT;

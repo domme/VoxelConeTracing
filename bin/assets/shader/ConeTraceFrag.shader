@@ -160,7 +160,7 @@ vec4 raycastBrick(in uint nodeColorU, in vec3 enter, in vec3 leave, in vec3 dir,
     ivec3 brickAddress = ivec3(uintXYZ10ToVec3(nodeColorU));
     ivec3 brickRes = textureSize(brickPool_color, 0); // TODO: make uniform
 
-    float stepSize = 1.0 / vec3(brickRes);
+    float stepSize = 1.0 / float(brickRes.x);
     vec3 brickAddressUVW = vec3(brickAddress) / vec3(brickRes)  + stepSize / 2.0; // Correct
     
     vec3 enterUVW = brickAddressUVW + enter * (2 * stepSize);

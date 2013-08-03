@@ -1,4 +1,4 @@
-KoRE Log - Fri Jul 26 16:56:59 2013
+KoRE Log - Wed Jul 31 17:30:59 2013
 
 [DEBUG] added Framebuffer 'BACKBUFFER'
 Render Device: GeForce GTX 670/PCIe/SSE2
@@ -8,7 +8,11 @@ GLSL version: 4.30 NVIDIA via Cg compiler
 GLFW version 2.7.7
 GLEW version: 1.9.0
 Max TextureBuffer size: 134217728 
-[ERROR] Scene './assets/meshes/sponza_diff_big_combi.dae' could not be read
-Unable to open file "./assets/meshes/sponza_diff_big_combi.dae".
-[ERROR] Scene './assets/meshes/sponza_diff_big_combi.dae' could not be read
-Unable to open file "./assets/meshes/sponza_diff_big_combi.dae".
+Max Img units: 192 
+Max vertex Img units: 32 
+Max Img uniforms: 48 
+Max vertex Img uniforms: 8 
+[ERROR] Scene './assets/meshes/sponza_diff_small_combi.dae' could not be read
+Unable to open file "./assets/meshes/sponza_diff_small_combi.dae".
+[ERROR] Scene './assets/meshes/sponza_diff_small_combi.dae' could not be read
+Unable to open file "./assets/meshes/sponza_diff_small_combi.dae".

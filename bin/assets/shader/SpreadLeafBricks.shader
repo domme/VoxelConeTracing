@@ -48,7 +48,6 @@ uniform uint voxelGridResolution;
 #define NODE_MASK_TAG (0x00000001 << 31)
 #define NODE_MASK_BRICK (0x00000001 << 30)
 #define NODE_NOT_FOUND 0xFFFFFFFF
-#define NODE_MASK_BRICK (0x00000001 << 30)
 
 const uint pow2[] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
 
@@ -88,11 +87,32 @@ uvec3 uintXYZ10ToVec3(uint val) {
                  uint((val & 0x3FF00000) >> 20U));
 }
 
+// Allocate brick-texture, store pointer in color and return the coordinate of the lower-left voxel.
+uvec3 alloc3x3x3TextureBrick(in int nodeAddress, in uint nodeNextU) {
+  uint nextFreeTexBrick = atomicCounterIncrement(nextFreeBrick);
+  uvec3 texAddress = uvec3(0);
+  uint brickPoolResBricks = brickPoolResolution / 3;
+  texAddress.x = nextFreeTexBrick % brickPoolResBricks;
+  texAddress.y = (nextFreeTexBrick / brickPoolResBricks) % brickPoolResBricks;
+  texAddress.z = nextFreeTexBrick / (brickPoolResBricks * brickPoolResBricks);
+  texAddress *= 3;
 
+  // Store brick-pointer
+  imageStore(nodePool_color, nodeAddress,
+      uvec4(vec3ToUintXYZ10(texAddress), 0, 0, 0));
 
+  // Set the flag to indicate the brick-existance
+  imageStore(nodePool_next, nodeAddress,
+             uvec4(NODE_MASK_BRICK | nodeNextU, 0, 0, 0));
 
+  return texAddress;
+}
 
-int traverseToLeaf(in vec3 posTex, out int childIndex) {
+void storeVoxelColorInBrick(in uvec3 brickCoords, in uint voxelColorU) {
+  
+}
+
+int traverseToLeaf(in vec3 posTex) {
   int nodeAddress = 0;
   vec3 nodePosTex = vec3(0.0);
   vec3 nodePosMaxTex = vec3(1.0);
@@ -104,11 +124,7 @@ int traverseToLeaf(in vec3 posTex, out int childIndex) {
     uint childStartAddress = nodeNext & NODE_MASK_VALUE;
     if (childStartAddress == 0U) {
       if (iLevel == numLevels - 1) {  // This is a leaf node! Yuppieee! ;)
-          // calculate the child index and return
-          uvec3 offVec = uvec3(2.0 * posTex);
-          childIndex = int(offVec.x + 2U * offVec.y + 4U * offVec.z);
-
-          return nodeAddress;
+         return nodeAddress;
        }
 
       return NODE_NOT_FOUND;
@@ -136,17 +152,13 @@ void main() {
   uvec3 voxelPos = uintXYZ10ToVec3(voxelPosU);
   vec3 posTex = vec3(voxelPos) / vec3(voxelGridResolution);
 
-  int childIndex = 0;
-  int nodeAddress = traverseToLeaf(posTex, childIndex);
+  int nodeAddress = traverseToLeaf(posTex);
   if (nodeAddress == NODE_NOT_FOUND) {
     return;
   }
 
-  ivec3 brickCoords = ivec3(uintXYZ10ToVec3(
-                       imageLoad(nodePool_color, int(nodeAddress)).x));
+  nodeColorU = imageLoad(nodePool_color, nodeAddress).x;
   memoryBarrier();
 
-  imageStore(brickPool_color,
-             brickCoords + childOffsets[iChildIndex],
-             convRGBA8ToVec4(voxelColorU) / 255.0);
+
 }
