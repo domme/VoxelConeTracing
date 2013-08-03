@@ -44,6 +44,7 @@ struct SVCTparameters {
   uint fraglist_size_divisor;
   glm::vec3 voxel_grid_sidelengths;
   uint brickPoolResolution;
+  glm::uvec2 shadowMapResolution;
 };
 
 enum ETex3DContent {
@@ -94,7 +95,10 @@ public:
   inline NodePool* getNodePool() {return &_nodePool;}
   inline BrickPool* getBrickPool() {return &_brickPool;}
   inline VoxelFragList* getVoxelFragList() {return &_voxelFragList;}
-   
+
+  inline kore::ShaderData* getShdLightNodeMap(uint level) 
+  {return &_vShdLightNodeMap[level];}
+
 private:
   kore::Camera* _camera;
   std::vector<kore::SceneNode*> _meshNodes;
@@ -111,6 +115,10 @@ private:
   kore::ShaderData _shdAcVoxelIndex;
 
   kore::SceneNode* _voxelGridNode;
+
+  std::vector<kore::Texture> _vLightNodeMap;
+  std::vector<kore::STextureInfo> _vLightNodeMapTexInfo;
+  std::vector<kore::ShaderData> _vShdLightNodeMap;
 
 };
 

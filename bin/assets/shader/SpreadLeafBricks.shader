@@ -33,16 +33,11 @@ to traverse the octree and find the leaf-node.
 
 #version 420 core
 
-layout(r32ui) uniform volatile uimageBuffer voxelFragList_pos;
-layout(r32ui) uniform volatile uimageBuffer voxelFragList_color;
-layout(r32ui) uniform volatile uimageBuffer nodePool_next;
-layout(r32ui) uniform volatile uimageBuffer nodePool_color;
+layout(r32ui) uniform readonly uimageBuffer nodePool_color;
+layout(r32ui) uniform readonly uimageBuffer levelAddressBuffer;
 layout(rgba8) uniform volatile image3D brickPool_color;
-layout(binding = 0) uniform atomic_uint nextFreeBrick;
-uniform uint brickPoolResolution;
 
 uniform uint numLevels;  // Number of levels in the octree
-uniform uint voxelGridResolution;
 
 #define NODE_MASK_VALUE 0x3FFFFFFF
 #define NODE_MASK_TAG (0x00000001 << 31)
@@ -60,6 +55,17 @@ const uvec3 childOffsets[8] = {
   uvec3(1, 0, 1),
   uvec3(0, 1, 1), 
   uvec3(1, 1, 1)};
+
+vec4 voxelColors[8] = {
+  vec4(0),
+  vec4(0),
+  vec4(0),
+  vec4(0),
+  vec4(0),
+  vec4(0),
+  vec4(0),
+  vec4(0)
+};
 
 vec4 convRGBA8ToVec4(uint val) {
     return vec4( float((val & 0x000000FF)), 
@@ -87,78 +93,156 @@ uvec3 uintXYZ10ToVec3(uint val) {
                  uint((val & 0x3FF00000) >> 20U));
 }
 
-// Allocate brick-texture, store pointer in color and return the coordinate of the lower-left voxel.
-uvec3 alloc3x3x3TextureBrick(in int nodeAddress, in uint nodeNextU) {
-  uint nextFreeTexBrick = atomicCounterIncrement(nextFreeBrick);
-  uvec3 texAddress = uvec3(0);
-  uint brickPoolResBricks = brickPoolResolution / 3;
-  texAddress.x = nextFreeTexBrick % brickPoolResBricks;
-  texAddress.y = (nextFreeTexBrick / brickPoolResBricks) % brickPoolResBricks;
-  texAddress.z = nextFreeTexBrick / (brickPoolResBricks * brickPoolResBricks);
-  texAddress *= 3;
-
-  // Store brick-pointer
-  imageStore(nodePool_color, nodeAddress,
-      uvec4(vec3ToUintXYZ10(texAddress), 0, 0, 0));
-
-  // Set the flag to indicate the brick-existance
-  imageStore(nodePool_next, nodeAddress,
-             uvec4(NODE_MASK_BRICK | nodeNextU, 0, 0, 0));
-
-  return texAddress;
+void loadVoxelColors(in ivec3 brickAddress){
+  // Collect the original voxel colors (from voxelfragmentlist-voxels)
+  // which were stored at the corners of the brick texture.
+  for(int i = 0; i < 8; ++i) {
+    voxelColors[i] = imageLoad(brickPool_color, 
+                               brickAddress + 2 * ivec3(childOffsets[i]));
+  }
 }
 
-void storeVoxelColorInBrick(in uvec3 brickCoords, in uint voxelColorU) {
-  
-}
+uint getThreadNode() {
+  int level = int(numLevels - 1);
+  uint levelStart = imageLoad(levelAddressBuffer, level).x;
+  uint nextLevelStart = imageLoad(levelAddressBuffer, level + 1).x;
+  memoryBarrier();
 
-int traverseToLeaf(in vec3 posTex) {
-  int nodeAddress = 0;
-  vec3 nodePosTex = vec3(0.0);
-  vec3 nodePosMaxTex = vec3(1.0);
-  float sideLength = 0.5;
-  
-  for (uint iLevel = 0; iLevel < numLevels; ++iLevel) {
-    uint nodeNext = imageLoad(nodePool_next, nodeAddress).x;
+  uint index = levelStart + uint(gl_VertexID);
 
-    uint childStartAddress = nodeNext & NODE_MASK_VALUE;
-    if (childStartAddress == 0U) {
-      if (iLevel == numLevels - 1) {  // This is a leaf node! Yuppieee! ;)
-         return nodeAddress;
-       }
+  if (index >= nextLevelStart) {
+    return NODE_NOT_FOUND;
+  }
 
-      return NODE_NOT_FOUND;
-    }
-     
-    uvec3 offVec = uvec3(2.0 * posTex);
-    uint off = offVec.x + 2U * offVec.y + 4U * offVec.z;
-
-    // Restart while-loop with the child node (aka recursion)
-    nodeAddress = int(childStartAddress + off);
-    nodePosTex += vec3(childOffsets[off]) * vec3(sideLength);
-    nodePosMaxTex = nodePosTex + vec3(sideLength);
-
-    sideLength = sideLength / 2.0;
-    posTex = 2.0 * posTex - vec3(offVec);
-  } // level-for
-  return NODE_NOT_FOUND;
+  return index;
 }
 
 void main() {
-  // Get the voxel's position and color from the voxel frag list.
-  uint voxelPosU = imageLoad(voxelFragList_pos, gl_VertexID).x;
-  uint voxelColorU = imageLoad(voxelFragList_color, gl_VertexID).x;
-
-  uvec3 voxelPos = uintXYZ10ToVec3(voxelPosU);
-  vec3 posTex = vec3(voxelPos) / vec3(voxelGridResolution);
-
-  int nodeAddress = traverseToLeaf(posTex);
-  if (nodeAddress == NODE_NOT_FOUND) {
-    return;
+  uint nodeAddress = getThreadNode();
+  if(nodeAddress == NODE_NOT_FOUND) {
+    return;  // The requested threadID-node does not belong to the current level
   }
 
-  nodeColorU = imageLoad(nodePool_color, nodeAddress).x;
-  memoryBarrier();
+  ivec3 brickAddress = ivec3(uintXYZ10ToVec3(
+                       imageLoad(nodePool_color, int(nodeAddress)).x));
+
+  loadVoxelColors(brickAddress);
+
+  
+  vec4 col = vec4(0);
+  
+  // Center
+  for (int i = 0; i < 8; ++i) {
+    col += 0.125 * voxelColors[i];
+  }
+
+  imageStore(brickPool_color, brickAddress + ivec3(1,1,1), col);
 
 
+  // Face X
+  col = vec4(0);
+  col += 0.25 * voxelColors[1];
+  col += 0.25 * voxelColors[3];
+  col += 0.25 * voxelColors[5];
+  col += 0.25 * voxelColors[7];
+  imageStore(brickPool_color, brickAddress + ivec3(2,1,1), col);
+
+  // Face X Neg
+  col = vec4(0);
+  col += 0.25 * voxelColors[0];
+  col += 0.25 * voxelColors[2];
+  col += 0.25 * voxelColors[4];
+  col += 0.25 * voxelColors[6];
+  imageStore(brickPool_color, brickAddress + ivec3(0,1,1), col);
+
+
+  // Face Y
+  col = vec4(0);
+  col += 0.25 * voxelColors[2];
+  col += 0.25 * voxelColors[3];
+  col += 0.25 * voxelColors[6];
+  col += 0.25 * voxelColors[7];
+  imageStore(brickPool_color, brickAddress + ivec3(1,2,1), col);
+
+  // Face Y Neg
+  col = vec4(0);
+  col += 0.25 * voxelColors[0];
+  col += 0.25 * voxelColors[1];
+  col += 0.25 * voxelColors[4];
+  col += 0.25 * voxelColors[5];
+  imageStore(brickPool_color, brickAddress + ivec3(1,0,1), col);
+
+  
+  // Face Z
+  col = vec4(0);
+  col += 0.25 * voxelColors[4];
+  col += 0.25 * voxelColors[5];
+  col += 0.25 * voxelColors[6];
+  col += 0.25 * voxelColors[7];
+  imageStore(brickPool_color, brickAddress + ivec3(1,1,2), col);
+
+  // Face Z Neg
+  col = vec4(0);
+  col += 0.25 * voxelColors[0];
+  col += 0.25 * voxelColors[1];
+  col += 0.25 * voxelColors[2];
+  col += 0.25 * voxelColors[3];
+  imageStore(brickPool_color, brickAddress + ivec3(1,1,0), col);
+
+
+  // Edges
+  col = vec4(0);
+  col += 0.5 * voxelColors[0];
+  col += 0.5 * voxelColors[2];
+  imageStore(brickPool_color, brickAddress + ivec3(0,1,0), col);
+
+  col = vec4(0);
+  col += 0.5 * voxelColors[2];
+  col += 0.5 * voxelColors[3];
+  imageStore(brickPool_color, brickAddress + ivec3(1,2,0), col);
+
+  col = vec4(0);
+  col += 0.5 * voxelColors[3];
+  col += 0.5 * voxelColors[1];
+  imageStore(brickPool_color, brickAddress + ivec3(2,1,0), col);
+
+  col = vec4(0);
+  col += 0.5 * voxelColors[0];
+  col += 0.5 * voxelColors[4];
+  imageStore(brickPool_color, brickAddress + ivec3(0,0,1), col);
+
+  col = vec4(0);
+  col += 0.5 * voxelColors[2];
+  col += 0.5 * voxelColors[6];
+  imageStore(brickPool_color, brickAddress + ivec3(0,2,1), col);
+
+  col = vec4(0);
+  col += 0.5 * voxelColors[3];
+  col += 0.5 * voxelColors[7];
+  imageStore(brickPool_color, brickAddress + ivec3(2,2,1), col);
+
+  col = vec4(0);
+  col += 0.5 * voxelColors[1];
+  col += 0.5 * voxelColors[5];
+  imageStore(brickPool_color, brickAddress + ivec3(2,0,1), col);
+
+  col = vec4(0);
+  col += 0.5 * voxelColors[4];
+  col += 0.5 * voxelColors[6];
+  imageStore(brickPool_color, brickAddress + ivec3(0,1,2), col);
+
+  col = vec4(0);
+  col += 0.5 * voxelColors[6];
+  col += 0.5 * voxelColors[7];
+  imageStore(brickPool_color, brickAddress + ivec3(1,2,2), col);
+
+  col = vec4(0);
+  col += 0.5 * voxelColors[5];
+  col += 0.5 * voxelColors[7];
+  imageStore(brickPool_color, brickAddress + ivec3(2,1,2), col);
+
+  col = vec4(0);
+  col += 0.5 * voxelColors[4];
+  col += 0.5 * voxelColors[5];
+  imageStore(brickPool_color, brickAddress + ivec3(1,0,2), col);
 }

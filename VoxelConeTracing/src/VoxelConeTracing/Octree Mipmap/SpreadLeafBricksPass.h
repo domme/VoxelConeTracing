@@ -23,8 +23,8 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#ifndef VCT_SRC_VCT_WRITELEAFNODESPASS_H_
-#define VCT_SRC_VCT_WRITELEAFNODESPASS_H_
+#ifndef VCT_SRC_VCT_SPREADLEAFBRICKSPASS_H_
+#define VCT_SRC_VCT_SPREADLEAFBRICKSPASS_H_
 
 #include "KoRE/Passes/ShaderProgramPass.h"
 #include "VoxelConeTracing/Scene/VCTscene.h"
@@ -33,12 +33,12 @@
 #include "KoRE/ResourceManager.h"
 
 
-class WriteLeafNodesPass : public kore::ShaderProgramPass
+class SpreadLeafBricksPass : public kore::ShaderProgramPass
 {
   public:
-    WriteLeafNodesPass(VCTscene* vctScene,
+    SpreadLeafBricksPass(VCTscene* vctScene,
                      kore::EOperationExecutionType executionType);
-    virtual ~WriteLeafNodesPass(void);
+    virtual ~SpreadLeafBricksPass(void);
 
   private:
     kore::RenderManager* _renderMgr;
@@ -47,4 +47,4 @@ class WriteLeafNodesPass : public kore::ShaderProgramPass
     VCTscene* _vctScene;
 };
 
-#endif // VCT_SRC_VCT_MODIFYINDIRECTBUFFERPASS_H_
+#endif // VCT_SRC_VCT_SPREADLEAFBRICKSPASS_H_

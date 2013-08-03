@@ -23,18 +23,18 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#include "VoxelConeTracing/Octree Mipmap/WriteLeafNodesPass.h"
+#include "VoxelConeTracing/Octree Mipmap/SpreadLeafBricksPass.h"
 
 #include "KoRE\RenderManager.h"
 #include "KoRE\ResourceManager.h"
 
 #include "Kore\Operations\Operations.h"
 
-WriteLeafNodesPass::~WriteLeafNodesPass(void) {
+SpreadLeafBricksPass::~SpreadLeafBricksPass(void) {
 }
 
-WriteLeafNodesPass::
-  WriteLeafNodesPass(VCTscene* vctScene,
+SpreadLeafBricksPass::
+  SpreadLeafBricksPass(VCTscene* vctScene,
                      kore::EOperationExecutionType executionType) {
   using namespace kore;
   
@@ -47,49 +47,32 @@ WriteLeafNodesPass::
 
   kore::ShaderProgram* shp = new kore::ShaderProgram;
   this->setShaderProgram(shp);
-  shp->setName("OctreeWriteLeaf shader");
-  shp->loadShader("./assets/shader/OctreeWriteLeafs.shader",
+  shp->setName("SpreadLeafBricks shader");
+  shp->loadShader("./assets/shader/SpreadLeafBricks.shader",
                  GL_VERTEX_SHADER);
   shp->init();
-  
   
   // Launch a thread for every node up to the max level
   addStartupOperation(
     new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
-        _vctScene->getVoxelFragList()->getFragListIndCmdBuf()->getBufferHandle()));
+    _vctScene->getNodePool()->getDenseThreadBuf(
+    _vctScene->getNodePool()->getNumLevels() - 1)->getHandle()));
 
   addStartupOperation(new BindUniform(vctScene->getNodePool()->getShdNumLevels(),
                                               shp->getUniform("numLevels")));
 
   addStartupOperation(new BindImageTexture(
-    vctScene->getVoxelFragList()->getShdVoxelFragList(VOXELATT_POSITION),
-    shp->getUniform("voxelFragList_pos")));
-
-  addStartupOperation(new BindImageTexture(
-    vctScene->getVoxelFragList()->getShdVoxelFragList(VOXELATT_COLOR),
-    shp->getUniform("voxelFragList_color")));
-
-  addStartupOperation(new BindImageTexture(
-    vctScene->getNodePool()->getShdNodePool(NEXT),
-    shp->getUniform("nodePool_next")));
+                      vctScene->getNodePool()->getShdLevelAddressBuffer(),
+                      shp->getUniform("levelAddressBuffer"), GL_READ_ONLY));
 
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdNodePool(COLOR),
-    shp->getUniform("nodePool_color")));
+    shp->getUniform("nodePool_color"), GL_READ_ONLY));
 
   addStartupOperation(new BindImageTexture(
     vctScene->getBrickPool()->getShdBrickPool(BRICKPOOL_COLOR),
     shp->getUniform("brickPool_color")));
 
-  addStartupOperation(new BindUniform(vctScene->getBrickPool()->getShdAcNextFree(),
-    shp->getUniform("nextFreeBrick")));
-
-  addStartupOperation(new BindUniform(vctScene->getBrickPool()->getShdBrickPoolResolution(),
-    shp->getUniform("brickPoolResolution")));
-
-  addStartupOperation(new BindUniform(
-    vctScene->getShdVoxelGridResolution(),
-    shp->getUniform("voxelGridResolution")));
 
   addStartupOperation(
     new kore::DrawIndirectOp(GL_POINTS, 0));

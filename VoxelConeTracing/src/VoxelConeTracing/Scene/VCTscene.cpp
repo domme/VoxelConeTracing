@@ -83,4 +83,34 @@ void VCTscene::init(const SVCTparameters& params,
   _shdAcVoxelIndex.size = 1;
   _shdAcVoxelIndex.type = GL_UNSIGNED_INT_ATOMIC_COUNTER;
   _shdAcVoxelIndex.data = &_acVoxelIndex;
+  
+  STextureProperties nodeMapProps;
+  
+  nodeMapProps.format = GL_RED_INTEGER;
+  nodeMapProps.targetType = GL_TEXTURE_2D;
+  nodeMapProps.internalFormat = GL_R32UI;
+  nodeMapProps.pixelType = GL_UNSIGNED_INT;
+  nodeMapProps.width = params.shadowMapResolution.x;
+  nodeMapProps.height = params.shadowMapResolution.y;
+
+  _vLightNodeMap.resize(_nodePool.getNumLevels());
+  _vLightNodeMapTexInfo.resize(_nodePool.getNumLevels());
+  _vShdLightNodeMap.resize(_nodePool.getNumLevels());
+
+  // Init light node map for each level
+  for (int i = _nodePool.getNumLevels() - 1; i >= 0; --i) {
+    _vLightNodeMap[i].init(nodeMapProps, "LightNodeMap");
+
+    _vLightNodeMapTexInfo[i].texLocation = _vLightNodeMap[i].getHandle();
+    _vLightNodeMapTexInfo[i].internalFormat = GL_R32UI;
+    _vLightNodeMapTexInfo[i].texTarget = GL_TEXTURE_2D;
+
+    _vShdLightNodeMap[i].type = GL_IMAGE_2D;
+    _vShdLightNodeMap[i].name = "LightNodeMap image";
+    _vShdLightNodeMap[i].size = 1;
+    _vShdLightNodeMap[i].data = &_vLightNodeMapTexInfo[i];
+
+    nodeMapProps.width = nodeMapProps.width / 2;
+    nodeMapProps.height = nodeMapProps.height / 2;
+  }
 }

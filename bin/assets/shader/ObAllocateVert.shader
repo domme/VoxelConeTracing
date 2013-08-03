@@ -84,7 +84,7 @@ void main() {
     alloc3x3x3TextureBrick(gl_VertexID);
     
     // Set the flag to indicate the brick-existance and write nextFreeAdress
-    imageStore(nodePool_next, nodeAddress,
+    imageStore(nodePool_next, gl_VertexID,
                uvec4(NODE_MASK_BRICK | nodeNext, 0, 0, 0));
   }
 }

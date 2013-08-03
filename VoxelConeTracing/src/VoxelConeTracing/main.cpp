@@ -158,6 +158,7 @@ void setup() {
   params.fraglist_size_multiplier = 5;
   params.fraglist_size_divisor = 1;
   params.brickPoolResolution = 64 * 3;
+  params.shadowMapResolution = glm::vec2(2048,2048);
   
   // Make sure all lightnodes are initialized with camera components
   std::vector<SceneNode*> lightNodes;
@@ -186,7 +187,7 @@ void setup() {
 
   // Shadowmap Stage
   FrameBufferStage* shadowMapStage =
-    new ShadowMapStage(lightNodes[0], renderNodes, 2048, 2048);
+    new ShadowMapStage(lightNodes[0], renderNodes, params.shadowMapResolution.x, params.shadowMapResolution.y);
 
   RenderManager::getInstance()->addFramebufferStage(shadowMapStage);
   //////////////////////////////////////////////////////////////////////////

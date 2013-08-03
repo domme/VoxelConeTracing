@@ -92,7 +92,7 @@ uvec3 uintXYZ10ToVec3(uint val) {
 
 
 
-int traverseToLeaf(in vec3 posTex, out int childIndex) {
+uint traverseToLeaf(in vec3 posTex, out int childIndex) {
   int nodeAddress = 0;
   vec3 nodePosTex = vec3(0.0);
   vec3 nodePosMaxTex = vec3(1.0);
@@ -137,16 +137,17 @@ void main() {
   vec3 posTex = vec3(voxelPos) / vec3(voxelGridResolution);
 
   int childIndex = 0;
-  int nodeAddress = traverseToLeaf(posTex, childIndex);
+  uint nodeAddress = traverseToLeaf(posTex, childIndex);
   if (nodeAddress == NODE_NOT_FOUND) {
     return;
   }
 
   ivec3 brickCoords = ivec3(uintXYZ10ToVec3(
-                       imageLoad(nodePool_color, int(nodeAddress)).x));
+                            imageLoad(nodePool_color, int(nodeAddress)).x));
   memoryBarrier();
 
+  //store VoxelColors in brick corners
   imageStore(brickPool_color,
-             brickCoords + childOffsets[iChildIndex],
+             ivec3(brickCoords + 2*childOffsets[childIndex]),
              convRGBA8ToVec4(voxelColorU) / 255.0);
 }
