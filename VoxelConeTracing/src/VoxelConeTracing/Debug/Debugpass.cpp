@@ -85,7 +85,7 @@ DebugPass::DebugPass(VCTscene* vctScene,
  addStartupOperation(
    new FunctionOp(std::bind(&DebugPass::debugBrickAc, this)));
  //addStartupOperation(
-  // new FunctionOp(std::bind(&DebugPass::debugColorNodePool, this)));
+ //  new FunctionOp(std::bind(&DebugPass::debugColorNodePool, this)));
 
  
 }

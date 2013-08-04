@@ -175,7 +175,7 @@ vec4 raycastBrick(in uint nodeColorU, in vec3 enter, in vec3 leave, in vec3 dir,
     
     for (float f = 0; f < stepLength; f += stepSize) {
       vec4 newCol = texture(brickPool_color, enterUVW + dir * f);
-      newCol.a = 1.0;//1.0 - pow((1.0 - newCol.a), alphaCorrection); 
+      newCol.a = 1.0 - pow((1.0 - newCol.a), alphaCorrection); 
       newCol.xyz *= newCol.a;
       color = (1.0 - color.a) * newCol + color;
     

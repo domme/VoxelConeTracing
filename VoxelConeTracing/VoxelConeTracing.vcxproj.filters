@@ -112,7 +112,7 @@
     <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\SpreadLeafBricksPass.cpp">
       <Filter>src\Octree Mipmap</Filter>
     </ClCompile>
-    <ClCompile Include="src\VoxelConeTracing\Octree Building\AllocBricks.cpp">
+    <ClCompile Include="src\VoxelConeTracing\Octree Building\AllocBricksPass.cpp">
       <Filter>src\Octree Building</Filter>
     </ClCompile>
   </ItemGroup>
@@ -275,7 +275,7 @@
     <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\SpreadLeafBricksPass.h">
       <Filter>src\Octree Mipmap</Filter>
     </ClInclude>
-    <ClInclude Include="src\VoxelConeTracing\Octree Building\AllocBricks.h">
+    <ClInclude Include="src\VoxelConeTracing\Octree Building\AllocBricksPass.h">
       <Filter>src\Octree Building</Filter>
     </ClInclude>
   </ItemGroup>

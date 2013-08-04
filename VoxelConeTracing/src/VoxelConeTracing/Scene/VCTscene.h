@@ -80,10 +80,14 @@ public:
             kore::Camera* camera);
 
   inline std::vector<kore::SceneNode*>& getRenderNodes() {return _meshNodes;}
-  inline uint getVoxelGridResolution() {return _voxelGridResolution;}
 
+  inline uint getVoxelGridResolution() {return _voxelGridResolution;}
   inline kore::ShaderData* getShdVoxelGridResolution()
                             {return &_shdVoxelGridResolution;}
+
+  inline uint getNodeGridResolution() {return _nodeGridResolution;}
+  inline kore::ShaderData* getShdNodeGridResolution()
+                                      {return &_shdNodeGridResolution;}
 
   inline kore::SceneNode* getVoxelGridNode() {return _voxelGridNode;}
 
@@ -111,6 +115,9 @@ private:
   kore::ShaderData _shdVoxelGridResolution;
   glm::vec3 _voxelGridSideLengths;
 
+  uint _nodeGridResolution;
+  kore::ShaderData _shdNodeGridResolution;
+  
   kore::IndexedBuffer _acVoxelIndex;
   kore::ShaderData _shdAcVoxelIndex;
 

@@ -26,13 +26,9 @@
 #version 420 core
 
 layout(r32ui) uniform volatile uimageBuffer nodePool_next;
-layout(r32ui) uniform volatile uimageBuffer nodePool_color;
 layout(r32ui) uniform volatile uimageBuffer levelAddressBuffer;
-
 layout(binding = 0) uniform atomic_uint nextFreeAddress;
-layout(binding = 1) uniform atomic_uint nextFreeBrick;
 
-uniform uint brickPoolResolution;
 uniform uint level;
 
 #define NODE_MASK_VALUE 0x3FFFFFFF
@@ -51,10 +47,6 @@ bool isFlagged(in uint nodeNext) {
   return (nodeNext & NODE_MASK_TAG) != 0U;
 }
 
-bool hasBrick(in uint nextU) {
-  return (nextU & NODE_MASK_BRICK) != 0;
-}
-
 uint allocChildTile(in int nodeAddress) {
   uint nextFreeTile = atomicCounterIncrement(nextFreeAddress);
   uint nextFreeAddress = (1U + 8U * nextFreeTile);
@@ -62,43 +54,17 @@ uint allocChildTile(in int nodeAddress) {
    // Create levelAddress indirection buffer by storing the start-addresses on each level
    imageAtomicMin(levelAddressBuffer, int(level + 1), int(nextFreeAddress));
 
-    
    return nextFreeAddress;
-}
-
-// Allocate brick-texture, store pointer in color
-void alloc3x3x3TextureBrick(in int nodeAddress) {
-  uint nextFreeTexBrick = atomicCounterIncrement(nextFreeBrick);
-
-  uvec3 texAddress = uvec3(0);
-  uint brickPoolResBricks = brickPoolResolution / 3;
-  texAddress.x = nextFreeTexBrick % brickPoolResBricks;
-  texAddress.y = (nextFreeTexBrick / brickPoolResBricks) % brickPoolResBricks;
-  texAddress.z = nextFreeTexBrick / (brickPoolResBricks * brickPoolResBricks);
-  texAddress *= 3;
-
-  // Store brick-pointer
-  imageStore(nodePool_color, nodeAddress,
-      uvec4(vec3ToUintXYZ10(texAddress), 0, 0, 0));
 }
 
 void main() {
   uint nodeNextU = imageLoad(nodePool_next, gl_VertexID).x;
 
-  bool flagged = isFlagged(nodeNextU);
-  bool bricked = hasBrick(nodeNextU);
-    
-  if (flagged) {
+  if (isFlagged(nodeNextU)) {
     //alloc child and unflag
     nodeNextU = NODE_MASK_VALUE & allocChildTile(gl_VertexID);
-  }
 
-  if (!bricked) {
-    //alloc brick
-    alloc3x3x3TextureBrick(gl_VertexID);
+    // Store the unflagged nodeNextU
+    imageStore(nodePool_next, gl_VertexID, uvec4(nodeNextU, 0, 0, 0));
   }
-
-  // Set the brick-flag in any case
-  imageStore(nodePool_next, gl_VertexID,
-             uvec4(NODE_MASK_BRICK | nodeNextU, 0, 0, 0));
 }

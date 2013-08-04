@@ -38,6 +38,7 @@
 #include "../Octree Building/ClearBrickTexPass.h"
 #include "../Octree Mipmap/MipmapCenterPass.h"
 #include "../Octree Mipmap/SpreadLeafBricksPass.h"
+#include "../Octree Building/AllocBricksPass.h"
 
 
 SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
@@ -73,6 +74,13 @@ SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
     this->addProgramPass(new ObAllocatePass(&vctScene, iLevel,
                                             kore::EXECUTE_ONCE));
   }
+
+  this->addProgramPass(new ModifyIndirectBufferPass(
+                       vctScene.getNodePool()->getShdCmdBufSVOnodes(),
+                       vctScene.getNodePool()->getShdAcNextFree(), &vctScene,
+                       kore::EXECUTE_ONCE));
+
+  this->addProgramPass(new AllocBricksPass(&vctScene, kore::EXECUTE_ONCE));
 
   // End of static construction here
   //////////////////////////////////////////////////////////////////////////

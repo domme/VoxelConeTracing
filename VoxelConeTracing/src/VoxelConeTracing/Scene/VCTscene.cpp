@@ -49,6 +49,7 @@ void VCTscene::init(const SVCTparameters& params,
                     kore::Camera* camera) {
   _voxelGridResolution = params.voxel_grid_resolution;
   _voxelGridSideLengths = params.voxel_grid_sidelengths;
+  _nodeGridResolution = _voxelGridResolution / 2;
  
   //Level based on number of Voxels (8^level = number of leaves)  
   
@@ -69,6 +70,14 @@ void VCTscene::init(const SVCTparameters& params,
   _shdVoxelGridResolution.name = "VoxelGridResolution";
   _shdVoxelGridResolution.size = 1;
   _shdVoxelGridResolution.type = GL_UNSIGNED_INT;
+
+  _shdNodeGridResolution.data = &_nodeGridResolution;
+  _shdNodeGridResolution.name = "NodeGridResolution";
+  _shdNodeGridResolution.size = 1;
+  _shdNodeGridResolution.type = GL_UNSIGNED_INT;
+
+
+
   
   _voxelFragList.init(_voxelGridResolution, params.fraglist_size_multiplier, params.fraglist_size_divisor);
   _nodePool.init(_voxelGridResolution);

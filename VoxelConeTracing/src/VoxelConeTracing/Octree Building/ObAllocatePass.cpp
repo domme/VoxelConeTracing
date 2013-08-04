@@ -71,8 +71,6 @@ ObAllocatePass::ObAllocatePass(VCTscene* vctScene, uint level,
   addStartupOperation(_bindIndCmdBufOp);
 
   addStartupOperation(new BindUniform(&_shdLevel, _allocateShader.getUniform("level")));
-  addStartupOperation(new BindUniform(vctScene->getBrickPool()->getShdBrickPoolResolution(),
-                                      _allocateShader.getUniform("brickPoolResolution")));
 
   addStartupOperation(new BindImageTexture(
     _vctScene->getNodePool()->getShdLevelAddressBuffer(),
@@ -81,18 +79,10 @@ ObAllocatePass::ObAllocatePass(VCTscene* vctScene, uint level,
   addStartupOperation(new BindImageTexture(
                       vctScene->getNodePool()->getShdNodePool(NEXT),
                       _allocateShader.getUniform("nodePool_next")));
-
-  addStartupOperation(new BindImageTexture(
-                      vctScene->getNodePool()->getShdNodePool(COLOR),
-                      _allocateShader.getUniform("nodePool_color")));
   
   addStartupOperation(new BindAtomicCounterBuffer(
                        vctScene->getNodePool()->getShdAcNextFree(),
                        _allocateShader.getUniform("nextFreeAddress")));
-
-  addStartupOperation(new BindAtomicCounterBuffer(
-                      vctScene->getBrickPool()->getShdAcNextFree(),
-                      _allocateShader.getUniform("nextFreeBrick")));
 
   addStartupOperation(new DrawIndirectOp(GL_POINTS, 0));
   addFinishOperation(new MemoryBarrierOp(GL_ALL_BARRIER_BITS));

@@ -63,19 +63,19 @@ WriteLeafNodesPass::
 
   addStartupOperation(new BindImageTexture(
     vctScene->getVoxelFragList()->getShdVoxelFragList(VOXELATT_POSITION),
-    shp->getUniform("voxelFragList_pos"), GL_READ_ONLY));
+    shp->getUniform("voxelFragList_pos")));
 
   addStartupOperation(new BindImageTexture(
     vctScene->getVoxelFragList()->getShdVoxelFragList(VOXELATT_COLOR),
-    shp->getUniform("voxelFragList_color"), GL_READ_ONLY));
+    shp->getUniform("voxelFragList_color")));
 
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdNodePool(NEXT),
-    shp->getUniform("nodePool_next"), GL_READ_ONLY));
+    shp->getUniform("nodePool_next")));
 
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdNodePool(COLOR),
-    shp->getUniform("nodePool_color"), GL_READ_ONLY));
+    shp->getUniform("nodePool_color")));
 
   addStartupOperation(new BindImageTexture(
     vctScene->getBrickPool()->getShdBrickPool(BRICKPOOL_COLOR),

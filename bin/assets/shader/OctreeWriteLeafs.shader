@@ -33,16 +33,16 @@ to traverse the octree and find the leaf-node.
 
 #version 420 core
 
-#define NODE_MASK_VALUE 0x3FFFFFFF
-#define NODE_MASK_TAG (0x00000001 << 31)
-#define NODE_MASK_BRICK (0x00000001 << 30)
-#define NODE_NOT_FOUND 0xFFFFFFFF
-#define NODE_MASK_BRICK (0x00000001 << 30)
 
-layout(r32ui) uniform readonly uimageBuffer voxelFragList_pos;
-layout(r32ui) uniform readonly uimageBuffer voxelFragList_color;
-layout(r32ui) uniform readonly uimageBuffer nodePool_next;
-layout(r32ui) uniform readonly uimageBuffer nodePool_color;
+const uint NODE_MASK_VALUE = 0x3FFFFFFF;
+const uint NODE_MASK_TAG = (0x00000001 << 31);
+const uint NODE_MASK_BRICK = (0x00000001 << 30);
+const uint NODE_NOT_FOUND = 0xFFFFFFFF;
+
+layout(r32ui) uniform uimageBuffer voxelFragList_pos;
+layout(r32ui) uniform uimageBuffer voxelFragList_color;
+layout(r32ui) uniform uimageBuffer nodePool_next;
+layout(r32ui) uniform uimageBuffer nodePool_color;
 layout(rgba8) uniform image3D brickPool_color;
 
 uniform uint numLevels;  // Number of levels in the octree
@@ -86,57 +86,59 @@ uvec3 uintXYZ10ToVec3(uint val) {
                  uint((val & 0x3FF00000) >> 20U));
 }
 
-
-void traverseToLeaf(in vec3 posTex, in uint voxelColorU) {
-  uint nodeAddress = 0;
+void traverse(in vec3 posTex, in uint voxelColorU) {
   vec3 nodePosTex = vec3(0.0);
   vec3 nodePosMaxTex = vec3(1.0);
-  float sideLength = 0.5;
-  
-  
-  for (uint iLevel = 0; iLevel < numLevels; ++iLevel) {
-    uint nodeNext = imageLoad(nodePool_next, int(nodeAddress)).x;
+
+  float sideLength = 1.0;
+  int nodeAddress = 0;
+
+  for (uint iLevel = 0U; iLevel < numLevels+1; ++iLevel) {
+    uint nodeNext = imageLoad(nodePool_next, nodeAddress).x;
+    memoryBarrier();
 
     uint childStartAddress = nodeNext & NODE_MASK_VALUE;
     if (childStartAddress == 0U) {
-      if (iLevel == numLevels - 1) {  // This is a leaf node! Yuppieee! ;)
-          // calculate the child index and return
-          uvec3 offVec = uvec3(2.0 * posTex);
-          uint childIndex = offVec.x + 2U * offVec.y + 4U * offVec.z;
+       uint nodeColorU = imageLoad(nodePool_color, nodeAddress).x;
+       memoryBarrier();
+       
+       ivec3 brickCoords = ivec3(uintXYZ10ToVec3(nodeColorU));
+       uvec3 offVec = uvec3(2.0 * posTex);
+       uint off = offVec.x + 2U * offVec.y + 4U * offVec.z;
 
-          ivec3 brickCoords = ivec3(uintXYZ10ToVec3(imageLoad(nodePool_color, int(nodeAddress)).x));
-          memoryBarrier();
+       //store VoxelColors in brick corners
+       imageStore(brickPool_color,
+             brickCoords  + 2 * ivec3(childOffsets[off]),
+             convRGBA8ToVec4(voxelColorU) / 255.0);
 
-          //store VoxelColors in brick corners
-          imageStore(brickPool_color,
-                     brickCoords + 2 * ivec3(childOffsets[childIndex]),
-                     convRGBA8ToVec4(voxelColorU) / 255.0);
-       }
-       break;
+    return;
     }
-     
+      
     uvec3 offVec = uvec3(2.0 * posTex);
     uint off = offVec.x + 2U * offVec.y + 4U * offVec.z;
 
     // Restart while-loop with the child node (aka recursion)
-    nodeAddress = childStartAddress + off;
+    sideLength = sideLength / 2.0;
+    nodeAddress = int(childStartAddress + off);
     nodePosTex += vec3(childOffsets[off]) * vec3(sideLength);
     nodePosMaxTex = nodePosTex + vec3(sideLength);
-
-    sideLength = sideLength / 2.0;
     posTex = 2.0 * posTex - vec3(offVec);
   } // level-for
 
+  
 }
+
 
 void main() {
   // Get the voxel's position and color from the voxel frag list.
   uint voxelPosU = imageLoad(voxelFragList_pos, gl_VertexID).x;
   uint voxelColorU = imageLoad(voxelFragList_color, gl_VertexID).x;
+  memoryBarrier();
 
   uvec3 voxelPos = uintXYZ10ToVec3(voxelPosU);
   vec3 posTex = vec3(voxelPos) / vec3(voxelGridResolution);
 
-  traverseToLeaf(posTex, voxelColorU);
+  //traverseToLeaf(posTex, voxelColorU);
+  traverse(posTex, voxelColorU);
   
 }
