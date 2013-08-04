@@ -68,10 +68,15 @@ void alloc3x3x3TextureBrick(in int nodeAddress) {
 }
 
 void main() {
-   alloc3x3x3TextureBrick(gl_VertexID);
+  uint tileAddress = (8U * gl_VertexID);
 
-   //set Brick flag
-   uint nodeNextU = imageLoad(nodePool_next, gl_VertexID).x;
-   imageStore(nodePool_next, gl_VertexID,
-              uvec4(NODE_MASK_BRICK | nodeNextU, 0, 0, 0));
+  for (uint i = 0; i < 8; ++i) {
+    int address = int(tileAddress + i);
+    alloc3x3x3TextureBrick(address);
+
+    //set Brick flag
+    uint nodeNextU = imageLoad(nodePool_next, address).x;
+    imageStore(nodePool_next, address,
+               uvec4(NODE_MASK_BRICK | nodeNextU, 0, 0, 0));
+  }
 }

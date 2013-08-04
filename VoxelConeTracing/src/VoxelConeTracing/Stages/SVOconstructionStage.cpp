@@ -93,9 +93,9 @@ SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
                                               shadowMapFBO,
                                               kore::EXECUTE_ONCE)); */
 
-  /*
+  
   this->addProgramPass(new SpreadLeafBricksPass(&vctScene, kore::EXECUTE_ONCE));
-  this->addProgramPass(new BorderTransferPass(&vctScene,
+  /*this->addProgramPass(new BorderTransferPass(&vctScene,
                                               _numLevels - 1, EXECUTE_ONCE));
   
   // Mipmap the values from bottom to top

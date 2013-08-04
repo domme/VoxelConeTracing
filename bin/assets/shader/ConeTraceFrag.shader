@@ -176,7 +176,7 @@ vec4 raycastBrick(in uint nodeColorU, in vec3 enter, in vec3 leave, in vec3 dir,
     for (float f = 0; f < stepLength; f += stepSize) {
       vec4 newCol = texture(brickPool_color, enterUVW + dir * f);
       newCol.a = 1.0 - pow((1.0 - newCol.a), alphaCorrection); 
-      newCol.xyz *= newCol.a;
+      //newCol.xyz *= newCol.a;
       color = (1.0 - color.a) * newCol + color;
     
       if (color.a > 0.99) {
@@ -232,9 +232,7 @@ void main(void) {
     vec3 leavePos = ((posTex + rayDirTex * tLeave) - nodePosMin) / foundNodeSideLength;
     float rayCastAlphaCorrection = foundNodeSideLength / (1.0 / float(voxelGridResolution));
     newCol = raycastBrick(nodeColorU, enterPos, leavePos, rayDirTex, rayCastAlphaCorrection);
-    
-     
-    //newCol.xyz *= radiance.xyz;
+
     color = (1.0 - color.a) * newCol + color;
 
     if (color.a > 0.99) {

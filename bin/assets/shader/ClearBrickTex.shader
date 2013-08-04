@@ -34,7 +34,7 @@ void main() {
   texCoord.x = gl_VertexID % size;
   texCoord.y = (gl_VertexID / size) % size;
   texCoord.z = gl_VertexID / (size * size);
-  imageStore(brickPool_color, texCoord, vec4(0.0,1.0,0.0,1.0));
+  imageStore(brickPool_color, texCoord, vec4(0.0,0.0,0.0,0.0));
 }
 
 

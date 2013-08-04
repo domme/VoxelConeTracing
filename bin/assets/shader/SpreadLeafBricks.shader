@@ -110,13 +110,14 @@ uint getThreadNode() {
 
   uint index = levelStart + uint(gl_VertexID);
 
-  if (index >= nextLevelStart) {
-    return NODE_NOT_FOUND;
-  }
+ // if (index >= nextLevelStart) {
+  //  return NODE_NOT_FOUND;
+  //}
 
   return index;
 }
 
+///*
 void main() {
   uint nodeAddress = getThreadNode();
   if(nodeAddress == NODE_NOT_FOUND) {
@@ -193,6 +194,11 @@ void main() {
   // Edges
   col = vec4(0);
   col += 0.5 * voxelColors[0];
+  col += 0.5 * voxelColors[1];
+  imageStore(brickPool_color, brickAddress + ivec3(1,0,0), col);
+
+  col = vec4(0);
+  col += 0.5 * voxelColors[0];
   col += 0.5 * voxelColors[2];
   imageStore(brickPool_color, brickAddress + ivec3(0,1,0), col);
 
@@ -246,3 +252,267 @@ void main() {
   col += 0.5 * voxelColors[5];
   imageStore(brickPool_color, brickAddress + ivec3(1,0,2), col);
 }
+//*/
+
+/*
+void main() {
+  uint nodeAddress = getThreadNode();
+  if(nodeAddress == NODE_NOT_FOUND) {
+    return;  // The requested threadID-node does not belong to the current level
+  }
+
+  ivec3 brickAddress = ivec3(uintXYZ10ToVec3(
+                       imageLoad(nodePool_color, int(nodeAddress)).x));
+
+  loadVoxelColors(brickAddress);
+    
+  vec4 col = vec4(0);
+  int weight = 0;
+  // Center
+
+  for (int i = 0; i < 8; ++i) {
+    if (voxelColors[i].a > 0.001) {
+      ++weight;
+      col += voxelColors[i];
+    }
+  }
+
+  col = vec4(col.xyz / float(max(1, weight)), col.a /8);
+
+  imageStore(brickPool_color, brickAddress + ivec3(1,1,1), col);
+
+
+  // Face X
+  int index[] = {1,3,5,7};
+  col = vec4(0);
+  weight = 0;
+  for (int i = 0; i < 4; ++i) {
+    if (voxelColors[index[i]].a > 0.001) {
+      col += voxelColors[index[i]];
+      ++weight;
+    }
+  }
+  col = vec4(col.xyz / float(max(1, weight)), col.a /4);
+  imageStore(brickPool_color, brickAddress + ivec3(2,1,1), col);
+
+  // Face X Neg
+  col = vec4(0);
+  weight = 0;
+  index = int[4](0,2,4,6);
+  for (int i = 0; i < 4; ++i) {
+    if (voxelColors[index[i]].a > 0.001) {
+      col += voxelColors[index[i]];
+      ++weight;
+    }
+  }
+  col = vec4(col.xyz / float(max(1, weight)), col.a /5);
+  imageStore(brickPool_color, brickAddress + ivec3(0,1,1), col);
+
+
+  // Face Y
+  weight = 0;
+  index = int[4](2,3,6,7);
+  for (int i = 0; i < 4; ++i) {
+    if (voxelColors[index[i]].a > 0.001) {
+      col += voxelColors[index[i]];
+      ++weight;
+    }
+  }
+  col = vec4(col.xyz / float(max(1, weight)), col.a /4);
+  imageStore(brickPool_color, brickAddress + ivec3(1,2,1), col);
+
+
+ 
+  // Face Y Neg
+  col = vec4(0);
+  weight = 0;
+  index = int[4](0,1,4,5);
+  for (int i = 0; i < 4; ++i) {
+    if (voxelColors[index[i]].a > 0.001) {
+      col += voxelColors[index[i]];
+      ++weight;
+    }
+  }
+  col = vec4(col.xyz / float(max(1, weight)), col.a /4);
+  imageStore(brickPool_color, brickAddress + ivec3(1,0,1), col);
+
+  // Face Z
+  col = vec4(0);
+  weight = 0;
+  index = int[4](4,5,6,7);
+  for (int i = 0; i < 4; ++i) {
+    if (voxelColors[index[i]].a > 0.001) {
+      col += voxelColors[index[i]];
+      ++weight;
+    }
+  }
+  col = vec4(col.xyz / float(max(1, weight)), col.a /4);
+  imageStore(brickPool_color, brickAddress + ivec3(1,1,2), col);
+
+  // Face Z Neg
+  col = vec4(0);
+  weight = 0;
+  index = int[4](0,1,2,3);
+  for (int i = 0; i < 4; ++i) {
+    if (voxelColors[index[i]].a > 0.001) {
+      col += voxelColors[index[i]];
+      ++weight;
+    }
+  }
+  col = vec4(col.xyz / float(max(1, weight)), col.a /4);
+  imageStore(brickPool_color, brickAddress + ivec3(1,1,0), col);
+
+  // Edges
+  col = vec4(0);
+  weight = 0;
+  index = int[4](0,1,0,0);
+  for (int i = 0; i < 2; ++i) {
+    if (voxelColors[index[i]].a > 0.001) {
+      col += voxelColors[index[i]];
+      ++weight;
+    }
+  }
+  col = vec4(col.xyz / float(max(1, weight)), col.a /2);
+  imageStore(brickPool_color, brickAddress + ivec3(1,0,0), col);
+  
+  col = vec4(0);
+  weight = 0;
+  index = int[4](0,2,0,0);
+  for (int i = 0; i < 2; ++i) {
+    if (voxelColors[index[i]].a > 0.001) {
+      col += voxelColors[index[i]];
+      ++weight;
+    }
+  }
+  col = vec4(col.xyz / float(max(1, weight)), col.a /2);
+  imageStore(brickPool_color, brickAddress + ivec3(0,1,0), col);
+
+  col = vec4(0);
+  weight = 0;
+  index = int[4](2,3,0,0);
+  for (int i = 0; i < 2; ++i) {
+    if (voxelColors[index[i]].a > 0.001) {
+      col += voxelColors[index[i]];
+      ++weight;
+    }
+  }
+  col = vec4(col.xyz / float(max(1, weight)), col.a /2);
+  imageStore(brickPool_color, brickAddress + ivec3(1,2,0), col);
+
+  col = vec4(0);
+  weight = 0;
+  index = int[4](3,1,0,0);
+  for (int i = 0; i < 2; ++i) {
+    if (voxelColors[index[i]].a > 0.001) {
+      col += voxelColors[index[i]];
+      ++weight;
+    }
+  }
+  col = vec4(col.xyz / float(max(1, weight)), col.a /2);
+  imageStore(brickPool_color, brickAddress + ivec3(2,1,0), col);
+
+
+  col = vec4(0);
+  weight = 0;
+  index = int[4](0,4,0,0);
+  for (int i = 0; i < 2; ++i) {
+    if (voxelColors[index[i]].a > 0.001) {
+      col += voxelColors[index[i]];
+      ++weight;
+    }
+  }
+  col = vec4(col.xyz / float(max(1, weight)), col.a /2);
+  imageStore(brickPool_color, brickAddress + ivec3(0,0,1), col);
+
+
+  col = vec4(0);
+  weight = 0;
+  index = int[4](2,6,0,0);
+  for (int i = 0; i < 2; ++i) {
+    if (voxelColors[index[i]].a > 0.001) {
+      col += voxelColors[index[i]];
+      ++weight;
+    }
+  }
+  col = vec4(col.xyz / float(max(1, weight)), col.a /2);
+  imageStore(brickPool_color, brickAddress + ivec3(0,2,1), col);
+
+  col = vec4(0);
+   weight = 0;
+  index = int[4](3,7,0,0);
+  for (int i = 0; i < 2; ++i) {
+    if (voxelColors[index[i]].a > 0.001) {
+      col += voxelColors[index[i]];
+      ++weight;
+    }
+  }
+  col = vec4(col.xyz / float(max(1, weight)), col.a /2);
+  imageStore(brickPool_color, brickAddress + ivec3(2,2,1), col);
+
+
+  col = vec4(0);
+  weight = 0;
+  index = int[4](1,5,0,0);
+  for (int i = 0; i < 2; ++i) {
+    if (voxelColors[index[i]].a > 0.001) {
+      col += voxelColors[index[i]];
+      ++weight;
+    }
+  }
+  col = vec4(col.xyz / float(max(1, weight)), col.a /2);
+  imageStore(brickPool_color, brickAddress + ivec3(2,0,1), col);
+
+  col = vec4(0);
+  weight = 0;
+  index = int[4](4,6,0,0);
+  for (int i = 0; i < 2; ++i) {
+    if (voxelColors[index[i]].a > 0.001) {
+      col += voxelColors[index[i]];
+      ++weight;
+    }
+  }
+  col = vec4(col.xyz / float(max(1, weight)), col.a /2);
+  imageStore(brickPool_color, brickAddress + ivec3(0,1,2), col);
+
+
+  col = vec4(0);
+  weight = 0;
+  index = int[4](6,7,0,0);
+  for (int i = 0; i < 2; ++i) {
+    if (voxelColors[index[i]].a > 0.001) {
+      col += voxelColors[index[i]];
+      ++weight;
+    }
+  }
+  col = vec4(col.xyz / float(max(1, weight)), col.a /2);
+  imageStore(brickPool_color, brickAddress + ivec3(1,2,2), col);
+
+
+  col = vec4(0);
+  weight = 0;
+  index = int[4](5,7,0,0);
+  for (int i = 0; i < 2; ++i) {
+    if (voxelColors[index[i]].a > 0.001) {
+      col += voxelColors[index[i]];
+      ++weight;
+    }
+  }
+  col = vec4(col.xyz / float(max(1, weight)), col.a /2);
+  imageStore(brickPool_color, brickAddress + ivec3(2,1,2), col);
+
+
+  col = vec4(0);
+  weight = 0;
+  index = int[4](4,5,0,0);
+  for (int i = 0; i < 2; ++i) {
+    if (voxelColors[index[i]].a > 0.001) {
+      col += voxelColors[index[i]];
+      ++weight;
+    }
+  }
+  col = vec4(col.xyz / float(max(1, weight)), col.a /2);
+  imageStore(brickPool_color, brickAddress + ivec3(1,0,2), col);
+
+}
+
+//*/

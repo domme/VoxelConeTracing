@@ -66,6 +66,8 @@ void main() {
   uvec3 baseVoxel = uvec3(floor(In.posTexSpace * voxelTexSize));
   
   vec4 diffColor = vec4(texture(diffuseTex,  vec2(In.uv.x, 1.0 - In.uv.y)).xyz, 1.0);
+  // Pre-multiply alpha:
+  diffColor = vec4(diffColor.xyz * diffColor.a, diffColor.a);
 
   uint diffColorU = convVec4ToRGBA8(diffColor * vec4(255));
 
