@@ -56,5 +56,6 @@ private:
   void debugLevelAddressBuf();
   void debugBrickAc();
   void debugRadianceNodePool();
+  void debugColorNodePool();
 };
 #endif //VCT_SRC_VCT_OCTREEVISPASS_H_

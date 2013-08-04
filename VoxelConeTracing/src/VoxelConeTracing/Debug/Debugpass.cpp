@@ -84,6 +84,10 @@ DebugPass::DebugPass(VCTscene* vctScene,
 
  addStartupOperation(
    new FunctionOp(std::bind(&DebugPass::debugBrickAc, this)));
+ addStartupOperation(
+   new FunctionOp(std::bind(&DebugPass::debugColorNodePool, this)));
+
+ 
 }
 
 
@@ -291,6 +295,23 @@ void DebugPass::debugNodePool_Octree() {
     kore::Log::getInstance()->write("\n");
   }
 
+  kore::Log::getInstance()->write("\n");
+  glUnmapBuffer(GL_TEXTURE_BUFFER);
+}
+
+glm::uvec3 uintXYZ10ToVec3(uint val) {
+  return glm::uvec3(uint((val & 0x000003FF)),
+                    uint((val & 0x000FFC00) >> 10U), 
+                    uint((val & 0x3FF00000) >> 20U));
+}
+
+void DebugPass::debugColorNodePool() {
+  _renderMgr->bindBuffer(GL_TEXTURE_BUFFER, _vctScene->getNodePool()->getNodePool(COLOR)->getBufferHandle());
+  const uint* nodePtr = (const uint*) glMapBuffer(GL_TEXTURE_BUFFER, GL_READ_ONLY);
+  kore::Log::getInstance()->write("\n");
+  for (uint i = 0; i < _vctScene->getNodePool()->getNumNodes(); ++i) {
+      kore::Log::getInstance()->write("brick pointer %u: x:%u y:%u z:%u\n", i, uintXYZ10ToVec3(nodePtr[i]).x,uintXYZ10ToVec3(nodePtr[i]).y,uintXYZ10ToVec3(nodePtr[i]).z);
+  }
   kore::Log::getInstance()->write("\n");
   glUnmapBuffer(GL_TEXTURE_BUFFER);
 }
