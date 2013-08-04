@@ -25,10 +25,10 @@
 
 #version 420 core
 
-const uint NODE_MASK_VALUE = 0x3FFFFFFF;
-const uint NODE_MASK_TAG = (0x00000001 << 31);
-const uint NODE_MASK_TAG_STATIC = (0x00000003 << 30);
-const uint NODE_NOT_FOUND = 0xFFFFFFFF;
+#define NODE_MASK_VALUE 0x3FFFFFFF
+#define NODE_MASK_TAG (0x00000001 << 31)
+#define NODE_MASK_TAG_STATIC (0x00000003 << 30)
+#define NODE_NOT_FOUND 0xFFFFFFFF
 const uint pow2[] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
 
 layout(r32ui) uniform volatile uimageBuffer voxelFragmentListPosition;
@@ -60,7 +60,7 @@ uvec3 uintXYZ10ToVec3(uint val) {
 }
 
 void flagNode(in uint nodeNext, in int address) {
-  nodeNext = (0x00000001 << 31) | (0x7FFFFFFF & nodeNext); 
+  nodeNext = NODE_MASK_TAG | nodeNext;
   imageStore(nodePool_next, address, uvec4(nodeNext));
   memoryBarrier();
 }

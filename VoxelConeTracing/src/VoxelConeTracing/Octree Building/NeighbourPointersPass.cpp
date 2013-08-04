@@ -49,7 +49,7 @@ NeighbourPointersPass::
   _shader.init();
 
   this->setShaderProgram(&_shader);
-
+  
   addStartupOperation(
     new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
     vctScene->getVoxelFragList()->getFragListIndCmdBuf()->getBufferHandle()));

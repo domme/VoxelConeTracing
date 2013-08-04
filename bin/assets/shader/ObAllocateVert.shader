@@ -51,6 +51,10 @@ bool isFlagged(in uint nodeNext) {
   return (nodeNext & NODE_MASK_TAG) != 0U;
 }
 
+bool hasBrick(in uint nextU) {
+  return (nextU & NODE_MASK_BRICK) != 0;
+}
+
 uint allocChildTile(in int nodeAddress) {
   uint nextFreeTile = atomicCounterIncrement(nextFreeAddress);
   uint nextFreeAddress = (1U + 8U * nextFreeTile);
@@ -79,14 +83,22 @@ void alloc3x3x3TextureBrick(in int nodeAddress) {
 }
 
 void main() {
-  uint nodeNext = imageLoad(nodePool_next, gl_VertexID).x;
-  
-  if (isFlagged(nodeNext)) {
-    nodeNext = allocChildTile(gl_VertexID);
-    alloc3x3x3TextureBrick(gl_VertexID);
+  uint nodeNextU = imageLoad(nodePool_next, gl_VertexID).x;
+
+  bool flagged = isFlagged(nodeNextU);
+  bool bricked = hasBrick(nodeNextU);
     
-    // Set the flag to indicate the brick-existance and write nextFreeAddress
-    imageStore(nodePool_next, gl_VertexID,
-               uvec4(NODE_MASK_BRICK | nodeNext, 0, 0, 0));
+  if (flagged) {
+    //alloc child and unflag
+    nodeNextU = NODE_MASK_VALUE & allocChildTile(gl_VertexID);
   }
+
+  if (!bricked) {
+    //alloc brick
+    alloc3x3x3TextureBrick(gl_VertexID);
+  }
+
+  // Set the brick-flag in any case
+  imageStore(nodePool_next, gl_VertexID,
+             uvec4(NODE_MASK_BRICK | nodeNextU, 0, 0, 0));
 }
