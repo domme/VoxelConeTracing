@@ -32,7 +32,7 @@ layout(rgba8) uniform image3D brickPool_color;
 layout(r32ui) uniform readonly uimageBuffer nodePool_Neighbour;
 layout(r32ui) uniform readonly uimageBuffer nodePool_Neighbour_neg;
 
-uniform uint level;
+uniform int level;
 uniform uint numLevels;
 uniform uint axis;
 
@@ -58,13 +58,13 @@ uvec3 uintXYZ10ToVec3(uint val) {
 }
 
 uint getThreadNode() {
-  uint levelStart = imageLoad(levelAddressBuffer, int(level)).x;
-  uint nextLevelStart = imageLoad(levelAddressBuffer, int(level + 1)).x;
+  int levelStart = int(imageLoad(levelAddressBuffer, int(level)).x);
+  int nextLevelStart = int(imageLoad(levelAddressBuffer, int(level + 1)).x);
   memoryBarrier();
 
-  uint index = levelStart + uint(gl_VertexID);
+  uint index = uint(levelStart) + uint(gl_VertexID);
 
-  if (index >= nextLevelStart) {
+  if (level < int(numLevels - 1) && index >= nextLevelStart) {
     return NODE_NOT_FOUND;
   }
 
@@ -108,9 +108,9 @@ void main() {
         vec4 neighbourBorderVal = imageLoad(brickPool_color, nBrickAddr + nOffset);
         memoryBarrier();
 
-        vec4 finalVal = borderVal + neighbourBorderVal; // TODO: Maybe we need a /2 here and have to use atomics
+        vec4 finalVal = borderVal / 2 + neighbourBorderVal / 2; // TODO: Maybe we need a /2 here and have to use atomics
         //imageStore(brickPool_color, brickAddr + offset, finalVal);
-        imageStore(brickPool_color, nBrickAddr + nOffset, finalVal/*vec4(1,0,0,1)*/);
+        imageStore(brickPool_color, nBrickAddr + nOffset, finalVal /* vec4(1,0,0,1)*/);
         
       }
     }
@@ -125,7 +125,7 @@ void main() {
         vec4 neighbourBorderVal = imageLoad(brickPool_color, nBrickAddr + nOffset);
         memoryBarrier();
 
-        vec4 finalVal = borderVal + neighbourBorderVal; // TODO: Maybe we need a /2 here and have to use atomics
+        vec4 finalVal = borderVal / 2 + neighbourBorderVal / 2; // TODO: Maybe we need a /2 here and have to use atomics
         //imageStore(brickPool_color, brickAddr + offset, finalVal);
         imageStore(brickPool_color, nBrickAddr + nOffset, finalVal/*vec4(0,1,0,1)*/);
 
@@ -142,7 +142,7 @@ void main() {
         vec4 neighbourBorderVal = imageLoad(brickPool_color, nBrickAddr + nOffset);
         memoryBarrier();
 
-        vec4 finalVal = borderVal + neighbourBorderVal; // TODO: Maybe we need a /2 here and have to use atomics
+        vec4 finalVal = borderVal / 2 + neighbourBorderVal / 2; // TODO: Maybe we need a /2 here and have to use atomics
         //imageStore(brickPool_color, brickAddr + offset, finalVal);
         imageStore(brickPool_color, nBrickAddr + nOffset, finalVal/*vec4(0,0,1,1)*/);
 

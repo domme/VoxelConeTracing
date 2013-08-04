@@ -30,7 +30,7 @@
 #include "Kore\Operations\Operations.h"
 
 BorderTransferPass::
-  BorderTransferPass(VCTscene* vctScene, uint level,
+  BorderTransferPass(VCTscene* vctScene, int level,
                      kore::EOperationExecutionType executionType) {
   using namespace kore;
 
@@ -59,7 +59,7 @@ BorderTransferPass::
   _shdLevel.component = NULL;
   _shdLevel.name = "Level";
   _shdLevel.size = 1;
-  _shdLevel.type = GL_UNSIGNED_INT;
+  _shdLevel.type = GL_INT;
   _shdLevel.data = &_level;
     
   _shader.loadShader("./assets/shader/BorderTransfer.shader",

@@ -33,14 +33,14 @@
 class BorderTransferPass : public kore::ShaderProgramPass
 {
   public:
-    BorderTransferPass(VCTscene* vctScene, uint level,
+    BorderTransferPass(VCTscene* vctScene, int level,
               kore::EOperationExecutionType executionType);
     virtual ~BorderTransferPass(void);
 
   private:
     kore::ShaderProgram _shader;
     
-    uint _level;
+    int _level;
     kore::ShaderData _shdLevel;
 
     uint _axisX;

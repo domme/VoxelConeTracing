@@ -95,9 +95,10 @@ SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
 
   
   this->addProgramPass(new SpreadLeafBricksPass(&vctScene, kore::EXECUTE_ONCE));
-  /*this->addProgramPass(new BorderTransferPass(&vctScene,
+  this->addProgramPass(new BorderTransferPass(&vctScene,
                                               _numLevels - 1, EXECUTE_ONCE));
   
+ // /*
   // Mipmap the values from bottom to top
   for (int iLevel = _numLevels - 2; iLevel >= 0;) {
     //kore::Log::getInstance()->write("%u\n", iLevel);
@@ -106,7 +107,7 @@ SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
     this->addProgramPass(new BorderTransferPass(&vctScene,
                                                 iLevel, EXECUTE_ONCE)); 
     --iLevel;
-  }*/
+  }//*/
 
 }
 
