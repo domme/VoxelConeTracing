@@ -68,26 +68,17 @@ MipmapCenterPass::
 
   addStartupOperation(new BindImageTexture(
     _vctScene->getNodePool()->getShdLevelAddressBuffer(),
-    shp->getUniform("levelAddressBuffer")));
-   
-  /// Brick-Uniforms ///
-  addStartupOperation(
-    new BindUniform(_vctScene->getBrickPool()->getShdBrickPoolResolution(),
-                    shp->getUniform("brickPoolResolution")));
-
-  addStartupOperation(
-    new BindAtomicCounterBuffer(_vctScene->getBrickPool()->getShdAcNextFree(),
-                                shp->getUniform("nextFreeBrick"))); 
-
+    shp->getUniform("levelAddressBuffer"), GL_READ_ONLY));
+  
     addStartupOperation(new BindImageTexture(
                     vctScene->getBrickPool()->getShdBrickPool(BRICKPOOL_COLOR),
                                           shp->getUniform("brickPool_color")));
 
   addStartupOperation(new BindImageTexture(
-    vctScene->getNodePool()->getShdNodePool(NEXT), shp->getUniform("nodePool_next")));
+    vctScene->getNodePool()->getShdNodePool(NEXT), shp->getUniform("nodePool_next"), GL_READ_ONLY));
 
   addStartupOperation(new BindImageTexture(
-    vctScene->getNodePool()->getShdNodePool(COLOR), shp->getUniform("nodePool_color")));
+    vctScene->getNodePool()->getShdNodePool(COLOR), shp->getUniform("nodePool_color"), GL_READ_ONLY));
 
   addStartupOperation(new BindUniform(&_shdLevel, shp->getUniform("level")));
   

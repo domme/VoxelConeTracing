@@ -25,9 +25,9 @@
 
 #version 430 core
 
-layout(r32ui) uniform volatile uimageBuffer nodePool_next;
-layout(r32ui) uniform volatile uimageBuffer nodePool_color;
-layout(r32ui) uniform volatile uimageBuffer levelAddressBuffer;
+layout(r32ui) uniform readonly uimageBuffer nodePool_next;
+layout(r32ui) uniform readonly uimageBuffer nodePool_color;
+layout(r32ui) uniform readonly uimageBuffer levelAddressBuffer;
 
 layout(rgba8) uniform image3D brickPool_color;
 

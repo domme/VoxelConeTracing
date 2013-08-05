@@ -385,27 +385,11 @@ int main(void) {
     running = !glfwGetKey(GLFW_KEY_ESC) && glfwGetWindowParam(GLFW_OPENED);
   }
 
-  // Wait for all rendering processes to finish
-  
-  glFlush();
-  glFinish();
-  glMemoryBarrier(GL_ALL_BARRIER_BITS);
-  
-  // Do manual cleanupS
-  kore::RenderManager::getInstance()->removeFrameBufferStage(_backbufferStage);
-  delete _backbufferStage;
-  
   // Close window and terminate GLFW
-  shutdown();
-  
-  try{
-    glfwCloseWindow();
-    glfwTerminate(); }
-   catch(std::exception& e) {
-    kore::Log::getInstance()->write("[ERROR] Exception on program closing");
-  }
+   shutdown();
+
+   glfwTerminate();
 
   // Exit program
    exit(EXIT_SUCCESS);
-   return 0;
 } 
