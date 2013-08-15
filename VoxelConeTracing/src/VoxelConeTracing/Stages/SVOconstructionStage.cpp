@@ -40,6 +40,7 @@
 #include "../Octree Mipmap/SpreadLeafBricksPass.h"
 #include "../Octree Building/AllocBricksPass.h"
 #include "../Octree Mipmap/MipmapFacesPass.h"
+#include "../Octree Mipmap/MipmapCornersPass.h"
 
 
 SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
@@ -105,9 +106,10 @@ SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
     //kore::Log::getInstance()->write("%u\n", iLevel);
     this->addProgramPass(new MipmapCenterPass(&vctScene, iLevel, kore::EXECUTE_ONCE));
     this->addProgramPass(new MipmapFacesPass(&vctScene, iLevel, kore::EXECUTE_ONCE));
+    this->addProgramPass(new MipmapCornersPass(&vctScene, iLevel, kore::EXECUTE_ONCE));
     
     this->addProgramPass(new BorderTransferPass(&vctScene,
-                                                iLevel, EXECUTE_ONCE)); 
+                                                iLevel, EXECUTE_ONCE));
     --iLevel;
   }//*/
 

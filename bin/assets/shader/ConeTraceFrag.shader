@@ -115,18 +115,21 @@ bool intersectRayWithAABB (in vec3 ro, in vec3 rd,         // Ray-origin and -di
 
 ///*
 int traverseOctree(in vec3 posTex, in float d, in float pixelSizeTS,
-                   out vec3 nodePosTex, out vec3 nodePosMaxTex, out float outSideLength) {
+                   out vec3 nodePosTex, out vec3 nodePosMaxTex,
+                   out float outSideLength, out bool valid) {
   nodePosTex = vec3(0.0);
   nodePosMaxTex = vec3(1.0);
 
   float sideLength = 1.0;
   int nodeAddress = 0;
   
-  for (uint iLevel = 0; iLevel < numLevels; ++iLevel) {
+  uint iLevel = 0;
+  for (; iLevel < numLevels; ++iLevel) {
     float voxelSize = sideLength;
     float projVoxelSize = voxelSize / d;
 
     if (projVoxelSize / 2 < pixelSizeTS) {
+      valid = true;
       break;
     }
     
@@ -146,7 +149,11 @@ int traverseOctree(in vec3 posTex, in float d, in float pixelSizeTS,
       nodePosTex += vec3(childOffsets[off]) * vec3(sideLength);
       nodePosMaxTex = nodePosTex + vec3(sideLength);
       posTex = 2.0 * posTex - vec3(offVec);
-    } // level-for
+  } // level-for
+
+  if (iLevel == numLevels - 1) {
+    valid = true;
+  }
 
   outSideLength = sideLength;
   return nodeAddress;
@@ -218,33 +225,35 @@ void main(void) {
     vec3 posTex = (rayOriginTex + rayDirTex * f);
    
     float foundNodeSideLength = 1.0;
-    int address = traverseOctree(posTex, f, pixelSizeTS, nodePosMin, nodePosMax, foundNodeSideLength);
-    
+    bool valid = false;
+    int address = traverseOctree(posTex, f, pixelSizeTS, nodePosMin, nodePosMax, foundNodeSideLength, valid);
 
     float alphaCorrection = tLeave / (1.0 / float(voxelGridResolution));
     bool advance = intersectRayWithAABB(posTex, rayDirTex, nodePosMin, nodePosMax, tEnter, tLeave);
     
-    uint nodeColorU = imageLoad(nodePool_color, address).x;
-    memoryBarrier();
+    if (valid) {
+      uint nodeColorU = imageLoad(nodePool_color, address).x;
+      memoryBarrier();
 
-    vec4 newCol = vec4(0);
+      vec4 newCol = vec4(0);
     
-    vec3 enterPos = (posTex - nodePosMin) / foundNodeSideLength;
-    vec3 leavePos = ((posTex + rayDirTex * tLeave) - nodePosMin) / foundNodeSideLength;
-    float rayCastAlphaCorrection = foundNodeSideLength / (1.0 / float(voxelGridResolution / 2));
-    newCol = raycastBrick(nodeColorU, enterPos, leavePos, rayDirTex, rayCastAlphaCorrection);
+      vec3 enterPos = (posTex - nodePosMin) / foundNodeSideLength;
+      vec3 leavePos = ((posTex + rayDirTex * tLeave) - nodePosMin) / foundNodeSideLength;
+      float rayCastAlphaCorrection = foundNodeSideLength / (1.0 / float(voxelGridResolution / 2));
+      newCol = raycastBrick(nodeColorU, enterPos, leavePos, rayDirTex, rayCastAlphaCorrection);
 
-    color = (1.0 - color.a) * newCol + color;
+      color = (1.0 - color.a) * newCol + color;
 
-    if (color.a > 0.99) {
-      return;
+      if (color.a > 0.99) {
+        return;
+      }
+
+      
     }
 
-    
     if (!advance) {
-      return; // prevent infinite loop
+        return; // prevent infinite loop
     }
-
-
+    
   } 
 }

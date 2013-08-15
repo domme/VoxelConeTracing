@@ -562,6 +562,282 @@ void edgeRightTop(in ivec3 brickAddress) {
 }
 
 
+
+
+
+
+
+void cornerNearLeftBottom(in ivec3 brickAddress) {
+   vec4 color = vec4(0);
+  float weightSum = 0.0;
+
+  //  1/4
+  float weight = 0.25;
+  color += weight * getChildBrickColor(0, ivec3(0, 0, 0));
+  weightSum += weight;                         
+                                               
+  // 1/8                                       
+  weight = 0.125;                              
+  color += weight * getChildBrickColor(0, ivec3(1, 0, 0));
+  color += weight * getChildBrickColor(0, ivec3(0, 1, 0));
+  color += weight * getChildBrickColor(0, ivec3(0, 0, 1));
+  weightSum += 3.0 * weight;                   
+                                               
+  // 1/16                                      
+  weight = 0.0625;                             
+  color += weight * getChildBrickColor(0, ivec3(1, 0, 1));
+  color += weight * getChildBrickColor(0, ivec3(1, 1, 0));
+  color += weight * getChildBrickColor(0, ivec3(0, 1, 1));
+  weightSum += 3.0 * weight;                   
+                                               
+  // 1/32                                      
+  weight = 0.03125;                            
+  color += weight * getChildBrickColor(0, ivec3(1, 1, 1));
+  weightSum +=  weight;
+
+  color /= weightSum;
+  
+  imageStore(brickPool_color, brickAddress + ivec3(0, 0, 0), color);
+}
+
+void cornerNearRightBottom(in ivec3 brickAddress) {
+   vec4 color = vec4(0);
+  float weightSum = 0.0;
+
+  //  1/4
+  float weight = 0.25;
+  color += weight * getChildBrickColor(1, ivec3(2, 0, 0));
+  weightSum += weight;                         
+                                               
+  // 1/8                                       
+  weight = 0.125;                              
+  color += weight * getChildBrickColor(1, ivec3(1, 0, 0));
+  color += weight * getChildBrickColor(1, ivec3(2, 1, 0));
+  color += weight * getChildBrickColor(1, ivec3(2, 0, 1));
+  weightSum += 3.0 * weight;                   
+                                               
+  // 1/16                                      
+  weight = 0.0625;                             
+  color += weight * getChildBrickColor(1, ivec3(1, 0, 1));
+  color += weight * getChildBrickColor(1, ivec3(1, 1, 0));
+  color += weight * getChildBrickColor(1, ivec3(2, 1, 1));
+  weightSum += 3.0 * weight;                   
+                                               
+  // 1/32                                      
+  weight = 0.03125;                            
+  color += weight * getChildBrickColor(1, ivec3(1, 1, 1));
+  weightSum +=  weight;
+
+  color /= weightSum;
+  
+  imageStore(brickPool_color, brickAddress + ivec3(2, 0, 0), color);
+}
+
+void cornerNearLeftTop(in ivec3 brickAddress) {
+   vec4 color = vec4(0);
+  float weightSum = 0.0;
+
+  //  1/4
+  float weight = 0.25;
+  color += weight * getChildBrickColor(2, ivec3(0, 2, 0));
+  weightSum += weight;                         
+                                               
+  // 1/8                                       
+  weight = 0.125;                              
+  color += weight * getChildBrickColor(2, ivec3(1, 2, 0));
+  color += weight * getChildBrickColor(2, ivec3(0, 1, 0));
+  color += weight * getChildBrickColor(2, ivec3(0, 2, 1));
+  weightSum += 3.0 * weight;                   
+                                               
+  // 1/16                                      
+  weight = 0.0625;                             
+  color += weight * getChildBrickColor(2, ivec3(1, 2, 1));
+  color += weight * getChildBrickColor(2, ivec3(1, 1, 0));
+  color += weight * getChildBrickColor(2, ivec3(0, 1, 1));
+  weightSum += 3.0 * weight;                   
+                                               
+  // 1/32                                      
+  weight = 0.03125;                            
+  color += weight * getChildBrickColor(2, ivec3(1, 1, 1));
+  weightSum +=  weight;
+
+  color /= weightSum;
+  
+  imageStore(brickPool_color, brickAddress + ivec3(0, 2, 0), color);
+}
+
+void cornerNearRightTop(in ivec3 brickAddress) {
+   vec4 color = vec4(0);
+  float weightSum = 0.0;
+
+  //  1/4
+  float weight = 0.25;
+  color += weight * getChildBrickColor(3, ivec3(2, 2, 0));
+  weightSum += weight;                         
+                                               
+  // 1/8                                       
+  weight = 0.125;                              
+  color += weight * getChildBrickColor(3, ivec3(1, 2, 0));
+  color += weight * getChildBrickColor(3, ivec3(2, 1, 0));
+  color += weight * getChildBrickColor(3, ivec3(2, 2, 1));
+  weightSum += 3.0 * weight;                   
+                                               
+  // 1/16                                      
+  weight = 0.0625;                             
+  color += weight * getChildBrickColor(3, ivec3(1, 2, 1));
+  color += weight * getChildBrickColor(3, ivec3(1, 1, 0));
+  color += weight * getChildBrickColor(3, ivec3(2, 1, 1));
+  weightSum += 3.0 * weight;                   
+                                               
+  // 1/32                                      
+  weight = 0.03125;                            
+  color += weight * getChildBrickColor(3, ivec3(1, 1, 1));
+  weightSum +=  weight;
+
+  color /= weightSum;
+  
+  imageStore(brickPool_color, brickAddress + ivec3(2, 2, 0), color);
+}
+
+
+
+
+// Back face
+void cornerFarLeftBottom(in ivec3 brickAddress) {
+   vec4 color = vec4(0);
+  float weightSum = 0.0;
+
+  //  1/4
+  float weight = 0.25;
+  color += weight * getChildBrickColor(4, ivec3(0, 0, 2));
+  weightSum += weight;                         
+                                               
+  // 1/8                                       
+  weight = 0.125;                              
+  color += weight * getChildBrickColor(4, ivec3(1, 0, 2));
+  color += weight * getChildBrickColor(4, ivec3(0, 1, 2));
+  color += weight * getChildBrickColor(4, ivec3(0, 0, 1));
+  weightSum += 3.0 * weight;                   
+                                               
+  // 1/16                                      
+  weight = 0.0625;                             
+  color += weight * getChildBrickColor(4, ivec3(1, 0, 1));
+  color += weight * getChildBrickColor(4, ivec3(1, 1, 2));
+  color += weight * getChildBrickColor(4, ivec3(0, 1, 1));
+  weightSum += 3.0 * weight;                   
+                                               
+  // 1/32                                      
+  weight = 0.03125;                            
+  color += weight * getChildBrickColor(4, ivec3(1, 1, 1));
+  weightSum +=  weight;
+
+  color /= weightSum;
+  
+  imageStore(brickPool_color, brickAddress + ivec3(0, 0, 2), color);
+}
+
+void cornerFarRightBottom(in ivec3 brickAddress) {
+   vec4 color = vec4(0);
+  float weightSum = 0.0;
+
+  //  1/4
+  float weight = 0.25;
+  color += weight * getChildBrickColor(5, ivec3(2, 0, 2));
+  weightSum += weight;                         
+                                               
+  // 1/8                                       
+  weight = 0.125;                              
+  color += weight * getChildBrickColor(5, ivec3(1, 0, 2));
+  color += weight * getChildBrickColor(5, ivec3(2, 1, 2));
+  color += weight * getChildBrickColor(5, ivec3(2, 0, 1));
+  weightSum += 3.0 * weight;                   
+                                               
+  // 1/16                                      
+  weight = 0.0625;                             
+  color += weight * getChildBrickColor(5, ivec3(1, 0, 1));
+  color += weight * getChildBrickColor(5, ivec3(1, 1, 2));
+  color += weight * getChildBrickColor(5, ivec3(2, 1, 1));
+  weightSum += 3.0 * weight;                   
+                                               
+  // 1/32                                      
+  weight = 0.03125;                            
+  color += weight * getChildBrickColor(5, ivec3(1, 1, 1));
+  weightSum +=  weight;
+
+  color /= weightSum;
+  
+  imageStore(brickPool_color, brickAddress + ivec3(2, 0, 2), color);
+}
+
+void cornerFarLeftTop(in ivec3 brickAddress) {
+   vec4 color = vec4(0);
+  float weightSum = 0.0;
+
+  //  1/4
+  float weight = 0.25;
+  color += weight * getChildBrickColor(6, ivec3(0, 2, 2));
+  weightSum += weight;                         
+                                               
+  // 1/8                                       
+  weight = 0.125;                              
+  color += weight * getChildBrickColor(6, ivec3(1, 2, 2));
+  color += weight * getChildBrickColor(6, ivec3(0, 1, 2));
+  color += weight * getChildBrickColor(6, ivec3(0, 2, 1));
+  weightSum += 3.0 * weight;                   
+                                               
+  // 1/16                                      
+  weight = 0.0625;                             
+  color += weight * getChildBrickColor(6, ivec3(1, 2, 1));
+  color += weight * getChildBrickColor(6, ivec3(1, 1, 2));
+  color += weight * getChildBrickColor(6, ivec3(0, 1, 1));
+  weightSum += 3.0 * weight;                   
+                                               
+  // 1/32                                      
+  weight = 0.03125;                            
+  color += weight * getChildBrickColor(6, ivec3(1, 1, 1));
+  weightSum +=  weight;
+
+  color /= weightSum;
+  
+  imageStore(brickPool_color, brickAddress + ivec3(0, 2, 2), color);
+}
+
+void cornerFarRightTop(in ivec3 brickAddress) {
+   vec4 color = vec4(0);
+  float weightSum = 0.0;
+
+  //  1/4
+  float weight = 0.25;
+  color += weight * getChildBrickColor(7, ivec3(2, 2, 2));
+  weightSum += weight;                         
+                                               
+  // 1/8                                       
+  weight = 0.125;                              
+  color += weight * getChildBrickColor(7, ivec3(1, 2, 2));
+  color += weight * getChildBrickColor(7, ivec3(2, 1, 2));
+  color += weight * getChildBrickColor(7, ivec3(2, 2, 1));
+  weightSum += 3.0 * weight;                   
+                                               
+  // 1/16                                      
+  weight = 0.0625;                             
+  color += weight * getChildBrickColor(7, ivec3(1, 2, 1));
+  color += weight * getChildBrickColor(7, ivec3(1, 1, 2));
+  color += weight * getChildBrickColor(7, ivec3(2, 1, 1));
+  weightSum += 3.0 * weight;                   
+                                               
+  // 1/32                                      
+  weight = 0.03125;                            
+  color += weight * getChildBrickColor(7, ivec3(1, 1, 1));
+  weightSum +=  weight;
+
+  color /= weightSum;
+  
+  imageStore(brickPool_color, brickAddress + ivec3(2, 2, 2), color);
+}
+
+
+
+
 void main() {
   uint nodeAddress = getThreadNode();
   if(nodeAddress == NODE_NOT_FOUND) {
@@ -598,6 +874,14 @@ void main() {
 
   // Mipmap corners
   // 8
+  cornerNearRightTop(brickAddress);
+  cornerNearLeftBottom(brickAddress);
+  cornerNearRightTop(brickAddress);
+  cornerNearLeftBottom(brickAddress);
+  cornerFarRightTop(brickAddress);
+  cornerFarLeftBottom(brickAddress);
+  cornerFarRightTop(brickAddress);
+  cornerFarLeftBottom(brickAddress);
 }
 
 

@@ -1,4 +1,4 @@
-KoRE Log - Wed Jul 31 17:30:59 2013
+KoRE Log - Thu Aug 15 17:36:59 2013
 
 [DEBUG] added Framebuffer 'BACKBUFFER'
 Render Device: GeForce GTX 670/PCIe/SSE2
