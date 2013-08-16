@@ -23,8 +23,8 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#ifndef VCT_SRC_VCT_MIPMAPCORNERSPASS_H_
-#define VCT_SRC_VCT_MIPMAPCORNERSPASS_H_
+#ifndef VCT_SRC_VCT_MIPMAPEDGESPASS_H_
+#define VCT_SRC_VCT_MIPMAPEDGESPASS_H_
 
 #include "KoRE/Passes/ShaderProgramPass.h"
 #include "VoxelConeTracing/Scene/VCTscene.h"
@@ -50,4 +50,4 @@ class MipmapCornersPass : public kore::ShaderProgramPass
     uint _level;
 };
 
-#endif  // VCT_SRC_VCT_MIPMAPCORNERSPASS_H_
+#endif  // VCT_SRC_VCT_MIPMAPEDGESPASS_H_
