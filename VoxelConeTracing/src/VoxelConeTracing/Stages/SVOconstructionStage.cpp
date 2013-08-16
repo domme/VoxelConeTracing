@@ -41,6 +41,7 @@
 #include "../Octree Building/AllocBricksPass.h"
 #include "../Octree Mipmap/MipmapFacesPass.h"
 #include "../Octree Mipmap/MipmapCornersPass.h"
+#include "../Octree Mipmap/MipmapEdgesPass.h"
 
 
 SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
@@ -102,27 +103,28 @@ SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
 
 
   // DEBUG:
-  this->addProgramPass(new MipmapCenterPass(&vctScene, _numLevels - 2, kore::EXECUTE_ONCE));
+  //this->addProgramPass(new MipmapCenterPass(&vctScene, _numLevels - 2, kore::EXECUTE_ONCE));
   //this->addProgramPass(new MipmapFacesPass(&vctScene, _numLevels - 2, kore::EXECUTE_ONCE));
-  this->addProgramPass(new MipmapCornersPass(&vctScene, _numLevels - 2, kore::EXECUTE_ONCE));
+  //this->addProgramPass(new MipmapCornersPass(&vctScene, _numLevels - 2, kore::EXECUTE_ONCE));
+  //this->addProgramPass(new MipmapEdgesPass(&vctScene, _numLevels - 2, kore::EXECUTE_ONCE));
   //this->addProgramPass(new BorderTransferPass(&vctScene, _numLevels - 2, EXECUTE_ONCE));
   //////////////////////////////////////////////////////////////////////////
 
   
-  /*
+  ///*
   // Mipmap the values from bottom to top
   for (int iLevel = _numLevels - 2; iLevel >= 0;) {
     
     this->addProgramPass(new MipmapCenterPass(&vctScene, iLevel, kore::EXECUTE_ONCE));
     this->addProgramPass(new MipmapFacesPass(&vctScene, iLevel, kore::EXECUTE_ONCE));
     this->addProgramPass(new MipmapCornersPass(&vctScene, iLevel, kore::EXECUTE_ONCE));
+    this->addProgramPass(new MipmapEdgesPass(&vctScene, iLevel, kore::EXECUTE_ONCE));
     
-    this->addProgramPass(new BorderTransferPass(&vctScene,
-                                                iLevel, EXECUTE_ONCE));
+    this->addProgramPass(new BorderTransferPass(&vctScene, iLevel, EXECUTE_ONCE));
     --iLevel;
   }
 
-  */
+  //*/
 
 }
 

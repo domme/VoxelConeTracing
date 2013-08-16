@@ -23,8 +23,8 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#ifndef VCT_SRC_VCT_MIPMAPCORNERSPASS_H_
-#define VCT_SRC_VCT_MIPMAPCORNERSPASS_H_
+#ifndef VCT_SRC_VCT_MIPMAPEDGES_H_
+#define VCT_SRC_VCT_MIPMAPEDGES_H_
 
 #include "KoRE/Passes/ShaderProgramPass.h"
 #include "VoxelConeTracing/Scene/VCTscene.h"
@@ -32,13 +32,13 @@
 #include "KoRE/RenderManager.h"
 #include "KoRE/ResourceManager.h"
 
-class MipmapCornersPass : public kore::ShaderProgramPass
+class MipmapEdgesPass : public kore::ShaderProgramPass
 {
   public:
-    MipmapCornersPass(VCTscene* vctScene,
+    MipmapEdgesPass(VCTscene* vctScene,
                      uint level,
                      kore::EOperationExecutionType executionType);
-    virtual ~MipmapCornersPass(void);
+    virtual ~MipmapEdgesPass(void);
 
   private:
     kore::RenderManager* _renderMgr;
