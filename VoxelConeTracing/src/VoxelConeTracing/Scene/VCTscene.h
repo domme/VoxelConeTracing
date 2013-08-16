@@ -126,7 +126,6 @@ private:
   std::vector<kore::Texture> _vLightNodeMap;
   std::vector<kore::STextureInfo> _vLightNodeMapTexInfo;
   std::vector<kore::ShaderData> _vShdLightNodeMap;
-
 };
 
 #endif  // VCT_SRC_VCT_VCTSCENE_H_

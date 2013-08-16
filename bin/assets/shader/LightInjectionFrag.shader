@@ -48,6 +48,8 @@ const uint pow2[] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
 
 layout(r32ui) uniform readonly uimageBuffer nodePool_next;
 
+// Note: Size has to be manually adjusted depending on the number of levels
+layout(r32ui) uniform image2D lightNodeMap[8];
 
 uniform mat4 voxelGridTransformI;
 uniform uint numLevels;
@@ -89,6 +91,7 @@ void main() {
   vec4 posWS = vec4(texture(smPosition, In.uv).xyz, 1.0);
   vec3 posTex = (voxelGridTransformI * posWS).xyz * 0.5 + 0.5;
 
+
   outColor = posWS;
 
   if (posTex.x < 0 || posTex.y < 0 || posTex.z < 0 ||
@@ -102,8 +105,11 @@ void main() {
   float sideLength = 0.5;
   
   for (uint iLevel = 0; iLevel < numLevels; ++iLevel) {
-    uint nodeNext = imageLoad(nodePool_next, nodeAddress).x;
+    // Store the address of this node in the correct lightNodeMap
+    ivec2 nodeMapPos = (ivec2(gl_FragCoord.xy) / ivec2(1280, 720)) * imageSize(lightNodeMap[iLevel]);
+    imageStore(lightNodeMap[iLevel], nodeMapPos, uvec4(nodeAddress));
 
+    uint nodeNext = imageLoad(nodePool_next, nodeAddress).x;
     uint childStartAddress = nodeNext & NODE_MASK_VALUE;
       if (childStartAddress == 0U) {
         if (iLevel == numLevels - 1) {  // This is a leaf node! Yuppieee! ;)

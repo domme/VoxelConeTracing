@@ -90,11 +90,11 @@ SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
 
 
 
-  this->addProgramPass(new WriteLeafNodesPass(&vctScene, kore::EXECUTE_ONCE));
-  /*this->addProgramPass(new LightInjectionPass(&vctScene,
+  //this->addProgramPass(new WriteLeafNodesPass(&vctScene, kore::EXECUTE_ONCE));
+  this->addProgramPass(new LightInjectionPass(&vctScene,
                                               lightNode,
                                               shadowMapFBO,
-                                              kore::EXECUTE_ONCE)); */
+                                              kore::EXECUTE_ONCE));
 
   
   this->addProgramPass(new SpreadLeafBricksPass(&vctScene, kore::EXECUTE_ONCE));

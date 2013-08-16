@@ -23,6 +23,8 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
+#include <sstream>
+
 #include "VoxelConeTracing/Octree Mipmap/LightInjectionPass.h"
 #include "KoRE/Operations/Operations.h"
 #include "VoxelConeTracing/FullscreenQuad.h"
@@ -98,7 +100,15 @@ LightInjectionPass::LightInjectionPass(VCTscene* vctScene,
   nodePass->addOperation(new BindImageTexture(
                          vctScene->getNodePool()->getShdNodePool(NEXT),
                          shader->getUniform("nodePool_next"), GL_READ_ONLY));
-
+  
+  // Add node maps for all levels
+  for (uint i = 0; i < vctScene->getNodePool()->getNumLevels(); ++i) {
+    std::stringstream ss;
+    ss << "lightNodeMap[" << i << "]";
+    nodePass->addOperation(new BindImageTexture(vctScene->getShdLightNodeMap(i),
+                           shader->getUniform(ss.str())));
+  }
+  
   nodePass->addOperation(new RenderMesh(fsqMeshComponent));
 
   this->addFinishOperation(new MemoryBarrierOp(GL_ALL_BARRIER_BITS));
