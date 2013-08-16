@@ -191,6 +191,7 @@
     <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\LightInjectionPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\MipmapCenterPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\MipmapCornersPass.cpp" />
+    <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\MipmapEdgesPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\MipmapFacesPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\OctreeMipmapPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\SpreadLeafBricksPass.cpp" />
@@ -230,6 +231,7 @@
     <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\LightInjectionPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\MipmapCenterPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\MipmapCornersPass.h" />
+    <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\MipmapEdgesPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\MipmapFacesPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\OctreeMipmapPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\SpreadLeafBricksPass.h" />
@@ -265,6 +267,7 @@
     <None Include="..\bin\assets\shader\LightInjectionFrag.shader" />
     <None Include="..\bin\assets\shader\MipmapCenter.shader" />
     <None Include="..\bin\assets\shader\MipmapCorners.shader" />
+    <None Include="..\bin\assets\shader\MipmapEdges.shader" />
     <None Include="..\bin\assets\shader\MipmapFaces.shader" />
     <None Include="..\bin\assets\shader\ModifyIndirectBufferVert.shader" />
     <None Include="..\bin\assets\shader\NeighbourPointer.shader" />

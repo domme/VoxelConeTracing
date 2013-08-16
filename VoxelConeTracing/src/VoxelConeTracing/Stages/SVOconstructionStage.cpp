@@ -99,11 +99,20 @@ SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
   this->addProgramPass(new SpreadLeafBricksPass(&vctScene, kore::EXECUTE_ONCE));
   this->addProgramPass(new BorderTransferPass(&vctScene,
                                               _numLevels - 1, EXECUTE_ONCE));
+
+
+  // DEBUG:
+  this->addProgramPass(new MipmapCenterPass(&vctScene, _numLevels - 2, kore::EXECUTE_ONCE));
+  //this->addProgramPass(new MipmapFacesPass(&vctScene, _numLevels - 2, kore::EXECUTE_ONCE));
+  this->addProgramPass(new MipmapCornersPass(&vctScene, _numLevels - 2, kore::EXECUTE_ONCE));
+  //this->addProgramPass(new BorderTransferPass(&vctScene, _numLevels - 2, EXECUTE_ONCE));
+  //////////////////////////////////////////////////////////////////////////
+
   
- // /*
+  /*
   // Mipmap the values from bottom to top
   for (int iLevel = _numLevels - 2; iLevel >= 0;) {
-    //kore::Log::getInstance()->write("%u\n", iLevel);
+    
     this->addProgramPass(new MipmapCenterPass(&vctScene, iLevel, kore::EXECUTE_ONCE));
     this->addProgramPass(new MipmapFacesPass(&vctScene, iLevel, kore::EXECUTE_ONCE));
     this->addProgramPass(new MipmapCornersPass(&vctScene, iLevel, kore::EXECUTE_ONCE));
@@ -111,7 +120,9 @@ SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
     this->addProgramPass(new BorderTransferPass(&vctScene,
                                                 iLevel, EXECUTE_ONCE));
     --iLevel;
-  }//*/
+  }
+
+  */
 
 }
 

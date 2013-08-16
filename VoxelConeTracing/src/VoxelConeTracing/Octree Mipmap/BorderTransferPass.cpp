@@ -74,6 +74,8 @@ BorderTransferPass::
     vctScene->getNodePool()->getDenseThreadBuf(_level)->getHandle()));
 
   addStartupOperation(new BindUniform(&_shdLevel, _shader.getUniform("level")));
+  addStartupOperation(new BindUniform(vctScene->getNodePool()->getShdNumLevels(),
+                                      _shader.getUniform("numLevels")));
   
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdLevelAddressBuffer(),

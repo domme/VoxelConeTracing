@@ -122,9 +122,8 @@ int traverseOctree(in vec3 posTex, in float d, in float pixelSizeTS,
 
   float sideLength = 1.0;
   int nodeAddress = 0;
-  
-  uint iLevel = 0;
-  for (; iLevel < numLevels; ++iLevel) {
+
+  for (uint iLevel = 0; iLevel < numLevels; ++iLevel) {
     float voxelSize = sideLength;
     float projVoxelSize = voxelSize / d;
 
@@ -137,6 +136,10 @@ int traverseOctree(in vec3 posTex, in float d, in float pixelSizeTS,
 
     uint childStartAddress = nodeNext & NODE_MASK_VALUE;
       if (childStartAddress == 0U) {
+        if (iLevel == numLevels - 1) {
+          valid = true;
+        }
+
         break;
       }
       
@@ -150,10 +153,6 @@ int traverseOctree(in vec3 posTex, in float d, in float pixelSizeTS,
       nodePosMaxTex = nodePosTex + vec3(sideLength);
       posTex = 2.0 * posTex - vec3(offVec);
   } // level-for
-
-  if (iLevel == numLevels - 1) {
-    valid = true;
-  }
 
   outSideLength = sideLength;
   return nodeAddress;
@@ -247,13 +246,10 @@ void main(void) {
       if (color.a > 0.99) {
         return;
       }
-
-      
     }
 
     if (!advance) {
         return; // prevent infinite loop
     }
-    
-  } 
+  }
 }

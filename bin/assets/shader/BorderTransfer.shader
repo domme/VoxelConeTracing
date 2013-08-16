@@ -71,6 +71,15 @@ uint getThreadNode() {
   return index;
 }
 
+vec4 getFinalVal(in vec4 borderVal, in vec4 neighbourBorderVal) {
+  vec4 col = borderVal + neighbourBorderVal;
+  if (uint(level) == numLevels - 1) { // Perform average on leaf-level
+     col /= 2.0;
+  }
+
+  return col;
+}
+
 ///*
 //This shader is launched for every node up to a specific level, so that gl_VertexID 
 //exactly matches all node-addresses in a dense octree. */
@@ -108,7 +117,7 @@ void main() {
         vec4 neighbourBorderVal = imageLoad(brickPool_color, nBrickAddr + nOffset);
         memoryBarrier();
 
-        vec4 finalVal = borderVal / 2 + neighbourBorderVal / 2; // TODO: Maybe we need a /2 here and have to use atomics
+        vec4 finalVal = getFinalVal(borderVal, neighbourBorderVal);// TODO: Maybe we need a /2 here and have to use atomics
         //imageStore(brickPool_color, brickAddr + offset, finalVal);
         imageStore(brickPool_color, nBrickAddr + nOffset, finalVal /* vec4(1,0,0,1)*/);
         
@@ -125,7 +134,7 @@ void main() {
         vec4 neighbourBorderVal = imageLoad(brickPool_color, nBrickAddr + nOffset);
         memoryBarrier();
 
-        vec4 finalVal = borderVal / 2 + neighbourBorderVal / 2; // TODO: Maybe we need a /2 here and have to use atomics
+        vec4 finalVal = getFinalVal(borderVal, neighbourBorderVal); // TODO: Maybe we need a /2 here and have to use atomics
         //imageStore(brickPool_color, brickAddr + offset, finalVal);
         imageStore(brickPool_color, nBrickAddr + nOffset, finalVal/*vec4(0,1,0,1)*/);
 
@@ -142,7 +151,7 @@ void main() {
         vec4 neighbourBorderVal = imageLoad(brickPool_color, nBrickAddr + nOffset);
         memoryBarrier();
 
-        vec4 finalVal = borderVal / 2 + neighbourBorderVal / 2; // TODO: Maybe we need a /2 here and have to use atomics
+        vec4 finalVal = getFinalVal(borderVal, neighbourBorderVal); // TODO: Maybe we need a /2 here and have to use atomics
         //imageStore(brickPool_color, brickAddr + offset, finalVal);
         imageStore(brickPool_color, nBrickAddr + nOffset, finalVal/*vec4(0,0,1,1)*/);
 

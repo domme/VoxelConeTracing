@@ -131,7 +131,7 @@ void faceLeft(in ivec3 brickAddress) {
   color += weight * getChildBrickColor(0, ivec3(1,2,2));
   color += weight * getChildBrickColor(2, ivec3(0,1,2));
   color += weight * getChildBrickColor(4, ivec3(0,2,1));
-  weightSum += 5.0 * weight;
+  weightSum += 6.0 * weight;
 
   // 1/16
   weight = 0.0625;
@@ -143,7 +143,7 @@ void faceLeft(in ivec3 brickAddress) {
   color += weight * getChildBrickColor(4, ivec3(0,1,1));
   color += weight * getChildBrickColor(4, ivec3(1,2,1));
   color += weight * getChildBrickColor(6, ivec3(0,1,1));
-  weightSum += 8.0 * weight;
+  weightSum += 12.0 * weight;
 
   // 1/32
   weight = 0.03125;
@@ -151,7 +151,7 @@ void faceLeft(in ivec3 brickAddress) {
   color += weight * getChildBrickColor(2, ivec3(1,1,1));
   color += weight * getChildBrickColor(4, ivec3(1,1,1));
   color += weight * getChildBrickColor(6, ivec3(1,1,1));
-  weightSum += 4.0 * weight;
+  weightSum += 8.0 * weight;
 
   color /= weightSum;
   
@@ -175,7 +175,7 @@ void faceRight(in ivec3 brickAddress) {
   color += weight * getChildBrickColor(1, ivec3(1,2,2));
   color += weight * getChildBrickColor(3, ivec3(2,1,2));
   color += weight * getChildBrickColor(5, ivec3(2,2,1));
-  weightSum += 5.0 * weight;
+  weightSum += 6.0 * weight;
 
   // 1/16
   weight = 0.0625;
@@ -187,7 +187,7 @@ void faceRight(in ivec3 brickAddress) {
   color += weight * getChildBrickColor(5, ivec3(2,1,1));
   color += weight * getChildBrickColor(5, ivec3(1,2,1));
   color += weight * getChildBrickColor(7, ivec3(2,1,1));
-  weightSum += 8.0 * weight;
+  weightSum += 12.0 * weight;
 
   // 1/32
   weight = 0.03125;
@@ -195,7 +195,7 @@ void faceRight(in ivec3 brickAddress) {
   color += weight * getChildBrickColor(3, ivec3(1,1,1));
   color += weight * getChildBrickColor(5, ivec3(1,1,1));
   color += weight * getChildBrickColor(7, ivec3(1,1,1));
-  weightSum += 4.0 * weight;
+  weightSum += 8.0 * weight;
 
   color /= weightSum;
   
@@ -218,7 +218,7 @@ void faceBottom(in ivec3 brickAddress) {
   color += weight * getChildBrickColor(0, ivec3(2,1,2));
   color += weight * getChildBrickColor(1, ivec3(1,0,2));
   color += weight * getChildBrickColor(4, ivec3(2,0,1));
-  weightSum += 5.0 * weight;                   
+  weightSum += 6.0 * weight;                   
                                                
   // 1/16                                      
   weight = 0.0625;                             
@@ -230,7 +230,7 @@ void faceBottom(in ivec3 brickAddress) {
   color += weight * getChildBrickColor(4, ivec3(1,0,1));
   color += weight * getChildBrickColor(4, ivec3(2,1,1));
   color += weight * getChildBrickColor(5, ivec3(1,0,1));
-  weightSum += 8.0 * weight;                  
+  weightSum += 12.0 * weight;                  
                                               
   // 1/32                                     
   weight = 0.03125;                           
@@ -238,7 +238,7 @@ void faceBottom(in ivec3 brickAddress) {
   color += weight * getChildBrickColor(1, ivec3(1,1,1));
   color += weight * getChildBrickColor(4, ivec3(1,1,1));
   color += weight * getChildBrickColor(5, ivec3(1,1,1));
-  weightSum += 4.0 * weight;
+  weightSum += 8.0 * weight;
 
   color /= weightSum;
   
@@ -261,7 +261,7 @@ void faceTop(in ivec3 brickAddress) {
   color += weight * getChildBrickColor(2, ivec3(2,1,2));
   color += weight * getChildBrickColor(3, ivec3(1,2,2));
   color += weight * getChildBrickColor(6, ivec3(2,2,1));
-  weightSum += 5.0 * weight;                   
+  weightSum += 6.0 * weight;                   
                                                
   // 1/16                                      
   weight = 0.0625;                             
@@ -273,7 +273,7 @@ void faceTop(in ivec3 brickAddress) {
   color += weight * getChildBrickColor(6, ivec3(1,2,1));
   color += weight * getChildBrickColor(6, ivec3(2,1,1));
   color += weight * getChildBrickColor(7, ivec3(1,2,1));
-  weightSum += 8.0 * weight;                  
+  weightSum += 12.0 * weight;                  
                                               
   // 1/32                                     
   weight = 0.03125;                           
@@ -281,7 +281,7 @@ void faceTop(in ivec3 brickAddress) {
   color += weight * getChildBrickColor(2, ivec3(1,1,1));
   color += weight * getChildBrickColor(6, ivec3(1,1,1));
   color += weight * getChildBrickColor(7, ivec3(1,1,1));
-  weightSum += 4.0 * weight;
+  weightSum += 8.0 * weight;
 
   color /= weightSum;
   
@@ -304,7 +304,7 @@ void faceNear(in ivec3 brickAddress) {
   color += weight * getChildBrickColor(0, ivec3(2,2,1));
   color += weight * getChildBrickColor(2, ivec3(2,1,0));
   color += weight * getChildBrickColor(1, ivec3(1,2,0));
-  weightSum += 5.0 * weight;
+  weightSum += 6.0 * weight;
                             
   // 1/16                   
   weight = 0.0625;          
@@ -316,7 +316,7 @@ void faceNear(in ivec3 brickAddress) {
   color += weight * getChildBrickColor(1, ivec3(1,1,0));
   color += weight * getChildBrickColor(1, ivec3(1,2,1));
   color += weight * getChildBrickColor(3, ivec3(1,1,0));
-  weightSum += 8.0 * weight; 
+  weightSum += 12.0 * weight; 
                              
   // 1/32                    
   weight = 0.03125;          
@@ -324,7 +324,7 @@ void faceNear(in ivec3 brickAddress) {
   color += weight * getChildBrickColor(2, ivec3(1,1,1));
   color += weight * getChildBrickColor(1, ivec3(1,1,1));
   color += weight * getChildBrickColor(3, ivec3(1,1,1));
-  weightSum += 4.0 * weight;
+  weightSum += 8.0 * weight;
 
   color /= weightSum;
   
@@ -347,7 +347,7 @@ void faceFar(in ivec3 brickAddress) {
   color += weight * getChildBrickColor(4, ivec3(2,2,1));
   color += weight * getChildBrickColor(6, ivec3(2,1,2));
   color += weight * getChildBrickColor(5, ivec3(1,2,2));
-  weightSum += 5.0 * weight;
+  weightSum += 6.0 * weight;
                             
   // 1/16                   
   weight = 0.0625;          
@@ -359,7 +359,7 @@ void faceFar(in ivec3 brickAddress) {
   color += weight * getChildBrickColor(5, ivec3(1,1,2));
   color += weight * getChildBrickColor(5, ivec3(1,2,1));
   color += weight * getChildBrickColor(7, ivec3(1,1,2));
-  weightSum += 8.0 * weight; 
+  weightSum += 12.0 * weight; 
                              
   // 1/32                    
   weight = 0.03125;          
@@ -367,7 +367,7 @@ void faceFar(in ivec3 brickAddress) {
   color += weight * getChildBrickColor(6, ivec3(1,1,1));
   color += weight * getChildBrickColor(5, ivec3(1,1,1));
   color += weight * getChildBrickColor(7, ivec3(1,1,1));
-  weightSum += 4.0 * weight;
+  weightSum += 8.0 * weight;
 
   color /= weightSum;
   
