@@ -61,7 +61,24 @@ void FullscreenQuad::init() {
 
   _attributes.push_back(att);
 
+  // Load vertex positions.
+  glm::vec3* uvws = new glm::vec3[_numVertices];
+  uvws[LL] = glm::vec3(0.0f, 0.0f, 0.0f);  // LL
+  uvws[LR] = glm::vec3(1.0f, 0.0f, 0.0f);   // LR
+  uvws[UR] = glm::vec3(1.0f, 1.0f, 0.0f);    // UR
+  uvws[UL] = glm::vec3(0.0f, 1.0f, 0.0f);   // UL
 
+  kore::MeshAttributeArray att2;
+  att2.name = "v_uvw";
+  att2.numValues = _numVertices * 3;
+  att2.numComponents = 3;
+  att2.type = GL_FLOAT_VEC3;
+  att2.componentType = GL_FLOAT;
+  att2.byteSize = kore::DatatypeUtil::getSizeFromGLdatatype(att2.type);
+  att2.data = uvws;
+
+  _attributes.push_back(att2);
+  
   // Load indices
   _indices.clear();
   _indices.resize(6);

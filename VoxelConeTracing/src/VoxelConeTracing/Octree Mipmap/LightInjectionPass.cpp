@@ -42,6 +42,7 @@ LightInjectionPass::LightInjectionPass(VCTscene* vctScene,
   _renderMgr = RenderManager::getInstance();
   _sceneMgr = SceneManager::getInstance();
   _resMgr = ResourceManager::getInstance();
+  _shadowMapFBO = shadowMapFBO;
 
 
   ShaderProgram* shader = new ShaderProgram;
@@ -87,6 +88,10 @@ LightInjectionPass::LightInjectionPass(VCTscene* vctScene,
   nodePass->addOperation(new BindAttribute(
                          fsqMeshComponent->getShaderData("v_position"),
                          shader->getAttribute("v_position")));
+
+  nodePass->addOperation(new BindAttribute(
+                        fsqMeshComponent->getShaderData("v_uvw"),
+                        shader->getAttribute("v_uvw")));
   
   nodePass->addOperation(new BindUniform(
                         vctScene->getVoxelGridNode()->getTransform()->getShaderData("inverse model Matrix"),
@@ -117,14 +122,33 @@ LightInjectionPass::LightInjectionPass(VCTscene* vctScene,
                          shader->getUniform("nodeMap")));
    
   
-  nodePass->addOperation(new ViewportOp(
-    glm::ivec4(0, 0, 2048, 2048)));
+  //nodePass->addOperation(new ViewportOp(
+    //glm::ivec4(0, 0, 2048, 2048)));
+  nodePass->addOperation(
+    new FunctionOp(std::bind(&LightInjectionPass::setViewport, this)));
+
   nodePass->addOperation(new EnableDisableOp(GL_DEPTH_TEST, EnableDisableOp::DISABLE));
-  nodePass->addOperation(new ColorMaskOp(glm::bvec4(true, true, true, true)));
+  nodePass->addOperation(new ColorMaskOp(glm::bvec4(false, false, false, false)));
   nodePass->addOperation(new RenderMesh(fsqMeshComponent));
 
+  nodePass->addOperation(
+    new FunctionOp(std::bind(&LightInjectionPass::resetFBO, this)));
+
   this->addFinishOperation(new MemoryBarrierOp(GL_ALL_BARRIER_BITS));
+
+  
 }
+
+
+void LightInjectionPass::setViewport() {
+  RenderManager::getInstance()->bindFrameBuffer(GL_FRAMEBUFFER, _shadowMapFBO->getHandle());
+  RenderManager::getInstance()->setViewport(glm::ivec4(0, 0, 2048, 2048));
+}
+
+void LightInjectionPass::resetFBO() {
+  _renderMgr->bindFrameBuffer(GL_FRAMEBUFFER, 0);
+}
+
 
 LightInjectionPass::~LightInjectionPass(void) {
 }

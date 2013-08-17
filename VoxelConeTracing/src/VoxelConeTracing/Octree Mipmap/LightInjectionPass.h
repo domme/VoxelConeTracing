@@ -40,12 +40,17 @@ public:
                       kore::FrameBuffer* shadowMapFBO,
                       kore::EOperationExecutionType executionType);
   virtual ~LightInjectionPass(void);
-
+ 
 private:
   kore::RenderManager* _renderMgr;
   kore::SceneManager* _sceneMgr;
   kore::ResourceManager* _resMgr;
   VCTscene* _vctScene;
+
+  kore::FrameBuffer* _shadowMapFBO;
+
+ void setViewport();
+ void resetFBO();
 };
 
 #endif

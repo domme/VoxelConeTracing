@@ -1,6 +1,7 @@
 #version 420
 
 layout (location = 0) in vec3 v_position;
+layout (location = 1) in vec3 v_uvw;
 
 out VertexData {
   vec2 uv;
@@ -8,6 +9,6 @@ out VertexData {
 
 void main(void)
 {
-  Out.uv = vec2(0.5) * v_position.xy + vec2(0.5);
+  Out.uv = v_uvw.xy;
   gl_Position = vec4( v_position, 1.0 );
 }
