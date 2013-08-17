@@ -103,6 +103,9 @@ public:
   inline kore::ShaderData* getShdLightNodeMap(uint level) 
   {return &_vShdLightNodeMap[level];}
 
+  inline const glm::ivec2& getSMresolution() {return _smResolution;}
+  inline kore::ShaderData* getShdSMresolution() {return &_shdSMresolution;}
+
 private:
   kore::Camera* _camera;
   std::vector<kore::SceneNode*> _meshNodes;
@@ -117,6 +120,9 @@ private:
 
   uint _nodeGridResolution;
   kore::ShaderData _shdNodeGridResolution;
+
+  glm::ivec2 _smResolutioni;
+  kore::ShaderData _shdSMresolution;
   
   kore::IndexedBuffer _acVoxelIndex;
   kore::ShaderData _shdAcVoxelIndex;
