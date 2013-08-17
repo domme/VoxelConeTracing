@@ -30,8 +30,8 @@
 #include "Kore\Operations\Operations.h"
 
 BorderTransferPass::
-  BorderTransferPass(VCTscene* vctScene, int level,
-                     kore::EOperationExecutionType executionType) {
+  BorderTransferPass(VCTscene* vctScene, EBrickPoolAttributes eBrickPool, 
+                     int level, kore::EOperationExecutionType executionType) {
   using namespace kore;
 
   this->setExecutionType(executionType);
@@ -86,17 +86,9 @@ BorderTransferPass::
     _shader.getUniform("nodePool_color"), GL_READ_ONLY));
 
   addStartupOperation(new BindImageTexture(
-    vctScene->getBrickPool()->getShdBrickPool(BRICKPOOL_COLOR),
-    _shader.getUniform("brickPool_color")));
+    vctScene->getBrickPool()->getShdBrickPool(eBrickPool),
+    _shader.getUniform("brickPool_value")));
 
-  //DEBUG:
-  addStartupOperation(new BindImageTexture(
-    vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_NEG_Z),
-    _shader.getUniform("nodePool_Neighbour_neg"), GL_READ_ONLY));
-
-
-  
-  
     // X Axis ADD
   addStartupOperation(new BindUniform(&_shdAxisX, _shader.getUniform("axis")));
   addStartupOperation(new BindImageTexture(

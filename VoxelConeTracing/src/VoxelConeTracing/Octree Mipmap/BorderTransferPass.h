@@ -33,8 +33,8 @@
 class BorderTransferPass : public kore::ShaderProgramPass
 {
   public:
-    BorderTransferPass(VCTscene* vctScene, int level,
-              kore::EOperationExecutionType executionType);
+    BorderTransferPass(VCTscene* vctScene, EBrickPoolAttributes eBrickPool,
+                       int level, kore::EOperationExecutionType executionType);
     virtual ~BorderTransferPass(void);
 
   private:

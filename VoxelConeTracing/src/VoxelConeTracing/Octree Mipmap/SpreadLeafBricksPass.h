@@ -37,6 +37,7 @@ class SpreadLeafBricksPass : public kore::ShaderProgramPass
 {
   public:
     SpreadLeafBricksPass(VCTscene* vctScene,
+                      EBrickPoolAttributes eBrickPool,
                      kore::EOperationExecutionType executionType);
     virtual ~SpreadLeafBricksPass(void);
 

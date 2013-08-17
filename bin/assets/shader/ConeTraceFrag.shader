@@ -28,7 +28,7 @@ in VertexData {
   vec3 viewDirVS;
   float pixelSizeVS;
   vec2 uv;
-} In;
+} In; 
 
 const uint NODE_MASK_VALUE = 0x3FFFFFFF;
 const uint NODE_MASK_TAG = (0x00000001 << 31);
@@ -52,6 +52,7 @@ const uint pow2[] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
 layout(r32ui) uniform readonly uimageBuffer nodePool_next;
 layout(r32ui) uniform readonly uimageBuffer nodePool_color;
 uniform sampler3D brickPool_color;
+uniform sampler3D brickPool_irradiance;
 
 uniform uint voxelGridResolution;
 uniform mat4 viewI;
@@ -129,7 +130,7 @@ int traverseOctree(in vec3 posTex, in float d, in float pixelSizeTS,
 
     if (projVoxelSize / 2 < pixelSizeTS) {
       valid = true;
-      break;
+      //break;
     }
     
     uint nodeNext = imageLoad(nodePool_next, nodeAddress).x;
@@ -180,7 +181,7 @@ vec4 raycastBrick(in uint nodeColorU, in vec3 enter, in vec3 leave, in vec3 dir,
    // color.xyz *= color.a;
     
     for (float f = 0; f < stepLength; f += stepSize) {
-      vec4 newCol = texture(brickPool_color, enterUVW + dir * f);
+      vec4 newCol = texture(brickPool_irradiance, enterUVW + dir * f);
 
       /*
       float oldColA = newCol.a;

@@ -57,14 +57,17 @@ LightInjectionPass::LightInjectionPass(VCTscene* vctScene,
   this->setShaderProgram(shader);
 
   kore::TexSamplerProperties texSamplerProps;
-  texSamplerProps.wrapping = glm::uvec3(GL_CLAMP_TO_EDGE);
+  texSamplerProps.wrapping = glm::uvec3(GL_REPEAT, GL_REPEAT, GL_REPEAT);
   texSamplerProps.minfilter = GL_NEAREST;
   texSamplerProps.magfilter = GL_NEAREST;
+  texSamplerProps.type = GL_SAMPLER_2D;
   shader->setSamplerProperties(0, texSamplerProps);
 
-  addStartupOperation(new EnableDisableOp(GL_DEPTH_TEST, EnableDisableOp::DISABLE));
-  addStartupOperation(new ColorMaskOp(glm::bvec4(true, true, true, true)));
-  addStartupOperation(new ViewportOp(glm::ivec4(0, 0, 1280, 720)));
+  
+  
+  // There will be bugs here....
+  //addStartupOperation(new ViewportOp(glm::ivec4(0, 0, 1280, 720)));
+ 
  
   SceneNode* fsquadnode = new SceneNode();
   SceneManager::getInstance()->getRootNode()->addChild(fsquadnode);
@@ -100,15 +103,24 @@ LightInjectionPass::LightInjectionPass(VCTscene* vctScene,
   nodePass->addOperation(new BindImageTexture(
                          vctScene->getNodePool()->getShdNodePool(NEXT),
                          shader->getUniform("nodePool_next"), GL_READ_ONLY));
+
+  nodePass->addOperation(new BindImageTexture(
+                        vctScene->getNodePool()->getShdNodePool(COLOR),
+                        shader->getUniform("nodePool_color"), GL_READ_ONLY));
+
+  nodePass->addOperation(new BindImageTexture(
+                         vctScene->getBrickPool()->getShdBrickPool(BRICKPOOL_IRRADIANCE),
+                         shader->getUniform("brickPool_irradiance")));
   
-  // Add node maps for all levels
-  for (uint i = 0; i < vctScene->getNodePool()->getNumLevels(); ++i) {
-    std::stringstream ss;
-    ss << "lightNodeMap[" << i << "]";
-    nodePass->addOperation(new BindImageTexture(vctScene->getShdLightNodeMap(i),
-                           shader->getUniform(ss.str())));
-  }
+  // Add node map for all levels
+  nodePass->addOperation(new BindImageTexture(vctScene->getShdLightNodeMap(),
+                         shader->getUniform("nodeMap")));
+   
   
+  nodePass->addOperation(new ViewportOp(
+    glm::ivec4(0, 0, 2048, 2048)));
+  nodePass->addOperation(new EnableDisableOp(GL_DEPTH_TEST, EnableDisableOp::DISABLE));
+  nodePass->addOperation(new ColorMaskOp(glm::bvec4(true, true, true, true)));
   nodePass->addOperation(new RenderMesh(fsqMeshComponent));
 
   this->addFinishOperation(new MemoryBarrierOp(GL_ALL_BARRIER_BITS));

@@ -50,6 +50,11 @@ void VCTscene::init(const SVCTparameters& params,
   _voxelGridResolution = params.voxel_grid_resolution;
   _voxelGridSideLengths = params.voxel_grid_sidelengths;
   _nodeGridResolution = _voxelGridResolution / 2;
+  _smResolution = params.shadowMapResolution;
+
+  _shdSMresolution.name = "Shadow Map resolution";
+  _shdSMresolution.type = GL_INT_VEC2;
+  _shdSMresolution.data = &_smResolution;
  
   //Level based on number of Voxels (8^level = number of leaves)  
   
@@ -99,27 +104,18 @@ void VCTscene::init(const SVCTparameters& params,
   nodeMapProps.targetType = GL_TEXTURE_2D;
   nodeMapProps.internalFormat = GL_R32UI;
   nodeMapProps.pixelType = GL_UNSIGNED_INT;
-  nodeMapProps.width = params.shadowMapResolution.x;
+  nodeMapProps.width = params.shadowMapResolution.x + params.shadowMapResolution.x / 2;
   nodeMapProps.height = params.shadowMapResolution.y;
 
-  _vLightNodeMap.resize(_nodePool.getNumLevels());
-  _vLightNodeMapTexInfo.resize(_nodePool.getNumLevels());
-  _vShdLightNodeMap.resize(_nodePool.getNumLevels());
-
   // Init light node map for each level
-  for (int i = _nodePool.getNumLevels() - 1; i >= 0; --i) {
-    _vLightNodeMap[i].init(nodeMapProps, "LightNodeMap");
+  _lightNodeMap.init(nodeMapProps, "LightNodeMap");
 
-    _vLightNodeMapTexInfo[i].texLocation = _vLightNodeMap[i].getHandle();
-    _vLightNodeMapTexInfo[i].internalFormat = GL_R32UI;
-    _vLightNodeMapTexInfo[i].texTarget = GL_TEXTURE_2D;
+  _lightNodeMapTexInfo.texLocation = _lightNodeMap.getHandle();
+  _lightNodeMapTexInfo.internalFormat = GL_R32UI;
+  _lightNodeMapTexInfo.texTarget = GL_TEXTURE_2D;
 
-    _vShdLightNodeMap[i].type = GL_IMAGE_2D;
-    _vShdLightNodeMap[i].name = "LightNodeMap image";
-    _vShdLightNodeMap[i].size = 1;
-    _vShdLightNodeMap[i].data = &_vLightNodeMapTexInfo[i];
-
-    nodeMapProps.width = nodeMapProps.width / 2;
-    nodeMapProps.height = nodeMapProps.height / 2;
-  }
+  _shdLightNodeMap.type = GL_UNSIGNED_INT_IMAGE_2D;
+  _shdLightNodeMap.name = "LightNodeMap image";
+  _shdLightNodeMap.size = 1;
+  _shdLightNodeMap.data = &_lightNodeMapTexInfo;
 }

@@ -100,8 +100,8 @@ public:
   inline BrickPool* getBrickPool() {return &_brickPool;}
   inline VoxelFragList* getVoxelFragList() {return &_voxelFragList;}
 
-  inline kore::ShaderData* getShdLightNodeMap(uint level) 
-  {return &_vShdLightNodeMap[level];}
+  inline kore::ShaderData* getShdLightNodeMap() 
+  {return &_shdLightNodeMap;}
 
   inline const glm::ivec2& getSMresolution() {return _smResolution;}
   inline kore::ShaderData* getShdSMresolution() {return &_shdSMresolution;}
@@ -121,7 +121,7 @@ private:
   uint _nodeGridResolution;
   kore::ShaderData _shdNodeGridResolution;
 
-  glm::ivec2 _smResolutioni;
+  glm::ivec2 _smResolution;
   kore::ShaderData _shdSMresolution;
   
   kore::IndexedBuffer _acVoxelIndex;
@@ -129,9 +129,9 @@ private:
 
   kore::SceneNode* _voxelGridNode;
 
-  std::vector<kore::Texture> _vLightNodeMap;
-  std::vector<kore::STextureInfo> _vLightNodeMapTexInfo;
-  std::vector<kore::ShaderData> _vShdLightNodeMap;
+  kore::Texture _lightNodeMap;
+  kore::STextureInfo _lightNodeMapTexInfo;
+  kore::ShaderData _shdLightNodeMap;
 };
 
 #endif  // VCT_SRC_VCT_VCTSCENE_H_

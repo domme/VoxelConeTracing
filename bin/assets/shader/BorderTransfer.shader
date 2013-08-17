@@ -27,10 +27,9 @@
 
 layout(r32ui) uniform readonly uimageBuffer nodePool_color;
 layout(r32ui) uniform readonly uimageBuffer levelAddressBuffer;
-layout(rgba8) uniform image3D brickPool_color;
+layout(rgba8) uniform image3D brickPool_value;
 
 layout(r32ui) uniform readonly uimageBuffer nodePool_Neighbour;
-layout(r32ui) uniform readonly uimageBuffer nodePool_Neighbour_neg;
 
 uniform int level;
 uniform uint numLevels;
@@ -100,12 +99,8 @@ void main() {
     return;
   }
 
-  uint neighbourNegAddress = imageLoad(nodePool_Neighbour_neg, int(neighbourAddress)).x;
-  
   ivec3 brickAddr = ivec3(uintXYZ10ToVec3(imageLoad(nodePool_color, int(nodeAddress)).x));
   ivec3 nBrickAddr = ivec3(uintXYZ10ToVec3(imageLoad(nodePool_color, int(neighbourAddress)).x));
-
-
 
   
   if (axis == AXIS_X) {
@@ -113,13 +108,13 @@ void main() {
       for (int z = 0; z <= 2; ++z) {
         ivec3 offset = ivec3(2,y,z);
         ivec3 nOffset = ivec3(0,y,z);
-        vec4 borderVal = imageLoad(brickPool_color, brickAddr + offset);
-        vec4 neighbourBorderVal = imageLoad(brickPool_color, nBrickAddr + nOffset);
+        vec4 borderVal = imageLoad(brickPool_value, brickAddr + offset);
+        vec4 neighbourBorderVal = imageLoad(brickPool_value, nBrickAddr + nOffset);
         memoryBarrier();
 
         vec4 finalVal = getFinalVal(borderVal, neighbourBorderVal);// TODO: Maybe we need a /2 here and have to use atomics
-        //imageStore(brickPool_color, brickAddr + offset, finalVal);
-        imageStore(brickPool_color, nBrickAddr + nOffset, finalVal /* vec4(1,0,0,1)*/);
+        //imageStore(brickPool_value, brickAddr + offset, finalVal);
+        imageStore(brickPool_value, nBrickAddr + nOffset, finalVal /* vec4(1,0,0,1)*/);
         
       }
     }
@@ -130,13 +125,13 @@ void main() {
       for (int z = 0; z <= 2; ++z) {
         ivec3 offset = ivec3(x,2,z);
         ivec3 nOffset = ivec3(x,0,z);
-        vec4 borderVal = imageLoad(brickPool_color, brickAddr + offset);
-        vec4 neighbourBorderVal = imageLoad(brickPool_color, nBrickAddr + nOffset);
+        vec4 borderVal = imageLoad(brickPool_value, brickAddr + offset);
+        vec4 neighbourBorderVal = imageLoad(brickPool_value, nBrickAddr + nOffset);
         memoryBarrier();
 
         vec4 finalVal = getFinalVal(borderVal, neighbourBorderVal); // TODO: Maybe we need a /2 here and have to use atomics
-        //imageStore(brickPool_color, brickAddr + offset, finalVal);
-        imageStore(brickPool_color, nBrickAddr + nOffset, finalVal/*vec4(0,1,0,1)*/);
+        //imageStore(brickPool_value, brickAddr + offset, finalVal);
+        imageStore(brickPool_value, nBrickAddr + nOffset, finalVal/*vec4(0,1,0,1)*/);
 
       }
     }
@@ -147,13 +142,13 @@ void main() {
       for (int y = 0; y <= 2; ++y) {
         ivec3 offset = ivec3(x,y,2);
         ivec3 nOffset = ivec3(x,y,0);
-        vec4 borderVal = imageLoad(brickPool_color, brickAddr + offset);
-        vec4 neighbourBorderVal = imageLoad(brickPool_color, nBrickAddr + nOffset);
+        vec4 borderVal = imageLoad(brickPool_value, brickAddr + offset);
+        vec4 neighbourBorderVal = imageLoad(brickPool_value, nBrickAddr + nOffset);
         memoryBarrier();
 
         vec4 finalVal = getFinalVal(borderVal, neighbourBorderVal); // TODO: Maybe we need a /2 here and have to use atomics
-        //imageStore(brickPool_color, brickAddr + offset, finalVal);
-        imageStore(brickPool_color, nBrickAddr + nOffset, finalVal/*vec4(0,0,1,1)*/);
+        //imageStore(brickPool_value, brickAddr + offset, finalVal);
+        imageStore(brickPool_value, nBrickAddr + nOffset, finalVal/*vec4(0,0,1,1)*/);
 
         
       }
@@ -166,10 +161,10 @@ void main() {
       for (int z = 0; z <= 2; ++z) {
         ivec3 offset = ivec3(0,y,z);
         ivec3 nOffset = ivec3(2,y,z);
-        vec4 borderVal = imageLoad(brickPool_color, brickAddr + offset);
+        vec4 borderVal = imageLoad(brickPool_value, brickAddr + offset);
         
         memoryBarrier();
-        imageStore(brickPool_color, nBrickAddr + nOffset, borderVal);
+        imageStore(brickPool_value, nBrickAddr + nOffset, borderVal);
       }
     }
   }
@@ -180,10 +175,10 @@ void main() {
       for (int z = 0; z <= 2; ++z) {
         ivec3 offset = ivec3(x,0,z);
         ivec3 nOffset = ivec3(x,2,z);
-        vec4 borderVal = imageLoad(brickPool_color, brickAddr + offset);
+        vec4 borderVal = imageLoad(brickPool_value, brickAddr + offset);
        
         memoryBarrier();
-        imageStore(brickPool_color, nBrickAddr + nOffset, borderVal);
+        imageStore(brickPool_value, nBrickAddr + nOffset, borderVal);
       }
     }
   }
@@ -194,10 +189,10 @@ void main() {
       for (int y = 0; y <= 2; ++y) {
         ivec3 offset = ivec3(x,y,0);
         ivec3 nOffset = ivec3(x,y,2);
-        vec4 borderVal = imageLoad(brickPool_color, brickAddr + offset);
+        vec4 borderVal = imageLoad(brickPool_value, brickAddr + offset);
         memoryBarrier();
 
-        imageStore(brickPool_color, nBrickAddr + nOffset, borderVal);
+        imageStore(brickPool_value, nBrickAddr + nOffset, borderVal);
       }
     }
   }
@@ -222,7 +217,7 @@ void main() {
       for (int z = 0; z <= 2; ++z) {
         ivec3 offset = ivec3(2,y,z);
         
-        imageStore(brickPool_color, brickAddr + offset, vec4(1,0,0,1));
+        imageStore(brickPool_value, brickAddr + offset, vec4(1,0,0,1));
       }
     }
   }
@@ -232,7 +227,7 @@ void main() {
       for (int z = 0; z <= 2; ++z) {
         ivec3 offset = ivec3(x,2,z);
         
-        imageStore(brickPool_color, brickAddr + offset, vec4(0,1,0,1));
+        imageStore(brickPool_value, brickAddr + offset, vec4(0,1,0,1));
       }
     }
   }
@@ -242,7 +237,7 @@ void main() {
       for (int y = 0; y <= 2; ++y) {
         ivec3 offset = ivec3(x,y,2);
 
-        imageStore(brickPool_color, brickAddr + offset, vec4(0,0,1,1));
+        imageStore(brickPool_value, brickAddr + offset, vec4(0,0,1,1));
       }
     }
   }
@@ -252,7 +247,7 @@ void main() {
       for (int z = 0; z <= 2; ++z) {
         ivec3 offset = ivec3(0,y,z);
        
-        imageStore(brickPool_color, brickAddr + offset, vec4(1,0,0,1));
+        imageStore(brickPool_value, brickAddr + offset, vec4(1,0,0,1));
       }
     }
   }
@@ -262,7 +257,7 @@ void main() {
       for (int z = 0; z <= 2; ++z) {
         ivec3 offset = ivec3(x,0,z);
         
-        imageStore(brickPool_color, brickAddr + offset, vec4(0,1,0,1));
+        imageStore(brickPool_value, brickAddr + offset, vec4(0,1,0,1));
       }
     }
   }
@@ -273,7 +268,7 @@ void main() {
       for (int y = 0; y <= 2; ++y) {
         ivec3 offset = ivec3(x,y,0);
         
-        imageStore(brickPool_color, brickAddr + offset, vec4(0,0,1,1));
+        imageStore(brickPool_value, brickAddr + offset, vec4(0,0,1,1));
       }
     }
   }

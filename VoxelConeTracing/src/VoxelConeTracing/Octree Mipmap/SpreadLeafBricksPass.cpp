@@ -35,6 +35,7 @@ SpreadLeafBricksPass::~SpreadLeafBricksPass(void) {
 
 SpreadLeafBricksPass::
   SpreadLeafBricksPass(VCTscene* vctScene,
+                      EBrickPoolAttributes eBrickPool,
                      kore::EOperationExecutionType executionType) {
   using namespace kore;
   
@@ -70,8 +71,8 @@ SpreadLeafBricksPass::
     shp->getUniform("nodePool_color"), GL_READ_ONLY));
 
   addStartupOperation(new BindImageTexture(
-    vctScene->getBrickPool()->getShdBrickPool(BRICKPOOL_COLOR),
-    shp->getUniform("brickPool_color")));
+    vctScene->getBrickPool()->getShdBrickPool(eBrickPool),
+    shp->getUniform("brickPool_value")));
 
 
   addStartupOperation(

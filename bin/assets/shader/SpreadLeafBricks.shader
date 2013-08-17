@@ -35,7 +35,7 @@ to traverse the octree and find the leaf-node.
 
 layout(r32ui) uniform readonly uimageBuffer nodePool_color;
 layout(r32ui) uniform readonly uimageBuffer levelAddressBuffer;
-layout(rgba8) uniform volatile image3D brickPool_color;
+layout(rgba8) uniform volatile image3D brickPool_value;
 
 uniform uint numLevels;  // Number of levels in the octree
 
@@ -56,7 +56,7 @@ const uvec3 childOffsets[8] = {
   uvec3(0, 1, 1), 
   uvec3(1, 1, 1)};
 
-vec4 voxelColors[8] = {
+vec4 voxelValues[8] = {
   vec4(0),
   vec4(0),
   vec4(0),
@@ -93,11 +93,11 @@ uvec3 uintXYZ10ToVec3(uint val) {
                  uint((val & 0x3FF00000) >> 20U));
 }
 
-void loadVoxelColors(in ivec3 brickAddress){
+void loadVoxelValues(in ivec3 brickAddress){
   // Collect the original voxel colors (from voxelfragmentlist-voxels)
   // which were stored at the corners of the brick texture.
   for(int i = 0; i < 8; ++i) {
-    voxelColors[i] = imageLoad(brickPool_color, 
+    voxelValues[i] = imageLoad(brickPool_value, 
                                brickAddress + 2 * ivec3(childOffsets[i]));
   }
 }
@@ -127,130 +127,130 @@ void main() {
   ivec3 brickAddress = ivec3(uintXYZ10ToVec3(
                        imageLoad(nodePool_color, int(nodeAddress)).x));
 
-  loadVoxelColors(brickAddress);
+  loadVoxelValues(brickAddress);
 
   
   vec4 col = vec4(0);
   
   // Center
   for (int i = 0; i < 8; ++i) {
-    col += 0.125 * voxelColors[i];
+    col += 0.125 * voxelValues[i];
   }
 
-  imageStore(brickPool_color, brickAddress + ivec3(1,1,1), col);
+  imageStore(brickPool_value, brickAddress + ivec3(1,1,1), col);
 
 
   // Face X
   col = vec4(0);
-  col += 0.25 * voxelColors[1];
-  col += 0.25 * voxelColors[3];
-  col += 0.25 * voxelColors[5];
-  col += 0.25 * voxelColors[7];
-  imageStore(brickPool_color, brickAddress + ivec3(2,1,1), col);
+  col += 0.25 * voxelValues[1];
+  col += 0.25 * voxelValues[3];
+  col += 0.25 * voxelValues[5];
+  col += 0.25 * voxelValues[7];
+  imageStore(brickPool_value, brickAddress + ivec3(2,1,1), col);
 
   // Face X Neg
   col = vec4(0);
-  col += 0.25 * voxelColors[0];
-  col += 0.25 * voxelColors[2];
-  col += 0.25 * voxelColors[4];
-  col += 0.25 * voxelColors[6];
-  imageStore(brickPool_color, brickAddress + ivec3(0,1,1), col);
+  col += 0.25 * voxelValues[0];
+  col += 0.25 * voxelValues[2];
+  col += 0.25 * voxelValues[4];
+  col += 0.25 * voxelValues[6];
+  imageStore(brickPool_value, brickAddress + ivec3(0,1,1), col);
 
 
   // Face Y
   col = vec4(0);
-  col += 0.25 * voxelColors[2];
-  col += 0.25 * voxelColors[3];
-  col += 0.25 * voxelColors[6];
-  col += 0.25 * voxelColors[7];
-  imageStore(brickPool_color, brickAddress + ivec3(1,2,1), col);
+  col += 0.25 * voxelValues[2];
+  col += 0.25 * voxelValues[3];
+  col += 0.25 * voxelValues[6];
+  col += 0.25 * voxelValues[7];
+  imageStore(brickPool_value, brickAddress + ivec3(1,2,1), col);
 
   // Face Y Neg
   col = vec4(0);
-  col += 0.25 * voxelColors[0];
-  col += 0.25 * voxelColors[1];
-  col += 0.25 * voxelColors[4];
-  col += 0.25 * voxelColors[5];
-  imageStore(brickPool_color, brickAddress + ivec3(1,0,1), col);
+  col += 0.25 * voxelValues[0];
+  col += 0.25 * voxelValues[1];
+  col += 0.25 * voxelValues[4];
+  col += 0.25 * voxelValues[5];
+  imageStore(brickPool_value, brickAddress + ivec3(1,0,1), col);
 
   
   // Face Z
   col = vec4(0);
-  col += 0.25 * voxelColors[4];
-  col += 0.25 * voxelColors[5];
-  col += 0.25 * voxelColors[6];
-  col += 0.25 * voxelColors[7];
-  imageStore(brickPool_color, brickAddress + ivec3(1,1,2), col);
+  col += 0.25 * voxelValues[4];
+  col += 0.25 * voxelValues[5];
+  col += 0.25 * voxelValues[6];
+  col += 0.25 * voxelValues[7];
+  imageStore(brickPool_value, brickAddress + ivec3(1,1,2), col);
 
   // Face Z Neg
   col = vec4(0);
-  col += 0.25 * voxelColors[0];
-  col += 0.25 * voxelColors[1];
-  col += 0.25 * voxelColors[2];
-  col += 0.25 * voxelColors[3];
-  imageStore(brickPool_color, brickAddress + ivec3(1,1,0), col);
+  col += 0.25 * voxelValues[0];
+  col += 0.25 * voxelValues[1];
+  col += 0.25 * voxelValues[2];
+  col += 0.25 * voxelValues[3];
+  imageStore(brickPool_value, brickAddress + ivec3(1,1,0), col);
 
 
   // Edges
   col = vec4(0);
-  col += 0.5 * voxelColors[0];
-  col += 0.5 * voxelColors[1];
-  imageStore(brickPool_color, brickAddress + ivec3(1,0,0), col);
+  col += 0.5 * voxelValues[0];
+  col += 0.5 * voxelValues[1];
+  imageStore(brickPool_value, brickAddress + ivec3(1,0,0), col);
 
   col = vec4(0);
-  col += 0.5 * voxelColors[0];
-  col += 0.5 * voxelColors[2];
-  imageStore(brickPool_color, brickAddress + ivec3(0,1,0), col);
+  col += 0.5 * voxelValues[0];
+  col += 0.5 * voxelValues[2];
+  imageStore(brickPool_value, brickAddress + ivec3(0,1,0), col);
 
   col = vec4(0);
-  col += 0.5 * voxelColors[2];
-  col += 0.5 * voxelColors[3];
-  imageStore(brickPool_color, brickAddress + ivec3(1,2,0), col);
+  col += 0.5 * voxelValues[2];
+  col += 0.5 * voxelValues[3];
+  imageStore(brickPool_value, brickAddress + ivec3(1,2,0), col);
 
   col = vec4(0);
-  col += 0.5 * voxelColors[3];
-  col += 0.5 * voxelColors[1];
-  imageStore(brickPool_color, brickAddress + ivec3(2,1,0), col);
+  col += 0.5 * voxelValues[3];
+  col += 0.5 * voxelValues[1];
+  imageStore(brickPool_value, brickAddress + ivec3(2,1,0), col);
 
   col = vec4(0);
-  col += 0.5 * voxelColors[0];
-  col += 0.5 * voxelColors[4];
-  imageStore(brickPool_color, brickAddress + ivec3(0,0,1), col);
+  col += 0.5 * voxelValues[0];
+  col += 0.5 * voxelValues[4];
+  imageStore(brickPool_value, brickAddress + ivec3(0,0,1), col);
 
   col = vec4(0);
-  col += 0.5 * voxelColors[2];
-  col += 0.5 * voxelColors[6];
-  imageStore(brickPool_color, brickAddress + ivec3(0,2,1), col);
+  col += 0.5 * voxelValues[2];
+  col += 0.5 * voxelValues[6];
+  imageStore(brickPool_value, brickAddress + ivec3(0,2,1), col);
 
   col = vec4(0);
-  col += 0.5 * voxelColors[3];
-  col += 0.5 * voxelColors[7];
-  imageStore(brickPool_color, brickAddress + ivec3(2,2,1), col);
+  col += 0.5 * voxelValues[3];
+  col += 0.5 * voxelValues[7];
+  imageStore(brickPool_value, brickAddress + ivec3(2,2,1), col);
 
   col = vec4(0);
-  col += 0.5 * voxelColors[1];
-  col += 0.5 * voxelColors[5];
-  imageStore(brickPool_color, brickAddress + ivec3(2,0,1), col);
+  col += 0.5 * voxelValues[1];
+  col += 0.5 * voxelValues[5];
+  imageStore(brickPool_value, brickAddress + ivec3(2,0,1), col);
 
   col = vec4(0);
-  col += 0.5 * voxelColors[4];
-  col += 0.5 * voxelColors[6];
-  imageStore(brickPool_color, brickAddress + ivec3(0,1,2), col);
+  col += 0.5 * voxelValues[4];
+  col += 0.5 * voxelValues[6];
+  imageStore(brickPool_value, brickAddress + ivec3(0,1,2), col);
 
   col = vec4(0);
-  col += 0.5 * voxelColors[6];
-  col += 0.5 * voxelColors[7];
-  imageStore(brickPool_color, brickAddress + ivec3(1,2,2), col);
+  col += 0.5 * voxelValues[6];
+  col += 0.5 * voxelValues[7];
+  imageStore(brickPool_value, brickAddress + ivec3(1,2,2), col);
 
   col = vec4(0);
-  col += 0.5 * voxelColors[5];
-  col += 0.5 * voxelColors[7];
-  imageStore(brickPool_color, brickAddress + ivec3(2,1,2), col);
+  col += 0.5 * voxelValues[5];
+  col += 0.5 * voxelValues[7];
+  imageStore(brickPool_value, brickAddress + ivec3(2,1,2), col);
 
   col = vec4(0);
-  col += 0.5 * voxelColors[4];
-  col += 0.5 * voxelColors[5];
-  imageStore(brickPool_color, brickAddress + ivec3(1,0,2), col);
+  col += 0.5 * voxelValues[4];
+  col += 0.5 * voxelValues[5];
+  imageStore(brickPool_value, brickAddress + ivec3(1,0,2), col);
 }
 //*/
 
@@ -279,7 +279,7 @@ void main() {
 
   col = vec4(col.xyz / float(max(1, weight)), col.a /8);
 
-  imageStore(brickPool_color, brickAddress + ivec3(1,1,1), col);
+  imageStore(brickPool_value, brickAddress + ivec3(1,1,1), col);
 
 
   // Face X
@@ -293,7 +293,7 @@ void main() {
     }
   }
   col = vec4(col.xyz / float(max(1, weight)), col.a /4);
-  imageStore(brickPool_color, brickAddress + ivec3(2,1,1), col);
+  imageStore(brickPool_value, brickAddress + ivec3(2,1,1), col);
 
   // Face X Neg
   col = vec4(0);
@@ -306,7 +306,7 @@ void main() {
     }
   }
   col = vec4(col.xyz / float(max(1, weight)), col.a /5);
-  imageStore(brickPool_color, brickAddress + ivec3(0,1,1), col);
+  imageStore(brickPool_value, brickAddress + ivec3(0,1,1), col);
 
 
   // Face Y
@@ -319,7 +319,7 @@ void main() {
     }
   }
   col = vec4(col.xyz / float(max(1, weight)), col.a /4);
-  imageStore(brickPool_color, brickAddress + ivec3(1,2,1), col);
+  imageStore(brickPool_value, brickAddress + ivec3(1,2,1), col);
 
 
  
@@ -334,7 +334,7 @@ void main() {
     }
   }
   col = vec4(col.xyz / float(max(1, weight)), col.a /4);
-  imageStore(brickPool_color, brickAddress + ivec3(1,0,1), col);
+  imageStore(brickPool_value, brickAddress + ivec3(1,0,1), col);
 
   // Face Z
   col = vec4(0);
@@ -347,7 +347,7 @@ void main() {
     }
   }
   col = vec4(col.xyz / float(max(1, weight)), col.a /4);
-  imageStore(brickPool_color, brickAddress + ivec3(1,1,2), col);
+  imageStore(brickPool_value, brickAddress + ivec3(1,1,2), col);
 
   // Face Z Neg
   col = vec4(0);
@@ -360,7 +360,7 @@ void main() {
     }
   }
   col = vec4(col.xyz / float(max(1, weight)), col.a /4);
-  imageStore(brickPool_color, brickAddress + ivec3(1,1,0), col);
+  imageStore(brickPool_value, brickAddress + ivec3(1,1,0), col);
 
   // Edges
   col = vec4(0);
@@ -373,7 +373,7 @@ void main() {
     }
   }
   col = vec4(col.xyz / float(max(1, weight)), col.a /2);
-  imageStore(brickPool_color, brickAddress + ivec3(1,0,0), col);
+  imageStore(brickPool_value, brickAddress + ivec3(1,0,0), col);
   
   col = vec4(0);
   weight = 0;
@@ -385,7 +385,7 @@ void main() {
     }
   }
   col = vec4(col.xyz / float(max(1, weight)), col.a /2);
-  imageStore(brickPool_color, brickAddress + ivec3(0,1,0), col);
+  imageStore(brickPool_value, brickAddress + ivec3(0,1,0), col);
 
   col = vec4(0);
   weight = 0;
@@ -397,7 +397,7 @@ void main() {
     }
   }
   col = vec4(col.xyz / float(max(1, weight)), col.a /2);
-  imageStore(brickPool_color, brickAddress + ivec3(1,2,0), col);
+  imageStore(brickPool_value, brickAddress + ivec3(1,2,0), col);
 
   col = vec4(0);
   weight = 0;
@@ -409,7 +409,7 @@ void main() {
     }
   }
   col = vec4(col.xyz / float(max(1, weight)), col.a /2);
-  imageStore(brickPool_color, brickAddress + ivec3(2,1,0), col);
+  imageStore(brickPool_value, brickAddress + ivec3(2,1,0), col);
 
 
   col = vec4(0);
@@ -422,7 +422,7 @@ void main() {
     }
   }
   col = vec4(col.xyz / float(max(1, weight)), col.a /2);
-  imageStore(brickPool_color, brickAddress + ivec3(0,0,1), col);
+  imageStore(brickPool_value, brickAddress + ivec3(0,0,1), col);
 
 
   col = vec4(0);
@@ -435,7 +435,7 @@ void main() {
     }
   }
   col = vec4(col.xyz / float(max(1, weight)), col.a /2);
-  imageStore(brickPool_color, brickAddress + ivec3(0,2,1), col);
+  imageStore(brickPool_value, brickAddress + ivec3(0,2,1), col);
 
   col = vec4(0);
    weight = 0;
@@ -447,7 +447,7 @@ void main() {
     }
   }
   col = vec4(col.xyz / float(max(1, weight)), col.a /2);
-  imageStore(brickPool_color, brickAddress + ivec3(2,2,1), col);
+  imageStore(brickPool_value, brickAddress + ivec3(2,2,1), col);
 
 
   col = vec4(0);
@@ -460,7 +460,7 @@ void main() {
     }
   }
   col = vec4(col.xyz / float(max(1, weight)), col.a /2);
-  imageStore(brickPool_color, brickAddress + ivec3(2,0,1), col);
+  imageStore(brickPool_value, brickAddress + ivec3(2,0,1), col);
 
   col = vec4(0);
   weight = 0;
@@ -472,7 +472,7 @@ void main() {
     }
   }
   col = vec4(col.xyz / float(max(1, weight)), col.a /2);
-  imageStore(brickPool_color, brickAddress + ivec3(0,1,2), col);
+  imageStore(brickPool_value, brickAddress + ivec3(0,1,2), col);
 
 
   col = vec4(0);
@@ -485,7 +485,7 @@ void main() {
     }
   }
   col = vec4(col.xyz / float(max(1, weight)), col.a /2);
-  imageStore(brickPool_color, brickAddress + ivec3(1,2,2), col);
+  imageStore(brickPool_value, brickAddress + ivec3(1,2,2), col);
 
 
   col = vec4(0);
@@ -498,7 +498,7 @@ void main() {
     }
   }
   col = vec4(col.xyz / float(max(1, weight)), col.a /2);
-  imageStore(brickPool_color, brickAddress + ivec3(2,1,2), col);
+  imageStore(brickPool_value, brickAddress + ivec3(2,1,2), col);
 
 
   col = vec4(0);
@@ -511,7 +511,7 @@ void main() {
     }
   }
   col = vec4(col.xyz / float(max(1, weight)), col.a /2);
-  imageStore(brickPool_color, brickAddress + ivec3(1,0,2), col);
+  imageStore(brickPool_value, brickAddress + ivec3(1,0,2), col);
 
 }
 

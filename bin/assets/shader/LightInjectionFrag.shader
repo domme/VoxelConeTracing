@@ -23,7 +23,7 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#version 420
+#version 430
 
 in VertexData {
   vec2 uv;
@@ -34,6 +34,8 @@ in VertexData {
 #define NODE_MASK_TAG_STATIC (0x00000003 << 30)
 #define NODE_NOT_FOUND 0xFFFFFFFF
 
+
+
 const uvec3 childOffsets[8] = {
   uvec3(0, 0, 0),
   uvec3(1, 0, 0),
@@ -41,15 +43,18 @@ const uvec3 childOffsets[8] = {
   uvec3(1, 1, 0),
   uvec3(0, 0, 1),
   uvec3(1, 0, 1),
-  uvec3(0, 1, 1), 
+  uvec3(0, 1, 1),
   uvec3(1, 1, 1)};
 
 const uint pow2[] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
 
-layout(r32ui) uniform readonly uimageBuffer nodePool_next;
 
 // Note: Size has to be manually adjusted depending on the number of levels
-layout(r32ui) uniform image2D lightNodeMap[8];
+layout(r32ui) uniform uimage2D nodeMap;
+
+layout(r32ui) uniform readonly uimageBuffer nodePool_next;
+layout(r32ui) uniform readonly uimageBuffer nodePool_color;
+layout(rgba8) uniform image3D brickPool_irradiance;
 
 uniform mat4 voxelGridTransformI;
 uniform uint numLevels;
@@ -58,7 +63,7 @@ uniform sampler2D smPosition;
 uniform float fFar;
 uniform vec3 lightColor;
 
-out vec4 outColor;
+ivec2 nodeMapLevel[8];
 
 vec4 convRGBA8ToVec4(uint val) {
     return vec4( float((val & 0x000000FF)), 
@@ -87,54 +92,72 @@ uvec3 uintXYZ10ToVec3(uint val) {
 }
 
 
+// NOTE: We assume cubical textures
+void calcNodeMapLevels(){
+  ivec2 smResolution = textureSize(smPosition, 0);
+
+  nodeMapLevel[7]= ivec2(0,0);
+  nodeMapLevel[6]= ivec2(smResolution.x,0);
+  nodeMapLevel[5]= ivec2(smResolution.x,smResolution.y/2);
+  nodeMapLevel[4]= ivec2(smResolution.x,smResolution.y/4);
+  nodeMapLevel[3]= ivec2(smResolution.x,smResolution.y/8);
+  nodeMapLevel[2]= ivec2(smResolution.x,smResolution.y/16);
+  nodeMapLevel[1]= ivec2(smResolution.x,smResolution.y/32);
+  nodeMapLevel[0]= ivec2(smResolution.x,smResolution.y/64);
+
+}
+
 void main() {
+
+  calcNodeMapLevels();
+
   vec4 posWS = vec4(texture(smPosition, In.uv).xyz, 1.0);
   vec3 posTex = (voxelGridTransformI * posWS).xyz * 0.5 + 0.5;
 
-
-  outColor = posWS;
-
   if (posTex.x < 0 || posTex.y < 0 || posTex.z < 0 ||
       posTex.x > 1 || posTex.y > 1 || posTex.z > 1) {
-        return;
+       return;
   }
-  
+
+  /*for (int iLevel = 0; iLevel < 8; ++iLevel) {
+    imageStore(nodeMap[iLevel], ivec2(0,0), uvec4(0));
+  }*/
+ 
   int nodeAddress = 0;
   vec3 nodePosTex = vec3(0.0);
   vec3 nodePosMaxTex = vec3(1.0);
-  float sideLength = 0.5;
-  
-  for (uint iLevel = 0; iLevel < numLevels; ++iLevel) {
-    // Store the address of this node in the correct lightNodeMap
-    ivec2 nodeMapPos = (ivec2(gl_FragCoord.xy) / ivec2(1280, 720)) * imageSize(lightNodeMap[iLevel]);
-    imageStore(lightNodeMap[iLevel], nodeMapPos, uvec4(nodeAddress));
+  float sideLength = 1.0;
 
+  for (uint iLevel = 0U; iLevel < numLevels+1; ++iLevel) {
     uint nodeNext = imageLoad(nodePool_next, nodeAddress).x;
+    memoryBarrier();
+
     uint childStartAddress = nodeNext & NODE_MASK_VALUE;
-      if (childStartAddress == 0U) {
-        if (iLevel == numLevels - 1) {  // This is a leaf node! Yuppieee! ;)
-
-           
-           //TODO INJECT TO TEXTURE
-           //imageStore(nodePool_radiance, int(nodeAddress),
-           //           uvec4(radianceU));
-
-           memoryBarrier();
-         }
-      }
+    if (childStartAddress == 0U) {
+       uint nodeColorU = imageLoad(nodePool_color, nodeAddress).x;
+       memoryBarrier();
        
-      uvec3 offVec = uvec3(2.0 * posTex);
-      uint off = offVec.x + 2U * offVec.y + 4U * offVec.z;
+       ivec3 brickCoords = ivec3(uintXYZ10ToVec3(nodeColorU));
+       uvec3 offVec = uvec3(2.0 * posTex);
+       uint off = offVec.x + 2U * offVec.y + 4U * offVec.z;
 
-      // Restart while-loop with the child node (aka recursion)
-      nodeAddress = int(childStartAddress + off);
-      nodePosTex += vec3(childOffsets[off]) * vec3(sideLength);
-      nodePosMaxTex = nodePosTex + vec3(sideLength);
+       //store VoxelColors in brick corners
+       imageStore(brickPool_irradiance,
+             brickCoords  + 2 * ivec3(childOffsets[off]),
+             vec4(lightColor, 1));
+      return;
+    }
+      
+    uvec3 offVec = uvec3(2.0 * posTex);
+    uint off = offVec.x + 2U * offVec.y + 4U * offVec.z;
 
-      sideLength = sideLength / 2.0;
-      posTex = 2.0 * posTex - vec3(offVec);
-    } // level-for  
-
-    
+    // Restart while-loop with the child node (aka recursion)
+    sideLength = sideLength / 2.0;
+    nodeAddress = int(childStartAddress + off);
+    nodePosTex += vec3(childOffsets[off]) * vec3(sideLength);
+    nodePosMaxTex = nodePosTex + vec3(sideLength);
+    posTex = 2.0 * posTex - vec3(offVec);
+  } // level-for
+    //*/
 }
 

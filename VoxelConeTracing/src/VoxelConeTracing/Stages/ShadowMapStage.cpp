@@ -22,6 +22,7 @@
 * \author Dominik Lazarek (dominik.lazarek@gmail.com)
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
+#include "KoRE/RenderManager.h"
 
 #include "VoxelConeTracing/Stages/ShadowMapStage.h"
 #include "VoxelConeTracing/Rendering/ShadowMapPass.h"
@@ -48,6 +49,18 @@ ShadowMapStage::ShadowMapStage(kore::SceneNode* lightNode,
   SMprops.internalFormat =  GL_RGB32F;
   SMprops.pixelType = GL_FLOAT;
   _shadowBuffer->addTextureAttachment(SMprops,"SMposition",GL_COLOR_ATTACHMENT0);
+
+  kore::RenderManager::getInstance()->bindTexture(GL_TEXTURE_2D, _shadowBuffer->getTexture("SMposition")->getHandle());
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, GL_RED);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, GL_GREEN);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, GL_BLUE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_A, GL_ALPHA);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  kore::RenderManager::getInstance()->bindTexture(GL_TEXTURE_2D, 0);
+
 
   this->setFrameBuffer(_shadowBuffer);
   this->addProgramPass(new ShadowMapPass(
