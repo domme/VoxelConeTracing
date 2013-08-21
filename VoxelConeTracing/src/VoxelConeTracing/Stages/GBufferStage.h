@@ -36,6 +36,8 @@ public:
   GBufferStage(kore::Camera* mainCamera, std::vector<kore::SceneNode*>& vRenderNodes,
               int width, int height);
   virtual ~GBufferStage();
+
+    
 };
 
 

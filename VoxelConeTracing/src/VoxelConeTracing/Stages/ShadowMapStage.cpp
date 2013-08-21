@@ -23,6 +23,7 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 #include "KoRE/RenderManager.h"
+#include "Kore/ResourceManager.h"
 
 #include "VoxelConeTracing/Stages/ShadowMapStage.h"
 #include "VoxelConeTracing/Rendering/ShadowMapPass.h"
@@ -32,6 +33,7 @@ ShadowMapStage::ShadowMapStage(kore::SceneNode* lightNode,
                                int shadow_width, int shadow_height) {
  
   kore::FrameBuffer* _shadowBuffer = new kore::FrameBuffer("shadowBuffer");
+  kore::ResourceManager::getInstance()->addFramebuffer(_shadowBuffer);
   std::vector<GLenum> drawBufs;
   drawBufs.push_back(GL_COLOR_ATTACHMENT0);
   this->setActiveAttachments(drawBufs);

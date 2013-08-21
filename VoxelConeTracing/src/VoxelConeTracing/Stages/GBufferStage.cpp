@@ -23,8 +23,11 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
+#include "Kore/ResourceManager.h"
+
 #include "VoxelConeTracing/Stages/GBufferStage.h"
 #include "VoxelConeTracing/Rendering/DeferredPass.h"
+
 
 GBufferStage::GBufferStage(kore::Camera* mainCamera,
                            std::vector<kore::SceneNode*>& vRenderNodes,
@@ -39,6 +42,7 @@ GBufferStage::GBufferStage(kore::Camera* mainCamera,
 
   kore::FrameBuffer* gBuffer = new kore::FrameBuffer("gBuffer");
   this->setFrameBuffer(gBuffer);
+  kore::ResourceManager::getInstance()->addFramebuffer(gBuffer);
 
   kore::STextureProperties props;
   props.width = width;
@@ -72,12 +76,10 @@ GBufferStage::GBufferStage(kore::Camera* mainCamera,
 
   //kore::Camera* lightcam = static_cast<Camera*>(lightNodes[0]->getComponent(COMPONENT_CAMERA));
   this->addProgramPass(new DeferredPass(mainCamera, vRenderNodes));
-
-
 }
 
 GBufferStage::~GBufferStage()
 {
-
+  
 }
 

@@ -169,7 +169,7 @@ void setup() {
   for(int i=0; i<lightNodes.size(); ++i){
     Camera* cam  = new Camera();
     float projsize = params.voxel_grid_sidelengths.x / 2;
-    cam->setProjectionOrtho(-projsize,projsize,-projsize,projsize,1,100);
+    cam->setProjectionOrtho(-projsize,projsize,-projsize,projsize,1,100); 
     cam->setAspectRatio(1.0);   
     //_pCamera = cam;
     lightNodes[i]->addComponent(cam);
@@ -196,7 +196,7 @@ void setup() {
     
   // Voxelize & SVO Stage
   FrameBufferStage* svoStage =
-    new SVOconstructionStage(lightNodes[0], renderNodes, params, _vctScene, shadowMapStage->getFrameBuffer());
+    new SVOconstructionStage(lightNodes[0], renderNodes, params, _vctScene, shadowMapStage->getFrameBuffer()); 
 
   RenderManager::getInstance()->addFramebufferStage(svoStage);
   ////////////////////////////////////////////////////////////////////////// 
@@ -221,9 +221,9 @@ void setup() {
   RenderManager::getInstance()->addFramebufferStage(_backbufferStage);
   //////////////////////////////////////////////////////////////////////////
 }
-
+    
 void shutdown(){
-  
+   
 }
 
 int main(void) {
@@ -386,6 +386,7 @@ int main(void) {
     // Check if ESC key was pressed or window was closed
     running = !glfwGetKey(GLFW_KEY_ESC) && glfwGetWindowParam(GLFW_OPENED);
   }
+
 
   // Close window and terminate GLFW
    shutdown();
