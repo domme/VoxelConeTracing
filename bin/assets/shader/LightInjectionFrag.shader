@@ -56,7 +56,6 @@ uniform mat4 voxelGridTransformI;
 uniform uint numLevels;
 
 uniform sampler2D smPosition;
-uniform float fFar;
 uniform vec3 lightColor;
 
 uniform ivec2 nodeMapOffset[8];

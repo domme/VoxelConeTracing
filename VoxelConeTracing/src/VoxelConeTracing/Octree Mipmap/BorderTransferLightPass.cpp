@@ -74,9 +74,7 @@ BorderTransferLightPass::
     vctScene->getThreadBuf_nodeMap(_level)->getHandle()));
 
   addStartupOperation(new BindUniform(&_shdLevel, _shader.getUniform("level")));
-  addStartupOperation(new BindUniform(vctScene->getNodePool()->getShdNumLevels(),
-                                      _shader.getUniform("numLevels")));
-  
+    
   addStartupOperation(new BindImageTexture(
     vctScene->getShdLightNodeMap(),
     _shader.getUniform("nodeMap"), GL_READ_ONLY));

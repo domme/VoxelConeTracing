@@ -116,8 +116,12 @@ uint getThreadNode() {
 
 ///*
 void main() {
+  
   uint nodeAddress = getThreadNode();
+  memoryBarrier();
+
   if(nodeAddress == NODE_NOT_FOUND) {
+    imageStore(brickPool_value, ivec3(0,0,0), vec4(1,0,0,1));
     return;  // The requested threadID-node does not belong to the current level
   }
 
@@ -152,7 +156,6 @@ void main() {
   col += 0.25 * voxelValues[4];
   col += 0.25 * voxelValues[6];
   imageStore(brickPool_value, brickAddress + ivec3(0,1,1), col);
-
 
   // Face Y
   col = vec4(0);

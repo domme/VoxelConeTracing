@@ -103,9 +103,6 @@ LightInjectionPass::LightInjectionPass(VCTscene* vctScene,
 
   addStartupOperation(new BindUniform(vctScene->getShdNodeMapSizes(),
                                       shader->getUniform("nodeMapSize[0]")));
-  
-  addStartupOperation(new EnableDisableOp(GL_DEPTH_TEST, EnableDisableOp::DISABLE));
-  addStartupOperation(new ColorMaskOp(glm::bvec4(false, false, false, false)));
 
   addStartupOperation(new DrawIndirectOp(GL_POINTS, 0));
 

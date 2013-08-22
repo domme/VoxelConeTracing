@@ -32,7 +32,6 @@ layout(rgba8) uniform image3D brickPool_value;
 layout(r32ui) uniform readonly uimageBuffer nodePool_Neighbour;
 
 uniform int level;
-uniform uint numLevels;
 uniform uint axis;
 uniform ivec2 nodeMapOffset[8];
 uniform ivec2 nodeMapSize[8];
