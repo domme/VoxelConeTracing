@@ -188,6 +188,7 @@
     <ClCompile Include="src\VoxelConeTracing\Octree Building\ObClearPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Building\ObFlagPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Building\ObInitPass.cpp" />
+    <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\BorderTransferLightPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\BorderTransferPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\LightInjectionPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\MipmapCenterPass.cpp" />
@@ -231,6 +232,7 @@
     <ClInclude Include="src\VoxelConeTracing\Octree Building\ObClearPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Building\ObFlagPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Building\ObInitPass.h" />
+    <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\BorderTransferLightPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\BorderTransferPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\LightInjectionPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\MipmapCenterPass.h" />
@@ -262,6 +264,7 @@
   <ItemGroup>
     <None Include="..\bin\assets\shader\AllocBricks.shader" />
     <None Include="..\bin\assets\shader\BorderTransfer.shader" />
+    <None Include="..\bin\assets\shader\BorderTransferLight.shader" />
     <None Include="..\bin\assets\shader\ClearBrickTex.shader" />
     <None Include="..\bin\assets\shader\ClearNodeMap.shader" />
     <None Include="..\bin\assets\shader\ConeTraceFrag.shader" />

@@ -23,29 +23,38 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#ifndef VCT_SRC_VCT_SpreadLightLeafBricksPass_H_
-#define VCT_SRC_VCT_SpreadLightLeafBricksPass_H_
+#ifndef VCT_SRC_VCT_BORDERTRANSFERPASS_H_
+#define VCT_SRC_VCT_BORDERTRANSFERPASS_H_
 
 #include "KoRE/Passes/ShaderProgramPass.h"
 #include "VoxelConeTracing/Scene/VCTscene.h"
-#include "KoRE/SceneManager.h"
-#include "KoRE/RenderManager.h"
-#include "KoRE/ResourceManager.h"
 
 
-class SpreadLightLeafBricksPass : public kore::ShaderProgramPass
+class BorderTransferPass : public kore::ShaderProgramPass
 {
   public:
-    SpreadLightLeafBricksPass(VCTscene* vctScene,
-                      EBrickPoolAttributes eBrickPool,
-                     kore::EOperationExecutionType executionType);
-    virtual ~SpreadLightLeafBricksPass(void);
+    BorderTransferPass(VCTscene* vctScene, EBrickPoolAttributes eBrickPool,
+                       int level, kore::EOperationExecutionType executionType);
+    virtual ~BorderTransferPass(void);
 
   private:
-    kore::RenderManager* _renderMgr;
-    kore::SceneManager* _sceneMgr;
-    kore::ResourceManager* _resMgr;
-    VCTscene* _vctScene;
+    kore::ShaderProgram _shader;
+    
+    int _level;
+    kore::ShaderData _shdLevel;
+
+    uint _axisX;
+    uint _axisY;
+    uint _axisZ;
+    uint _axisX_neg;
+    uint _axisY_neg;
+    uint _axisZ_neg;
+    kore::ShaderData _shdAxisX;
+    kore::ShaderData _shdAxisY;
+    kore::ShaderData _shdAxisZ;
+    kore::ShaderData _shdAxisX_neg;
+    kore::ShaderData _shdAxisY_neg;
+    kore::ShaderData _shdAxisZ_neg;
 };
 
-#endif // VCT_SRC_VCT_SpreadLightLeafBricksPass_H_
+#endif //VCT_SRC_VCT_BORDERTRANSFERPASS_H_

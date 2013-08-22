@@ -127,6 +127,9 @@
     <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\SpreadLightLeafBricksPass.cpp">
       <Filter>src\Octree Building</Filter>
     </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\BorderTransferLightPass.cpp">
+      <Filter>src\Octree Mipmap</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -302,6 +305,9 @@
     <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\SpreadLightLeafBricksPass.h">
       <Filter>src\Octree Building</Filter>
     </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\BorderTransferLightPass.h">
+      <Filter>src\Octree Mipmap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\bin\assets\shader\debug.shader">
@@ -407,6 +413,9 @@
       <Filter>shader\Octree Building</Filter>
     </None>
     <None Include="..\bin\assets\shader\SpreadLightLeafBricks.shader">
+      <Filter>shader\Octree Mipmapping</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\BorderTransferLight.shader">
       <Filter>shader\Octree Mipmapping</Filter>
     </None>
   </ItemGroup>

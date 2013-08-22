@@ -23,18 +23,18 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#include "VoxelConeTracing/Octree Mipmap/SpreadLeafBricksPass.h"
+#include "VoxelConeTracing/Octree Mipmap/SpreadLightLeafBricksPass.h"
 
 #include "KoRE\RenderManager.h"
 #include "KoRE\ResourceManager.h"
 
 #include "Kore\Operations\Operations.h"
 
-SpreadLeafBricksPass::~SpreadLeafBricksPass(void) {
+SpreadLightLeafBricksPass::~SpreadLightLeafBricksPass(void) {
 }
 
-SpreadLeafBricksPass::
-  SpreadLeafBricksPass(VCTscene* vctScene,
+SpreadLightLeafBricksPass::
+  SpreadLightLeafBricksPass(VCTscene* vctScene,
                       EBrickPoolAttributes eBrickPool,
                      kore::EOperationExecutionType executionType) {
   using namespace kore;
@@ -48,23 +48,22 @@ SpreadLeafBricksPass::
 
   kore::ShaderProgram* shp = new kore::ShaderProgram;
   this->setShaderProgram(shp);
-  shp->setName("SpreadLeafBricks shader");
-  shp->loadShader("./assets/shader/SpreadLeafBricks.shader",
+  shp->setName("SpreadLightLeafBricks shader");
+  shp->loadShader("./assets/shader/SpreadLightLeafBricks.shader",
                  GL_VERTEX_SHADER);
   shp->init();
   
   // Launch a thread for every node up to the max level
   addStartupOperation(
     new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
-    _vctScene->getNodePool()->getDenseThreadBuf(
-    _vctScene->getNodePool()->getNumLevels() - 1)->getHandle()));
+    vctScene->getThreadBuf_nodeMap(vctScene->getNodePool()->getNumLevels() - 1)->getHandle()));
 
   addStartupOperation(new BindUniform(vctScene->getNodePool()->getShdNumLevels(),
                                               shp->getUniform("numLevels")));
 
   addStartupOperation(new BindImageTexture(
-                      vctScene->getNodePool()->getShdLevelAddressBuffer(),
-                      shp->getUniform("levelAddressBuffer"), GL_READ_ONLY));
+                      vctScene->getShdLightNodeMap(),
+                      shp->getUniform("nodeMap"), GL_READ_ONLY));
 
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdNodePool(COLOR),
