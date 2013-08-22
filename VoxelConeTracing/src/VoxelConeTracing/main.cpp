@@ -82,6 +82,7 @@
 #include "VoxelConeTracing/Stages/GBufferStage.h"
 #include "VoxelConeTracing/Stages/SVOconstructionStage.h"
 #include "VoxelConeTracing/Stages/ShadowMapStage.h"
+#include "Stages/SVOlightUpdateStage.h"
 
 static const uint screen_width = 1280;
 static const uint screen_height = 720;
@@ -164,7 +165,7 @@ void setup() {
   
   // Make sure all lightnodes are initialized with camera components
   std::vector<SceneNode*> lightNodes;
-  SceneManager::getInstance()->getSceneNodesByComponent(COMPONENT_LIGHT,lightNodes);
+  SceneManager::getInstance()->getSceneNodesByComponent(COMPONENT_LIGHT, lightNodes);
 
   for(int i=0; i<lightNodes.size(); ++i){
     Camera* cam  = new Camera();
@@ -201,6 +202,13 @@ void setup() {
   RenderManager::getInstance()->addFramebufferStage(svoStage);
   ////////////////////////////////////////////////////////////////////////// 
 
+
+  // Light update stage
+  FrameBufferStage* lightUpdateStage =
+    new SVOlightUpdateStage(lightNodes[0], renderNodes, params, _vctScene, shadowMapStage->getFrameBuffer());
+
+  RenderManager::getInstance()->addFramebufferStage(lightUpdateStage);
+  ////////////////////////////////////////////////////////////////////////// 
   
   _backbufferStage = new FrameBufferStage;
   _backbufferStage->setFrameBuffer(kore::FrameBuffer::BACKBUFFER);
@@ -221,10 +229,7 @@ void setup() {
   RenderManager::getInstance()->addFramebufferStage(_backbufferStage);
   //////////////////////////////////////////////////////////////////////////
 }
-    
-void shutdown(){
-   
-}
+
 
 int main(void) {
   int running = GL_TRUE;
@@ -387,11 +392,7 @@ int main(void) {
     running = !glfwGetKey(GLFW_KEY_ESC) && glfwGetWindowParam(GLFW_OPENED);
   }
 
-
-  // Close window and terminate GLFW
-   shutdown();
-
-   glfwTerminate();
+  glfwTerminate();
 
   // Exit program
    exit(EXIT_SUCCESS);

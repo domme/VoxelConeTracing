@@ -30,11 +30,17 @@ ClearBrickTexPass::~ClearBrickTexPass(void) {
 }
 
 ClearBrickTexPass::ClearBrickTexPass(VCTscene* vctScene,
-                      kore::EOperationExecutionType executionType) {
+                   EClearMode clearMode,
+                   kore::EOperationExecutionType executionType) {
   using namespace kore;
   
   this->setExecutionType(executionType);
 
+  _eClearMode = clearMode;
+  _shdClearMode.name = "Brick clear mode";
+  _shdClearMode.type = GL_UNSIGNED_INT;
+  _shdClearMode.data = &_eClearMode;
+  
   ShaderProgram* shader = new ShaderProgram();
   shader->loadShader("./assets/shader/ClearBrickTex.shader",
                  GL_VERTEX_SHADER);
@@ -72,6 +78,10 @@ ClearBrickTexPass::ClearBrickTexPass(VCTscene* vctScene,
     new kore::BindImageTexture(
     vctScene->getBrickPool()->getShdBrickPool(BRICKPOOL_NORMAL),
     shader->getUniform("brickPool_normal")));
+
+  addStartupOperation(
+    new kore::BindUniform(
+    &_shdClearMode, shader->getUniform("clearMode")));
 
   addStartupOperation(new kore::DrawIndirectOp(GL_POINTS, 0));
 

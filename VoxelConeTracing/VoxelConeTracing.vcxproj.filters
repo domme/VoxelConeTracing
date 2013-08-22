@@ -118,6 +118,9 @@
     <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\MipmapEdgesPass.cpp">
       <Filter>src\Octree Mipmap</Filter>
     </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\Stages\SVOlightUpdateStage.cpp">
+      <Filter>src\Stages</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -283,6 +286,9 @@
     </ClInclude>
     <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\MipmapEdgesPass.h">
       <Filter>src\Octree Mipmap</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\Stages\SVOlightUpdateStage.h">
+      <Filter>src\Stages</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

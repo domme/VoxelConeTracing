@@ -55,8 +55,6 @@ void VCTscene::init(const SVCTparameters& params,
   _shdSMresolution.name = "Shadow Map resolution";
   _shdSMresolution.type = GL_INT_VEC2;
   _shdSMresolution.data = &_smResolution;
- 
-  //Level based on number of Voxels (8^level = number of leaves)  
   
   _meshNodes = meshNodes;
   _camera = camera;
@@ -118,4 +116,19 @@ void VCTscene::init(const SVCTparameters& params,
   _shdLightNodeMap.name = "LightNodeMap image";
   _shdLightNodeMap.size = 1;
   _shdLightNodeMap.data = &_lightNodeMapTexInfo;
+
+
+  SDrawArraysIndirectCommand cmd;
+  cmd.numPrimitives = 1;
+
+  glm::vec2 curSMmipmapRes(_smResolution.x, _smResolution.y);
+  _vThreadBufs_NodeMap.resize(_nodePool.getNumLevels());
+  for (int i = _nodePool.getNumLevels() - 1; i > 0; --i) {
+    cmd.numVertices = curSMmipmapRes.x * curSMmipmapRes.y;
+    curSMmipmapRes /= 2;
+
+    _vThreadBufs_NodeMap[i].create(GL_DRAW_INDIRECT_BUFFER,
+                        sizeof(SDrawArraysIndirectCommand),
+                        GL_STATIC_DRAW, &cmd);
+  }
 }

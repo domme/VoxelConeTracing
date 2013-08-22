@@ -23,32 +23,22 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#ifndef VCT_SRC_VCT_OBCLERBRICKTEXPASS_H_
-#define VCT_SRC_VCT_OBCLERBRICKTEXPASS_H_
+#ifndef VCT_SRC_VCT_SVOLIGHTUPDATESTAGE_H_
+#define VCT_SRC_VCT_SVOLIGHTUPDATESTAGE_H_
 
-#include "KoRE/Passes/ShaderProgramPass.h"
+#include "KoRE/Passes/FrameBufferStage.h"
+#include "Kore/Components/Camera.h"
+#include "Kore/SceneNode.h"
 #include "VoxelConeTracing/Scene/VCTscene.h"
 
-class ClearBrickTexPass : public kore::ShaderProgramPass
-{
-  public:
-    enum EClearMode {
-      CLEAR_BRICK_ALL = 0,
-      CLEAR_BRICK_DYNAMIC
-    };
-
-    ClearBrickTexPass(VCTscene* vctScene,
-              EClearMode clearMode,
-              kore::EOperationExecutionType executionType);
-    virtual ~ClearBrickTexPass(void);
-
-  private:
-    kore::IndexedBuffer _svoCmdBuf;
-
-    EClearMode _eClearMode;
-    kore::ShaderData _shdClearMode;
-
-
+class SVOlightUpdateStage : public kore::FrameBufferStage {
+public:
+  SVOlightUpdateStage(kore::SceneNode* lightNode,
+                      std::vector<kore::SceneNode*>& vRenderNodes,
+                      SVCTparameters& vctParams,
+                      VCTscene& vctScene,
+                      kore::FrameBuffer* shadowMapFBO);
+  virtual ~SVOlightUpdateStage();
 };
 
-#endif //VCT_SRC_VCT_OBCLERBRICKTEXPASS_H_
+#endif

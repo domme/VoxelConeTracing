@@ -23,7 +23,7 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#include "VoxelConeTracing/Stages/SVOconstructionStage.h"
+#include "VoxelConeTracing/Stages/SVOlightUpdateStage.h"
 #include "../Octree Building/ObClearPass.h"
 #include "../Voxelization/VoxelizePass.h"
 #include "../Octree Building/ModifyIndirectBufferPass.h"
@@ -44,7 +44,7 @@
 #include "../Octree Mipmap/MipmapEdgesPass.h"
 
 
-SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
+SVOlightUpdateStage::SVOlightUpdateStage(kore::SceneNode* lightNode,
                                std::vector<kore::SceneNode*>& vRenderNodes,
                                SVCTparameters& vctParams,
                                VCTscene& vctScene,
@@ -55,49 +55,42 @@ SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
   this->setActiveAttachments(drawBufs);
   this->setFrameBuffer(kore::FrameBuffer::BACKBUFFER);
 
+  kore::EOperationExecutionType exeFrequency = kore::EXECUTE_ONCE;
+  
+  uint _numLevels = vctScene.getNodePool()->getNumLevels(); 
+
   // Prepare render algorithm
-  this->addProgramPass(new ObClearPass(&vctScene, kore::EXECUTE_ONCE));
-  this->addProgramPass(new ObClearNeighboursPass(&vctScene, kore::EXECUTE_ONCE));
-  this->addProgramPass(new ClearBrickTexPass(&vctScene, ClearBrickTexPass::CLEAR_BRICK_ALL, kore::EXECUTE_ONCE));
+  this->addProgramPass(new ClearBrickTexPass(&vctScene,
+                                        ClearBrickTexPass::CLEAR_BRICK_DYNAMIC,
+                                        exeFrequency));
+
   this->addProgramPass(new VoxelizePass(vctParams.voxel_grid_sidelengths,
-                                        &vctScene, kore::EXECUTE_ONCE));
+                                        &vctScene, exeFrequency));
   this->addProgramPass(new ModifyIndirectBufferPass(
                        vctScene.getVoxelFragList()->getShdFragListIndCmdBuf(),
                        vctScene.getShdAcVoxelIndex(),&vctScene,
-                       kore::EXECUTE_ONCE));
+                       exeFrequency));
   
-  // Build SVO from top to bottom
-  uint _numLevels = vctScene.getNodePool()->getNumLevels(); 
-  for (uint iLevel = 0; iLevel < _numLevels; ++iLevel) {
-    this->addProgramPass(new NeighbourPointersPass(&vctScene,
-                                                  iLevel,
-                                                  kore::EXECUTE_ONCE));
+  this->addProgramPass(new LightInjectionPass(&vctScene,
+                                              lightNode,
+                                              shadowMapFBO,
+                                              exeFrequency));
+  this->addProgramPass(new SpreadLeafBricksPass(&vctScene, BRICKPOOL_IRRADIANCE, exeFrequency));
+  this->addProgramPass(new BorderTransferPass(&vctScene, BRICKPOOL_IRRADIANCE, _numLevels - 1, exeFrequency));
 
-    this->addProgramPass(new ObFlagPass(&vctScene, kore::EXECUTE_ONCE));
-    this->addProgramPass(new ObAllocatePass(&vctScene, iLevel,
-                                            kore::EXECUTE_ONCE));
+  for (int iLevel = _numLevels - 2; iLevel >= 0;) {
+    this->addProgramPass(new MipmapCenterPass(&vctScene, iLevel, exeFrequency));
+    this->addProgramPass(new MipmapFacesPass(&vctScene, iLevel, exeFrequency));
+    this->addProgramPass(new MipmapCornersPass(&vctScene, iLevel, exeFrequency));
+    this->addProgramPass(new MipmapEdgesPass(&vctScene, iLevel, exeFrequency));
+
+    this->addProgramPass(new BorderTransferPass(&vctScene, BRICKPOOL_COLOR, iLevel, exeFrequency));
+    
+    --iLevel;
   }
-
-  this->addProgramPass(new ModifyIndirectBufferPass(
-                       vctScene.getNodePool()->getShdCmdBufSVOnodes(),
-                       vctScene.getNodePool()->getShdAcNextFree(), &vctScene,
-                       kore::EXECUTE_ONCE));
-
-  this->addProgramPass(new AllocBricksPass(&vctScene, kore::EXECUTE_ONCE));
-
-  this->addProgramPass(new WriteLeafNodesPass(&vctScene, kore::EXECUTE_ONCE));
-  this->addProgramPass(new SpreadLeafBricksPass(&vctScene, BRICKPOOL_COLOR, kore::EXECUTE_ONCE));
-  this->addProgramPass(new SpreadLeafBricksPass(&vctScene, BRICKPOOL_NORMAL, kore::EXECUTE_ONCE));
-  this->addProgramPass(new BorderTransferPass(&vctScene, BRICKPOOL_NORMAL,
-                                               _numLevels - 1, EXECUTE_ONCE));
-  this->addProgramPass(new SpreadLeafBricksPass(&vctScene, BRICKPOOL_COLOR, kore::EXECUTE_ONCE));
-  this->addProgramPass(new BorderTransferPass(&vctScene, BRICKPOOL_COLOR,
-
-                                              _numLevels - 1, EXECUTE_ONCE)); 
-
 }
 
-SVOconstructionStage::~SVOconstructionStage() {
+SVOlightUpdateStage::~SVOlightUpdateStage() {
 
 }
 
