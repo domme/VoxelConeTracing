@@ -25,10 +25,6 @@
 
 #version 430
 
-in VertexData {
-  vec2 uv;
-} In;
-
 #define NODE_MASK_VALUE 0x3FFFFFFF
 #define NODE_MASK_TAG (0x00000001 << 31)
 #define NODE_MASK_TAG_STATIC (0x00000003 << 30)
@@ -63,7 +59,8 @@ uniform sampler2D smPosition;
 uniform float fFar;
 uniform vec3 lightColor;
 
-ivec2 nodeMapLevel[8];
+ivec2 nodeMapOffset[8];
+ivec2 nodeMapSize[8];
 
 vec4 convRGBA8ToVec4(uint val) {
     return vec4( float((val & 0x000000FF)), 
@@ -92,26 +89,42 @@ uvec3 uintXYZ10ToVec3(uint val) {
 }
 
 
-// NOTE: We assume cubical textures
-void calcNodeMapLevels(){
+void calcNodeMapOffsets(){
   ivec2 smResolution = textureSize(smPosition, 0);
 
-  nodeMapLevel[7]= ivec2(0,0);
-  nodeMapLevel[6]= ivec2(smResolution.x,0);
-  nodeMapLevel[5]= ivec2(smResolution.x,smResolution.y/2);
-  nodeMapLevel[4]= ivec2(smResolution.x,smResolution.y/4);
-  nodeMapLevel[3]= ivec2(smResolution.x,smResolution.y/8);
-  nodeMapLevel[2]= ivec2(smResolution.x,smResolution.y/16);
-  nodeMapLevel[1]= ivec2(smResolution.x,smResolution.y/32);
-  nodeMapLevel[0]= ivec2(smResolution.x,smResolution.y/64);
+  nodeMapOffset[7] = ivec2(0,0);
+  nodeMapOffset[6] = ivec2(smResolution.x,0);
+  nodeMapOffset[5] = ivec2(smResolution.x,smResolution.y/2);
+  nodeMapOffset[4] = ivec2(smResolution.x,smResolution.y/4);
+  nodeMapOffset[3] = ivec2(smResolution.x,smResolution.y/8);
+  nodeMapOffset[2] = ivec2(smResolution.x,smResolution.y/16);
+  nodeMapOffset[1] = ivec2(smResolution.x,smResolution.y/32);
+  nodeMapOffset[0] = ivec2(smResolution.x,smResolution.y/64);
+}
 
+void calcNodeMapSizes() {
+  ivec2 res = textureSize(smPosition, 0);
+  for (int i = 7; i > 0; --i) {
+    nodeMapSize[i] = res;
+    res /= 2;
+  }
+}
+
+void storeNodeInNodemap(in vec2 uv, in uint level, in int nodeAddress) {
+  ivec2 storePos = nodeMapOffset[level] + ivec2(uv * nodeMapSize[level]);
+  imageStore(nodeMap, storePos, uvec4(nodeAddress));
 }
 
 void main() {
+  calcNodeMapOffsets();
+  calcNodeMapSizes();
+  
+  ivec2 smTexSize = textureSize(smPosition, 0);
+  vec2 uv = vec2(0);
+  uv.x = (gl_VertexID % smTexSize.x) / float(smTexSize.x);
+  uv.y = (gl_VertexID / smTexSize.x) / float(smTexSize.y);
 
-  calcNodeMapLevels();
-
-  vec4 posWS = vec4(texture(smPosition, In.uv).xyz, 1.0);
+  vec4 posWS = vec4(texture(smPosition, uv).xyz, 1.0);
   vec3 posTex = (voxelGridTransformI * posWS).xyz * 0.5 + 0.5;
 
   if (posTex.x < 0 || posTex.y < 0 || posTex.z < 0 ||
@@ -119,16 +132,15 @@ void main() {
        return;
   }
 
-  /*for (int iLevel = 0; iLevel < 8; ++iLevel) {
-    imageStore(nodeMap[iLevel], ivec2(0,0), uvec4(0));
-  }*/
- 
   int nodeAddress = 0;
   vec3 nodePosTex = vec3(0.0);
   vec3 nodePosMaxTex = vec3(1.0);
   float sideLength = 1.0;
 
   for (uint iLevel = 0U; iLevel < numLevels+1; ++iLevel) {
+    // Store nodes during traversal in the nodeMap
+    storeNodeInNodemap(uv, iLevel, nodeAddress);
+
     uint nodeNext = imageLoad(nodePool_next, nodeAddress).x;
     memoryBarrier();
 
@@ -141,7 +153,7 @@ void main() {
        uvec3 offVec = uvec3(2.0 * posTex);
        uint off = offVec.x + 2U * offVec.y + 4U * offVec.z;
 
-       //store VoxelColors in brick corners
+       //store Radiance in brick corners
        imageStore(brickPool_irradiance,
              brickCoords  + 2 * ivec3(childOffsets[off]),
              vec4(lightColor, 1));

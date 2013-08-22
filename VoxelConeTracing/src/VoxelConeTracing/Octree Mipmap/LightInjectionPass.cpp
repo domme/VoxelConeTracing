@@ -61,6 +61,10 @@ LightInjectionPass::LightInjectionPass(VCTscene* vctScene,
   texSamplerProps.type = GL_SAMPLER_2D;
   shader->setSamplerProperties(0, texSamplerProps);
 
+  addStartupOperation(new BindBuffer(
+    GL_DRAW_INDIRECT_BUFFER,
+    _vctScene->getThreadBuf_nodeMap(_vctScene->getNodePool()->getNumLevels() - 1)->getHandle()));
+  
   std::vector<ShaderData>& vSMBufferTex = shadowMapFBO->getOutputs();
   addStartupOperation(new BindTexture(
                          &vSMBufferTex[1],
@@ -96,10 +100,8 @@ LightInjectionPass::LightInjectionPass(VCTscene* vctScene,
   
   addStartupOperation(new EnableDisableOp(GL_DEPTH_TEST, EnableDisableOp::DISABLE));
   addStartupOperation(new ColorMaskOp(glm::bvec4(false, false, false, false)));
-  addStartupOperation(new RenderMesh(fsqMeshComponent));
 
-  addStartupOperation(
-    new FunctionOp(std::bind(&LightInjectionPass::resetFBO, this)));
+  addStartupOperation(new DrawIndirectOp(GL_POINTS, 0));
 
   this->addFinishOperation(new MemoryBarrierOp(GL_ALL_BARRIER_BITS));
 

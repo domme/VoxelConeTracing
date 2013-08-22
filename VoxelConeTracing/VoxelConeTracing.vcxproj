@@ -180,6 +180,7 @@
     <ClCompile Include="src\VoxelConeTracing\main.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Building\AllocBricksPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Building\ClearBrickTexPass.cpp" />
+    <ClCompile Include="src\VoxelConeTracing\Octree Building\ClearNodeMapPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Building\ModifyIndirectBufferPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Building\NeighbourPointersPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Building\ObAllocatePass.cpp" />
@@ -221,6 +222,7 @@
     <ClInclude Include="src\VoxelConeTracing\FullscreenQuad.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Building\AllocBricksPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Building\ClearBrickTexPass.h" />
+    <ClInclude Include="src\VoxelConeTracing\Octree Building\ClearNodeMapPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Building\ModifyIndirectBufferPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Building\NeighbourPointersPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Building\ObAllocatePass.h" />
@@ -259,6 +261,7 @@
     <None Include="..\bin\assets\shader\AllocBricks.shader" />
     <None Include="..\bin\assets\shader\BorderTransfer.shader" />
     <None Include="..\bin\assets\shader\ClearBrickTex.shader" />
+    <None Include="..\bin\assets\shader\ClearNodeMap.shader" />
     <None Include="..\bin\assets\shader\ConeTraceFrag.shader" />
     <None Include="..\bin\assets\shader\debug.shader" />
     <None Include="..\bin\assets\shader\deferredFrag.shader" />
