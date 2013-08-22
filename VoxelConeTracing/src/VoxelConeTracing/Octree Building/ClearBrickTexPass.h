@@ -32,12 +32,23 @@
 class ClearBrickTexPass : public kore::ShaderProgramPass
 {
   public:
+    enum EClearMode {
+      CLEAR_BRICK_ALL = 0,
+      CLEAR_BRICK_DYNAMIC
+    };
+
     ClearBrickTexPass(VCTscene* vctScene,
+              EClearMode clearMode,
               kore::EOperationExecutionType executionType);
     virtual ~ClearBrickTexPass(void);
 
   private:
     kore::IndexedBuffer _svoCmdBuf;
+
+    EClearMode _eClearMode;
+    kore::ShaderData _shdClearMode;
+
+
 };
 
 #endif //VCT_SRC_VCT_OBCLERBRICKTEXPASS_H_

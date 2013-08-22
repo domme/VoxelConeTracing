@@ -25,9 +25,13 @@
 
 #version 430 core
 
+#define CLEAR_ALL 0U
+#define CLEAR_DYNAMIC 1U
 
 layout(rgba8) uniform image3D brickPool_color;
 layout(rgba8) uniform image3D brickPool_irradiance;
+
+uniform uint clearMode;
 
 void main() {
   int size = imageSize(brickPool_color).x;
@@ -35,8 +39,16 @@ void main() {
   texCoord.x = gl_VertexID % size;
   texCoord.y = (gl_VertexID / size) % size;
   texCoord.z = gl_VertexID / (size * size);
-  imageStore(brickPool_color, texCoord, vec4(0.0,0.0,0.0,0.0));
-  imageStore(brickPool_irradiance, texCoord, vec4(0.0,0.01,0.0,0.01));
+
+  vec4 clearColor = vec4(0.0);
+  vec4 clearIrradiance = vec4(0.0,0.01,0.0,0.01);
+
+  if (clearMode == CLEAR_ALL) {
+    imageStore(brickPool_color, texCoord, clearColor);
+    imageStore(brickPool_irradiance, texCoord, clearIrradiance);
+  }
+
+  else if (clearMode == CLEAR_DYNAMIC) {
+    imageStore(brickPool_irradiance, texCoord, clearIrradiance);
+  }
 }
-
-

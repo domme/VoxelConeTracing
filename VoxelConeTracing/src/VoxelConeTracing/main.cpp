@@ -82,6 +82,7 @@
 #include "VoxelConeTracing/Stages/GBufferStage.h"
 #include "VoxelConeTracing/Stages/SVOconstructionStage.h"
 #include "VoxelConeTracing/Stages/ShadowMapStage.h"
+#include "Stages/SVOlightUpdateStage.h"
 
 static const uint screen_width = 1280;
 static const uint screen_height = 720;
@@ -201,6 +202,13 @@ void setup() {
   RenderManager::getInstance()->addFramebufferStage(svoStage);
   ////////////////////////////////////////////////////////////////////////// 
 
+
+  // Light update stage
+  FrameBufferStage* lightUpdateStage =
+    new SVOlightUpdateStage(lightNodes[0], renderNodes, params, _vctScene, shadowMapStage->getFrameBuffer());
+
+  RenderManager::getInstance()->addFramebufferStage(lightUpdateStage);
+  ////////////////////////////////////////////////////////////////////////// 
   
   _backbufferStage = new FrameBufferStage;
   _backbufferStage->setFrameBuffer(kore::FrameBuffer::BACKBUFFER);
