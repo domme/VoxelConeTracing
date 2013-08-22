@@ -108,6 +108,11 @@ void VCTscene::init(const SVCTparameters& params,
   // Init light node map for each level
   _lightNodeMap.init(nodeMapProps, "LightNodeMap");
 
+  kore::RenderManager::getInstance()->bindTexture(GL_TEXTURE_2D, _lightNodeMap.getHandle());
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+  kore::RenderManager::getInstance()->bindTexture(GL_TEXTURE_2D, 0);
+
   _lightNodeMapTexInfo.texLocation = _lightNodeMap.getHandle();
   _lightNodeMapTexInfo.internalFormat = GL_R32UI;
   _lightNodeMapTexInfo.texTarget = GL_TEXTURE_2D;
