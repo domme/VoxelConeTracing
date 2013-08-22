@@ -106,6 +106,9 @@ public:
   inline const glm::ivec2& getSMresolution() {return _smResolution;}
   inline kore::ShaderData* getShdSMresolution() {return &_shdSMresolution;}
 
+  inline kore::IndexedBuffer* getThreadBuf_nodeMap(const uint level)
+  {return &_vThreadBufs_NodeMap[level];}
+
 private:
   kore::Camera* _camera;
   std::vector<kore::SceneNode*> _meshNodes;
@@ -132,6 +135,8 @@ private:
   kore::Texture _lightNodeMap;
   kore::STextureInfo _lightNodeMapTexInfo;
   kore::ShaderData _shdLightNodeMap;
+
+  std::vector<kore::IndexedBuffer> _vThreadBufs_NodeMap;
 };
 
 #endif  // VCT_SRC_VCT_VCTSCENE_H_

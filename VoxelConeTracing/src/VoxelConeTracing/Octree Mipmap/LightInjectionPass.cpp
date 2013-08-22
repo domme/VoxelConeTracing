@@ -47,11 +47,8 @@ LightInjectionPass::LightInjectionPass(VCTscene* vctScene,
 
   ShaderProgram* shader = new ShaderProgram;
 
-  shader->loadShader("./assets/shader/FullscreenQuadVert.shader",
-    GL_VERTEX_SHADER);
-
   shader->loadShader("./assets/shader/LightInjectionFrag.shader",
-    GL_FRAGMENT_SHADER);
+    GL_VERTEX_SHADER);
   shader->setName("light injection shader");
   shader->init();
 
@@ -64,74 +61,44 @@ LightInjectionPass::LightInjectionPass(VCTscene* vctScene,
   texSamplerProps.type = GL_SAMPLER_2D;
   shader->setSamplerProperties(0, texSamplerProps);
 
-  
-  
-  // There will be bugs here....
-  //addStartupOperation(new ViewportOp(glm::ivec4(0, 0, 1280, 720)));
- 
- 
-  SceneNode* fsquadnode = new SceneNode();
-  SceneManager::getInstance()->getRootNode()->addChild(fsquadnode);
-
-  MeshComponent* fsqMeshComponent = new MeshComponent();
-  fsqMeshComponent->setMesh(FullscreenQuad::getInstance());
-  fsquadnode->addComponent(fsqMeshComponent);
-
-  NodePass* nodePass = new NodePass(fsquadnode);
-  this->addNodePass(nodePass);
-
   std::vector<ShaderData>& vSMBufferTex = shadowMapFBO->getOutputs();
-  nodePass->addOperation(new BindTexture(
+  addStartupOperation(new BindTexture(
                          &vSMBufferTex[1],
                           shader->getUniform("smPosition")));
 
-  nodePass->addOperation(new BindAttribute(
-                         fsqMeshComponent->getShaderData("v_position"),
-                         shader->getAttribute("v_position")));
-
-  nodePass->addOperation(new BindAttribute(
-                        fsqMeshComponent->getShaderData("v_uvw"),
-                        shader->getAttribute("v_uvw")));
-  
-  nodePass->addOperation(new BindUniform(
+  addStartupOperation(new BindUniform(
                         vctScene->getVoxelGridNode()->getTransform()->getShaderData("inverse model Matrix"),
                         shader->getUniform("voxelGridTransformI")));
-  nodePass->addOperation(new BindUniform(
+  addStartupOperation(new BindUniform(
                         vctScene->getNodePool()->getShdNumLevels(),
                         shader->getUniform("numLevels")));
 
   kore::LightComponent* lightComp = static_cast<LightComponent*>(lightNode->getComponent(COMPONENT_LIGHT));
-  nodePass->addOperation(new BindUniform(
+  addStartupOperation(new BindUniform(
                          lightComp->getShaderData("color"),
                          shader->getUniform("lightColor")));
 
-  nodePass->addOperation(new BindImageTexture(
+  addStartupOperation(new BindImageTexture(
                          vctScene->getNodePool()->getShdNodePool(NEXT),
                          shader->getUniform("nodePool_next"), GL_READ_ONLY));
 
-  nodePass->addOperation(new BindImageTexture(
+  addStartupOperation(new BindImageTexture(
                         vctScene->getNodePool()->getShdNodePool(COLOR),
                         shader->getUniform("nodePool_color"), GL_READ_ONLY));
 
-  nodePass->addOperation(new BindImageTexture(
+  addStartupOperation(new BindImageTexture(
                          vctScene->getBrickPool()->getShdBrickPool(BRICKPOOL_IRRADIANCE),
                          shader->getUniform("brickPool_irradiance")));
   
   // Add node map for all levels
-  nodePass->addOperation(new BindImageTexture(vctScene->getShdLightNodeMap(),
+  addStartupOperation(new BindImageTexture(vctScene->getShdLightNodeMap(),
                          shader->getUniform("nodeMap")));
-   
   
-  //nodePass->addOperation(new ViewportOp(
-    //glm::ivec4(0, 0, 2048, 2048)));
-  nodePass->addOperation(
-    new FunctionOp(std::bind(&LightInjectionPass::setViewport, this)));
+  addStartupOperation(new EnableDisableOp(GL_DEPTH_TEST, EnableDisableOp::DISABLE));
+  addStartupOperation(new ColorMaskOp(glm::bvec4(false, false, false, false)));
+  addStartupOperation(new RenderMesh(fsqMeshComponent));
 
-  nodePass->addOperation(new EnableDisableOp(GL_DEPTH_TEST, EnableDisableOp::DISABLE));
-  nodePass->addOperation(new ColorMaskOp(glm::bvec4(false, false, false, false)));
-  nodePass->addOperation(new RenderMesh(fsqMeshComponent));
-
-  nodePass->addOperation(
+  addStartupOperation(
     new FunctionOp(std::bind(&LightInjectionPass::resetFBO, this)));
 
   this->addFinishOperation(new MemoryBarrierOp(GL_ALL_BARRIER_BITS));
