@@ -59,8 +59,8 @@ uniform sampler2D smPosition;
 uniform float fFar;
 uniform vec3 lightColor;
 
-ivec2 nodeMapOffset[8];
-ivec2 nodeMapSize[8];
+uniform ivec2 nodeMapOffset[8];
+uniform ivec2 nodeMapSize[8];
 
 vec4 convRGBA8ToVec4(uint val) {
     return vec4( float((val & 0x000000FF)), 
@@ -89,35 +89,12 @@ uvec3 uintXYZ10ToVec3(uint val) {
 }
 
 
-void calcNodeMapOffsets(){
-  ivec2 smResolution = textureSize(smPosition, 0);
-
-  nodeMapOffset[7] = ivec2(0,0);
-  nodeMapOffset[6] = ivec2(smResolution.x,0);
-  nodeMapOffset[5] = ivec2(smResolution.x,smResolution.y/2);
-  nodeMapOffset[4] = ivec2(smResolution.x,smResolution.y/4);
-  nodeMapOffset[3] = ivec2(smResolution.x,smResolution.y/8);
-  nodeMapOffset[2] = ivec2(smResolution.x,smResolution.y/16);
-  nodeMapOffset[1] = ivec2(smResolution.x,smResolution.y/32);
-  nodeMapOffset[0] = ivec2(smResolution.x,smResolution.y/64);
-}
-
-void calcNodeMapSizes() {
-  ivec2 res = textureSize(smPosition, 0);
-  for (int i = 7; i > 0; --i) {
-    nodeMapSize[i] = res;
-    res /= 2;
-  }
-}
-
 void storeNodeInNodemap(in vec2 uv, in uint level, in int nodeAddress) {
   ivec2 storePos = nodeMapOffset[level] + ivec2(uv * nodeMapSize[level]);
   imageStore(nodeMap, storePos, uvec4(nodeAddress));
 }
 
 void main() {
-  calcNodeMapOffsets();
-  calcNodeMapSizes();
   
   ivec2 smTexSize = textureSize(smPosition, 0);
   vec2 uv = vec2(0);

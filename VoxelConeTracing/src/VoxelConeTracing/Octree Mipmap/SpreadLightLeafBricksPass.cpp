@@ -65,6 +65,12 @@ SpreadLightLeafBricksPass::
                       vctScene->getShdLightNodeMap(),
                       shp->getUniform("nodeMap"), GL_READ_ONLY));
 
+  addStartupOperation(new BindUniform(vctScene->getShdNodeMapOffsets(),
+                                      shp->getUniform("nodeMapOffset[0]")));
+
+  addStartupOperation(new BindUniform(vctScene->getShdNodeMapSizes(),
+                                      shp->getUniform("nodeMapSize[0]")));
+
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdNodePool(COLOR),
     shp->getUniform("nodePool_color"), GL_READ_ONLY));

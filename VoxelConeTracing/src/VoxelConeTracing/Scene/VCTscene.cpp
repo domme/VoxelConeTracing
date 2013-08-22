@@ -123,7 +123,7 @@ void VCTscene::init(const SVCTparameters& params,
 
   glm::vec2 curSMmipmapRes(_smResolution.x, _smResolution.y);
   _vThreadBufs_NodeMap.resize(_nodePool.getNumLevels());
-  for (int i = _nodePool.getNumLevels() - 1; i > 0; --i) {
+  for (int i = _nodePool.getNumLevels() - 1; i >= 0; --i) {
     cmd.numVertices = curSMmipmapRes.x * curSMmipmapRes.y;
     curSMmipmapRes /= 2;
 
@@ -138,4 +138,30 @@ void VCTscene::init(const SVCTparameters& params,
   _threadBuf_NodeMapComplete.create(GL_DRAW_INDIRECT_BUFFER,
                              sizeof(SDrawArraysIndirectCommand),
                              GL_STATIC_DRAW, &cmd);
+  
+  _nodeMapOffsets[7] = glm::ivec2(0, 0);
+  _nodeMapOffsets[6] = glm::ivec2(_smResolution.x, 0);
+  _nodeMapOffsets[5] = glm::ivec2(_smResolution.x, _smResolution.y/2);
+  _nodeMapOffsets[4] = glm::ivec2(_smResolution.x, _smResolution.y/4);
+  _nodeMapOffsets[3] = glm::ivec2(_smResolution.x, _smResolution.y/8);
+  _nodeMapOffsets[2] = glm::ivec2(_smResolution.x, _smResolution.y/16);
+  _nodeMapOffsets[1] = glm::ivec2(_smResolution.x, _smResolution.y/32);
+  _nodeMapOffsets[0] = glm::ivec2(_smResolution.x, _smResolution.y/64);
+  
+  _nodeMapSizes[7] = _smResolution;
+  _nodeMapSizes[6] = _smResolution / 2;
+  _nodeMapSizes[5] = _smResolution / 4;
+  _nodeMapSizes[4] = _smResolution / 8;
+  _nodeMapSizes[3] = _smResolution / 16;
+  _nodeMapSizes[2] = _smResolution / 32;
+  _nodeMapSizes[1] = _smResolution / 64;
+  _nodeMapSizes[0] = _smResolution / 128;
+
+  _shdNodeMapOffsets.size = 8;
+  _shdNodeMapOffsets.type = GL_INT_VEC2;
+  _shdNodeMapOffsets.data = _nodeMapOffsets;
+
+  _shdNodeMapSizes.size = 8;
+  _shdNodeMapSizes.type = GL_INT_VEC2;
+  _shdNodeMapSizes.data = _nodeMapSizes;
 }

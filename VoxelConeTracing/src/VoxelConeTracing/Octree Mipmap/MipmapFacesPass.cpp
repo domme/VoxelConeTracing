@@ -70,10 +70,16 @@ MipmapFacesPass::
   addStartupOperation(new BindImageTexture(
     _vctScene->getShdLightNodeMap(),
     shp->getUniform("nodeMap"), GL_READ_ONLY));
+
+  addStartupOperation(new BindUniform(vctScene->getShdNodeMapOffsets(),
+                                      shp->getUniform("nodeMapOffset[0]")));
+
+  addStartupOperation(new BindUniform(vctScene->getShdNodeMapSizes(),
+                                      shp->getUniform("nodeMapSize[0]")));
   
-    addStartupOperation(new BindImageTexture(
-                    vctScene->getBrickPool()->getShdBrickPool(eBrickPoolAtt),
-                                          shp->getUniform("brickPool_value")));
+  addStartupOperation(new BindImageTexture(
+                  vctScene->getBrickPool()->getShdBrickPool(eBrickPoolAtt),
+                                         shp->getUniform("brickPool_value")));
 
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdNodePool(NEXT), shp->getUniform("nodePool_next"), GL_READ_ONLY));

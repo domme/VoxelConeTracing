@@ -43,6 +43,8 @@
 #include "../Octree Mipmap/MipmapCornersPass.h"
 #include "../Octree Mipmap/MipmapEdgesPass.h"
 #include "../Octree Building/ClearNodeMapPass.h"
+#include "../Octree Mipmap/SpreadLightLeafBricksPass.h"
+#include "../Octree Mipmap/BorderTransferLightPass.h"
 
 
 SVOlightUpdateStage::SVOlightUpdateStage(kore::SceneNode* lightNode,
@@ -70,8 +72,8 @@ SVOlightUpdateStage::SVOlightUpdateStage(kore::SceneNode* lightNode,
                                               lightNode,
                                               shadowMapFBO,
                                               exeFrequency));
-  this->addProgramPass(new SpreadLeafBricksPass(&vctScene, BRICKPOOL_IRRADIANCE, exeFrequency));
-  this->addProgramPass(new BorderTransferPass(&vctScene, BRICKPOOL_IRRADIANCE, _numLevels - 1, exeFrequency));
+  this->addProgramPass(new SpreadLightLeafBricksPass(&vctScene, BRICKPOOL_IRRADIANCE, exeFrequency));
+  this->addProgramPass(new BorderTransferLightPass(&vctScene, BRICKPOOL_IRRADIANCE, _numLevels - 1, exeFrequency));
 
   for (int iLevel = _numLevels - 2; iLevel >= 0;) {
     this->addProgramPass(new MipmapCenterPass(&vctScene, BRICKPOOL_COLOR, iLevel, exeFrequency));

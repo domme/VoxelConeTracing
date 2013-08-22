@@ -87,13 +87,13 @@ SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
 
   this->addProgramPass(new WriteLeafNodesPass(&vctScene, kore::EXECUTE_ONCE));
 
+  this->addProgramPass(new SpreadLeafBricksPass(&vctScene, BRICKPOOL_COLOR, kore::EXECUTE_ONCE));
   this->addProgramPass(new SpreadLeafBricksPass(&vctScene, BRICKPOOL_NORMAL, kore::EXECUTE_ONCE));
+  
+  this->addProgramPass(new BorderTransferPass(&vctScene, BRICKPOOL_COLOR,
+                                              _numLevels - 1, EXECUTE_ONCE));
   this->addProgramPass(new BorderTransferPass(&vctScene, BRICKPOOL_NORMAL,
                                                _numLevels - 1, EXECUTE_ONCE));
-  this->addProgramPass(new SpreadLeafBricksPass(&vctScene, BRICKPOOL_COLOR, kore::EXECUTE_ONCE));
-  this->addProgramPass(new BorderTransferPass(&vctScene, BRICKPOOL_COLOR,
-                                              _numLevels - 1, EXECUTE_ONCE)); 
-
 }
 
 SVOconstructionStage::~SVOconstructionStage() {

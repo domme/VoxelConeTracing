@@ -23,19 +23,19 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#ifndef VCT_SRC_VCT_BORDERTRANSFERPASS_H_
-#define VCT_SRC_VCT_BORDERTRANSFERPASS_H_
+#ifndef VCT_SRC_VCT_BORDERTRANSFERLIGHTPASS_H_
+#define VCT_SRC_VCT_BORDERTRANSFERLIGHTPASS_H_
 
 #include "KoRE/Passes/ShaderProgramPass.h"
 #include "VoxelConeTracing/Scene/VCTscene.h"
 
 
-class BorderTransferPass : public kore::ShaderProgramPass
+class BorderTransferLightPass : public kore::ShaderProgramPass
 {
   public:
-    BorderTransferPass(VCTscene* vctScene, EBrickPoolAttributes eBrickPool,
+    BorderTransferLightPass(VCTscene* vctScene, EBrickPoolAttributes eBrickPool,
                        int level, kore::EOperationExecutionType executionType);
-    virtual ~BorderTransferPass(void);
+    virtual ~BorderTransferLightPass(void);
 
   private:
     kore::ShaderProgram _shader;
@@ -57,4 +57,4 @@ class BorderTransferPass : public kore::ShaderProgramPass
     kore::ShaderData _shdAxisZ_neg;
 };
 
-#endif //VCT_SRC_VCT_BORDERTRANSFERPASS_H_
+#endif //VCT_SRC_VCT_BORDERTRANSFERLIGHTPASS_H_

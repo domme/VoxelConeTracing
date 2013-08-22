@@ -112,6 +112,9 @@ public:
   inline kore::IndexedBuffer* getThreadBuf_nodeMap_complete()
   {return &_threadBuf_NodeMapComplete;}
 
+  inline kore::ShaderData* getShdNodeMapOffsets() {return &_shdNodeMapOffsets;}
+  inline kore::ShaderData* getShdNodeMapSizes() {return &_shdNodeMapSizes;}
+
 private:
   kore::Camera* _camera;
   std::vector<kore::SceneNode*> _meshNodes;
@@ -141,6 +144,11 @@ private:
 
   std::vector<kore::IndexedBuffer> _vThreadBufs_NodeMap;
   kore::IndexedBuffer _threadBuf_NodeMapComplete;
+
+  glm::ivec2 _nodeMapOffsets[8];
+  glm::ivec2 _nodeMapSizes[8];
+  kore::ShaderData _shdNodeMapOffsets;
+  kore::ShaderData _shdNodeMapSizes;
 };
 
 #endif  // VCT_SRC_VCT_VCTSCENE_H_

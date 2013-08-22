@@ -38,6 +38,8 @@ layout(r32ui) uniform readonly uimage2D nodeMap;
 layout(rgba8) uniform volatile image3D brickPool_value;
 
 uniform uint numLevels;  // Number of levels in the octree
+uniform ivec2 nodeMapOffset[8];
+uniform ivec2 nodeMapSize[8];
 
 #define NODE_MASK_VALUE 0x3FFFFFFF
 #define NODE_MASK_TAG (0x00000001 << 31)
@@ -100,6 +102,16 @@ void loadVoxelValues(in ivec3 brickAddress){
     voxelValues[i] = imageLoad(brickPool_value, 
                                brickAddress + 2 * ivec3(childOffsets[i]));
   }
+}
+
+uint getThreadNode() {
+  ivec2 nmSize = nodeMapSize[numLevels - 1];
+  
+  ivec2 uv = ivec2(0);
+  uv.x = (gl_VertexID % nmSize.x);
+  uv.y = (gl_VertexID / nmSize.x);
+
+  return imageLoad(nodeMap, nodeMapOffset[numLevels - 1] + uv).x;
 }
 
 ///*

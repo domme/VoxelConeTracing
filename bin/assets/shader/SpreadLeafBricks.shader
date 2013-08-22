@@ -34,7 +34,7 @@ to traverse the octree and find the leaf-node.
 #version 420 core
 
 layout(r32ui) uniform readonly uimageBuffer nodePool_color;
-layout(r32ui) uniform readonly uimage2D nodeMap;
+layout(r32ui) uniform readonly uimageBuffer levelAddressBuffer;
 layout(rgba8) uniform volatile image3D brickPool_value;
 
 uniform uint numLevels;  // Number of levels in the octree
@@ -100,6 +100,20 @@ void loadVoxelValues(in ivec3 brickAddress){
     voxelValues[i] = imageLoad(brickPool_value, 
                                brickAddress + 2 * ivec3(childOffsets[i]));
   }
+}
+uint getThreadNode() {
+  int level = int(numLevels - 1);
+  uint levelStart = imageLoad(levelAddressBuffer, level).x;
+  uint nextLevelStart = imageLoad(levelAddressBuffer, level + 1).x;
+  memoryBarrier();
+
+  uint index = levelStart + uint(gl_VertexID);
+
+ // if (index >= nextLevelStart) {
+  //  return NODE_NOT_FOUND;
+  //}
+
+  return index;
 }
 
 ///*

@@ -34,6 +34,8 @@ layout(r32ui) uniform readonly uimageBuffer nodePool_Neighbour;
 uniform int level;
 uniform uint numLevels;
 uniform uint axis;
+uniform ivec2 nodeMapOffset[8];
+uniform ivec2 nodeMapSize[8];
 
 #define NODE_MASK_VALUE 0x3FFFFFFF
 #define NODE_NOT_FOUND 0xFFFFFFFF
@@ -63,6 +65,17 @@ vec4 getFinalVal(in vec4 borderVal, in vec4 neighbourBorderVal) {
   //}
 
   return col;
+}
+
+
+uint getThreadNode() {
+  ivec2 nmSize = nodeMapSize[level];
+  
+  ivec2 uv = ivec2(0);
+  uv.x = (gl_VertexID % nmSize.x);
+  uv.y = (gl_VertexID / nmSize.x);
+
+  return imageLoad(nodeMap, nodeMapOffset[level] + uv).x;
 }
 
 ///*

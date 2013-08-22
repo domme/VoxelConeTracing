@@ -25,6 +25,8 @@
 
 #version 430 core
 
+#define NODE_NOT_FOUND 0xFFFFFFFF
+
 layout(r32ui) uniform uimage2D nodeMap;
 
 void main() {
@@ -32,5 +34,5 @@ void main() {
   ivec2 uv = ivec2(0);
   uv.x = (gl_VertexID % nodeMapSize.x);
   uv.y = (gl_VertexID / nodeMapSize.x);
-  imageStore(nodeMap, uv, uvec4(0));
+  imageStore(nodeMap, uv, uvec4(NODE_NOT_FOUND));
 }

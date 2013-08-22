@@ -24,13 +24,13 @@
 */
 
 
-#include "VoxelConeTracing/Octree Mipmap/BorderTransferPass.h"
+#include "VoxelConeTracing/Octree Mipmap/BorderTransferLightPass.h"
 #include "KoRE\RenderManager.h"
 #include "VoxelConeTracing/Scene/VCTscene.h"
 #include "Kore\Operations\Operations.h"
 
-BorderTransferPass::
-  BorderTransferPass(VCTscene* vctScene, EBrickPoolAttributes eBrickPool, 
+BorderTransferLightPass::
+  BorderTransferLightPass(VCTscene* vctScene, EBrickPoolAttributes eBrickPool, 
                      int level, kore::EOperationExecutionType executionType) {
   using namespace kore;
 
@@ -62,24 +62,30 @@ BorderTransferPass::
   _shdLevel.type = GL_INT;
   _shdLevel.data = &_level;
     
-  _shader.loadShader("./assets/shader/BorderTransfer.shader",
+  _shader.loadShader("./assets/shader/BorderTransferLight.shader",
                       GL_VERTEX_SHADER);
-  _shader.setName("BorderTransfer shader");
+  _shader.setName("BorderTransferLight shader");
   _shader.init();
 
   this->setShaderProgram(&_shader);
 
   addStartupOperation(
     new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
-    vctScene->getNodePool()->getDenseThreadBuf(_level)->getHandle()));
+    vctScene->getThreadBuf_nodeMap(_level)->getHandle()));
 
   addStartupOperation(new BindUniform(&_shdLevel, _shader.getUniform("level")));
   addStartupOperation(new BindUniform(vctScene->getNodePool()->getShdNumLevels(),
                                       _shader.getUniform("numLevels")));
   
   addStartupOperation(new BindImageTexture(
-    vctScene->getNodePool()->getShdLevelAddressBuffer(),
-    _shader.getUniform("levelAddressBuffer"), GL_READ_ONLY));
+    vctScene->getShdLightNodeMap(),
+    _shader.getUniform("nodeMap"), GL_READ_ONLY));
+
+  addStartupOperation(new BindUniform(vctScene->getShdNodeMapOffsets(),
+    _shader.getUniform("nodeMapOffset[0]")));
+
+  addStartupOperation(new BindUniform(vctScene->getShdNodeMapSizes(),
+    _shader.getUniform("nodeMapSize[0]")));
 
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdNodePool(COLOR),
@@ -153,6 +159,6 @@ BorderTransferPass::
   
 }
 
-BorderTransferPass::~BorderTransferPass(void) {
+BorderTransferLightPass::~BorderTransferLightPass(void) {
 
 }

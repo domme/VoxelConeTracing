@@ -32,6 +32,8 @@ layout(r32ui) uniform readonly uimage2D nodeMap;
 layout(rgba8) uniform image3D brickPool_value;
 
 uniform uint level;
+uniform ivec2 nodeMapOffset[8];
+uniform ivec2 nodeMapSize[8];
 
 #define NODE_MASK_VALUE 0x3FFFFFFF
 #define NODE_MASK_TAG (0x00000001 << 31)
@@ -93,11 +95,23 @@ void loadChildTile(in int tileAddress) {
   memoryBarrier();
 }
 
+uint getThreadNode() {
+  ivec2 nmSize = nodeMapSize[level];
+  
+  ivec2 uv = ivec2(0);
+  uv.x = (gl_VertexID % nmSize.x);
+  uv.y = (gl_VertexID / nmSize.x);
+
+  return imageLoad(nodeMap, nodeMapOffset[level] + uv).x;
+}
+
 // Get the child brickcolor
 vec4 getChildBrickColor(in int childIndex, in ivec3 brickOffset) {
   ivec3 childBrickAddress = ivec3(uintXYZ10ToVec3(childColorU[childIndex]));
   return imageLoad(brickPool_value, childBrickAddress + brickOffset);
 }
+
+
 
 void edgeNearBottom(in ivec3 brickAddress) {
    vec4 color = vec4(0);

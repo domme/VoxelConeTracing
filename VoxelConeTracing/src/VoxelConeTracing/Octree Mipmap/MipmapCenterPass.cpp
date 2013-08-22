@@ -70,6 +70,12 @@ MipmapCenterPass::
                   _vctScene->getShdLightNodeMap(),
                   shp->getUniform("nodeMap"), GL_READ_ONLY));
 
+  addStartupOperation(new BindUniform(vctScene->getShdNodeMapOffsets(),
+                                      shp->getUniform("nodeMapOffset[0]")));
+
+  addStartupOperation(new BindUniform(vctScene->getShdNodeMapSizes(),
+                                      shp->getUniform("nodeMapSize[0]")));
+
     addStartupOperation(new BindImageTexture(
                     vctScene->getBrickPool()->getShdBrickPool(brickPoolAtt),
                                           shp->getUniform("brickPool_value")));

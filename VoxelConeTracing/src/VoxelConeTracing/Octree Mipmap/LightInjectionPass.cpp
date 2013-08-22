@@ -97,6 +97,12 @@ LightInjectionPass::LightInjectionPass(VCTscene* vctScene,
   // Add node map for all levels
   addStartupOperation(new BindImageTexture(vctScene->getShdLightNodeMap(),
                          shader->getUniform("nodeMap")));
+
+  addStartupOperation(new BindUniform(vctScene->getShdNodeMapOffsets(),
+                                      shader->getUniform("nodeMapOffset[0]")));
+
+  addStartupOperation(new BindUniform(vctScene->getShdNodeMapSizes(),
+                                      shader->getUniform("nodeMapSize[0]")));
   
   addStartupOperation(new EnableDisableOp(GL_DEPTH_TEST, EnableDisableOp::DISABLE));
   addStartupOperation(new ColorMaskOp(glm::bvec4(false, false, false, false)));

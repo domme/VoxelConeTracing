@@ -26,7 +26,7 @@
 #version 430 core
 
 layout(r32ui) uniform readonly uimageBuffer nodePool_color;
-layout(r32ui) uniform readonly uimage2D nodeMap;
+layout(r32ui) uniform readonly uimageBuffer levelAddressBuffer;
 layout(rgba8) uniform image3D brickPool_value;
 
 layout(r32ui) uniform readonly uimageBuffer nodePool_Neighbour;
@@ -63,6 +63,19 @@ vec4 getFinalVal(in vec4 borderVal, in vec4 neighbourBorderVal) {
   //}
 
   return col;
+}
+uint getThreadNode() {
+  int levelStart = int(imageLoad(levelAddressBuffer, int(level)).x);
+  int nextLevelStart = int(imageLoad(levelAddressBuffer, int(level + 1)).x);
+  memoryBarrier();
+
+  uint index = uint(levelStart) + uint(gl_VertexID);
+
+  if (level < int(numLevels - 1) && index >= nextLevelStart) {
+    return NODE_NOT_FOUND;
+  }
+
+  return index;
 }
 
 ///*
