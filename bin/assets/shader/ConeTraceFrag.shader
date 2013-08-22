@@ -130,7 +130,7 @@ int traverseOctree(in vec3 posTex, in float d, in float pixelSizeTS,
 
     if (projVoxelSize / 2 < pixelSizeTS) {
       valid = true;
-      //break;
+      break;
     }
     
     uint nodeNext = imageLoad(nodePool_next, nodeAddress).x;
@@ -181,7 +181,9 @@ vec4 raycastBrick(in uint nodeColorU, in vec3 enter, in vec3 leave, in vec3 dir,
    // color.xyz *= color.a;
     
     for (float f = 0; f < stepLength; f += stepSize) {
-      vec4 newCol = texture(brickPool_irradiance, enterUVW + dir * f);
+      vec4 newCol = texture(brickPool_color, enterUVW + dir * f);
+      vec4 irradiance = texture(brickPool_irradiance, enterUVW + dir * f);
+      newCol.xyz *= irradiance.xyz;
 
       /*
       float oldColA = newCol.a;

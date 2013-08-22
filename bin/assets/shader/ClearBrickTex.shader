@@ -42,8 +42,8 @@ void main() {
   texCoord.z = gl_VertexID / (size * size);
 
   vec4 clearColor = vec4(0.0);
-  vec4 clearIrradiance = vec4(0.0,0.01,0.0,0.01);
-  vec4 clearNormal = vec4(0.0,0.0,0.0,0.0);
+  vec4 clearIrradiance = vec4(0.0, 0.0, 0.0, 0.0);
+  vec4 clearNormal = vec4(0.0, 0.0, 0.0, 0.0);
   if (clearMode == CLEAR_ALL) {
     imageStore(brickPool_color, texCoord, clearColor);
     imageStore(brickPool_irradiance, texCoord, clearIrradiance);
