@@ -42,6 +42,7 @@
 #include "../Octree Mipmap/MipmapFacesPass.h"
 #include "../Octree Mipmap/MipmapCornersPass.h"
 #include "../Octree Mipmap/MipmapEdgesPass.h"
+#include "../Octree Building/ClearNodeMapPass.h"
 
 
 SVOlightUpdateStage::SVOlightUpdateStage(kore::SceneNode* lightNode,
@@ -63,14 +64,8 @@ SVOlightUpdateStage::SVOlightUpdateStage(kore::SceneNode* lightNode,
   this->addProgramPass(new ClearBrickTexPass(&vctScene,
                                         ClearBrickTexPass::CLEAR_BRICK_DYNAMIC,
                                         exeFrequency));
-
-  this->addProgramPass(new VoxelizePass(vctParams.voxel_grid_sidelengths,
-                                        &vctScene, exeFrequency));
-  this->addProgramPass(new ModifyIndirectBufferPass(
-                       vctScene.getVoxelFragList()->getShdFragListIndCmdBuf(),
-                       vctScene.getShdAcVoxelIndex(),&vctScene,
-                       exeFrequency));
-  
+  this->addProgramPass(new ClearNodeMapPass(&vctScene, exeFrequency));
+      
   this->addProgramPass(new LightInjectionPass(&vctScene,
                                               lightNode,
                                               shadowMapFBO,
@@ -79,18 +74,28 @@ SVOlightUpdateStage::SVOlightUpdateStage(kore::SceneNode* lightNode,
   this->addProgramPass(new BorderTransferPass(&vctScene, BRICKPOOL_IRRADIANCE, _numLevels - 1, exeFrequency));
 
   for (int iLevel = _numLevels - 2; iLevel >= 0;) {
-    this->addProgramPass(new MipmapCenterPass(&vctScene, iLevel, exeFrequency));
-    this->addProgramPass(new MipmapFacesPass(&vctScene, iLevel, exeFrequency));
-    this->addProgramPass(new MipmapCornersPass(&vctScene, iLevel, exeFrequency));
-    this->addProgramPass(new MipmapEdgesPass(&vctScene, iLevel, exeFrequency));
+    this->addProgramPass(new MipmapCenterPass(&vctScene, BRICKPOOL_COLOR, iLevel, exeFrequency));
+    this->addProgramPass(new MipmapFacesPass(&vctScene, BRICKPOOL_COLOR, iLevel, exeFrequency));
+    this->addProgramPass(new MipmapCornersPass(&vctScene, BRICKPOOL_COLOR, iLevel, exeFrequency));
+    this->addProgramPass(new MipmapEdgesPass(&vctScene, BRICKPOOL_COLOR, iLevel, exeFrequency));
+
+    this->addProgramPass(new MipmapCenterPass(&vctScene, BRICKPOOL_NORMAL, iLevel, exeFrequency));
+    this->addProgramPass(new MipmapFacesPass(&vctScene, BRICKPOOL_NORMAL, iLevel, exeFrequency));
+    this->addProgramPass(new MipmapCornersPass(&vctScene, BRICKPOOL_NORMAL, iLevel, exeFrequency));
+    this->addProgramPass(new MipmapEdgesPass(&vctScene, BRICKPOOL_NORMAL, iLevel, exeFrequency));
+
+    this->addProgramPass(new MipmapCenterPass(&vctScene, BRICKPOOL_IRRADIANCE, iLevel, exeFrequency));
+    this->addProgramPass(new MipmapFacesPass(&vctScene, BRICKPOOL_IRRADIANCE, iLevel, exeFrequency));
+    this->addProgramPass(new MipmapCornersPass(&vctScene, BRICKPOOL_IRRADIANCE, iLevel, exeFrequency));
+    this->addProgramPass(new MipmapEdgesPass(&vctScene, BRICKPOOL_IRRADIANCE, iLevel, exeFrequency));
 
     this->addProgramPass(new BorderTransferPass(&vctScene, BRICKPOOL_COLOR, iLevel, exeFrequency));
-    
+    this->addProgramPass(new BorderTransferPass(&vctScene, BRICKPOOL_NORMAL, iLevel, exeFrequency));
+    this->addProgramPass(new BorderTransferPass(&vctScene, BRICKPOOL_IRRADIANCE, iLevel, exeFrequency));
+
     --iLevel;
   }
 }
 
 SVOlightUpdateStage::~SVOlightUpdateStage() {
-
 }
-

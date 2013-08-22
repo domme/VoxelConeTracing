@@ -24,18 +24,19 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#include "VoxelConeTracing/Octree Mipmap/MipmapCornersPass.h"
+#include "VoxelConeTracing/Octree Mipmap/MipmapEdgesPass.h"
 
 #include "KoRE\RenderManager.h"
 #include "KoRE\ResourceManager.h"
 
 #include "Kore\Operations\Operations.h"
 
-MipmapCornersPass::~MipmapCornersPass(void) {
+MipmapEdgesPass::~MipmapEdgesPass(void) {
 }
 
-MipmapCornersPass::
-  MipmapCornersPass(VCTscene* vctScene,
+MipmapEdgesPass::
+  MipmapEdgesPass(VCTscene* vctScene,
+                  EBrickPoolAttributes eBrickPoolAtt,
                   uint level,
                   kore::EOperationExecutionType executionType) {
   using namespace kore;
@@ -56,23 +57,23 @@ MipmapCornersPass::
   kore::ShaderProgram* shp = new kore::ShaderProgram;
   this->setShaderProgram(shp);
 
-  shp->loadShader("./assets/shader/MipmapCorners.shader",
+  shp->loadShader("./assets/shader/MipmapEdges.shader",
                  GL_VERTEX_SHADER);
-  shp->setName("MipmapCorners shader");
+  shp->setName("MipmapEdges shader");
   shp->init();
 
   // Launch a thread for every node up to _level
   addStartupOperation(
     new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
-                  _vctScene->getNodePool()->getDenseThreadBuf(_level)->getHandle()));
+                  _vctScene->getThreadBuf_nodeMap(_level)->getHandle()));
 
   addStartupOperation(new BindImageTexture(
-    _vctScene->getNodePool()->getShdLevelAddressBuffer(),
-    shp->getUniform("levelAddressBuffer"), GL_READ_ONLY));
+    vctScene->getShdLightNodeMap(),
+    shp->getUniform("nodeMap"), GL_READ_ONLY));
   
     addStartupOperation(new BindImageTexture(
-                    vctScene->getBrickPool()->getShdBrickPool(BRICKPOOL_COLOR),
-                                          shp->getUniform("brickPool_color")));
+                    vctScene->getBrickPool()->getShdBrickPool(eBrickPoolAtt),
+                                          shp->getUniform("brickPool_value")));
 
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdNodePool(NEXT), shp->getUniform("nodePool_next"), GL_READ_ONLY));

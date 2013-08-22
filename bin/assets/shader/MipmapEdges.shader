@@ -27,9 +27,9 @@
 
 layout(r32ui) uniform readonly uimageBuffer nodePool_next;
 layout(r32ui) uniform readonly uimageBuffer nodePool_color;
-layout(r32ui) uniform readonly uimageBuffer levelAddressBuffer;
+layout(r32ui) uniform readonly uimage2D nodeMap;
 
-layout(rgba8) uniform image3D brickPool_color;
+layout(rgba8) uniform image3D brickPool_value;
 
 uniform uint level;
 
@@ -93,26 +93,10 @@ void loadChildTile(in int tileAddress) {
   memoryBarrier();
 }
 
-
-
-uint getThreadNode() {
-  uint levelStart = imageLoad(levelAddressBuffer, int(level)).x;
-  uint nextLevelStart = imageLoad(levelAddressBuffer, int(level + 1)).x;
-  memoryBarrier();
-
-  uint index = levelStart + uint(gl_VertexID);
-
-  if (index >= nextLevelStart) {
-    return NODE_NOT_FOUND;
-  }
-
-  return index;
-}
-
 // Get the child brickcolor
 vec4 getChildBrickColor(in int childIndex, in ivec3 brickOffset) {
   ivec3 childBrickAddress = ivec3(uintXYZ10ToVec3(childColorU[childIndex]));
-  return imageLoad(brickPool_color, childBrickAddress + brickOffset);
+  return imageLoad(brickPool_value, childBrickAddress + brickOffset);
 }
 
 void edgeNearBottom(in ivec3 brickAddress) {
@@ -149,7 +133,7 @@ void edgeNearBottom(in ivec3 brickAddress) {
 
   color /= weightSum;
   
-  imageStore(brickPool_color, brickAddress + ivec3(1,0,0), color);
+  imageStore(brickPool_value, brickAddress + ivec3(1,0,0), color);
 }
 
 void edgeNearRight(in ivec3 brickAddress) {
@@ -186,7 +170,7 @@ void edgeNearRight(in ivec3 brickAddress) {
 
   color /= weightSum;
   
-  imageStore(brickPool_color, brickAddress + ivec3(2,1,0), color);
+  imageStore(brickPool_value, brickAddress + ivec3(2,1,0), color);
 }
 
 void edgeNearLeft(in ivec3 brickAddress) {
@@ -223,7 +207,7 @@ void edgeNearLeft(in ivec3 brickAddress) {
 
   color /= weightSum;
   
-  imageStore(brickPool_color, brickAddress + ivec3(0,1,0), color);
+  imageStore(brickPool_value, brickAddress + ivec3(0,1,0), color);
 }
 
 void edgeNearTop(in ivec3 brickAddress) {
@@ -260,7 +244,7 @@ void edgeNearTop(in ivec3 brickAddress) {
 
   color /= weightSum;
   
-  imageStore(brickPool_color, brickAddress + ivec3(1,2,0), color);
+  imageStore(brickPool_value, brickAddress + ivec3(1,2,0), color);
 }
 
 
@@ -298,7 +282,7 @@ void edgeFarBottom(in ivec3 brickAddress) {
 
   color /= weightSum;
   
-  imageStore(brickPool_color, brickAddress + ivec3(1,0,2), color);
+  imageStore(brickPool_value, brickAddress + ivec3(1,0,2), color);
 }
 
 void edgeFarTop(in ivec3 brickAddress) {
@@ -335,7 +319,7 @@ void edgeFarTop(in ivec3 brickAddress) {
 
   color /= weightSum;
   
-  imageStore(brickPool_color, brickAddress + ivec3(1,2,2), color);
+  imageStore(brickPool_value, brickAddress + ivec3(1,2,2), color);
 }
 
 void edgeFarLeft(in ivec3 brickAddress) {
@@ -372,7 +356,7 @@ void edgeFarLeft(in ivec3 brickAddress) {
 
   color /= weightSum;
   
-  imageStore(brickPool_color, brickAddress + ivec3(0,1,2), color);
+  imageStore(brickPool_value, brickAddress + ivec3(0,1,2), color);
 }
 
 void edgeFarRight(in ivec3 brickAddress) {
@@ -409,7 +393,7 @@ void edgeFarRight(in ivec3 brickAddress) {
 
   color /= weightSum;
   
-  imageStore(brickPool_color, brickAddress + ivec3(2,1,2), color);
+  imageStore(brickPool_value, brickAddress + ivec3(2,1,2), color);
 }
 
 
@@ -447,7 +431,7 @@ void edgeLeftBottom(in ivec3 brickAddress) {
 
   color /= weightSum;
   
-  imageStore(brickPool_color, brickAddress + ivec3(0, 0, 1), color);
+  imageStore(brickPool_value, brickAddress + ivec3(0, 0, 1), color);
 }
 
 void edgeRightBottom(in ivec3 brickAddress) {
@@ -484,7 +468,7 @@ void edgeRightBottom(in ivec3 brickAddress) {
 
   color /= weightSum;
   
-  imageStore(brickPool_color, brickAddress + ivec3(2, 0, 1), color);
+  imageStore(brickPool_value, brickAddress + ivec3(2, 0, 1), color);
 }
 
 void edgeLeftTop(in ivec3 brickAddress) {
@@ -521,7 +505,7 @@ void edgeLeftTop(in ivec3 brickAddress) {
 
   color /= weightSum;
   
-  imageStore(brickPool_color, brickAddress + ivec3(0, 2, 1), color);
+  imageStore(brickPool_value, brickAddress + ivec3(0, 2, 1), color);
 }
 
 void edgeRightTop(in ivec3 brickAddress) {
@@ -558,7 +542,7 @@ void edgeRightTop(in ivec3 brickAddress) {
 
   color /= weightSum;
   
-  imageStore(brickPool_color, brickAddress + ivec3(2, 2, 1), color);
+  imageStore(brickPool_value, brickAddress + ivec3(2, 2, 1), color);
 }
 
 void main() {

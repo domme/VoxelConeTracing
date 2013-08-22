@@ -131,4 +131,11 @@ void VCTscene::init(const SVCTparameters& params,
                         sizeof(SDrawArraysIndirectCommand),
                         GL_STATIC_DRAW, &cmd);
   }
+
+
+  cmd.numVertices = (_smResolution.x + _smResolution.x / 2) *
+                     _smResolution.y;
+  _threadBuf_NodeMapComplete.create(GL_DRAW_INDIRECT_BUFFER,
+                             sizeof(SDrawArraysIndirectCommand),
+                             GL_STATIC_DRAW, &cmd);
 }

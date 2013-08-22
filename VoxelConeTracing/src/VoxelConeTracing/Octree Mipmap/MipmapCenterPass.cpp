@@ -36,6 +36,7 @@ MipmapCenterPass::~MipmapCenterPass(void) {
 
 MipmapCenterPass::
   MipmapCenterPass(VCTscene* vctScene,
+                  EBrickPoolAttributes brickPoolAtt,
                   uint level,
                   kore::EOperationExecutionType executionType) {
   using namespace kore;
@@ -61,21 +62,22 @@ MipmapCenterPass::
   shp->setName("MipmapCenter shader");
   shp->init();
 
-  // Launch a thread for every node up to _level
   addStartupOperation(
     new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
-                  _vctScene->getNodePool()->getDenseThreadBuf(_level)->getHandle()));
+                  _vctScene->getThreadBuf_nodeMap(_level)->getHandle()));
 
   addStartupOperation(new BindImageTexture(
-    _vctScene->getNodePool()->getShdLevelAddressBuffer(),
-    shp->getUniform("levelAddressBuffer"), GL_READ_ONLY));
-  
+                  _vctScene->getShdLightNodeMap(),
+                  shp->getUniform("nodeMap"), GL_READ_ONLY));
+
     addStartupOperation(new BindImageTexture(
-                    vctScene->getBrickPool()->getShdBrickPool(BRICKPOOL_COLOR),
-                                          shp->getUniform("brickPool_color")));
+                    vctScene->getBrickPool()->getShdBrickPool(brickPoolAtt),
+                                          shp->getUniform("brickPool_value")));
 
   addStartupOperation(new BindImageTexture(
-    vctScene->getNodePool()->getShdNodePool(NEXT), shp->getUniform("nodePool_next"), GL_READ_ONLY));
+    vctScene->getNodePool()->getShdNodePool(NEXT),
+              shp->getUniform("nodePool_next"),
+              GL_READ_ONLY));
 
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdNodePool(COLOR), shp->getUniform("nodePool_color"), GL_READ_ONLY));

@@ -27,9 +27,9 @@
 
 layout(r32ui) uniform readonly uimageBuffer nodePool_next;
 layout(r32ui) uniform readonly uimageBuffer nodePool_color;
-layout(r32ui) uniform readonly uimageBuffer levelAddressBuffer;
+layout(r32ui) uniform readonly uimage2D nodeMap;
 
-layout(rgba8) uniform image3D brickPool_color;
+layout(rgba8) uniform image3D brickPool_value;
 
 uniform uint level;
 
@@ -93,26 +93,10 @@ void loadChildTile(in int tileAddress) {
   memoryBarrier();
 }
 
-
-
-uint getThreadNode() {
-  uint levelStart = imageLoad(levelAddressBuffer, int(level)).x;
-  uint nextLevelStart = imageLoad(levelAddressBuffer, int(level + 1)).x;
-  memoryBarrier();
-
-  uint index = levelStart + uint(gl_VertexID);
-
-  if (index >= nextLevelStart) {
-    return NODE_NOT_FOUND;
-  }
-
-  return index;
-}
-
 // Get the child brickcolor
 vec4 getChildBrickColor(in int childIndex, in ivec3 brickOffset) {
   ivec3 childBrickAddress = ivec3(uintXYZ10ToVec3(childColorU[childIndex]));
-  return imageLoad(brickPool_color, childBrickAddress + brickOffset);
+  return imageLoad(brickPool_value, childBrickAddress + brickOffset);
 }
 
 void main() {
@@ -181,8 +165,8 @@ void main() {
   // Center color finished
   color /= weightSum;
   
-  imageStore(brickPool_color, brickAddress + ivec3(1,1,1), color);
-  //imageStore(brickPool_color, brickAddress + ivec3(1,1,1), vec4(0,1,0,1));
+  imageStore(brickPool_value, brickAddress + ivec3(1,1,1), color);
+  //imageStore(brickPool_value, brickAddress + ivec3(1,1,1), vec4(0,1,0,1));
 }
 
 

@@ -1,4 +1,3 @@
-
 /*
  Copyright (c) 2012 The VCT Project
 
@@ -24,21 +23,20 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#include "VoxelConeTracing/Octree Mipmap/MipmapCornersPass.h"
+#include "VoxelConeTracing/Octree Mipmap/SpreadLeafBricksPass.h"
 
 #include "KoRE\RenderManager.h"
 #include "KoRE\ResourceManager.h"
 
 #include "Kore\Operations\Operations.h"
 
-MipmapCornersPass::~MipmapCornersPass(void) {
+SpreadLeafBricksPass::~SpreadLeafBricksPass(void) {
 }
 
-MipmapCornersPass::
-  MipmapCornersPass(VCTscene* vctScene,
-                  EBrickPoolAttributes eBrickPoolAtt,
-                  uint level,
-                  kore::EOperationExecutionType executionType) {
+SpreadLeafBricksPass::
+  SpreadLeafBricksPass(VCTscene* vctScene,
+                      EBrickPoolAttributes eBrickPool,
+                     kore::EOperationExecutionType executionType) {
   using namespace kore;
   
   this->setExecutionType(executionType);
@@ -47,42 +45,36 @@ MipmapCornersPass::
   _renderMgr = RenderManager::getInstance();
   _sceneMgr = SceneManager::getInstance();
   _resMgr = ResourceManager::getInstance();
-  
-  _level = level;
-  _shdLevel.component = NULL;
-  _shdLevel.data = &_level;
-  _shdLevel.name = "OctreeLevel";
-  _shdLevel.type = GL_UNSIGNED_INT;
 
   kore::ShaderProgram* shp = new kore::ShaderProgram;
   this->setShaderProgram(shp);
-
-  shp->loadShader("./assets/shader/MipmapCorners.shader",
+  shp->setName("SpreadLeafBricks shader");
+  shp->loadShader("./assets/shader/SpreadLeafBricks.shader",
                  GL_VERTEX_SHADER);
-  shp->setName("MipmapCorners shader");
   shp->init();
-
-  // Launch a thread for every node up to _level
+  
+  // Launch a thread for every node up to the max level
   addStartupOperation(
     new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
-                  _vctScene->getThreadBuf_nodeMap(_level)->getHandle()));
+    _vctScene->getNodePool()->getDenseThreadBuf(
+    _vctScene->getNodePool()->getNumLevels() - 1)->getHandle()));
+
+  addStartupOperation(new BindUniform(vctScene->getNodePool()->getShdNumLevels(),
+                                              shp->getUniform("numLevels")));
 
   addStartupOperation(new BindImageTexture(
-    _vctScene->getShdLightNodeMap(),
-    shp->getUniform("nodeMap"), GL_READ_ONLY));
-  
-    addStartupOperation(new BindImageTexture(
-                    vctScene->getBrickPool()->getShdBrickPool(eBrickPoolAtt),
-                                          shp->getUniform("brickPool_value")));
+                      vctScene->getNodePool()->getShdLevelAddressBuffer(),
+                      shp->getUniform("levelAddressBuffer"), GL_READ_ONLY));
 
   addStartupOperation(new BindImageTexture(
-    vctScene->getNodePool()->getShdNodePool(NEXT), shp->getUniform("nodePool_next"), GL_READ_ONLY));
+    vctScene->getNodePool()->getShdNodePool(COLOR),
+    shp->getUniform("nodePool_color"), GL_READ_ONLY));
 
   addStartupOperation(new BindImageTexture(
-    vctScene->getNodePool()->getShdNodePool(COLOR), shp->getUniform("nodePool_color"), GL_READ_ONLY));
+    vctScene->getBrickPool()->getShdBrickPool(eBrickPool),
+    shp->getUniform("brickPool_value")));
 
-  addStartupOperation(new BindUniform(&_shdLevel, shp->getUniform("level")));
-  
+
   addStartupOperation(
     new kore::DrawIndirectOp(GL_POINTS, 0));
 

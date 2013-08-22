@@ -36,6 +36,7 @@ class MipmapEdgesPass : public kore::ShaderProgramPass
 {
   public:
     MipmapEdgesPass(VCTscene* vctScene,
+                    EBrickPoolAttributes eBrickPoolAtt,
                      uint level,
                      kore::EOperationExecutionType executionType);
     virtual ~MipmapEdgesPass(void);

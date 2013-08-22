@@ -109,6 +109,9 @@ public:
   inline kore::IndexedBuffer* getThreadBuf_nodeMap(const uint level)
   {return &_vThreadBufs_NodeMap[level];}
 
+  inline kore::IndexedBuffer* getThreadBuf_nodeMap_complete()
+  {return &_threadBuf_NodeMapComplete;}
+
 private:
   kore::Camera* _camera;
   std::vector<kore::SceneNode*> _meshNodes;
@@ -137,6 +140,7 @@ private:
   kore::ShaderData _shdLightNodeMap;
 
   std::vector<kore::IndexedBuffer> _vThreadBufs_NodeMap;
+  kore::IndexedBuffer _threadBuf_NodeMapComplete;
 };
 
 #endif  // VCT_SRC_VCT_VCTSCENE_H_

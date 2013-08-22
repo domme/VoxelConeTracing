@@ -196,6 +196,7 @@
     <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\MipmapFacesPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\OctreeMipmapPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\SpreadLeafBricksPass.cpp" />
+    <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\SpreadLightLeafBricksPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\WriteLeafNodesPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Raycasting\ConeTracePass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Raycasting\OctreeVisPass.cpp" />
@@ -238,6 +239,7 @@
     <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\MipmapFacesPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\OctreeMipmapPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\SpreadLeafBricksPass.h" />
+    <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\SpreadLightLeafBricksPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\WriteLeafNodesPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Raycasting\ConeTracePass.h" />
     <ClInclude Include="src\VoxelConeTracing\Raycasting\OctreeVisPass.h" />
@@ -287,6 +289,7 @@
     <None Include="..\bin\assets\shader\ShadowMapFrag.shader" />
     <None Include="..\bin\assets\shader\ShadowMapVert.shader" />
     <None Include="..\bin\assets\shader\SpreadLeafBricks.shader" />
+    <None Include="..\bin\assets\shader\SpreadLightLeafBricks.shader" />
     <None Include="..\bin\assets\shader\VoxelConeTracing\raycastFrag.shader" />
     <None Include="..\bin\assets\shader\VoxelConeTracing\raycastVert.shader" />
     <None Include="..\bin\assets\shader\VoxelConeTracing\voxelizeFrag.shader" />

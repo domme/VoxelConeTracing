@@ -23,8 +23,8 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#ifndef VCT_SRC_VCT_MIPMAPFACESASS_H_
-#define VCT_SRC_VCT_MIPMAPFACESASS_H_
+#ifndef VCT_SRC_VCT_SPREADLEAFBRICKSPASS_H_
+#define VCT_SRC_VCT_SPREADLEAFBRICKSPASS_H_
 
 #include "KoRE/Passes/ShaderProgramPass.h"
 #include "VoxelConeTracing/Scene/VCTscene.h"
@@ -32,23 +32,20 @@
 #include "KoRE/RenderManager.h"
 #include "KoRE/ResourceManager.h"
 
-class MipmapFacesPass : public kore::ShaderProgramPass
+
+class SpreadLeafBricksPass : public kore::ShaderProgramPass
 {
   public:
-    MipmapFacesPass(VCTscene* vctScene,
-                    EBrickPoolAttributes eBrickPoolAtt,
-                    uint level,
-                    kore::EOperationExecutionType executionType);
-    virtual ~MipmapFacesPass(void);
+    SpreadLeafBricksPass(VCTscene* vctScene,
+                      EBrickPoolAttributes eBrickPool,
+                     kore::EOperationExecutionType executionType);
+    virtual ~SpreadLeafBricksPass(void);
 
   private:
     kore::RenderManager* _renderMgr;
     kore::SceneManager* _sceneMgr;
     kore::ResourceManager* _resMgr;
     VCTscene* _vctScene;
-
-    kore::ShaderData _shdLevel;
-    uint _level;
 };
 
-#endif  // VCT_SRC_VCT_MIPMAPFACESASS_H_
+#endif // VCT_SRC_VCT_SPREADLEAFBRICKSPASS_H_
