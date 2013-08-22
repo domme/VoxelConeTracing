@@ -68,6 +68,11 @@ ClearBrickTexPass::ClearBrickTexPass(VCTscene* vctScene,
     vctScene->getBrickPool()->getShdBrickPool(BRICKPOOL_IRRADIANCE),
     shader->getUniform("brickPool_irradiance")));
 
+  addStartupOperation(
+    new kore::BindImageTexture(
+    vctScene->getBrickPool()->getShdBrickPool(BRICKPOOL_NORMAL),
+    shader->getUniform("brickPool_normal")));
+
   addStartupOperation(new kore::DrawIndirectOp(GL_POINTS, 0));
 
   addStartupOperation(new MemoryBarrierOp(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT));

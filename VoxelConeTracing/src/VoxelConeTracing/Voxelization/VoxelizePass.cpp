@@ -114,6 +114,10 @@ VoxelizePass::VoxelizePass(const glm::vec3& voxelGridSize,
     vctScene->getVoxelFragList()->getShdVoxelFragList(VOXELATT_COLOR),
     voxelizeShader->getUniform("voxelFragmentListColor")));
 
+  addStartupOperation(new BindImageTexture(
+    vctScene->getVoxelFragList()->getShdVoxelFragList(VOXELATT_NORMAL),
+    voxelizeShader->getUniform("voxelFragmentListNormal")));
+
   addStartupOperation(
     new BindAtomicCounterBuffer(vctScene->getShdAcVoxelIndex(),
     voxelizeShader->getUniform("voxel_index")));

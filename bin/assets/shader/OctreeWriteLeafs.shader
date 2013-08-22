@@ -41,9 +41,11 @@ const uint NODE_NOT_FOUND = 0xFFFFFFFF;
 
 layout(r32ui) uniform uimageBuffer voxelFragList_pos;
 layout(r32ui) uniform uimageBuffer voxelFragList_color;
+layout(r32ui) uniform uimageBuffer voxelFragList_normal;
 layout(r32ui) uniform uimageBuffer nodePool_next;
 layout(r32ui) uniform uimageBuffer nodePool_color;
 layout(rgba8) uniform image3D brickPool_color;
+layout(rgba8) uniform image3D brickPool_normal;
 
 uniform uint numLevels;  // Number of levels in the octree
 uniform uint voxelGridResolution;
@@ -86,7 +88,7 @@ uvec3 uintXYZ10ToVec3(uint val) {
                  uint((val & 0x3FF00000) >> 20U));
 }
 
-void traverse(in vec3 posTex, in uint voxelColorU) {
+void traverse(in vec3 posTex, in uint voxelColorU, in uint voxelNormalU) {
   vec3 nodePosTex = vec3(0.0);
   vec3 nodePosMaxTex = vec3(1.0);
 
@@ -110,6 +112,9 @@ void traverse(in vec3 posTex, in uint voxelColorU) {
        imageStore(brickPool_color,
              brickCoords  + 2 * ivec3(childOffsets[off]),
              convRGBA8ToVec4(voxelColorU) / 255.0);
+       imageStore(brickPool_normal,
+             brickCoords  + 2 * ivec3(childOffsets[off]),
+             convRGBA8ToVec4(voxelNormalU) / 255.0);
 
     return;
     }
@@ -133,12 +138,13 @@ void main() {
   // Get the voxel's position and color from the voxel frag list.
   uint voxelPosU = imageLoad(voxelFragList_pos, gl_VertexID).x;
   uint voxelColorU = imageLoad(voxelFragList_color, gl_VertexID).x;
+  uint voxelNormalU = imageLoad(voxelFragList_normal, gl_VertexID).x;
   memoryBarrier();
 
   uvec3 voxelPos = uintXYZ10ToVec3(voxelPosU);
   vec3 posTex = vec3(voxelPos) / vec3(voxelGridResolution);
 
   //traverseToLeaf(posTex, voxelColorU);
-  traverse(posTex, voxelColorU);
+  traverse(posTex, voxelColorU, voxelNormalU);
   
 }

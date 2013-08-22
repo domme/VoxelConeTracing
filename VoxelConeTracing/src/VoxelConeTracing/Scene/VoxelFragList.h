@@ -33,6 +33,7 @@
 enum EVoxelAttributes {
   VOXELATT_POSITION = 0,
   VOXELATT_COLOR,
+  VOXELATT_NORMAL,
 
   VOXELATT_NUM
 };

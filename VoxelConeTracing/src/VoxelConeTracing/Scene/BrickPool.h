@@ -39,7 +39,7 @@
 enum EBrickPoolAttributes {
   BRICKPOOL_COLOR = 0,
   BRICKPOOL_IRRADIANCE,
-  //NORMAL,
+  BRICKPOOL_NORMAL,
   
   /*
   Additional attributes later

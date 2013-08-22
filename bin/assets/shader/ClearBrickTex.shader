@@ -28,6 +28,7 @@
 
 layout(rgba8) uniform image3D brickPool_color;
 layout(rgba8) uniform image3D brickPool_irradiance;
+layout(rgba8) uniform image3D brickPool_normal;
 
 void main() {
   int size = imageSize(brickPool_color).x;
@@ -37,6 +38,7 @@ void main() {
   texCoord.z = gl_VertexID / (size * size);
   imageStore(brickPool_color, texCoord, vec4(0.0,0.0,0.0,0.0));
   imageStore(brickPool_irradiance, texCoord, vec4(0.0,0.01,0.0,0.01));
+  imageStore(brickPool_normal, texCoord, vec4(0.0,0.0,0.0,0.0));
 }
 
 

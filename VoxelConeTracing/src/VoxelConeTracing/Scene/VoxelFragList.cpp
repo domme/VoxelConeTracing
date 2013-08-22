@@ -74,6 +74,7 @@ void VoxelFragList::init(uint voxelGridResolution, uint fragListSizeMultiplier, 
 
   _voxelFragLists[VOXELATT_POSITION].create(props, "VoxelFragmentList_Position");
   _voxelFragLists[VOXELATT_COLOR].create(props, "VoxelFragmentList_Color");
+  _voxelFragLists[VOXELATT_NORMAL].create(props, "VoxelFragmentList_Normal");
 
 
   _vflTexInfos[VOXELATT_POSITION].internalFormat = props.internalFormat;
@@ -86,6 +87,11 @@ void VoxelFragList::init(uint voxelGridResolution, uint fragListSizeMultiplier, 
   _vflTexInfos[VOXELATT_COLOR].texLocation
     = _voxelFragLists[VOXELATT_COLOR].getTexHandle();
 
+  _vflTexInfos[VOXELATT_NORMAL].internalFormat = props.internalFormat;
+  _vflTexInfos[VOXELATT_NORMAL].texTarget = GL_TEXTURE_BUFFER;
+  _vflTexInfos[VOXELATT_NORMAL].texLocation
+    = _voxelFragLists[VOXELATT_NORMAL].getTexHandle();
+
 
   _shdVoxelFragLists[VOXELATT_POSITION].component = NULL;
   _shdVoxelFragLists[VOXELATT_POSITION].data = &_vflTexInfos[VOXELATT_POSITION];
@@ -96,6 +102,11 @@ void VoxelFragList::init(uint voxelGridResolution, uint fragListSizeMultiplier, 
   _shdVoxelFragLists[VOXELATT_COLOR].data = &_vflTexInfos[VOXELATT_COLOR];
   _shdVoxelFragLists[VOXELATT_COLOR].name = "VoxelFragmentList_Color";
   _shdVoxelFragLists[VOXELATT_COLOR].type = GL_TEXTURE_BUFFER;
+
+  _shdVoxelFragLists[VOXELATT_NORMAL].component = NULL;
+  _shdVoxelFragLists[VOXELATT_NORMAL].data = &_vflTexInfos[VOXELATT_NORMAL];
+  _shdVoxelFragLists[VOXELATT_NORMAL].name = "VoxelFragmentList_Normal";
+  _shdVoxelFragLists[VOXELATT_NORMAL].type = GL_TEXTURE_BUFFER;
 
   initIndirectCommandBufs();
 }

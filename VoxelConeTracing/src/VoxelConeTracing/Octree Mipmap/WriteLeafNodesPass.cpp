@@ -70,6 +70,10 @@ WriteLeafNodesPass::
     shp->getUniform("voxelFragList_color")));
 
   addStartupOperation(new BindImageTexture(
+    vctScene->getVoxelFragList()->getShdVoxelFragList(VOXELATT_NORMAL),
+    shp->getUniform("voxelFragList_normal")));
+
+  addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdNodePool(NEXT),
     shp->getUniform("nodePool_next")));
 
@@ -80,6 +84,10 @@ WriteLeafNodesPass::
   addStartupOperation(new BindImageTexture(
     vctScene->getBrickPool()->getShdBrickPool(BRICKPOOL_COLOR),
     shp->getUniform("brickPool_color")));
+
+  addStartupOperation(new BindImageTexture(
+    vctScene->getBrickPool()->getShdBrickPool(BRICKPOOL_NORMAL),
+    shp->getUniform("brickPool_normal")));
 
   addStartupOperation(new BindUniform(vctScene->getShdVoxelGridResolution(),
                                       shp->getUniform("voxelGridResolution")));

@@ -27,6 +27,7 @@
 
 layout(r32ui) uniform coherent uimageBuffer voxelFragmentListPosition;
 layout(r32ui) uniform coherent uimageBuffer voxelFragmentListColor;
+layout(r32ui) uniform coherent uimageBuffer voxelFragmentListNormal;
 layout(binding = 0) uniform atomic_uint voxel_index;
 
 uniform sampler2D diffuseTex;
@@ -69,16 +70,15 @@ void main() {
   // Pre-multiply alpha:
   diffColor = vec4(diffColor.xyz * diffColor.a, diffColor.a);
 
-  uint diffColorU = convVec4ToRGBA8(diffColor * vec4(255));
+  vec3 normal = In.normal * 0.5 + 0.5;
 
+  uint diffColorU = convVec4ToRGBA8(diffColor * vec4(255));
+  uint normalU = convVec4ToRGBA8(vec4(normal,1) * vec4(255));
   uint voxelIndex = atomicCounterIncrement(voxel_index);
 
   memoryBarrier();
-
   // Store voxel-position as tex-indices
-  imageStore(voxelFragmentListPosition,
-             int(voxelIndex),
-             uvec4(vec3ToUintXYZ10(baseVoxel)));
-
+  imageStore(voxelFragmentListPosition, int(voxelIndex), uvec4(vec3ToUintXYZ10(baseVoxel)));
   imageStore(voxelFragmentListColor, int(voxelIndex), uvec4(diffColorU));
+  imageStore(voxelFragmentListNormal, int(voxelIndex), uvec4(normalU));
 }

@@ -138,7 +138,40 @@ void BrickPool::init(uint brickPoolResolution, NodePool* nodePool) {
   //////////////////////////////////////////////////////////////////////////
   // TODO: Normal
   //////////////////////////////////////////////////////////////////////////
-  // .... blablabla ;)
+  brickPoolProps.format = GL_RGBA;
+  brickPoolProps.internalFormat = GL_RGBA8;
+  brickPoolProps.pixelType = GL_UNSIGNED_BYTE;
+  brickPoolProps.targetType = GL_TEXTURE_3D;
+
+  _brickPool[BRICKPOOL_NORMAL].init(brickPoolProps, "BrickPool_Attribute_normal");
+
+  _brickPoolTexInfo[BRICKPOOL_NORMAL].internalFormat = GL_RGBA8;
+  _brickPoolTexInfo[BRICKPOOL_NORMAL].texLocation = _brickPool[BRICKPOOL_NORMAL].getHandle();
+  _brickPoolTexInfo[BRICKPOOL_NORMAL].texTarget = GL_TEXTURE_3D;
+
+  _shdBrickPool[BRICKPOOL_NORMAL].name = "BrickPool_Attribute_normal";
+  _shdBrickPool[BRICKPOOL_NORMAL].type = GL_IMAGE_3D;
+  _shdBrickPool[BRICKPOOL_NORMAL].data = &_brickPoolTexInfo[BRICKPOOL_NORMAL];
+  _shdBrickPool[BRICKPOOL_NORMAL].size = 1;
+  _shdBrickPool[BRICKPOOL_NORMAL].component = NULL;
+
+  _shdBrickPoolTexture[BRICKPOOL_NORMAL].name = "BrickPool_Attribute_normalTexture";
+  _shdBrickPoolTexture[BRICKPOOL_NORMAL].type = GL_SAMPLER_3D;
+  _shdBrickPoolTexture[BRICKPOOL_NORMAL].data = &_brickPoolTexInfo[BRICKPOOL_NORMAL];
+  _shdBrickPoolTexture[BRICKPOOL_NORMAL].size = 1;
+  _shdBrickPoolTexture[BRICKPOOL_NORMAL].component = NULL;
+
+  kore::RenderManager::getInstance()->bindTexture(GL_TEXTURE_3D, _brickPool[BRICKPOOL_NORMAL].getHandle());
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, 0);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, 0);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_R, GL_RED);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_G, GL_GREEN);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_B, GL_BLUE);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_A, GL_ALPHA);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+  kore::RenderManager::getInstance()->bindTexture(GL_TEXTURE_3D, 0);
 
 
   //////////////////////////////////////////////////////////////////////////
