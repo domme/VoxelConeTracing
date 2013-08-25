@@ -28,6 +28,7 @@
 #define NODE_NOT_FOUND 0xFFFFFFFF
 
 layout(r32ui) uniform uimage2D nodeMap;
+//layout(rgba8) uniform image2D nodeMap;
 
 void main() {
   ivec2 nodeMapSize = imageSize(nodeMap);
@@ -35,4 +36,5 @@ void main() {
   uv.x = (gl_VertexID % nodeMapSize.x);
   uv.y = (gl_VertexID / nodeMapSize.x);
   imageStore(nodeMap, uv, uvec4(NODE_NOT_FOUND));
+  //imageStore(nodeMap, uv, vec4(0));
 }

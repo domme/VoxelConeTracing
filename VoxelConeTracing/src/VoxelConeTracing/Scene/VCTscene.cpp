@@ -102,6 +102,16 @@ void VCTscene::init(const SVCTparameters& params,
   nodeMapProps.targetType = GL_TEXTURE_2D;
   nodeMapProps.internalFormat = GL_R32UI;
   nodeMapProps.pixelType = GL_UNSIGNED_INT;
+
+  /*
+  // DEBUG nodemap
+  //////////////////////////////////////////////////////////////////////////
+  nodeMapProps.format = GL_RGBA;
+  nodeMapProps.internalFormat = GL_RGBA8;
+  nodeMapProps.pixelType = GL_UNSIGNED_BYTE;
+  //////////////////////////////////////////////////////////////////////////
+  */
+
   nodeMapProps.width = params.shadowMapResolution.x + params.shadowMapResolution.x / 2;
   nodeMapProps.height = params.shadowMapResolution.y;
 
@@ -121,6 +131,19 @@ void VCTscene::init(const SVCTparameters& params,
   _shdLightNodeMap.name = "LightNodeMap image";
   _shdLightNodeMap.size = 1;
   _shdLightNodeMap.data = &_lightNodeMapTexInfo;
+
+  /*
+  // DEBUG nodemap
+  //////////////////////////////////////////////////////////////////////////
+  _lightNodeMapTexInfo.internalFormat = GL_RGBA8;
+  _lightNodeMapTexInfo.texTarget = GL_TEXTURE_2D;
+
+  _shdLightNodeMap.type = GL_IMAGE_2D;
+  _shdLightNodeMap.name = "LightNodeMap image";
+  _shdLightNodeMap.size = 1;
+  _shdLightNodeMap.data = &_lightNodeMapTexInfo;
+  //////////////////////////////////////////////////////////////////////////
+  */
 
 
   SDrawArraysIndirectCommand cmd;
@@ -144,14 +167,6 @@ void VCTscene::init(const SVCTparameters& params,
                              sizeof(SDrawArraysIndirectCommand),
                              GL_STATIC_DRAW, &cmd);
   
-  _nodeMapOffsets[7] = glm::ivec2(0, 0);
-  _nodeMapOffsets[6] = glm::ivec2(_smResolution.x, 0);
-  _nodeMapOffsets[5] = glm::ivec2(_smResolution.x, _smResolution.y/2);
-  _nodeMapOffsets[4] = glm::ivec2(_smResolution.x, _smResolution.y/4);
-  _nodeMapOffsets[3] = glm::ivec2(_smResolution.x, _smResolution.y/8);
-  _nodeMapOffsets[2] = glm::ivec2(_smResolution.x, _smResolution.y/16);
-  _nodeMapOffsets[1] = glm::ivec2(_smResolution.x, _smResolution.y/32);
-  _nodeMapOffsets[0] = glm::ivec2(_smResolution.x, _smResolution.y/64);
   
   _nodeMapSizes[7] = _smResolution;
   _nodeMapSizes[6] = _smResolution / 2;
@@ -161,6 +176,13 @@ void VCTscene::init(const SVCTparameters& params,
   _nodeMapSizes[2] = _smResolution / 32;
   _nodeMapSizes[1] = _smResolution / 64;
   _nodeMapSizes[0] = _smResolution / 128;
+
+  _nodeMapOffsets[7] = glm::ivec2(0, 0);
+  _nodeMapOffsets[6] = glm::ivec2(_smResolution.x, 0);
+  for (int i = 5; i >= 0; --i) {
+    _nodeMapOffsets[i] = glm::ivec2(_smResolution.x,
+                         _nodeMapOffsets[i + 1].y + _nodeMapSizes[i + 1].y);
+  }
 
   _shdNodeMapOffsets.size = 8;
   _shdNodeMapOffsets.type = GL_INT_VEC2;

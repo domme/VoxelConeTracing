@@ -47,6 +47,7 @@ const uint pow2[] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
 
 // Note: Size has to be manually adjusted depending on the number of levels
 layout(r32ui) uniform uimage2D nodeMap;
+//layout(rgba8) uniform image2D nodeMap;
 
 layout(r32ui) uniform readonly uimageBuffer nodePool_next;
 layout(r32ui) uniform readonly uimageBuffer nodePool_color;
@@ -91,6 +92,9 @@ uvec3 uintXYZ10ToVec3(uint val) {
 void storeNodeInNodemap(in vec2 uv, in uint level, in int nodeAddress) {
   ivec2 storePos = nodeMapOffset[level] + ivec2(uv * nodeMapSize[level]);
   imageStore(nodeMap, storePos, uvec4(nodeAddress));
+
+  //DEBUG:
+  //imageStore(nodeMap, storePos, vec4(0.143 * level + 0.1));
 }
 
 void main() {
@@ -99,6 +103,16 @@ void main() {
   vec2 uv = vec2(0);
   uv.x = (gl_VertexID % smTexSize.x) / float(smTexSize.x);
   uv.y = (gl_VertexID / smTexSize.x) / float(smTexSize.y);
+
+  /*
+  // Debug nodemap
+  for (int i = 0; i < 8; ++i) {
+    ivec2 storePos = nodeMapOffset[i] + ivec2(uv * nodeMapSize[i]);
+    imageStore(nodeMap, storePos, vec4(0.143 * i + 0.1));
+  }
+  
+  return;
+  */
 
   vec4 posWS = vec4(texture(smPosition, uv).xyz, 1.0);
   vec3 posTex = (voxelGridTransformI * posWS).xyz * 0.5 + 0.5;
