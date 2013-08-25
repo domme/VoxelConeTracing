@@ -64,7 +64,7 @@ MipmapCenterPass::
 
   addStartupOperation(
     new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
-                  _vctScene->getThreadBuf_nodeMap(_level)->getHandle()));
+                  _vctScene->getThreadBuf_nodeMap(vctScene->getNodePool()->getNumLevels()-1)->getHandle()));
 
   addStartupOperation(new BindImageTexture(
                   _vctScene->getShdLightNodeMap(),
@@ -76,7 +76,7 @@ MipmapCenterPass::
   addStartupOperation(new BindUniform(vctScene->getShdNodeMapSizes(),
                                       shp->getUniform("nodeMapSize[0]")));
 
-    addStartupOperation(new BindImageTexture(
+  addStartupOperation(new BindImageTexture(
                     vctScene->getBrickPool()->getShdBrickPool(brickPoolAtt),
                                           shp->getUniform("brickPool_value")));
 

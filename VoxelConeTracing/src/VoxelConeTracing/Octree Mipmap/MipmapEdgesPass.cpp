@@ -65,7 +65,7 @@ MipmapEdgesPass::
   // Launch a thread for every node up to _level
   addStartupOperation(
     new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
-                  _vctScene->getThreadBuf_nodeMap(_level)->getHandle()));
+                  _vctScene->getThreadBuf_nodeMap(vctScene->getNodePool()->getNumLevels()-1)->getHandle()));
 
   addStartupOperation(new BindImageTexture(
     vctScene->getShdLightNodeMap(),
