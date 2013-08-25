@@ -592,6 +592,19 @@ void main() {
   edgeLeftTop(brickAddress);
   edgeRightBottom(brickAddress);
   edgeRightTop(brickAddress);
+
+  //imageStore(brickPool_value, brickAddress + ivec3(1,0,0), vec4(0.0,1.0,0.0,1.0));
+  //imageStore(brickPool_value, brickAddress + ivec3(2,1,0), vec4(0.0,1.0,0.0,1.0));
+  //imageStore(brickPool_value, brickAddress + ivec3(0,1,0), vec4(0.0,1.0,0.0,1.0));
+  //imageStore(brickPool_value, brickAddress + ivec3(1,2,0), vec4(0.0,1.0,0.0,1.0));
+  //imageStore(brickPool_value, brickAddress + ivec3(1,0,2), vec4(0.0,1.0,0.0,1.0));
+  //imageStore(brickPool_value, brickAddress + ivec3(1,2,2), vec4(0.0,1.0,0.0,1.0));
+  //imageStore(brickPool_value, brickAddress + ivec3(0,1,2), vec4(0.0,1.0,0.0,1.0));
+  //imageStore(brickPool_value, brickAddress + ivec3(2,1,2), vec4(0.0,1.0,0.0,1.0));
+  //imageStore(brickPool_value, brickAddress + ivec3(0,0,1), vec4(0.0,1.0,0.0,1.0));
+  //imageStore(brickPool_value, brickAddress + ivec3(2,0,1), vec4(0.0,1.0,0.0,1.0));
+  //imageStore(brickPool_value, brickAddress + ivec3(0,2,1), vec4(0.0,1.0,0.0,1.0));
+  //imageStore(brickPool_value, brickAddress + ivec3(2,2,1), vec4(0.0,1.0,0.0,1.0));
 }
 
 

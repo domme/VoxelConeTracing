@@ -110,7 +110,7 @@ void changeAllocPassLevel() {
 void setup() {
   using namespace kore;
 
-  glClearColor(0.0f, 0.0f,0.0f,1.0f);
+  glClearColor(0.4f, 0.2f,0.1f,1.0f);
   glDisable(GL_CULL_FACE);
 
   GLint maxTexBufferSize = 0;

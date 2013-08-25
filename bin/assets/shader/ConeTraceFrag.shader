@@ -183,12 +183,13 @@ vec4 raycastBrick(in uint nodeColorU, in vec3 enter, in vec3 leave, in vec3 dir,
     for (float f = 0; f < stepLength; f += stepSize) {
       vec4 newCol = texture(brickPool_color, enterUVW + dir * f);
       vec4 irradiance = texture(brickPool_irradiance, enterUVW + dir * f);
-      newCol *= irradiance;
+      //newCol *= irradiance;
       
       // Alpha correction
-      float oldColA = newCol.a;
+      /*float oldColA = newCol.a;
       newCol.a = clamp(1.0 - pow(clamp(1.0 - newCol.a, 0.0, 1.0), alphaCorrection), 0.0, 1.0); 
       newCol.xyz *= newCol.a / oldColA;
+      */
 
             
       //newCol.xyz *= 1.0;

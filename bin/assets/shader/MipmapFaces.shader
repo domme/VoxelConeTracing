@@ -395,6 +395,13 @@ void main() {
   faceTop(brickAddress);
   faceNear(brickAddress);
   faceFar(brickAddress);
+
+  //imageStore(brickPool_value, brickAddress + ivec3(0,1,1), vec4(0.0,1.0,0.0,1.0));
+  //imageStore(brickPool_value, brickAddress + ivec3(2,1,1), vec4(0.0,1.0,0.0,1.0));
+  //imageStore(brickPool_value, brickAddress + ivec3(1,0,1), vec4(0.0,1.0,0.0,1.0));
+  //imageStore(brickPool_value, brickAddress + ivec3(1,2,1), vec4(0.0,1.0,0.0,1.0));
+  //imageStore(brickPool_value, brickAddress + ivec3(1,1,0), vec4(0.0,1.0,0.0,1.0));
+  //imageStore(brickPool_value, brickAddress + ivec3(1,1,2), vec4(0.0,1.0,0.0,1.0));
 }
 
 
