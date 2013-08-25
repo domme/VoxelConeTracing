@@ -117,12 +117,13 @@ bool intersectRayWithAABB (in vec3 ro, in vec3 rd,         // Ray-origin and -di
 ///*
 int traverseOctree(in vec3 posTex, in float d, in float pixelSizeTS,
                    out vec3 nodePosTex, out vec3 nodePosMaxTex,
-                   out float outSideLength, out bool valid) {
+                   out float outSideLength, out bool valid, out uint outLevel) {
   nodePosTex = vec3(0.0);
   nodePosMaxTex = vec3(1.0);
 
   float sideLength = 1.0;
   int nodeAddress = 0;
+
 
   for (uint iLevel = 0; iLevel < numLevels; ++iLevel) {
     float voxelSize = sideLength;
@@ -130,6 +131,8 @@ int traverseOctree(in vec3 posTex, in float d, in float pixelSizeTS,
 
     if (projVoxelSize / 2 < pixelSizeTS) {
       valid = true;
+
+      outLevel = iLevel;
       break;
     }
     
@@ -141,6 +144,7 @@ int traverseOctree(in vec3 posTex, in float d, in float pixelSizeTS,
           valid = true;
         }
 
+        outLevel = iLevel;
         break;
       }
       
@@ -155,6 +159,7 @@ int traverseOctree(in vec3 posTex, in float d, in float pixelSizeTS,
       posTex = 2.0 * posTex - vec3(offVec);
   } // level-for
 
+  
   outSideLength = sideLength;
   return nodeAddress;
 }
@@ -162,7 +167,7 @@ int traverseOctree(in vec3 posTex, in float d, in float pixelSizeTS,
 
                                                 // TODO: Add ray-direction here...
 vec4 raycastBrick(in uint nodeColorU, in vec3 enter, in vec3 leave, in vec3 dir, 
-                  in float alphaCorrection) {
+                  in uint level) {
   
     ivec3 brickAddress = ivec3(uintXYZ10ToVec3(nodeColorU));
     ivec3 brickRes = textureSize(brickPool_color, 0); // TODO: make uniform
@@ -176,6 +181,8 @@ vec4 raycastBrick(in uint nodeColorU, in vec3 enter, in vec3 leave, in vec3 dir,
 
     vec4 color = vec4(0);
 
+    float alphaCorrection = (float(numLevels) / float(level + 1));
+
    // color = texture(brickPool_color, brickAddressUVW + vec3(stepSize));
    // color.a = 1.0 - pow((1.0 - color.a), alphaCorrection);
    // color.xyz *= color.a;
@@ -185,15 +192,17 @@ vec4 raycastBrick(in uint nodeColorU, in vec3 enter, in vec3 leave, in vec3 dir,
       vec4 irradiance = texture(brickPool_irradiance, enterUVW + dir * f);
       //newCol *= irradiance;
       
-      // Alpha correction
-      /*float oldColA = newCol.a;
-      newCol.a = clamp(1.0 - pow(clamp(1.0 - newCol.a, 0.0, 1.0), alphaCorrection), 0.0, 1.0); 
-      newCol.xyz *= newCol.a / oldColA;
-      */
+      if (newCol.a > 0.01) {
+        // Alpha correction
+        float oldColA = newCol.a;
+        newCol.a = 1.0 - pow(1.0 - newCol.a, alphaCorrection); 
+        float colorAdaption = newCol.a / oldColA;
+        newCol.xyz *= colorAdaption;
 
-            
-      //newCol.xyz *= 1.0;
-      color = newCol * clamp((1.0 - color.a), 0.0, 1.0) + color;
+        //newCol.xyz *= 1.0;
+        color = newCol * clamp((1.0 - color.a), 0.0, 1.0) + color;
+      }
+
           
       if (color.a > 0.99) {
          break;
@@ -234,7 +243,8 @@ void main(void) {
    
     float foundNodeSideLength = 1.0;
     bool valid = false;
-    int address = traverseOctree(posTex, f, pixelSizeTS, nodePosMin, nodePosMax, foundNodeSideLength, valid);
+    uint outLevel = 0;
+    int address = traverseOctree(posTex, f, pixelSizeTS, nodePosMin, nodePosMax, foundNodeSideLength, valid, outLevel);
 
     float alphaCorrection = tLeave / (1.0 / float(voxelGridResolution));
     bool advance = intersectRayWithAABB(posTex, rayDirTex, nodePosMin, nodePosMax, tEnter, tLeave);
@@ -247,8 +257,8 @@ void main(void) {
     
       vec3 enterPos = (posTex - nodePosMin) / foundNodeSideLength;
       vec3 leavePos = ((posTex + rayDirTex * tLeave) - nodePosMin) / foundNodeSideLength;
-      float rayCastAlphaCorrection = foundNodeSideLength / (1.0 / float(voxelGridResolution / 2));
-      newCol = raycastBrick(nodeColorU, enterPos, leavePos, rayDirTex, rayCastAlphaCorrection);
+
+      newCol = raycastBrick(nodeColorU, enterPos, leavePos, rayDirTex, outLevel);
 
       color = (1.0 - color.a) * newCol + color;
 
