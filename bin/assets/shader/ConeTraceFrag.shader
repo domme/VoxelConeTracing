@@ -167,7 +167,7 @@ int traverseOctree(in vec3 posTex, in float d, in float pixelSizeTS,
 
                                                 // TODO: Add ray-direction here...
 vec4 raycastBrick(in uint nodeColorU, in vec3 enter, in vec3 leave, in vec3 dir, 
-                  in uint level) {
+                  in uint level, in float nodeSideLength) {
   
     ivec3 brickAddress = ivec3(uintXYZ10ToVec3(nodeColorU));
     ivec3 brickRes = textureSize(brickPool_color, 0); // TODO: make uniform
@@ -181,7 +181,9 @@ vec4 raycastBrick(in uint nodeColorU, in vec3 enter, in vec3 leave, in vec3 dir,
 
     vec4 color = vec4(0);
 
-    float alphaCorrection = (float(numLevels) / float(level + 1));
+    float targetSampleRate = 1.0 / float(pow(2, numLevels - 1));
+    float currSampleRate = 1.0 / float(pow(2, level));
+    float alphaCorrection = targetSampleRate / currSampleRate;
 
    // color = texture(brickPool_color, brickAddressUVW + vec3(stepSize));
    // color.a = 1.0 - pow((1.0 - color.a), alphaCorrection);
@@ -194,17 +196,19 @@ vec4 raycastBrick(in uint nodeColorU, in vec3 enter, in vec3 leave, in vec3 dir,
       
       if (newCol.a > 0.01) {
         // Alpha correction
-        float oldColA = newCol.a;
-        newCol.a = 1.0 - pow(1.0 - newCol.a, alphaCorrection); 
+       /* float oldColA = newCol.a;
+        newCol.a = 1.0 - pow(1.0 - newCol.a, 100.0); 
         float colorAdaption = newCol.a / oldColA;
-        newCol.xyz *= colorAdaption;
+        newCol.xyz *= colorAdaption; */
 
         //newCol.xyz *= 1.0;
         color = newCol * clamp((1.0 - color.a), 0.0, 1.0) + color;
       }
 
           
-      if (color.a > 0.99) {
+      if (color.a > alphaCorrection) {
+         color.xyz /= color.a;
+         color.a = 1.0;
          break;
       }
     }
@@ -258,7 +262,7 @@ void main(void) {
       vec3 enterPos = (posTex - nodePosMin) / foundNodeSideLength;
       vec3 leavePos = ((posTex + rayDirTex * tLeave) - nodePosMin) / foundNodeSideLength;
 
-      newCol = raycastBrick(nodeColorU, enterPos, leavePos, rayDirTex, outLevel);
+      newCol = raycastBrick(nodeColorU, enterPos, leavePos, rayDirTex, outLevel, foundNodeSideLength);
 
       color = (1.0 - color.a) * newCol + color;
 
