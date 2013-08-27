@@ -112,6 +112,7 @@ void traverse(in vec3 posTex, in uint voxelColorU, in uint voxelNormalU) {
        imageStore(brickPool_color,
              brickCoords  + 2 * ivec3(childOffsets[off]),
              convRGBA8ToVec4(voxelColorU) / 255.0);
+
        imageStore(brickPool_normal,
              brickCoords  + 2 * ivec3(childOffsets[off]),
              convRGBA8ToVec4(voxelNormalU) / 255.0);

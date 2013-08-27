@@ -605,6 +605,6 @@ void main() {
   //imageStore(brickPool_value, brickAddress + ivec3(2,0,1), vec4(0.0,1.0,0.0,1.0));
   //imageStore(brickPool_value, brickAddress + ivec3(0,2,1), vec4(0.0,1.0,0.0,1.0));
   //imageStore(brickPool_value, brickAddress + ivec3(2,2,1), vec4(0.0,1.0,0.0,1.0));
-}
+} 
 
 

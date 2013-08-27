@@ -120,6 +120,7 @@ int traverseOctree(in vec3 posTex, in float d, in float pixelSizeTS,
                    out float outSideLength, out bool valid, out uint outLevel) {
   nodePosTex = vec3(0.0);
   nodePosMaxTex = vec3(1.0);
+  valid = false;
 
   float sideLength = 1.0;
   int nodeAddress = 0;
@@ -134,7 +135,7 @@ int traverseOctree(in vec3 posTex, in float d, in float pixelSizeTS,
 
       outLevel = iLevel;
       break;
-    }
+    } 
     
     uint nodeNext = imageLoad(nodePool_next, nodeAddress).x;
 
@@ -173,7 +174,7 @@ vec4 raycastBrick(in uint nodeColorU, in vec3 enter, in vec3 leave, in vec3 dir,
     ivec3 brickRes = textureSize(brickPool_color, 0); // TODO: make uniform
 
     float stepSize = 1.0 / float(brickRes.x);
-    vec3 brickAddressUVW = vec3(brickAddress) / vec3(brickRes)  + stepSize / 2.0; // Correct
+    vec3 brickAddressUVW = vec3(brickAddress) / vec3(brickRes) + vec3(stepSize / 2.0);
     
     vec3 enterUVW = brickAddressUVW + enter * (2 * stepSize);
     vec3 leaveUVW = brickAddressUVW + leave * (2 * stepSize);
@@ -181,34 +182,29 @@ vec4 raycastBrick(in uint nodeColorU, in vec3 enter, in vec3 leave, in vec3 dir,
 
     vec4 color = vec4(0);
 
-    float targetSampleRate = 1.0 / float(pow(2, numLevels - 1));
-    float currSampleRate = 1.0 / float(pow(2, level));
-    float alphaCorrection = targetSampleRate / currSampleRate;
+    float d = float(pow(2, numLevels - 1)) / 3; 
+    float d_bar = float(pow(2, level)) / 3; 
+    float alphaCorrection = d / d_bar;
 
-   // color = texture(brickPool_color, brickAddressUVW + vec3(stepSize));
-   // color.a = 1.0 - pow((1.0 - color.a), alphaCorrection);
-   // color.xyz *= color.a;
+    //color = texture(brickPool_color, brickAddressUVW);
+    //color = texelFetch(brickPool_color, brickAddress, 0);
     
     for (float f = 0; f < stepLength; f += stepSize) {
       vec4 newCol = texture(brickPool_color, enterUVW + dir * f);
       vec4 irradiance = texture(brickPool_irradiance, enterUVW + dir * f);
       //newCol *= irradiance;
       
-      if (newCol.a > 0.01) {
+      if (newCol.a > 0.001) {
         // Alpha correction
-       /* float oldColA = newCol.a;
-        newCol.a = 1.0 - pow(1.0 - newCol.a, 100.0); 
-        float colorAdaption = newCol.a / oldColA;
-        newCol.xyz *= colorAdaption; */
-
-        //newCol.xyz *= 1.0;
-        color = newCol * clamp((1.0 - color.a), 0.0, 1.0) + color;
+        float oldColA = newCol.a;
+        newCol.a = 1.0 - clamp(pow(1.0 - newCol.a, alphaCorrection), 0.0, 1.0);
+        newCol.a = clamp(newCol.a, 0.0, 1.0);
+        newCol.xyz *= newCol.a / oldColA;
+        
+        color = newCol * clamp(1.0 - color.a, 0.0, 1.0) + color;
       }
 
-          
-      if (color.a > alphaCorrection) {
-         color.xyz /= color.a;
-         color.a = 1.0;
+      if (color.a > 1.0) {
          break;
       }
     }
