@@ -52,6 +52,7 @@ const uint pow2[] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
 layout(r32ui) uniform readonly uimageBuffer nodePool_next;
 layout(r32ui) uniform readonly uimageBuffer nodePool_color;
 uniform sampler3D brickPool_color;
+uniform sampler3D brickPool_normal;
 uniform sampler3D brickPool_irradiance;
 
 uniform uint voxelGridResolution;
@@ -130,9 +131,15 @@ int traverseOctree(in vec3 posTex, in float d, in float pixelSizeTS,
     float voxelSize = sideLength;
     float projVoxelSize = voxelSize / d;
 
-    if (projVoxelSize / 2 < pixelSizeTS) {
+    //if (projVoxelSize / 2 < pixelSizeTS) {
+    //  valid = true;
+    //
+    //  outLevel = iLevel;
+    //  break;
+    //} 
+    if (int(iLevel) == numLevels-8) {
       valid = true;
-
+    
       outLevel = iLevel;
       break;
     } 
@@ -160,7 +167,6 @@ int traverseOctree(in vec3 posTex, in float d, in float pixelSizeTS,
       posTex = 2.0 * posTex - vec3(offVec);
   } // level-for
 
-  
   outSideLength = sideLength;
   return nodeAddress;
 }
@@ -182,13 +188,12 @@ vec4 raycastBrick(in uint nodeColorU, in vec3 enter, in vec3 leave, in vec3 dir,
 
     vec4 color = vec4(0);
 
-    float d = float(pow(2, numLevels - 1)) / 3; 
-    float d_bar = float(pow(2, level)) / 3; 
-    float alphaCorrection = d / d_bar;
+    float d = float(pow(2, numLevels)); 
+    float d_bar = float(pow(2, level)); 
+    float alphaCorrection = d / d_bar; 
 
     //color = texture(brickPool_color, brickAddressUVW);
     //color = texelFetch(brickPool_color, brickAddress, 0);
-    
     for (float f = 0; f < stepLength; f += stepSize) {
       vec4 newCol = texture(brickPool_color, enterUVW + dir * f);
       vec4 irradiance = texture(brickPool_irradiance, enterUVW + dir * f);
@@ -197,10 +202,10 @@ vec4 raycastBrick(in uint nodeColorU, in vec3 enter, in vec3 leave, in vec3 dir,
       if (newCol.a > 0.001) {
         // Alpha correction
         float oldColA = newCol.a;
-        newCol.a = 1.0 - clamp(pow(1.0 - newCol.a, alphaCorrection), 0.0, 1.0);
+        newCol.a = 1.0 - clamp(pow((1.0 - newCol.a), alphaCorrection), 0.0, 1.0);
         newCol.a = clamp(newCol.a, 0.0, 1.0);
         newCol.xyz *= newCol.a / oldColA;
-        
+
         color = newCol * clamp(1.0 - color.a, 0.0, 1.0) + color;
       }
 

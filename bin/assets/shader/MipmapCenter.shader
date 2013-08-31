@@ -176,7 +176,7 @@ void main() {
   
   // Center color finished
   color /= weightSum;
-  
+
   imageStore(brickPool_value, brickAddress + ivec3(1,1,1), color);
   //imageStore(brickPool_value, brickAddress + ivec3(1,1,1), vec4(0,1,0,1));
 }
