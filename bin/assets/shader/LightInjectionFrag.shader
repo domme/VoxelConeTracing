@@ -25,26 +25,6 @@
 
 #version 430
 
-#define NODE_MASK_VALUE 0x3FFFFFFF
-#define NODE_MASK_TAG (0x00000001 << 31)
-#define NODE_MASK_TAG_STATIC (0x00000003 << 30)
-#define NODE_NOT_FOUND 0xFFFFFFFF
-
-
-
-const uvec3 childOffsets[8] = {
-  uvec3(0, 0, 0),
-  uvec3(1, 0, 0),
-  uvec3(0, 1, 0),
-  uvec3(1, 1, 0),
-  uvec3(0, 0, 1),
-  uvec3(1, 0, 1),
-  uvec3(0, 1, 1),
-  uvec3(1, 1, 1)};
-
-const uint pow2[] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
-
-
 // Note: Size has to be manually adjusted depending on the number of levels
 layout(r32ui) uniform uimage2D nodeMap;
 //layout(rgba8) uniform image2D nodeMap;
@@ -62,32 +42,8 @@ uniform vec3 lightColor;
 uniform ivec2 nodeMapOffset[8];
 uniform ivec2 nodeMapSize[8];
 
-vec4 convRGBA8ToVec4(uint val) {
-    return vec4( float((val & 0x000000FF)), 
-                 float((val & 0x0000FF00) >> 8U), 
-                 float((val & 0x00FF0000) >> 16U), 
-                 float((val & 0xFF000000) >> 24U));
-}
-
-uint convVec4ToRGBA8(vec4 val) {
-    return (uint(val.w) & 0x000000FF)   << 24U
-            |(uint(val.z) & 0x000000FF) << 16U
-            |(uint(val.y) & 0x000000FF) << 8U 
-            |(uint(val.x) & 0x000000FF);
-}
-
-uint vec3ToUintXYZ10(uvec3 val) {
-    return (uint(val.z) & 0x000003FF)   << 20U
-            |(uint(val.y) & 0x000003FF) << 10U 
-            |(uint(val.x) & 0x000003FF);
-}
-
-uvec3 uintXYZ10ToVec3(uint val) {
-    return uvec3(uint((val & 0x000003FF)),
-                 uint((val & 0x000FFC00) >> 10U), 
-                 uint((val & 0x3FF00000) >> 20U));
-}
-
+#include "assets/shader/_utilityFunctions.shader"
+#include "assets/shader/_octreeTraverse.shader"
 
 void storeNodeInNodemap(in vec2 uv, in uint level, in int nodeAddress) {
   ivec2 storePos = nodeMapOffset[level] + ivec2(uv * nodeMapSize[level]);
@@ -121,7 +77,7 @@ void main() {
       posTex.x > 1 || posTex.y > 1 || posTex.z > 1) {
        return;
   }
-
+    
   int nodeAddress = 0;
   vec3 nodePosTex = vec3(0.0);
   vec3 nodePosMaxTex = vec3(1.0);

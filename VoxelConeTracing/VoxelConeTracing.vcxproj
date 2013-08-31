@@ -195,7 +195,6 @@
     <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\MipmapCornersPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\MipmapEdgesPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\MipmapFacesPass.cpp" />
-    <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\OctreeMipmapPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\SpreadLeafBricksPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\SpreadLightLeafBricksPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\WriteLeafNodesPass.cpp" />
@@ -239,7 +238,6 @@
     <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\MipmapCornersPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\MipmapEdgesPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\MipmapFacesPass.h" />
-    <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\OctreeMipmapPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\SpreadLeafBricksPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\SpreadLightLeafBricksPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\WriteLeafNodesPass.h" />
@@ -286,7 +284,7 @@
     <None Include="..\bin\assets\shader\ObClearVert.shader" />
     <None Include="..\bin\assets\shader\ObFlagVert.shader" />
     <None Include="..\bin\assets\shader\ObInitVert.shader" />
-    <None Include="..\bin\assets\shader\OctreeMipmap.shader" />
+    <None Include="..\bin\assets\shader\_octreeTraverse.shader" />
     <None Include="..\bin\assets\shader\octreeVisFrag.shader" />
     <None Include="..\bin\assets\shader\OctreeWriteLeafs.shader" />
     <None Include="..\bin\assets\shader\ShadowMapFrag.shader" />
@@ -298,6 +296,8 @@
     <None Include="..\bin\assets\shader\VoxelConeTracing\voxelizeFrag.shader" />
     <None Include="..\bin\assets\shader\VoxelConeTracing\voxelizeGeom.shader" />
     <None Include="..\bin\assets\shader\VoxelConeTracing\voxelizeVert.shader" />
+    <None Include="..\bin\assets\shader\_raycast.shader" />
+    <None Include="..\bin\assets\shader\_utilityFunctions.shader" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\KoRE\KoRE.vcxproj">

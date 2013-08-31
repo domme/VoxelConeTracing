@@ -31,25 +31,8 @@ layout(binding = 0) uniform atomic_uint nextFreeBrick;
 
 uniform uint brickPoolResolution;
 
-#define NODE_MASK_VALUE 0x3FFFFFFF
-#define NODE_MASK_TAG (0x00000001 << 31)
-#define NODE_MASK_BRICK (0x00000001 << 30)
-#define NODE_MASK_TAG_STATIC (0x00000003 << 30)
-#define NODE_NOT_FOUND 0xFFFFFFFF
+#include "assets/shader/_utilityFunctions.shader"
 
-uint vec3ToUintXYZ10(uvec3 val) {
-    return (uint(val.z) & 0x000003FF)   << 20U
-            |(uint(val.y) & 0x000003FF) << 10U 
-            |(uint(val.x) & 0x000003FF);
-}
-
-bool isFlagged(in uint nodeNext) {
-  return (nodeNext & NODE_MASK_TAG) != 0U;
-}
-
-bool hasBrick(in uint nextU) {
-  return (nextU & NODE_MASK_BRICK) != 0;
-}
 
 // Allocate brick-texture, store pointer in color
 void alloc3x3x3TextureBrick(in int nodeAddress) {

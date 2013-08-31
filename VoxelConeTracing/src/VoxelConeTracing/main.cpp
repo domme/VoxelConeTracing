@@ -22,7 +22,7 @@
 * \author Dominik Lazarek (dominik.lazarek@gmail.com)
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
-
+ 
 #include <GL/glew.h>
 #include <GL/glfw.h>
 #include <glm/glm.hpp>
@@ -196,12 +196,12 @@ void setup() {
   //////////////////////////////////////////////////////////////////////////
     
   // Voxelize & SVO Stage
-  FrameBufferStage* svoStage =
+  FrameBufferStage* svoStage = 
     new SVOconstructionStage(lightNodes[0], renderNodes, params, _vctScene, shadowMapStage->getFrameBuffer()); 
 
   RenderManager::getInstance()->addFramebufferStage(svoStage);
   ////////////////////////////////////////////////////////////////////////// 
-
+   
 
   // Light update stage
   FrameBufferStage* lightUpdateStage =
@@ -233,7 +233,7 @@ void setup() {
 
 int main(void) {
   int running = GL_TRUE;
-
+   
   // Initialize GLFW
   if (!glfwInit()) {
     kore::Log::getInstance()->write("[ERROR] could not load window manager\n");
@@ -347,7 +347,7 @@ int main(void) {
 
         if (glfwGetKey(GLFW_KEY_PAGEDOWN)) {
           if (!_oldPageDown) {
-            _oldPageDown = true;
+            _oldPageDown = true;   
             _octreeVisPass->setDisplayLevel(_octreeVisPass->getDisplayLevel() - 1);
           }
 

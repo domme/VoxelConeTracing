@@ -39,23 +39,6 @@ layout(rgba8) uniform volatile image3D brickPool_value;
 
 uniform uint numLevels;  // Number of levels in the octree
 
-#define NODE_MASK_VALUE 0x3FFFFFFF
-#define NODE_MASK_TAG (0x00000001 << 31)
-#define NODE_MASK_BRICK (0x00000001 << 30)
-#define NODE_NOT_FOUND 0xFFFFFFFF
-
-const uint pow2[] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
-
-const uvec3 childOffsets[8] = {
-  uvec3(0, 0, 0),
-  uvec3(1, 0, 0),
-  uvec3(0, 1, 0),
-  uvec3(1, 1, 0),
-  uvec3(0, 0, 1),
-  uvec3(1, 0, 1),
-  uvec3(0, 1, 1), 
-  uvec3(1, 1, 1)};
-
 vec4 voxelValues[8] = {
   vec4(0),
   vec4(0),
@@ -67,31 +50,18 @@ vec4 voxelValues[8] = {
   vec4(0)
 };
 
-vec4 convRGBA8ToVec4(uint val) {
-    return vec4( float((val & 0x000000FF)), 
-                 float((val & 0x0000FF00) >> 8U), 
-                 float((val & 0x00FF0000) >> 16U), 
-                 float((val & 0xFF000000) >> 24U));
-}
+const uvec3 childOffsets[8] = {
+  uvec3(0, 0, 0),
+  uvec3(1, 0, 0),
+  uvec3(0, 1, 0),
+  uvec3(1, 1, 0),
+  uvec3(0, 0, 1),
+  uvec3(1, 0, 1),
+  uvec3(0, 1, 1), 
+  uvec3(1, 1, 1)};
 
-uint convVec4ToRGBA8(vec4 val) {
-    return (uint(val.w) & 0x000000FF)   << 24U
-            |(uint(val.z) & 0x000000FF) << 16U
-            |(uint(val.y) & 0x000000FF) << 8U 
-            |(uint(val.x) & 0x000000FF);
-}
+#include "assets/shader/_utilityFunctions.shader"
 
-uint vec3ToUintXYZ10(uvec3 val) {
-    return (uint(val.z) & 0x000003FF)   << 20U
-            |(uint(val.y) & 0x000003FF) << 10U 
-            |(uint(val.x) & 0x000003FF);
-}
-
-uvec3 uintXYZ10ToVec3(uint val) {
-    return uvec3(uint((val & 0x000003FF)),
-                 uint((val & 0x000FFC00) >> 10U), 
-                 uint((val & 0x3FF00000) >> 20U));
-}
 
 void loadVoxelValues(in ivec3 brickAddress){
   // Collect the original voxel colors (from voxelfragmentlist-voxels)

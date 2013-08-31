@@ -25,25 +25,6 @@
 
 #version 430 core
 
-#define NODE_MASK_VALUE 0x3FFFFFFF
-#define NODE_NOT_FOUND  0xFFFFFFFF
-
-const uint NODE_MASK_TAG = (0x00000001 << 31);
-const uint NODE_MASK_TAG_STATIC = (0x00000003 << 30);
-
-const uint pow2[] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
-
-const uvec3 childOffsets[8] = {
-  uvec3(0, 0, 0),
-  uvec3(1, 0, 0),
-  uvec3(0, 1, 0),
-  uvec3(1, 1, 0),
-  uvec3(0, 0, 1),
-  uvec3(1, 0, 1),
-  uvec3(0, 1, 1), 
-  uvec3(1, 1, 1)};
-
-
 layout(r32ui) uniform readonly uimageBuffer nodePool_next;
 layout(r32ui) uniform readonly uimageBuffer voxelFragmentListPosition;
 
@@ -58,42 +39,8 @@ uniform uint level;
 uniform uint numLevels;
 uniform uint voxelGridResolution;
 
-uvec3 uintXYZ10ToVec3(uint val) {
-    return uvec3(uint((val & 0x000003FF)),
-                 uint((val & 0x000FFC00) >> 10U), 
-                 uint((val & 0x3FF00000) >> 20U));
-}
-
-int traverseOctree(in vec3 posTex, out uint foundOnLevel) {
-  vec3 nodePosTex = vec3(0.0);
-  vec3 nodePosMaxTex = vec3(1.0);
-  int nodeAddress = 0;
-  float sideLength = 0.5;
-  
-  for (uint iLevel = 0; iLevel < numLevels; ++iLevel) {
-    uint nodeNext = imageLoad(nodePool_next, nodeAddress).x;
-
-    uint childStartAddress = nodeNext & NODE_MASK_VALUE;
-      if (childStartAddress == 0U) {
-        foundOnLevel = iLevel;
-        break;
-      }
-       
-      uvec3 offVec = uvec3(2.0 * posTex);
-      uint off = offVec.x + 2U * offVec.y + 4U * offVec.z;
-
-      // Restart while-loop with the child node (aka recursion)
-      nodeAddress = int(childStartAddress + off);
-      nodePosTex += vec3(childOffsets[off]) * vec3(sideLength);
-      nodePosMaxTex = nodePosTex + vec3(sideLength);
-
-      sideLength = sideLength / 2.0;
-      posTex = 2.0 * posTex - vec3(offVec);
-  } // level-for
-
-  return nodeAddress;
-}
-
+#include "assets/shader/_utilityFunctions.shader"
+#include "assets/shader/_octreeTraverse.shader"
 
 void main() {
   // Find the node for this position
@@ -104,7 +51,7 @@ void main() {
   //stepTex *= 0.99;
   
   uint nodeLevel = 0;
-  int nodeAddress = traverseOctree(posTex, nodeLevel);
+  int nodeAddress = traverseOctree_simple(posTex, nodeLevel);
   
   int nX = 0;
   int nY = 0;
@@ -116,42 +63,42 @@ void main() {
   uint neighbourLevel = 0;
 
   if (posTex.x + stepTex < 1) {
-    nX = traverseOctree(posTex + vec3(stepTex, 0, 0), neighbourLevel);
+    nX = traverseOctree_simple(posTex + vec3(stepTex, 0, 0), neighbourLevel);
     if (nodeLevel != neighbourLevel) {
       nX = 0; // invalidate neighbour-pointer if they are not on the same level
     }
   }
 
   if (posTex.y + stepTex < 1) {
-    nY = traverseOctree(posTex + vec3(0, stepTex, 0), neighbourLevel); 
+    nY = traverseOctree_simple(posTex + vec3(0, stepTex, 0), neighbourLevel); 
     if (nodeLevel != neighbourLevel) {
       nY = 0; // invalidate neighbour-pointer if they are not on the same level
     }
   }
 
   if (posTex.z + stepTex < 1) {
-    nZ = traverseOctree(posTex + vec3(0, 0, stepTex), neighbourLevel);
+    nZ = traverseOctree_simple(posTex + vec3(0, 0, stepTex), neighbourLevel);
     if (nodeLevel != neighbourLevel) {
       nZ = 0; // invalidate neighbour-pointer if they are not on the same level
     }
   }
 
   if (posTex.x - stepTex > 0) {
-    nX_neg = traverseOctree(posTex - vec3(stepTex, 0, 0), neighbourLevel);
+    nX_neg = traverseOctree_simple(posTex - vec3(stepTex, 0, 0), neighbourLevel);
     if (nodeLevel != neighbourLevel) {
       nX_neg = 0; // invalidate neighbour-pointer if they are not on the same level
     }
   }
 
   if (posTex.y - stepTex > 0) {
-    nY_neg = traverseOctree(posTex - vec3(0, stepTex, 0), neighbourLevel); 
+    nY_neg = traverseOctree_simple(posTex - vec3(0, stepTex, 0), neighbourLevel); 
     if (nodeLevel != neighbourLevel) {
       nY_neg = 0; // invalidate neighbour-pointer if they are not on the same level
     }
   }
 
   if (posTex.z - stepTex > 0) {
-    nZ_neg = traverseOctree(posTex - vec3(0, 0, stepTex), neighbourLevel);
+    nZ_neg = traverseOctree_simple(posTex - vec3(0, 0, stepTex), neighbourLevel);
     if (nodeLevel != neighbourLevel) {
       nZ_neg = 0; // invalidate neighbour-pointer if they are not on the same level
     }

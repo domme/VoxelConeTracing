@@ -31,7 +31,6 @@
 #include "../Octree Building/ObAllocatePass.h"
 #include "../Octree Mipmap/WriteLeafNodesPass.h"
 #include "../Octree Mipmap/LightInjectionPass.h"
-#include "../Octree Mipmap/OctreeMipmapPass.h"
 #include "../Octree Building/NeighbourPointersPass.h"
 #include "../Octree Building/ObClearNeighboursPass.h"
 #include "../Octree Mipmap/BorderTransferPass.h"

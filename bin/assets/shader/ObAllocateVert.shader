@@ -31,21 +31,7 @@ layout(binding = 0) uniform atomic_uint nextFreeAddress;
 
 uniform uint level;
 
-#define NODE_MASK_VALUE 0x3FFFFFFF
-#define NODE_MASK_TAG (0x00000001 << 31)
-#define NODE_MASK_BRICK (0x00000001 << 30)
-#define NODE_MASK_TAG_STATIC (0x00000003 << 30)
-#define NODE_NOT_FOUND 0xFFFFFFFF
-
-uint vec3ToUintXYZ10(uvec3 val) {
-    return (uint(val.z) & 0x000003FF)   << 20U
-            |(uint(val.y) & 0x000003FF) << 10U 
-            |(uint(val.x) & 0x000003FF);
-}
-
-bool isFlagged(in uint nodeNext) {
-  return (nodeNext & NODE_MASK_TAG) != 0U;
-}
+#include "assets/shader/_utilityFunctions.shader"
 
 uint allocChildTile(in int nodeAddress) {
   uint nextFreeTile = atomicCounterIncrement(nextFreeAddress);

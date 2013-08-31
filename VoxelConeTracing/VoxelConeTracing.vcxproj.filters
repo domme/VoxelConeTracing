@@ -46,9 +46,6 @@
     <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\WriteLeafNodesPass.cpp">
       <Filter>src\Octree Mipmap</Filter>
     </ClCompile>
-    <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\OctreeMipmapPass.cpp">
-      <Filter>src\Octree Mipmap</Filter>
-    </ClCompile>
     <ClCompile Include="src\VoxelConeTracing\Scene\NodePool.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
@@ -224,9 +221,6 @@
     <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\WriteLeafNodesPass.h">
       <Filter>src\Octree Mipmap</Filter>
     </ClInclude>
-    <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\OctreeMipmapPass.h">
-      <Filter>src\Octree Mipmap</Filter>
-    </ClInclude>
     <ClInclude Include="src\VoxelConeTracing\Scene\NodePool.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
@@ -343,9 +337,6 @@
     <None Include="..\bin\assets\shader\LightInjectionFrag.shader">
       <Filter>shader\Octree Mipmapping</Filter>
     </None>
-    <None Include="..\bin\assets\shader\OctreeMipmap.shader">
-      <Filter>shader\Octree Mipmapping</Filter>
-    </None>
     <None Include="..\bin\assets\shader\OctreeWriteLeafs.shader">
       <Filter>shader\Octree Mipmapping</Filter>
     </None>
@@ -417,6 +408,15 @@
     </None>
     <None Include="..\bin\assets\shader\BorderTransferLight.shader">
       <Filter>shader\Octree Mipmapping</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\_octreeTraverse.shader">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\_utilityFunctions.shader">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\_raycast.shader">
+      <Filter>shader</Filter>
     </None>
   </ItemGroup>
 </Project>
