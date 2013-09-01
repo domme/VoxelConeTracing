@@ -26,8 +26,8 @@
 #version 420
 
 layout(r32ui) uniform coherent uimageBuffer voxelFragList_position;
-layout(rgba8) uniform volatile image3D voxelFragTex_color;
-layout(rgba8) uniform volatile image3D voxelFragTex_normal;
+layout(r32ui) uniform volatile uimage3D voxelFragTex_color;
+layout(r32ui) uniform volatile uimage3D voxelFragTex_normal;
 
 layout(binding = 0) uniform atomic_uint voxel_index;
 
@@ -103,9 +103,11 @@ void main() {
   
   //Avg voxel attributes and store in FragmentTexXXX
   uint diffColorU = convVec4ToRGBA8(diffColor * 255.0);
-  //imageStore(voxelFragTex_color, ivec3(baseVoxel), uvec4(diffColorU));
-  imageStore(voxelFragTex_color, ivec3(baseVoxel), diffColor);
-  
+  uint normalU = convVec4ToRGBA8(normal * 255.0);
+
+  imageStore(voxelFragTex_color, ivec3(baseVoxel), uvec4(diffColorU));
+  imageStore(voxelFragTex_normal, ivec3(baseVoxel), uvec4(normalU));
+    
   //imageAtomicRGBA8Avg(voxelFragTex_color, ivec3(baseVoxel), diffColor);
   //imageAtomicRGBA8Avg(voxelFragTex_normal, ivec3(baseVoxel), normal);
 

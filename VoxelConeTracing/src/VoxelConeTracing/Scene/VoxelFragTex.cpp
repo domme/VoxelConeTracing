@@ -55,10 +55,10 @@ void VoxelFragTex::init(uint voxelGridResolution) {
   props.width = voxelGridResolution;
   props.height = voxelGridResolution;
   props.depth = voxelGridResolution;
-  props.format = GL_RGBA;
-  props.internalFormat = GL_RGBA8;
+  props.format = GL_RED_INTEGER;
+  props.internalFormat = GL_R32UI;
   props.targetType = GL_TEXTURE_3D;
-  props.pixelType = GL_UNSIGNED_BYTE;
+  props.pixelType = GL_UNSIGNED_INT;
 
   _voxelFragTex[VOXELATT_COLOR].init(props, "VoxelFragTex_Color");
   _voxelFragTex[VOXELATT_NORMAL].init(props, "VoxelFragTex_Normal");
@@ -98,10 +98,10 @@ void VoxelFragTex::init(uint voxelGridResolution) {
     _voxelFragTex[VOXELATT_NORMAL].getHandle();
 
 
-  _shdVoxelFragTex[VOXELATT_COLOR].type = GL_IMAGE_3D;
+  _shdVoxelFragTex[VOXELATT_COLOR].type = GL_UNSIGNED_INT_IMAGE_3D;
   _shdVoxelFragTex[VOXELATT_COLOR].data = &_vfTexInfos[VOXELATT_COLOR];
   
-  _shdVoxelFragTex[VOXELATT_NORMAL].type = GL_IMAGE_3D;
+  _shdVoxelFragTex[VOXELATT_NORMAL].type = GL_UNSIGNED_INT_IMAGE_3D;
   _shdVoxelFragTex[VOXELATT_NORMAL].data = &_vfTexInfos[VOXELATT_NORMAL];
 
 

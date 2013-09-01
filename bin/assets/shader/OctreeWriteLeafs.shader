@@ -34,8 +34,8 @@ to traverse the octree and find the leaf-node.
 #version 420 core
 
 layout(r32ui) uniform uimageBuffer voxelFragList_position;
-layout(rgba8) uniform image3D voxelFragTex_color;
-layout(rgba8) uniform image3D voxelFragTex_normal;
+layout(r32ui) uniform uimage3D voxelFragTex_color;
+layout(r32ui) uniform uimage3D voxelFragTex_normal;
 
 layout(r32ui) uniform uimageBuffer nodePool_next;
 layout(r32ui) uniform uimageBuffer nodePool_color;
@@ -71,12 +71,8 @@ void main() {
   uint voxelPosU = imageLoad(voxelFragList_position, gl_VertexID).x;
   uvec3 voxelPos = uintXYZ10ToVec3(voxelPosU);
     
-  //uint voxelColorU = imageLoad(voxelFragTex_color, ivec3(voxelPos)).x;
-  uint voxelNormalU = 0;//imageLoad(voxelFragTex_normal, ivec3(voxelPos)).x;
-  
-  vec4 col = imageLoad(voxelFragTex_color, ivec3(voxelPos)) * vec4(255.0);
-    //vec4 col = vec4(255,255,255,255);
-  uint voxelColorU = convVec4ToRGBA8(col);
+  uint voxelColorU = imageLoad(voxelFragTex_color, ivec3(voxelPos)).x;
+  uint voxelNormalU = imageLoad(voxelFragTex_normal, ivec3(voxelPos)).x;
   memoryBarrier();
 
   vec3 posTex = vec3(voxelPos) / vec3(voxelGridResolution);
