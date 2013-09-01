@@ -33,11 +33,7 @@ uniform uint numLevels;
 #include "assets/shader/_utilityFunctions.shader"
 #include "assets/shader/_octreeTraverse.shader"
 
-void flagNode(in uint nodeNext, in int address) {
-  nodeNext = NODE_MASK_TAG | nodeNext;
-  imageStore(nodePool_next, address, uvec4(nodeNext));
-  memoryBarrier();
-}
+void flagNode(in uint nodeNext, in int address);
 
 void main() {
   uint voxelPosU = imageLoad(voxelFragmentListPosition, gl_VertexID).x;
@@ -52,6 +48,12 @@ void main() {
     uint nodeNext = imageLoad(nodePool_next, nodeAddress).x;
     flagNode(nodeNext, nodeAddress);
   }
+}
+
+void flagNode(in uint nodeNext, in int address) {
+  nodeNext = NODE_MASK_TAG | nodeNext;
+  imageStore(nodePool_next, address, uvec4(nodeNext));
+  memoryBarrier();
 }
 
 

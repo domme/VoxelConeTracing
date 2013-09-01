@@ -61,13 +61,12 @@
 
 #include "VoxelConeTracing/Scene/VCTscene.h"
 #include "VoxelConeTracing/Voxelization/VoxelizePass.h"
-#include "VoxelConeTracing/Raycasting/RayCastingPass.h"
+#include "VoxelConeTracing/Raycasting/RayCastingPass.h" 
 #include "VoxelConeTracing/Raycasting/OctreeVisPass.h"
 #include "VoxelConeTracing/Octree Building/ObFlagPass.h"
 #include "VoxelConeTracing/Octree Building/ObAllocatePass.h"
 #include "VoxelConeTracing/Octree Building/ObInitPass.h"
 #include "VoxelConeTracing/Octree Mipmap/WriteLeafNodesPass.h"
-#include "VoxelConeTracing/Octree Mipmap/OctreeMipmapPass.h"
 
 #include "vsDebugLib.h"
 #include "Octree Building/ModifyIndirectBufferPass.h"
