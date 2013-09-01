@@ -127,6 +127,9 @@
     <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\BorderTransferLightPass.cpp">
       <Filter>src\Octree Mipmap</Filter>
     </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\Scene\VoxelFragTex.cpp">
+      <Filter>src\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -301,6 +304,9 @@
     </ClInclude>
     <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\BorderTransferLightPass.h">
       <Filter>src\Octree Mipmap</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\Scene\VoxelFragTex.h">
+      <Filter>src\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

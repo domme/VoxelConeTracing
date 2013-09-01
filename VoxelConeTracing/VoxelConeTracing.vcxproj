@@ -208,6 +208,7 @@
     <ClCompile Include="src\VoxelConeTracing\Scene\NodePool.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Scene\VCTscene.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Scene\VoxelFragList.cpp" />
+    <ClCompile Include="src\VoxelConeTracing\Scene\VoxelFragTex.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Stages\GBufferStage.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Stages\ShadowMapStage.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Stages\SVOconstructionStage.cpp" />
@@ -251,6 +252,7 @@
     <ClInclude Include="src\VoxelConeTracing\Scene\NodePool.h" />
     <ClInclude Include="src\VoxelConeTracing\Scene\VCTscene.h" />
     <ClInclude Include="src\VoxelConeTracing\Scene\VoxelFragList.h" />
+    <ClInclude Include="src\VoxelConeTracing\Scene\VoxelFragTex.h" />
     <ClInclude Include="src\VoxelConeTracing\Stages\GBufferStage.h" />
     <ClInclude Include="src\VoxelConeTracing\Stages\ShadowMapStage.h" />
     <ClInclude Include="src\VoxelConeTracing\Stages\SVOconstructionStage.h" />
