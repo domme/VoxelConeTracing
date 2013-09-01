@@ -24,12 +24,19 @@ vec4 raycastBrick(in uint nodeColorU, in vec3 enter, in vec3 leave, in vec3 dir,
     float samplingRateCurr = float(pow2[level + 1]) * stepSize;
     float alphaCorrection = samplingRateMax / samplingRateCurr; 
 
-    for (float f = 0; f < stepLength; f += stepSize) {
+    color = texture(brickPool_normal, brickAddressUVW + vec3(voxelStep));
+    color.xyz /= color.a;
+    color.a = 1.0;
+
+    /*for (float f = 0; f < stepLength; f += stepSize) {
       vec4 newCol = texture(brickPool_color, enterUVW + dir * f);
       vec4 irradiance = texture(brickPool_irradiance, enterUVW + dir * f);
       vec3 normal = texture(brickPool_normal, enterUVW + dir * f).xyz;
+      //normal = normalize(normal * 2.0 - 1.0);
       
+            
       //newCol *= irradiance;
+      newCol.xyz = normal;
       
       if (newCol.a > 0.001) {
         // Alpha correction
@@ -43,7 +50,7 @@ vec4 raycastBrick(in uint nodeColorU, in vec3 enter, in vec3 leave, in vec3 dir,
       if (color.a > 0.99) {
          break;
       }
-    }
+    } */
 
   return color;
 }

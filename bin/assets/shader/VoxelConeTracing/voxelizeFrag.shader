@@ -70,10 +70,12 @@ void main() {
   // Pre-multiply alpha:
   diffColor = vec4(diffColor.xyz * diffColor.a, diffColor.a);
 
-  vec3 normal = In.normal * 0.5 + 0.5;
+  vec4 normal = vec4(normalize(In.normal) * 0.5 + 0.5, 1.0);
+  normal.xyz *= diffColor.a;
+  normal.a = diffColor.a;
 
   uint diffColorU = convVec4ToRGBA8(diffColor * vec4(255));
-  uint normalU = convVec4ToRGBA8(vec4(normal,1) * vec4(255));
+  uint normalU = convVec4ToRGBA8(normal * vec4(255));
   uint voxelIndex = atomicCounterIncrement(voxel_index);
 
   memoryBarrier();

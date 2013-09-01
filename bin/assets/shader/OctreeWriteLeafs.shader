@@ -33,12 +33,6 @@ to traverse the octree and find the leaf-node.
 
 #version 420 core
 
-
-const uint NODE_MASK_VALUE = 0x3FFFFFFF;
-const uint NODE_MASK_TAG = (0x00000001 << 31);
-const uint NODE_MASK_BRICK = (0x00000001 << 30);
-const uint NODE_NOT_FOUND = 0xFFFFFFFF;
-
 layout(r32ui) uniform uimageBuffer voxelFragList_pos;
 layout(r32ui) uniform uimageBuffer voxelFragList_color;
 layout(r32ui) uniform uimageBuffer voxelFragList_normal;
@@ -50,57 +44,10 @@ layout(rgba8) uniform image3D brickPool_normal;
 uniform uint numLevels;  // Number of levels in the octree
 uniform uint voxelGridResolution;
 
-const uint pow2[] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
+#include "assets/shader/_utilityFunctions.shader"
+#include "assets/shader/_octreeTraverse.shader"
 
-const uvec3 childOffsets[8] = {
-  uvec3(0, 0, 0),
-  uvec3(1, 0, 0),
-  uvec3(0, 1, 0),
-  uvec3(1, 1, 0),
-  uvec3(0, 0, 1),
-  uvec3(1, 0, 1),
-  uvec3(0, 1, 1), 
-  uvec3(1, 1, 1)};
-
-vec4 convRGBA8ToVec4(uint val) {
-    return vec4( float((val & 0x000000FF)), 
-                 float((val & 0x0000FF00) >> 8U), 
-                 float((val & 0x00FF0000) >> 16U), 
-                 float((val & 0xFF000000) >> 24U));
-}
-
-uint convVec4ToRGBA8(vec4 val) {
-    return (uint(val.w) & 0x000000FF)   << 24U
-            |(uint(val.z) & 0x000000FF) << 16U
-            |(uint(val.y) & 0x000000FF) << 8U 
-            |(uint(val.x) & 0x000000FF);
-}
-
-uint vec3ToUintXYZ10(uvec3 val) {
-    return (uint(val.z) & 0x000003FF)   << 20U
-            |(uint(val.y) & 0x000003FF) << 10U 
-            |(uint(val.x) & 0x000003FF);
-}
-
-uvec3 uintXYZ10ToVec3(uint val) {
-    return uvec3(uint((val & 0x000003FF)),
-                 uint((val & 0x000FFC00) >> 10U), 
-                 uint((val & 0x3FF00000) >> 20U));
-}
-
-void traverse(in vec3 posTex, in uint voxelColorU, in uint voxelNormalU) {
-  vec3 nodePosTex = vec3(0.0);
-  vec3 nodePosMaxTex = vec3(1.0);
-
-  float sideLength = 1.0;
-  int nodeAddress = 0;
-
-  for (uint iLevel = 0U; iLevel < numLevels+1; ++iLevel) {
-    uint nodeNext = imageLoad(nodePool_next, nodeAddress).x;
-    memoryBarrier();
-
-    uint childStartAddress = nodeNext & NODE_MASK_VALUE;
-    if (childStartAddress == 0U) {
+void storeInLeaf(in vec3 posTex, in int nodeAddress, in uint voxelColorU, in uint voxelNormalU) {
        uint nodeColorU = imageLoad(nodePool_color, nodeAddress).x;
        memoryBarrier();
        
@@ -112,28 +59,15 @@ void traverse(in vec3 posTex, in uint voxelColorU, in uint voxelNormalU) {
        imageStore(brickPool_color,
              brickCoords  + 2 * ivec3(childOffsets[off]),
              convRGBA8ToVec4(voxelColorU) / 255.0);
-
-       imageStore(brickPool_normal,
+       
+       vec4 normal = imageLoad(brickPool_normal, brickCoords  + 2 * ivec3(childOffsets[off]));
+       
+       if (length(normal) < 0.1) {
+         imageStore(brickPool_normal,
              brickCoords  + 2 * ivec3(childOffsets[off]),
              convRGBA8ToVec4(voxelNormalU) / 255.0);
-
-    return;
-    }
-      
-    uvec3 offVec = uvec3(2.0 * posTex);
-    uint off = offVec.x + 2U * offVec.y + 4U * offVec.z;
-
-    // Restart while-loop with the child node (aka recursion)
-    sideLength = sideLength / 2.0;
-    nodeAddress = int(childStartAddress + off);
-    nodePosTex += vec3(childOffsets[off]) * vec3(sideLength);
-    nodePosMaxTex = nodePosTex + vec3(sideLength);
-    posTex = 2.0 * posTex - vec3(offVec);
-  } // level-for
-
-  
+       }
 }
-
 
 void main() {
   // Get the voxel's position and color from the voxel frag list.
@@ -145,7 +79,8 @@ void main() {
   uvec3 voxelPos = uintXYZ10ToVec3(voxelPosU);
   vec3 posTex = vec3(voxelPos) / vec3(voxelGridResolution);
 
-  //traverseToLeaf(posTex, voxelColorU);
-  traverse(posTex, voxelColorU, voxelNormalU);
+  uint onLevel = 0;
+  int nodeAddress = traverseOctree_simple(posTex, onLevel);
   
+  storeInLeaf(posTex, nodeAddress, voxelColorU, voxelNormalU);
 }
