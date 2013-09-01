@@ -26,8 +26,9 @@
 #version 420
 
 layout(r32ui) uniform coherent uimageBuffer voxelFragmentListPosition;
-layout(r32ui) uniform coherent uimageBuffer voxelFragmentListColor;
-layout(r32ui) uniform coherent uimageBuffer voxelFragmentListNormal;
+layout(r32ui) uniform coherent uimage3D voxelFragmentTexColor;
+layout(r32ui) uniform coherent uimage3D voxelFragmentTexNormal;
+
 layout(binding = 0) uniform atomic_uint voxel_index;
 
 uniform sampler2D diffuseTex;
@@ -63,6 +64,25 @@ uint vec3ToUintXYZ10(uvec3 val) {
 }
 
 
+void imageAtomicRGBA8Avg(layout(r32ui) volatile image3D img, 
+                         ivec3 coords,
+                         vec4 val) {
+    val.rgb *=255.0f; // Optimise following calculations
+    uint newVal = convVec4ToRGBA8(val);
+    uint prevStoredVal = 0; 
+    uint curStoredVal;
+    // Loop as long as destination value gets changed by other threads
+    while((curStoredVal = imageAtomicCompSwap(img, coords, prevStoredVal, newVal))
+          != prevStoredVal) {
+        prevStoredVal = curStoredVal;
+        vec4 rval= convRGBA8ToVec4(curStoredVal);
+        rval.xyz = (rval.xyz * rval.w); // Denormalize
+        vec4 curValF = rval + val; // Add new value
+        curValF.xyz /= (curValF.w); // Renormalize
+        newVal = convVec4ToRGBA8(curValF);
+    }
+}
+
 void main() {
   uvec3 baseVoxel = uvec3(floor(In.posTexSpace * voxelTexSize));
   
@@ -74,13 +94,14 @@ void main() {
   normal.xyz *= diffColor.a;
   normal.a = diffColor.a;
 
-  uint diffColorU = convVec4ToRGBA8(diffColor * vec4(255));
-  uint normalU = convVec4ToRGBA8(normal * vec4(255));
   uint voxelIndex = atomicCounterIncrement(voxel_index);
-
   memoryBarrier();
-  // Store voxel-position as tex-indices
+
+  //Store voxel position in FragmentList
   imageStore(voxelFragmentListPosition, int(voxelIndex), uvec4(vec3ToUintXYZ10(baseVoxel)));
-  imageStore(voxelFragmentListColor, int(voxelIndex), uvec4(diffColorU));
-  imageStore(voxelFragmentListNormal, int(voxelIndex), uvec4(normalU));
+  
+  //Avg voxel attributes and store in FragmentTexXXX
+  imageAtomicRGBA8Avg(voxelFragmentTexColor, int(baseVoxel), diffColor);
+  imageAtomicRGBA8Avg(voxelFragmentTexNormal, int(baseVoxel), normal);
+
 }

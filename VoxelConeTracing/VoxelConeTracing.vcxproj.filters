@@ -130,6 +130,9 @@
     <ClCompile Include="src\VoxelConeTracing\Scene\VoxelFragTex.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\Voxelization\VoxelizeClearPass.cpp">
+      <Filter>src\Voxelization</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -308,6 +311,9 @@
     <ClInclude Include="src\VoxelConeTracing\Scene\VoxelFragTex.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\Voxelization\VoxelizeClearPass.h">
+      <Filter>src\Voxelization</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\bin\assets\shader\debug.shader">
@@ -423,6 +429,9 @@
     </None>
     <None Include="..\bin\assets\shader\_raycast.shader">
       <Filter>shader</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\voxelizeClear.shader">
+      <Filter>shader\Voxelize</Filter>
     </None>
   </ItemGroup>
 </Project>

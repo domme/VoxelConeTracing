@@ -214,6 +214,7 @@
     <ClCompile Include="src\VoxelConeTracing\Stages\SVOconstructionStage.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Stages\SVOlightUpdateStage.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Util\MathUtil.cpp" />
+    <ClCompile Include="src\VoxelConeTracing\Voxelization\VoxelizeClearPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Voxelization\VoxelizePass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\vsDebugLib.cpp" />
   </ItemGroup>
@@ -258,6 +259,7 @@
     <ClInclude Include="src\VoxelConeTracing\Stages\SVOconstructionStage.h" />
     <ClInclude Include="src\VoxelConeTracing\Stages\SVOlightUpdateStage.h" />
     <ClInclude Include="src\VoxelConeTracing\Util\MathUtil.h" />
+    <ClInclude Include="src\VoxelConeTracing\Voxelization\VoxelizeClearPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Voxelization\VoxelizePass.h" />
     <ClInclude Include="src\VoxelConeTracing\vsDebugLib.h" />
   </ItemGroup>
@@ -286,6 +288,7 @@
     <None Include="..\bin\assets\shader\ObClearVert.shader" />
     <None Include="..\bin\assets\shader\ObFlagVert.shader" />
     <None Include="..\bin\assets\shader\ObInitVert.shader" />
+    <None Include="..\bin\assets\shader\voxelizeClear.shader" />
     <None Include="..\bin\assets\shader\_octreeTraverse.shader" />
     <None Include="..\bin\assets\shader\octreeVisFrag.shader" />
     <None Include="..\bin\assets\shader\OctreeWriteLeafs.shader" />

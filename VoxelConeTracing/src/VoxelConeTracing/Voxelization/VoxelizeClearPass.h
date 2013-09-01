@@ -23,40 +23,21 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#ifndef VCT_SRC_VCT_VOXELFRAGTEX_H_
-#define VCT_SRC_VCT_VOXELFRAGTEX_H_
+#ifndef VCT_SRC_VCT_OBCLEARPASS_H_
+#define VCT_SRC_VCT_OBCLEARPASS_H_
 
-#include "KoRE/Common.h"
-#include "KoRE/Texture.h"
-#include "KoRE/TextureBuffer.h"
+#include "KoRE/Passes/ShaderProgramPass.h"
+#include "VoxelConeTracing/Scene/VCTscene.h"
 
-#include "KoRE/ShaderData.h"
-
-enum EVoxelAttributes {
-  VOXELATT_COLOR = 0,
-  VOXELATT_NORMAL,
-
-  VOXELATT_NUM
-};
-
-class VoxelFragTex
+class ObClearPass : public kore::ShaderProgramPass
 {
-public:
-  VoxelFragTex();
-  ~VoxelFragTex();
-  void init(uint voxelGridResolution);
+  public:
+    ObClearPass(VCTscene* vctScene,
+              kore::EOperationExecutionType executionType);
+    virtual ~ObClearPass(void);
 
-  inline kore::ShaderData* getShdVoxelFragTex(EVoxelAttributes type)
-  {return &_shdVoxelFragTex[type];}
-
-  inline kore::Texture* getVoxelFragTex(EVoxelAttributes type) 
-  { return &_voxelFragTex[type]; }
-
-private:
-  // 3D VoxelFragment-Texture
-  kore::Texture _voxelFragTex[VOXELATT_NUM];
-  kore::STextureInfo _vfTexInfos[VOXELATT_NUM];
-  kore::ShaderData _shdVoxelFragTex[VOXELATT_NUM];
+  private:
+    kore::IndexedBuffer _svoCmdBuf;
 };
 
-#endif //VCT_SRC_VCT_VOXELFRAGTEX_H_
+#endif //VCT_SRC_VCT_OBCLEARPASS_H_
