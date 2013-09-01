@@ -33,9 +33,10 @@ to traverse the octree and find the leaf-node.
 
 #version 420 core
 
-layout(r32ui) uniform uimageBuffer voxelFragList_pos;
-layout(r32ui) uniform uimageBuffer voxelFragList_color;
-layout(r32ui) uniform uimageBuffer voxelFragList_normal;
+layout(r32ui) uniform uimageBuffer voxelFragList_position;
+layout(r32ui) uniform uimage3D voxelFragTex_color;
+layout(r32ui) uniform uimage3D voxelFragTex_normal;
+
 layout(r32ui) uniform uimageBuffer nodePool_next;
 layout(r32ui) uniform uimageBuffer nodePool_color;
 layout(rgba8) uniform image3D brickPool_color;
@@ -59,24 +60,21 @@ void storeInLeaf(in vec3 posTex, in int nodeAddress, in uint voxelColorU, in uin
        imageStore(brickPool_color,
              brickCoords  + 2 * ivec3(childOffsets[off]),
              convRGBA8ToVec4(voxelColorU) / 255.0);
-       
-       vec4 normal = imageLoad(brickPool_normal, brickCoords  + 2 * ivec3(childOffsets[off]));
-       
-       if (length(normal) < 0.1) {
+
          imageStore(brickPool_normal,
              brickCoords  + 2 * ivec3(childOffsets[off]),
              convRGBA8ToVec4(voxelNormalU) / 255.0);
-       }
 }
 
 void main() {
   // Get the voxel's position and color from the voxel frag list.
-  uint voxelPosU = imageLoad(voxelFragList_pos, gl_VertexID).x;
-  uint voxelColorU = imageLoad(voxelFragList_color, gl_VertexID).x;
-  uint voxelNormalU = imageLoad(voxelFragList_normal, gl_VertexID).x;
+  uint voxelPosU = imageLoad(voxelFragList_position, gl_VertexID).x;
+  uvec3 voxelPos = uintXYZ10ToVec3(voxelPosU);
+
+  uint voxelColorU = imageLoad(voxelFragTex_color, ivec3(voxelPos)).x;
+  uint voxelNormalU = imageLoad(voxelFragTex_normal, ivec3(voxelPos)).x;
   memoryBarrier();
 
-  uvec3 voxelPos = uintXYZ10ToVec3(voxelPosU);
   vec3 posTex = vec3(voxelPos) / vec3(voxelGridResolution);
 
   uint onLevel = 0;

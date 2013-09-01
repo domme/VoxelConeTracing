@@ -55,7 +55,7 @@ NeighbourPointersPass::
     vctScene->getVoxelFragList()->getFragListIndCmdBuf()->getBufferHandle()));
 
   addStartupOperation(new BindImageTexture(
-    vctScene->getVoxelFragList()->getShdVoxelFragList(VOXELATT_POSITION),
+    vctScene->getVoxelFragList()->getShdVoxelFragList(),
     _shader.getUniform("voxelFragmentListPosition"), GL_READ_ONLY));
 
   addStartupOperation(new BindUniform(&_shdLevel, _shader.getUniform("level")));

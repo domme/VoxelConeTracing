@@ -23,75 +23,37 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#include "VoxelConeTracing/Octree Building/ObClearPass.h"
+#include "VoxelConeTracing/Voxelization/VoxelizeClearPass.h"
 #include "Kore/Operations/Operations.h"
 
-ObClearPass::~ObClearPass(void) {
+VoxelizeClearPass::~VoxelizeClearPass(void) {
 }
 
-ObClearPass::ObClearPass(VCTscene* vctScene,
+VoxelizeClearPass::VoxelizeClearPass(VCTscene* vctScene,
                       kore::EOperationExecutionType executionType) {
   using namespace kore;
   
   this->setExecutionType(executionType);
 
   ShaderProgram* shader = new ShaderProgram();
-  shader->loadShader("./assets/shader/ObClearVert.shader",
+  shader->loadShader("./assets/shader/voxelizeClear.shader",
                  GL_VERTEX_SHADER);
-  shader->setName("ObClear shader");
+  shader->setName("VoxelizeClear shader");
   shader->init();
   this->setShaderProgram(shader);
 
-  SDrawArraysIndirectCommand cmd;
-  cmd.numVertices = vctScene->getNodePool()->getNumNodes();
-  cmd.numPrimitives = 1;
-  cmd.baseInstanceIdx = 0;
-  cmd.firstVertexIdx = 0;
 
-  _svoCmdBuf.create(GL_DRAW_INDIRECT_BUFFER,
-                    sizeof(SDrawArraysIndirectCommand),
-                    GL_STATIC_DRAW,
-                    &cmd);
+  addStartupOperation(new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER, 
+        vctScene->getVoxelFragTex()->getVoxelFragTexIndCmdBuf()->getHandle()));
 
-  addStartupOperation(
-    new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,_svoCmdBuf.getHandle()));
 
   addStartupOperation(new BindImageTexture(
-                    vctScene->getNodePool()->getShdNodePool(COLOR),
-                    shader->getUniform("nodePool_color")));
+                    vctScene->getVoxelFragTex()->getShdVoxelFragTex(VOXELATT_COLOR),
+                    shader->getUniform("voxelFragTex_color")));
 
   addStartupOperation(new BindImageTexture(
-                    vctScene->getNodePool()->getShdNodePool(NEXT),
-                    shader->getUniform("nodePool_next")));
-
-  addStartupOperation(new BindImageTexture(
-                      vctScene->getNodePool()->getShdNodePool(NORMAL),
-                      shader->getUniform("nodePool_normal")));
-
-  /*
-  addStartupOperation(new BindImageTexture(
-                    vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_X),
-                    shader->getUniform("nodePool_X")));
-
-  addStartupOperation(new BindImageTexture(
-                  vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_NEG_X),
-                  shader->getUniform("nodePool_X_neg")));
-
-  addStartupOperation(new BindImageTexture(
-                  vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_Y),
-                  shader->getUniform("nodePool_Y")));
-
-  addStartupOperation(new BindImageTexture(
-                    vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_NEG_Y),
-                    shader->getUniform("nodePool_Y_neg")));
-
-  addStartupOperation(new BindImageTexture(
-                vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_Z),
-                shader->getUniform("nodePool_Z")));
-
-  addStartupOperation(new BindImageTexture(
-                  vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_NEG_Z),
-                  shader->getUniform("nodePool_Z_neg"))); */
+                    vctScene->getVoxelFragTex()->getShdVoxelFragTex(VOXELATT_NORMAL),
+                    shader->getUniform("voxelFragTex_normal")));
   
   addStartupOperation(new kore::DrawIndirectOp(GL_POINTS, 0));
 

@@ -53,7 +53,7 @@ void VoxelFragTex::init(uint voxelGridResolution) {
   props.width = voxelGridResolution;
   props.height = voxelGridResolution;
   props.depth = voxelGridResolution;
-  props.format = GL_RED;
+  props.format = GL_RED_INTEGER;
   props.internalFormat = GL_R32UI;
   props.targetType = GL_TEXTURE_3D;
   props.pixelType = GL_UNSIGNED_INT;
@@ -77,4 +77,13 @@ void VoxelFragTex::init(uint voxelGridResolution) {
   
   _shdVoxelFragTex[VOXELATT_NORMAL].type = GL_UNSIGNED_INT_IMAGE_3D;
   _shdVoxelFragTex[VOXELATT_NORMAL].data = &_vfTexInfos[VOXELATT_NORMAL];
+
+
+  SDrawArraysIndirectCommand cmd;
+  cmd.numVertices = props.width * props.height * props.depth;
+  cmd.numPrimitives = 1;
+
+  _voxelFragTexIndCmdBuf.create(GL_DRAW_INDIRECT_BUFFER,
+                                sizeof(SDrawArraysIndirectCommand),
+                                GL_STATIC_DRAW, &cmd);
 }

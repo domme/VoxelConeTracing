@@ -60,7 +60,7 @@ ObFlagPass::ObFlagPass(VCTscene* vctScene,
   addStartupOperation(new MemoryBarrierOp(GL_ALL_BARRIER_BITS));
 
   addStartupOperation(new BindImageTexture(
-                      vctScene->getVoxelFragList()->getShdVoxelFragList(VOXELATT_POSITION),
+                      vctScene->getVoxelFragList()->getShdVoxelFragList(),
                       _flagShader.getUniform("voxelFragmentListPosition")));
 
   addStartupOperation(new BindUniform(

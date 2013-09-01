@@ -79,10 +79,8 @@ void VCTscene::init(const SVCTparameters& params,
   _shdNodeGridResolution.size = 1;
   _shdNodeGridResolution.type = GL_UNSIGNED_INT;
 
-
-
-  
   _voxelFragList.init(_voxelGridResolution, params.fraglist_size_multiplier, params.fraglist_size_divisor);
+  _voxelFragTex.init(_voxelGridResolution);
   _nodePool.init(_voxelGridResolution);
   _brickPool.init(params.brickPoolResolution, &_nodePool);
 

@@ -23,21 +23,21 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#ifndef VCT_SRC_VCT_OBCLEARPASS_H_
-#define VCT_SRC_VCT_OBCLEARPASS_H_
+#ifndef VCT_SRC_VCT_VOXELIZECLEARPASS_H_
+#define VCT_SRC_VCT_VOXELIZECLEARPASS_H_
 
 #include "KoRE/Passes/ShaderProgramPass.h"
 #include "VoxelConeTracing/Scene/VCTscene.h"
 
-class ObClearPass : public kore::ShaderProgramPass
+class VoxelizeClearPass : public kore::ShaderProgramPass
 {
   public:
-    ObClearPass(VCTscene* vctScene,
+    VoxelizeClearPass(VCTscene* vctScene,
               kore::EOperationExecutionType executionType);
-    virtual ~ObClearPass(void);
+    virtual ~VoxelizeClearPass(void);
 
   private:
-    kore::IndexedBuffer _svoCmdBuf;
+
 };
 
-#endif //VCT_SRC_VCT_OBCLEARPASS_H_
+#endif //VCT_SRC_VCT_VOXELIZECLEARPASS_H_

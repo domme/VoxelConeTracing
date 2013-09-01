@@ -36,7 +36,7 @@ ObInitPass::~ObInitPass(void) {
 
 ObInitPass::ObInitPass(VCTscene* vctScene,
                        kore::EOperationExecutionType executionType) {
-  using namespace kore;  
+  /*using namespace kore;  
 
   this->setExecutionType(executionType);
   
@@ -55,14 +55,14 @@ ObInitPass::ObInitPass(VCTscene* vctScene,
   this->setShaderProgram(&_initShader);
   
   addStartupOperation(new BindImageTexture(
-                     vctScene->getVoxelFragList()->getShdVoxelFragList(VOXELATT_COLOR),
+                     vctScene->getVoxelFragList()->getShdVoxelFragList(),
                      _initShader.getUniform("voxelFragmentListColor")));
 
   addStartupOperation(new BindImageTexture(
-                      vctScene->getVoxelFragList()->getShdVoxelFragList(VOXELATT_POSITION),
+                      vctScene->getVoxelFragList()->getShdVoxelFragList(),
                       _initShader.getUniform("voxelFragmentListPosition")));
 
    addStartupOperation(new BindAtomicCounterBuffer(
                        vctScene->getShdAcVoxelIndex(),
-                       _initShader.getUniform("voxel_num")));
+                       _initShader.getUniform("voxel_num")));*/
 }

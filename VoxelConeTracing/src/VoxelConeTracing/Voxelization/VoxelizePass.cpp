@@ -107,16 +107,16 @@ VoxelizePass::VoxelizePass(const glm::vec3& voxelGridSize,
     voxelizeShader->getUniform("voxelTexSize")));
 
   addStartupOperation(new BindImageTexture(
-    vctScene->getVoxelFragList()->getShdVoxelFragList(VOXELATT_POSITION),
-    voxelizeShader->getUniform("voxelFragmentListPosition")));
+    vctScene->getVoxelFragList()->getShdVoxelFragList(),
+    voxelizeShader->getUniform("voxelFragList_position")));
 
   addStartupOperation(new BindImageTexture(
-    vctScene->getVoxelFragList()->getShdVoxelFragList(VOXELATT_COLOR),
-    voxelizeShader->getUniform("voxelFragmentListColor")));
+    vctScene->getVoxelFragTex()->getShdVoxelFragTex(VOXELATT_COLOR),
+    voxelizeShader->getUniform("voxelFragTex_color")));
 
   addStartupOperation(new BindImageTexture(
-    vctScene->getVoxelFragList()->getShdVoxelFragList(VOXELATT_NORMAL),
-    voxelizeShader->getUniform("voxelFragmentListNormal")));
+    vctScene->getVoxelFragTex()->getShdVoxelFragTex(VOXELATT_NORMAL),
+    voxelizeShader->getUniform("voxelFragTex_normal")));
 
   addStartupOperation(
     new BindAtomicCounterBuffer(vctScene->getShdAcVoxelIndex(),

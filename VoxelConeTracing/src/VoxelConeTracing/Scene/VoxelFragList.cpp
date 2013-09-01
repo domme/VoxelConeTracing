@@ -64,7 +64,7 @@ void VoxelFragList::init(uint voxelGridResolution, uint fragListSizeMultiplier, 
   //fraglistSizeByte = glm::min((uint)maxTexBufferSize,fraglistSizeByte);
 
   kore::Log::getInstance()
-    ->write("Allocating voxel fragment lists of size %f MB\n",
+    ->write("Allocating voxel fragment list of size %f MB\n",
     MathUtil::byteToMB(fraglistSizeByte));
 
   kore::STextureBufferProperties props;
@@ -72,41 +72,17 @@ void VoxelFragList::init(uint voxelGridResolution, uint fragListSizeMultiplier, 
   props.size = fraglistSizeByte;
   props.usageHint = GL_DYNAMIC_COPY;
 
-  _voxelFragLists[VOXELATT_POSITION].create(props, "VoxelFragmentList_Position");
-  _voxelFragLists[VOXELATT_COLOR].create(props, "VoxelFragmentList_Color");
-  _voxelFragLists[VOXELATT_NORMAL].create(props, "VoxelFragmentList_Normal");
+  _voxelFragList.create(props, "VoxelFragmentList_Position");
 
+  _vflTexInfo.internalFormat = props.internalFormat;
+  _vflTexInfo.texTarget = GL_TEXTURE_BUFFER;
+  _vflTexInfo.texLocation
+    = _voxelFragList.getTexHandle();
 
-  _vflTexInfos[VOXELATT_POSITION].internalFormat = props.internalFormat;
-  _vflTexInfos[VOXELATT_POSITION].texTarget = GL_TEXTURE_BUFFER;
-  _vflTexInfos[VOXELATT_POSITION].texLocation
-    = _voxelFragLists[VOXELATT_POSITION].getTexHandle();
-
-  _vflTexInfos[VOXELATT_COLOR].internalFormat = props.internalFormat;
-  _vflTexInfos[VOXELATT_COLOR].texTarget = GL_TEXTURE_BUFFER;
-  _vflTexInfos[VOXELATT_COLOR].texLocation
-    = _voxelFragLists[VOXELATT_COLOR].getTexHandle();
-
-  _vflTexInfos[VOXELATT_NORMAL].internalFormat = props.internalFormat;
-  _vflTexInfos[VOXELATT_NORMAL].texTarget = GL_TEXTURE_BUFFER;
-  _vflTexInfos[VOXELATT_NORMAL].texLocation
-    = _voxelFragLists[VOXELATT_NORMAL].getTexHandle();
-
-
-  _shdVoxelFragLists[VOXELATT_POSITION].component = NULL;
-  _shdVoxelFragLists[VOXELATT_POSITION].data = &_vflTexInfos[VOXELATT_POSITION];
-  _shdVoxelFragLists[VOXELATT_POSITION].name = "VoxelFragmentList_Position";
-  _shdVoxelFragLists[VOXELATT_POSITION].type = GL_TEXTURE_BUFFER;
-
-  _shdVoxelFragLists[VOXELATT_COLOR].component = NULL;
-  _shdVoxelFragLists[VOXELATT_COLOR].data = &_vflTexInfos[VOXELATT_COLOR];
-  _shdVoxelFragLists[VOXELATT_COLOR].name = "VoxelFragmentList_Color";
-  _shdVoxelFragLists[VOXELATT_COLOR].type = GL_TEXTURE_BUFFER;
-
-  _shdVoxelFragLists[VOXELATT_NORMAL].component = NULL;
-  _shdVoxelFragLists[VOXELATT_NORMAL].data = &_vflTexInfos[VOXELATT_NORMAL];
-  _shdVoxelFragLists[VOXELATT_NORMAL].name = "VoxelFragmentList_Normal";
-  _shdVoxelFragLists[VOXELATT_NORMAL].type = GL_TEXTURE_BUFFER;
+  _shdVoxelFragList.component = NULL;
+  _shdVoxelFragList.data = &_vflTexInfo;
+  _shdVoxelFragList.name = "VoxelFragmentList_Position";
+  _shdVoxelFragList.type = GL_TEXTURE_BUFFER;
 
   initIndirectCommandBufs();
 }

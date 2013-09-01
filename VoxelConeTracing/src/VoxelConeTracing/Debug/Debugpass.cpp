@@ -128,9 +128,9 @@ void DebugPass::debugBrickAc() {
 
 void DebugPass::debugVoxelFragmentList() {
   uint byteSize =
-    _vctScene->getVoxelFragList()->getVoxelFragList(VOXELATT_POSITION)->getProperties().size;
+    _vctScene->getVoxelFragList()->getVoxelFragList()->getProperties().size;
     
-  _renderMgr->bindBuffer(GL_TEXTURE_BUFFER, _vctScene->getVoxelFragList()->getVoxelFragList(VOXELATT_POSITION)->getBufferHandle());
+  _renderMgr->bindBuffer(GL_TEXTURE_BUFFER, _vctScene->getVoxelFragList()->getVoxelFragList()->getBufferHandle());
 
   const GLuint* ptr = (const GLuint*) glMapBuffer(GL_TEXTURE_BUFFER, GL_READ_ONLY);
 

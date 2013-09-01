@@ -30,14 +30,6 @@
 #include "KoRE/TextureBuffer.h"
 #include "KoRE/ShaderData.h"
 
-enum EVoxelAttributes {
-  VOXELATT_POSITION = 0,
-  VOXELATT_COLOR,
-  VOXELATT_NORMAL,
-
-  VOXELATT_NUM
-};
-
 class VoxelFragList
 {
 public:
@@ -45,11 +37,11 @@ public:
   ~VoxelFragList();
   void init(uint voxelGridResolution, uint fragListSizeMultiplier, uint fragListSizeDivisor);
 
-  inline kore::ShaderData* getShdVoxelFragList(EVoxelAttributes type)
-  {return &_shdVoxelFragLists[type];}
+  inline kore::ShaderData* getShdVoxelFragList()
+  {return &_shdVoxelFragList;}
 
-  inline kore::TextureBuffer* getVoxelFragList(EVoxelAttributes type) 
-  { return &_voxelFragLists[type]; }
+  inline kore::TextureBuffer* getVoxelFragList() 
+  { return &_voxelFragList; }
 
   inline kore::TextureBuffer* getFragListIndCmdBuf()
   { return &_fragListIndirectCmdBuf; }
@@ -60,9 +52,9 @@ public:
 private:
   void initIndirectCommandBufs();
 
-  kore::TextureBuffer _voxelFragLists[VOXELATT_NUM];
-  kore::STextureInfo _vflTexInfos[VOXELATT_NUM];
-  kore::ShaderData _shdVoxelFragLists[VOXELATT_NUM];
+  kore::TextureBuffer _voxelFragList;
+  kore::STextureInfo _vflTexInfo;
+  kore::ShaderData _shdVoxelFragList;
 
   kore::TextureBuffer _fragListIndirectCmdBuf;
   kore::STextureInfo _fragListIcbTexInfos;

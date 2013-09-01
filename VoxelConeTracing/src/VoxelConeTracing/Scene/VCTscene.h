@@ -35,7 +35,8 @@
 #include "KoRE/Components/Camera.h"
 #include "KoRE/Components/MeshComponent.h"
 #include "VoxelConeTracing/Scene/NodePool.h"
-#include "VoxelFragList.h"
+#include "VoxelConeTracing/Scene/VoxelFragList.h"
+#include "VoxelConeTracing/Scene/VoxelFragTex.h"
 #include "BrickPool.h"
 
 struct SVCTparameters {
@@ -99,7 +100,8 @@ public:
   inline NodePool* getNodePool() {return &_nodePool;}
   inline BrickPool* getBrickPool() {return &_brickPool;}
   inline VoxelFragList* getVoxelFragList() {return &_voxelFragList;}
-
+  inline VoxelFragTex* getVoxelFragTex() {return &_voxelFragTex;}
+  
   inline kore::ShaderData* getShdLightNodeMap() 
   {return &_shdLightNodeMap;}
 
@@ -122,6 +124,7 @@ private:
   NodePool _nodePool;
   BrickPool _brickPool;
   VoxelFragList _voxelFragList;
+  VoxelFragTex _voxelFragTex;
   
   uint _voxelGridResolution;
   kore::ShaderData _shdVoxelGridResolution;

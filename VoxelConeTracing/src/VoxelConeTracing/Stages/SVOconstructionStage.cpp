@@ -41,6 +41,7 @@
 #include "../Octree Mipmap/MipmapFacesPass.h"
 #include "../Octree Mipmap/MipmapCornersPass.h"
 #include "../Octree Mipmap/MipmapEdgesPass.h"
+#include "../Voxelization/VoxelizeClearPass.h"
 
 
 SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
@@ -58,6 +59,8 @@ SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
   this->addProgramPass(new ObClearPass(&vctScene, kore::EXECUTE_ONCE));
   this->addProgramPass(new ObClearNeighboursPass(&vctScene, kore::EXECUTE_ONCE));
   this->addProgramPass(new ClearBrickTexPass(&vctScene, ClearBrickTexPass::CLEAR_BRICK_ALL, kore::EXECUTE_ONCE));
+  this->addProgramPass(new VoxelizeClearPass(&vctScene, kore::EXECUTE_ONCE));
+
   this->addProgramPass(new VoxelizePass(vctParams.voxel_grid_sidelengths,
                                         &vctScene, kore::EXECUTE_ONCE));
   this->addProgramPass(new ModifyIndirectBufferPass(

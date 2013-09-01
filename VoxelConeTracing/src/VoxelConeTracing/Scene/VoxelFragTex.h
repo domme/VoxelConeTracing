@@ -29,6 +29,7 @@
 #include "KoRE/Common.h"
 #include "KoRE/Texture.h"
 #include "KoRE/TextureBuffer.h"
+#include "KoRE/IndexedBuffer.h"
 
 #include "KoRE/ShaderData.h"
 
@@ -51,12 +52,17 @@ public:
 
   inline kore::Texture* getVoxelFragTex(EVoxelAttributes type) 
   { return &_voxelFragTex[type]; }
+  
+  inline kore::IndexedBuffer* getVoxelFragTexIndCmdBuf()
+  {return &_voxelFragTexIndCmdBuf;}
 
 private:
   // 3D VoxelFragment-Texture
   kore::Texture _voxelFragTex[VOXELATT_NUM];
   kore::STextureInfo _vfTexInfos[VOXELATT_NUM];
   kore::ShaderData _shdVoxelFragTex[VOXELATT_NUM];
+
+  kore::IndexedBuffer _voxelFragTexIndCmdBuf;
 };
 
 #endif //VCT_SRC_VCT_VOXELFRAGTEX_H_

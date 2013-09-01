@@ -25,9 +25,9 @@
 
 #version 420
 
-layout(r32ui) uniform coherent uimageBuffer voxelFragmentListPosition;
-layout(r32ui) uniform coherent uimage3D voxelFragmentTexColor;
-layout(r32ui) uniform coherent uimage3D voxelFragmentTexNormal;
+layout(r32ui) uniform coherent uimageBuffer voxelFragList_position;
+layout(r32ui) uniform volatile uimage3D voxelFragTex_color;
+layout(r32ui) uniform volatile uimage3D voxelFragTex_normal;
 
 layout(binding = 0) uniform atomic_uint voxel_index;
 
@@ -64,10 +64,10 @@ uint vec3ToUintXYZ10(uvec3 val) {
 }
 
 
-void imageAtomicRGBA8Avg(layout(r32ui) volatile image3D img, 
+void imageAtomicRGBA8Avg(layout(r32ui) volatile uimage3D img, 
                          ivec3 coords,
                          vec4 val) {
-    val.rgb *=255.0f; // Optimise following calculations
+    val.rgb *= 255.0f; // Optimise following calculations
     uint newVal = convVec4ToRGBA8(val);
     uint prevStoredVal = 0; 
     uint curStoredVal;
@@ -94,14 +94,18 @@ void main() {
   normal.xyz *= diffColor.a;
   normal.a = diffColor.a;
 
+
   uint voxelIndex = atomicCounterIncrement(voxel_index);
   memoryBarrier();
 
   //Store voxel position in FragmentList
-  imageStore(voxelFragmentListPosition, int(voxelIndex), uvec4(vec3ToUintXYZ10(baseVoxel)));
+  imageStore(voxelFragList_position, int(voxelIndex), uvec4(vec3ToUintXYZ10(baseVoxel)));
   
   //Avg voxel attributes and store in FragmentTexXXX
-  imageAtomicRGBA8Avg(voxelFragmentTexColor, int(baseVoxel), diffColor);
-  imageAtomicRGBA8Avg(voxelFragmentTexNormal, int(baseVoxel), normal);
+  imageStore(voxelFragTex_color, ivec3(baseVoxel), uvec4(convVec4ToRGBA8(diffColor * 255.0)));
+  //imageStore(voxelFragTex_color, ivec3(baseVoxel), convVec4ToRGBA8(diffColor * 255.0));
+  
+  //imageAtomicRGBA8Avg(voxelFragTex_color, ivec3(baseVoxel), diffColor);
+  //imageAtomicRGBA8Avg(voxelFragTex_normal, ivec3(baseVoxel), normal);
 
 }
