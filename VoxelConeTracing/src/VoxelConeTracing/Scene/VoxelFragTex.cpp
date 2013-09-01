@@ -23,6 +23,8 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
+#include "KoRE/RenderManager.h"
+
 #include "VoxelConeTracing/Scene/VoxelFragTex.h"
 #include "VoxelConeTracing/Util/MathUtil.h"
 
@@ -53,13 +55,37 @@ void VoxelFragTex::init(uint voxelGridResolution) {
   props.width = voxelGridResolution;
   props.height = voxelGridResolution;
   props.depth = voxelGridResolution;
-  props.format = GL_RED_INTEGER;
-  props.internalFormat = GL_R32UI;
+  props.format = GL_RGBA;
+  props.internalFormat = GL_RGBA8;
   props.targetType = GL_TEXTURE_3D;
-  props.pixelType = GL_UNSIGNED_INT;
+  props.pixelType = GL_UNSIGNED_BYTE;
 
   _voxelFragTex[VOXELATT_COLOR].init(props, "VoxelFragTex_Color");
   _voxelFragTex[VOXELATT_NORMAL].init(props, "VoxelFragTex_Normal");
+
+  kore::RenderManager::getInstance()->bindTexture(GL_TEXTURE_3D, _voxelFragTex[VOXELATT_COLOR].getHandle());
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, 0);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, 0);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_R, GL_RED);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_G, GL_GREEN);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_B, GL_BLUE);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_A, GL_ALPHA);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+  kore::RenderManager::getInstance()->bindTexture(GL_TEXTURE_3D, _voxelFragTex[VOXELATT_NORMAL].getHandle());
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, 0);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, 0);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_R, GL_RED);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_G, GL_GREEN);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_B, GL_BLUE);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_A, GL_ALPHA);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+  kore::RenderManager::getInstance()->bindTexture(GL_TEXTURE_3D, 0);
+
+
   
   _vfTexInfos[VOXELATT_COLOR].internalFormat = props.internalFormat;
   _vfTexInfos[VOXELATT_COLOR].texTarget = props.targetType;
@@ -72,10 +98,10 @@ void VoxelFragTex::init(uint voxelGridResolution) {
     _voxelFragTex[VOXELATT_NORMAL].getHandle();
 
 
-  _shdVoxelFragTex[VOXELATT_COLOR].type = GL_UNSIGNED_INT_IMAGE_3D;
+  _shdVoxelFragTex[VOXELATT_COLOR].type = GL_IMAGE_3D;
   _shdVoxelFragTex[VOXELATT_COLOR].data = &_vfTexInfos[VOXELATT_COLOR];
   
-  _shdVoxelFragTex[VOXELATT_NORMAL].type = GL_UNSIGNED_INT_IMAGE_3D;
+  _shdVoxelFragTex[VOXELATT_NORMAL].type = GL_IMAGE_3D;
   _shdVoxelFragTex[VOXELATT_NORMAL].data = &_vfTexInfos[VOXELATT_NORMAL];
 
 

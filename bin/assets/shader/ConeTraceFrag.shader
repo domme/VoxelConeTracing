@@ -63,7 +63,7 @@ void main(void) {
   float tLeave = 0.0;
     
   if (!intersectRayWithAABB(rayOriginTex, rayDirTex, vec3(0.0), vec3(1.0), tEnter, tLeave)) {
-    color = vec4(0.0, 0.0, 0.0, 0.0);
+    color = vec4(0.4, 0.2,0.1,1.0);
     return;
   }
   
