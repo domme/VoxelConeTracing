@@ -33,11 +33,13 @@ vec4 raycastBrick(in uint nodeColorU, in vec3 enter, in vec3 leave, in vec3 dir,
       vec4 newCol = texture(brickPool_color, enterUVW + dir * f);
       vec4 irradiance = texture(brickPool_irradiance, enterUVW + dir * f);
       vec3 normal = texture(brickPool_normal, enterUVW + dir * f).xyz;
-      //normal = normalize(normal * 2.0 - 1.0);
+      normal = normalize(normal * 2.0 - 1.0);
       
-            
+      vec3 lightDir = vec3(0,0,1);
+      float nl = max(0, dot(lightDir, normal));
+      
       //newCol *= irradiance;
-      //newCol.xyz = normal;
+      newCol.xyz *= nl;
       
       if (newCol.a > 0.001) {
         // Alpha correction

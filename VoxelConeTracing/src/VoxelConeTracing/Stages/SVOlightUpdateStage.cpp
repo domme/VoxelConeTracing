@@ -50,15 +50,14 @@ SVOlightUpdateStage::SVOlightUpdateStage(kore::SceneNode* lightNode,
                                std::vector<kore::SceneNode*>& vRenderNodes,
                                SVCTparameters& vctParams,
                                VCTscene& vctScene,
-                               kore::FrameBuffer* shadowMapFBO) {
+                               kore::FrameBuffer* shadowMapFBO,
+                               kore::EOperationExecutionType exeFrequency) {
   std::vector<GLenum> drawBufs;
   drawBufs.clear();
   drawBufs.push_back(GL_BACK_LEFT);
   this->setActiveAttachments(drawBufs);
   this->setFrameBuffer(kore::FrameBuffer::BACKBUFFER);
 
-  kore::EOperationExecutionType exeFrequency = kore::EXECUTE_ONCE;
-  
   uint _numLevels = vctScene.getNodePool()->getNumLevels(); 
 
   // Prepare render algorithm

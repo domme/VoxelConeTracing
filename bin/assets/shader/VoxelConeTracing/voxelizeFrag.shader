@@ -64,23 +64,36 @@ uint vec3ToUintXYZ10(uvec3 val) {
 }
 
 
-void imageAtomicRGBA8Avg(layout(r32ui) volatile uimage3D img, 
+uint imageAtomicRGBA8Avg(layout(r32ui) volatile uimage3D img, 
                          ivec3 coords,
-                         vec4 val) {
-    val.rgb *= 255.0f; // Optimise following calculations
-    uint newVal = convVec4ToRGBA8(val);
-    uint prevStoredVal = 0; 
-    uint curStoredVal;
+                         vec4 newVal) {
+    newVal.xyz *= 255.0; // Optimise following calculations
+    uint newValU = convVec4ToRGBA8(newVal);
+    uint lastValU = 0; 
+    uint currValU;
+    vec4 currVal;
     // Loop as long as destination value gets changed by other threads
-    while((curStoredVal = imageAtomicCompSwap(img, coords, prevStoredVal, newVal))
-          != prevStoredVal) {
-        prevStoredVal = curStoredVal;
-        vec4 rval= convRGBA8ToVec4(curStoredVal);
-        rval.xyz = (rval.xyz * rval.w); // Denormalize
-        vec4 curValF = rval + val; // Add new value
-        curValF.xyz /= (curValF.w); // Renormalize
-        newVal = convVec4ToRGBA8(curValF);
+    while((currValU = imageAtomicCompSwap(img, coords, lastValU, newValU))
+          != lastValU) {
+        lastValU = currValU;
+
+        currVal = convRGBA8ToVec4(currValU);
+        currVal.xyz *= currVal.a; // Denormalize
+
+        currVal += newVal; // Add new value
+        currVal.xyz /= currVal.a; // Renormalize
+
+        newValU = convVec4ToRGBA8(currVal);
     }
+
+    // currVal now contains the calculated color: now convert it to a proper alpha-premultiplied version
+    newVal = convRGBA8ToVec4(newValU);
+    newVal.a = 255.0;
+    newValU = convVec4ToRGBA8(newVal);
+
+    imageStore(img, coords, uvec4(newValU));
+
+    return newValU;
 }
 
 void main() {
@@ -88,7 +101,7 @@ void main() {
   
   vec4 diffColor = texture(diffuseTex,  vec2(In.uv.x, 1.0 - In.uv.y));
   // Pre-multiply alpha:
-  diffColor = vec4(diffColor.xyz * diffColor.a, diffColor.a);
+  diffColor.a = 1.0;
 
   vec4 normal = vec4(normalize(In.normal) * 0.5 + 0.5, 1.0);
   normal.xyz *= diffColor.a;
@@ -102,13 +115,13 @@ void main() {
   imageStore(voxelFragList_position, int(voxelIndex), uvec4(vec3ToUintXYZ10(baseVoxel)));
   
   //Avg voxel attributes and store in FragmentTexXXX
-  uint diffColorU = convVec4ToRGBA8(diffColor * 255.0);
-  uint normalU = convVec4ToRGBA8(normal * 255.0);
+  //uint diffColorU = convVec4ToRGBA8(diffColor * 255.0);
+  //uint normalU = convVec4ToRGBA8(normal * 255.0);
+  //imageStore(voxelFragTex_color, ivec3(baseVoxel), uvec4(diffColorU));
+  //imageStore(voxelFragTex_normal, ivec3(baseVoxel), uvec4(normalU));
+   
+  imageAtomicRGBA8Avg(voxelFragTex_color, ivec3(baseVoxel), diffColor);
+  imageAtomicRGBA8Avg(voxelFragTex_normal, ivec3(baseVoxel), normal);
 
-  imageStore(voxelFragTex_color, ivec3(baseVoxel), uvec4(diffColorU));
-  imageStore(voxelFragTex_normal, ivec3(baseVoxel), uvec4(normalU));
-    
-  //imageAtomicRGBA8Avg(voxelFragTex_color, ivec3(baseVoxel), diffColor);
-  //imageAtomicRGBA8Avg(voxelFragTex_normal, ivec3(baseVoxel), normal);
-
+  
 }

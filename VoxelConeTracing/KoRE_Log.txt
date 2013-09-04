@@ -1,7 +1,7 @@
-KoRE Log - Thu Aug 15 17:36:59 2013
+KoRE Log - Wed Sep 04 21:34:14 2013
 
 [DEBUG] added Framebuffer 'BACKBUFFER'
-Render Device: GeForce GTX 670/PCIe/SSE2
+Render Device: GeForce GTX 770/PCIe/SSE2
 Vendor: NVIDIA Corporation
 OpenGL version: 4.3.0
 GLSL version: 4.30 NVIDIA via Cg compiler
@@ -12,6 +12,7 @@ Max Img units: 192
 Max vertex Img units: 32 
 Max Img uniforms: 48 
 Max vertex Img uniforms: 8 
+Max Img units: 8 
 [ERROR] Scene './assets/meshes/sponza_diff_small_combi.dae' could not be read
 Unable to open file "./assets/meshes/sponza_diff_small_combi.dae".
 [ERROR] Scene './assets/meshes/sponza_diff_small_combi.dae' could not be read

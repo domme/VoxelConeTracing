@@ -48,7 +48,8 @@ SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
                                std::vector<kore::SceneNode*>& vRenderNodes,
                                SVCTparameters& vctParams,
                                VCTscene& vctScene,
-                               kore::FrameBuffer* shadowMapFBO) {
+                               kore::FrameBuffer* shadowMapFBO,
+                               kore::EOperationExecutionType exeFrequency) {
   std::vector<GLenum> drawBufs;
   drawBufs.clear();
   drawBufs.push_back(GL_BACK_LEFT);
@@ -56,46 +57,46 @@ SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
   this->setFrameBuffer(kore::FrameBuffer::BACKBUFFER);
 
   // Prepare render algorithm
-  this->addProgramPass(new ObClearPass(&vctScene, kore::EXECUTE_ONCE));
-  this->addProgramPass(new ObClearNeighboursPass(&vctScene, kore::EXECUTE_ONCE));
-  this->addProgramPass(new ClearBrickTexPass(&vctScene, ClearBrickTexPass::CLEAR_BRICK_ALL, kore::EXECUTE_ONCE));
-  this->addProgramPass(new VoxelizeClearPass(&vctScene, kore::EXECUTE_ONCE));
+  this->addProgramPass(new ObClearPass(&vctScene, exeFrequency));
+  this->addProgramPass(new ObClearNeighboursPass(&vctScene, exeFrequency));
+  this->addProgramPass(new ClearBrickTexPass(&vctScene, ClearBrickTexPass::CLEAR_BRICK_ALL, exeFrequency));
+  this->addProgramPass(new VoxelizeClearPass(&vctScene, exeFrequency));
 
   this->addProgramPass(new VoxelizePass(vctParams.voxel_grid_sidelengths,
-                                        &vctScene, kore::EXECUTE_ONCE));
+                                        &vctScene, exeFrequency));
   this->addProgramPass(new ModifyIndirectBufferPass(
                        vctScene.getVoxelFragList()->getShdFragListIndCmdBuf(),
                        vctScene.getShdAcVoxelIndex(),&vctScene,
-                       kore::EXECUTE_ONCE));
+                       exeFrequency));
   
   // Build SVO from top to bottom
   uint _numLevels = vctScene.getNodePool()->getNumLevels(); 
   for (uint iLevel = 0; iLevel < _numLevels; ++iLevel) {
     this->addProgramPass(new NeighbourPointersPass(&vctScene,
                                                   iLevel,
-                                                  kore::EXECUTE_ONCE));
+                                                  exeFrequency));
 
-    this->addProgramPass(new ObFlagPass(&vctScene, kore::EXECUTE_ONCE));
+    this->addProgramPass(new ObFlagPass(&vctScene, exeFrequency));
     this->addProgramPass(new ObAllocatePass(&vctScene, iLevel,
-                                            kore::EXECUTE_ONCE));
+                                            exeFrequency));
   }
 
   this->addProgramPass(new ModifyIndirectBufferPass(
                        vctScene.getNodePool()->getShdCmdBufSVOnodes(),
                        vctScene.getNodePool()->getShdAcNextFree(), &vctScene,
-                       kore::EXECUTE_ONCE));
+                       exeFrequency));
 
-  this->addProgramPass(new AllocBricksPass(&vctScene, kore::EXECUTE_ONCE));
+  this->addProgramPass(new AllocBricksPass(&vctScene, exeFrequency));
 
-  this->addProgramPass(new WriteLeafNodesPass(&vctScene, kore::EXECUTE_ONCE));
+  this->addProgramPass(new WriteLeafNodesPass(&vctScene, exeFrequency));
 
-  this->addProgramPass(new SpreadLeafBricksPass(&vctScene, BRICKPOOL_COLOR, kore::EXECUTE_ONCE));
-  this->addProgramPass(new SpreadLeafBricksPass(&vctScene, BRICKPOOL_NORMAL, kore::EXECUTE_ONCE));
+  this->addProgramPass(new SpreadLeafBricksPass(&vctScene, BRICKPOOL_COLOR, exeFrequency));
+  this->addProgramPass(new SpreadLeafBricksPass(&vctScene, BRICKPOOL_NORMAL, exeFrequency));
   
   this->addProgramPass(new BorderTransferPass(&vctScene, BRICKPOOL_COLOR,
-                                              _numLevels - 1, EXECUTE_ONCE));
+                                              _numLevels - 1, exeFrequency));
   this->addProgramPass(new BorderTransferPass(&vctScene, BRICKPOOL_NORMAL,
-                                               _numLevels - 1, EXECUTE_ONCE));
+                                               _numLevels - 1, exeFrequency));
 }
 
 SVOconstructionStage::~SVOconstructionStage() {

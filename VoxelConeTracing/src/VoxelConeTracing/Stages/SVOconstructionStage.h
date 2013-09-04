@@ -37,7 +37,8 @@ public:
                       std::vector<kore::SceneNode*>& vRenderNodes,
                       SVCTparameters& vctParams,
                       VCTscene& vctScene,
-                      kore::FrameBuffer* shadowMapFBO);
+                      kore::FrameBuffer* shadowMapFBO,
+                       kore::EOperationExecutionType exeFrequency);
   virtual ~SVOconstructionStage();
 };
 

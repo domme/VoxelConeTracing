@@ -157,7 +157,7 @@ void setup() {
   SVCTparameters params;
   params.voxel_grid_resolution = 256;
   params.voxel_grid_sidelengths = glm::vec3(50, 50, 50);
-  params.fraglist_size_multiplier = 3;
+  params.fraglist_size_multiplier = 5;
   params.fraglist_size_divisor = 1;
   params.brickPoolResolution = 64 * 3;
   params.shadowMapResolution = glm::vec2(2048,2048);
@@ -193,10 +193,10 @@ void setup() {
 
   RenderManager::getInstance()->addFramebufferStage(shadowMapStage);
   //////////////////////////////////////////////////////////////////////////
-    
+  
   // Voxelize & SVO Stage
   FrameBufferStage* svoStage = 
-    new SVOconstructionStage(lightNodes[0], renderNodes, params, _vctScene, shadowMapStage->getFrameBuffer()); 
+    new SVOconstructionStage(lightNodes[0], renderNodes, params, _vctScene, shadowMapStage->getFrameBuffer(), kore::EXECUTE_ONCE); 
 
   RenderManager::getInstance()->addFramebufferStage(svoStage);
   ////////////////////////////////////////////////////////////////////////// 
@@ -204,7 +204,7 @@ void setup() {
 
   // Light update stage
   FrameBufferStage* lightUpdateStage =
-    new SVOlightUpdateStage(lightNodes[0], renderNodes, params, _vctScene, shadowMapStage->getFrameBuffer());
+    new SVOlightUpdateStage(lightNodes[0], renderNodes, params, _vctScene, shadowMapStage->getFrameBuffer(), kore::EXECUTE_ONCE);
 
   RenderManager::getInstance()->addFramebufferStage(lightUpdateStage);
   ////////////////////////////////////////////////////////////////////////// 
@@ -225,7 +225,7 @@ void setup() {
     lightNodes, &_vctScene));*/
 
   _backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
-  RenderManager::getInstance()->addFramebufferStage(_backbufferStage);
+   RenderManager::getInstance()->addFramebufferStage(_backbufferStage);
   //////////////////////////////////////////////////////////////////////////
 }
 
