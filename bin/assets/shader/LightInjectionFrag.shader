@@ -83,7 +83,7 @@ void main() {
   vec3 nodePosMaxTex = vec3(1.0);
   float sideLength = 1.0;
 
-  for (uint iLevel = 0U; iLevel < numLevels+1; ++iLevel) {
+  for (uint iLevel = 0U; iLevel < numLevels; ++iLevel) {
     // Store nodes during traversal in the nodeMap
     storeNodeInNodemap(uv, iLevel, nodeAddress);
 
@@ -99,10 +99,19 @@ void main() {
        uvec3 offVec = uvec3(2.0 * posTex);
        uint off = offVec.x + 2U * offVec.y + 4U * offVec.z;
 
+       /*
+       for (int x = 0; x < 3; ++x) {
+        for( int y = 0; y < 3; ++y) {
+          for( int z = 0; z < 3; ++z) {
+            imageStore(brickPool_irradiance, brickCoords + ivec3(x,y,z), vec4(lightColor, 1));
+          }
+        }
+      }*/
+
        //store Radiance in brick corners
-       imageStore(brickPool_irradiance,
+      imageStore(brickPool_irradiance,
              brickCoords  + 2 * ivec3(childOffsets[off]),
-             vec4(lightColor, 1));
+             vec4(lightColor, 1)); 
       return;
     }
       

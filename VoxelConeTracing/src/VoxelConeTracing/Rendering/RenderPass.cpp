@@ -47,16 +47,28 @@ RenderPass::RenderPass(kore::FrameBuffer* gBuffer, kore::FrameBuffer* smBuffer,
   shader->init();
   
 
-  kore::TexSamplerProperties texSamplerProps;
-  texSamplerProps.wrapping = glm::uvec3(GL_CLAMP_TO_EDGE);
-  texSamplerProps.minfilter = GL_NEAREST;
-  texSamplerProps.magfilter = GL_NEAREST;
+  kore::TexSamplerProperties texSamplerNearest;
+  texSamplerNearest.type = GL_SAMPLER_2D;
+  texSamplerNearest.wrapping = glm::uvec3(GL_CLAMP_TO_EDGE);
+  texSamplerNearest.minfilter = GL_NEAREST;
+  texSamplerNearest.magfilter = GL_NEAREST;
 
-  shader->setSamplerProperties(0, texSamplerProps);
-  shader->setSamplerProperties(1, texSamplerProps);
-  shader->setSamplerProperties(2, texSamplerProps);
-  shader->setSamplerProperties(3, texSamplerProps);
-  shader->setSamplerProperties(4, texSamplerProps);
+  kore::TexSamplerProperties texSampler3DLinear;
+  texSampler3DLinear.type = GL_SAMPLER_3D;
+  texSampler3DLinear.wrapping = glm::uvec3(GL_REPEAT);
+  texSampler3DLinear.minfilter = GL_LINEAR;
+  texSampler3DLinear.minfilter = GL_LINEAR;
+
+  shader->setSamplerProperties("brickPool_color", texSampler3DLinear);
+  shader->setSamplerProperties("brickPool_normal", texSampler3DLinear);
+  shader->setSamplerProperties("brickPool_irradiance", texSampler3DLinear);
+  shader->setSamplerProperties("gBuffer_color", texSamplerNearest);
+  shader->setSamplerProperties("gBuffer_pos", texSamplerNearest);
+  shader->setSamplerProperties("gBuffer_normal", texSamplerNearest);
+  shader->setSamplerProperties("gBuffer_tangent", texSamplerNearest);
+  shader->setSamplerProperties("shadowMap", texSamplerNearest);
+  
+  
   this->setShaderProgram(shader);
 
   addStartupOperation(new EnableDisableOp(GL_DEPTH_TEST, EnableDisableOp::ENABLE));
@@ -80,7 +92,25 @@ RenderPass::RenderPass(kore::FrameBuffer* gBuffer, kore::FrameBuffer* smBuffer,
 
   std::vector<ShaderData>& vGBufferTex = gBuffer->getOutputs();
   std::vector<ShaderData>& vSMBufferTex = smBuffer->getOutputs();
+
+  shader->startUniformBindingCheck();
   
+  // TEXTURES
+  nodePass->addOperation(
+    new BindTexture(
+      vctScene->getBrickPool()->getShdBrickPoolTexture(BRICKPOOL_COLOR),
+      shader->getUniform("brickPool_color")));
+
+  nodePass->addOperation(
+    new BindTexture(
+      vctScene->getBrickPool()->getShdBrickPoolTexture(BRICKPOOL_IRRADIANCE),
+      shader->getUniform("brickPool_irradiance")));
+
+  nodePass->addOperation(
+    new BindTexture(
+      vctScene->getBrickPool()->getShdBrickPoolTexture(BRICKPOOL_NORMAL),
+      shader->getUniform("brickPool_normal")));
+
   nodePass->addOperation(new BindTexture(&vGBufferTex[0],
                          shader->getUniform("gBuffer_color")));
   nodePass->addOperation(new BindTexture(&vGBufferTex[1],
@@ -92,6 +122,16 @@ RenderPass::RenderPass(kore::FrameBuffer* gBuffer, kore::FrameBuffer* smBuffer,
   nodePass->addOperation(new BindTexture(&vSMBufferTex[0],
                          shader->getUniform("shadowMap")));
 
+  nodePass->addOperation(new BindImageTexture(
+      vctScene->getNodePool()->getShdNodePool(NEXT),
+      shader->getUniform("nodePool_next"),
+      GL_READ_ONLY));
+
+  nodePass->addOperation(new BindImageTexture(
+    vctScene->getNodePool()->getShdNodePool(COLOR),
+    shader->getUniform("nodePool_color"),
+    GL_READ_ONLY));
+  //////////////////////////////////////////////////////////////////////////
 
   kore::Camera* lightcam = static_cast<Camera*>(lightNodes[0]->getComponent(COMPONENT_CAMERA));
   kore::LightComponent* light = static_cast<LightComponent*>(lightNodes[0]->getComponent(COMPONENT_LIGHT));
@@ -138,17 +178,6 @@ RenderPass::RenderPass(kore::FrameBuffer* gBuffer, kore::FrameBuffer* smBuffer,
   nodePass->addOperation(new BindUniform(renderMgr->getShdScreenRes(),
                                          shader->getUniform("screenRes"))); 
 
-  addStartupOperation(new BindImageTexture(
-    vctScene->getBrickPool()->getShdBrickPool(BRICKPOOL_COLOR),
-    shader->getUniform("brickPool_color"), GL_READ_WRITE));
-
-  addStartupOperation(new BindImageTexture(
-    vctScene->getNodePool()->getShdNodePool(NEXT),
-    shader->getUniform("nodePool_next"), GL_READ_ONLY));
-  addStartupOperation(new BindImageTexture(
-    vctScene->getNodePool()->getShdNodePool(COLOR),
-    shader->getUniform("nodePool_color"), GL_READ_ONLY));
-
   nodePass->addOperation(new BindUniform(
     vctScene->getShdVoxelGridResolution(),
     shader->getUniform("voxelGridResolution")));
@@ -167,6 +196,8 @@ RenderPass::RenderPass(kore::FrameBuffer* gBuffer, kore::FrameBuffer* smBuffer,
                                          shader->getUniform("numLevels"))); 
 
   nodePass->addOperation(new RenderMesh(fsqMeshComponent));
+
+  shader->finishUniformBindingCheck(); 
 }
 
 

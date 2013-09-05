@@ -46,6 +46,7 @@ out vec4 color;
 #include "assets/shader/_utilityFunctions.shader"
 #include "assets/shader/_octreeTraverse.shader"
 #include "assets/shader/_raycast.shader"
+#include "assets/shader/_coneTrace.shader"
 
 void main(void) {
   vec3 camPosWS = viewI[3].xyz;
@@ -54,56 +55,10 @@ void main(void) {
   // Get ray origin and ray direction in texspace
   vec3 rayDirTex = normalize((voxelGridTransformI * vec4(viewDirWS, 0.0)).xyz);
   vec3 rayOriginTex = (voxelGridTransformI *  vec4(camPosWS, 1.0)).xyz * 0.5 + 0.5;
-
+  
   // PixelSize in texture space is the pixel-viewpsace size divided by the scale
   // of the voxelGrid
   float pixelSizeTS = In.pixelSizeVS / length(voxelGridTransformI[0]);
-  
-  float tEnter = 0.0;
-  float tLeave = 0.0;
-    
-  if (!intersectRayWithAABB(rayOriginTex, rayDirTex, vec3(0.0), vec3(1.0), tEnter, tLeave)) {
-    color = vec4(0.4, 0.2,0.1,1.0);
-    return;
-  }
-  
-  tEnter = max(tEnter, 0.0);
-    
-  vec3 nodePosMin = vec3(0.0);
-  vec3 nodePosMax = vec3(1.0);
-    
-  float end = tLeave;
-  for (float f = tEnter + 0.00001; f < end; f += tLeave + 0.00001) {
-    vec3 posTex = (rayOriginTex + rayDirTex * f);
-   
-    float foundNodeSideLength = 1.0;
-    bool valid = false;
-    uint outLevel = 0;
-    int address = traverseOctree_pixelProj(posTex, f, pixelSizeTS, nodePosMin, nodePosMax, foundNodeSideLength, valid, outLevel);
 
-    float alphaCorrection = tLeave / (1.0 / float(voxelGridResolution));
-    bool advance = intersectRayWithAABB(posTex, rayDirTex, nodePosMin, nodePosMax, tEnter, tLeave);
-    
-    if (valid) {
-      uint nodeColorU = imageLoad(nodePool_color, address).x;
-      memoryBarrier();
-
-      vec4 newCol = vec4(0);
-    
-      vec3 enterPos = (posTex - nodePosMin) / foundNodeSideLength;
-      vec3 leavePos = ((posTex + rayDirTex * tLeave) - nodePosMin) / foundNodeSideLength;
-
-      newCol = raycastBrick(nodeColorU, enterPos, leavePos, rayDirTex, outLevel, foundNodeSideLength);
-
-      color = (1.0 - color.a) * newCol + color;
-
-      if (color.a > 0.99) {
-        return;
-      }
-    }
-
-    if (!advance) {
-        return; // prevent infinite loop
-    }
-  }
+  color = coneTrace_pixelProj(rayOriginTex, rayDirTex, pixelSizeTS);
 }

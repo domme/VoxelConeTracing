@@ -24,32 +24,37 @@ vec4 raycastBrick(in uint nodeColorU, in vec3 enter, in vec3 leave, in vec3 dir,
     float samplingRateCurr = float(pow2[level + 1]) * stepSize;
     float alphaCorrection = samplingRateMax / samplingRateCurr; 
 
-    //color = texture(brickPool_color, brickAddressUVW + vec3(1,1,1) * voxelStep);
-    //if (color.a > 0.001){
-    //  color.xyz /= color.a;
-    //  color.a = 1.0;
-    //}
+    /*color = texture(brickPool_color, brickAddressUVW + vec3(1,1,1) * voxelStep);
+    if (color.a > 0.001){
+      color.xyz /= color.a;
+      color.a = 1.0;
+    }*/
+    
     for (float f = 0; f < stepLength; f += stepSize) {
       vec4 newCol = texture(brickPool_color, enterUVW + dir * f);
       vec4 irradiance = texture(brickPool_irradiance, enterUVW + dir * f);
       vec3 normal = texture(brickPool_normal, enterUVW + dir * f).xyz;
       normal = normalize(normal * 2.0 - 1.0);
-      
-      vec3 lightDir = vec3(0,0,1);
+    
+      // Lighting tests...
+      /*
+      vec3 lightDir = vec3(0,1,0);
       float nl = max(0, dot(lightDir, normal));
-      
-      //newCol *= irradiance;
       newCol.xyz *= nl;
-      
+      */
+    
+      newCol.xyz *= irradiance.xyz;
+        
       if (newCol.a > 0.001) {
         // Alpha correction
+
         float oldColA = newCol.a;
         newCol.a = 1.0 - clamp(pow((1.0 - newCol.a), alphaCorrection), 0.0, 1.0);
         newCol.a = clamp(newCol.a, 0.0, 1.0);
         newCol.xyz *= newCol.a / oldColA;
         color = newCol * clamp(1.0 - color.a, 0.0, 1.0) + color;
       }
-
+    
       if (color.a > 0.99) {
          break;
       }

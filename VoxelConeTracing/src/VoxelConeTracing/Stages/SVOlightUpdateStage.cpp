@@ -74,6 +74,7 @@ SVOlightUpdateStage::SVOlightUpdateStage(kore::SceneNode* lightNode,
   this->addProgramPass(new SpreadLightLeafBricksPass(&vctScene, BRICKPOOL_IRRADIANCE, exeFrequency));
   this->addProgramPass(new BorderTransferLightPass(&vctScene, BRICKPOOL_IRRADIANCE, _numLevels - 1, exeFrequency));
 
+  
   for (int iLevel = _numLevels - 2; iLevel >= 0;) {
     this->addProgramPass(new MipmapCenterPass(&vctScene, BRICKPOOL_COLOR, iLevel, exeFrequency));
     this->addProgramPass(new MipmapFacesPass(&vctScene, BRICKPOOL_COLOR, iLevel, exeFrequency));
@@ -90,15 +91,11 @@ SVOlightUpdateStage::SVOlightUpdateStage(kore::SceneNode* lightNode,
     this->addProgramPass(new MipmapCornersPass(&vctScene, BRICKPOOL_IRRADIANCE, iLevel, exeFrequency));
     this->addProgramPass(new MipmapEdgesPass(&vctScene, BRICKPOOL_IRRADIANCE, iLevel, exeFrequency));
 
-    /*
+    
     this->addProgramPass(new BorderTransferLightPass(&vctScene, BRICKPOOL_NORMAL, iLevel, exeFrequency));
     this->addProgramPass(new BorderTransferLightPass(&vctScene, BRICKPOOL_IRRADIANCE, iLevel, exeFrequency));
-    this->addProgramPass(new BorderTransferLightPass(&vctScene, BRICKPOOL_COLOR, iLevel, exeFrequency));*/
+    this->addProgramPass(new BorderTransferLightPass(&vctScene, BRICKPOOL_COLOR, iLevel, exeFrequency));
 
-    this->addProgramPass(new BorderTransferPass(&vctScene, BRICKPOOL_NORMAL, iLevel, exeFrequency));
-    this->addProgramPass(new BorderTransferPass(&vctScene, BRICKPOOL_IRRADIANCE, iLevel, exeFrequency));
-    this->addProgramPass(new BorderTransferPass(&vctScene, BRICKPOOL_COLOR, iLevel, exeFrequency));
-  
     --iLevel;
   }
 

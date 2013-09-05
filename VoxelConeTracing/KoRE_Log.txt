@@ -1,4 +1,4 @@
-KoRE Log - Wed Sep 04 21:34:14 2013
+KoRE Log - Wed Sep 04 23:08:17 2013
 
 [DEBUG] added Framebuffer 'BACKBUFFER'
 Render Device: GeForce GTX 770/PCIe/SSE2

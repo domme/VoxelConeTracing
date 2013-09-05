@@ -433,5 +433,8 @@
     <None Include="..\bin\assets\shader\voxelizeClear.shader">
       <Filter>shader\Voxelize</Filter>
     </None>
+    <None Include="..\bin\assets\shader\_coneTrace.shader">
+      <Filter>shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

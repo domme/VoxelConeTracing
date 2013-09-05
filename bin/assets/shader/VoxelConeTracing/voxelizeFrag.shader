@@ -115,13 +115,13 @@ void main() {
   imageStore(voxelFragList_position, int(voxelIndex), uvec4(vec3ToUintXYZ10(baseVoxel)));
   
   //Avg voxel attributes and store in FragmentTexXXX
-  //uint diffColorU = convVec4ToRGBA8(diffColor * 255.0);
-  //uint normalU = convVec4ToRGBA8(normal * 255.0);
-  //imageStore(voxelFragTex_color, ivec3(baseVoxel), uvec4(diffColorU));
-  //imageStore(voxelFragTex_normal, ivec3(baseVoxel), uvec4(normalU));
+  uint diffColorU = convVec4ToRGBA8(diffColor * 255.0);
+  uint normalU = convVec4ToRGBA8(normal * 255.0);
+  imageStore(voxelFragTex_color, ivec3(baseVoxel), uvec4(diffColorU));
+  imageStore(voxelFragTex_normal, ivec3(baseVoxel), uvec4(normalU));
    
-  imageAtomicRGBA8Avg(voxelFragTex_color, ivec3(baseVoxel), diffColor);
-  imageAtomicRGBA8Avg(voxelFragTex_normal, ivec3(baseVoxel), normal);
+  //imageAtomicRGBA8Avg(voxelFragTex_color, ivec3(baseVoxel), diffColor);
+  //imageAtomicRGBA8Avg(voxelFragTex_normal, ivec3(baseVoxel), normal);
 
   
 }
