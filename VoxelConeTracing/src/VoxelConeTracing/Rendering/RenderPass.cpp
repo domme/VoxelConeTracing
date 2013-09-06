@@ -195,6 +195,18 @@ RenderPass::RenderPass(kore::FrameBuffer* gBuffer, kore::FrameBuffer* smBuffer,
   nodePass->addOperation(new BindUniform(vctScene->getNodePool()->getShdNumLevels(),
                                          shader->getUniform("numLevels"))); 
 
+  //////////////////////////////////////////////////////////////////////////
+  // Tweak-Parameters
+  nodePass->addOperation(new BindUniform(vctScene->getShdGIintensity(),
+                                         shader->getUniform("giIntensity")));
+  nodePass->addOperation(new BindUniform(vctScene->getShdSpecGIintensity(),
+                                         shader->getUniform("specGiIntensity")));
+  nodePass->addOperation(new BindUniform(vctScene->getShdSpecExponent(),
+                                         shader->getUniform("specExponent")));
+  nodePass->addOperation(new BindUniform(vctScene->getShdUseLighting(),
+                                         shader->getUniform("useLighting")));
+  //////////////////////////////////////////////////////////////////////////
+
   nodePass->addOperation(new RenderMesh(fsqMeshComponent));
 
   shader->finishUniformBindingCheck(); 

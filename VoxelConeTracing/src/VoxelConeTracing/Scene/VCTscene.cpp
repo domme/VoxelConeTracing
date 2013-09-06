@@ -41,12 +41,33 @@ VCTscene::VCTscene() :
 }
 
 
+void VCTscene::initTweakParameters() {
+  _giIntensity = 1.0f;
+  _shdGIintensity.type = GL_FLOAT;
+  _shdGIintensity.data = &_giIntensity;
+
+  _specExponent = 20.0f;
+  _shdSpecExponent.type = GL_FLOAT;
+  _shdSpecExponent.data = &_specExponent;
+
+  _specGIintensity = 1.0f;
+  _shdSpecGIintensity.type = GL_FLOAT;
+  _shdSpecGIintensity.data = &_specGIintensity;
+
+  _useLIghting = true;
+  _shdUseLighting.type = GL_BOOL;
+  _shdUseLighting.data = &_useLIghting;
+}
+
+
 VCTscene::~VCTscene() {
 }
 
 void VCTscene::init(const SVCTparameters& params,
                     const std::vector<kore::SceneNode*>& meshNodes,
                     kore::Camera* camera) {
+  initTweakParameters();
+
   _voxelGridResolution = params.voxel_grid_resolution;
   _voxelGridSideLengths = params.voxel_grid_sidelengths;
   _nodeGridResolution = _voxelGridResolution / 2;

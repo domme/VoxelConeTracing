@@ -1,6 +1,6 @@
 //DEPENDENCIES:
 //_utilityFunctions
-//_octreeTraverse                                                
+//_octreeTraverse       
                                                 
                                                 // TODO: Add ray-direction here...
 vec4 raycastBrick(in uint nodeColorU, in vec3 enter, in vec3 leave, in vec3 dir, 
@@ -32,7 +32,7 @@ vec4 raycastBrick(in uint nodeColorU, in vec3 enter, in vec3 leave, in vec3 dir,
     
     for (float f = 0; f < stepLength; f += stepSize) {
       vec4 newCol = texture(brickPool_color, enterUVW + dir * f);
-      vec4 irradiance = texture(brickPool_irradiance, enterUVW + dir * f);
+      
       vec3 normal = texture(brickPool_normal, enterUVW + dir * f).xyz;
       normal = normalize(normal * 2.0 - 1.0);
     
@@ -43,7 +43,10 @@ vec4 raycastBrick(in uint nodeColorU, in vec3 enter, in vec3 leave, in vec3 dir,
       newCol.xyz *= nl;
       */
     
-      newCol.xyz *= irradiance.xyz;
+      if (useLighting) {
+        vec4 irradiance = texture(brickPool_irradiance, enterUVW + dir * f);
+        newCol.xyz *= irradiance.xyz;
+      }
         
       if (newCol.a > 0.001) {
         // Alpha correction

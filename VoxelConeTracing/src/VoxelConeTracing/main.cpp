@@ -22,9 +22,15 @@
 * \author Dominik Lazarek (dominik.lazarek@gmail.com)
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
- 
+
+#define GLFW_CDECL
+#include <AntTweakBar/AntTweakBar.h>
+
 #include <GL/glew.h>
+
+
 #include <GL/glfw.h>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
@@ -230,7 +236,6 @@ void setup() {
   //////////////////////////////////////////////////////////////////////////
 }
 
-
 int main(void) {
   int running = GL_TRUE;
    
@@ -241,10 +246,10 @@ int main(void) {
     return -1;
   }
 
-  glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 4);
+  /*glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 4);
   glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 3);
   glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-  glfwOpenWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+  glfwOpenWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE); */
 
   // Open an OpenGL window
   if (!glfwOpenWindow(screen_width, screen_height, 8, 8, 8, 0, 24, 8, GLFW_WINDOW)) {
@@ -253,10 +258,13 @@ int main(void) {
     exit(EXIT_FAILURE);
   }
 
-  glfwSetWindowTitle("Sparse Voxel Octree Demo");
+  glfwEnable(GLFW_MOUSE_CURSOR);
+  glfwEnable(GLFW_KEY_REPEAT);
 
-  // disable v-sync
-  //glfwSwapInterval(0);
+  glfwSetWindowTitle("Sparse Voxel Octree Demo");
+  
+  TwInit(TW_OPENGL_CORE, NULL);
+  TwWindowSize(screen_width, screen_height);
 
   // initialize GLEW
   glewExperimental = true;
@@ -265,6 +273,8 @@ int main(void) {
     exit(EXIT_FAILURE);
     return -1;
   }
+
+
 
     
   // log versions
@@ -302,6 +312,37 @@ int main(void) {
     ->setScreenResolution(glm::ivec2(screen_width, screen_height));
 
   setup();
+
+
+
+  TwBar* bar = TwNewBar("TweakBar");
+  TwAddVarRW(bar, "GI intensity", TW_TYPE_FLOAT, _vctScene.getGIintensityPointer(),
+    " label='GI intensity' min=0 max=100 step=0.01 ");
+
+  TwAddVarRW(bar, "GI Spec Intensity", TW_TYPE_FLOAT, _vctScene.getSpecGIintensityPtr(),
+    " label='GI Spec intensity' min=0 max=100 step=0.01 ");
+
+  TwAddVarRW(bar, "Spec Exponent", TW_TYPE_FLOAT, _vctScene.getSpecExponentPtr(),
+    " label='Spec Exponent' min=0 max=100 step=0.01 ");
+
+  TwAddVarRW(bar, "Use Lighting", TW_TYPE_BOOLCPP, _vctScene.getUseLightingPtr(),
+    " label='Use Lighting' ");
+  
+
+  // Set GLFW event callbacks
+  // - Redirect window size changes to the callback function WindowSizeCB
+  //glfwSetWindowSizeCallback(WindowSizeCB);
+  // - Directly redirect GLFW mouse button events to AntTweakBar
+  glfwSetMouseButtonCallback((GLFWmousebuttonfun)TwEventMouseButtonGLFW);
+  // - Directly redirect GLFW mouse position events to AntTweakBar
+  glfwSetMousePosCallback((GLFWmouseposfun)TwEventMousePosGLFW);
+  // - Directly redirect GLFW mouse wheel events to AntTweakBar
+  glfwSetMouseWheelCallback((GLFWmousewheelfun)TwEventMouseWheelGLFW);
+  // - Directly redirect GLFW key events to AntTweakBar
+  glfwSetKeyCallback((GLFWkeyfun)TwEventKeyGLFW);
+  // - Directly redirect GLFW char events to AntTweakBar
+  glfwSetCharCallback((GLFWcharfun)TwEventCharGLFW);
+
 
   kore::Timer the_timer;
   the_timer.start();
@@ -351,7 +392,7 @@ int main(void) {
             _octreeVisPass->setDisplayLevel(_octreeVisPass->getDisplayLevel() - 1);
           }
 
-        } else {
+        } else { 
           _oldPageDown = false;
         }
       }
@@ -386,12 +427,15 @@ int main(void) {
     kore::GLerror::gl_ErrorCheckFinish("Main Loop"); 
     //*/
 
+    TwDraw();
+     
     glfwSwapBuffers();
 
     // Check if ESC key was pressed or window was closed
     running = !glfwGetKey(GLFW_KEY_ESC) && glfwGetWindowParam(GLFW_OPENED);
   }
 
+  TwTerminate();
   glfwTerminate();
 
   // Exit program

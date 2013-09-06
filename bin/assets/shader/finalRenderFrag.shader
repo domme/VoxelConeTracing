@@ -51,21 +51,29 @@ uniform vec3 lightDir;
 uniform mat4 lightCamProjMat;
 uniform mat4 lightCamviewMat;
 
-const float PI = 3.1415926535897932384626433832795;
-
-const float coneAngleDeg = 90.0;
-const float coneAngleRad = (coneAngleDeg / 180.0) * PI;
-const float tanAngle = abs(tan(coneAngleRad / 2.0));
-
 uniform uint voxelGridResolution;
 uniform mat4 viewI;
 uniform mat4 voxelGridTransformI;
 uniform uint numLevels;
 
+
+// Tweak-parameters
+uniform float giIntensity;
+uniform float specGiIntensity;
+uniform float specExponent;
+uniform bool useLighting = true;
+
 #include "assets/shader/_utilityFunctions.shader"
 #include "assets/shader/_octreeTraverse.shader"
 #include "assets/shader/_raycast.shader"
 #include "assets/shader/_coneTrace.shader"
+
+
+const float PI = 3.1415926535897932384626433832795;
+
+const float coneAngleDeg = 90.0;
+const float coneAngleRad = (coneAngleDeg / 180.0) * PI;
+const float tanAngle = abs(tan(coneAngleRad / 2.0));
 
 float tanAngleDeg(in float angleDeg) {
    return abs(tan((angleDeg / 180.0) * PI * 0.5));
@@ -76,8 +84,8 @@ vec4 gatherIndirectIllum(in vec3 posTex, in vec3 normalWS) {
   vec4 color = vec4(0);
   
   float weights = 0.0;
-  for (float phi = 0; phi < 2.0 * PI; phi += coneAngleRad) {
-    for (float theta = 0; theta < 2.0 * PI; theta += coneAngleRad) {
+  for (float phi = coneAngleRad / 2; phi < 2.0 * PI + coneAngleRad / 2; phi += coneAngleRad) {
+    for (float theta = coneAngleRad / 2; theta < 2.0 * PI + coneAngleRad / 2; theta += coneAngleRad) {
       vec3 dir = normalize(vec3(sin(theta) * cos(phi),
                                 sin(theta) * sin(phi),
                                 cos(theta)));
@@ -109,26 +117,30 @@ void main(void)
    posLProj.xyz /= posLProj.w;
    posLProj.xyz = posLProj.xyz * 0.5 + 0.5;
 
-   float e = 0.0008;
-   if (abs(texture(shadowMap, posLProj.xy).x) + e < abs(posLProj.z)){
-     visibility = 0.0;
-   }
-
-   // Light intensity
+   vec3 lightIntensity = vec3(0);
    vec3 view = normalize(posWS.xyz - viewI[3].xyz);
-   vec3 h = normalize((-view) + lightDir);
-   vec3 lightColor = vec3(1);  //TODO: Replace with uniform
+
+   float e = 0.0008;
+   if (useLighting) {
+    if (abs(texture(shadowMap, posLProj.xy).x) + e < abs(posLProj.z)){
+       visibility = 0.0;
+     }
+
+     // Light intensity
+     vec3 h = normalize((-view) + lightDir);
+     vec3 lightColor = vec3(1) * giIntensity;  //TODO: Replace with uniform
    
-   // Account for local shading      
-   float diff = max(0.0, dot(lightDir, normalWS));
-   float spec = pow(max(0.0, dot(normalWS, h)), 20.0);
-   vec3 lightIntensity = visibility * (lightColor * diff + spec);
-   
+     // Account for local shading      
+     float diff = max(0.0, dot(lightDir, normalWS));
+     float spec = pow(max(0.0, dot(normalWS, h)), specExponent);
+     lightIntensity += visibility * (lightColor * diff + spec);
+   }
+      
    // Add global illumination
-   lightIntensity += 5.0 * gatherIndirectIllum(posTex, normalWS).xyz;
+   lightIntensity += giIntensity * gatherIndirectIllum(posTex, normalWS).xyz;
     
    vec3 reflectVec = normalize(reflect(view, normalWS));
-   lightIntensity += coneTrace_tanAngle(posTex + reflectVec * (1.0 / 128), reflectVec, tanAngleDeg(20.0)).xyz;
+   lightIntensity += specGiIntensity * coneTrace_tanAngle(posTex + reflectVec * (1.0 / 128), reflectVec, tanAngleDeg(specExponent)).xyz;
    
    outColor = diffColor * vec4(lightIntensity, 1.0);
 }

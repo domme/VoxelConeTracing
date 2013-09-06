@@ -25,6 +25,8 @@
 
 #version 420
 
+#define MAX_NUM_AVG_ITERATIONS 100
+
 layout(r32ui) uniform coherent uimageBuffer voxelFragList_position;
 layout(r32ui) uniform volatile uimage3D voxelFragTex_color;
 layout(r32ui) uniform volatile uimage3D voxelFragTex_normal;
@@ -72,9 +74,11 @@ uint imageAtomicRGBA8Avg(layout(r32ui) volatile uimage3D img,
     uint lastValU = 0; 
     uint currValU;
     vec4 currVal;
+    uint numIterations = 0;
     // Loop as long as destination value gets changed by other threads
     while((currValU = imageAtomicCompSwap(img, coords, lastValU, newValU))
-          != lastValU) {
+          != lastValU
+          && numIterations < MAX_NUM_AVG_ITERATIONS) {
         lastValU = currValU;
 
         currVal = convRGBA8ToVec4(currValU);
@@ -84,6 +88,8 @@ uint imageAtomicRGBA8Avg(layout(r32ui) volatile uimage3D img,
         currVal.xyz /= currVal.a; // Renormalize
 
         newValU = convVec4ToRGBA8(currVal);
+
+        ++numIterations;
     }
 
     // currVal now contains the calculated color: now convert it to a proper alpha-premultiplied version
@@ -115,13 +121,15 @@ void main() {
   imageStore(voxelFragList_position, int(voxelIndex), uvec4(vec3ToUintXYZ10(baseVoxel)));
   
   //Avg voxel attributes and store in FragmentTexXXX
+  /*
   uint diffColorU = convVec4ToRGBA8(diffColor * 255.0);
   uint normalU = convVec4ToRGBA8(normal * 255.0);
   imageStore(voxelFragTex_color, ivec3(baseVoxel), uvec4(diffColorU));
   imageStore(voxelFragTex_normal, ivec3(baseVoxel), uvec4(normalU));
+  */
    
-  //imageAtomicRGBA8Avg(voxelFragTex_color, ivec3(baseVoxel), diffColor);
-  //imageAtomicRGBA8Avg(voxelFragTex_normal, ivec3(baseVoxel), normal);
+  imageAtomicRGBA8Avg(voxelFragTex_color, ivec3(baseVoxel), diffColor);
+  imageAtomicRGBA8Avg(voxelFragTex_normal, ivec3(baseVoxel), normal);
 
   
 }

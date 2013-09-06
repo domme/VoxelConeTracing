@@ -41,6 +41,8 @@ uniform mat4 viewI;
 uniform mat4 voxelGridTransformI;
 uniform uint numLevels;
 
+uniform bool useLighting = true;
+
 out vec4 color;
 
 #include "assets/shader/_utilityFunctions.shader"

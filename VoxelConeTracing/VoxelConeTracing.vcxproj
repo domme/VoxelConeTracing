@@ -84,7 +84,7 @@
     </Midl>
     <Link>
       <AdditionalOptions> /machine:X86 /debug /NODEFAULTLIB:msvcrt.lib %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;OpenGL32.lib;$(SolutionDir)\lib\Debug\KoRE.lib;$(SolutionDir)\ext\lib\tinyxml.lib;$(SolutionDir)\ext\lib\msvc100\GLFW.lib;$(SolutionDir)\ext\lib\glew32.lib;$(SolutionDir)\ext\lib\assimp_release-dll_win32\assimp.lib</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;OpenGL32.lib;$(SolutionDir)\lib\Debug\KoRE.lib;$(SolutionDir)\ext\lib\tinyxml.lib;$(SolutionDir)\ext\lib\msvc100\GLFW.lib;$(SolutionDir)\ext\lib\glew32.lib;$(SolutionDir)\ext\lib\assimp_release-dll_win32\assimp.lib;$(SolutionDir)\ext\lib\AntTweakBar\AntTweakBar.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ImportLibrary>

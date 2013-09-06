@@ -117,7 +117,21 @@ public:
   inline kore::ShaderData* getShdNodeMapOffsets() {return &_shdNodeMapOffsets;}
   inline kore::ShaderData* getShdNodeMapSizes() {return &_shdNodeMapSizes;}
 
+  inline float* getGIintensityPointer() {return &_giIntensity;}
+  inline kore::ShaderData* getShdGIintensity() {return &_shdGIintensity;}
+
+  inline float* getSpecGIintensityPtr() {return &_specGIintensity;}
+  inline kore::ShaderData* getShdSpecGIintensity() {return &_shdSpecGIintensity;}
+
+  inline float* getSpecExponentPtr() {return &_specExponent;}
+  inline kore::ShaderData* getShdSpecExponent() {return &_shdSpecExponent;}
+
+  inline bool* getUseLightingPtr() {return &_useLIghting;}
+  inline kore::ShaderData* getShdUseLighting() {return &_shdUseLighting;}
+
 private:
+  void initTweakParameters();
+
   kore::Camera* _camera;
   std::vector<kore::SceneNode*> _meshNodes;
 
@@ -152,6 +166,18 @@ private:
   glm::ivec2 _nodeMapSizes[8];
   kore::ShaderData _shdNodeMapOffsets;
   kore::ShaderData _shdNodeMapSizes;
+
+  float _giIntensity;
+  kore::ShaderData _shdGIintensity;
+
+  float _specGIintensity;
+  kore::ShaderData _shdSpecGIintensity;
+
+  float _specExponent;
+  kore::ShaderData _shdSpecExponent;
+
+  bool _useLIghting;
+  kore::ShaderData _shdUseLighting;
 };
 
 #endif  // VCT_SRC_VCT_VCTSCENE_H_
