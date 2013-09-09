@@ -129,6 +129,9 @@ public:
   inline bool* getUseLightingPtr() {return &_useLIghting;}
   inline kore::ShaderData* getShdUseLighting() {return &_shdUseLighting;}
 
+  inline bool* getUseWideConePtr() {return &_useWideCone;}
+  inline kore::ShaderData* getShdUseWideCone() {return &_shdUseWideCone;}
+
 private:
   void initTweakParameters();
 
@@ -178,6 +181,9 @@ private:
 
   bool _useLIghting;
   kore::ShaderData _shdUseLighting;
+
+  bool _useWideCone;
+  kore::ShaderData _shdUseWideCone;
 };
 
 #endif  // VCT_SRC_VCT_VCTSCENE_H_

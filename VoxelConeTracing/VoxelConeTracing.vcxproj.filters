@@ -133,6 +133,9 @@
     <ClCompile Include="src\VoxelConeTracing\Voxelization\VoxelizeClearPass.cpp">
       <Filter>src\Voxelization</Filter>
     </ClCompile>
+    <ClCompile Include="src\VoxelConeTracing\Util\GPUtimer.cpp">
+      <Filter>src\Util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -313,6 +316,9 @@
     </ClInclude>
     <ClInclude Include="src\VoxelConeTracing\Voxelization\VoxelizeClearPass.h">
       <Filter>src\Voxelization</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VoxelConeTracing\Util\GPUtimer.h">
+      <Filter>src\Util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -62,6 +62,7 @@ uniform float giIntensity;
 uniform float specGiIntensity;
 uniform float specExponent;
 uniform bool useLighting = true;
+uniform bool useWideCone = true;
 
 #include "assets/shader/_utilityFunctions.shader"
 #include "assets/shader/_octreeTraverse.shader"
@@ -71,33 +72,65 @@ uniform bool useLighting = true;
 
 const float PI = 3.1415926535897932384626433832795;
 
-const float coneAngleDeg = 90.0;
-const float coneAngleRad = (coneAngleDeg / 180.0) * PI;
-const float tanAngle = abs(tan(coneAngleRad / 2.0));
+// Sample dirs for a 60degree-cone
+ const vec3 sampleDirs60[7] =  {normalize(vec3(0.865, 0.5, 0)),
+                                normalize(vec3(0.43, 0.5, 0.75)),
+                                normalize(vec3(-0.43, 0.5, 0.75)),
+                                normalize(vec3(-0.865, 0.5, 0)),
+                                normalize(vec3(-0.43, 0.5, -0.75)),
+                                normalize(vec3(0.43, 0.5, -0.75)),
+                                normalize(vec3(0, 1, 0))};
+
+const vec3 sampleDirs90[4] =  {normalize(vec3(0.70711, 0.70611, 0)),
+                               normalize(vec3(0, 0.70611, -0.70711)),
+                               normalize(vec3(-0.70711, 0.70611, 0)),
+                               normalize(vec3(0, 0.70611, 0.70711))};
+                               
+
+
 
 float tanAngleDeg(in float angleDeg) {
    return abs(tan((angleDeg / 180.0) * PI * 0.5));
 }
 
 
-vec4 gatherIndirectIllum(in vec3 posTex, in vec3 normalWS) {
+vec3 getDir(in float phi, in float theta) {
+  return  normalize(vec3(sin(theta) * cos(phi),
+                         sin(theta) * sin(phi),
+                         cos(theta)));
+}
+
+vec4 gatherIndirectIllum60(in vec3 posTex, in vec3 normalWS, in vec3 tangentWS) {
+  mat3 surfaceMat = mat3(tangentWS, normalWS, normalize(cross(normalWS, tangentWS)));
+
   vec4 color = vec4(0);
   
   float weights = 0.0;
-  for (float phi = coneAngleRad / 2; phi < 2.0 * PI + coneAngleRad / 2; phi += coneAngleRad) {
-    for (float theta = coneAngleRad / 2; theta < 2.0 * PI + coneAngleRad / 2; theta += coneAngleRad) {
-      vec3 dir = normalize(vec3(sin(theta) * cos(phi),
-                                sin(theta) * sin(phi),
-                                cos(theta)));
-      float weight = dot(dir, normalWS);
-
-      if (weight > 0.001) {
-        color += weight * coneTrace_tanAngle(posTex + dir * (1.0 / 128), dir, tanAngle);
-        weights += 1;
-      }
-    }
+  
+  for (int i = 0; i < 7; ++i) {
+    vec3 dir = surfaceMat * sampleDirs60[i];
+    float currWeight = dot(dir, normalWS);
+    color += currWeight * coneTrace_tanAngle(posTex + dir * (1.0 / 128), dir, 0.5773);
+    weights += currWeight;
   }
+    
+  return color / weights;
+}
 
+vec4 gatherIndirectIllum90(in vec3 posTex, in vec3 normalWS, in vec3 tangentWS) {
+  mat3 surfaceMat = mat3(tangentWS, normalWS, normalize(cross(normalWS, tangentWS)));
+
+  vec4 color = vec4(0);
+  
+  float weights = 0.0;
+  
+  for (int i = 0; i < 4; ++i) {
+    vec3 dir = surfaceMat * sampleDirs90[i];
+    float currWeight = dot(dir, normalWS);
+    color += currWeight * coneTrace_tanAngle(posTex + dir * (1.0 / 128), dir, 0.5773);
+    weights += currWeight;
+  }
+    
   return color / weights;
 }
 
@@ -137,7 +170,13 @@ void main(void)
    }
       
    // Add global illumination
-   lightIntensity += giIntensity * gatherIndirectIllum(posTex, normalWS).xyz;
+   if (useWideCone) {
+    lightIntensity += giIntensity * gatherIndirectIllum90(posTex, normalWS, tangentWS).xyz;
+   }
+   else {
+    lightIntensity += giIntensity * gatherIndirectIllum60(posTex, normalWS, tangentWS).xyz; 
+   }
+   
     
    vec3 reflectVec = normalize(reflect(view, normalWS));
    lightIntensity += specGiIntensity * coneTrace_tanAngle(posTex + reflectVec * (1.0 / 128), reflectVec, tanAngleDeg(specExponent)).xyz;

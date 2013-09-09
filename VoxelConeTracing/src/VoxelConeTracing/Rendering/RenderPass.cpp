@@ -205,6 +205,8 @@ RenderPass::RenderPass(kore::FrameBuffer* gBuffer, kore::FrameBuffer* smBuffer,
                                          shader->getUniform("specExponent")));
   nodePass->addOperation(new BindUniform(vctScene->getShdUseLighting(),
                                          shader->getUniform("useLighting")));
+  nodePass->addOperation(new BindUniform(vctScene->getShdUseWideCone(),
+                                          shader->getUniform("useWideCone")));
   //////////////////////////////////////////////////////////////////////////
 
   nodePass->addOperation(new RenderMesh(fsqMeshComponent));

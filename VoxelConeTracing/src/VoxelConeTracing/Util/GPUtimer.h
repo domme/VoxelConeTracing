@@ -23,29 +23,31 @@
 * \author Andreas Weinmann (andy.weinmann@gmail.com)
 */
 
-#ifndef VCT_SRC_VCT_VOXELIZEPASS_H_
-#define VCT_SRC_VCT_VOXELIZEPASS_H_
 
-#include "KoRE/Passes/ShaderProgramPass.h"
-#include "VoxelConeTracing/Scene/VCTscene.h"
+#ifndef GPUTIMER_H_
+#define  GPUTIMER_H_
 
-class VoxelizePass : public kore::ShaderProgramPass {
+#include "KoRE/Common.h"
+
+class GPUtimer {
 public:
-  VoxelizePass(const glm::vec3& voxelGridSize, 
-               VCTscene* vctScene,
-               kore::EOperationExecutionType executionType);
-  virtual ~VoxelizePass(void);
+  static GPUtimer* getInstance();
+  ~GPUtimer();
+
+  GLuint queryTimestamp(const std::string& name);
+
+  void checkQueryResults();
+  
+  bool isQueryResultAvailable(const uint queryID);
+  GLuint64 getQueryResult(const uint queryID);
+  const std::string& getQueryName(const uint queryID);
 
 private:
-  void init(const glm::vec3& voxelGridSize);
+  GPUtimer();
 
-  //glm::vec3 _worldAxes[3];
-  //kore::ShaderData _shdWorldAxesArr;
-
-  glm::mat4 _viewProjMats[3];
-  kore::ShaderData _shdViewProjMatsArr;
-
-  glm::vec3 _voxelGridSize;
-  kore::ShaderData _shdVoxelGridSize;
+  std::vector<GLuint> _queryObjects;
+  std::vector<GLuint> _finishedQueryObjects;
+  std::map<GLuint, std::string> _queryNames;
 };
-#endif  // VCT_SRC_VCT_VOXELIZEPASS_H_
+
+#endif

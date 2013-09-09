@@ -213,6 +213,7 @@
     <ClCompile Include="src\VoxelConeTracing\Stages\ShadowMapStage.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Stages\SVOconstructionStage.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Stages\SVOlightUpdateStage.cpp" />
+    <ClCompile Include="src\VoxelConeTracing\Util\GPUtimer.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Util\MathUtil.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Voxelization\VoxelizeClearPass.cpp" />
     <ClCompile Include="src\VoxelConeTracing\Voxelization\VoxelizePass.cpp" />
@@ -258,6 +259,7 @@
     <ClInclude Include="src\VoxelConeTracing\Stages\ShadowMapStage.h" />
     <ClInclude Include="src\VoxelConeTracing\Stages\SVOconstructionStage.h" />
     <ClInclude Include="src\VoxelConeTracing\Stages\SVOlightUpdateStage.h" />
+    <ClInclude Include="src\VoxelConeTracing\Util\GPUtimer.h" />
     <ClInclude Include="src\VoxelConeTracing\Util\MathUtil.h" />
     <ClInclude Include="src\VoxelConeTracing\Voxelization\VoxelizeClearPass.h" />
     <ClInclude Include="src\VoxelConeTracing\Voxelization\VoxelizePass.h" />

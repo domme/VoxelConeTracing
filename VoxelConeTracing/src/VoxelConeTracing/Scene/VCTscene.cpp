@@ -57,6 +57,10 @@ void VCTscene::initTweakParameters() {
   _useLIghting = true;
   _shdUseLighting.type = GL_BOOL;
   _shdUseLighting.data = &_useLIghting;
+
+  _useWideCone = true;
+  _shdUseWideCone.type = GL_BOOL;
+  _shdUseWideCone.data = &_useWideCone;
 }
 
 

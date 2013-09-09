@@ -88,6 +88,7 @@
 #include "VoxelConeTracing/Stages/SVOconstructionStage.h"
 #include "VoxelConeTracing/Stages/ShadowMapStage.h"
 #include "Stages/SVOlightUpdateStage.h"
+#include "Util/GPUtimer.h"
 
 static const uint screen_width = 1280;
 static const uint screen_height = 720;
@@ -106,6 +107,9 @@ static uint _numLevels = 0;
 
 static bool _oldPageUp = false;
 static bool _oldPageDown = false;
+
+static GLuint _queryFrameStart;
+static GLuint _queryFrameEnd;
 
 void changeAllocPassLevel() {
   static uint currLevel = 0;
@@ -327,6 +331,9 @@ int main(void) {
 
   TwAddVarRW(bar, "Use Lighting", TW_TYPE_BOOLCPP, _vctScene.getUseLightingPtr(),
     " label='Use Lighting' ");
+
+  TwAddVarRW(bar, "Use wide cone angle", TW_TYPE_BOOLCPP, _vctScene.getUseWideConePtr(),
+    " label='Use wide cone angle' ");
   
 
   // Set GLFW event callbacks
@@ -357,6 +364,7 @@ int main(void) {
   while (running) {
     time = the_timer.timeSinceLastCall();
     kore::SceneManager::getInstance()->update();
+    GPUtimer::getInstance()->checkQueryResults();
 
     if (_pCamera) {
       if (glfwGetKey(GLFW_KEY_UP) || glfwGetKey('W')) {
@@ -422,7 +430,10 @@ int main(void) {
    // /*
     kore::GLerror::gl_ErrorCheckStart();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT |GL_STENCIL_BUFFER_BIT);
+
+    _queryFrameStart = GPUtimer::getInstance()->queryTimestamp("Render Frame Start");
     kore::RenderManager::getInstance()->renderFrame();
+    _queryFrameStart = GPUtimer::getInstance()->queryTimestamp("Render Frame End");
 
     kore::GLerror::gl_ErrorCheckFinish("Main Loop"); 
     //*/
