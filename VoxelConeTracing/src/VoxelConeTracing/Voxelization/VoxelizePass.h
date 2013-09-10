@@ -38,6 +38,8 @@ public:
 
 private:
   void init(const glm::vec3& voxelGridSize);
+  void startQuery();
+  void endQuery();
 
   //glm::vec3 _worldAxes[3];
   //kore::ShaderData _shdWorldAxesArr;
@@ -47,5 +49,7 @@ private:
 
   glm::vec3 _voxelGridSize;
   kore::ShaderData _shdVoxelGridSize;
+
+  GLuint _durationQuery;
 };
 #endif  // VCT_SRC_VCT_VOXELIZEPASS_H_

@@ -108,8 +108,7 @@ static uint _numLevels = 0;
 static bool _oldPageUp = false;
 static bool _oldPageDown = false;
 
-static GLuint _queryFrameStart;
-static GLuint _queryFrameEnd;
+static GLuint _queryFrameDuration = 0;
 
 void changeAllocPassLevel() {
   static uint currLevel = 0;
@@ -240,6 +239,19 @@ void setup() {
   //////////////////////////////////////////////////////////////////////////
 }
 
+
+void processFrameTimeQueries() {
+  GPUtimer* timer = GPUtimer::getInstance();
+
+  std::vector<SDurationResult> vDurations = timer->getDurationResultsMS();
+
+  for (uint i = 0; i < vDurations.size(); ++i) {
+    Log::getInstance()->write("%s: %u\n", vDurations[i].name.c_str(), vDurations[i].durationMS);
+    timer->removeDurationQuery(vDurations[i].startQueryID);
+  }
+
+}
+
 int main(void) {
   int running = GL_TRUE;
    
@@ -365,6 +377,7 @@ int main(void) {
     time = the_timer.timeSinceLastCall();
     kore::SceneManager::getInstance()->update();
     GPUtimer::getInstance()->checkQueryResults();
+    processFrameTimeQueries();
 
     if (_pCamera) {
       if (glfwGetKey(GLFW_KEY_UP) || glfwGetKey('W')) {
@@ -430,13 +443,13 @@ int main(void) {
    // /*
     kore::GLerror::gl_ErrorCheckStart();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT |GL_STENCIL_BUFFER_BIT);
-
-    _queryFrameStart = GPUtimer::getInstance()->queryTimestamp("Render Frame Start");
+        
+    _queryFrameDuration = GPUtimer::getInstance()->startDurationQuery("Frame time");
     kore::RenderManager::getInstance()->renderFrame();
-    _queryFrameStart = GPUtimer::getInstance()->queryTimestamp("Render Frame End");
+    GPUtimer::getInstance()->endDurationQuery(_queryFrameDuration);
 
     kore::GLerror::gl_ErrorCheckFinish("Main Loop"); 
-    //*/
+    
 
     TwDraw();
      

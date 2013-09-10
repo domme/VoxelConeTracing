@@ -29,6 +29,12 @@
 
 #include "KoRE/Common.h"
 
+struct SDurationResult {
+  GLuint64 durationMS;
+  std::string name;
+  GLuint startQueryID;
+};
+
 class GPUtimer {
 public:
   static GPUtimer* getInstance();
@@ -36,11 +42,18 @@ public:
 
   GLuint queryTimestamp(const std::string& name);
 
+  GLuint startDurationQuery(const std::string& name);
+  void endDurationQuery(const uint startQueryID);
+
   void checkQueryResults();
+  GLuint64 getDurationMS(const uint startQueryID);
   
   bool isQueryResultAvailable(const uint queryID);
   GLuint64 getQueryResult(const uint queryID);
+  std::vector<SDurationResult> getDurationResultsMS();
   const std::string& getQueryName(const uint queryID);
+  void removeQueryResult(const uint queryID);
+  void removeDurationQuery(const uint startQueryID);
 
 private:
   GPUtimer();
@@ -48,6 +61,7 @@ private:
   std::vector<GLuint> _queryObjects;
   std::vector<GLuint> _finishedQueryObjects;
   std::map<GLuint, std::string> _queryNames;
+  std::map<GLuint, GLuint> _durationQueries;
 };
 
 #endif

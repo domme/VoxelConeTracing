@@ -37,10 +37,12 @@
 #include "KoRE/Operations/BindOperations/BindAtomicCounterBuffer.h"
 #include "KoRE/Operations/ResetAtomicCounterBuffer.h"
 #include "KoRE/Operations/MemoryBarrierOp.h"
+#include "../Util/GPUtimer.h"
+#include "KoRE/Operations/FunctionOp.h"
 
 VoxelizePass::VoxelizePass(const glm::vec3& voxelGridSize, 
                            VCTscene* vctScene,
-                           kore::EOperationExecutionType executionType)
+                           kore::EOperationExecutionType executionType) : _durationQuery(0)
 {
   using namespace kore;
 
@@ -73,6 +75,8 @@ VoxelizePass::VoxelizePass(const glm::vec3& voxelGridSize,
   //////////////////////////////////////////////////////////////////////////
   // Startup operations
   //////////////////////////////////////////////////////////////////////////
+  this->addStartupOperation(new FunctionOp(std::bind(&VoxelizePass::startQuery, this)));
+
   this->addStartupOperation(
     new ResetAtomicCounterBuffer(vctScene->getShdAcVoxelIndex(), 0));
 
@@ -184,6 +188,8 @@ VoxelizePass::VoxelizePass(const glm::vec3& voxelGridSize,
   this->addFinishOperation(
     new MemoryBarrierOp(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT
                         | GL_ATOMIC_COUNTER_BARRIER_BIT));
+
+  this->addFinishOperation(new FunctionOp(std::bind(&VoxelizePass::endQuery, this)));
 }
 
 void VoxelizePass::init(const glm::vec3& voxelGridSize) {
@@ -242,5 +248,13 @@ void VoxelizePass::init(const glm::vec3& voxelGridSize) {
 
 
 VoxelizePass::~VoxelizePass(void) {
+}
+
+void VoxelizePass::startQuery() {
+  _durationQuery = GPUtimer::getInstance()->startDurationQuery("Voxelization");
+} 
+
+void VoxelizePass::endQuery() {
+  GPUtimer::getInstance()->endDurationQuery(_durationQuery);
 }
 
