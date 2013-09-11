@@ -108,6 +108,11 @@ static uint _numLevels = 0;
 static bool _oldPageUp = false;
 static bool _oldPageDown = false;
 
+static std::string _timerResults = "";
+
+static TwBar* _performanceBar;
+static std::vector<SDurationResult> _vDurationsResults;
+
 void changeAllocPassLevel() {
   static uint currLevel = 0;
   _obAllocatePass->setLevel((currLevel++) % _numLevels);
@@ -240,16 +245,19 @@ void setup() {
 }
 
 
-void processFrameTimeQueries() {
-  GPUtimer* timer = GPUtimer::getInstance();
+void TW_CALL GetMyStdStringCB(void *value, void * clientData)
+{
+  // Get: copy the value of s3 to AntTweakBar
+  std::string *destPtr = static_cast<std::string *>(value);
+  ShaderProgramPass* pass = static_cast<ShaderProgramPass*>(clientData);
 
-  std::vector<SDurationResult> vDurations = timer->getDurationResultsMS();
+  GLuint durationID = pass->getTimerQueryObject();
 
-  for (uint i = 0; i < vDurations.size(); ++i) {
-    Log::getInstance()->write("%s: %u\n", vDurations[i].name.c_str(), vDurations[i].durationMS);
-    timer->removeDurationQuery(vDurations[i].startQueryID);
+  for (uint i = 0; i < _vDurationsResults.size(); ++i) {
+    if (_vDurationsResults[i].startQueryID == durationID) {
+      TwCopyStdStringToLibrary(*destPtr, std::to_string(_vDurationsResults[i].durationMS));
+    }
   }
-
 }
 
 int main(void) {
@@ -333,20 +341,35 @@ int main(void) {
 
   TwBar* bar = TwNewBar("TweakBar");
   TwAddVarRW(bar, "GI intensity", TW_TYPE_FLOAT, _vctScene.getGIintensityPointer(),
-    " label='GI intensity' min=0 max=100 step=0.01 ");
+    " group='Lighting parameters' label='GI intensity' min=0 max=100 step=0.01 ");
 
   TwAddVarRW(bar, "GI Spec Intensity", TW_TYPE_FLOAT, _vctScene.getSpecGIintensityPtr(),
-    " label='GI Spec intensity' min=0 max=100 step=0.01 ");
+    " group='Lighting parameters' label='GI Spec intensity' min=0 max=100 step=0.01 ");
 
   TwAddVarRW(bar, "Spec Exponent", TW_TYPE_FLOAT, _vctScene.getSpecExponentPtr(),
-    " label='Spec Exponent' min=0 max=100 step=0.01 ");
+    " group='Lighting parameters' label='Spec Exponent' min=0 max=100 step=0.01 ");
 
   TwAddVarRW(bar, "Use Lighting", TW_TYPE_BOOLCPP, _vctScene.getUseLightingPtr(),
-    " label='Use Lighting' ");
+    " group='Lighting parameters' label='Use Lighting' ");
 
   TwAddVarRW(bar, "Use wide cone angle", TW_TYPE_BOOLCPP, _vctScene.getUseWideConePtr(),
-    " label='Use wide cone angle' ");
-  
+    "group='Lighting parameters' label='Use wide cone angle'");
+
+  _performanceBar = TwNewBar("Performance");
+
+  auto stages = RenderManager::getInstance()->getFrameBufferStages();
+  for (uint iStage = 0; iStage < stages.size(); ++iStage) {
+    auto passes = stages[iStage]->getShaderProgramPasses();
+
+    for (uint iPass = 0; iPass < passes.size(); ++iPass) {
+       std::string szParameters = std::string("label='") + passes[iPass]->getName() + "'";
+
+       TwAddVarCB(_performanceBar, (std::to_string(iPass) + std::to_string(iStage)).c_str(),
+                  TW_TYPE_STDSTRING, NULL, 
+                  GetMyStdStringCB, passes[iPass], szParameters.c_str());
+    }
+  }
+
 
   // Set GLFW event callbacks
   // - Redirect window size changes to the callback function WindowSizeCB
@@ -377,7 +400,11 @@ int main(void) {
     time = the_timer.timeSinceLastCall();
     kore::SceneManager::getInstance()->update();
     GPUtimer::getInstance()->checkQueryResults();
-    processFrameTimeQueries();
+     _vDurationsResults = GPUtimer::getInstance()->getDurationResultsMS();
+
+     /*for (int i= 0; i < _vDurationsResults.size(); ++i) {
+       Log::getInstance()->write("%s: %u\n", _vDurationsResults[i].name.c_str(), _vDurationsResults[i].durationMS);
+     }*/
 
     if (_pCamera) {
       if (glfwGetKey(GLFW_KEY_UP) || glfwGetKey('W')) {
@@ -429,7 +456,7 @@ int main(void) {
         _rotationNode->rotate(5.0f * static_cast<float>(time), glm::vec3(0.0f, 1.0f, 0.0f));
       }
 
-      if (glfwGetMouseButton(GLFW_MOUSE_BUTTON_1) == GLFW_PRESS ) {
+      if (glfwGetMouseButton(GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS ) {
         if (glm::abs(mouseMoveX) > 0 || glm::abs(mouseMoveY) > 0) {
           _pCamera->rotateFromMouseMove((float)-mouseMoveX / 5.0f,
             (float)-mouseMoveY / 5.0f);
@@ -448,7 +475,6 @@ int main(void) {
     
     kore::GLerror::gl_ErrorCheckFinish("Main Loop"); 
     
-
     TwDraw();
      
     glfwSwapBuffers();
