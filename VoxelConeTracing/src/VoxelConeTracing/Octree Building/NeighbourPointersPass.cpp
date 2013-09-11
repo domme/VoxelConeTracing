@@ -35,6 +35,9 @@ NeighbourPointersPass::
                         kore::EOperationExecutionType executionType) {
   using namespace kore;
 
+  _name = std::string("Neighbour Pointer (level ").append(std::to_string(level).append(")"));
+  _useGPUProfiling = vctScene->getUseGPUprofiling();
+
   this->setExecutionType(executionType);
 
   _level = level;

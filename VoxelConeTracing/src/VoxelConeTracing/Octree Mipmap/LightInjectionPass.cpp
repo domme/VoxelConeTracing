@@ -37,6 +37,9 @@ LightInjectionPass::LightInjectionPass(VCTscene* vctScene,
 
   using namespace kore;
 
+  _name = std::string("Light Injection");
+  _useGPUProfiling = vctScene->getUseGPUprofiling();
+
   this->setExecutionType(executionType);
   _vctScene = vctScene;
   _renderMgr = RenderManager::getInstance();

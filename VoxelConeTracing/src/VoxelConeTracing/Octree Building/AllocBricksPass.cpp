@@ -37,9 +37,12 @@ AllocBricksPass::~AllocBricksPass(void) {
 AllocBricksPass::AllocBricksPass(VCTscene* vctScene,
                                kore::EOperationExecutionType executionType) {
   using namespace kore;
-  
-  this->setExecutionType(executionType);
 
+  _name = "Alloc Bricks";
+  _useGPUProfiling = vctScene->getUseGPUprofiling();
+
+  this->setExecutionType(executionType);
+  
   _vctScene = vctScene;
   _renderMgr = RenderManager::getInstance();
   _sceneMgr = SceneManager::getInstance();
@@ -51,8 +54,7 @@ AllocBricksPass::AllocBricksPass(VCTscene* vctScene,
   _shader.setName("Allocate Bricks shader");
   _shader.init();
   this->setShaderProgram(&_shader);
-
-
+  
   // Threads: All nodes in the SVO
   addStartupOperation(new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
              vctScene->getNodePool()->getCmdBufSVOnodes()->getBufferHandle()));

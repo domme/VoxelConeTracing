@@ -34,6 +34,9 @@ RenderPass::RenderPass(kore::FrameBuffer* gBuffer, kore::FrameBuffer* smBuffer,
                        std::vector<SceneNode*> lightNodes, VCTscene* vctScene) {
   using namespace kore;
 
+  _name = std::string("Final Render pass");
+  _useGPUProfiling = vctScene->getUseGPUprofiling();
+
   RenderManager* renderMgr = RenderManager::getInstance();
 
   ShaderProgram* shader = new ShaderProgram;

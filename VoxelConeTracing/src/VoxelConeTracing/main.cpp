@@ -88,7 +88,7 @@
 #include "VoxelConeTracing/Stages/SVOconstructionStage.h"
 #include "VoxelConeTracing/Stages/ShadowMapStage.h"
 #include "Stages/SVOlightUpdateStage.h"
-#include "Util/GPUtimer.h"
+#include "KoRE/GPUtimer.h"
 
 static const uint screen_width = 1280;
 static const uint screen_height = 720;
@@ -107,8 +107,6 @@ static uint _numLevels = 0;
 
 static bool _oldPageUp = false;
 static bool _oldPageDown = false;
-
-static GLuint _queryFrameDuration = 0;
 
 void changeAllocPassLevel() {
   static uint currLevel = 0;
@@ -188,6 +186,8 @@ void setup() {
   SceneManager::getInstance()->update();
 
   _vctScene.init(params, renderNodes, _pCamera);
+  _vctScene.setUseGPUprofiling(true);
+
   _numLevels = _vctScene.getNodePool()->getNumLevels(); 
 
   // GBuffer Stage
@@ -443,11 +443,9 @@ int main(void) {
    // /*
     kore::GLerror::gl_ErrorCheckStart();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT |GL_STENCIL_BUFFER_BIT);
-        
-    _queryFrameDuration = GPUtimer::getInstance()->startDurationQuery("Frame time");
+    
     kore::RenderManager::getInstance()->renderFrame();
-    GPUtimer::getInstance()->endDurationQuery(_queryFrameDuration);
-
+    
     kore::GLerror::gl_ErrorCheckFinish("Main Loop"); 
     
 

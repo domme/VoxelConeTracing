@@ -32,6 +32,9 @@ ClearNodeMapPass::~ClearNodeMapPass(void) {
 ClearNodeMapPass::ClearNodeMapPass(VCTscene* vctScene,
                    kore::EOperationExecutionType executionType) {
   using namespace kore;
+
+  _name = "Clear Node Map";
+  _useGPUProfiling = vctScene->getUseGPUprofiling();
   
   this->setExecutionType(executionType);
 

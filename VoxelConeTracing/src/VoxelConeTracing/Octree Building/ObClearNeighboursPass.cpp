@@ -33,6 +33,9 @@ ObClearNeighboursPass::ObClearNeighboursPass(VCTscene* vctScene,
                       kore::EOperationExecutionType executionType) {
   using namespace kore;
   
+  _name = "Clear Neighbours";
+  _useGPUProfiling = vctScene->getUseGPUprofiling();
+
   this->setExecutionType(executionType);
 
   ShaderProgram* shader = new ShaderProgram();

@@ -114,6 +114,14 @@ public:
   inline kore::IndexedBuffer* getThreadBuf_nodeMap_complete()
   {return &_threadBuf_NodeMapComplete;}
 
+  inline bool getUseGPUprofiling() {
+    return _useGPUprofiling;
+  }
+
+  inline void setUseGPUprofiling(bool useProfiling) {
+    _useGPUprofiling = useProfiling;
+  }
+
   inline kore::ShaderData* getShdNodeMapOffsets() {return &_shdNodeMapOffsets;}
   inline kore::ShaderData* getShdNodeMapSizes() {return &_shdNodeMapSizes;}
 
@@ -184,6 +192,8 @@ private:
 
   bool _useWideCone;
   kore::ShaderData _shdUseWideCone;
+
+  bool _useGPUprofiling;
 };
 
 #endif  // VCT_SRC_VCT_VCTSCENE_H_

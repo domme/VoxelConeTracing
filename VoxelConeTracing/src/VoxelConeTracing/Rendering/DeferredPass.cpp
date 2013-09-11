@@ -34,6 +34,9 @@
 
 DeferredPass::DeferredPass(kore::Camera* cam, std::vector<kore::SceneNode*>& vRenderNodes){
   using namespace kore;
+
+  _name = std::string("GBuffer Pass");
+  _useGPUProfiling = true;
   
   kore::RenderManager* renderMgr = kore::RenderManager::getInstance();
 

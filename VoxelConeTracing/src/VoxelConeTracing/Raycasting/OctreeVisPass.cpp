@@ -39,6 +39,9 @@ OctreeVisPass::~OctreeVisPass(void) {
 
 OctreeVisPass::OctreeVisPass(VCTscene* vctScene) {
   using namespace kore;
+
+  _name = std::string("Octree Vis");
+  _useGPUProfiling = vctScene->getUseGPUprofiling();
   
   _vctScene = vctScene;
   _renderMgr = RenderManager::getInstance();

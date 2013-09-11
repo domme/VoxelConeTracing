@@ -33,6 +33,9 @@ ClearBrickTexPass::ClearBrickTexPass(VCTscene* vctScene,
                    EClearMode clearMode,
                    kore::EOperationExecutionType executionType) {
   using namespace kore;
+
+  _name = "Clear Bricks";
+  _useGPUProfiling = vctScene->getUseGPUprofiling();
   
   this->setExecutionType(executionType);
 

@@ -39,6 +39,9 @@ SpreadLightLeafBricksPass::
                      kore::EOperationExecutionType executionType) {
   using namespace kore;
   
+  _name = "Spread Leafs";
+  _useGPUProfiling = vctScene->getUseGPUprofiling();
+
   this->setExecutionType(executionType);
 
   _vctScene = vctScene;

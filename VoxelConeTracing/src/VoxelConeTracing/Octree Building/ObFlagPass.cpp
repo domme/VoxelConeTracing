@@ -38,6 +38,9 @@ ObFlagPass::ObFlagPass(VCTscene* vctScene,
                       kore::EOperationExecutionType executionType) {
   using namespace kore;
   
+  _name = "Flag Pass";
+  _useGPUProfiling = vctScene->getUseGPUprofiling();
+
   this->setExecutionType(executionType);
 
   _vctScene = vctScene;

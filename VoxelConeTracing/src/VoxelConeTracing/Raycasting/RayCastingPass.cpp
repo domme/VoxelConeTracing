@@ -39,6 +39,9 @@
 
 RayCastingPass::RayCastingPass(VCTscene* vctScene) {
   using namespace kore;
+
+  _name = std::string("Raycasting Pass");
+  _useGPUProfiling = vctScene->getUseGPUprofiling();
   
   _raycastShader
      .loadShader("./assets/shader/VoxelConeTracing/raycastVert.shader",

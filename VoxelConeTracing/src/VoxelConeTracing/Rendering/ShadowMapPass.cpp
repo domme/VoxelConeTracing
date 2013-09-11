@@ -33,6 +33,9 @@ ShadowMapPass::ShadowMapPass(std::vector<kore::SceneNode*>& vRenderNodes, kore::
 {
   using namespace kore;
 
+  _name = std::string("Shadow Map Construction");
+  _useGPUProfiling = true;
+
   RenderManager* renderMgr = RenderManager::getInstance();
 
   ShaderProgram* shader = new ShaderProgram;

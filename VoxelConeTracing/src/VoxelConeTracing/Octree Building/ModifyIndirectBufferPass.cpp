@@ -41,6 +41,9 @@ ModifyIndirectBufferPass::
                            kore::EOperationExecutionType executionType) {
   using namespace kore;
   
+  _name = "Modifiy indirect buffer";
+  _useGPUProfiling = vctScene->getUseGPUprofiling();
+
   this->setExecutionType(executionType);
 
   _vctScene = vctScene;

@@ -32,6 +32,9 @@ VoxelizeClearPass::~VoxelizeClearPass(void) {
 VoxelizeClearPass::VoxelizeClearPass(VCTscene* vctScene,
                       kore::EOperationExecutionType executionType) {
   using namespace kore;
+
+  _name = std::string("VoxelizeClear Pass");
+  _useGPUProfiling = vctScene->getUseGPUprofiling();
   
   this->setExecutionType(executionType);
 

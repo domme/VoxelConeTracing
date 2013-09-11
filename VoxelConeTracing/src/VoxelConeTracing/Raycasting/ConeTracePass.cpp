@@ -31,6 +31,9 @@
 ConeTracePass::ConeTracePass(VCTscene* vctScene){
   using namespace kore;
 
+  _name = std::string("ConeTrace");
+  _useGPUProfiling = vctScene->getUseGPUprofiling();
+
     _vctScene = vctScene;
     _renderMgr = RenderManager::getInstance();
     _sceneMgr = SceneManager::getInstance();

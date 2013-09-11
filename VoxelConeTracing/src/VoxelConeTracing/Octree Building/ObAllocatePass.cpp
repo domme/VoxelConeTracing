@@ -37,6 +37,9 @@ ObAllocatePass::~ObAllocatePass(void) {
 ObAllocatePass::ObAllocatePass(VCTscene* vctScene, uint level,
                                kore::EOperationExecutionType executionType) {
   using namespace kore;
+
+  _name = std::string("Allocate Pass (level ").append(std::to_string(level).append(")"));
+  _useGPUProfiling = vctScene->getUseGPUprofiling();
   
   this->setExecutionType(executionType);
 
