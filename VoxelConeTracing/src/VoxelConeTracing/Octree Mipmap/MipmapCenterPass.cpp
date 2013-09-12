@@ -37,19 +37,24 @@ MipmapCenterPass::~MipmapCenterPass(void) {
 MipmapCenterPass::
   MipmapCenterPass(VCTscene* vctScene,
                   EBrickPoolAttributes brickPoolAtt,
+                  EMipmappingMode mipmapMode,
                   uint level,
                   kore::EOperationExecutionType executionType) {
   using namespace kore;
 
   _name = std::string("MipmapCenter (level: ").append(std::to_string(level).append(")"));
   _useGPUProfiling = vctScene->getUseGPUprofiling();
-  
+
   this->setExecutionType(executionType);
 
   _vctScene = vctScene;
   _renderMgr = RenderManager::getInstance();
   _sceneMgr = SceneManager::getInstance();
   _resMgr = ResourceManager::getInstance();
+
+  _mipmapMode = mipmapMode;
+  _shdMipmapMode.type = GL_UNSIGNED_INT;
+  _shdMipmapMode.data = &_mipmapMode;
   
   _level = level;
   _shdLevel.component = NULL;
@@ -65,20 +70,38 @@ MipmapCenterPass::
   shp->setName("MipmapCenter shader");
   shp->init();
 
-  addStartupOperation(
-    new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
-                  _vctScene->getThreadBuf_nodeMap(vctScene->getNodePool()->getNumLevels()-1)->getHandle()));
+  if (_mipmapMode == MIPMAP_LIGHT) {
+    addStartupOperation(
+      new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
+      _vctScene->getThreadBuf_nodeMap(vctScene->getNodePool()->getNumLevels()-1)->getHandle()));
 
-  addStartupOperation(new BindImageTexture(
-                  _vctScene->getShdLightNodeMap(),
-                  shp->getUniform("nodeMap"), GL_READ_ONLY));
+    addStartupOperation(new BindImageTexture(
+      _vctScene->getShdLightNodeMap(),
+      shp->getUniform("nodeMap"), GL_READ_ONLY));
 
-  addStartupOperation(new BindUniform(vctScene->getShdNodeMapOffsets(),
-                                      shp->getUniform("nodeMapOffset[0]")));
+    addStartupOperation(new BindUniform(vctScene->getShdNodeMapOffsets(),
+      shp->getUniform("nodeMapOffset[0]")));
 
-  addStartupOperation(new BindUniform(vctScene->getShdNodeMapSizes(),
-                                      shp->getUniform("nodeMapSize[0]")));
+    addStartupOperation(new BindUniform(vctScene->getShdNodeMapSizes(),
+      shp->getUniform("nodeMapSize[0]")));
 
+  } else {
+    addStartupOperation(
+      new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
+      _vctScene->getNodePool()->getDenseThreadBuf(_level)->getHandle()));
+
+    addStartupOperation(
+      new kore::BindUniform(_vctScene->getNodePool()->getShdNumLevels(),
+      shp->getUniform("numLevels")));
+
+    addStartupOperation(
+      new kore::BindImageTexture(
+        vctScene->getNodePool()->getShdLevelAddressBuffer(),
+        shp->getUniform("levelAddressBuffer"), GL_READ_ONLY));
+  }
+
+  addStartupOperation(new BindUniform(&_shdMipmapMode, shp->getUniform("mipmapMode")));
+  
   addStartupOperation(new BindImageTexture(
                     vctScene->getBrickPool()->getShdBrickPool(brickPoolAtt),
                                           shp->getUniform("brickPool_value")));

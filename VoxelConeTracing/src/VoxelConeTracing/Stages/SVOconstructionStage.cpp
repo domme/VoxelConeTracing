@@ -100,6 +100,17 @@ SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
                                                _numLevels - 1, exeFrequency));
   this->addProgramPass(new BorderTransferPass(&vctScene, BRICKPOOL_IRRADIANCE,
                                               _numLevels - 1, exeFrequency));
+
+  for (int iLevel = _numLevels - 2; iLevel >= 0;) {
+    this->addProgramPass(new MipmapCenterPass(&vctScene, BRICKPOOL_IRRADIANCE, MIPMAP_COMPLETE, iLevel, exeFrequency));
+    this->addProgramPass(new MipmapFacesPass(&vctScene, BRICKPOOL_IRRADIANCE, MIPMAP_COMPLETE, iLevel, exeFrequency));
+    this->addProgramPass(new MipmapCornersPass(&vctScene, BRICKPOOL_IRRADIANCE, MIPMAP_COMPLETE, iLevel, exeFrequency));
+    this->addProgramPass(new MipmapEdgesPass(&vctScene, BRICKPOOL_IRRADIANCE, MIPMAP_COMPLETE, iLevel, exeFrequency));
+    
+    this->addProgramPass(new BorderTransferPass(&vctScene, BRICKPOOL_IRRADIANCE, iLevel, exeFrequency));
+    
+    --iLevel;
+  }
 }
 
 SVOconstructionStage::~SVOconstructionStage() {

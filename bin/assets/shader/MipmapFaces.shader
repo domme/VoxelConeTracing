@@ -28,6 +28,9 @@
 layout(r32ui) uniform readonly uimageBuffer nodePool_next;
 layout(r32ui) uniform readonly uimageBuffer nodePool_color;
 layout(r32ui) uniform readonly uimage2D nodeMap;
+layout(r32ui) uniform readonly uimageBuffer levelAddressBuffer;
+uniform uint mipmapMode;
+uniform uint numLevels;
 
 layout(rgba8) uniform image3D brickPool_value;
 
@@ -55,13 +58,31 @@ vec4 getChildBrickColor(in int childIndex, in ivec3 brickOffset) {
 }
 
 uint getThreadNode() {
-  ivec2 nmSize = nodeMapSize[level];
-  
-  ivec2 uv = ivec2(0);
-  uv.x = (gl_VertexID % nmSize.x);
-  uv.y = (gl_VertexID / nmSize.x);
+  // Complete octree
+  if (mipmapMode == 0) {
+      int levelStart = int(imageLoad(levelAddressBuffer, int(level)).x);
+      int nextLevelStart = int(imageLoad(levelAddressBuffer, int(level + 1)).x);
+      memoryBarrier();
 
-  return imageLoad(nodeMap, nodeMapOffset[level] + uv).x;
+      uint index = uint(levelStart) + uint(gl_VertexID);
+
+      if (level < int(numLevels - 1) && index >= nextLevelStart) {
+        return NODE_NOT_FOUND;
+      }
+
+      return index;
+  } 
+  
+  // Only lightMap-Node
+  else {
+      ivec2 nmSize = nodeMapSize[level];
+  
+      ivec2 uv = ivec2(0);
+      uv.x = (gl_VertexID % nmSize.x);
+      uv.y = (gl_VertexID / nmSize.x);
+
+      return imageLoad(nodeMap, nodeMapOffset[level] + uv).x;
+  }
 }
 
 void faceLeft(in ivec3 brickAddress) {
