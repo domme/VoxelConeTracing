@@ -113,6 +113,7 @@ static std::string _timerResults = "";
 static TwBar* _performanceBar;
 static std::vector<SDurationResult> _vDurationsResults;
 
+
 void changeAllocPassLevel() {
   static uint currLevel = 0;
   _obAllocatePass->setLevel((currLevel++) % _numLevels);
@@ -245,23 +246,26 @@ void setup() {
 }
 
 
-void TW_CALL GetMyStdStringCB(void *value, void * clientData)
-{
+void TW_CALL durationStringCallback(void *value, void * clientData)
+{ 
   // Get: copy the value of s3 to AntTweakBar
   std::string *destPtr = static_cast<std::string *>(value);
   ShaderProgramPass* pass = static_cast<ShaderProgramPass*>(clientData);
 
   GLuint durationID = pass->getTimerQueryObject();
-
+  
   for (uint i = 0; i < _vDurationsResults.size(); ++i) {
-    if (_vDurationsResults[i].startQueryID == durationID) {
+       if (_vDurationsResults[i].startQueryID == durationID) {
       TwCopyStdStringToLibrary(*destPtr, std::to_string(_vDurationsResults[i].durationMS));
+      return;
     }
   }
+
 }
 
+
 int main(void) {
-  int running = GL_TRUE;
+  int running = GL_TRUE; 
    
   // Initialize GLFW
   if (!glfwInit()) {
@@ -270,7 +274,8 @@ int main(void) {
     return -1;
   }
 
-  /*glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 4);
+
+  /*glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 4); 
   glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 3);
   glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   glfwOpenWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE); */
@@ -357,18 +362,22 @@ int main(void) {
 
   _performanceBar = TwNewBar("Performance");
 
+  
   auto stages = RenderManager::getInstance()->getFrameBufferStages();
   for (uint iStage = 0; iStage < stages.size(); ++iStage) {
     auto passes = stages[iStage]->getShaderProgramPasses();
 
     for (uint iPass = 0; iPass < passes.size(); ++iPass) {
        std::string szParameters = std::string("label='") + passes[iPass]->getName() + "'";
+       std::string szUniqueName = (std::to_string(iPass) + std::to_string(iStage));
 
-       TwAddVarCB(_performanceBar, (std::to_string(iPass) + std::to_string(iStage)).c_str(),
+       TwAddVarCB(_performanceBar, szUniqueName.c_str(),
                   TW_TYPE_STDSTRING, NULL, 
-                  GetMyStdStringCB, passes[iPass], szParameters.c_str());
+                  durationStringCallback, passes[iPass], szParameters.c_str());
     }
   }
+  
+  //TwAddVarRW(_performanceBar, "Frame duration", TW_TYPE_UINT32, &_frameDuration, "");
 
 
   // Set GLFW event callbacks
@@ -383,7 +392,7 @@ int main(void) {
   // - Directly redirect GLFW key events to AntTweakBar
   glfwSetKeyCallback((GLFWkeyfun)TwEventKeyGLFW);
   // - Directly redirect GLFW char events to AntTweakBar
-  glfwSetCharCallback((GLFWcharfun)TwEventCharGLFW);
+  glfwSetCharCallback((GLFWcharfun)TwEventCharGLFW); 
 
 
   kore::Timer the_timer;
@@ -399,13 +408,10 @@ int main(void) {
   while (running) {
     time = the_timer.timeSinceLastCall();
     kore::SceneManager::getInstance()->update();
-    GPUtimer::getInstance()->checkQueryResults();
-     _vDurationsResults = GPUtimer::getInstance()->getDurationResultsMS();
 
-     /*for (int i= 0; i < _vDurationsResults.size(); ++i) {
-       Log::getInstance()->write("%s: %u\n", _vDurationsResults[i].name.c_str(), _vDurationsResults[i].durationMS);
-     }*/
-
+    GPUtimer::getInstance()->checkQueryResults(); 
+    GPUtimer::getInstance()->getDurationResultsMS(_vDurationsResults);
+       
     if (_pCamera) {
       if (glfwGetKey(GLFW_KEY_UP) || glfwGetKey('W')) {
       
@@ -471,8 +477,9 @@ int main(void) {
     kore::GLerror::gl_ErrorCheckStart();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT |GL_STENCIL_BUFFER_BIT);
     
+
     kore::RenderManager::getInstance()->renderFrame();
-    
+        
     kore::GLerror::gl_ErrorCheckFinish("Main Loop"); 
     
     TwDraw();
