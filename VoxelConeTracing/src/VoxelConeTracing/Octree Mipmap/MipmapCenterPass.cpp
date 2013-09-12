@@ -51,10 +51,6 @@ MipmapCenterPass::
   _renderMgr = RenderManager::getInstance();
   _sceneMgr = SceneManager::getInstance();
   _resMgr = ResourceManager::getInstance();
-
-  _mipmapMode = mipmapMode;
-  _shdMipmapMode.type = GL_UNSIGNED_INT;
-  _shdMipmapMode.data = &_mipmapMode;
   
   _level = level;
   _shdLevel.component = NULL;
@@ -65,12 +61,21 @@ MipmapCenterPass::
   kore::ShaderProgram* shp = new kore::ShaderProgram;
   this->setShaderProgram(shp);
 
-  shp->loadShader("./assets/shader/MipmapCenter.shader",
-                 GL_VERTEX_SHADER);
+  if (mipmapMode == MIPMAP_COMPLETE) {
+    shp->loadShader("./assets/shader/MipmapCenter.shader",
+      GL_VERTEX_SHADER,
+      "#define MIPMAP_MODE 1\n\n");
+  } else if (mipmapMode == MIPMAP_LIGHT) {
+    shp->loadShader("./assets/shader/MipmapCenter.shader",
+      GL_VERTEX_SHADER,
+      "#define MIPMAP_MODE 2\n\n");
+  }
+  
+    
   shp->setName("MipmapCenter shader");
   shp->init();
 
-  if (_mipmapMode == MIPMAP_LIGHT) {
+  if (mipmapMode == MIPMAP_LIGHT) {
     addStartupOperation(
       new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
       _vctScene->getThreadBuf_nodeMap(level)->getHandle()));
@@ -99,8 +104,6 @@ MipmapCenterPass::
         vctScene->getNodePool()->getShdLevelAddressBuffer(),
         shp->getUniform("levelAddressBuffer"), GL_READ_ONLY));
   }
-
-  addStartupOperation(new BindUniform(&_shdMipmapMode, shp->getUniform("mipmapMode")));
   
   addStartupOperation(new BindImageTexture(
                     vctScene->getBrickPool()->getShdBrickPool(brickPoolAtt),

@@ -38,7 +38,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <string>
+#include <string> 
 #include <ctime> 
 #include <vector>
 
@@ -180,7 +180,7 @@ void setup() {
   std::vector<SceneNode*> lightNodes;
   SceneManager::getInstance()->getSceneNodesByComponent(COMPONENT_LIGHT, lightNodes);
 
-  for(int i=0; i<lightNodes.size(); ++i){
+  for(uint i=0; i<lightNodes.size(); ++i){
     Camera* cam  = new Camera();
     float projsize = params.voxel_grid_sidelengths.x / 2;
     cam->setProjectionOrtho(-projsize,projsize,-projsize,projsize,1,100); 
@@ -192,7 +192,7 @@ void setup() {
   SceneManager::getInstance()->update();
 
   _vctScene.init(params, renderNodes, _pCamera);
-  _vctScene.setUseGPUprofiling(false);
+  _vctScene.setUseGPUprofiling(true);
 
   _numLevels = _vctScene.getNodePool()->getNumLevels(); 
 
@@ -233,9 +233,9 @@ void setup() {
 
   //_backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
   
-  //_backbufferStage->addProgramPass(new ConeTracePass(&_vctScene));
+  _backbufferStage->addProgramPass(new ConeTracePass(&_vctScene));
   
-  
+  /*
   _backbufferStage->addProgramPass(new RenderPass(
     gBufferStage->getFrameBuffer(), shadowMapStage->getFrameBuffer(),
     lightNodes, &_vctScene));
@@ -359,7 +359,7 @@ int main(void) {
   TwAddVarRW(bar, "Use wide cone angle", TW_TYPE_BOOLCPP, _vctScene.getUseWideConePtr(),
     "group='Lighting parameters' label='Use wide cone angle'");
 
-  /*_performanceBar = TwNewBar("Performance");
+  _performanceBar = TwNewBar("Performance");
     
   auto stages = RenderManager::getInstance()->getFrameBufferStages();
   for (uint iStage = 0; iStage < stages.size(); ++iStage) {
@@ -373,7 +373,7 @@ int main(void) {
                   TW_TYPE_STDSTRING, NULL, 
                   durationStringCallback, passes[iPass], szParameters.c_str());
     }
-  }*/
+  }
   
   //TwAddVarRW(_performanceBar, "Frame duration", TW_TYPE_UINT32, &_frameDuration, "");
 
