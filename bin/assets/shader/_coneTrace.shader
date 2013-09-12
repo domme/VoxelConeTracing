@@ -107,6 +107,10 @@ vec4 coneTrace_tanAngle(in vec3 rayOriginTex, in vec3 rayDirTex, in float tanCon
       newCol = raycastBrick(nodeColorU, enterPos, leavePos, rayDirTex,
                             outLevel, foundNodeSideLength);
 
+      // Account for quadratic falloff
+      float dist = f * 25;
+      newCol.xyz /= max(dist * dist, 1.0);
+            
       returnColor = (1.0 - returnColor.a) * newCol + returnColor;
 
       if (returnColor.a > 0.99) {

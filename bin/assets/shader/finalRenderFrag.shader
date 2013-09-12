@@ -46,7 +46,6 @@ uniform sampler2D shadowMap;
 layout(r32ui) uniform readonly uimageBuffer nodePool_next;
 layout(r32ui) uniform readonly uimageBuffer nodePool_color;
 
-uniform vec3 lightPos;
 uniform vec3 lightDir;
 uniform mat4 lightCamProjMat;
 uniform mat4 lightCamviewMat;

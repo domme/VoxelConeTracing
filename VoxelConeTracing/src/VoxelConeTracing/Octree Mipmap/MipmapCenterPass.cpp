@@ -73,7 +73,7 @@ MipmapCenterPass::
   if (_mipmapMode == MIPMAP_LIGHT) {
     addStartupOperation(
       new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
-      _vctScene->getThreadBuf_nodeMap(vctScene->getNodePool()->getNumLevels()-1)->getHandle()));
+      _vctScene->getThreadBuf_nodeMap(level)->getHandle()));
 
     addStartupOperation(new BindImageTexture(
       _vctScene->getShdLightNodeMap(),
