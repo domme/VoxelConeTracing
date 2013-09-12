@@ -45,12 +45,13 @@ uniform ivec2 nodeMapSize[8];
 #define AXIS_Y_NEG 4
 #define AXIS_Z_NEG 5
 
+
 #include "assets/shader/_utilityFunctions.shader"
 
 vec4 getFinalVal(in vec4 borderVal, in vec4 neighbourBorderVal) {
   vec4 col = borderVal + neighbourBorderVal;
   //if (uint(level) == numLevels - 1) { // Perform average on leaf-level
-     col /= 2.0;
+     col /= 2;
   //}
 
   return col;

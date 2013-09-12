@@ -85,6 +85,10 @@ LightInjectionPass::LightInjectionPass(VCTscene* vctScene,
                          lightComp->getShaderData("color"),
                          shader->getUniform("lightColor")));
 
+  addStartupOperation(new BindUniform(
+                          lightComp->getShaderData("direction"),
+                          shader->getUniform("lightDir")));
+
   addStartupOperation(new BindImageTexture(
                          vctScene->getNodePool()->getShdNodePool(NEXT),
                          shader->getUniform("nodePool_next"), GL_READ_ONLY));
@@ -96,6 +100,14 @@ LightInjectionPass::LightInjectionPass(VCTscene* vctScene,
   addStartupOperation(new BindImageTexture(
                          vctScene->getBrickPool()->getShdBrickPool(BRICKPOOL_IRRADIANCE),
                          shader->getUniform("brickPool_irradiance")));
+
+  addStartupOperation(new BindImageTexture(
+                        vctScene->getBrickPool()->getShdBrickPool(BRICKPOOL_COLOR),
+                        shader->getUniform("brickPool_color")));
+
+  addStartupOperation(new BindImageTexture(
+                      vctScene->getBrickPool()->getShdBrickPool(BRICKPOOL_NORMAL),
+                      shader->getUniform("brickPool_normal")));
   
   // Add node map for all levels
   addStartupOperation(new BindImageTexture(vctScene->getShdLightNodeMap(),

@@ -32,12 +32,16 @@ layout(r32ui) uniform uimage2D nodeMap;
 layout(r32ui) uniform readonly uimageBuffer nodePool_next;
 layout(r32ui) uniform readonly uimageBuffer nodePool_color;
 layout(rgba8) uniform image3D brickPool_irradiance;
+layout(rgba8) uniform image3D brickPool_color;
+layout(rgba8) uniform image3D brickPool_normal;
+
 
 uniform mat4 voxelGridTransformI;
 uniform uint numLevels;
 
 uniform sampler2D smPosition;
 uniform vec3 lightColor;
+uniform vec3 lightDir;
 
 uniform ivec2 nodeMapOffset[8];
 uniform ivec2 nodeMapSize[8];
@@ -99,20 +103,26 @@ void main() {
        uvec3 offVec = uvec3(2.0 * posTex);
        uint off = offVec.x + 2U * offVec.y + 4U * offVec.z;
 
-       /*
-       for (int x = 0; x < 3; ++x) {
-        for( int y = 0; y < 3; ++y) {
-          for( int z = 0; z < 3; ++z) {
-            imageStore(brickPool_irradiance, brickCoords + ivec3(x,y,z), vec4(lightColor, 1));
-          }
-        }
-      }*/
 
-       //store Radiance in brick corners
-      imageStore(brickPool_irradiance,
-             brickCoords  + 2 * ivec3(childOffsets[off]),
-             vec4(lightColor, 1)); 
-      return;
+        ivec3 injectionPos = brickCoords  + 2 * ivec3(childOffsets[off]);
+        vec3 voxelNormal = normalize(imageLoad(brickPool_normal, injectionPos).xyz * 2.0 - 1.0);
+        vec4 voxelColor = imageLoad(brickPool_color, injectionPos);
+        memoryBarrier();
+
+        vec4 reflectedRadiance = vec4(lightColor, 1) 
+                                * voxelColor;
+                                //* max(dot(-lightDir, voxelNormal), 0);
+
+        imageStore(brickPool_irradiance,
+                  injectionPos,
+                  reflectedRadiance);
+     
+         //store Radiance in brick corners
+        /*imageStore(brickPool_irradiance,
+               injectionPos,
+               vec4(lightColor, 1)); */
+
+        return;
     }
       
     uvec3 offVec = uvec3(2.0 * posTex);

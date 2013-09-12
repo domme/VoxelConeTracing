@@ -37,6 +37,7 @@ class MipmapCenterPass : public kore::ShaderProgramPass
   public:
     MipmapCenterPass(VCTscene* vctScene,
                      EBrickPoolAttributes eBrickPoolAtt,
+                     //EMipmappingMode eMipmapMode,
                      uint level,
                      kore::EOperationExecutionType executionType);
     virtual ~MipmapCenterPass(void);
@@ -49,6 +50,9 @@ class MipmapCenterPass : public kore::ShaderProgramPass
 
     kore::ShaderData _shdLevel;
     uint _level;
+
+    //EMipmappingMode _mipmapMode;
+    //kore::ShaderData _shdMipmapMode;
 };
 
 #endif // VCT_SRC_VCT_MIPMAPCENTERPASS_H_

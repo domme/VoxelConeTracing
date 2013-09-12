@@ -171,7 +171,7 @@ void setup() {
   SVCTparameters params;
   params.voxel_grid_resolution = 256;
   params.voxel_grid_sidelengths = glm::vec3(50, 50, 50);
-  params.fraglist_size_multiplier = 4;
+  params.fraglist_size_multiplier = 3;
   params.fraglist_size_divisor = 1;
   params.brickPoolResolution = 64 * 4;
   params.shadowMapResolution = glm::vec2(2048,2048);
@@ -192,7 +192,7 @@ void setup() {
   SceneManager::getInstance()->update();
 
   _vctScene.init(params, renderNodes, _pCamera);
-  _vctScene.setUseGPUprofiling(true);
+  _vctScene.setUseGPUprofiling(false);
 
   _numLevels = _vctScene.getNodePool()->getNumLevels(); 
 
@@ -233,9 +233,9 @@ void setup() {
 
   //_backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
   
-  //_backbufferStage->addProgramPass(new ConeTracePass(&_vctScene));
+  _backbufferStage->addProgramPass(new ConeTracePass(&_vctScene));
   
-  
+  /*
   _backbufferStage->addProgramPass(new RenderPass(
     gBufferStage->getFrameBuffer(), shadowMapStage->getFrameBuffer(),
     lightNodes, &_vctScene));
@@ -260,7 +260,6 @@ void TW_CALL durationStringCallback(void *value, void * clientData)
       return;
     }
   }
-
 }
 
 
@@ -360,9 +359,8 @@ int main(void) {
   TwAddVarRW(bar, "Use wide cone angle", TW_TYPE_BOOLCPP, _vctScene.getUseWideConePtr(),
     "group='Lighting parameters' label='Use wide cone angle'");
 
-  _performanceBar = TwNewBar("Performance");
-
-  
+  /*_performanceBar = TwNewBar("Performance");
+    
   auto stages = RenderManager::getInstance()->getFrameBufferStages();
   for (uint iStage = 0; iStage < stages.size(); ++iStage) {
     auto passes = stages[iStage]->getShaderProgramPasses();
@@ -375,7 +373,7 @@ int main(void) {
                   TW_TYPE_STDSTRING, NULL, 
                   durationStringCallback, passes[iPass], szParameters.c_str());
     }
-  }
+  }*/
   
   //TwAddVarRW(_performanceBar, "Frame duration", TW_TYPE_UINT32, &_frameDuration, "");
 

@@ -80,11 +80,11 @@ int traverseOctree_pixelProj(in vec3 posTex, in float d, in float pixelSizeTS,
     float voxelSize = sideLength;
     float projVoxelSize = voxelSize / d;
 
-    /*if (projVoxelSize / 2 < pixelSizeTS) {
+    if (projVoxelSize / 2 < pixelSizeTS) {
       valid = true;
       outLevel = iLevel;
       break;
-    }*/
+    }
 
     uint nodeNext = imageLoad(nodePool_next, nodeAddress).x;
 

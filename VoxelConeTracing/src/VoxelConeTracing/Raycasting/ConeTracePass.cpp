@@ -134,6 +134,13 @@ ConeTracePass::ConeTracePass(VCTscene* vctScene){
     nodePass->addOperation(new BindUniform(vctScene->getNodePool()->getShdNumLevels(),
       _coneTraceShader.getUniform("numLevels"))); 
 
+
+    //////////////////////////////////////////////////////////////////////////
+    // Tweak-Parameters
+    nodePass->addOperation(new BindUniform(vctScene->getShdUseLighting(),
+      _coneTraceShader.getUniform("useLighting")));
+    //////////////////////////////////////////////////////////////////////////
+
     nodePass->addOperation(new RenderMesh(fsqMeshComponent));
 
 }

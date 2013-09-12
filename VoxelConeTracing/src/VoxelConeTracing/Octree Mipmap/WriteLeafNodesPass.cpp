@@ -92,6 +92,10 @@ WriteLeafNodesPass::
     vctScene->getBrickPool()->getShdBrickPool(BRICKPOOL_NORMAL),
     shp->getUniform("brickPool_normal")));
 
+  addStartupOperation(new BindImageTexture(
+    vctScene->getBrickPool()->getShdBrickPool(BRICKPOOL_IRRADIANCE),
+    shp->getUniform("brickPool_irradiance")));
+
   addStartupOperation(new BindUniform(vctScene->getShdVoxelGridResolution(),
                                       shp->getUniform("voxelGridResolution")));
 

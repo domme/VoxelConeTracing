@@ -41,6 +41,7 @@ layout(r32ui) uniform uimageBuffer nodePool_next;
 layout(r32ui) uniform uimageBuffer nodePool_color;
 layout(rgba8) uniform image3D brickPool_color;
 layout(rgba8) uniform image3D brickPool_normal;
+layout(rgba8) uniform image3D brickPool_irradiance;
 
 uniform uint numLevels;  // Number of levels in the octree
 uniform uint voxelGridResolution;
@@ -64,6 +65,10 @@ void storeInLeaf(in vec3 posTex, in int nodeAddress, in uint voxelColorU, in uin
        imageStore(brickPool_normal,
              brickCoords  + 2 * ivec3(childOffsets[off]),
              convRGBA8ToVec4(voxelNormalU) / 255.0);
+
+       imageStore(brickPool_irradiance,
+                  brickCoords  + 2 * ivec3(childOffsets[off]),
+                  vec4(0.0, 0.0, 0.0, 1.0));
 }
 
 void main() {

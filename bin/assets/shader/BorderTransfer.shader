@@ -49,7 +49,7 @@ uniform uint axis;
 vec4 getFinalVal(in vec4 borderVal, in vec4 neighbourBorderVal) {
   vec4 col = borderVal + neighbourBorderVal;
   //if (uint(level) == numLevels - 1) { // Perform average on leaf-level
-     col /= 2.0;
+     col /= 2;
   //}
 
   return col;

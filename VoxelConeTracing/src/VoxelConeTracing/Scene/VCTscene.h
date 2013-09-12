@@ -58,6 +58,11 @@ struct SNode {
   uint color;
 };
 
+enum EMipmappingMode {
+  MIPMAP_COMPLETE = 0,
+  MIPMAP_LIGHT
+};
+
 struct SDrawArraysIndirectCommand {
   SDrawArraysIndirectCommand() :
     numVertices(0),
