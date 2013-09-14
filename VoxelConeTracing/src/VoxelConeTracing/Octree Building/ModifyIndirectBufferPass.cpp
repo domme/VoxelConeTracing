@@ -63,8 +63,10 @@ ModifyIndirectBufferPass::
   
   this->setShaderProgram(&_shader);
 
+
   addStartupOperation(
     new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER, _callIndirectBuffer.getHandle()));
+  addStartupOperation(new ColorMaskOp(glm::bvec4(false, false, false, false)));
 
   addStartupOperation(
     new kore::BindImageTexture(_shdIndirectBuffer,

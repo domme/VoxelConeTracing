@@ -91,6 +91,8 @@ SpreadLeafBricksPass::
       shp->getUniform("levelAddressBuffer"), GL_READ_ONLY));
   }
 
+  addStartupOperation(new ColorMaskOp(glm::bvec4(false, false, false, false)));
+
   addStartupOperation(
     new kore::BindUniform(vctScene->getNodePool()->getShdNumLevels(),
     shp->getUniform("numLevels")));
@@ -107,5 +109,5 @@ SpreadLeafBricksPass::
   addStartupOperation(
     new kore::DrawIndirectOp(GL_POINTS, 0));
 
-  //addFinishOperation(new MemoryBarrierOp(GL_ALL_BARRIER_BITS));
+  addFinishOperation(new MemoryBarrierOp(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT));
 }

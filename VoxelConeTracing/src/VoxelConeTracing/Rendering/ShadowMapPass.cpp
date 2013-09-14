@@ -55,7 +55,7 @@ ShadowMapPass::ShadowMapPass(std::vector<kore::SceneNode*>& vRenderNodes, kore::
 
   addStartupOperation(new EnableDisableOp(GL_DEPTH_TEST, EnableDisableOp::ENABLE));
   addStartupOperation(new ViewportOp(glm::ivec4(0,0,smSize.x, smSize.y)));
-  //addStartupOperation(new ColorMaskOp(glm::bvec4(false, false, false, false)));
+  addStartupOperation(new ColorMaskOp(glm::bvec4(true, true, true, true)));
   addStartupOperation(new ClearOp());
 
   kore::Camera* lightcam = static_cast<Camera*>(light->getComponent(COMPONENT_CAMERA));

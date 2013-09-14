@@ -73,11 +73,13 @@ MipmapCenterPass::
       
   shp->setName("MipmapCenter shader");
   shp->init();
+  addStartupOperation(new ColorMaskOp(glm::bvec4(false, false, false, false)));
 
   if (mipmapMode == THREAD_MODE_LIGHT) {
     addStartupOperation(
       new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
       _vctScene->getThreadBuf_nodeMap(level)->getHandle()));
+    
 
     addStartupOperation(new BindImageTexture(
       _vctScene->getShdLightNodeMap(),
@@ -121,5 +123,5 @@ MipmapCenterPass::
   addStartupOperation(
     new kore::DrawIndirectOp(GL_POINTS, 0));
 
-  addFinishOperation(new MemoryBarrierOp(GL_ALL_BARRIER_BITS));
+  addFinishOperation(new MemoryBarrierOp(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT));
 }

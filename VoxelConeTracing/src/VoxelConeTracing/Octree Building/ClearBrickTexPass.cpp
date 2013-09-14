@@ -66,7 +66,8 @@ ClearBrickTexPass::ClearBrickTexPass(VCTscene* vctScene,
 
   addStartupOperation(
     new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,_svoCmdBuf.getHandle()));
-
+  
+  addStartupOperation(new ColorMaskOp(glm::bvec4(false, false, false, false)));
   addStartupOperation(
     new kore::BindImageTexture(
       vctScene->getBrickPool()->getShdBrickPool(BRICKPOOL_COLOR),

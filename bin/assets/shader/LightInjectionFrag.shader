@@ -109,12 +109,10 @@ void main() {
         vec4 voxelColor = imageLoad(brickPool_color, injectionPos);
         memoryBarrier();
 
-        vec4 reflectedRadiance = vec4(lightColor, 1) 
+        vec4 reflectedRadiance = vec4(lightColor, 1)
                                 * voxelColor;
         //reflectedRadiance.xyz *= clamp(abs(dot(-lightDir, voxelNormal)) + 0.3, 0.0, 1.0);
   
-                                 
-
         imageStore(brickPool_irradiance,
                   injectionPos,
                   reflectedRadiance);

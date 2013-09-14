@@ -59,6 +59,7 @@ AllocBricksPass::AllocBricksPass(VCTscene* vctScene,
   addStartupOperation(new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
              vctScene->getNodePool()->getCmdBufSVOnodes()->getBufferHandle()));
 
+  addStartupOperation(new ColorMaskOp(glm::bvec4(false, false, false, false)));
   addStartupOperation(new BindUniform(
                       vctScene->getBrickPool()->getShdBrickPoolResolution(),
                       _shader.getUniform("brickPoolResolution")));

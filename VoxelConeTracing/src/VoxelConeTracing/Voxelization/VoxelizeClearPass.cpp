@@ -48,6 +48,7 @@ VoxelizeClearPass::VoxelizeClearPass(VCTscene* vctScene,
 
   addStartupOperation(new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER, 
         vctScene->getVoxelFragTex()->getVoxelFragTexIndCmdBuf()->getHandle()));
+  addStartupOperation(new ColorMaskOp(glm::bvec4(false, false, false, false)));
 
 
   addStartupOperation(new BindImageTexture(
@@ -60,5 +61,5 @@ VoxelizeClearPass::VoxelizeClearPass(VCTscene* vctScene,
   
   addStartupOperation(new kore::DrawIndirectOp(GL_POINTS, 0));
 
-  addStartupOperation(new MemoryBarrierOp(GL_ALL_BARRIER_BITS));
+  addStartupOperation(new MemoryBarrierOp(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT));
 }

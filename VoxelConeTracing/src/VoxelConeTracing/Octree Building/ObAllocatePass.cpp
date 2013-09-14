@@ -61,10 +61,7 @@ ObAllocatePass::ObAllocatePass(VCTscene* vctScene, uint level,
   _allocateShader.setName("ObAllocate shader");
   _allocateShader.init();
   this->setShaderProgram(&_allocateShader);
-
-  
-
-  addStartupOperation(new MemoryBarrierOp(GL_ALL_BARRIER_BITS));
+    
 
   _bindIndCmdBufOp =
     new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
@@ -72,6 +69,7 @@ ObAllocatePass::ObAllocatePass(VCTscene* vctScene, uint level,
                          getCompleteThreadBuf(level)->getHandle());
 
   addStartupOperation(_bindIndCmdBufOp);
+  addStartupOperation(new ColorMaskOp(glm::bvec4(false, false, false, false)));
 
   addStartupOperation(new BindUniform(&_shdLevel, _allocateShader.getUniform("level")));
 
@@ -88,7 +86,7 @@ ObAllocatePass::ObAllocatePass(VCTscene* vctScene, uint level,
                        _allocateShader.getUniform("nextFreeAddress")));
 
   addStartupOperation(new DrawIndirectOp(GL_POINTS, 0));
-  addFinishOperation(new MemoryBarrierOp(GL_ALL_BARRIER_BITS));
+  addFinishOperation(new MemoryBarrierOp(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT));
 
   /*addFinishOperation(
     new FunctionOp(std::bind(&ObAllocatePass::setLevelAddressBuffer, this)));*/

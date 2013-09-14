@@ -60,6 +60,7 @@ WriteLeafNodesPass::
   addStartupOperation(
     new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
         _vctScene->getVoxelFragList()->getFragListIndCmdBuf()->getBufferHandle()));
+  addStartupOperation(new ColorMaskOp(glm::bvec4(false, false, false, false)));
 
   addStartupOperation(new BindUniform(vctScene->getNodePool()->getShdNumLevels(),
                                               shp->getUniform("numLevels")));
@@ -102,5 +103,5 @@ WriteLeafNodesPass::
   addStartupOperation(
     new kore::DrawIndirectOp(GL_POINTS, 0));
 
-  addFinishOperation(new MemoryBarrierOp(GL_ALL_BARRIER_BITS));
+  addFinishOperation(new MemoryBarrierOp(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT));
 }

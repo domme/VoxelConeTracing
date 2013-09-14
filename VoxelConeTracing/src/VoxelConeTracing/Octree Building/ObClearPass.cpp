@@ -58,6 +58,7 @@ ObClearPass::ObClearPass(VCTscene* vctScene,
 
   addStartupOperation(
     new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,_svoCmdBuf.getHandle()));
+  addStartupOperation(new ColorMaskOp(glm::bvec4(false, false, false, false)));
 
   addStartupOperation(new BindImageTexture(
                     vctScene->getNodePool()->getShdNodePool(COLOR),
@@ -98,5 +99,5 @@ ObClearPass::ObClearPass(VCTscene* vctScene,
   
   addStartupOperation(new kore::DrawIndirectOp(GL_POINTS, 0));
 
-  addStartupOperation(new MemoryBarrierOp(GL_ALL_BARRIER_BITS));
+  addStartupOperation(new MemoryBarrierOp(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT));
 }

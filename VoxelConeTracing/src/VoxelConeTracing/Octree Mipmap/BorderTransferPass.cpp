@@ -77,6 +77,7 @@ BorderTransferPass::
   _shader.init();
 
   this->setShaderProgram(&_shader);
+  addStartupOperation(new ColorMaskOp(glm::bvec4(false, false, false, false)));
 
   if (eThreadMode == THREAD_MODE_LIGHT) {
     addStartupOperation(

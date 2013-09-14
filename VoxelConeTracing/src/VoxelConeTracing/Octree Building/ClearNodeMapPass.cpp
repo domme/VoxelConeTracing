@@ -48,6 +48,7 @@ ClearNodeMapPass::ClearNodeMapPass(VCTscene* vctScene,
   addStartupOperation(
     new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
                          vctScene->getThreadBuf_nodeMap_complete()->getHandle()));
+  addStartupOperation(new ColorMaskOp(glm::bvec4(false, false, false, false)));
 
   addStartupOperation(
     new kore::BindImageTexture(

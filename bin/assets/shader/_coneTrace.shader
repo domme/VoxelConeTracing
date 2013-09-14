@@ -61,8 +61,9 @@ vec4 coneTrace_pixelProj(in vec3 rayOriginTex, in vec3 rayDirTex, in float pixel
 }
 
 
-vec4 coneTrace_tanAngle(in vec3 rayOriginTex, in vec3 rayDirTex, in float tanConeAngle) {
+vec4 coneTrace(in vec3 rayOriginTex, in vec3 rayDirTex, in float coneDiameter, in float maxDistance) {
   vec4 returnColor = vec4(0);
+  rayOriginTex += rayDirTex * (1.0 / 128);
 
   float tEnter = 0.0;
   float tLeave = 0.0;
@@ -85,8 +86,8 @@ vec4 coneTrace_tanAngle(in vec3 rayOriginTex, in vec3 rayDirTex, in float tanCon
     bool valid = false;
     uint outLevel = 0;
 
-    float coneH = 2 * tanConeAngle * f;
-    int address = traverseOctree_voxelSize(posTex, f, coneH, nodePosMin, 
+    float targetSize = coneDiameter * f;
+    int address = traverseOctree_voxelSize(posTex, f, targetSize, nodePosMin, 
                                            nodePosMax, foundNodeSideLength, 
                                            valid, outLevel);
 
@@ -107,13 +108,9 @@ vec4 coneTrace_tanAngle(in vec3 rayOriginTex, in vec3 rayDirTex, in float tanCon
       newCol = raycastBrick(nodeColorU, enterPos, leavePos, rayDirTex,
                             outLevel, foundNodeSideLength);
 
-      // Account for quadratic falloff
-      float dist = f * 25;
-      newCol.xyz /= max(dist * dist, 1.0);
-            
       returnColor = (1.0 - returnColor.a) * newCol + returnColor;
 
-      if (returnColor.a > 0.99) {
+      if (returnColor.a > 0.99 || (maxDistance > 0.00001 && f >= maxDistance)) {
         return returnColor;
       }
     }

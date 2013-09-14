@@ -72,9 +72,13 @@ SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
   // Build SVO from top to bottom
   uint _numLevels = vctScene.getNodePool()->getNumLevels(); 
   for (uint iLevel = 0; iLevel < _numLevels; ++iLevel) {
-    this->addProgramPass(new NeighbourPointersPass(&vctScene,
-                                                  iLevel,
-                                                  exeFrequency));
+
+    if (iLevel > 0) {
+      this->addProgramPass(new NeighbourPointersPass(&vctScene,
+                                                      iLevel,
+                                                      exeFrequency));
+    }
+    
 
     this->addProgramPass(new ObFlagPass(&vctScene, exeFrequency));
     this->addProgramPass(new ObAllocatePass(&vctScene, iLevel,

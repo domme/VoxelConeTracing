@@ -71,66 +71,24 @@ uniform bool useWideCone = true;
 
 const float PI = 3.1415926535897932384626433832795;
 
-// Sample dirs for a 60degree-cone
- const vec3 sampleDirs60[7] =  {normalize(vec3(0.865, 0.5, 0)),
-                                normalize(vec3(0.43, 0.5, 0.75)),
-                                normalize(vec3(-0.43, 0.5, 0.75)),
-                                normalize(vec3(-0.865, 0.5, 0)),
-                                normalize(vec3(-0.43, 0.5, -0.75)),
-                                normalize(vec3(0.43, 0.5, -0.75)),
-                                normalize(vec3(0, 1, 0))};
-
-const vec3 sampleDirs90[4] =  {normalize(vec3(0.70711, 0.70611, 0)),
-                               normalize(vec3(0, 0.70611, -0.70711)),
-                               normalize(vec3(-0.70711, 0.70611, 0)),
-                               normalize(vec3(0, 0.70611, 0.70711))};
-                               
-
-
-
 float tanAngleDeg(in float angleDeg) {
    return abs(tan((angleDeg / 180.0) * PI * 0.5));
 }
 
+vec4 gatherIndirectIllum(in vec3 posTex, in vec3 normal, in vec3 tangent) {
+  vec3 bitangent = normalize(cross(normal, tangent));
 
-vec3 getDir(in float phi, in float theta) {
-  return  normalize(vec3(sin(theta) * cos(phi),
-                         sin(theta) * sin(phi),
-                         cos(theta)));
-}
-
-vec4 gatherIndirectIllum60(in vec3 posTex, in vec3 normalWS, in vec3 tangentWS) {
-  mat3 surfaceMat = mat3(tangentWS, normalWS, normalize(cross(normalWS, tangentWS)));
-
+  float maxDistance = 0.3;
   vec4 color = vec4(0);
-  
-  float weights = 0.0;
-  
-  for (int i = 0; i < 7; ++i) {
-    vec3 dir = surfaceMat * sampleDirs60[i];
-    float currWeight = dot(dir, normalWS);
-    color += currWeight * coneTrace_tanAngle(posTex + dir * (1.0 / 128), dir, 0.5773);
-    weights += currWeight;
-  }
     
-  return color / weights;
-}
+  color += coneTrace(posTex, normal, 1.1546, maxDistance);
 
-vec4 gatherIndirectIllum90(in vec3 posTex, in vec3 normalWS, in vec3 tangentWS) {
-  mat3 surfaceMat = mat3(tangentWS, normalWS, normalize(cross(normalWS, tangentWS)));
+  color += 0.707 * coneTrace(posTex, normalize(normal + tangent), 1.1546, maxDistance);
+  color += 0.707 * coneTrace(posTex, normalize(normal - tangent), 1.1546, maxDistance);
+  color += 0.707 * coneTrace(posTex, normalize(normal + bitangent), 1.1546, maxDistance);
+  color += 0.707 * coneTrace(posTex, normalize(normal - bitangent), 1.1546, maxDistance);
 
-  vec4 color = vec4(0);
-  
-  float weights = 0.0;
-  
-  for (int i = 0; i < 4; ++i) {
-    vec3 dir = surfaceMat * sampleDirs90[i];
-    float currWeight = dot(dir, normalWS);
-    color += currWeight * coneTrace_tanAngle(posTex + dir * (1.0 / 128), dir, 0.5773);
-    weights += currWeight;
-  }
-    
-  return color / weights;
+  return color;
 }
 
 
@@ -168,17 +126,13 @@ void main(void)
      lightIntensity += visibility * (lightColor * diff + spec);
    }
       
-   // Add global illumination
-   if (useWideCone) {
-    lightIntensity += giIntensity * gatherIndirectIllum90(posTex, normalWS, tangentWS).xyz;
-   }
-   else {
-    lightIntensity += giIntensity * gatherIndirectIllum60(posTex, normalWS, tangentWS).xyz; 
-   }
-   
+  
+  
+   lightIntensity += giIntensity * gatherIndirectIllum(posTex, normalWS, tangentWS).xyz;
+     
     
    vec3 reflectVec = normalize(reflect(view, normalWS));
-   lightIntensity += specGiIntensity * coneTrace_tanAngle(posTex + reflectVec * (1.0 / 128), reflectVec, tanAngleDeg(specExponent)).xyz;
+   lightIntensity += specGiIntensity * coneTrace(posTex, reflectVec, 2.0 * tanAngleDeg(specExponent), 0.0).xyz;
    
    outColor = diffColor * vec4(lightIntensity, 1.0);
 }

@@ -56,6 +56,7 @@ NeighbourPointersPass::
   addStartupOperation(
     new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
     vctScene->getVoxelFragList()->getFragListIndCmdBuf()->getBufferHandle()));
+  addStartupOperation(new ColorMaskOp(glm::bvec4(false, false, false, false)));
 
   addStartupOperation(new BindImageTexture(
     vctScene->getVoxelFragList()->getShdVoxelFragList(),

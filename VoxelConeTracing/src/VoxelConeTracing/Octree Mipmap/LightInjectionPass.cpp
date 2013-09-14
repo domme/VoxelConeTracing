@@ -67,6 +67,8 @@ LightInjectionPass::LightInjectionPass(VCTscene* vctScene,
   addStartupOperation(new BindBuffer(
     GL_DRAW_INDIRECT_BUFFER,
     _vctScene->getThreadBuf_nodeMap(_vctScene->getNodePool()->getNumLevels() - 1)->getHandle()));
+
+  addStartupOperation(new ColorMaskOp(glm::bvec4(true, true, true, true)));
   
   std::vector<ShaderData>& vSMBufferTex = shadowMapFBO->getOutputs();
   addStartupOperation(new BindTexture(
@@ -121,7 +123,7 @@ LightInjectionPass::LightInjectionPass(VCTscene* vctScene,
 
   addStartupOperation(new DrawIndirectOp(GL_POINTS, 0));
 
-  this->addFinishOperation(new MemoryBarrierOp(GL_ALL_BARRIER_BITS));
+  this->addFinishOperation(new MemoryBarrierOp(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT));
 
   
 }

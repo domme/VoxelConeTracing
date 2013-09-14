@@ -58,6 +58,7 @@ ObClearNeighboursPass::ObClearNeighboursPass(VCTscene* vctScene,
 
   addStartupOperation(
     new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,_svoCmdBuf.getHandle()));
+  addStartupOperation(new ColorMaskOp(glm::bvec4(false, false, false, false)));
 
   addStartupOperation(new BindImageTexture(
                     vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_X),
