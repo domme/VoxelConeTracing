@@ -37,7 +37,7 @@ MipmapCornersPass::~MipmapCornersPass(void) {
 MipmapCornersPass::
   MipmapCornersPass(VCTscene* vctScene,
                   EBrickPoolAttributes eBrickPoolAtt,
-                  EMipmappingMode mipmapMode,
+                  EThreadMode mipmapMode,
                   uint level,
                   kore::EOperationExecutionType executionType) {
   using namespace kore;
@@ -51,10 +51,6 @@ MipmapCornersPass::
   _renderMgr = RenderManager::getInstance();
   _sceneMgr = SceneManager::getInstance();
   _resMgr = ResourceManager::getInstance();
-
-  _mipmapMode = mipmapMode;
-  _shdMipmapMode.type = GL_UNSIGNED_INT;
-  _shdMipmapMode.data = &_mipmapMode;
   
   _level = level;
   _shdLevel.component = NULL;
@@ -65,13 +61,19 @@ MipmapCornersPass::
   kore::ShaderProgram* shp = new kore::ShaderProgram;
   this->setShaderProgram(shp);
 
-  shp->loadShader("./assets/shader/MipmapCorners.shader",
-                 GL_VERTEX_SHADER);
+  if (mipmapMode == THREAD_MODE_COMPLETE) {
+    shp->loadShader("./assets/shader/MipmapCorners.shader",
+      GL_VERTEX_SHADER, "#define THREAD_MODE 0\n\n");
+  } else if (mipmapMode == THREAD_MODE_LIGHT) {
+    shp->loadShader("./assets/shader/MipmapCorners.shader",
+      GL_VERTEX_SHADER, "#define THREAD_MODE 1\n\n");
+  }
+  
   shp->setName("MipmapCorners shader");
   shp->init();
 
   // Launch a thread for every node up to _level
-  if (_mipmapMode == MIPMAP_LIGHT) {
+  if (mipmapMode == THREAD_MODE_LIGHT) {
     addStartupOperation(
       new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
       _vctScene->getThreadBuf_nodeMap(level)->getHandle()));
@@ -100,8 +102,6 @@ MipmapCornersPass::
       vctScene->getNodePool()->getShdLevelAddressBuffer(),
       shp->getUniform("levelAddressBuffer"), GL_READ_ONLY));
   }
-
-  addStartupOperation(new BindUniform(&_shdMipmapMode, shp->getUniform("mipmapMode")));
   
     addStartupOperation(new BindImageTexture(
                     vctScene->getBrickPool()->getShdBrickPool(eBrickPoolAtt),

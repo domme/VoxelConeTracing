@@ -30,7 +30,7 @@
 #include "Kore\Operations\Operations.h"
 
 BorderTransferPass::
-  BorderTransferPass(VCTscene* vctScene, EBrickPoolAttributes eBrickPool, 
+  BorderTransferPass(VCTscene* vctScene, EBrickPoolAttributes eBrickPool, EThreadMode eThreadMode,
                      int level, kore::EOperationExecutionType executionType) {
   using namespace kore;
 
@@ -65,25 +65,51 @@ BorderTransferPass::
   _shdLevel.type = GL_INT;
   _shdLevel.data = &_level;
     
-  _shader.loadShader("./assets/shader/BorderTransfer.shader",
-                      GL_VERTEX_SHADER);
+  if (eThreadMode == THREAD_MODE_COMPLETE) {
+    _shader.loadShader("./assets/shader/BorderTransfer.shader",
+                       GL_VERTEX_SHADER, "#define THREAD_MODE 0\n\n");
+  } else if (eThreadMode == THREAD_MODE_LIGHT) {
+    _shader.loadShader("./assets/shader/BorderTransfer.shader",
+                        GL_VERTEX_SHADER, "#define THREAD_MODE 1\n\n");
+  }
+  
   _shader.setName("BorderTransfer shader");
   _shader.init();
 
   this->setShaderProgram(&_shader);
 
-  addStartupOperation(
-    new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
-    vctScene->getNodePool()->getDenseThreadBuf(_level)->getHandle()));
+  if (eThreadMode == THREAD_MODE_LIGHT) {
+    addStartupOperation(
+      new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
+      vctScene->getThreadBuf_nodeMap(level)->getHandle()));
+
+    addStartupOperation(new BindImageTexture(
+      vctScene->getShdLightNodeMap(),
+      _shader.getUniform("nodeMap"), GL_READ_ONLY));
+
+    addStartupOperation(new BindUniform(vctScene->getShdNodeMapOffsets(),
+      _shader.getUniform("nodeMapOffset[0]")));
+
+    addStartupOperation(new BindUniform(vctScene->getShdNodeMapSizes(),
+      _shader.getUniform("nodeMapSize[0]")));
+
+  } else {
+    addStartupOperation(
+      new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
+      vctScene->getNodePool()->getDenseThreadBuf(_level)->getHandle()));
+
+    addStartupOperation(
+      new kore::BindUniform(vctScene->getNodePool()->getShdNumLevels(),
+      _shader.getUniform("numLevels")));
+
+    addStartupOperation(
+      new kore::BindImageTexture(
+      vctScene->getNodePool()->getShdLevelAddressBuffer(),
+      _shader.getUniform("levelAddressBuffer"), GL_READ_ONLY));
+  }
 
   addStartupOperation(new BindUniform(&_shdLevel, _shader.getUniform("level")));
-  addStartupOperation(new BindUniform(vctScene->getNodePool()->getShdNumLevels(),
-                                      _shader.getUniform("numLevels")));
   
-  addStartupOperation(new BindImageTexture(
-    vctScene->getNodePool()->getShdLevelAddressBuffer(),
-    _shader.getUniform("levelAddressBuffer"), GL_READ_ONLY));
-
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdNodePool(COLOR),
     _shader.getUniform("nodePool_color"), GL_READ_ONLY));
@@ -102,17 +128,6 @@ BorderTransferPass::
   addStartupOperation(new MemoryBarrierOp(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT));
   //////////////////////////////////////////////////////////////////////////
   
-  // X Axis COPY
-  addStartupOperation(new BindUniform(&_shdAxisX_neg, _shader.getUniform("axis")));
-  addStartupOperation(new BindImageTexture(
-    vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_NEG_X),
-    _shader.getUniform("nodePool_Neighbour"), GL_READ_ONLY));
-
-  addStartupOperation(new DrawIndirectOp(GL_POINTS, 0));
-  addStartupOperation(new MemoryBarrierOp(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT));
-  //////////////////////////////////////////////////////////////////////////
-
-  
   // Y Axis ADD
   addStartupOperation(new BindUniform(&_shdAxisY, _shader.getUniform("axis")));
   addStartupOperation(new BindImageTexture(
@@ -122,18 +137,7 @@ BorderTransferPass::
   addStartupOperation(new DrawIndirectOp(GL_POINTS, 0));
   addStartupOperation(new MemoryBarrierOp(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT));
   //////////////////////////////////////////////////////////////////////////
-  
-  // Y Axis COPY
-  addStartupOperation(new BindUniform(&_shdAxisY_neg, _shader.getUniform("axis")));
-  addStartupOperation(new BindImageTexture(
-    vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_NEG_Y),
-    _shader.getUniform("nodePool_Neighbour"), GL_READ_ONLY));
-
-  addStartupOperation(new DrawIndirectOp(GL_POINTS, 0));
-  addStartupOperation(new MemoryBarrierOp(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT));
-  //////////////////////////////////////////////////////////////////////////
-  
-  
+   
   // Z Axis ADD
   addStartupOperation(new BindUniform(&_shdAxisZ, _shader.getUniform("axis")));
   addStartupOperation(new BindImageTexture(
@@ -144,16 +148,6 @@ BorderTransferPass::
   addStartupOperation(new MemoryBarrierOp(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT));
   //////////////////////////////////////////////////////////////////////////
 
-  // Z Axis COPY
-  addStartupOperation(new BindUniform(&_shdAxisZ_neg, _shader.getUniform("axis")));
-  addStartupOperation(new BindImageTexture(
-    vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_NEG_Z),
-    _shader.getUniform("nodePool_Neighbour"), GL_READ_ONLY));
-
-  addStartupOperation(new DrawIndirectOp(GL_POINTS, 0));
-  addStartupOperation(new MemoryBarrierOp(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT));
-  //////////////////////////////////////////////////////////////////////////
-  
 }
 
 BorderTransferPass::~BorderTransferPass(void) {

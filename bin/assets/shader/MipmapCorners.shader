@@ -39,6 +39,7 @@ uniform ivec2 nodeMapOffset[8];
 uniform ivec2 nodeMapSize[8];
 
 #include "assets/shader/_utilityFunctions.shader"
+#include "assets/shader/_threadNodeUtil.shader"
 
 uint childNextU[] = {0, 0, 0, 0, 0, 0, 0, 0};
 uint childColorU[] = {0, 0, 0, 0, 0, 0, 0, 0};
@@ -52,33 +53,6 @@ void loadChildTile(in int tileAddress) {
   memoryBarrier();
 }
 
-uint getThreadNode() {
-  // Complete octree
-  if (mipmapMode == 0) {
-      int levelStart = int(imageLoad(levelAddressBuffer, int(level)).x);
-      int nextLevelStart = int(imageLoad(levelAddressBuffer, int(level + 1)).x);
-      memoryBarrier();
-
-      uint index = uint(levelStart) + uint(gl_VertexID);
-
-      if (level < int(numLevels - 1) && index >= nextLevelStart) {
-        return NODE_NOT_FOUND;
-      }
-
-      return index;
-  } 
-  
-  // Only lightMap-Node
-  else {
-      ivec2 nmSize = nodeMapSize[level];
-  
-      ivec2 uv = ivec2(0);
-      uv.x = (gl_VertexID % nmSize.x);
-      uv.y = (gl_VertexID / nmSize.x);
-
-      return imageLoad(nodeMap, nodeMapOffset[level] + uv).x;
-  }
-}
 
 // Get the child brickcolor
 vec4 getChildBrickColor(in int childIndex, in ivec3 brickOffset) {

@@ -121,12 +121,6 @@
     <ClCompile Include="src\VoxelConeTracing\Octree Building\ClearNodeMapPass.cpp">
       <Filter>src\Octree Building</Filter>
     </ClCompile>
-    <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\SpreadLightLeafBricksPass.cpp">
-      <Filter>src\Octree Building</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VoxelConeTracing\Octree Mipmap\BorderTransferLightPass.cpp">
-      <Filter>src\Octree Mipmap</Filter>
-    </ClCompile>
     <ClCompile Include="src\VoxelConeTracing\Scene\VoxelFragTex.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
@@ -302,12 +296,6 @@
     <ClInclude Include="src\VoxelConeTracing\Octree Building\ClearNodeMapPass.h">
       <Filter>src\Octree Building</Filter>
     </ClInclude>
-    <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\SpreadLightLeafBricksPass.h">
-      <Filter>src\Octree Building</Filter>
-    </ClInclude>
-    <ClInclude Include="src\VoxelConeTracing\Octree Mipmap\BorderTransferLightPass.h">
-      <Filter>src\Octree Mipmap</Filter>
-    </ClInclude>
     <ClInclude Include="src\VoxelConeTracing\Scene\VoxelFragTex.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
@@ -415,12 +403,6 @@
     <None Include="..\bin\assets\shader\ClearNodeMap.shader">
       <Filter>shader\Octree Building</Filter>
     </None>
-    <None Include="..\bin\assets\shader\SpreadLightLeafBricks.shader">
-      <Filter>shader\Octree Mipmapping</Filter>
-    </None>
-    <None Include="..\bin\assets\shader\BorderTransferLight.shader">
-      <Filter>shader\Octree Mipmapping</Filter>
-    </None>
     <None Include="..\bin\assets\shader\_octreeTraverse.shader">
       <Filter>shader</Filter>
     </None>
@@ -434,6 +416,9 @@
       <Filter>shader\Voxelize</Filter>
     </None>
     <None Include="..\bin\assets\shader\_coneTrace.shader">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\_threadNodeUtil.shader">
       <Filter>shader</Filter>
     </None>
   </ItemGroup>

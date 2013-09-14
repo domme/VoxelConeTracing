@@ -37,6 +37,10 @@ layout(r32ui) uniform readonly uimageBuffer nodePool_color;
 layout(r32ui) uniform readonly uimageBuffer levelAddressBuffer;
 layout(rgba8) uniform volatile image3D brickPool_value;
 
+layout(r32ui) uniform readonly uimage2D nodeMap;
+uniform ivec2 nodeMapOffset[8];
+uniform ivec2 nodeMapSize[8];
+
 uniform uint numLevels;  // Number of levels in the octree
 
 vec4 voxelValues[8] = {
@@ -60,8 +64,10 @@ const uvec3 childOffsets[8] = {
   uvec3(0, 1, 1), 
   uvec3(1, 1, 1)};
 
-#include "assets/shader/_utilityFunctions.shader"
+const uint level = numLevels - 1;
 
+#include "assets/shader/_utilityFunctions.shader"
+#include "assets/shader/_threadNodeUtil.shader"
 
 void loadVoxelValues(in ivec3 brickAddress){
   // Collect the original voxel colors (from voxelfragmentlist-voxels)
@@ -70,20 +76,6 @@ void loadVoxelValues(in ivec3 brickAddress){
     voxelValues[i] = imageLoad(brickPool_value, 
                                brickAddress + 2 * ivec3(childOffsets[i]));
   }
-}
-uint getThreadNode() {
-  int level = int(numLevels - 1);
-  uint levelStart = imageLoad(levelAddressBuffer, level).x;
-  uint nextLevelStart = imageLoad(levelAddressBuffer, level + 1).x;
-  memoryBarrier();
-
-  uint index = levelStart + uint(gl_VertexID);
-
- // if (index >= nextLevelStart) {
-  //  return NODE_NOT_FOUND;
-  //}
-
-  return index;
 }
 
 ///*

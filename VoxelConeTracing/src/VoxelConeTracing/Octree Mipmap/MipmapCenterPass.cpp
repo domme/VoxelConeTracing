@@ -37,7 +37,7 @@ MipmapCenterPass::~MipmapCenterPass(void) {
 MipmapCenterPass::
   MipmapCenterPass(VCTscene* vctScene,
                   EBrickPoolAttributes brickPoolAtt,
-                  EMipmappingMode mipmapMode,
+                  EThreadMode mipmapMode,
                   uint level,
                   kore::EOperationExecutionType executionType) {
   using namespace kore;
@@ -61,21 +61,20 @@ MipmapCenterPass::
   kore::ShaderProgram* shp = new kore::ShaderProgram;
   this->setShaderProgram(shp);
 
-  if (mipmapMode == MIPMAP_COMPLETE) {
+  if (mipmapMode == THREAD_MODE_COMPLETE) {
     shp->loadShader("./assets/shader/MipmapCenter.shader",
       GL_VERTEX_SHADER,
-      "#define MIPMAP_MODE 1\n\n");
-  } else if (mipmapMode == MIPMAP_LIGHT) {
+      "#define THREAD_MODE 0\n\n");
+  } else if (mipmapMode == THREAD_MODE_LIGHT) {
     shp->loadShader("./assets/shader/MipmapCenter.shader",
       GL_VERTEX_SHADER,
-      "#define MIPMAP_MODE 2\n\n");
+      "#define THREAD_MODE 1\n\n");
   }
-  
-    
+      
   shp->setName("MipmapCenter shader");
   shp->init();
 
-  if (mipmapMode == MIPMAP_LIGHT) {
+  if (mipmapMode == THREAD_MODE_LIGHT) {
     addStartupOperation(
       new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
       _vctScene->getThreadBuf_nodeMap(level)->getHandle()));

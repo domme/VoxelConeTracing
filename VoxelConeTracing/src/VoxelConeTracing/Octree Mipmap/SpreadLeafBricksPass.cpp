@@ -36,6 +36,7 @@ SpreadLeafBricksPass::~SpreadLeafBricksPass(void) {
 SpreadLeafBricksPass::
   SpreadLeafBricksPass(VCTscene* vctScene,
                       EBrickPoolAttributes eBrickPool,
+                      EThreadMode eThreadMode,
                      kore::EOperationExecutionType executionType) {
   using namespace kore;
   
@@ -52,22 +53,47 @@ SpreadLeafBricksPass::
   kore::ShaderProgram* shp = new kore::ShaderProgram;
   this->setShaderProgram(shp);
   shp->setName("SpreadLeafBricks shader");
-  shp->loadShader("./assets/shader/SpreadLeafBricks.shader",
-                 GL_VERTEX_SHADER);
-  shp->init();
+
+  if (eThreadMode == THREAD_MODE_COMPLETE) {
+    shp->loadShader("./assets/shader/SpreadLeafBricks.shader",
+      GL_VERTEX_SHADER, "#define THREAD_MODE 0\n\n");
+  } else if (eThreadMode == THREAD_MODE_LIGHT) {
+    shp->loadShader("./assets/shader/SpreadLeafBricks.shader",
+      GL_VERTEX_SHADER, "#define THREAD_MODE 1\n\n");
+  }
+
   
-  // Launch a thread for every node up to the max level
+  shp->init();
+    
+  if (eThreadMode == THREAD_MODE_LIGHT) {
+    addStartupOperation(
+      new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
+      vctScene->getThreadBuf_nodeMap(vctScene->getNodePool()->getNumLevels() - 1)->getHandle()));
+
+    addStartupOperation(new BindImageTexture(
+      vctScene->getShdLightNodeMap(),
+      shp->getUniform("nodeMap"), GL_READ_ONLY));
+
+    addStartupOperation(new BindUniform(vctScene->getShdNodeMapOffsets(),
+      shp->getUniform("nodeMapOffset[0]")));
+
+    addStartupOperation(new BindUniform(vctScene->getShdNodeMapSizes(),
+      shp->getUniform("nodeMapSize[0]")));
+
+  } else {
+    addStartupOperation(
+      new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
+      vctScene->getNodePool()->getDenseThreadBuf(vctScene->getNodePool()->getNumLevels() - 1)->getHandle()));
+
+    addStartupOperation(
+      new kore::BindImageTexture(
+      vctScene->getNodePool()->getShdLevelAddressBuffer(),
+      shp->getUniform("levelAddressBuffer"), GL_READ_ONLY));
+  }
+
   addStartupOperation(
-    new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
-    _vctScene->getNodePool()->getDenseThreadBuf(
-    _vctScene->getNodePool()->getNumLevels() - 1)->getHandle()));
-
-  addStartupOperation(new BindUniform(vctScene->getNodePool()->getShdNumLevels(),
-                                              shp->getUniform("numLevels")));
-
-  addStartupOperation(new BindImageTexture(
-                      vctScene->getNodePool()->getShdLevelAddressBuffer(),
-                      shp->getUniform("levelAddressBuffer"), GL_READ_ONLY));
+    new kore::BindUniform(vctScene->getNodePool()->getShdNumLevels(),
+    shp->getUniform("numLevels")));
 
   addStartupOperation(new BindImageTexture(
     vctScene->getNodePool()->getShdNodePool(COLOR),
@@ -81,5 +107,5 @@ SpreadLeafBricksPass::
   addStartupOperation(
     new kore::DrawIndirectOp(GL_POINTS, 0));
 
-  addFinishOperation(new MemoryBarrierOp(GL_ALL_BARRIER_BITS));
+  //addFinishOperation(new MemoryBarrierOp(GL_ALL_BARRIER_BITS));
 }

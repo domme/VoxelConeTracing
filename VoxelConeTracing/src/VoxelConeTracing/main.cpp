@@ -253,10 +253,11 @@ void TW_CALL durationStringCallback(void *value, void * clientData)
   ShaderProgramPass* pass = static_cast<ShaderProgramPass*>(clientData);
 
   GLuint durationID = pass->getTimerQueryObject();
-  
+ 
   for (uint i = 0; i < _vDurationsResults.size(); ++i) {
        if (_vDurationsResults[i].startQueryID == durationID) {
-      TwCopyStdStringToLibrary(*destPtr, std::to_string(_vDurationsResults[i].durationMS));
+      TwCopyStdStringToLibrary(*destPtr, 
+        std::to_string((double)((uint)(_vDurationsResults[i].durationNS)) / 1000000.0));
       return;
     }
   }
@@ -321,8 +322,8 @@ int main(void) {
             reinterpret_cast<const char*>(
             glGetString(GL_VERSION)));
   kore::Log::getInstance()
-    ->write("GLSL version: %s\n",
-             reinterpret_cast<const char*>(
+    ->write("GLSL version: %s\n", 
+             reinterpret_cast<const char*>( 
              glGetString(GL_SHADING_LANGUAGE_VERSION)));
   kore::Log::getInstance()
     ->write("GLFW version %i.%i.%i\n",

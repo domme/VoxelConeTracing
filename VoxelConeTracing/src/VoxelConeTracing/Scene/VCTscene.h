@@ -58,9 +58,9 @@ struct SNode {
   uint color;
 };
 
-enum EMipmappingMode {
-  MIPMAP_COMPLETE = 0,
-  MIPMAP_LIGHT
+enum EThreadMode {
+  THREAD_MODE_COMPLETE = 0,
+  THREAD_MODE_LIGHT
 };
 
 struct SDrawArraysIndirectCommand {

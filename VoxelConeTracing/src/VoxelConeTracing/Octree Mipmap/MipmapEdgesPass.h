@@ -37,7 +37,7 @@ class MipmapEdgesPass : public kore::ShaderProgramPass
   public:
     MipmapEdgesPass(VCTscene* vctScene,
                     EBrickPoolAttributes eBrickPoolAtt,
-                     EMipmappingMode eMipmapMode,
+                     EThreadMode eMipmapMode,
                      uint level,
                      kore::EOperationExecutionType executionType);
     virtual ~MipmapEdgesPass(void);
@@ -51,8 +51,6 @@ class MipmapEdgesPass : public kore::ShaderProgramPass
     kore::ShaderData _shdLevel;
     uint _level;
 
-    EMipmappingMode _mipmapMode;
-    kore::ShaderData _shdMipmapMode;
 };
 
 #endif  // VCT_SRC_VCT_MIPMAPCORNERSPASS_H_
