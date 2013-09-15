@@ -78,9 +78,9 @@ float tanAngleDeg(in float angleDeg) {
 vec4 gatherIndirectIllum(in vec3 posTex, in vec3 normal, in vec3 tangent) {
   vec3 bitangent = normalize(cross(normal, tangent));
 
-  float maxDistance = 0.3;
+  float maxDistance = 0.5;
   vec4 color = vec4(0);
-    
+
   color += coneTrace(posTex, normal, 1.1546, maxDistance);
 
   color += 0.707 * coneTrace(posTex, normalize(normal + tangent), 1.1546, maxDistance);
@@ -132,7 +132,7 @@ void main(void)
      
     
    vec3 reflectVec = normalize(reflect(view, normalWS));
-   lightIntensity += specGiIntensity * coneTrace(posTex, reflectVec, 2.0 * tanAngleDeg(specExponent), 0.0).xyz;
+   //lightIntensity += specGiIntensity * coneTrace(posTex, reflectVec, 2.0 * tanAngleDeg(specExponent), 0.0).xyz;
    
    outColor = diffColor * vec4(lightIntensity, 1.0);
 }

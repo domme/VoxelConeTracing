@@ -171,7 +171,7 @@ void setup() {
   SVCTparameters params;
   params.voxel_grid_resolution = 256;
   params.voxel_grid_sidelengths = glm::vec3(50, 50, 50);
-  params.fraglist_size_multiplier = 3;
+  params.fraglist_size_multiplier = 4;
   params.fraglist_size_divisor = 1;
   params.brickPoolResolution = 64 * 4;
   params.shadowMapResolution = glm::vec2(2048,2048);
@@ -233,13 +233,13 @@ void setup() {
 
   //_backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
   
-  //_backbufferStage->addProgramPass(new ConeTracePass(&_vctScene));
+  _backbufferStage->addProgramPass(new ConeTracePass(&_vctScene));
   
   
-  _backbufferStage->addProgramPass(new RenderPass(
-    gBufferStage->getFrameBuffer(), shadowMapStage->getFrameBuffer(),
-    lightNodes, &_vctScene));
-    //*/
+  //_backbufferStage->addProgramPass(new RenderPass(
+  //  gBufferStage->getFrameBuffer(), shadowMapStage->getFrameBuffer(),
+  //  lightNodes, &_vctScene));
+  //  //*/
 
   RenderManager::getInstance()->addFramebufferStage(_backbufferStage);
   //////////////////////////////////////////////////////////////////////////

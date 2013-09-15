@@ -84,32 +84,53 @@ vec4 coneTrace(in vec3 rayOriginTex, in vec3 rayDirTex, in float coneDiameter, i
    
     float foundNodeSideLength = 1.0;
     bool valid = false;
+    bool valid2 = false;
     uint outLevel = 0;
 
     float targetSize = coneDiameter * f;
-    int address = traverseOctree_voxelSize(posTex, f, targetSize, nodePosMin, 
-                                           nodePosMax, foundNodeSideLength, 
-                                           valid, outLevel);
+    
+
+    float sampleDiameter = max((1.0/256.0), coneDiameter * f);
+    float sampleLOD = log2(sampleDiameter * 256);
+
+    int addressFloor = traverseOctree_level(posTex, f, uint(floor(sampleLOD)),
+                       nodePosMin, nodePosMax, valid);
+
+    int addressCeil = traverseOctree_level(posTex, f,  uint(ceil(sampleLOD)),
+                       nodePosMin, nodePosMax, valid2);
+
+    //int address = traverseOctree_voxelSize(posTex, f, targetSize, nodePosMin, 
+    //                                       nodePosMax, foundNodeSideLength, 
+    //                                       valid, outLevel);
+
+
 
     bool advance = intersectRayWithAABB(posTex, rayDirTex, nodePosMin, 
                                         nodePosMax, tEnter, tLeave);
     
     if (valid) {
-      uint nodeColorU = imageLoad(nodePool_color, address).x;
+      uint nodeColorUf = imageLoad(nodePool_color, addressFloor).x;
+      uint nodeColorUc = imageLoad(nodePool_color, addressCeil).x;
       memoryBarrier();
 
       vec4 newCol = vec4(0);
+      vec4 newCol2 = vec4(0);
+      vec4 mixCol = vec4(0);
     
       vec3 enterPos = (posTex - nodePosMin) / foundNodeSideLength;
 
       vec3 leavePos = 
           ((posTex + rayDirTex * tLeave) - nodePosMin) / foundNodeSideLength;
 
-      newCol = raycastBrick(nodeColorU, enterPos, leavePos, rayDirTex,
+      newCol = raycastBrick(nodeColorUf, enterPos, leavePos, rayDirTex,
+                            outLevel, foundNodeSideLength);
+      newCol2 = raycastBrick(nodeColorUc, enterPos, leavePos, rayDirTex,
                             outLevel, foundNodeSideLength);
 
-      returnColor = (1.0 - returnColor.a) * newCol + returnColor;
+      mixCol = mix(newCol,newCol2,(sampleLOD-floor(sampleLOD)));
 
+      returnColor = (1.0 - returnColor.a) * mixCol + returnColor;
+      
       if (returnColor.a > 0.99 || (maxDistance > 0.00001 && f >= maxDistance)) {
         return returnColor;
       }
