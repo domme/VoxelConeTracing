@@ -107,6 +107,11 @@ SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
                                               _numLevels - 1, exeFrequency));
 
   for (int iLevel = _numLevels - 2; iLevel >= 0;) {
+    this->addProgramPass(new MipmapCenterPass(&vctScene, BRICKPOOL_COLOR, THREAD_MODE_COMPLETE, iLevel, exeFrequency));
+    this->addProgramPass(new MipmapFacesPass(&vctScene, BRICKPOOL_COLOR, THREAD_MODE_COMPLETE, iLevel, exeFrequency));
+    this->addProgramPass(new MipmapCornersPass(&vctScene, BRICKPOOL_COLOR, THREAD_MODE_COMPLETE, iLevel, exeFrequency));
+    this->addProgramPass(new MipmapEdgesPass(&vctScene, BRICKPOOL_COLOR, THREAD_MODE_COMPLETE, iLevel, exeFrequency));
+
     this->addProgramPass(new MipmapCenterPass(&vctScene, BRICKPOOL_IRRADIANCE, THREAD_MODE_COMPLETE, iLevel, exeFrequency));
     this->addProgramPass(new MipmapFacesPass(&vctScene, BRICKPOOL_IRRADIANCE, THREAD_MODE_COMPLETE, iLevel, exeFrequency));
     this->addProgramPass(new MipmapCornersPass(&vctScene, BRICKPOOL_IRRADIANCE, THREAD_MODE_COMPLETE, iLevel, exeFrequency));
@@ -114,6 +119,7 @@ SVOconstructionStage::SVOconstructionStage(kore::SceneNode* lightNode,
     
     if (iLevel > 0) {
       this->addProgramPass(new BorderTransferPass(&vctScene, BRICKPOOL_IRRADIANCE, THREAD_MODE_COMPLETE, iLevel, exeFrequency));
+      this->addProgramPass(new BorderTransferPass(&vctScene, BRICKPOOL_COLOR, THREAD_MODE_COMPLETE, iLevel, exeFrequency));
     }
     
     --iLevel;

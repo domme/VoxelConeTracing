@@ -285,6 +285,7 @@
     <None Include="..\bin\assets\shader\ObInitVert.shader" />
     <None Include="..\bin\assets\shader\voxelizeClear.shader" />
     <None Include="..\bin\assets\shader\_coneTrace.shader" />
+    <None Include="..\bin\assets\shader\_mipmapUtil.shader" />
     <None Include="..\bin\assets\shader\_octreeTraverse.shader" />
     <None Include="..\bin\assets\shader\octreeVisFrag.shader" />
     <None Include="..\bin\assets\shader\OctreeWriteLeafs.shader" />

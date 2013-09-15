@@ -421,5 +421,8 @@
     <None Include="..\bin\assets\shader\_threadNodeUtil.shader">
       <Filter>shader</Filter>
     </None>
+    <None Include="..\bin\assets\shader\_mipmapUtil.shader">
+      <Filter>shader</Filter>
+    </None>
   </ItemGroup>
 </Project>
