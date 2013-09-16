@@ -62,12 +62,12 @@ const uvec3 childOffsets[8] = {
 }
 
 int traverseOctree_level(in vec3 posTex, in float d, in uint inLevel,
-                   out vec3 nodePosTex, out vec3 nodePosMaxTex, out bool valid) {
+                   out vec3 nodePosTex, out vec3 nodePosMaxTex) {
   
   // Clear the out-parameters
   nodePosTex = vec3(0.0);
   nodePosMaxTex = vec3(1.0);
-  valid = true;  
+  
 
   float sideLength = 1.0;
   int nodeAddress = 0;
@@ -78,8 +78,8 @@ int traverseOctree_level(in vec3 posTex, in float d, in uint inLevel,
 
     uint childStartAddress = nodeNext & NODE_MASK_VALUE;
 
-    if (childStartAddress == 0U && iLevel < inLevel-1){
-        valid = false;
+    if (childStartAddress == 0U) {
+        nodeAddress = int(NODE_NOT_FOUND);
         break;
     }
 

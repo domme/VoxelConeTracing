@@ -235,11 +235,11 @@ void setup() {
   
   _backbufferStage->addProgramPass(new ConeTracePass(&_vctScene));
   
-  
-  //_backbufferStage->addProgramPass(new RenderPass(
-  //  gBufferStage->getFrameBuffer(), shadowMapStage->getFrameBuffer(),
-  //  lightNodes, &_vctScene));
-  //  //*/
+ /*
+  _backbufferStage->addProgramPass(new RenderPass(
+    gBufferStage->getFrameBuffer(), shadowMapStage->getFrameBuffer(),
+    lightNodes, &_vctScene));
+  // */
 
   RenderManager::getInstance()->addFramebufferStage(_backbufferStage);
   //////////////////////////////////////////////////////////////////////////

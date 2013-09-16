@@ -62,5 +62,5 @@ void main(void) {
   // of the voxelGrid
   float pixelSizeTS = In.pixelSizeVS / length(voxelGridTransformI[0]);
 
-  color = coneTrace_pixelProj(rayOriginTex, rayDirTex, pixelSizeTS);
+  color = coneTrace(rayOriginTex, rayDirTex, pixelSizeTS, 0.0);
 }
