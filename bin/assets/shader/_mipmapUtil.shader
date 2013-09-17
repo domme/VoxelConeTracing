@@ -19,5 +19,5 @@ void avgColor(in int childIndex, in ivec3 brickOffset, in float weight, inout fl
   vec4 col = getChildBrickColor(childIndex, brickOffset);
   
   color += weight * col.a * col;
-  weightSum += col.a * weight;
+  weightSum += weight;
 }

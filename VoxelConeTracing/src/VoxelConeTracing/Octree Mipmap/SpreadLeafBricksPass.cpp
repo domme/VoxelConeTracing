@@ -62,8 +62,8 @@ SpreadLeafBricksPass::
       GL_VERTEX_SHADER, "#define THREAD_MODE 1\n\n");
   }
 
-  
   shp->init();
+  shp->startUniformBindingCheck();
     
   if (eThreadMode == THREAD_MODE_LIGHT) {
     addStartupOperation(
@@ -106,8 +106,11 @@ SpreadLeafBricksPass::
     shp->getUniform("brickPool_value")));
 
 
+
   addStartupOperation(
     new kore::DrawIndirectOp(GL_POINTS, 0));
 
   addFinishOperation(new MemoryBarrierOp(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT));
+
+  shp->finishUniformBindingCheck();
 }

@@ -90,7 +90,7 @@ ConeTracePass::ConeTracePass(VCTscene* vctScene){
 
     nodePass->addOperation(OperationFactory::create(OP_BINDUNIFORM, 
       "FOV degree",
-      cam, 
+      cam,
       "fYfovDeg",
       &_coneTraceShader));
 

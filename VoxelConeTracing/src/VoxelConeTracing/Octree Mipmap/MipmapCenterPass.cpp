@@ -73,6 +73,9 @@ MipmapCenterPass::
       
   shp->setName("MipmapCenter shader");
   shp->init();
+
+  shp->startUniformBindingCheck();
+
   addStartupOperation(new ColorMaskOp(glm::bvec4(false, false, false, false)));
 
   if (mipmapMode == THREAD_MODE_LIGHT) {
@@ -124,4 +127,6 @@ MipmapCenterPass::
     new kore::DrawIndirectOp(GL_POINTS, 0));
 
   addFinishOperation(new MemoryBarrierOp(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT));
+
+  shp->finishUniformBindingCheck();
 }

@@ -114,9 +114,8 @@ int traverseOctree_pixelProj(in vec3 posTex, in float d, in float pixelSizeTS,
 
   for (uint iLevel = 0; iLevel < numLevels; ++iLevel) {
     float voxelSize = sideLength;
-    float projVoxelSize = voxelSize / d;
-
-    if (projVoxelSize / 2 < pixelSizeTS) {
+    
+    if (voxelSize < pixelSizeTS * d * 500) {
       valid = true;
       outLevel = iLevel;
       break;

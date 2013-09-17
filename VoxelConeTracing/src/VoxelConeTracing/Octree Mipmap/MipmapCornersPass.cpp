@@ -72,6 +72,8 @@ MipmapCornersPass::
   shp->setName("MipmapCorners shader");
   shp->init();
 
+  shp->startUniformBindingCheck();
+
   // Launch a thread for every node up to _level
   if (mipmapMode == THREAD_MODE_LIGHT) {
     addStartupOperation(
@@ -121,4 +123,6 @@ MipmapCornersPass::
     new kore::DrawIndirectOp(GL_POINTS, 0));
 
   addFinishOperation(new MemoryBarrierOp(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT));
+
+  shp->finishUniformBindingCheck();
 }
