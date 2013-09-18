@@ -63,4 +63,5 @@ void main(void) {
   float pixelSizeTS = (In.pixelSizeVS / 25);
 
   color = coneTrace_pixelProj(rayOriginTex, rayDirTex, pixelSizeTS);
+
 }
