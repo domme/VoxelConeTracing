@@ -112,7 +112,7 @@ void VCTscene::init(const SVCTparameters& params,
   // Init atomic counters
   uint acValue = 0;
   _acVoxelIndex.create(GL_ATOMIC_COUNTER_BUFFER,
-                       sizeof(GLuint), GL_DYNAMIC_COPY, &acValue);
+                       sizeof(GLuint), GL_STATIC_DRAW, &acValue);
   _shdAcVoxelIndex.component = NULL;
   _shdAcVoxelIndex.name = "AC VoxelIndex";
   _shdAcVoxelIndex.size = 1;

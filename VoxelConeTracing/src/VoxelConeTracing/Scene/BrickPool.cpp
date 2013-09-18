@@ -138,6 +138,7 @@ void BrickPool::init(uint brickPoolResolution, NodePool* nodePool) {
   //////////////////////////////////////////////////////////////////////////
   // TODO: Normal
   //////////////////////////////////////////////////////////////////////////
+  
   brickPoolProps.format = GL_RGBA;
   brickPoolProps.internalFormat = GL_RGBA8;
   brickPoolProps.pixelType = GL_UNSIGNED_BYTE;
@@ -178,7 +179,7 @@ void BrickPool::init(uint brickPoolResolution, NodePool* nodePool) {
   // NextFreeBrick -- Atomic counter
   uint allocAcValue = 0;
   _acBrickPoolNextFree.create(GL_ATOMIC_COUNTER_BUFFER, sizeof(GL_UNSIGNED_INT),
-                     GL_DYNAMIC_COPY, &allocAcValue, "AC_nextFreeBrickPointer");
+                     GL_STATIC_DRAW, &allocAcValue, "AC_nextFreeBrickPointer");
 
   _shdAcBrickPoolNextFree.component = NULL;
   _shdAcBrickPoolNextFree.data = &_acBrickPoolNextFree;

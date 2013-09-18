@@ -45,9 +45,12 @@ vec4 coneTrace_pixelProj(in vec3 rayOriginTex, in vec3 rayDirTex, in float pixel
   
       if (returnColor.a > 0.99) {
         break;
-      }
-           
+      }     
     }  
+
+    if (!advance) {
+        break;
+      }
   }
 
   return returnColor;

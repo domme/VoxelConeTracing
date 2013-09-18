@@ -80,7 +80,7 @@ void NodePool::init(uint voxelGridResolution) {
   kore::STextureBufferProperties levelAddressProps;
   levelAddressProps.internalFormat = GL_R32UI;
   levelAddressProps.size = sizeof(uint) * _numLevels;
-  levelAddressProps.usageHint = GL_DYNAMIC_COPY;
+  levelAddressProps.usageHint = GL_STATIC_DRAW;
 
   std::vector<uint> initialValues;
   initialValues.resize(_numLevels, 0xFFFFFFFF);
@@ -102,7 +102,7 @@ void NodePool::init(uint voxelGridResolution) {
   kore::STextureBufferProperties nodePoolBufProps;
   nodePoolBufProps.internalFormat = GL_R32UI;
   nodePoolBufProps.size = sizeof(uint) * _numNodes;
-  nodePoolBufProps.usageHint = GL_DYNAMIC_COPY;
+  nodePoolBufProps.usageHint = GL_STATIC_DRAW;
 
   for (int i=0; i < NODEPOOL_ATTRIBUTES_NUM; ++i)  {
     std::stringstream ssName;
@@ -141,7 +141,7 @@ void NodePool::init(uint voxelGridResolution) {
 
   uint allocAcValue = 0;
   _acNodePoolNextFree.create(GL_ATOMIC_COUNTER_BUFFER, sizeof(GL_UNSIGNED_INT),
-    GL_DYNAMIC_COPY, &allocAcValue, "AC_nextFreeNodePointer");
+    GL_STATIC_DRAW, &allocAcValue, "AC_nextFreeNodePointer");
 
   _shdAcNodePoolNextFree.component = NULL;
   _shdAcNodePoolNextFree.data = &_acNodePoolNextFree;

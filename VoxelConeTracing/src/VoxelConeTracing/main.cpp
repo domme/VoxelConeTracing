@@ -152,9 +152,9 @@ void setup() {
 
   //Load the scene and get all mesh nodes
   //ResourceManager::getInstance()->loadScene("./assets/meshes/sibenik.dae");
-  ResourceManager::getInstance()->loadScene("./assets/meshes/sponza_diff_small_combi.dae");
+  //ResourceManager::getInstance()->loadScene("./assets/meshes/sponza_diff_small_combi.dae");
   //ResourceManager::getInstance()->loadScene("./assets/meshes/sponza_diff_big_combi.dae");
-  //ResourceManager::getInstance()->loadScene("./assets/meshes/sponza_diff_medium_combi.dae");
+  ResourceManager::getInstance()->loadScene("./assets/meshes/sponza_diff_medium_combi.dae");
   //ResourceManager::getInstance()->loadScene("./assets/meshes/sponza_outerCube.dae");
   
   std::vector<SceneNode*> renderNodes;
@@ -169,12 +169,20 @@ void setup() {
 
   
   SVCTparameters params;
-  params.voxel_grid_resolution = 256;
   params.voxel_grid_sidelengths = glm::vec3(50, 50, 50);
-  params.fraglist_size_multiplier = 4;
-  params.fraglist_size_divisor = 1;
-  params.brickPoolResolution = 64 * 4;
   params.shadowMapResolution = glm::vec2(2048,2048);
+  params.voxel_grid_resolution = 128;
+
+  if (params.voxel_grid_resolution == 128) {
+    params.fraglist_size_multiplier = 50;
+    params.fraglist_size_divisor = 1;
+    params.brickPoolResolution = 64 * 3;
+  } else if (params.voxel_grid_resolution == 256) {
+    params.fraglist_size_multiplier = 4;
+    params.fraglist_size_divisor = 1;
+    params.brickPoolResolution = 64 * 3;
+  }
+
   
   // Make sure all lightnodes are initialized with camera components
   std::vector<SceneNode*> lightNodes;

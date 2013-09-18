@@ -61,7 +61,13 @@ void VoxelFragList::init(uint voxelGridResolution, uint fragListSizeMultiplier, 
   GLint maxTexBufferSize = 0;
   glGetIntegerv(GL_MAX_TEXTURE_BUFFER_SIZE, &maxTexBufferSize);
   maxTexBufferSize = maxTexBufferSize * sizeof(uint);
-  //fraglistSizeByte = glm::min((uint)maxTexBufferSize,fraglistSizeByte);
+
+  if (fraglistSizeByte > maxTexBufferSize) {
+    kore::Log::getInstance()->write("[ERROR] VoxelFragList-size of %u is not"
+                            "supported on this hardware!", fraglistSizeByte);
+  }
+
+  fraglistSizeByte = glm::min((uint)maxTexBufferSize,fraglistSizeByte);
 
   kore::Log::getInstance()
     ->write("Allocating voxel fragment list of size %f MB\n",
@@ -70,7 +76,7 @@ void VoxelFragList::init(uint voxelGridResolution, uint fragListSizeMultiplier, 
   kore::STextureBufferProperties props;
   props.internalFormat = GL_R32UI;
   props.size = fraglistSizeByte;
-  props.usageHint = GL_DYNAMIC_COPY;
+  props.usageHint = GL_STATIC_DRAW;
 
   _voxelFragList.create(props, "VoxelFragmentList_Position");
 
