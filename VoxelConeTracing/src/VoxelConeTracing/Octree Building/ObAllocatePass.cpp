@@ -61,6 +61,8 @@ ObAllocatePass::ObAllocatePass(VCTscene* vctScene, uint level,
   _allocateShader.setName("ObAllocate shader");
   _allocateShader.init();
   this->setShaderProgram(&_allocateShader);
+
+  addStartupOperation(new MemoryBarrierOp(GL_ALL_BARRIER_BITS));
     
 
   _bindIndCmdBufOp =
@@ -86,7 +88,8 @@ ObAllocatePass::ObAllocatePass(VCTscene* vctScene, uint level,
                        _allocateShader.getUniform("nextFreeAddress")));
 
   addStartupOperation(new DrawIndirectOp(GL_POINTS, 0));
-  addFinishOperation(new MemoryBarrierOp(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT));
+//  addFinishOperation(new MemoryBarrierOp(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT |GL_ATOMIC_COUNTER_BARRIER_BIT));
+  addFinishOperation(new MemoryBarrierOp(GL_ALL_BARRIER_BITS));
 
   /*addFinishOperation(
     new FunctionOp(std::bind(&ObAllocatePass::setLevelAddressBuffer, this)));*/
