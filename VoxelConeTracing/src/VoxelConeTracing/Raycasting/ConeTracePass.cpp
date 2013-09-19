@@ -43,9 +43,13 @@ ConeTracePass::ConeTracePass(VCTscene* vctScene){
       GL_VERTEX_SHADER);
 
     _coneTraceShader.loadShader("./assets/shader/ConeTraceFrag.shader",
-      GL_FRAGMENT_SHADER);
+      GL_FRAGMENT_SHADER, std::string("#define LEAF_NODE_RESOLUTION ")
+                          + std::to_string(vctScene->getNodePool()->getLeafNodeResolution())
+                          + std::string("\n\n") );
     _coneTraceShader.setName("cone trace shader");
     _coneTraceShader.init();
+
+    _coneTraceShader.startUniformBindingCheck();
     
     this->setShaderProgram(&_coneTraceShader);
 
@@ -134,6 +138,9 @@ ConeTracePass::ConeTracePass(VCTscene* vctScene){
     nodePass->addOperation(new BindUniform(vctScene->getNodePool()->getShdNumLevels(),
       _coneTraceShader.getUniform("numLevels"))); 
 
+    nodePass->addOperation(new BindUniform(vctScene->getNodePool()->getShdLeafNodeResolution(),
+      _coneTraceShader.getUniform("leafNodeResolution")));
+
 
     //////////////////////////////////////////////////////////////////////////
     // Tweak-Parameters
@@ -143,6 +150,7 @@ ConeTracePass::ConeTracePass(VCTscene* vctScene){
 
     nodePass->addOperation(new RenderMesh(fsqMeshComponent));
 
+    _coneTraceShader.finishUniformBindingCheck();
 }
 
 

@@ -37,6 +37,7 @@ uniform sampler3D brickPool_normal;
 uniform sampler3D brickPool_irradiance;
 
 uniform uint voxelGridResolution;
+uniform uint leafNodeResolution;
 uniform mat4 viewI;
 uniform mat4 voxelGridTransformI;
 uniform uint numLevels;
@@ -62,6 +63,6 @@ void main(void) {
   // of the voxelGrid
   float pixelSizeTS = (In.pixelSizeVS / 25);
 
-  color = coneTrace_pixelProj(rayOriginTex, rayDirTex, pixelSizeTS);
+  color = coneTrace(rayOriginTex, rayDirTex, pixelSizeTS, 0.0);
 
 }

@@ -45,7 +45,9 @@ RenderPass::RenderPass(kore::FrameBuffer* gBuffer, kore::FrameBuffer* smBuffer,
                               GL_VERTEX_SHADER);
 
   shader->loadShader("./assets/shader/finalRenderFrag.shader",
-                              GL_FRAGMENT_SHADER);
+    GL_FRAGMENT_SHADER, std::string("#define LEAF_NODE_RESOLUTION ")
+    + std::to_string(vctScene->getNodePool()->getLeafNodeResolution())
+    + std::string("\n\n"));
   shader->setName("final render shader");
   shader->init();
   
@@ -197,6 +199,9 @@ RenderPass::RenderPass(kore::FrameBuffer* gBuffer, kore::FrameBuffer* smBuffer,
 
   nodePass->addOperation(new BindUniform(vctScene->getNodePool()->getShdNumLevels(),
                                          shader->getUniform("numLevels"))); 
+
+  nodePass->addOperation(new BindUniform(vctScene->getNodePool()->getShdLeafNodeResolution(),
+                                         shader->getUniform("leafNodeResolution")));
 
   //////////////////////////////////////////////////////////////////////////
   // Tweak-Parameters

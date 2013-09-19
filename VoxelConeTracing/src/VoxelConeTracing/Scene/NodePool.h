@@ -96,6 +96,13 @@ public:
   inline kore::ShaderData* getShdCmdBufSVOnodes()
   {return &_shdCmdBufSVOnodes;}
 
+  inline kore::ShaderData* getShdLeafNodeResolution()
+  {return & _shdLeafNodeResolution;}
+
+  inline uint getLeafNodeResolution() {
+    return _leafNodeResolution;
+  }
+
 private:
   kore::TextureBuffer _nodePool[NODEPOOL_ATTRIBUTES_NUM];
   kore::STextureInfo _nodePoolTexInfo[NODEPOOL_ATTRIBUTES_NUM];
@@ -118,6 +125,10 @@ private:
   kore::TextureBuffer _levelAddressBuffer;
   kore::STextureInfo _levelAddressBuffer_texInfo;
   kore::ShaderData _shdLevelAddressBuffer;
+
+  uint _leafNodeResolution;
+  kore::ShaderData _shdLeafNodeResolution;
+
 
   void initThreadBuffers();
 };

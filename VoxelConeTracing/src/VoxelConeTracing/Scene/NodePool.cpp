@@ -69,6 +69,11 @@ void NodePool::init(uint voxelGridResolution) {
   _shdNumLevels.type = GL_UNSIGNED_INT;
   _shdNumLevels.name = "Num levels";
   _shdNumLevels.data = &_numLevels;
+    
+  _leafNodeResolution = pow(2U, _numLevels - 1U);
+  _shdLeafNodeResolution.type = GL_UNSIGNED_INT;
+  _shdLeafNodeResolution.name = "Leaf node resolution";
+  _shdLeafNodeResolution.data = &_leafNodeResolution;
   
   kore::Log::getInstance()->write("Allocating Octree with %u nodes in %u levels\n" ,
     _numNodes, _numLevels);

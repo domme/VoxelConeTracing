@@ -24,6 +24,10 @@ vec4 raycastBrick(in uint nodeColorU, in vec3 enter, in vec3 leave, in vec3 dir,
     float samplingRateCurr = float(pow2[level + 1]) * stepSize;
     float alphaCorrection = samplingRateMax / samplingRateCurr; 
 
+    //color = texture(brickPool_color, brickAddressUVW + vec3(voxelStep));
+
+    
+
     for (float f = 0; f < stepLength; f += stepSize) {
       vec3 samplePos = enterUVW + dir * f;
       vec4 newCol;
@@ -48,6 +52,7 @@ vec4 raycastBrick(in uint nodeColorU, in vec3 enter, in vec3 leave, in vec3 dir,
          break;
       }
     }
+    
 
   return color;
 }

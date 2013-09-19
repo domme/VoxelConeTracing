@@ -61,19 +61,17 @@ const uvec3 childOffsets[8] = {
   return nodeAddress;
 }
 
-int traverseOctree_level(in vec3 posTex, in float d, in uint inLevel,
+int traverseOctree_level(in vec3 posTex, in uint targetLevel,
                    out vec3 nodePosTex, out vec3 nodePosMaxTex) {
   
   // Clear the out-parameters
   nodePosTex = vec3(0.0);
   nodePosMaxTex = vec3(1.0);
   
-
   float sideLength = 1.0;
   int nodeAddress = 0;
 
-  for (uint iLevel = 0; iLevel < inLevel; ++iLevel) {
-
+  for (uint iLevel = 0; iLevel < targetLevel; ++iLevel) {
     uint nodeNext = imageLoad(nodePool_next, nodeAddress).x;
 
     uint childStartAddress = nodeNext & NODE_MASK_VALUE;
