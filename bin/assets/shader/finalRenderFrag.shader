@@ -132,7 +132,7 @@ void main(void)
      
     
    vec3 reflectVec = normalize(reflect(view, normalWS));
-   //lightIntensity += specGiIntensity * coneTrace(posTex, reflectVec, 2.0 * tanAngleDeg(specExponent), 0.0).xyz;
+   lightIntensity += specGiIntensity * coneTrace(posTex, reflectVec, 2.0 * tanAngleDeg(specExponent), 0.0).xyz;
    
    outColor = diffColor * vec4(lightIntensity, 1.0);
 }

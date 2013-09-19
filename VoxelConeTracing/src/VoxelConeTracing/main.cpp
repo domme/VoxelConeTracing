@@ -241,9 +241,9 @@ void setup() {
 
   //_backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
   
-  _backbufferStage->addProgramPass(new ConeTracePass(&_vctScene));
+  //_backbufferStage->addProgramPass(new ConeTracePass(&_vctScene));
   
- /*
+  ///*
   _backbufferStage->addProgramPass(new RenderPass(
     gBufferStage->getFrameBuffer(), shadowMapStage->getFrameBuffer(),
     lightNodes, &_vctScene));
