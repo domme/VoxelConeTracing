@@ -19,7 +19,7 @@
 
 vec4 coneTrace(in vec3 rayOriginTex, in vec3 rayDirTex, in float coneDiameter, in float maxDistance) {
   vec4 returnColor = vec4(0);
-  rayOriginTex += rayDirTex * (1.0 / float(LEAF_NODE_RESOLUTION));
+  rayOriginTex += rayDirTex * 2 * (1.0 / float(LEAF_NODE_RESOLUTION));
 
   float tEnter = 0.0;
   float tLeave = 0.0;
@@ -38,12 +38,13 @@ vec4 coneTrace(in vec3 rayOriginTex, in vec3 rayDirTex, in float coneDiameter, i
   vec3 parentMax = vec3(1.0);
     
   float end = tLeave;
-  for (float f = tEnter + 0.00001; f < end; f += tLeave + 0.00001) {
+  float sampleDiameter = 0.0;
+  for (float f = tEnter + 0.000001; f < end; f += tLeave + 0.000001) {
     vec3 posTex = (rayOriginTex + rayDirTex * f);
     
     float targetSize = coneDiameter * f;
     
-    float sampleDiameter = max(1.0 / float(LEAF_NODE_RESOLUTION), targetSize);
+    sampleDiameter = max(1.0 / float(LEAF_NODE_RESOLUTION), targetSize);
     float sampleLOD = clamp(abs(log2(1.0 / sampleDiameter)), 0.0, float(numLevels) - 1.00001);
     
     int parentAddress = 0;
@@ -57,8 +58,9 @@ vec4 coneTrace(in vec3 rayOriginTex, in vec3 rayDirTex, in float coneDiameter, i
     
 
     if (address != int(NODE_NOT_FOUND)) {
-       vec4 colNode = getColor(posTex, rayDirTex, address, nodePosMin, tLeave, targetLevel);
-       vec4 colParent = getColor(posTex, rayDirTex, parentAddress, parentMin, tLeaveParent, targetLevel - 1);
+        float falloff = 1; // / (1 + f);
+       vec4 colNode = falloff * getColor(posTex, rayDirTex, address, nodePosMin, tLeave, targetLevel);
+      vec4 colParent = falloff * getColor(posTex, rayDirTex, parentAddress, parentMin, tLeaveParent, targetLevel - 1);
 
        vec4 newCol = mix(colParent, colNode, fract(sampleLOD));
        returnColor = (1.0 - returnColor.a) * newCol + returnColor;

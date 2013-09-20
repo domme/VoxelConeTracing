@@ -145,6 +145,31 @@ public:
   inline bool* getUseWideConePtr() {return &_useWideCone;}
   inline kore::ShaderData* getShdUseWideCone() {return &_shdUseWideCone;}
 
+  inline kore::ShaderData* getShdRandomDirTex() {return &_shdRandomDirTex;}
+
+  float _giIntensity;
+  kore::ShaderData _shdGIintensity;
+
+  float _specGIintensity;
+  kore::ShaderData _shdSpecGIintensity;
+
+  float _specExponent;
+  kore::ShaderData _shdSpecExponent;
+
+  bool _useLIghting;
+  kore::ShaderData _shdUseLighting;
+
+  bool _useWideCone;
+  kore::ShaderData _shdUseWideCone;
+
+  float _coneAngle;
+  kore::ShaderData _shdConeAngle;
+
+  float _coneMaxDistance;
+  kore::ShaderData _shdConeMaxDistance;
+
+  bool _useGPUprofiling;
+
 private:
   void initTweakParameters();
 
@@ -183,22 +208,10 @@ private:
   kore::ShaderData _shdNodeMapOffsets;
   kore::ShaderData _shdNodeMapSizes;
 
-  float _giIntensity;
-  kore::ShaderData _shdGIintensity;
+  kore::Texture _randomDirTex;
+  kore::STextureInfo _randomDirTexInfo;
+  kore::ShaderData _shdRandomDirTex;
 
-  float _specGIintensity;
-  kore::ShaderData _shdSpecGIintensity;
-
-  float _specExponent;
-  kore::ShaderData _shdSpecExponent;
-
-  bool _useLIghting;
-  kore::ShaderData _shdUseLighting;
-
-  bool _useWideCone;
-  kore::ShaderData _shdUseWideCone;
-
-  bool _useGPUprofiling;
 };
 
 #endif  // VCT_SRC_VCT_VCTSCENE_H_

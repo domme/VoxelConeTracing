@@ -241,9 +241,9 @@ void setup() {
 
   //_backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
   
-  //_backbufferStage->addProgramPass(new ConeTracePass(&_vctScene));
+  _backbufferStage->addProgramPass(new ConeTracePass(&_vctScene));
   
-  ///*
+  /*
   _backbufferStage->addProgramPass(new RenderPass(
     gBufferStage->getFrameBuffer(), shadowMapStage->getFrameBuffer(),
     lightNodes, &_vctScene));
@@ -367,6 +367,9 @@ int main(void) {
 
   TwAddVarRW(bar, "Use wide cone angle", TW_TYPE_BOOLCPP, _vctScene.getUseWideConePtr(),
     "group='Lighting parameters' label='Use wide cone angle'");
+
+  TwAddVarRW(bar, "Cone angle", TW_TYPE_FLOAT, &_vctScene._coneAngle, " group='Lighting parameters' min=0 max=100 step=0.01 ");
+  TwAddVarRW(bar, "Cone max distance", TW_TYPE_FLOAT, &_vctScene._coneMaxDistance, " group='Lighting parameters' min=0 max=1 step=0.001 ");
 
   _performanceBar = TwNewBar("Performance");
     

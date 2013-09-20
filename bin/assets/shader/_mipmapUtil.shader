@@ -19,11 +19,12 @@ void avgColor(in int childIndex, in ivec3 brickOffset, in float weight, inout fl
   vec4 col = getChildBrickColor(childIndex, brickOffset);
   
   // Weight only opaque colors
+  
   /*
   color += weight * col.a * col;
   weightSum += col.a * weight;
   */
-
+  
   // Standard weighting
   color += weight * col;
   weightSum += weight;

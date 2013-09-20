@@ -61,7 +61,37 @@ void VCTscene::initTweakParameters() {
   _useWideCone = true;
   _shdUseWideCone.type = GL_BOOL;
   _shdUseWideCone.data = &_useWideCone;
+
+  _coneAngle = 1.1546f;
+  _shdConeAngle.type = GL_FLOAT;
+  _shdConeAngle.data = &_coneAngle;
+
+  _coneMaxDistance = 1.0f;
+  _shdConeMaxDistance.type = GL_FLOAT;
+  _shdConeMaxDistance.data = &_coneMaxDistance;
+
+
 }
+
+float haltonNumber( int base, int index )
+{
+  int currIndex = 1;
+  int digit = 0;
+  float fHalton = 0.0f;
+
+  do 
+  {
+    digit = index % base;
+    index /= base;
+
+    fHalton += glm::pow( (float) base, (float) -currIndex ) * (float)digit;
+    currIndex++;
+  } 
+  while ( index );
+
+  return fHalton;
+}
+
 
 
 VCTscene::~VCTscene() {
@@ -214,4 +244,47 @@ void VCTscene::init(const SVCTparameters& params,
   _shdNodeMapSizes.size = 8;
   _shdNodeMapSizes.type = GL_INT_VEC2;
   _shdNodeMapSizes.data = _nodeMapSizes;
+
+
+
+
+  glm::vec3* samples = new glm::vec3[512 * 512];
+
+  int index = 0;
+
+  for( uint uY = 0; uY < 512; ++uY )
+  {
+    for( uint uX = 0; uX < 512; ++uX )
+    {
+      glm::vec3 v3Sample;
+      do 
+      {
+        index++;
+        v3Sample.x = 2.0f * haltonNumber( 2, index ) - 1.0f;
+        v3Sample.y = 2.0f * haltonNumber( 3, index ) - 1.0f;
+        v3Sample.z = 2.0f * haltonNumber( 5, index ) - 1.0f;
+      }
+      while ( glm::length( v3Sample ) > 1.0f );
+
+      samples[ uY * 512 + uX ] = v3Sample;
+    }
+  }
+  
+  STextureProperties randomTexProps;
+  randomTexProps.targetType = GL_TEXTURE_2D;
+  randomTexProps.height = 512;
+  randomTexProps.width = 512;
+  randomTexProps.format = GL_RGB;
+  randomTexProps.internalFormat = GL_RGB32F;
+  randomTexProps.pixelType = GL_FLOAT;
+  _randomDirTex.init(randomTexProps, "randomTex", TEXSEMANTICS_UNKNOWN, samples);
+
+  _randomDirTexInfo.internalFormat = GL_RGB32F;
+  _randomDirTexInfo.texTarget = GL_TEXTURE_2D;
+  _randomDirTexInfo.texLocation = _randomDirTex.getHandle();
+
+  _shdRandomDirTex.type = GL_SAMPLER_2D;
+  _shdRandomDirTex.data = &_randomDirTexInfo;
+
+  delete[] samples;
 }

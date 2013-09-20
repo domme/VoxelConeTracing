@@ -64,6 +64,12 @@ RenderPass::RenderPass(kore::FrameBuffer* gBuffer, kore::FrameBuffer* smBuffer,
   texSampler3DLinear.minfilter = GL_LINEAR;
   texSampler3DLinear.minfilter = GL_LINEAR;
 
+  kore::TexSamplerProperties texSampler2DLinearRepeat;
+  texSamplerNearest.type = GL_SAMPLER_2D;
+  texSamplerNearest.wrapping = glm::uvec3(GL_REPEAT);
+  texSamplerNearest.minfilter = GL_LINEAR;
+  texSamplerNearest.magfilter = GL_LINEAR;
+
   shader->setSamplerProperties("brickPool_color", texSampler3DLinear);
   shader->setSamplerProperties("brickPool_normal", texSampler3DLinear);
   shader->setSamplerProperties("brickPool_irradiance", texSampler3DLinear);
@@ -72,7 +78,7 @@ RenderPass::RenderPass(kore::FrameBuffer* gBuffer, kore::FrameBuffer* smBuffer,
   shader->setSamplerProperties("gBuffer_normal", texSamplerNearest);
   shader->setSamplerProperties("gBuffer_tangent", texSamplerNearest);
   shader->setSamplerProperties("shadowMap", texSamplerNearest);
-  
+  shader->setSamplerProperties("randomTex", texSampler2DLinearRepeat);  
   
   this->setShaderProgram(shader);
 
@@ -203,6 +209,8 @@ RenderPass::RenderPass(kore::FrameBuffer* gBuffer, kore::FrameBuffer* smBuffer,
   nodePass->addOperation(new BindUniform(vctScene->getNodePool()->getShdLeafNodeResolution(),
                                          shader->getUniform("leafNodeResolution")));
 
+  nodePass->addOperation(new BindTexture(vctScene->getShdRandomDirTex(), shader->getUniform("randomTex")));
+
   //////////////////////////////////////////////////////////////////////////
   // Tweak-Parameters
   nodePass->addOperation(new BindUniform(vctScene->getShdGIintensity(),
@@ -215,6 +223,8 @@ RenderPass::RenderPass(kore::FrameBuffer* gBuffer, kore::FrameBuffer* smBuffer,
                                          shader->getUniform("useLighting")));
   nodePass->addOperation(new BindUniform(vctScene->getShdUseWideCone(),
                                           shader->getUniform("useWideCone")));
+  nodePass->addOperation(new BindUniform(&vctScene->_shdConeAngle, shader->getUniform("coneAngle")));
+  nodePass->addOperation(new BindUniform(&vctScene->_shdConeMaxDistance, shader->getUniform("coneMaxDistance")));
   //////////////////////////////////////////////////////////////////////////
 
   nodePass->addOperation(new RenderMesh(fsqMeshComponent));
