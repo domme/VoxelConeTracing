@@ -24,7 +24,7 @@ void avgColor(in int childIndex, in ivec3 brickOffset, in float weight, inout fl
   color += weight * col.a * col;
   weightSum += col.a * weight;
   */
-  
+    
   // Standard weighting
   color += weight * col;
   weightSum += weight;

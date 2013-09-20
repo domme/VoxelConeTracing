@@ -62,7 +62,7 @@ void main(void) {
   
   // PixelSize in texture space is the pixel-viewpsace size divided by the scale
   // of the voxelGrid
-  float pixelSizeTS = (In.pixelSizeVS / 25) * 500.0 * coneAngle;
+  float pixelSizeTS =  coneAngle;
 
   color = coneTrace(rayOriginTex, rayDirTex, pixelSizeTS, 0.0);
 

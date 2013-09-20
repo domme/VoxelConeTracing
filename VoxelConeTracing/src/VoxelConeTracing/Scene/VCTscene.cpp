@@ -66,7 +66,7 @@ void VCTscene::initTweakParameters() {
   _shdConeAngle.type = GL_FLOAT;
   _shdConeAngle.data = &_coneAngle;
 
-  _coneMaxDistance = 1.0f;
+  _coneMaxDistance = 0.0005f;
   _shdConeMaxDistance.type = GL_FLOAT;
   _shdConeMaxDistance.data = &_coneMaxDistance;
 

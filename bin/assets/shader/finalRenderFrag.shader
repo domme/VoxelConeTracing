@@ -127,7 +127,7 @@ void main(void)
 
      // Light intensity
      vec3 h = normalize((-view) + lightDir);
-     vec3 lightColor = vec3(1) * giIntensity;  //TODO: Replace with uniform
+     vec3 lightColor = vec3(1); /** giIntensity;  */ //TODO: Replace with uniform
    
      // Account for local shading      
      float diff = max(0.0, dot(lightDir, normalWS));
@@ -135,14 +135,13 @@ void main(void)
      lightIntensity += visibility * (lightColor * diff + spec);
    }
         
-   //vec4 indirectLight = gatherIndirectIllum(posTex, normalWS, tangentWS);
-
-   //outColor = vec4(1.0 - indirectLight.aaa, 1.0);
+    /*//AO
+   vec4 indirectLight = gatherIndirectIllum(posTex, normalWS, tangentWS);
+   outColor = vec4(1.0 - indirectLight.aaa, 1.0);*/
 
    
+   
    lightIntensity += giIntensity * gatherIndirectIllum(posTex, normalWS, tangentWS).xyz;
-     
-    
    vec3 reflectVec = normalize(reflect(view, normalWS));
    lightIntensity += specGiIntensity * coneTrace(posTex, reflectVec, 2.0 * tanAngleDeg(specExponent), 0.0).xyz;
    

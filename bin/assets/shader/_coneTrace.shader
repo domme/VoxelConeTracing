@@ -19,7 +19,7 @@
 
 vec4 coneTrace(in vec3 rayOriginTex, in vec3 rayDirTex, in float coneDiameter, in float maxDistance) {
   vec4 returnColor = vec4(0);
-  rayOriginTex += rayDirTex * 2 * (1.0 / float(LEAF_NODE_RESOLUTION));
+  rayOriginTex += rayDirTex * (1.0 / float(LEAF_NODE_RESOLUTION));
 
   float tEnter = 0.0;
   float tLeave = 0.0;
@@ -39,7 +39,7 @@ vec4 coneTrace(in vec3 rayOriginTex, in vec3 rayDirTex, in float coneDiameter, i
     
   float end = tLeave;
   float sampleDiameter = 0.0;
-  for (float f = tEnter + 0.000001; f < end; f += tLeave + 0.00001) {
+  for (float f = tEnter + 0.00001; f < end; f += tLeave + 0.00001) {
     vec3 posTex = (rayOriginTex + rayDirTex * f);
     
     float targetSize = coneDiameter * f;
@@ -54,24 +54,25 @@ vec4 coneTrace(in vec3 rayOriginTex, in vec3 rayDirTex, in float coneDiameter, i
 
     bool advance = intersectRayWithAABB(posTex, rayDirTex, nodePosMin,
                                         nodePosMax, tEnter, tLeave);
-   // intersectRayWithAABB(posTex, rayDirTex, parentMin, parentMax, tEnterParent, tLeaveParent);
+    intersectRayWithAABB(posTex, rayDirTex, parentMin, parentMax, tEnterParent, tLeaveParent);
     
 
     if (address != int(NODE_NOT_FOUND)) {
-        float falloff = 1; // / (1 + f);
-       vec4 colNode = falloff * getColor(posTex, rayDirTex, address, nodePosMin, tLeave, targetLevel);
-       //vec4 colParent = falloff * getColor(posTex, rayDirTex, parentAddress, parentMin, tLeaveParent, targetLevel - 1);
+       vec4 colNode = getColor(posTex, rayDirTex, address, nodePosMin, tLeave, targetLevel);
+       vec4 colParent = getColor(posTex, rayDirTex, parentAddress, parentMin, tLeaveParent, targetLevel - 1);
 
-       vec4 newCol = colNode; //mix(colParent, colNode, fract(sampleLOD));
+       vec4 newCol = mix(colParent, colNode, fract(sampleLOD));
        returnColor = (1.0 - returnColor.a) * newCol + returnColor;
        
-       if (returnColor.a > 0.99 || (maxDistance > 0.00001 && f >= maxDistance)) {
-         return returnColor;
+       if (returnColor.a > 0.99 || (maxDistance > 0.000001 && f >= maxDistance)) {
+         break;
        }
     }
     
     if (!advance) {
-        return returnColor; // prevent infinite loop
+        break; // prevent infinite loop
     }
   }
+
+  return returnColor;
 }

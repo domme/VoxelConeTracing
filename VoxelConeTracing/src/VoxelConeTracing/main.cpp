@@ -113,6 +113,9 @@ static std::string _timerResults = "";
 static TwBar* _performanceBar;
 static std::vector<SDurationResult> _vDurationsResults;
 
+static kore::ShaderProgramPass* _finalRenderPass = NULL;
+static kore::ShaderProgramPass* _coneTracePass = NULL;
+
 
 void changeAllocPassLevel() {
   static uint currLevel = 0;
@@ -241,14 +244,9 @@ void setup() {
 
   //_backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
   
-  _backbufferStage->addProgramPass(new ConeTracePass(&_vctScene));
+   _coneTracePass = new ConeTracePass(&_vctScene);
+   _finalRenderPass = new RenderPass(gBufferStage->getFrameBuffer(), shadowMapStage->getFrameBuffer(), lightNodes, &_vctScene);
   
-  /*
-  _backbufferStage->addProgramPass(new RenderPass(
-    gBufferStage->getFrameBuffer(), shadowMapStage->getFrameBuffer(),
-    lightNodes, &_vctScene));
-  // */
-
   RenderManager::getInstance()->addFramebufferStage(_backbufferStage);
   //////////////////////////////////////////////////////////////////////////
 }
@@ -369,8 +367,9 @@ int main(void) {
     "group='Lighting parameters' label='Use wide cone angle'");
 
   TwAddVarRW(bar, "Cone angle", TW_TYPE_FLOAT, &_vctScene._coneAngle, " group='Lighting parameters' min=0 max=100 step=0.01 ");
-  TwAddVarRW(bar, "Cone max distance", TW_TYPE_FLOAT, &_vctScene._coneMaxDistance, " group='Lighting parameters' min=0 max=1 step=0.001 ");
+  TwAddVarRW(bar, "Cone max distance", TW_TYPE_FLOAT, &_vctScene._coneMaxDistance, " group='Lighting parameters' min=0 max=1 step=0.00001 ");
 
+  /*
   _performanceBar = TwNewBar("Performance");
     
   auto stages = RenderManager::getInstance()->getFrameBufferStages();
@@ -386,6 +385,7 @@ int main(void) {
                   durationStringCallback, passes[iPass], szParameters.c_str());
     }
   }
+  */
   
   //TwAddVarRW(_performanceBar, "Frame duration", TW_TYPE_UINT32, &_frameDuration, "");
 
@@ -421,6 +421,16 @@ int main(void) {
 
     GPUtimer::getInstance()->checkQueryResults(); 
     GPUtimer::getInstance()->getDurationResultsMS(_vDurationsResults);
+
+    std::vector<kore::ShaderProgramPass*>& vBackbufferPasses = _backbufferStage->getShaderProgramPasses();
+    if (*_vctScene.getUseWideConePtr()) {
+      _backbufferStage->removeProgramPass(_coneTracePass);
+      _backbufferStage->addProgramPass(_finalRenderPass);
+    } else {
+      _backbufferStage->removeProgramPass(_finalRenderPass);
+      _backbufferStage->addProgramPass(_coneTracePass);
+    }
+
        
     if (_pCamera) {
       if (glfwGetKey(GLFW_KEY_UP) || glfwGetKey('W')) {

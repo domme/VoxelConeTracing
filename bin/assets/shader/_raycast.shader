@@ -26,8 +26,6 @@ vec4 raycastBrick(in uint nodeColorU, in vec3 enter, in vec3 leave, in vec3 dir,
 
     //color = texture(brickPool_color, brickAddressUVW + vec3(voxelStep));
 
-    
-
     for (float f = 0; f < stepLength; f += stepSize) {
       vec3 samplePos = enterUVW + dir * f;
       vec4 newCol;
@@ -41,10 +39,11 @@ vec4 raycastBrick(in uint nodeColorU, in vec3 enter, in vec3 leave, in vec3 dir,
       if (newCol.a > 0.001) {
         // Alpha correction
       
-        //float oldColA = newCol.a;
-        //newCol.a = 1.0 - clamp(pow((1.0 - newCol.a), alphaCorrection), 0.0, 1.0);
-        //newCol.a = clamp(newCol.a, 0.0, 1.0);
-        //newCol.xyz *= newCol.a / oldColA;
+      /*
+        float oldColA = newCol.a;
+        newCol.a = 1.0 - clamp(pow((1.0 - newCol.a), alphaCorrection), 0.0, 1.0);
+        newCol.a = clamp(newCol.a, 0.0, 1.0);
+        newCol.xyz *= newCol.a / oldColA; */
 
         color = newCol * clamp(1.0 - color.a, 0.0, 1.0) + color;
       }
@@ -56,6 +55,6 @@ vec4 raycastBrick(in uint nodeColorU, in vec3 enter, in vec3 leave, in vec3 dir,
       }
     }
     
-
+    
   return color;
 }
