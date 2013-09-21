@@ -363,10 +363,16 @@ int main(void) {
   TwAddVarRW(bar, "Use Lighting", TW_TYPE_BOOLCPP, _vctScene.getUseLightingPtr(),
     " group='Lighting parameters' label='Use Lighting' ");
 
-  TwAddVarRW(bar, "Use wide cone angle", TW_TYPE_BOOLCPP, _vctScene.getUseWideConePtr(),
-    "group='Lighting parameters' label='Use wide cone angle'");
+  TwAddVarRW(bar, "Render voxels", TW_TYPE_BOOLCPP, _vctScene.getRenderVoxelsPtr(),
+    "group='Lighting parameters' ");
 
-  TwAddVarRW(bar, "Cone angle", TW_TYPE_FLOAT, &_vctScene._coneAngle, " group='Lighting parameters' min=0 max=100 step=0.01 ");
+  TwAddVarRW(bar, "Render AO", TW_TYPE_BOOLCPP, &_vctScene._renderAO,
+    "group='Lighting parameters' ");
+
+  TwAddVarRW(bar, "Use alpha correction" , TW_TYPE_BOOLCPP, &_vctScene._useAlphaCorrection,
+    "group='Lighting parameters' ");
+
+  TwAddVarRW(bar, "Cone diameter", TW_TYPE_FLOAT, &_vctScene._coneDiameter, " group='Lighting parameters' min=0 max=5 step=0.001 ");
   TwAddVarRW(bar, "Cone max distance", TW_TYPE_FLOAT, &_vctScene._coneMaxDistance, " group='Lighting parameters' min=0 max=1 step=0.00001 ");
 
   /*
@@ -423,7 +429,7 @@ int main(void) {
     GPUtimer::getInstance()->getDurationResultsMS(_vDurationsResults);
 
     std::vector<kore::ShaderProgramPass*>& vBackbufferPasses = _backbufferStage->getShaderProgramPasses();
-    if (*_vctScene.getUseWideConePtr()) {
+    if (*_vctScene.getRenderVoxelsPtr()) {
       _backbufferStage->removeProgramPass(_coneTracePass);
       _backbufferStage->addProgramPass(_finalRenderPass);
     } else {

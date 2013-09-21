@@ -142,8 +142,8 @@ public:
   inline bool* getUseLightingPtr() {return &_useLIghting;}
   inline kore::ShaderData* getShdUseLighting() {return &_shdUseLighting;}
 
-  inline bool* getUseWideConePtr() {return &_useWideCone;}
-  inline kore::ShaderData* getShdUseWideCone() {return &_shdUseWideCone;}
+  inline bool* getRenderVoxelsPtr() {return &_renderVoxels;}
+  inline kore::ShaderData* getShdUseWideCone() {return &_shdRenderVoxels;}
 
   inline kore::ShaderData* getShdRandomDirTex() {return &_shdRandomDirTex;}
 
@@ -159,11 +159,17 @@ public:
   bool _useLIghting;
   kore::ShaderData _shdUseLighting;
 
-  bool _useWideCone;
-  kore::ShaderData _shdUseWideCone;
+  bool _renderVoxels;
+  kore::ShaderData _shdRenderVoxels;
 
-  float _coneAngle;
-  kore::ShaderData _shdConeAngle;
+  bool _renderAO;
+  kore::ShaderData _shdRenderAO;
+
+  bool _useAlphaCorrection;
+  kore::ShaderData _shdUseAlphaCorrection;
+
+  float _coneDiameter;
+  kore::ShaderData _shdConeDiameter;
 
   float _coneMaxDistance;
   kore::ShaderData _shdConeMaxDistance;

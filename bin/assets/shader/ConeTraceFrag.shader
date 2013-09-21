@@ -44,6 +44,7 @@ uniform uint numLevels;
 uniform float coneAngle;
 
 uniform bool useLighting = true;
+uniform bool useAlphaCorrection = true;
 
 out vec4 color;
 

@@ -58,13 +58,21 @@ void VCTscene::initTweakParameters() {
   _shdUseLighting.type = GL_BOOL;
   _shdUseLighting.data = &_useLIghting;
 
-  _useWideCone = true;
-  _shdUseWideCone.type = GL_BOOL;
-  _shdUseWideCone.data = &_useWideCone;
+  _renderVoxels = true;
+  _shdRenderVoxels.type = GL_BOOL;
+  _shdRenderVoxels.data = &_renderVoxels;
 
-  _coneAngle = 1.1546f;
-  _shdConeAngle.type = GL_FLOAT;
-  _shdConeAngle.data = &_coneAngle;
+  _renderAO = false;
+  _shdRenderAO.type = GL_BOOL;
+  _shdRenderAO.data = &_renderAO;
+
+  _useAlphaCorrection = true;
+  _shdUseAlphaCorrection.type = GL_BOOL;
+  _shdUseAlphaCorrection.data = &_useAlphaCorrection;
+
+  _coneDiameter = 1.1546f;
+  _shdConeDiameter.type = GL_FLOAT;
+  _shdConeDiameter.data = &_coneDiameter;
 
   _coneMaxDistance = 0.0005f;
   _shdConeMaxDistance.type = GL_FLOAT;

@@ -141,13 +141,14 @@ ConeTracePass::ConeTracePass(VCTscene* vctScene){
     nodePass->addOperation(new BindUniform(vctScene->getNodePool()->getShdLeafNodeResolution(),
       _coneTraceShader.getUniform("leafNodeResolution")));
 
-    nodePass->addOperation(new BindUniform(&vctScene->_shdConeAngle, _coneTraceShader.getUniform("coneAngle")));
+    nodePass->addOperation(new BindUniform(&vctScene->_shdConeDiameter, _coneTraceShader.getUniform("coneAngle")));
 
 
     //////////////////////////////////////////////////////////////////////////
     // Tweak-Parameters
     nodePass->addOperation(new BindUniform(vctScene->getShdUseLighting(),
       _coneTraceShader.getUniform("useLighting")));
+    nodePass->addOperation(new BindUniform(&vctScene->_shdUseAlphaCorrection, _coneTraceShader.getUniform("useAlphaCorrection")));
     //////////////////////////////////////////////////////////////////////////
 
     nodePass->addOperation(new RenderMesh(fsqMeshComponent));

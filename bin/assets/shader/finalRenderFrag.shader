@@ -65,6 +65,8 @@ uniform float coneAngle;
 uniform float coneMaxDistance;
 uniform bool useLighting = true;
 uniform bool useWideCone = true;
+uniform bool renderAO = false;
+uniform bool useAlphaCorrection = true;
 
 #include "assets/shader/_utilityFunctions.shader"
 #include "assets/shader/_octreeTraverse.shader"
@@ -109,7 +111,14 @@ void main(void)
   vec3 posTex = (voxelGridTransformI * posWS).xyz * 0.5 + 0.5; 
   reflectVec = texture(randomTex, (In.uv * vec2(1280, 720)) / 4).xyz;
 
-   // Shadow mapping
+
+  if (renderAO) {
+    vec4 indirectLight = gatherIndirectIllum(posTex, normalWS, tangentWS);
+    outColor = vec4(1.0 - indirectLight.aaa, 1.0);
+  }
+
+  else {
+    // Shadow mapping
    float visibility = 1.0;
    vec4 posLVS = lightCamviewMat * posWS;
    vec4 posLProj = lightCamProjMat * posLVS;
@@ -134,17 +143,12 @@ void main(void)
      float spec = pow(max(0.0, dot(normalWS, h)), specExponent);
      lightIntensity += visibility * (lightColor * diff + spec);
    }
-        
-    /*//AO
-   vec4 indirectLight = gatherIndirectIllum(posTex, normalWS, tangentWS);
-   outColor = vec4(1.0 - indirectLight.aaa, 1.0);*/
+   
 
-   
-   
    lightIntensity += giIntensity * gatherIndirectIllum(posTex, normalWS, tangentWS).xyz;
    vec3 reflectVec = normalize(reflect(view, normalWS));
    lightIntensity += specGiIntensity * coneTrace(posTex, reflectVec, 2.0 * tanAngleDeg(specExponent), 0.0).xyz;
    
    outColor = diffColor * vec4(lightIntensity, 1.0);
-   
+  } 
 }
