@@ -60,7 +60,7 @@ void storeInLeaf(in vec3 posTex, in int nodeAddress, in uint voxelColorU, in uin
        //store VoxelColors in brick corners
        imageStore(brickPool_color,
              brickCoords  + 2 * ivec3(childOffsets[off]),
-             convRGBA8ToVec4(voxelColorU) / 255.0);
+             vec4(0.0, 0.1, 0.0, 0.1)); /*convRGBA8ToVec4(voxelColorU) / 255.0); */
 
        imageStore(brickPool_normal,
              brickCoords  + 2 * ivec3(childOffsets[off]),
