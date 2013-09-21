@@ -70,7 +70,6 @@ uniform bool useAlphaCorrection = true;
 
 #include "assets/shader/_utilityFunctions.shader"
 #include "assets/shader/_octreeTraverse.shader"
-#include "assets/shader/_raycast.shader"
 #include "assets/shader/_coneTrace.shader"
 
 vec3 reflectVec;
@@ -97,7 +96,7 @@ vec4 gatherIndirectIllum(in vec3 posTex, in vec3 normal, in vec3 tangent) {
   color += 0.707 * coneTrace(posTex, normalize(normal - bitangent), coneAngle, coneMaxDistance);
   memoryBarrier();
 
-  return color / (4 * 0.707 + 1.0);
+  return color; // / (4 * 0.707 + 1.0);
   
 }
 

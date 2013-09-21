@@ -50,7 +50,6 @@ out vec4 color;
 
 #include "assets/shader/_utilityFunctions.shader"
 #include "assets/shader/_octreeTraverse.shader"
-#include "assets/shader/_raycast.shader"
 #include "assets/shader/_coneTrace.shader"
 
 void main(void) {
