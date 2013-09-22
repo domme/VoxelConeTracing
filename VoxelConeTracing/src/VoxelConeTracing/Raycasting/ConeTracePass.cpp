@@ -141,7 +141,7 @@ ConeTracePass::ConeTracePass(VCTscene* vctScene){
     nodePass->addOperation(new BindUniform(vctScene->getNodePool()->getShdLeafNodeResolution(),
       _coneTraceShader.getUniform("leafNodeResolution")));
 
-    //nodePass->addOperation(new BindUniform(&vctScene->_shdConeDiameter, _coneTraceShader.getUniform("coneAngle")));
+    nodePass->addOperation(new BindUniform(&vctScene->_shdConeDiameter, _coneTraceShader.getUniform("coneAngle")));
 
 
     //////////////////////////////////////////////////////////////////////////

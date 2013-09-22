@@ -35,145 +35,47 @@ BrickPool::BrickPool() {
 }
 
 void BrickPool::init(uint brickPoolResolution, NodePool* nodePool) {
-  _brickPoolResolution = brickPoolResolution;
+  _brickPoolResolution_leaf = brickPoolResolution;
 
-  _shdBrickPoolResolution.component = NULL;
-  _shdBrickPoolResolution.name = "BrickPool Resolution";
-  _shdBrickPoolResolution.size = 1;
-  _shdBrickPoolResolution.type = GL_UNSIGNED_INT;
-  _shdBrickPoolResolution.data = &_brickPoolResolution;
+  _shdBrickPoolResolution_leaf.component = NULL;
+  _shdBrickPoolResolution_leaf.name = "BrickPool Resolution";
+  _shdBrickPoolResolution_leaf.size = 1;
+  _shdBrickPoolResolution_leaf.type = GL_UNSIGNED_INT;
+  _shdBrickPoolResolution_leaf.data = &_brickPoolResolution_leaf;
+
+
+  _brickPoolResolution_nodes = brickPoolResolution / 2;
+  
+  _shdBrickPoolResolution_nodes.type = GL_UNSIGNED_INT;
+  _shdBrickPoolResolution_nodes.data = &_brickPoolResolution_nodes;
 
   kore::STextureProperties brickPoolProps;
   brickPoolProps.width =  brickPoolResolution;
   brickPoolProps.height = brickPoolResolution;
   brickPoolProps.depth =  brickPoolResolution;
-
-  kore::Log::getInstance()
-    ->write("Allocating BrickPool-Texture with dimensions, %u %u %u\n",
-            brickPoolProps.width, brickPoolProps.height, brickPoolProps.depth);
-
-  kore::Log::getInstance()
-    ->write("Allocating BrickPool-Texture of size %f MB\n",
-      MathUtil::byteToMB(brickPoolProps.width
-                        * brickPoolProps.height
-                        * brickPoolProps.depth * 4));
-
-  //////////////////////////////////////////////////////////////////////////
-  // COLOR
-  //////////////////////////////////////////////////////////////////////////
   brickPoolProps.format = GL_RGBA;
   brickPoolProps.internalFormat = GL_RGBA8;
   brickPoolProps.pixelType = GL_UNSIGNED_BYTE;
   brickPoolProps.targetType = GL_TEXTURE_3D;
 
-  _brickPool[BRICKPOOL_COLOR].init(brickPoolProps, "BrickPool_Attribute_Color");
+  kore::STextureProperties brickPoolPropsNodes;
+  brickPoolPropsNodes.width =  _brickPoolResolution_nodes;
+  brickPoolPropsNodes.height = _brickPoolResolution_nodes;
+  brickPoolPropsNodes.depth =  _brickPoolResolution_nodes;
+  brickPoolPropsNodes.format = GL_RGBA;
+  brickPoolPropsNodes.internalFormat = GL_RGBA8;
+  brickPoolPropsNodes.pixelType = GL_UNSIGNED_BYTE;
+  brickPoolPropsNodes.targetType = GL_TEXTURE_3D;
 
-  _brickPoolTexInfo[BRICKPOOL_COLOR].internalFormat = GL_RGBA8;
-  _brickPoolTexInfo[BRICKPOOL_COLOR].texLocation = _brickPool[BRICKPOOL_COLOR].getHandle();
-  _brickPoolTexInfo[BRICKPOOL_COLOR].texTarget = GL_TEXTURE_3D;
-
-  _shdBrickPool[BRICKPOOL_COLOR].name = "BrickPool_Attribute_Color";
-  _shdBrickPool[BRICKPOOL_COLOR].type = GL_IMAGE_3D;
-  _shdBrickPool[BRICKPOOL_COLOR].data = &_brickPoolTexInfo[BRICKPOOL_COLOR];
-  _shdBrickPool[BRICKPOOL_COLOR].size = 1;
-  _shdBrickPool[BRICKPOOL_COLOR].component = NULL;
-
-  _shdBrickPoolTexture[BRICKPOOL_COLOR].name = "BrickPool_Attribute_ColorTexture";
-  _shdBrickPoolTexture[BRICKPOOL_COLOR].type = GL_SAMPLER_3D;
-  _shdBrickPoolTexture[BRICKPOOL_COLOR].data = &_brickPoolTexInfo[BRICKPOOL_COLOR];
-  _shdBrickPoolTexture[BRICKPOOL_COLOR].size = 1;
-  _shdBrickPoolTexture[BRICKPOOL_COLOR].component = NULL;
-
-  kore::RenderManager::getInstance()->bindTexture(GL_TEXTURE_3D, _brickPool[BRICKPOOL_COLOR].getHandle());
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, 0);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, 0);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_R, GL_RED);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_G, GL_GREEN);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_B, GL_BLUE);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_A, GL_ALPHA);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  
-  kore::RenderManager::getInstance()->bindTexture(GL_TEXTURE_3D, 0);
-
-
-  //////////////////////////////////////////////////////////////////////////
-  // RADIANCE
-  //////////////////////////////////////////////////////////////////////////
-  brickPoolProps.format = GL_RGBA;
-  brickPoolProps.internalFormat = GL_RGBA8;
-  brickPoolProps.pixelType = GL_UNSIGNED_BYTE;
-  brickPoolProps.targetType = GL_TEXTURE_3D;
-
-  _brickPool[BRICKPOOL_IRRADIANCE].init(brickPoolProps, "BrickPool_Attribute_iradiance");
-
-  _brickPoolTexInfo[BRICKPOOL_IRRADIANCE].internalFormat = GL_RGBA8;
-  _brickPoolTexInfo[BRICKPOOL_IRRADIANCE].texLocation = _brickPool[BRICKPOOL_IRRADIANCE].getHandle();
-  _brickPoolTexInfo[BRICKPOOL_IRRADIANCE].texTarget = GL_TEXTURE_3D;
-
-  _shdBrickPool[BRICKPOOL_IRRADIANCE].name = "BrickPool_Attribute_irradiance";
-  _shdBrickPool[BRICKPOOL_IRRADIANCE].type = GL_IMAGE_3D;
-  _shdBrickPool[BRICKPOOL_IRRADIANCE].data = &_brickPoolTexInfo[BRICKPOOL_IRRADIANCE];
-  _shdBrickPool[BRICKPOOL_IRRADIANCE].size = 1;
-  _shdBrickPool[BRICKPOOL_IRRADIANCE].component = NULL;
-
-  _shdBrickPoolTexture[BRICKPOOL_IRRADIANCE].name = "BrickPool_Attribute_irradianceTexture";
-  _shdBrickPoolTexture[BRICKPOOL_IRRADIANCE].type = GL_SAMPLER_3D;
-  _shdBrickPoolTexture[BRICKPOOL_IRRADIANCE].data = &_brickPoolTexInfo[BRICKPOOL_IRRADIANCE];
-  _shdBrickPoolTexture[BRICKPOOL_IRRADIANCE].size = 1;
-  _shdBrickPoolTexture[BRICKPOOL_IRRADIANCE].component = NULL;
-
-  kore::RenderManager::getInstance()->bindTexture(GL_TEXTURE_3D, _brickPool[BRICKPOOL_IRRADIANCE].getHandle());
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, 0);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, 0);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_R, GL_RED);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_G, GL_GREEN);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_B, GL_BLUE);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_A, GL_ALPHA);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-  kore::RenderManager::getInstance()->bindTexture(GL_TEXTURE_3D, 0);
-
-  //////////////////////////////////////////////////////////////////////////
-  // TODO: Normal
-  //////////////////////////////////////////////////////////////////////////
-  
-  brickPoolProps.format = GL_RGBA;
-  brickPoolProps.internalFormat = GL_RGBA8;
-  brickPoolProps.pixelType = GL_UNSIGNED_BYTE;
-  brickPoolProps.targetType = GL_TEXTURE_3D;
-
-  _brickPool[BRICKPOOL_NORMAL].init(brickPoolProps, "BrickPool_Attribute_normal");
-
-  _brickPoolTexInfo[BRICKPOOL_NORMAL].internalFormat = GL_RGBA8;
-  _brickPoolTexInfo[BRICKPOOL_NORMAL].texLocation = _brickPool[BRICKPOOL_NORMAL].getHandle();
-  _brickPoolTexInfo[BRICKPOOL_NORMAL].texTarget = GL_TEXTURE_3D;
-
-  _shdBrickPool[BRICKPOOL_NORMAL].name = "BrickPool_Attribute_normal";
-  _shdBrickPool[BRICKPOOL_NORMAL].type = GL_IMAGE_3D;
-  _shdBrickPool[BRICKPOOL_NORMAL].data = &_brickPoolTexInfo[BRICKPOOL_NORMAL];
-  _shdBrickPool[BRICKPOOL_NORMAL].size = 1;
-  _shdBrickPool[BRICKPOOL_NORMAL].component = NULL;
-
-  _shdBrickPoolTexture[BRICKPOOL_NORMAL].name = "BrickPool_Attribute_normalTexture";
-  _shdBrickPoolTexture[BRICKPOOL_NORMAL].type = GL_SAMPLER_3D;
-  _shdBrickPoolTexture[BRICKPOOL_NORMAL].data = &_brickPoolTexInfo[BRICKPOOL_NORMAL];
-  _shdBrickPoolTexture[BRICKPOOL_NORMAL].size = 1;
-  _shdBrickPoolTexture[BRICKPOOL_NORMAL].component = NULL;
-
-  kore::RenderManager::getInstance()->bindTexture(GL_TEXTURE_3D, _brickPool[BRICKPOOL_NORMAL].getHandle());
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, 0);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, 0);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_R, GL_RED);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_G, GL_GREEN);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_B, GL_BLUE);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_A, GL_ALPHA);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-  kore::RenderManager::getInstance()->bindTexture(GL_TEXTURE_3D, 0);
-
+  allocBrickPoolTex(BRICKPOOL_COLOR, brickPoolProps);
+  allocBrickPoolTex(BRICKPOOL_NORMAL, brickPoolProps);
+  allocBrickPoolTex(BRICKPOOL_IRRADIANCE, brickPoolProps);
+  allocBrickPoolTex(BRICKPOOL_COLOR_X, brickPoolPropsNodes);
+  allocBrickPoolTex(BRICKPOOL_COLOR_X_NEG, brickPoolPropsNodes);
+  allocBrickPoolTex(BRICKPOOL_COLOR_Y, brickPoolPropsNodes);
+  allocBrickPoolTex(BRICKPOOL_COLOR_Y_NEG, brickPoolPropsNodes);
+  allocBrickPoolTex(BRICKPOOL_COLOR_Z, brickPoolPropsNodes);
+  allocBrickPoolTex(BRICKPOOL_COLOR_Z_NEG, brickPoolPropsNodes);
 
   //////////////////////////////////////////////////////////////////////////
   // NextFreeBrick -- Atomic counter
@@ -189,4 +91,49 @@ void BrickPool::init(uint brickPoolResolution, NodePool* nodePool) {
 
 BrickPool::~BrickPool() {
 
+}
+
+void BrickPool::allocBrickPoolTex(EBrickPoolAttributes brickAtt,
+                                  const kore::STextureProperties& sProps)
+{
+
+  kore::Log::getInstance()
+    ->write("Allocating BrickPool-Texture with dimensions, %u %u %u\n",
+    sProps.width, sProps.height, sProps.depth);
+
+  kore::Log::getInstance()
+    ->write("Allocating BrickPool-Texture of size %f MB\n",
+    MathUtil::byteToMB(sProps.width
+                      * sProps.height
+                      * sProps.depth * 4));
+
+  _brickPool[brickAtt].init(sProps, "BrickPool Tex");
+
+  _brickPoolTexInfo[brickAtt].internalFormat = GL_RGBA8;
+  _brickPoolTexInfo[brickAtt].texLocation = _brickPool[brickAtt].getHandle();
+  _brickPoolTexInfo[brickAtt].texTarget = GL_TEXTURE_3D;
+
+  _shdBrickPool[brickAtt].name = "BrickPool_Attribute";
+  _shdBrickPool[brickAtt].type = GL_IMAGE_3D;
+  _shdBrickPool[brickAtt].data = &_brickPoolTexInfo[brickAtt];
+  _shdBrickPool[brickAtt].size = 1;
+  _shdBrickPool[brickAtt].component = NULL;
+
+  _shdBrickPoolTexture[brickAtt].name = "BrickPool_Attribute";
+  _shdBrickPoolTexture[brickAtt].type = GL_SAMPLER_3D;
+  _shdBrickPoolTexture[brickAtt].data = &_brickPoolTexInfo[brickAtt];
+  _shdBrickPoolTexture[brickAtt].size = 1;
+  _shdBrickPoolTexture[brickAtt].component = NULL;
+
+  kore::RenderManager::getInstance()->bindTexture(GL_TEXTURE_3D, _brickPool[brickAtt].getHandle());
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, 0);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, 0);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_R, GL_RED);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_G, GL_GREEN);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_B, GL_BLUE);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_A, GL_ALPHA);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+  kore::RenderManager::getInstance()->bindTexture(GL_TEXTURE_3D, 0);
 }

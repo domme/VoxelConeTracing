@@ -38,6 +38,12 @@
 
 enum EBrickPoolAttributes {
   BRICKPOOL_COLOR = 0,
+  BRICKPOOL_COLOR_X,
+  BRICKPOOL_COLOR_X_NEG,
+  BRICKPOOL_COLOR_Y,
+  BRICKPOOL_COLOR_Y_NEG,
+  BRICKPOOL_COLOR_Z,
+  BRICKPOOL_COLOR_Z_NEG,
   BRICKPOOL_IRRADIANCE,
   BRICKPOOL_NORMAL,
   
@@ -67,13 +73,22 @@ public:
   inline kore::ShaderData* getShdBrickPoolTexture(EBrickPoolAttributes eAttribute)
   {return &_shdBrickPoolTexture[eAttribute];}
 
-  inline uint getBrickPoolResolution() {return _brickPoolResolution;}
+  inline uint getBrickPoolResolution_leaf() {return _brickPoolResolution_leaf;}
 
-  inline kore::ShaderData* getShdBrickPoolResolution() {
-    return &_shdBrickPoolResolution;
+  inline kore::ShaderData* getShdBrickPoolResolutionLeaf() {
+    return &_shdBrickPoolResolution_leaf;
+  }
+
+  inline uint getBrickPoolResolution_nodes() {return _brickPoolResolution_nodes;}
+
+  inline kore::ShaderData* getShdBrickPoolResolutionNodes() {
+    return &_shdBrickPoolResolution_nodes;
   }
 
 private:
+  void allocBrickPoolTex(EBrickPoolAttributes brickAtt, 
+                         const kore::STextureProperties& sProps);
+
   kore::Texture _brickPool[BRICKPOOL_ATTRIBUTES_NUM];
   kore::STextureInfo _brickPoolTexInfo[BRICKPOOL_ATTRIBUTES_NUM];
   kore::ShaderData _shdBrickPool[BRICKPOOL_ATTRIBUTES_NUM];
@@ -82,8 +97,11 @@ private:
   kore::IndexedBuffer _acBrickPoolNextFree;
   kore::ShaderData _shdAcBrickPoolNextFree;
 
-  uint _brickPoolResolution;
-  kore::ShaderData _shdBrickPoolResolution;
+  uint _brickPoolResolution_leaf;
+  kore::ShaderData _shdBrickPoolResolution_leaf;
+
+  uint _brickPoolResolution_nodes;
+  kore::ShaderData _shdBrickPoolResolution_nodes;
 };
 
 #endif  // VCT_SRC_VCT_NODEPOOL_H_

@@ -372,7 +372,7 @@ int main(void) {
   //TwAddVarRW(bar, "Use alpha correction" , TW_TYPE_BOOLCPP, &_vctScene._useAlphaCorrection,
    // "group='Lighting parameters' ");
 
-  //TwAddVarRW(bar, "Cone diameter", TW_TYPE_FLOAT, &_vctScene._coneDiameter, " group='Lighting parameters' min=0 max=5 step=0.001 ");
+  TwAddVarRW(bar, "Cone diameter", TW_TYPE_FLOAT, &_vctScene._coneDiameter, " group='Lighting parameters' min=0 max=10 step=0.001 ");
   //TwAddVarRW(bar, "Cone max distance", TW_TYPE_FLOAT, &_vctScene._coneMaxDistance, " group='Lighting parameters' min=0 max=1 step=0.00001 ");
 
     

@@ -61,7 +61,7 @@ AllocBricksPass::AllocBricksPass(VCTscene* vctScene,
 
   addStartupOperation(new ColorMaskOp(glm::bvec4(false, false, false, false)));
   addStartupOperation(new BindUniform(
-                      vctScene->getBrickPool()->getShdBrickPoolResolution(),
+                      vctScene->getBrickPool()->getShdBrickPoolResolutionLeaf(),
                       _shader.getUniform("brickPoolResolution")));
 
   addStartupOperation(new BindImageTexture(

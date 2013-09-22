@@ -52,9 +52,9 @@ ClearBrickTexPass::ClearBrickTexPass(VCTscene* vctScene,
   this->setShaderProgram(shader);
 
   SDrawArraysIndirectCommand cmd;
-  cmd.numVertices = vctScene->getBrickPool()->getBrickPoolResolution() * 
-                    vctScene->getBrickPool()->getBrickPoolResolution() *
-                    vctScene->getBrickPool()->getBrickPoolResolution();
+  cmd.numVertices = vctScene->getBrickPool()->getBrickPoolResolution_leaf() * 
+                    vctScene->getBrickPool()->getBrickPoolResolution_leaf() *
+                    vctScene->getBrickPool()->getBrickPoolResolution_leaf();
   cmd.numPrimitives = 1;
   cmd.baseInstanceIdx = 0;
   cmd.firstVertexIdx = 0;
