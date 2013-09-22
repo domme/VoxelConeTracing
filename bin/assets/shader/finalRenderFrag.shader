@@ -88,11 +88,11 @@ vec4 gatherIndirectIllum(in vec3 posTex, in vec3 normal, in vec3 tangent) {
     maxDist = 0.0001;
   }
 
-  color += coneTrace(posTex, normal, 1.1546, maxDist);
-  color += 0.707 * coneTrace(posTex, normalize(normal + tangent), 1.1546, maxDist);
-  color += 0.707 * coneTrace(posTex, normalize(normal - tangent), 1.1546, maxDist);
-  color += 0.707 * coneTrace(posTex, normalize(normal + bitangent), 1.1546, maxDist);
-  color += 0.707 * coneTrace(posTex, normalize(normal - bitangent), 1.1546, maxDist);
+  color += coneTrace(posTex, normal, coneAngle, maxDist);
+  color += 0.707 * coneTrace(posTex, normalize(normal + tangent), coneAngle, maxDist);
+  color += 0.707 * coneTrace(posTex, normalize(normal - tangent), coneAngle, maxDist);
+  color += 0.707 * coneTrace(posTex, normalize(normal + bitangent), coneAngle, maxDist);
+  color += 0.707 * coneTrace(posTex, normalize(normal - bitangent), coneAngle, maxDist);
   
   return color / 3.828;
 }
