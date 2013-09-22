@@ -303,17 +303,7 @@ int main(void) {
 
   // initialize GLEW
   glewExperimental = true;
-  if (glewInit() != GLEW_OK) {
-    kore::Log::getInstance()->write("[ERROR] could not init glew\n");
-    exit(EXIT_FAILURE);
-    return -1;
-  }
-
-
-
-    
-  // log versions
-  int GLFWmajor, GLFWminor, GLFWrev;
+  if (glewInit() != GLEW_OK) {6
   glfwGetVersion(&GLFWmajor, &GLFWminor, &GLFWrev);
   kore::Log::getInstance()
     ->write("Render Device: %s\n",
