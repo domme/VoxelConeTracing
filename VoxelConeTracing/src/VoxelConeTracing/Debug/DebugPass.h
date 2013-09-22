@@ -46,6 +46,7 @@ private:
   kore::ShaderProgram _debugShader;
   VCTscene* _vctScene;
 
+  void debugCleanup();
   void debugVoxelIndexAC();
   void debugVoxelFragmentList();
   void debugIndirectCmdBuff();

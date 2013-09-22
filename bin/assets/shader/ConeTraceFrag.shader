@@ -41,10 +41,8 @@ uniform uint leafNodeResolution;
 uniform mat4 viewI;
 uniform mat4 voxelGridTransformI;
 uniform uint numLevels;
-uniform float coneAngle;
 
 uniform bool useLighting = true;
-uniform bool useAlphaCorrection = true;
 
 out vec4 color;
 
@@ -62,7 +60,7 @@ void main(void) {
   
   // PixelSize in texture space is the pixel-viewpsace size divided by the scale
   // of the voxelGrid
-  float pixelSizeTS =  coneAngle;
+  float pixelSizeTS = In.pixelSizeVS * 25;
 
   color = coneTrace(rayOriginTex, rayDirTex, pixelSizeTS, 0.0);
 

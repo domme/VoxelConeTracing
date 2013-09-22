@@ -113,3 +113,10 @@ void VoxelFragTex::init(uint voxelGridResolution) {
                                 sizeof(SDrawArraysIndirectCommand),
                                 GL_STATIC_DRAW, &cmd);
 }
+
+void VoxelFragTex::destroy()
+{
+  for (uint i = 0; i < VOXELATT_NUM; ++i) {
+    _voxelFragTex[i].destroy();
+  }
+}

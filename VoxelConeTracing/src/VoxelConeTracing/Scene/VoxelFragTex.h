@@ -56,6 +56,8 @@ public:
   inline kore::IndexedBuffer* getVoxelFragTexIndCmdBuf()
   {return &_voxelFragTexIndCmdBuf;}
 
+  void destroy();
+
 private:
   // 3D VoxelFragment-Texture
   kore::Texture _voxelFragTex[VOXELATT_NUM];

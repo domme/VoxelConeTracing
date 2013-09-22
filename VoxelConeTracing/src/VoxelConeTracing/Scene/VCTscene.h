@@ -145,7 +145,6 @@ public:
   inline bool* getRenderVoxelsPtr() {return &_renderVoxels;}
   inline kore::ShaderData* getShdUseWideCone() {return &_shdRenderVoxels;}
 
-  inline kore::ShaderData* getShdRandomDirTex() {return &_shdRandomDirTex;}
 
   float _giIntensity;
   kore::ShaderData _shdGIintensity;
@@ -213,10 +212,6 @@ private:
   glm::ivec2 _nodeMapSizes[8];
   kore::ShaderData _shdNodeMapOffsets;
   kore::ShaderData _shdNodeMapSizes;
-
-  kore::Texture _randomDirTex;
-  kore::STextureInfo _randomDirTexInfo;
-  kore::ShaderData _shdRandomDirTex;
 
 };
 

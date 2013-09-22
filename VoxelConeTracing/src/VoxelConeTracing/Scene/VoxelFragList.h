@@ -48,8 +48,12 @@ public:
 
   inline kore::ShaderData* getShdFragListIndCmdBuf()
   {return &_shdFragListIndirectCmdBuf;}
+
+  void destroy();
   
 private:
+  
+
   void initIndirectCommandBufs();
 
   kore::TextureBuffer _voxelFragList;

@@ -120,3 +120,8 @@ void VoxelFragList::initIndirectCommandBufs() {
 
 
 }
+
+void VoxelFragList::destroy()
+{
+  _voxelFragList.destroy();
+}

@@ -84,10 +84,18 @@ DebugPass::DebugPass(VCTscene* vctScene,
 
  addStartupOperation(
    new FunctionOp(std::bind(&DebugPass::debugBrickAc, this)));
+
+ addStartupOperation(new FunctionOp(std::bind(&DebugPass::debugCleanup, this)));
  //addStartupOperation(
  //  new FunctionOp(std::bind(&DebugPass::debugColorNodePool, this)));
 
  
+}
+
+void DebugPass::debugCleanup()
+{
+  _vctScene->getVoxelFragList()->destroy();
+  _vctScene->getVoxelFragTex()->destroy();
 }
 
 
@@ -315,3 +323,5 @@ void DebugPass::debugColorNodePool() {
   kore::Log::getInstance()->write("\n");
   glUnmapBuffer(GL_TEXTURE_BUFFER);
 }
+
+

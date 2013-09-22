@@ -155,9 +155,9 @@ void setup() {
 
   //Load the scene and get all mesh nodes
   //ResourceManager::getInstance()->loadScene("./assets/meshes/sibenik.dae");
-  //ResourceManager::getInstance()->loadScene("./assets/meshes/sponza_diff_small_combi.dae");
+  ResourceManager::getInstance()->loadScene("./assets/meshes/sponza_diff_small_combi.dae");
   //ResourceManager::getInstance()->loadScene("./assets/meshes/sponza_diff_big_combi.dae");
-  ResourceManager::getInstance()->loadScene("./assets/meshes/sponza_diff_medium_combi.dae");
+  //ResourceManager::getInstance()->loadScene("./assets/meshes/sponza_diff_medium_combi.dae");
   //ResourceManager::getInstance()->loadScene("./assets/meshes/sponza_outerCube.dae");
   
   std::vector<SceneNode*> renderNodes;
@@ -242,7 +242,7 @@ void setup() {
   drawBufs.clear();
   drawBufs.push_back(GL_BACK_LEFT);
 
-  //_backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
+  _backbufferStage->addProgramPass(new DebugPass(&_vctScene, kore::EXECUTE_ONCE));
   
    _coneTracePass = new ConeTracePass(&_vctScene);
    _finalRenderPass = new RenderPass(gBufferStage->getFrameBuffer(), shadowMapStage->getFrameBuffer(), lightNodes, &_vctScene);
@@ -369,29 +369,30 @@ int main(void) {
   TwAddVarRW(bar, "Render AO", TW_TYPE_BOOLCPP, &_vctScene._renderAO,
     "group='Lighting parameters' ");
 
-  TwAddVarRW(bar, "Use alpha correction" , TW_TYPE_BOOLCPP, &_vctScene._useAlphaCorrection,
-    "group='Lighting parameters' ");
+  //TwAddVarRW(bar, "Use alpha correction" , TW_TYPE_BOOLCPP, &_vctScene._useAlphaCorrection,
+   // "group='Lighting parameters' ");
 
-  TwAddVarRW(bar, "Cone diameter", TW_TYPE_FLOAT, &_vctScene._coneDiameter, " group='Lighting parameters' min=0 max=5 step=0.001 ");
-  TwAddVarRW(bar, "Cone max distance", TW_TYPE_FLOAT, &_vctScene._coneMaxDistance, " group='Lighting parameters' min=0 max=1 step=0.00001 ");
+  //TwAddVarRW(bar, "Cone diameter", TW_TYPE_FLOAT, &_vctScene._coneDiameter, " group='Lighting parameters' min=0 max=5 step=0.001 ");
+  //TwAddVarRW(bar, "Cone max distance", TW_TYPE_FLOAT, &_vctScene._coneMaxDistance, " group='Lighting parameters' min=0 max=1 step=0.00001 ");
 
-  /*
-  _performanceBar = TwNewBar("Performance");
     
   auto stages = RenderManager::getInstance()->getFrameBufferStages();
   for (uint iStage = 0; iStage < stages.size(); ++iStage) {
     auto passes = stages[iStage]->getShaderProgramPasses();
 
+    TwAddVarCB(bar, "ConeTrace", TW_TYPE_STDSTRING, NULL, durationStringCallback, _coneTracePass, " group='Performance' ");
+    TwAddVarCB(bar, "Final Render", TW_TYPE_STDSTRING, NULL, durationStringCallback, _finalRenderPass, " group='Performance' ");
+
     for (uint iPass = 0; iPass < passes.size(); ++iPass) {
-       std::string szParameters = std::string("label='") + passes[iPass]->getName() + "'";
+       std::string szParameters = std::string(" group='Performance' ") + std::string("label='") + passes[iPass]->getName() + "'";
        std::string szUniqueName = (std::to_string(iPass) + std::to_string(iStage));
 
-       TwAddVarCB(_performanceBar, szUniqueName.c_str(),
+       TwAddVarCB(bar, szUniqueName.c_str(),
                   TW_TYPE_STDSTRING, NULL, 
                   durationStringCallback, passes[iPass], szParameters.c_str());
     }
   }
-  */
+
   
   //TwAddVarRW(_performanceBar, "Frame duration", TW_TYPE_UINT32, &_frameDuration, "");
 

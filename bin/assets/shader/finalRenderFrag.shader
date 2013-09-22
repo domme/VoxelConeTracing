@@ -42,7 +42,6 @@ uniform sampler2D gBuffer_pos;
 uniform sampler2D gBuffer_normal;
 uniform sampler2D gBuffer_tangent;
 uniform sampler2D shadowMap;
-uniform sampler2D randomTex;
 
 layout(r32ui) uniform readonly uimageBuffer nodePool_next;
 layout(r32ui) uniform readonly uimageBuffer nodePool_color;
@@ -64,15 +63,11 @@ uniform float specExponent;
 uniform float coneAngle;
 uniform float coneMaxDistance;
 uniform bool useLighting = true;
-uniform bool useWideCone = true;
 uniform bool renderAO = false;
-uniform bool useAlphaCorrection = true;
 
 #include "assets/shader/_utilityFunctions.shader"
 #include "assets/shader/_octreeTraverse.shader"
 #include "assets/shader/_coneTrace.shader"
-
-vec3 reflectVec;
 
 const float PI = 3.1415926535897932384626433832795;
 
@@ -82,33 +77,35 @@ float tanAngleDeg(in float angleDeg) {
 
 
 vec4 gatherIndirectIllum(in vec3 posTex, in vec3 normal, in vec3 tangent) {
-  //tangent = abs(tangent);
-  vec3 bitangent = normalize(cross(normal, tangent));
+  vec3 bitangent = cross(normal, tangent);
 
   vec4 color = vec4(0);
 
-  color += coneTrace(posTex, normal, coneAngle, coneMaxDistance);
-
-
-  color += 0.707 * coneTrace(posTex, normalize(normal + tangent), coneAngle, coneMaxDistance);
-  color += 0.707 * coneTrace(posTex, normalize(normal - tangent), coneAngle, coneMaxDistance);
-  color += 0.707 * coneTrace(posTex, normalize(normal + bitangent), coneAngle, coneMaxDistance);
-  color += 0.707 * coneTrace(posTex, normalize(normal - bitangent), coneAngle, coneMaxDistance);
-  memoryBarrier();
-
-  return color; // / (4 * 0.707 + 1.0);
   
+  float maxDist = 0.3;
+
+  if (renderAO) {
+    maxDist = 0.0001;
+  }
+
+  color += coneTrace(posTex, normal, 1.1546, maxDist);
+  color += 0.707 * coneTrace(posTex, normalize(normal + tangent), 1.1546, maxDist);
+  color += 0.707 * coneTrace(posTex, normalize(normal - tangent), 1.1546, maxDist);
+  color += 0.707 * coneTrace(posTex, normalize(normal + bitangent), 1.1546, maxDist);
+  color += 0.707 * coneTrace(posTex, normalize(normal - bitangent), 1.1546, maxDist);
+  
+  return color / 3.828;
 }
 
 
 void main(void)
 {
   vec4 posWS = vec4(vec3(texture(gBuffer_pos, In.uv)),1);
-  vec3 normalWS = normalize(texture(gBuffer_normal, In.uv).xyz);
-  vec3 tangentWS = normalize(texture(gBuffer_tangent, In.uv).xyz);
+  vec3 normalWS = texture(gBuffer_normal, In.uv).xyz;
+  vec3 tangentWS = texture(gBuffer_tangent, In.uv).xyz;
   vec4 diffColor = vec4(texture(gBuffer_color, In.uv).xyz, 1.0);
   vec3 posTex = (voxelGridTransformI * posWS).xyz * 0.5 + 0.5; 
-  reflectVec = texture(randomTex, (In.uv * vec2(1280, 720)) / 4).xyz;
+  
 
 
   if (renderAO) {
@@ -149,5 +146,5 @@ void main(void)
    lightIntensity += specGiIntensity * coneTrace(posTex, reflectVec, 2.0 * tanAngleDeg(specExponent), 0.0).xyz;
    
    outColor = diffColor * vec4(lightIntensity, 1.0);
-  } 
+  }
 }
