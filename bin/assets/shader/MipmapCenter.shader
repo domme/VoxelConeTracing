@@ -39,7 +39,13 @@ uniform uint level;
 uniform ivec2 nodeMapOffset[8];
 uniform ivec2 nodeMapSize[8];
 
-
+#define ISOTROPIC 0
+#define ANISO_X 1
+#define ANISO_X_NEG 2
+#define ANISO_Y 3
+#define ANISO_Y_NEG 4
+#define ANISO_Z 5
+#define ANISO_Z_NEG 6
 
 #include "assets/shader/_utilityFunctions.shader"
 #include "assets/shader/_threadNodeUtil.shader"
@@ -61,6 +67,7 @@ void main() {
   
   uint childAddress = NODE_MASK_VALUE & nodeNextU;
   loadChildTile(int(childAddress));  // Loads the child-values into the global arrays
+
 
   vec4 color = vec4(0);
   float weightSum = 0.0;
@@ -109,6 +116,8 @@ void main() {
 
   imageStore(brickPool_value, brickAddress + ivec3(1,1,1), color);
   //imageStore(brickPool_value, brickAddress + ivec3(1,1,1), vec4(0,1,0,1));
+
+
 }
 
 
