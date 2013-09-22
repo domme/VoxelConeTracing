@@ -63,7 +63,7 @@
       if (useLighting) {
         childCol = texture(brickPool_irradiance, childSamplePos);
         parentCol = texture(brickPool_irradiance, parentSamplePos); 
-     } else {
+      } else {
         childCol = texture(brickPool_color, childSamplePos); 
         parentCol = texture(brickPool_color, parentSamplePos); 
       }
@@ -85,7 +85,7 @@
          break;
       }
     }
-        
+
   return color;
 }
 
@@ -98,39 +98,45 @@ vec4 raycastBrick(in uint nodeColorU,
                   in float nodeSideLength,
                   inout float f) 
 {
-    ivec3 brickRes = textureSize(brickPool_color, 0); // TODO: make uniform
-    float voxelStep = 1.0 / float(brickRes.x);
-    float stepSize = voxelStep /* / 3 */; 
+    vec3 brickRes = vec3(textureSize(brickPool_color, 0)); // TODO: make uniform
+    float voxelStep = 1.0 / brickRes.x;
+    float samplingRate = 3;
+    float stepSize = voxelStep / samplingRate;
+    
     vec4 color = vec4(0);
 
     ivec3 brickAddress = ivec3(uintXYZ10ToVec3(nodeColorU));
-    vec3 brickAddressUVW = vec3(brickAddress) / vec3(brickRes) + vec3(voxelStep / 2.0);
+    vec3 brickAddressUVW = vec3(brickAddress) / brickRes + vec3(voxelStep / 2.0);
+    vec3 brickMaxUVW = brickAddressUVW + 2.0 * vec3(voxelStep);
     
     vec3 enterUVW = brickAddressUVW + enter * (2 * voxelStep);
     vec3 leaveUVW = brickAddressUVW + leave * (2 * voxelStep);
+    
     float stepLength = length(leaveUVW - enterUVW);
-        
-    float samplingRateMax = float(pow2[numLevels - 1]);
-    float samplingRateCurr = float(pow2[level]);
-    float alphaCorrection = samplingRateMax / samplingRateCurr;
-
-  //  color = texture(brickPool_color, brickAddressUVW + vec3(voxelStep));
-
-    for (float brickDist = 0; brickDist < stepLength; brickDist += stepSize) {
-      vec3 samplePos = enterUVW + dir * brickDist;
-      f += nodeSideLength / 2;
+    float alphaCorrection = float(pow2[numLevels]) /
+                            (float(pow2[level + 1]) * samplingRate);
       
-      //float currTravelDist = travelDist + f * (nodeSideLength / 6);
-      //tLeave = currTravelDist;
+    for (float brickDist = 0; brickDist < stepLength + stepSize; brickDist += stepSize) {
+      vec3 samplePos = enterUVW + dir * brickDist;
+      
 
+      bvec3 boundsMin = lessThan(samplePos, brickAddressUVW);
+      bvec3 boundsMax = greaterThan(samplePos, brickMaxUVW);
+      if (boundsMin.x || boundsMin.y || boundsMin.z || boundsMax.x || boundsMax.y || boundsMax.z) {
+        break;
+      }
+
+      f += nodeSideLength / (2 * samplingRate);
+      
       vec4 newCol;
       if (useLighting) {
         newCol = texture(brickPool_irradiance, samplePos);
       } else {
         newCol = texture(brickPool_color, samplePos); 
       }
+
       
-      if (newCol.a > 0.001) { 
+      if (newCol.a > 0.00001) { 
           // Alpha correction
           float oldColA = newCol.a;
           newCol.a = 1.0 - clamp(pow((1.0 - newCol.a), alphaCorrection), 0.0, 1.0);
@@ -138,7 +144,7 @@ vec4 raycastBrick(in uint nodeColorU,
           newCol.xyz *= newCol.a / oldColA;  
           color = newCol * clamp(1.0 - color.a, 0.0, 1.0) + color;
       }
-      
+
       if (color.a > 0.99) {
          break;
       }
@@ -185,6 +191,7 @@ vec4 coneTrace(in vec3 rayOriginTex, in vec3 rayDirTex, in float coneDiameter, i
     int childAddress = traverseOctree_level(posTex, childLevel, childMin, childMax, parentAddress, parentMin, parentMax);
 
     bool advance = intersectRayWithAABB(posTex, rayDirTex, childMin, childMax, tEnter, tLeave);
+    intersectRayWithAABB(posTex, rayDirTex, parentMin, parentMax, tEnterParent, tLeaveParent);
     
     if (childAddress != int(NODE_NOT_FOUND)) {
        float childSize = 1.0 / float(pow2[childLevel]);
@@ -192,6 +199,7 @@ vec4 coneTrace(in vec3 rayOriginTex, in vec3 rayDirTex, in float coneDiameter, i
     
        uint childColorU = imageLoad(nodePool_color, childAddress).x;
        uint parentColorU = imageLoad(nodePool_color, parentAddress).x;
+       memoryBarrier();
        
        vec3 childStart = (posTex - childMin) / childSize;
        vec3 childEnd = ((posTex + rayDirTex * tLeave) - childMin) / childSize;
@@ -199,20 +207,26 @@ vec4 coneTrace(in vec3 rayOriginTex, in vec3 rayDirTex, in float coneDiameter, i
        vec3 parentStart = (posTex - parentMin) / parentSize;
        vec3 parentEnd = ((posTex + rayDirTex * tLeave) - parentMin) / parentSize;
        
-       memoryBarrier();
+       // raycastBrick(in uint nodeColorU, in vec3 enter, in vec3 leave, in vec3 dir, in uint level, in float nodeSideLength, in float travelDist, out float tLeave) {
        //vec4 parentCol = raycastBrick(parentColorU, parentStart, parentEnd, rayDirTex, childLevel - 1, parentSize, f);     
        vec4 childCol = raycastBrick(childColorU, childStart, childEnd, rayDirTex, childLevel, childSize, f);
 
-       vec4 newCol = childCol; // mix(parentCol, childCol, fract(sampleLOD));
+       vec4 newCol = childCol;//mix(parentCol, childCol, fract(sampleLOD));
        returnColor = (1.0 - returnColor.a) * newCol + returnColor;
        
        if (returnColor.a > 0.99 || (maxDistance > 0.000001 && f >= maxDistance)) {
          break;
        }
+
+       f+= e;
     }
 
     else {
-      f+= tLeave;
+      f += tLeave + e;
+    }
+    
+    if (!advance) {
+        break; // prevent infinite loop
     }
   }
 
@@ -226,7 +240,7 @@ vec4 coneTraceSimple(in vec3 rayOriginTex, in vec3 rayDirTex, in float coneDiame
   vec4 returnColor = vec4(0);
   ivec3 brickRes = textureSize(brickPool_color, 0); // TODO: make uniform
   float voxelStep = 1.0 / float(brickRes.x);
-  float brickStep = voxelStep / 3; 
+  
 
   float tEnter = 0.0;
   float tLeave = 0.0;
@@ -243,7 +257,8 @@ vec4 coneTraceSimple(in vec3 rayOriginTex, in vec3 rayDirTex, in float coneDiame
   
   float sampleDiameter = 0.0;
   float e = 0.00001;
-  for (float f = tEnter + e; f < tLeave; ) {
+  float end = tLeave;
+  for (float f = tEnter + e; f < end; ) {
     vec3 posTex = (rayOriginTex + rayDirTex * f);
     
     float targetSize = coneDiameter * f;
@@ -253,7 +268,7 @@ vec4 coneTraceSimple(in vec3 rayOriginTex, in vec3 rayDirTex, in float coneDiame
     int parentAddress = 0;
     uint childLevel = uint(ceil(sampleLOD));
     int childAddress = traverseOctree_level(posTex, childLevel, childMin, childMax, parentAddress, parentMin, parentMax);
-    
+
     if (childAddress != int(NODE_NOT_FOUND)) {
        float childSize = 1.0 / float(pow2[childLevel]);
        float samplingRateMax = float(pow2[numLevels - 1]);
@@ -269,15 +284,25 @@ vec4 coneTraceSimple(in vec3 rayOriginTex, in vec3 rayDirTex, in float coneDiame
        vec3 brickAddressUVW = vec3(brickAddress) / vec3(brickRes) + vec3(voxelStep / 2.0);
        vec3 brickMaxUVW = brickAddressUVW + 2.0 * vec3(voxelStep);
        vec3 enterUVW = brickAddressUVW + raycastStart * (2 * voxelStep);
-       
+       float brickStep = voxelStep / 3; 
+       int iBisectionCounter = 0;
+
        for (float brickDist = 0.0; brickDist < 2.0 * voxelStep; brickDist += brickStep) {
           vec3 samplePos = enterUVW + rayDirTex * brickDist;
-          f += childSize / 6;
+          f += childSize / ((voxelStep / brickStep) * 2);
 
           bvec3 boundsMin = lessThan(samplePos, brickAddressUVW);
           bvec3 boundsMax = greaterThan(samplePos, brickMaxUVW);
           if (boundsMin.x || boundsMin.y || boundsMin.z || boundsMax.x || boundsMax.y || boundsMax.z) {
-            break;
+            if (iBisectionCounter < 10) {
+              ++iBisectionCounter;
+              f -= childSize / ((voxelStep / brickStep) * 2);
+              brickDist -= brickStep;
+              brickStep /= 2;
+              continue;  
+            } else {
+              break;
+            }
           }
 
            vec4 newCol;

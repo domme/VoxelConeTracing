@@ -221,7 +221,7 @@ RenderPass::RenderPass(kore::FrameBuffer* gBuffer, kore::FrameBuffer* smBuffer,
                                          shader->getUniform("useLighting")));
   nodePass->addOperation(new BindUniform(vctScene->getShdUseWideCone(),
                                           shader->getUniform("useWideCone")));
-  //nodePass->addOperation(new BindUniform(&vctScene->_shdConeDiameter, shader->getUniform("coneAngle")));
+  nodePass->addOperation(new BindUniform(&vctScene->_shdConeDiameter, shader->getUniform("coneAngle")));
   //nodePass->addOperation(new BindUniform(&vctScene->_shdConeMaxDistance, shader->getUniform("coneMaxDistance")));
   nodePass->addOperation(new BindUniform(&vctScene->_shdRenderAO, shader->getUniform("renderAO")));
   //nodePass->addOperation(new BindUniform(&vctScene->_shdUseAlphaCorrection, shader->getUniform("useAlphaCorrection")));
