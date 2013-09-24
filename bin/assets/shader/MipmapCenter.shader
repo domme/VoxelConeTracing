@@ -69,50 +69,7 @@ void main() {
   loadChildTile(int(childAddress));  // Loads the child-values into the global arrays
 
 
-  vec4 color = vec4(0);
-  float weightSum = 0.0;
-
-  //  1/4
-  float weight = 0.25;
-  avgColor(0, ivec3(2,2,2), weight, weightSum, color);
-  
-  // 1/8
-  weight = 0.125;
-  avgColor(0, ivec3(2,1,2), weight, weightSum, color);
-  avgColor(0, ivec3(1,2,2), weight, weightSum, color);
-  avgColor(0, ivec3(2,2,1), weight, weightSum, color);
-  avgColor(1, ivec3(1,2,2), weight, weightSum, color);
-  avgColor(2, ivec3(2,1,2), weight, weightSum, color);
-  avgColor(6, ivec3(2,2,1), weight, weightSum, color);
-    
-  // 1/16
-  weight = 0.0625;                             
-  avgColor(0, ivec3(1,1,2), weight, weightSum, color);
-  avgColor(0, ivec3(2,1,1), weight, weightSum, color);
-  avgColor(0, ivec3(1,2,1), weight, weightSum, color);
-  avgColor(1, ivec3(1,1,2), weight, weightSum, color);
-  avgColor(1, ivec3(1,2,1), weight, weightSum, color);
-  avgColor(2, ivec3(1,1,2), weight, weightSum, color);
-  avgColor(2, ivec3(2,1,1), weight, weightSum, color);
-  avgColor(3, ivec3(1,1,2), weight, weightSum, color);
-  avgColor(4, ivec3(1,2,1), weight, weightSum, color);
-  avgColor(4, ivec3(2,1,1), weight, weightSum, color);
-  avgColor(5, ivec3(1,2,1), weight, weightSum, color);
-  avgColor(6, ivec3(2,1,1), weight, weightSum, color);
-  
-  // 1/32
-  weight = 0.03125;
-  avgColor(0, ivec3(1,1,1), weight, weightSum, color);
-  avgColor(1, ivec3(1,1,1), weight, weightSum, color);
-  avgColor(2, ivec3(1,1,1), weight, weightSum, color);
-  avgColor(3, ivec3(1,1,1), weight, weightSum, color);
-  avgColor(4, ivec3(1,1,1), weight, weightSum, color);
-  avgColor(5, ivec3(1,1,1), weight, weightSum, color);
-  avgColor(6, ivec3(1,1,1), weight, weightSum, color);
-  avgColor(7, ivec3(1,1,1), weight, weightSum, color);
-    
-  // Center color finished
-  color /= weightSum;
+  vec4 color = mipmapIsotropic(ivec3(2, 2, 2));
 
   imageStore(brickPool_value, brickAddress + ivec3(1,1,1), color);
   //imageStore(brickPool_value, brickAddress + ivec3(1,1,1), vec4(0,1,0,1));
