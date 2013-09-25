@@ -71,6 +71,8 @@ void main() {
 
   vec4 color = mipmapIsotropic(ivec3(2, 2, 2));
 
+  memoryBarrier();
+
   imageStore(brickPool_value, brickAddress + ivec3(1,1,1), color);
   //imageStore(brickPool_value, brickAddress + ivec3(1,1,1), vec4(0,1,0,1));
 

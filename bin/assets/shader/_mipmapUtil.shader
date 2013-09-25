@@ -64,7 +64,7 @@ vec4 mipmapIsotropic(in ivec3 pos) {
         const ivec3 lookupPos = pos + ivec3(x, y, z);
 
         if (lookupPos.x >= 0 && lookupPos.y >= 0 && lookupPos.z >= 0 &&
-            lookupPos.x <= 4 && lookupPos.y <= 4 && lookupPos.z <= 4) 
+            lookupPos.x <= 4 && lookupPos.y <= 4 && lookupPos.z <= 4)
         {
           const int manhattanDist = abs(x) + abs(y) + abs(z);
           const float weight = gaussianWeight[manhattanDist];

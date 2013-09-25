@@ -70,7 +70,9 @@ void main() {
   vec4 farRightBottom = mipmapIsotropic(ivec3(4, 0, 4));
   vec4 farLeftTop = mipmapIsotropic(ivec3(0, 4, 4));
   vec4 farLeftBottom = mipmapIsotropic(ivec3(0, 0, 4));
-
+  
+  memoryBarrier();
+  
   imageStore(brickPool_value, brickAddress + ivec3(2, 2, 0), nearRightTop);
   imageStore(brickPool_value, brickAddress + ivec3(2, 0, 0), nearRightBottom);
   imageStore(brickPool_value, brickAddress + ivec3(0, 2, 0), nearLeftTop);
