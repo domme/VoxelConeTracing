@@ -95,13 +95,11 @@ vec4 raycastBrick(in uint nodeColorU,
                   in vec3 leave,
                   in vec3 dir,
                   in uint level,
-                  in float nodeSideLength,
-                  inout float f) 
+                  in float nodeSideLength, inout float f) 
 {
     vec3 brickRes = vec3(textureSize(brickPool_color, 0)); // TODO: make uniform
     float voxelStep = 1.0 / brickRes.x;
-    float samplingRate = 3;
-    float stepSize = voxelStep / samplingRate;
+    
     
     vec4 color = vec4(0);
 
@@ -112,10 +110,16 @@ vec4 raycastBrick(in uint nodeColorU,
     vec3 leaveUVW = brickAddressUVW + leave * (2 * voxelStep);
     
     float stepLength = length(leaveUVW - enterUVW);
+    float nodeRayLength = length(leave - enter);
+
+    float samplingRate = 3 / nodeRayLength;
+
+    float stepSize = voxelStep / samplingRate;
+    
     float alphaCorrection = float(pow2[numLevels]) /
                             (float(pow2[level + 1]) * samplingRate);
       
-    for (float brickDist = 0; brickDist <= stepLength + 0.00001; brickDist += stepSize) {
+    for (float brickDist = 0.0; brickDist < stepLength - stepSize - 0.000001; brickDist += stepSize) {
       vec3 samplePos = enterUVW + dir * brickDist;
       f += nodeSideLength / (2 * samplingRate);
 
@@ -139,12 +143,12 @@ vec4 raycastBrick(in uint nodeColorU,
       if (color.a > 0.99) {
          break;
       }
+
+      
     }
         
   return color;
 }
-
-
 
 vec4 coneTrace(in vec3 rayOriginTex, in vec3 rayDirTex, in float coneDiameter, in float maxDistance) {
   vec4 returnColor = vec4(0);
@@ -174,7 +178,7 @@ vec4 coneTrace(in vec3 rayOriginTex, in vec3 rayDirTex, in float coneDiameter, i
     
     float targetSize = coneDiameter * f;
     
-    sampleDiameter = max(1.0 / float(LEAF_NODE_RESOLUTION), targetSize);
+    sampleDiameter = clamp(targetSize, 1.0 / float(LEAF_NODE_RESOLUTION), 1.0);
     float sampleLOD = clamp(abs(log2(1.0 / sampleDiameter)), 0.0, float(numLevels) - 1.00001);
     
     int parentAddress = 0;
@@ -199,17 +203,16 @@ vec4 coneTrace(in vec3 rayOriginTex, in vec3 rayDirTex, in float coneDiameter, i
        vec3 parentEnd = ((posTex + rayDirTex * tLeave) - parentMin) / parentSize;
        
        // raycastBrick(in uint nodeColorU, in vec3 enter, in vec3 leave, in vec3 dir, in uint level, in float nodeSideLength, in float travelDist, out float tLeave) {
-       //vec4 parentCol = raycastBrick(parentColorU, parentStart, parentEnd, rayDirTex, childLevel - 1, parentSize, f);     
+       float tempF = 0.0;
+       vec4 parentCol = raycastBrick(parentColorU, parentStart, parentEnd, rayDirTex, childLevel - 1, parentSize, tempF);     
        vec4 childCol = raycastBrick(childColorU, childStart, childEnd, rayDirTex, childLevel, childSize, f);
 
-       vec4 newCol = childCol;//mix(parentCol, childCol, fract(sampleLOD));
+       vec4 newCol = mix(parentCol, childCol, fract(sampleLOD));
        returnColor = (1.0 - returnColor.a) * newCol + returnColor;
        
        if (returnColor.a > 0.99 || (maxDistance > 0.000001 && f >= maxDistance)) {
          break;
        }
-
-       f+= e;
     }
 
     else {
@@ -223,3 +226,5 @@ vec4 coneTrace(in vec3 rayOriginTex, in vec3 rayDirTex, in float coneDiameter, i
 
   return returnColor;
 }
+
+
