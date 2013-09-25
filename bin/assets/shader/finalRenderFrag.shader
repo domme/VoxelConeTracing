@@ -85,7 +85,7 @@ vec4 gatherIndirectIllum(in vec3 posTex, in vec3 normal, in vec3 tangent) {
   float maxDist = 0.3;
 
   if (renderAO) {
-    maxDist = 0.0001;
+    maxDist = 0.00005;
   }
 
   color += coneTrace(posTex, normal, coneAngle, maxDist);
@@ -94,7 +94,11 @@ vec4 gatherIndirectIllum(in vec3 posTex, in vec3 normal, in vec3 tangent) {
   color += 0.707 * coneTrace(posTex, normalize(normal + bitangent), coneAngle, maxDist);
   color += 0.707 * coneTrace(posTex, normalize(normal - bitangent), coneAngle, maxDist);
   
-  return color / 3.828;
+  if (renderAO) {
+    color /= 3.828;
+  }
+
+  return color;
 }
 
 
@@ -143,7 +147,7 @@ void main(void)
 
    lightIntensity += giIntensity * gatherIndirectIllum(posTex, normalWS, tangentWS).xyz;
    vec3 reflectVec = normalize(reflect(view, normalWS));
-   //lightIntensity += specGiIntensity * coneTrace(posTex, reflectVec, 2.0 * tanAngleDeg(specExponent), 0.0).xyz;
+   lightIntensity += specGiIntensity * coneTrace(posTex, reflectVec, 2.0 * tanAngleDeg(specExponent), 0.0).xyz;
    
    outColor = diffColor * vec4(lightIntensity, 1.0);
   }

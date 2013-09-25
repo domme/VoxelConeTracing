@@ -297,7 +297,6 @@
     <None Include="..\bin\assets\shader\VoxelConeTracing\voxelizeFrag.shader" />
     <None Include="..\bin\assets\shader\VoxelConeTracing\voxelizeGeom.shader" />
     <None Include="..\bin\assets\shader\VoxelConeTracing\voxelizeVert.shader" />
-    <None Include="..\bin\assets\shader\_raycast.shader" />
     <None Include="..\bin\assets\shader\_threadNodeUtil.shader" />
     <None Include="..\bin\assets\shader\_utilityFunctions.shader" />
   </ItemGroup>

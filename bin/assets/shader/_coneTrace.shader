@@ -2,6 +2,18 @@
 // _utilityFunctions
 // _octreeTraverse
 // _raycast
+
+void correctAlpha(inout vec4 color, in float alphaCorrection) {
+  if (color.a > 0.00001) { 
+      // Alpha correction
+      float oldColA = color.a;
+      color.a = 1.0 - clamp(pow((1.0 - color.a), alphaCorrection), 0.0, 1.0);
+      color.a = clamp(color.a, 0.0, 1.0);
+      color.xyz *= color.a / oldColA;  
+   }
+}
+
+
 vec4 raycastBrick(in uint nodeColorU,
                   in vec3 enter,
                   in vec3 leave,
@@ -155,7 +167,7 @@ vec4 raycastBrick(in uint nodeColorU,
 
 
 
-vec4 coneTrace(in vec3 rayOriginTex, in vec3 rayDirTex, in float coneDiameter, in float maxDistance) {
+vec4 _coneTrace(in vec3 rayOriginTex, in vec3 rayDirTex, in float coneDiameter, in float maxDistance) {
   vec4 returnColor = vec4(0);
   rayOriginTex += rayDirTex * (1.0 / float(LEAF_NODE_RESOLUTION));
 
@@ -242,3 +254,83 @@ vec4 coneTrace(in vec3 rayOriginTex, in vec3 rayDirTex, in float coneDiameter, i
 
   return returnColor;
 }
+
+
+vec4 coneTrace(in vec3 rayOriginTex, in vec3 rayDirTex, in float coneDiameter, in float maxDistance) {
+  vec4 returnColor = vec4(0);
+  
+  float tEnter = 0.0;
+  float tLeave = 0.0;
+  vec3 childMin = vec3(0.0);
+  vec3 childMax = vec3(1.0);
+  vec3 parentMin = vec3(0.0);
+  vec3 parentMax = vec3(1.0);
+  float nodeSize = 0.0;
+  const vec3 brickRes = vec3(textureSize(brickPool_color, 0)); // TODO: make uniform
+  const float voxelStep = 1.0 / brickRes.x;
+    
+  if (!intersectRayWithAABB(rayOriginTex, rayDirTex, vec3(0.0), vec3(1.0), tEnter, tLeave)) {
+    return returnColor;
+  }
+
+  rayOriginTex += rayDirTex * (1.0 / float(LEAF_NODE_RESOLUTION));
+  for (float d = tEnter; d < tLeave; d += nodeSize) {
+    vec3 posTex = (rayOriginTex + rayDirTex * d);
+
+    float targetSize = coneDiameter * d;
+    
+    nodeSize = clamp(targetSize, 1.0 / float(LEAF_NODE_RESOLUTION), 1.0);
+    float sampleLOD = clamp(abs(log2(1.0 / nodeSize)), 0.0, float(numLevels) - 1.00001);
+    
+    int parentAddress = int(NODE_NOT_FOUND);
+    uint childLevel = uint(ceil(sampleLOD));
+    nodeSize = float(1.0 / float(pow2[childLevel]));
+
+    int childAddress = traverseOctree_level(posTex, childLevel, childMin, childMax, parentAddress, parentMin, parentMax);
+
+    if (childAddress != int(NODE_NOT_FOUND)) {
+      uint childColorU = imageLoad(nodePool_color, childAddress).x;
+      uint parentColorU = imageLoad(nodePool_color, parentAddress).x;
+      ivec3 childBrickAdd = ivec3(uintXYZ10ToVec3(childColorU));
+      ivec3 parentBrickAdd = ivec3(uintXYZ10ToVec3(parentColorU));
+      vec3 childBrickAddUVW = vec3(childBrickAdd) / vec3(brickRes) + vec3(voxelStep / 2.0);
+      vec3 parentBrickAddUVW = vec3(parentBrickAdd) / vec3(brickRes) + vec3(voxelStep / 2.0);
+
+      memoryBarrier();
+
+      vec3 childEnter = (posTex - childMin) / nodeSize;
+      vec3 parentEnter = (posTex - parentMin) / (nodeSize * 2.0);
+      
+      vec3 childEnterUVW = childBrickAddUVW + childEnter * (2 * voxelStep);
+      vec3 parentEnterUVW = parentBrickAddUVW + parentEnter * (2 * voxelStep);
+      
+      vec4 childCol = vec4(0);
+      vec4 parentCol = vec4(0);
+      if (useLighting) {
+        childCol = texture(brickPool_irradiance, childEnterUVW);
+        parentCol = texture(brickPool_irradiance, parentEnterUVW); 
+      } else {
+        childCol = texture(brickPool_color, childEnterUVW); 
+        parentCol = texture(brickPool_color, parentEnterUVW); 
+      }
+
+      float alphaCorrection = float(pow2[numLevels]) /
+                              float(pow2[childLevel + 1]);
+      
+      correctAlpha(childCol, alphaCorrection);
+      correctAlpha(parentCol, alphaCorrection * 2);
+
+      vec4 newCol = mix(parentCol, childCol, fract(sampleLOD));
+    
+      returnColor = newCol * clamp(1.0 - returnColor.a, 0.0, 1.0) + returnColor;
+
+
+      if (returnColor.a > 0.99 || (maxDistance > 0.000001 && d >= maxDistance)) {
+         break;
+      }
+    }  // if
+  } // for
+
+  return returnColor;
+
+} // coneTrace

@@ -409,9 +409,6 @@
     <None Include="..\bin\assets\shader\_utilityFunctions.shader">
       <Filter>shader</Filter>
     </None>
-    <None Include="..\bin\assets\shader\_raycast.shader">
-      <Filter>shader</Filter>
-    </None>
     <None Include="..\bin\assets\shader\voxelizeClear.shader">
       <Filter>shader\Voxelize</Filter>
     </None>
