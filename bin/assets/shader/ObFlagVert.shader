@@ -31,6 +31,7 @@ uniform uint voxelGridResolution;
 uniform uint numLevels;
 
 #include "assets/shader/_utilityFunctions.shader"
+#include "assets/shader/_traverseUtil.shader"
 #include "assets/shader/_octreeTraverse.shader"
 
 void flagNode(in uint nodeNext, in int address);

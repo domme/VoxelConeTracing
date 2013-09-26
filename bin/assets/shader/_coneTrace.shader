@@ -3,6 +3,8 @@
 // _octreeTraverse
 // _raycast
 
+
+
 void correctAlpha(inout vec4 color, in float alphaCorrection) {
   if (color.a > 0.00001) { 
       // Alpha correction
@@ -12,6 +14,8 @@ void correctAlpha(inout vec4 color, in float alphaCorrection) {
       color.xyz *= color.a / oldColA;  
    }
 }
+
+
 
 
 vec4 raycastBrick(in uint nodeColorU,
@@ -169,8 +173,7 @@ vec4 raycastBrick(in uint nodeColorU,
 
 vec4 _coneTrace(in vec3 rayOriginTex, in vec3 rayDirTex, in float coneDiameter, in float maxDistance) {
   vec4 returnColor = vec4(0);
-  rayOriginTex += rayDirTex * (1.0 / float(LEAF_NODE_RESOLUTION));
-
+  
   float tEnter = 0.0;
   float tLeave = 0.0;
     
@@ -188,7 +191,7 @@ vec4 _coneTrace(in vec3 rayOriginTex, in vec3 rayDirTex, in float coneDiameter, 
   float end = tLeave;
   float sampleDiameter = 0.0;
   float e = 0.00001;
-  for (float f = tEnter + e; f < end; ) {
+  for (float f = tEnter + nodeSizes[numLevels - 1]; f < end; ) {
     vec3 posTex = (rayOriginTex + rayDirTex * f);
     
     float targetSize = coneDiameter * f;
@@ -212,8 +215,8 @@ vec4 _coneTrace(in vec3 rayOriginTex, in vec3 rayDirTex, in float coneDiameter, 
     if (childAddress != int(NODE_NOT_FOUND)) {
        float childSize = 1.0 / float(pow2[childLevel]);
 
-       uint childColorU = imageLoad(nodePool_color, childAddress).x;
-       uint parentColorU = imageLoad(nodePool_color, parentAddress).x;
+       uint childColorU = texelFetch(nodePool_colorS, childAddress).x;
+       uint parentColorU = texelFetch(nodePool_colorS, parentAddress).x;
        memoryBarrier();
        
        vec3 childEnter = (posTex - childMin) / childSize;
@@ -265,7 +268,7 @@ vec4 coneTrace(in vec3 rayOriginTex, in vec3 rayDirTex, in float coneDiameter, i
   vec3 childMax = vec3(1.0);
   vec3 parentMin = vec3(0.0);
   vec3 parentMax = vec3(1.0);
-  float nodeSize = 0.0;
+  float nodeSize = nodeSizes[numLevels];
   const vec3 brickRes = vec3(textureSize(brickPool_color, 0)); // TODO: make uniform
   const float voxelStep = 1.0 / brickRes.x;
     
@@ -273,24 +276,24 @@ vec4 coneTrace(in vec3 rayOriginTex, in vec3 rayDirTex, in float coneDiameter, i
     return returnColor;
   }
 
-  rayOriginTex += rayDirTex * (1.0 / float(LEAF_NODE_RESOLUTION));
-  for (float d = tEnter; d < tLeave; d += nodeSize) {
+  for (float d = tEnter + nodeSizes[numLevels - 1]; d < tLeave; d += nodeSize) {
     vec3 posTex = (rayOriginTex + rayDirTex * d);
 
     float targetSize = coneDiameter * d;
     
-    nodeSize = clamp(targetSize, 1.0 / float(LEAF_NODE_RESOLUTION), 1.0);
+    nodeSize = clamp(targetSize, nodeSizes[numLevels - 1], 1.0);
     float sampleLOD = clamp(abs(log2(1.0 / nodeSize)), 0.0, float(numLevels) - 1.00001);
     
     int parentAddress = int(NODE_NOT_FOUND);
     uint childLevel = uint(ceil(sampleLOD));
-    nodeSize = float(1.0 / float(pow2[childLevel]));
+    nodeSize = nodeSizes[childLevel];
+        
 
     int childAddress = traverseOctree_level(posTex, childLevel, childMin, childMax, parentAddress, parentMin, parentMax);
 
-    if (childAddress != int(NODE_NOT_FOUND)) {
-      uint childColorU = imageLoad(nodePool_color, childAddress).x;
-      uint parentColorU = imageLoad(nodePool_color, parentAddress).x;
+//    if (childAddress != int(NODE_NOT_FOUND)) {
+      uint childColorU =  texelFetch(nodePool_colorS, childAddress).x;
+      uint parentColorU = texelFetch(nodePool_colorS, parentAddress).x;
       ivec3 childBrickAdd = ivec3(uintXYZ10ToVec3(childColorU));
       ivec3 parentBrickAdd = ivec3(uintXYZ10ToVec3(parentColorU));
       vec3 childBrickAddUVW = vec3(childBrickAdd) / vec3(brickRes) + vec3(voxelStep / 2.0);
@@ -316,6 +319,11 @@ vec4 coneTrace(in vec3 rayOriginTex, in vec3 rayDirTex, in float coneDiameter, i
 
       float alphaCorrection = float(pow2[numLevels]) /
                               float(pow2[childLevel + 1]);
+
+      // Falloff
+      float falloff = 1 / (1 + d * 50); 
+      childCol.a *= falloff;
+      parentCol.a *= falloff;
       
       correctAlpha(childCol, alphaCorrection);
       correctAlpha(parentCol, alphaCorrection * 2);
@@ -328,7 +336,7 @@ vec4 coneTrace(in vec3 rayOriginTex, in vec3 rayDirTex, in float coneDiameter, i
       if (returnColor.a > 0.99 || (maxDistance > 0.000001 && d >= maxDistance)) {
          break;
       }
-    }  // if
+  //  }  // if
   } // for
 
   return returnColor;

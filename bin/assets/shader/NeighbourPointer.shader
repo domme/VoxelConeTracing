@@ -40,6 +40,7 @@ uniform uint numLevels;
 uniform uint voxelGridResolution;
 
 #include "assets/shader/_utilityFunctions.shader"
+#include "assets/shader/_traverseUtil.shader"
 #include "assets/shader/_octreeTraverse.shader"
 
 void main() {

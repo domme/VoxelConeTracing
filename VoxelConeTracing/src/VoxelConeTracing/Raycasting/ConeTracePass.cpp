@@ -107,12 +107,15 @@ ConeTracePass::ConeTracePass(VCTscene* vctScene){
     nodePass->addOperation(new BindUniform(_renderMgr->getShdScreenRes(),
       _coneTraceShader.getUniform("screenRes")));  
 
-    addStartupOperation(new BindImageTexture(
+    /*addStartupOperation(new BindImageTexture(
       vctScene->getNodePool()->getShdNodePool(NEXT),
-      _coneTraceShader.getUniform("nodePool_next"), GL_READ_ONLY));
-    addStartupOperation(new BindImageTexture(
-      vctScene->getNodePool()->getShdNodePool(COLOR),
-      _coneTraceShader.getUniform("nodePool_color"), GL_READ_ONLY));
+      _coneTraceShader.getUniform("nodePool_next"), GL_READ_ONLY));*/
+
+    addStartupOperation(new BindTexture(vctScene->getNodePool()->getShdNodePoolSampler(NEXT),
+                                        _coneTraceShader.getUniform("nodePool_nextS")));
+
+    addStartupOperation(new BindTexture(vctScene->getNodePool()->getShdNodePoolSampler(COLOR),
+                                        _coneTraceShader.getUniform("nodePool_colorS")));
 
     addStartupOperation(new BindTexture(vctScene->getBrickPool()->getShdBrickPoolTexture(BRICKPOOL_COLOR),
                                         _coneTraceShader.getUniform("brickPool_color")));

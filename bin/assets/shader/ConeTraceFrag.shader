@@ -30,8 +30,8 @@ in VertexData {
   vec2 uv;
 } In; 
 
-layout(r32ui) uniform readonly uimageBuffer nodePool_next;
-layout(r32ui) uniform readonly uimageBuffer nodePool_color;
+uniform usamplerBuffer nodePool_nextS;
+uniform usamplerBuffer nodePool_colorS;
 uniform sampler3D brickPool_color;
 uniform sampler3D brickPool_normal;
 uniform sampler3D brickPool_irradiance;
@@ -48,7 +48,8 @@ uniform bool useLighting = true;
 out vec4 color;
 
 #include "assets/shader/_utilityFunctions.shader"
-#include "assets/shader/_octreeTraverse.shader"
+#include "assets/shader/_traverseUtil.shader"
+#include "assets/shader/_traverseFast.shader"
 #include "assets/shader/_coneTrace.shader"
 
 void main(void) {

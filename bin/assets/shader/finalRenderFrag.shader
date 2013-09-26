@@ -43,8 +43,9 @@ uniform sampler2D gBuffer_normal;
 uniform sampler2D gBuffer_tangent;
 uniform sampler2D shadowMap;
 
-layout(r32ui) uniform readonly uimageBuffer nodePool_next;
-layout(r32ui) uniform readonly uimageBuffer nodePool_color;
+//layout(r32ui) uniform readonly uimageBuffer nodePool_next;
+uniform usamplerBuffer nodePool_nextS; 
+uniform usamplerBuffer nodePool_colorS;
 
 uniform vec3 lightDir;
 uniform mat4 lightCamProjMat;
@@ -66,26 +67,26 @@ uniform bool useLighting = true;
 uniform bool renderAO = false;
 
 #include "assets/shader/_utilityFunctions.shader"
-#include "assets/shader/_octreeTraverse.shader"
+#include "assets/shader/_traverseUtil.shader"
+#include "assets/shader/_traverseFast.shader"
 #include "assets/shader/_coneTrace.shader"
 
 const float PI = 3.1415926535897932384626433832795;
+
 
 float tanAngleDeg(in float angleDeg) {
    return abs(tan((angleDeg / 180.0) * PI * 0.5));
 }
 
-
 vec4 gatherIndirectIllum(in vec3 posTex, in vec3 normal, in vec3 tangent) {
   vec3 bitangent = cross(normal, tangent);
 
   vec4 color = vec4(0);
-
   
   float maxDist = 0.3;
 
   if (renderAO) {
-    maxDist = 0.00005;
+    maxDist = 0.0001;
   }
 
   color += coneTrace(posTex, normal, coneAngle, maxDist);
@@ -136,7 +137,7 @@ void main(void)
 
      // Light intensity
      vec3 h = normalize((-view) + lightDir);
-     vec3 lightColor = vec3(1); /** giIntensity;  */ //TODO: Replace with uniform
+     vec3 lightColor = vec3(1) * giIntensity;   //TODO: Replace with uniform
    
      // Account for local shading      
      float diff = max(0.0, dot(lightDir, normalWS));

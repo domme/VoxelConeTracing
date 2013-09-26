@@ -47,6 +47,7 @@ uniform ivec2 nodeMapOffset[8];
 uniform ivec2 nodeMapSize[8];
 
 #include "assets/shader/_utilityFunctions.shader"
+#include "assets/shader/_traverseUtil.shader"
 #include "assets/shader/_octreeTraverse.shader"
 
 void storeNodeInNodemap(in vec2 uv, in uint level, in int nodeAddress) {

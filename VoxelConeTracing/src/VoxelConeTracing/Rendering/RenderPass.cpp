@@ -132,16 +132,19 @@ RenderPass::RenderPass(kore::FrameBuffer* gBuffer, kore::FrameBuffer* smBuffer,
                         shader->getUniform("gBuffer_tangent")));
   nodePass->addOperation(new BindTexture(&vSMBufferTex[0],
                          shader->getUniform("shadowMap")));
-
+  /*
   nodePass->addOperation(new BindImageTexture(
       vctScene->getNodePool()->getShdNodePool(NEXT),
       shader->getUniform("nodePool_next"),
       GL_READ_ONLY));
+      */
 
-  nodePass->addOperation(new BindImageTexture(
-    vctScene->getNodePool()->getShdNodePool(COLOR),
-    shader->getUniform("nodePool_color"),
-    GL_READ_ONLY));
+  nodePass->addOperation(new BindTexture(vctScene->getNodePool()->getShdNodePoolSampler(NEXT),
+                                         shader->getUniform("nodePool_nextS")));
+
+  nodePass->addOperation(new BindTexture(vctScene->getNodePool()->getShdNodePoolSampler(COLOR),
+                                         shader->getUniform("nodePool_colorS")));
+
   //////////////////////////////////////////////////////////////////////////
 
   kore::Camera* lightcam = static_cast<Camera*>(lightNodes[0]->getComponent(COMPONENT_CAMERA));

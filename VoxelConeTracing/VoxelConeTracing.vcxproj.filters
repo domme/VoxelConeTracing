@@ -421,5 +421,11 @@
     <None Include="..\bin\assets\shader\_mipmapUtil.shader">
       <Filter>shader</Filter>
     </None>
+    <None Include="..\bin\assets\shader\_traverseFast.shader">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\bin\assets\shader\_traverseUtil.shader">
+      <Filter>shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

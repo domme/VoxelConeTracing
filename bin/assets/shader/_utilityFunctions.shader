@@ -8,6 +8,7 @@
 #define NODE_NOT_FOUND 0xFFFFFFFF
 
 const uint pow2[] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
+const float nodeSizes[] = {1, 0.5, 0.25, 0.125, 0.0625, 0.03125, 0.015625, 0.0078125, 0.00390625, 0.001953125, 0.0009765625};
 
 vec4 convRGBA8ToVec4(uint val) {
     return vec4( float((val & 0x000000FF)), 

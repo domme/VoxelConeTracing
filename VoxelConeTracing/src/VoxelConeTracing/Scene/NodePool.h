@@ -81,6 +81,10 @@ public:
   inline kore::ShaderData* getShdNodePool(ENodePoolAttributes eAttribute)
   {return &_shdNodePool[eAttribute];}
 
+  inline kore::ShaderData* getShdNodePoolSampler(ENodePoolAttributes eAttribute) {
+    return &_shdNodePoolSampler[eAttribute];
+  }
+
   inline kore::ShaderData* getShdNumLevels()
   {return &_shdNumLevels;}
 
@@ -107,6 +111,7 @@ private:
   kore::TextureBuffer _nodePool[NODEPOOL_ATTRIBUTES_NUM];
   kore::STextureInfo _nodePoolTexInfo[NODEPOOL_ATTRIBUTES_NUM];
   kore::ShaderData _shdNodePool[NODEPOOL_ATTRIBUTES_NUM];
+  kore::ShaderData _shdNodePoolSampler[NODEPOOL_ATTRIBUTES_NUM];
 
   /// Thread buffers
   std::vector<kore::IndexedBuffer> _vThreadBufs_denseLevel;

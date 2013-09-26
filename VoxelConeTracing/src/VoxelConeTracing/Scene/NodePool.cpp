@@ -123,6 +123,10 @@ void NodePool::init(uint voxelGridResolution) {
     _shdNodePool[i].type = GL_TEXTURE_BUFFER;
     _shdNodePool[i].data = &_nodePoolTexInfo[i];
 
+    _shdNodePoolSampler[i].name = ssName.str();
+    _shdNodePoolSampler[i].type = GL_UNSIGNED_INT_SAMPLER_BUFFER;
+    _shdNodePoolSampler[i].data = &_nodePoolTexInfo[i];
+
     /*// Init to zero
     kore::RenderManager* renderMgr = kore::RenderManager::getInstance();
     renderMgr->bindBuffer(GL_TEXTURE_BUFFER, _nodePool[i].getBufferHandle());

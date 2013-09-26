@@ -47,6 +47,7 @@ uniform uint numLevels;  // Number of levels in the octree
 uniform uint voxelGridResolution;
 
 #include "assets/shader/_utilityFunctions.shader"
+#include "assets/shader/_traverseUtil.shader"
 #include "assets/shader/_octreeTraverse.shader"
 
 void storeInLeaf(in vec3 posTex, in int nodeAddress, in uint voxelColorU, in uint voxelNormalU) {
