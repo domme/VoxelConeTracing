@@ -52,19 +52,11 @@ vec4 raycastBrick(in uint nodeColorU,
 
       if (i == iSampleCount - 1) {
         alphaCorrection *= fract(fSampleCount);
-        
-        //alphaCorrection =  float(pow2[numLevels]) /
-        //                    (float(pow2[level + 1]) * (samplingRate * fract(fSampleCount)));
       }
 
-      if (newCol.a > 0.00001) { 
-          // Alpha correction
-          float oldColA = newCol.a;
-          newCol.a = 1.0 - clamp(pow((1.0 - newCol.a), alphaCorrection), 0.0, 1.0);
-          newCol.a = clamp(newCol.a, 0.0, 1.0);
-          newCol.xyz *= newCol.a / oldColA;  
-          color = newCol * clamp(1.0 - color.a, 0.0, 1.0) + color;
-      }
+      correctAlpha(newCol, alphaCorrection);
+
+      color += (1 - color.a) * newCol;
 
       if (color.a > 0.99) {
          break;
@@ -199,20 +191,12 @@ vec4 _coneTrace(in vec3 rayOriginTex, in vec3 rayDirTex, in float coneDiameter, 
        
        vec3 parentEnter = (posTex - parentMin) / (childSize * 2.0);
        vec3 parentLeave = ((posTex + rayDirTex * tLeave) - parentMin) / (childSize * 2.0);
-        
-       vec4 newCol = raycastBrickQuadrilinear(childColorU,
-                                              parentColorU,
-                                              rayDirTex,
-                                              childEnter,
-                                              childLeave,
-                                              childSize,
-                                              parentEnter,
-                                              parentLeave,
-                                              childLevel,        
-                                              coneDiameter,                              
-                                              f);
+       
+       vec4 cCol = raycastBrick(childColorU, childEnter, childLeave, rayDirTex, childLevel, childSize);
+       vec4 pCol = raycastBrick(parentColorU, parentEnter, parentLeave, rayDirTex, childLevel - 1, childSize * 2);
+       vec4 newCol = mix(pCol, cCol, fract(sampleLOD));
 
-       returnColor = (1.0 - returnColor.a) * newCol + returnColor;
+       returnColor += (1.0 - returnColor.a) * newCol;
        if (returnColor.a > 0.99 || (maxDistance > 0.000001 && f >= maxDistance)) {
          break;
        }

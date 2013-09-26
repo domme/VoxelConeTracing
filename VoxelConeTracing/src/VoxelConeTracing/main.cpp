@@ -353,7 +353,7 @@ int main(void) {
 
 
   TwBar* bar = TwNewBar("TweakBar");
-  TwAddVarRW(bar, "GI intensity", TW_TYPE_FLOAT, _vctScene.getGIintensityPointer(),
+  TwAddVarRW(bar, "Light intensity", TW_TYPE_FLOAT, _vctScene.getGIintensityPointer(),
     " group='Lighting parameters' label='GI intensity' min=0 max=100 step=0.01 ");
 
   TwAddVarRW(bar, "GI Spec Intensity", TW_TYPE_FLOAT, _vctScene.getSpecGIintensityPtr(),
@@ -417,7 +417,7 @@ int main(void) {
   kore::Timer the_timer;
   the_timer.start();
   double time = 0;
-  float cameraMoveSpeed = 40.0f;
+  float cameraMoveSpeed = 15.0f;
   
   int oldMouseX = 0;
   int oldMouseY = 0;
