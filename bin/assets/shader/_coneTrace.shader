@@ -6,7 +6,7 @@
 
 
 void correctAlpha(inout vec4 color, in float alphaCorrection) {
-  float oldColA = color.a;
+  const float oldColA = color.a;
   color.a = 1.0 - pow((1.0 - color.a), alphaCorrection);
   color.xyz *= color.a / clamp(oldColA, 0.0001, 10000.0);
 }
@@ -254,85 +254,74 @@ vec4 _coneTrace(in vec3 rayOriginTex, in vec3 rayDirTex, in float coneDiameter, 
 
 
 vec4 coneTrace(in vec3 rayOriginTex, in vec3 rayDirTex, in float coneDiameter, in float maxDistance) {
-  vec4 returnColor = vec4(0);
-  
   float tEnter = 0.0;
   float tLeave = 0.0;
-  vec3 childMin = vec3(0.0);
-  vec3 childMax = vec3(1.0);
-  vec3 parentMin = vec3(0.0);
-  vec3 parentMax = vec3(1.0);
+  vec3 cMin = vec3(0.0);
+  vec3 cMax = vec3(1.0);
+  vec3 pMin = vec3(0.0);
+  vec3 pMax = vec3(1.0);
   float nodeSize = nodeSizes[numLevels];
   const vec3 brickRes = vec3(textureSize(brickPool_color, 0)); // TODO: make uniform
-  const float voxelStep = 1.0 / brickRes.x;
+  const float voxelStep = 1 / brickRes;
     
   if (!intersectRayWithAABB(rayOriginTex, rayDirTex, vec3(0.0), vec3(1.0), tEnter, tLeave)) {
-    return returnColor;
+    return vec4(0);
   }
 
+  vec4 returnColor = vec4(0);
   for (float d = tEnter + nodeSizes[numLevels - 1]; d < tLeave; d += nodeSize) {
-    vec3 posTex = (rayOriginTex + rayDirTex * d);
+    const vec3 posTex = (rayOriginTex + rayDirTex * d);
 
-    float targetSize = coneDiameter * d;
-    
-    nodeSize = clamp(targetSize, nodeSizes[numLevels - 1], 1.0);
-    float sampleLOD = clamp(abs(log2(1.0 / nodeSize)), 0.0, float(numLevels) - 1.00001);
-    
-    int parentAddress = int(NODE_NOT_FOUND);
-    uint childLevel = uint(ceil(sampleLOD));
-    nodeSize = nodeSizes[childLevel];
+    nodeSize = clamp(coneDiameter * d, nodeSizes[numLevels - 1], 1.0);
+    const float sampleLOD = clamp(log2(1.0 / nodeSize), 0.0, float(numLevels) - 1.00001);
         
+    const uint cLevel = uint(ceil(sampleLOD));
+    nodeSize = nodeSizes[cLevel];
+    int pAddress;
+    int cAddress = traverseOctree_level(posTex, cLevel, cMin, cMax, pAddress, pMin, pMax);
 
-    int childAddress = traverseOctree_level(posTex, childLevel, childMin, childMax, parentAddress, parentMin, parentMax);
+    if (cAddress == int(NODE_NOT_FOUND)) {
+      continue;
+    }
 
-//    if (childAddress != int(NODE_NOT_FOUND)) {
-      uint childColorU =  texelFetch(nodePool_colorS, childAddress).x;
-      uint parentColorU = texelFetch(nodePool_colorS, parentAddress).x;
-      ivec3 childBrickAdd = ivec3(uintXYZ10ToVec3(childColorU));
-      ivec3 parentBrickAdd = ivec3(uintXYZ10ToVec3(parentColorU));
-      vec3 childBrickAddUVW = vec3(childBrickAdd) / vec3(brickRes) + vec3(voxelStep / 2.0);
-      vec3 parentBrickAddUVW = vec3(parentBrickAdd) / vec3(brickRes) + vec3(voxelStep / 2.0);
-
-      memoryBarrier();
-
-      vec3 childEnter = (posTex - childMin) / nodeSize;
-      vec3 parentEnter = (posTex - parentMin) / (nodeSize * 2.0);
-      
-      vec3 childEnterUVW = childBrickAddUVW + childEnter * (2 * voxelStep);
-      vec3 parentEnterUVW = parentBrickAddUVW + parentEnter * (2 * voxelStep);
-      
-      vec4 childCol = vec4(0);
-      vec4 parentCol = vec4(0);
-      if (useLighting) {
-        childCol = texture(brickPool_irradiance, childEnterUVW);
-        parentCol = texture(brickPool_irradiance, parentEnterUVW); 
-      } else {
-        childCol = texture(brickPool_color, childEnterUVW); 
-        parentCol = texture(brickPool_color, parentEnterUVW); 
-      }
-
-      float alphaCorrection = float(pow2[numLevels]) /
-                              float(pow2[childLevel + 1]);
-
-      // Falloff
-      /*float falloff = 1 / (1 + d * 50); 
-      childCol.a *= falloff;
-      parentCol.a *= falloff;*/
-      childCol.a /= 2;
-      parentCol.a /= 2;
-      
-      correctAlpha(childCol, alphaCorrection);
-      correctAlpha(parentCol, alphaCorrection * 2);
-
-      vec4 newCol = mix(parentCol, childCol, fract(sampleLOD));
+    const ivec3 cBrickAdd = ivec3(uintXYZ10ToVec3(texelFetch(nodePool_colorS, cAddress).x));
+    const ivec3 pBrickAdd = ivec3(uintXYZ10ToVec3(texelFetch(nodePool_colorS, pAddress).x));
+    const vec3 cBrickAddUVW = (vec3(cBrickAdd) + 0.5) / brickRes;
+    const vec3 pBrickAddUVW = (vec3(pBrickAdd) + 0.5) / brickRes;
     
-      returnColor = newCol * clamp(1.0 - returnColor.a, 0.0, 1.0) + returnColor;
+    const vec3 cEnter = (posTex - cMin) / nodeSize;
+    const vec3 pEnter = (posTex - pMin) / (nodeSize * 2.0);
+    
+    const vec3 cEnterUVW = cBrickAddUVW + cEnter * (2 * voxelStep);
+    const vec3 pEnterUVW = pBrickAddUVW + pEnter * (2 * voxelStep);
+    
+    vec4 cCol = vec4(0);
+    vec4 pCol = vec4(0);
+    if (useLighting) {
+      cCol = texture(brickPool_irradiance, cEnterUVW);
+      pCol = texture(brickPool_irradiance, pEnterUVW); 
+    } else {
+      cCol = texture(brickPool_color, cEnterUVW); 
+      pCol = texture(brickPool_color, pEnterUVW); 
+    }
 
+    const float alphaCorrection = float(pow2[numLevels]) /
+                                  float(pow2[cLevel + 1]);
 
-      if (returnColor.a > 0.99 || (maxDistance > 0.000001 && d >= maxDistance)) {
-         break;
-      }
-  //  }  // if
+    // Falloff
+    /*float falloff = 1 / (1 + d * 50); 
+    cCol.a *= falloff;
+    pCol.a *= falloff;*/
+        
+    correctAlpha(cCol, alphaCorrection);
+    correctAlpha(pCol, alphaCorrection * 2);
+
+    const vec4 newCol = mix(pCol, cCol, fract(sampleLOD));
+    returnColor += (1.0 - returnColor.a) * newCol;
+    
+    if (returnColor.a > 0.99 || (maxDistance > 0.000001 && d >= maxDistance)) {
+       break;
+    }
   } // for
 
   return returnColor;

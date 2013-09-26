@@ -22,13 +22,12 @@ int traverseOctree_level(in vec3 posTex, in uint targetLevel,
     uint nodeNext = texelFetch(nodePool_nextS, nodeAddress).x;
 
     uint childStartAddress = nodeNext & NODE_MASK_VALUE;
-        
-    /*if (childStartAddress == 0U) {
-        nodeAddress = 0;
-        break;
-    }*/
     
-
+    if (childStartAddress == 0U) {
+        nodeAddress = int(NODE_NOT_FOUND);
+        break;
+    }
+    
     uvec3 offVec = uvec3(2.0 * posTex);
     uint off = offVec.x + 2U * offVec.y + 4U * offVec.z;
 
