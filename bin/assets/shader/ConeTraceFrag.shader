@@ -64,6 +64,6 @@ void main(void) {
   // of the voxelGrid
   float pixelSizeTS = coneAngle;
 
-  color = coneTrace(rayOriginTex, rayDirTex, pixelSizeTS, 0.0);
+  color = _coneTrace(rayOriginTex, rayDirTex, pixelSizeTS, 0.0);
 
 }

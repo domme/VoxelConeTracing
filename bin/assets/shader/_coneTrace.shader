@@ -85,7 +85,6 @@ vec4 raycastBrick(in uint nodeColorU,
                                in vec3 parentEnter,
                                in vec3 parentLeave,
                                in uint childLevel,
-                               in float parentDistance,
                                in float coneDiameter,
                                inout float f)
 {
@@ -119,16 +118,11 @@ vec4 raycastBrick(in uint nodeColorU,
     for (int i = 0; i < iSampleCount; ++i) {
       vec3 childSamplePos = childEnterUVW + dir * stepSize * float(i);
       vec3 parentSamplePos = parentEnterUVW + dir * stepSize / 2 * float(i);
-      f += childSize / (2 * samplingRate);
-
-      if (parentDistance > 0.000001 && f >= parentDistance) {
-        break;
-      }
 
       float targetSize = coneDiameter * f;
       float sampleDiameter = clamp(targetSize, 1.0 / float(LEAF_NODE_RESOLUTION), 1.0);
       float sampleLOD = clamp(abs(log2(1.0 / sampleDiameter)), 0.0, float(numLevels) - 1.00001);
-
+     
       vec4 childCol = vec4(0);
       vec4 parentCol = vec4(0);
       
@@ -140,21 +134,15 @@ vec4 raycastBrick(in uint nodeColorU,
         parentCol = texture(brickPool_color, parentSamplePos); 
       }
 
-      vec4 newCol = mix(parentCol, childCol, fract(sampleLOD));
-
       if (i == iSampleCount - 1) {
         alphaCorrection *= fract(fSampleCount);
       }
 
-      if (newCol.a > 0.00001) { 
-          // Alpha correction
-          float oldColA = newCol.a;
-          newCol.a = 1.0 - clamp(pow((1.0 - newCol.a), alphaCorrection), 0.0, 1.0);
-          newCol.a = clamp(newCol.a, 0.0, 1.0);
-          newCol.xyz *= newCol.a / oldColA;  
-          color = newCol * clamp(1.0 - color.a, 0.0, 1.0) + color;
-      }
+      correctAlpha(childCol, alphaCorrection);
+      correctAlpha(parentCol, alphaCorrection * 2);
 
+      vec4 newCol = mix(parentCol, childCol, fract(sampleLOD));
+      
       if (color.a > 0.99) {
          break;
       }
@@ -196,22 +184,15 @@ vec4 _coneTrace(in vec3 rayOriginTex, in vec3 rayDirTex, in float coneDiameter, 
     int parentAddress = int(NODE_NOT_FOUND);
     uint childLevel = uint(ceil(sampleLOD));
 
-    float parentDistance = 0.0;
-    
-    if(childLevel > 0) {
-      parentDistance = (1.0 / float(pow2[childLevel - 1])) / coneDiameter;
-    }
-
     int childAddress = traverseOctree_level(posTex, childLevel, childMin, childMax, parentAddress, parentMin, parentMax);
 
     bool advance = intersectRayWithAABB(posTex, rayDirTex, childMin, childMax, tEnter, tLeave);
         
     if (childAddress != int(NODE_NOT_FOUND)) {
-       float childSize = 1.0 / float(pow2[childLevel]);
+       float childSize = nodeSizes[childLevel];
 
        uint childColorU = texelFetch(nodePool_colorS, childAddress).x;
        uint parentColorU = texelFetch(nodePool_colorS, parentAddress).x;
-       memoryBarrier();
        
        vec3 childEnter = (posTex - childMin) / childSize;
        vec3 childLeave = ((posTex + rayDirTex * tLeave) - childMin) / childSize;
@@ -227,9 +208,8 @@ vec4 _coneTrace(in vec3 rayOriginTex, in vec3 rayDirTex, in float coneDiameter, 
                                               childSize,
                                               parentEnter,
                                               parentLeave,
-                                              childLevel,
-                                              parentDistance,     
-                                              coneDiameter,                                         
+                                              childLevel,        
+                                              coneDiameter,                              
                                               f);
 
        returnColor = (1.0 - returnColor.a) * newCol + returnColor;
@@ -238,11 +218,7 @@ vec4 _coneTrace(in vec3 rayOriginTex, in vec3 rayDirTex, in float coneDiameter, 
        }
     }
 
-    else {
-      f += tLeave;
-    }
-
-    f+= e;
+    f += tLeave + e;
         
     if (!advance) {
         break; // prevent infinite loop
@@ -279,7 +255,7 @@ vec4 coneTrace(in vec3 rayOriginTex, in vec3 rayDirTex, in float coneDiameter, i
     nodeSize = nodeSizes[cLevel];
     int pAddress;
     int cAddress = traverseOctree_level(posTex, cLevel, cMin, cMax, pAddress, pMin, pMax);
-
+    
     if (cAddress == int(NODE_NOT_FOUND)) {
       continue;
     }
@@ -318,12 +294,11 @@ vec4 coneTrace(in vec3 rayOriginTex, in vec3 rayDirTex, in float coneDiameter, i
 
     const vec4 newCol = mix(pCol, cCol, fract(sampleLOD));
     returnColor += (1.0 - returnColor.a) * newCol;
-    
+   
     if (returnColor.a > 0.99 || (maxDistance > 0.000001 && d >= maxDistance)) {
        break;
     }
   } // for
-
   return returnColor;
 
 } // coneTrace

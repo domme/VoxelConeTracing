@@ -82,7 +82,6 @@ vec4 gatherIndirectIllum(in vec3 posTex, in vec3 normal, in vec3 tangent) {
   vec3 bitangent = cross(normal, tangent);
 
   vec4 color = vec4(0);
-  
   float maxDist = 0.3;
 
   if (renderAO) {
@@ -101,7 +100,6 @@ vec4 gatherIndirectIllum(in vec3 posTex, in vec3 normal, in vec3 tangent) {
 
   return color;
 }
-
 
 void main(void)
 {
@@ -147,6 +145,7 @@ void main(void)
    
 
    lightIntensity += giIntensity * gatherIndirectIllum(posTex, normalWS, tangentWS).xyz;
+   
    vec3 reflectVec = normalize(reflect(view, normalWS));
    lightIntensity += specGiIntensity * coneTrace(posTex, reflectVec, 2.0 * tanAngleDeg(specExponent), 0.0).xyz;
    
