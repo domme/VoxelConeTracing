@@ -6,16 +6,10 @@
 
 
 void correctAlpha(inout vec4 color, in float alphaCorrection) {
-  if (color.a > 0.00001) { 
-      // Alpha correction
-      float oldColA = color.a;
-      color.a = 1.0 - clamp(pow((1.0 - color.a), alphaCorrection), 0.0, 1.0);
-      color.a = clamp(color.a, 0.0, 1.0);
-      color.xyz *= color.a / oldColA;  
-   }
+  float oldColA = color.a;
+  color.a = 1.0 - pow((1.0 - color.a), alphaCorrection);
+  color.xyz *= color.a / clamp(oldColA, 0.0001, 10000.0);
 }
-
-
 
 
 vec4 raycastBrick(in uint nodeColorU,

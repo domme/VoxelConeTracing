@@ -137,7 +137,7 @@ void main(void)
 
      // Light intensity
      vec3 h = normalize((-view) + lightDir);
-     vec3 lightColor = vec3(1) * giIntensity;   //TODO: Replace with uniform
+     vec3 lightColor = vec3(1) /** giIntensity*/;   //TODO: Replace with uniform
    
      // Account for local shading      
      float diff = max(0.0, dot(lightDir, normalWS));

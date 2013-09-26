@@ -37,6 +37,15 @@ DeferredPass::DeferredPass(kore::Camera* cam, std::vector<kore::SceneNode*>& vRe
 
   _name = std::string("GBuffer Pass");
   _useGPUProfiling = true;
+
+  _useNMap_false = 0;
+  _useNMap_true = 1;
+
+  _shdUseNmapTrue.type = GL_INT;
+  _shdUseNmapTrue.data = &_useNMap_true;
+
+  _shdUseNmapFalse.type = GL_INT;
+  _shdUseNmapFalse.data = &_useNMap_false;
   
   kore::RenderManager* renderMgr = kore::RenderManager::getInstance();
 
@@ -67,15 +76,20 @@ DeferredPass::DeferredPass(kore::Camera* cam, std::vector<kore::SceneNode*>& vRe
       continue;
     }
 
-    const Texture* tex = texComp->getTexture(0);
-
-    if (!tex) {
+    std::vector<const Texture*> diffTextures =
+                          texComp->getTextures(TEXSEMANTICS_DIFFUSE);
+    
+    if (diffTextures.size() == 0) {
       continue;
     }
+
+    std::vector<const Texture*> normalTextures =
+                          texComp->getTextures(TEXSEMANTICS_NORMAL);
 
     kore::TexSamplerProperties samplerProps;
     samplerProps.minfilter = GL_LINEAR_MIPMAP_LINEAR;
     shader->setSamplerProperties(0, samplerProps);
+    shader->setSamplerProperties(1, samplerProps);
 
     NodePass* nodePass = new NodePass(vRenderNodes[i]);
     this->addNodePass(nodePass);
@@ -114,8 +128,18 @@ DeferredPass::DeferredPass(kore::Camera* cam, std::vector<kore::SceneNode*>& vRe
 
 
     nodePass
-      ->addOperation(OperationFactory::create(OP_BINDTEXTURE, tex->getName(),
+      ->addOperation(OperationFactory::create(OP_BINDTEXTURE, diffTextures[0]->getName(),
                                               texComp, "diffuseTex", shader));
+
+    if(normalTextures.size() == 0) {
+      nodePass->addOperation(new BindUniform(&_shdUseNmapFalse, shader->getUniform("useNormalMap")));
+    } else {
+      nodePass->addOperation(new BindUniform(&_shdUseNmapTrue, shader->getUniform("useNormalMap")));
+      
+      nodePass
+        ->addOperation(OperationFactory::create(OP_BINDTEXTURE, normalTextures[0]->getName(),
+                                               texComp, "normalTex", shader));
+    }
 
     nodePass
       ->addOperation(new RenderMesh(meshComp));

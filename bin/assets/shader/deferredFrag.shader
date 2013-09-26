@@ -32,6 +32,8 @@ in VertexData {
 } In;
 
 uniform sampler2D	diffuseTex;
+uniform sampler2D normalTex;
+uniform int useNormalMap = 0;
 
 out vec4 color[4];
 
@@ -39,6 +41,17 @@ void main(void)
 {
   color[0] = vec4(texture(diffuseTex, vec2(In.uv.x, 1.0 - In.uv.y)).rgb, 0);
   color[1] = vec4(In.position, 0); 
-  color[2] = vec4(normalize(In.normal), 0);
+  if (useNormalMap == 1) {
+    vec3 surfNormal = normalize(In.normal);
+    vec3 surfTangent = normalize(In.tangent);
+    vec3 bitangent = cross(surfNormal, surfTangent);
+    vec3 nMap = texture(normalTex, vec2(In.uv.x, 1.0 - In.uv.y)).xyz * 2 - 1;
+    vec3 normal = surfNormal + surfTangent * nMap.x + bitangent * nMap.y;
+    color[2] = vec4(normalize(normal), 0);
+  } else {
+    color[2] = vec4(normalize(In.normal), 0);  
+  }
+
+  
   color[3] = vec4(normalize(In.tangent), 0);
 }

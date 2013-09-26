@@ -35,6 +35,12 @@ public:
   DeferredPass(kore::Camera* cam, std::vector<kore::SceneNode*>& vRenderNodes);
   ~DeferredPass(void);
 
+private:
+  int _useNMap_true;
+  int _useNMap_false;
+  kore::ShaderData _shdUseNmapTrue;
+  kore::ShaderData _shdUseNmapFalse;
+
 };
 
 #endif //VCT_SRC_VCT_DEFERREDPASS_H_
