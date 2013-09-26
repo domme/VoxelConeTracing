@@ -58,9 +58,9 @@ SVOlightUpdateStage::SVOlightUpdateStage(kore::SceneNode* lightNode,
   uint _numLevels = vctScene.getNodePool()->getNumLevels(); 
 
   // Prepare render algorithm
-  /* this->addProgramPass(new ClearBrickTexPass(&vctScene,
+   this->addProgramPass(new ClearBrickTexPass(&vctScene,
                                         ClearBrickTexPass::CLEAR_BRICK_DYNAMIC,
-                                        exeFrequency)); */
+                                        exeFrequency));
   this->addProgramPass(new ClearNodeMapPass(&vctScene, exeFrequency));
       
   

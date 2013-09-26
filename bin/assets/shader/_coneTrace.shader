@@ -315,9 +315,11 @@ vec4 coneTrace(in vec3 rayOriginTex, in vec3 rayDirTex, in float coneDiameter, i
                               float(pow2[childLevel + 1]);
 
       // Falloff
-      float falloff = 1 / (1 + d * 50); 
+      /*float falloff = 1 / (1 + d * 50); 
       childCol.a *= falloff;
-      parentCol.a *= falloff;
+      parentCol.a *= falloff;*/
+      childCol.a /= 2;
+      parentCol.a /= 2;
       
       correctAlpha(childCol, alphaCorrection);
       correctAlpha(parentCol, alphaCorrection * 2);
