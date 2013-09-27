@@ -193,6 +193,9 @@ void VCTscene::init(const SVCTparameters& params,
   _shdLightNodeMap.size = 1;
   _shdLightNodeMap.data = &_lightNodeMapTexInfo;
 
+  _shdLightNodeMapSampler.type = GL_UNSIGNED_INT_SAMPLER_2D;
+  _shdLightNodeMapSampler.data = &_lightNodeMapTexInfo;
+
   /*
   // DEBUG nodemap
   //////////////////////////////////////////////////////////////////////////

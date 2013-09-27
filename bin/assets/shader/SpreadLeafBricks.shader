@@ -34,10 +34,10 @@ to traverse the octree and find the leaf-node.
 #version 420 core
 
 layout(r32ui) uniform readonly uimageBuffer nodePool_color;
-layout(r32ui) uniform readonly uimageBuffer levelAddressBuffer;
 layout(rgba8) uniform volatile image3D brickPool_value;
 
-layout(r32ui) uniform readonly uimage2D nodeMap;
+uniform usampler2D nodeMap;
+uniform usamplerBuffer levelAddressBuffer;
 uniform ivec2 nodeMapOffset[8];
 uniform ivec2 nodeMapSize[8];
 

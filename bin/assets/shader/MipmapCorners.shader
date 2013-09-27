@@ -27,8 +27,8 @@
 
 layout(r32ui) uniform readonly uimageBuffer nodePool_next;
 layout(r32ui) uniform readonly uimageBuffer nodePool_color;
-layout(r32ui) uniform readonly uimage2D nodeMap;
-layout(r32ui) uniform readonly uimageBuffer levelAddressBuffer;
+uniform usampler2D nodeMap;
+uniform usamplerBuffer levelAddressBuffer;
 uniform uint mipmapMode;
 uniform uint numLevels;
 

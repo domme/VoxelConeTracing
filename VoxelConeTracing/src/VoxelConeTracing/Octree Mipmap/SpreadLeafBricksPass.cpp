@@ -70,9 +70,9 @@ SpreadLeafBricksPass::
       new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
       vctScene->getThreadBuf_nodeMap(vctScene->getNodePool()->getNumLevels() - 1)->getHandle()));
 
-    addStartupOperation(new BindImageTexture(
-      vctScene->getShdLightNodeMap(),
-      shp->getUniform("nodeMap"), GL_READ_ONLY));
+    addStartupOperation(new BindTexture(
+      vctScene->getShdLightNodeMapSampler(),
+      shp->getUniform("nodeMap")));
 
     addStartupOperation(new BindUniform(vctScene->getShdNodeMapOffsets(),
       shp->getUniform("nodeMapOffset[0]")));
@@ -86,9 +86,9 @@ SpreadLeafBricksPass::
       vctScene->getNodePool()->getDenseThreadBuf(vctScene->getNodePool()->getNumLevels() - 1)->getHandle()));
 
     addStartupOperation(
-      new kore::BindImageTexture(
-      vctScene->getNodePool()->getShdLevelAddressBuffer(),
-      shp->getUniform("levelAddressBuffer"), GL_READ_ONLY));
+      new kore::BindTexture(
+      vctScene->getNodePool()->getShdLevelAddressBufferSampler(),
+      shp->getUniform("levelAddressBuffer")));
   }
 
   addStartupOperation(new ColorMaskOp(glm::bvec4(false, false, false, false)));

@@ -28,14 +28,14 @@
 uniform usamplerBuffer nodePool_color;
 uniform usamplerBuffer nodePool_Neighbour;
 
-layout(r32ui) uniform readonly uimageBuffer levelAddressBuffer;
+uniform usamplerBuffer levelAddressBuffer;
 layout(rgba8) uniform image3D brickPool_value;
 
 uniform int level;
 uniform uint numLevels;
 uniform uint axis;
 
-layout(r32ui) uniform readonly uimage2D nodeMap;
+uniform usampler2D nodeMap;
 uniform ivec2 nodeMapOffset[8];
 uniform ivec2 nodeMapSize[8];
 

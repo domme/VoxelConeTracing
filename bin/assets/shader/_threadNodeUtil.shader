@@ -6,8 +6,8 @@ uint getThreadNode() {
   uint index;
 
 #if THREAD_MODE == THREAD_MODE_COMPLETE
-      int levelStart = int(imageLoad(levelAddressBuffer, int(level)).x);
-      int nextLevelStart = int(imageLoad(levelAddressBuffer, int(level + 1)).x);
+      int levelStart = int(texelFetch(levelAddressBuffer, int(level)).x);
+      int nextLevelStart = int(texelFetch(levelAddressBuffer, int(level + 1)).x);
       memoryBarrier();
 
      index = uint(levelStart) + uint(gl_VertexID);
@@ -24,7 +24,7 @@ uint getThreadNode() {
       uv.x = (gl_VertexID % nmSize.x);
       uv.y = (gl_VertexID / nmSize.x);
 
-      index = imageLoad(nodeMap, nodeMapOffset[level] + uv).x;
+      index = texelFetch(nodeMap, nodeMapOffset[level] + uv, 0).x;
 #else
 #endif
     return index;

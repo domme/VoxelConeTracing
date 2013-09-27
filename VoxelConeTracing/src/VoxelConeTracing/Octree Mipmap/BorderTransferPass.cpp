@@ -84,9 +84,9 @@ BorderTransferPass::
       new kore::BindBuffer(GL_DRAW_INDIRECT_BUFFER,
       vctScene->getThreadBuf_nodeMap(level)->getHandle()));
 
-    addStartupOperation(new BindImageTexture(
-      vctScene->getShdLightNodeMap(),
-      _shader.getUniform("nodeMap"), GL_READ_ONLY));
+    addStartupOperation(new BindTexture(
+      vctScene->getShdLightNodeMapSampler(),
+      _shader.getUniform("nodeMap")));
 
     addStartupOperation(new BindUniform(vctScene->getShdNodeMapOffsets(),
       _shader.getUniform("nodeMapOffset[0]")));
@@ -104,9 +104,9 @@ BorderTransferPass::
       _shader.getUniform("numLevels")));
 
     addStartupOperation(
-      new kore::BindImageTexture(
-      vctScene->getNodePool()->getShdLevelAddressBuffer(),
-      _shader.getUniform("levelAddressBuffer"), GL_READ_ONLY));
+      new kore::BindTexture(
+      vctScene->getNodePool()->getShdLevelAddressBufferSampler(),
+      _shader.getUniform("levelAddressBuffer")));
   }
 
   addStartupOperation(new BindUniform(&_shdLevel, _shader.getUniform("level")));

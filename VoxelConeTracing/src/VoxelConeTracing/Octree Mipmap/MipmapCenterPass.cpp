@@ -84,9 +84,9 @@ MipmapCenterPass::
       _vctScene->getThreadBuf_nodeMap(level)->getHandle()));
     
 
-    addStartupOperation(new BindImageTexture(
-      _vctScene->getShdLightNodeMap(),
-      shp->getUniform("nodeMap"), GL_READ_ONLY));
+    addStartupOperation(new BindTexture(
+      _vctScene->getShdLightNodeMapSampler(),
+      shp->getUniform("nodeMap")));
 
     addStartupOperation(new BindUniform(vctScene->getShdNodeMapOffsets(),
       shp->getUniform("nodeMapOffset[0]")));
@@ -104,9 +104,9 @@ MipmapCenterPass::
       shp->getUniform("numLevels")));
 
     addStartupOperation(
-      new kore::BindImageTexture(
-        vctScene->getNodePool()->getShdLevelAddressBuffer(),
-        shp->getUniform("levelAddressBuffer"), GL_READ_ONLY));
+      new kore::BindTexture(
+        vctScene->getNodePool()->getShdLevelAddressBufferSampler(),
+        shp->getUniform("levelAddressBuffer")));
   }
   
   addStartupOperation(new BindImageTexture(

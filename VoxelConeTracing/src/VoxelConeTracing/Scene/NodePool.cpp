@@ -101,6 +101,9 @@ void NodePool::init(uint voxelGridResolution) {
   _shdLevelAddressBuffer.data = &_levelAddressBuffer_texInfo;
   _shdLevelAddressBuffer.size = 1;
   _shdLevelAddressBuffer.type = GL_TEXTURE_BUFFER;
+
+  _shdLevelAddressBufferSampler.type = GL_UNSIGNED_INT_SAMPLER_BUFFER;
+  _shdLevelAddressBufferSampler.data = &_levelAddressBuffer_texInfo;
   //////////////////////////////////////////////////////////////////////////
 
 

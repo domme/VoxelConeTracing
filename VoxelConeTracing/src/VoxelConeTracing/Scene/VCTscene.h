@@ -110,6 +110,9 @@ public:
   inline kore::ShaderData* getShdLightNodeMap() 
   {return &_shdLightNodeMap;}
 
+  inline kore::ShaderData* getShdLightNodeMapSampler() 
+  {return &_shdLightNodeMapSampler;}
+
   inline const glm::ivec2& getSMresolution() {return _smResolution;}
   inline kore::ShaderData* getShdSMresolution() {return &_shdSMresolution;}
 
@@ -204,6 +207,7 @@ private:
   kore::Texture _lightNodeMap;
   kore::STextureInfo _lightNodeMapTexInfo;
   kore::ShaderData _shdLightNodeMap;
+  kore::ShaderData _shdLightNodeMapSampler;
 
   std::vector<kore::IndexedBuffer> _vThreadBufs_NodeMap;
   kore::IndexedBuffer _threadBuf_NodeMapComplete;

@@ -94,6 +94,9 @@ public:
   inline kore::ShaderData* getShdLevelAddressBuffer()
   {return &_shdLevelAddressBuffer;}
 
+  inline kore::ShaderData* getShdLevelAddressBufferSampler()
+  {return &_shdLevelAddressBufferSampler;}
+
   inline kore::TextureBuffer* getCmdBufSVOnodes()
   {return &_cmdBufSVOnodes;}
 
@@ -130,6 +133,7 @@ private:
   kore::TextureBuffer _levelAddressBuffer;
   kore::STextureInfo _levelAddressBuffer_texInfo;
   kore::ShaderData _shdLevelAddressBuffer;
+  kore::ShaderData _shdLevelAddressBufferSampler;
 
   uint _leafNodeResolution;
   kore::ShaderData _shdLeafNodeResolution;
