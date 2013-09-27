@@ -129,7 +129,8 @@ void main(void)
 
    float e = 0.0008;
    if (useLighting) {
-    if (abs(texture(shadowMap, posLProj.xy).x) + e < abs(posLProj.z)){
+    float sMapDepth = abs(texture(shadowMap, posLProj.xy).x);
+    if (posLProj.x < 0.00001 ||posLProj.x > 0.99999 || posLProj.y < 0.000001 ||posLProj.y > 0.99999 || sMapDepth + e < abs(posLProj.z)){
        visibility = 0.0;
      }
 

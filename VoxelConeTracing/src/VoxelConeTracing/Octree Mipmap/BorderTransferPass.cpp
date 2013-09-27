@@ -111,9 +111,9 @@ BorderTransferPass::
 
   addStartupOperation(new BindUniform(&_shdLevel, _shader.getUniform("level")));
   
-  addStartupOperation(new BindImageTexture(
-    vctScene->getNodePool()->getShdNodePool(COLOR),
-    _shader.getUniform("nodePool_color"), GL_READ_ONLY));
+  addStartupOperation(new BindTexture(
+    vctScene->getNodePool()->getShdNodePoolSampler(COLOR),
+    _shader.getUniform("nodePool_color")));
 
   addStartupOperation(new BindImageTexture(
     vctScene->getBrickPool()->getShdBrickPool(eBrickPool),
@@ -121,9 +121,9 @@ BorderTransferPass::
 
     // X Axis ADD
   addStartupOperation(new BindUniform(&_shdAxisX, _shader.getUniform("axis")));
-  addStartupOperation(new BindImageTexture(
-    vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_X),
-    _shader.getUniform("nodePool_Neighbour"), GL_READ_ONLY));
+  addStartupOperation(new BindTexture(
+    vctScene->getNodePool()->getShdNodePoolSampler(NEIGHBOUR_X),
+    _shader.getUniform("nodePool_Neighbour")));
 
   addStartupOperation(new DrawIndirectOp(GL_POINTS, 0));
   addStartupOperation(new MemoryBarrierOp(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT));
@@ -131,9 +131,9 @@ BorderTransferPass::
   
   // Y Axis ADD
   addStartupOperation(new BindUniform(&_shdAxisY, _shader.getUniform("axis")));
-  addStartupOperation(new BindImageTexture(
-    vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_Y),
-    _shader.getUniform("nodePool_Neighbour"), GL_READ_ONLY));
+  addStartupOperation(new BindTexture(
+    vctScene->getNodePool()->getShdNodePoolSampler(NEIGHBOUR_Y),
+    _shader.getUniform("nodePool_Neighbour")));
 
   addStartupOperation(new DrawIndirectOp(GL_POINTS, 0));
   addStartupOperation(new MemoryBarrierOp(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT));
@@ -141,9 +141,9 @@ BorderTransferPass::
    
   // Z Axis ADD
   addStartupOperation(new BindUniform(&_shdAxisZ, _shader.getUniform("axis")));
-  addStartupOperation(new BindImageTexture(
-    vctScene->getNodePool()->getShdNodePool(NEIGHBOUR_Z),
-    _shader.getUniform("nodePool_Neighbour"), GL_READ_ONLY));
+  addStartupOperation(new BindTexture(
+    vctScene->getNodePool()->getShdNodePoolSampler(NEIGHBOUR_Z),
+    _shader.getUniform("nodePool_Neighbour")));
 
   addStartupOperation(new DrawIndirectOp(GL_POINTS, 0));
   addStartupOperation(new MemoryBarrierOp(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT));

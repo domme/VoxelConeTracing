@@ -96,7 +96,7 @@ static const uint screen_height = 720;
 static kore::SceneNode* _cameraNode = NULL;
 static kore::Camera* _pCamera = NULL;
 
-static kore::SceneNode* _rotationNode = NULL;
+static kore::SceneNode* _lightNode = NULL;
 static kore::FrameBufferStage* _backbufferStage = NULL;
 
 static VCTscene _vctScene;
@@ -115,6 +115,7 @@ static std::vector<SDurationResult> _vDurationsResults;
 
 static kore::ShaderProgramPass* _finalRenderPass = NULL;
 static kore::ShaderProgramPass* _coneTracePass = NULL;
+static kore::FrameBufferStage* _lightUpdateStage = NULL;
 
 
 void changeAllocPassLevel() {
@@ -164,8 +165,6 @@ void setup() {
   SceneManager::getInstance()
       ->getSceneNodesByComponent(COMPONENT_MESH, renderNodes);
 
-  _rotationNode = renderNodes[0];
-
   _cameraNode = SceneManager::getInstance()
                       ->getSceneNodeByComponent(COMPONENT_CAMERA);
   _pCamera = static_cast<Camera*>(_cameraNode->getComponent(COMPONENT_CAMERA));
@@ -202,6 +201,8 @@ void setup() {
   }
   SceneManager::getInstance()->update();
 
+  _lightNode = lightNodes[0];
+
   _vctScene.init(params, renderNodes, _pCamera);
   _vctScene.setUseGPUprofiling(true);
 
@@ -230,10 +231,10 @@ void setup() {
    
 
   // Light update stage
-  FrameBufferStage* lightUpdateStage =
+  _lightUpdateStage =
     new SVOlightUpdateStage(lightNodes[0], renderNodes, params, _vctScene, shadowMapStage->getFrameBuffer(), kore::EXECUTE_ONCE);
 
-  RenderManager::getInstance()->addFramebufferStage(lightUpdateStage);
+  RenderManager::getInstance()->addFramebufferStage(_lightUpdateStage);
   ////////////////////////////////////////////////////////////////////////// 
   
   _backbufferStage = new FrameBufferStage;
@@ -440,6 +441,20 @@ int main(void) {
       _backbufferStage->addProgramPass(_coneTracePass);
     }
 
+
+    if (glfwGetKey('J')) {
+        // Rotate the light
+        _lightNode->rotate(5.0f * static_cast<float>(time), glm::vec3(0.0f, 1.0f, 0.0f), SPACE_WORLD);
+        
+        // Reset all lightUpdate-passes
+        _lightUpdateStage->setExecuted(false);
+        std::vector<kore::ShaderProgramPass*>& lightPasses =
+                                    _lightUpdateStage->getShaderProgramPasses();
+
+        for (int i = 0;  i < lightPasses.size(); ++i) {
+          lightPasses[i]->setExecuted(false);
+        }
+    }
        
     if (_pCamera) {
       if (glfwGetKey(GLFW_KEY_UP) || glfwGetKey('W')) {
@@ -458,6 +473,7 @@ int main(void) {
       if (glfwGetKey(GLFW_KEY_RIGHT) || glfwGetKey('D')) {
         _pCamera->moveSideways(cameraMoveSpeed * static_cast<float>(time));
       }
+
 
       if (_octreeVisPass) {
         if (glfwGetKey(GLFW_KEY_PAGEUP)) {
@@ -486,10 +502,6 @@ int main(void) {
 
       int mouseMoveX = mouseX - oldMouseX;
       int mouseMoveY = mouseY - oldMouseY;
-
-      if (_rotationNode && glfwGetKey('R')) {
-        _rotationNode->rotate(5.0f * static_cast<float>(time), glm::vec3(0.0f, 1.0f, 0.0f));
-      }
 
       if (glfwGetMouseButton(GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS ) {
         if (glm::abs(mouseMoveX) > 0 || glm::abs(mouseMoveY) > 0) {

@@ -25,11 +25,11 @@
 
 #version 430 core
 
-layout(r32ui) uniform readonly uimageBuffer nodePool_color;
+uniform usamplerBuffer nodePool_color;
+uniform usamplerBuffer nodePool_Neighbour;
+
 layout(r32ui) uniform readonly uimageBuffer levelAddressBuffer;
 layout(rgba8) uniform image3D brickPool_value;
-
-layout(r32ui) uniform readonly uimageBuffer nodePool_Neighbour;
 
 uniform int level;
 uniform uint numLevels;
@@ -52,11 +52,8 @@ uniform ivec2 nodeMapSize[8];
 #include "assets/shader/_threadNodeUtil.shader"
 
 vec4 getFinalVal(in vec4 borderVal, in vec4 neighbourBorderVal) {
-  vec4 col = borderVal + neighbourBorderVal;
-  //if (uint(level) == numLevels - 1) { // Perform average on leaf-level
-     col /= 2;
-  //}
-
+  vec4 col = 0.5 * (borderVal + neighbourBorderVal);
+  
   return col;
 }
 
@@ -69,19 +66,14 @@ void main() {
     return;  // The requested threadID-node does not belong to the current level
   }
 
-  uint neighbourAddress = imageLoad(nodePool_Neighbour, int(nodeAddress)).x;
-  memoryBarrier();
-
- /* if (neighbourAddress != 0) {
-    return;
-  } */
-
+  uint neighbourAddress = texelFetch(nodePool_Neighbour, int(nodeAddress)).x;
+  
   if (neighbourAddress == 0) {
     return;
   }
 
-  ivec3 brickAddr = ivec3(uintXYZ10ToVec3(imageLoad(nodePool_color, int(nodeAddress)).x));
-  ivec3 nBrickAddr = ivec3(uintXYZ10ToVec3(imageLoad(nodePool_color, int(neighbourAddress)).x));
+  ivec3 brickAddr = ivec3(uintXYZ10ToVec3(texelFetch(nodePool_color, int(nodeAddress)).x));
+  ivec3 nBrickAddr = ivec3(uintXYZ10ToVec3(texelFetch(nodePool_color, int(neighbourAddress)).x));
 
   
   if (axis == AXIS_X) {

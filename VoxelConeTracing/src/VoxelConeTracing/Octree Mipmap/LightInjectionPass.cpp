@@ -91,13 +91,13 @@ LightInjectionPass::LightInjectionPass(VCTscene* vctScene,
                           lightComp->getShaderData("direction"),
                           shader->getUniform("lightDir")));
 
-  addStartupOperation(new BindImageTexture(
-                         vctScene->getNodePool()->getShdNodePool(NEXT),
-                         shader->getUniform("nodePool_next"), GL_READ_ONLY));
+  addStartupOperation(new BindTexture(
+                         vctScene->getNodePool()->getShdNodePoolSampler(NEXT),
+                         shader->getUniform("nodePool_next")));
 
-  addStartupOperation(new BindImageTexture(
-                        vctScene->getNodePool()->getShdNodePool(COLOR),
-                        shader->getUniform("nodePool_color"), GL_READ_ONLY));
+  addStartupOperation(new BindTexture(
+                        vctScene->getNodePool()->getShdNodePoolSampler(COLOR),
+                        shader->getUniform("nodePool_color")));
 
   addStartupOperation(new BindImageTexture(
                          vctScene->getBrickPool()->getShdBrickPool(BRICKPOOL_IRRADIANCE),

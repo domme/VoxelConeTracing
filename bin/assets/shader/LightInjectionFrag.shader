@@ -27,19 +27,18 @@
 
 // Note: Size has to be manually adjusted depending on the number of levels
 layout(r32ui) uniform uimage2D nodeMap;
+uniform sampler2D smPosition;
 //layout(rgba8) uniform image2D nodeMap;
 
-layout(r32ui) uniform readonly uimageBuffer nodePool_next;
-layout(r32ui) uniform readonly uimageBuffer nodePool_color;
+uniform usamplerBuffer nodePool_next;
+uniform usamplerBuffer nodePool_color;
 layout(rgba8) uniform image3D brickPool_irradiance;
 layout(rgba8) uniform image3D brickPool_color;
-layout(rgba8) uniform image3D brickPool_normal;
-
+//layout(rgba8) uniform image3D brickPool_normal;
 
 uniform mat4 voxelGridTransformI;
 uniform uint numLevels;
 
-uniform sampler2D smPosition;
 uniform vec3 lightColor;
 uniform vec3 lightDir;
 
@@ -48,7 +47,6 @@ uniform ivec2 nodeMapSize[8];
 
 #include "assets/shader/_utilityFunctions.shader"
 #include "assets/shader/_traverseUtil.shader"
-#include "assets/shader/_octreeTraverse.shader"
 
 void storeNodeInNodemap(in vec2 uv, in uint level, in int nodeAddress) {
   ivec2 storePos = nodeMapOffset[level] + ivec2(uv * nodeMapSize[level]);
@@ -64,16 +62,6 @@ void main() {
   vec2 uv = vec2(0);
   uv.x = (gl_VertexID % smTexSize.x) / float(smTexSize.x);
   uv.y = (gl_VertexID / smTexSize.x) / float(smTexSize.y);
-
-  /*
-  // Debug nodemap
-  for (int i = 0; i < 8; ++i) {
-    ivec2 storePos = nodeMapOffset[i] + ivec2(uv * nodeMapSize[i]);
-    imageStore(nodeMap, storePos, vec4(0.143 * i + 0.1));
-  }
-  
-  return;
-  */
 
   vec4 posWS = vec4(texture(smPosition, uv).xyz, 1.0);
   vec3 posTex = (voxelGridTransformI * posWS).xyz * 0.5 + 0.5;
@@ -92,31 +80,25 @@ void main() {
     // Store nodes during traversal in the nodeMap
     storeNodeInNodemap(uv, iLevel, nodeAddress);
 
-    uint nodeNext = imageLoad(nodePool_next, nodeAddress).x;
-    memoryBarrier();
-
+    uint nodeNext = texelFetch(nodePool_next, nodeAddress).x;
+    
     uint childStartAddress = nodeNext & NODE_MASK_VALUE;
     if (childStartAddress == 0U) {
-       uint nodeColorU = imageLoad(nodePool_color, nodeAddress).x;
-       memoryBarrier();
+       uint nodeColorU = texelFetch(nodePool_color, nodeAddress).x;
        
        ivec3 brickCoords = ivec3(uintXYZ10ToVec3(nodeColorU));
        uvec3 offVec = uvec3(2.0 * posTex);
        uint off = offVec.x + 2U * offVec.y + 4U * offVec.z;
 
-
         ivec3 injectionPos = brickCoords  + 2 * ivec3(childOffsets[off]);
-        vec3 voxelNormal = normalize(imageLoad(brickPool_normal, injectionPos).xyz * 2.0 - 1.0);
+        //vec3 voxelNormal = normalize(imageLoad(brickPool_normal, injectionPos).xyz * 2.0 - 1.0);
         vec4 voxelColor = imageLoad(brickPool_color, injectionPos);
-        memoryBarrier();
-
+       
         vec4 reflectedRadiance = vec4(lightColor, 1)
                                 * voxelColor;
         //reflectedRadiance.xyz *= clamp(abs(dot(-lightDir, voxelNormal)) + 0.3, 0.0, 1.0);
   
-        imageStore(brickPool_irradiance,
-                  injectionPos,
-                  reflectedRadiance);
+        imageStore(brickPool_irradiance, injectionPos, reflectedRadiance);
      
          //store Radiance in brick corners
         /*imageStore(brickPool_irradiance,
